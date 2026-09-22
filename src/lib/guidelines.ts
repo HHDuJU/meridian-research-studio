@@ -1,0 +1,321 @@
+import type { StudyFamily } from "./types";
+
+export interface Guideline {
+  id: string;
+  name: string;
+  year: string;
+  hub: string;
+  useWhen: string;
+  families: StudyFamily[] | "all";
+  essentials: string[];
+}
+
+export const GUIDELINES: Guideline[] = [
+  {
+    id: "prisma",
+    name: "PRISMA 2020",
+    year: "2020",
+    hub: "EQUATOR",
+    useWhen: "Systematic reviews and meta-analyses of studies",
+    families: ["systematic-review", "rapid-review", "umbrella-review"],
+    essentials: [
+      "Pre-register (PROSPERO)",
+      "Flow diagram of identification → inclusion",
+      "Risk of bias per included study",
+      "Certainty of evidence (GRADE)",
+    ],
+  },
+  {
+    id: "prisma-scr",
+    name: "PRISMA-ScR",
+    year: "2018",
+    hub: "EQUATOR",
+    useWhen: "Scoping reviews that map a field rather than estimate an effect",
+    families: ["scoping-review"],
+    essentials: [
+      "PCC (population, concept, context)",
+      "Do not meta-analyse unless justified",
+      "Chart the evidence, including gaps",
+    ],
+  },
+  {
+    id: "consort",
+    name: "CONSORT 2010",
+    year: "2010",
+    hub: "EQUATOR",
+    useWhen: "Reporting a completed randomized trial",
+    families: ["rct", "pragmatic-trial", "feasibility"],
+    essentials: [
+      "Participant flow",
+      "Allocation concealment and blinding status",
+      "Outcomes pre-specified vs exploratory",
+      "Harms as well as benefits",
+    ],
+  },
+  {
+    id: "spirit",
+    name: "SPIRIT 2013",
+    year: "2013",
+    hub: "EQUATOR",
+    useWhen: "Writing a trial protocol before enrolment",
+    families: ["rct", "pragmatic-trial", "feasibility"],
+    essentials: [
+      "One primary outcome",
+      "SAP or SAP date",
+      "Data monitoring and stopping rules",
+      "Consent and ancillary care",
+    ],
+  },
+  {
+    id: "strobe",
+    name: "STROBE",
+    year: "2007",
+    hub: "EQUATOR",
+    useWhen: "Cohort, case-control, and cross-sectional studies",
+    families: ["cohort", "case-control", "retrospective", "prospective", "cross-sectional"],
+    essentials: [
+      "Eligibility and missing data",
+      "Confounding strategy named a priori",
+      "Do not call associations causal without warrant",
+    ],
+  },
+  {
+    id: "record",
+    name: "RECORD",
+    year: "2015",
+    hub: "EQUATOR",
+    useWhen: "Observational studies using routinely collected health data",
+    families: ["retrospective", "cohort"],
+    essentials: [
+      "Code lists and data provenance",
+      "Validation of algorithms",
+      "Population coverage and linkage",
+    ],
+  },
+  {
+    id: "squire",
+    name: "SQUIRE 2.0",
+    year: "2016",
+    hub: "SQUIRE",
+    useWhen: "Quality improvement reports intended to be published",
+    families: ["qi-pdsa", "qi-lean", "implementation"],
+    essentials: [
+      "Why this gap, in this system, now",
+      "Iterative cycles, not a fake RCT",
+      "Context as a finding, not a footnote",
+      "Balancing measures and unintended effects",
+    ],
+  },
+  {
+    id: "coreq",
+    name: "COREQ",
+    year: "2007",
+    hub: "EQUATOR",
+    useWhen: "Interviews and focus groups",
+    families: ["qualitative", "mixed-methods"],
+    essentials: [
+      "Researcher relationship to participants",
+      "Sampling and saturation logic",
+      "How themes were derived",
+    ],
+  },
+  {
+    id: "srqr",
+    name: "SRQR",
+    year: "2014",
+    hub: "EQUATOR",
+    useWhen: "Qualitative research of any tradition",
+    families: ["qualitative", "mixed-methods"],
+    essentials: ["Trustworthiness", "Reflexivity", "Enough context to judge transfer"],
+  },
+  {
+    id: "grade",
+    name: "GRADE",
+    year: "ongoing",
+    hub: "GRADE Working Group",
+    useWhen: "Rating certainty of a body of evidence",
+    families: "all",
+    essentials: [
+      "Start from design, then down/up-rate",
+      "Separate quality from effect size",
+      "Patient-important outcomes first",
+    ],
+  },
+  {
+    id: "rob2",
+    name: "RoB 2 / ROBINS-I",
+    year: "2019",
+    hub: "Cochrane",
+    useWhen: "Risk of bias in trials and non-randomized studies",
+    families: ["systematic-review", "rct", "cohort", "retrospective"],
+    essentials: [
+      "Domain-based, not a single score",
+      "Signalling questions before judgement",
+    ],
+  },
+  {
+    id: "amstar",
+    name: "AMSTAR 2",
+    year: "2017",
+    hub: "AMSTAR",
+    useWhen: "Appraising systematic reviews themselves",
+    families: ["systematic-review", "umbrella-review", "rapid-review"],
+    essentials: ["Protocol", "Comprehensive search", "RoB in included studies"],
+  },
+  {
+    id: "tidier",
+    name: "TIDieR",
+    year: "2014",
+    hub: "EQUATOR",
+    useWhen: "Describing an intervention so it can be replicated",
+    families: ["rct", "pragmatic-trial", "qi-pdsa", "implementation"],
+    essentials: ["Who, what, when, how much, tailoring, fidelity"],
+  },
+  {
+    id: "cheers",
+    name: "CHEERS 2022",
+    year: "2022",
+    hub: "EQUATOR",
+    useWhen: "Health economic evaluations",
+    families: ["economic"],
+    essentials: ["Perspective", "Time horizon", "Uncertainty", "Equity"],
+  },
+  {
+    id: "stard",
+    name: "STARD 2015",
+    year: "2015",
+    hub: "EQUATOR",
+    useWhen: "Diagnostic accuracy studies",
+    families: ["diagnostic"],
+    essentials: ["Reference standard", "Spectrum", "2×2 flow"],
+  },
+  {
+    id: "stari",
+    name: "StaRI",
+    year: "2017",
+    hub: "EQUATOR",
+    useWhen: "Implementation studies",
+    families: ["implementation"],
+    essentials: ["Intervention vs implementation strategy", "Context", "Fidelity"],
+  },
+  {
+    id: "precis",
+    name: "PRECIS-2",
+    year: "2015",
+    hub: "PRECIS",
+    useWhen: "Judging how pragmatic a trial is",
+    families: ["rct", "pragmatic-trial"],
+    essentials: ["Eligibility, setting, organisation, flexibility, follow-up, outcome, analysis"],
+  },
+  {
+    id: "immpact",
+    name: "IMMPACT / IMMPACT-II",
+    year: "2003–",
+    hub: "IMMPACT",
+    useWhen: "Choosing outcomes in chronic pain trials",
+    families: ["rct", "pragmatic-trial", "systematic-review"],
+    essentials: [
+      "Pain, physical function, emotion, global improvement, symptoms, adverse events",
+      "Do not let a 0–10 NRS stand in for a life",
+    ],
+  },
+  {
+    id: "progress",
+    name: "PROGRESS-Plus",
+    year: "2014",
+    hub: "Cochrane Equity",
+    useWhen: "Planning and reporting equity",
+    families: "all",
+    essentials: [
+      "Place, race/ethnicity, occupation, gender/sex, religion, education, SES, social capital",
+      "Plus: age, disability, sexual orientation, features of relationships",
+    ],
+  },
+  {
+    id: "gripp",
+    name: "GRIPP2",
+    year: "2017",
+    hub: "EQUATOR",
+    useWhen: "Reporting patient and public involvement",
+    families: "all",
+    essentials: ["How patients shaped the question", "What changed because they were there"],
+  },
+  {
+    id: "tcps",
+    name: "TCPS 2",
+    year: "2022",
+    hub: "Panel on Research Ethics (CA)",
+    useWhen: "Human research in Canada",
+    families: "all",
+    essentials: [
+      "Respect for persons, concern for welfare, justice",
+      "REB review proportionate to risk",
+      "Chapter 9: research involving First Nations, Inuit, and Métis peoples",
+    ],
+  },
+  {
+    id: "helsinki",
+    name: "Declaration of Helsinki",
+    year: "2024",
+    hub: "WMA",
+    useWhen: "Any interventional research with patients",
+    families: ["rct", "pragmatic-trial", "feasibility"],
+    essentials: ["Benefit-risk", "Informed consent", "Post-trial access where relevant"],
+  },
+];
+
+export const VERIFY_SOURCES = [
+  { name: "PubMed", href: "https://pubmed.ncbi.nlm.nih.gov/", job: "Primary bibliographic verification" },
+  { name: "Google Scholar", href: "https://scholar.google.com/", job: "Citation chaining and grey academic" },
+  { name: "OpenEvidence", href: "https://www.openevidence.com/", job: "Clinical evidence summaries" },
+  { name: "Consensus", href: "https://consensus.app/", job: "Paper-level agreement signals" },
+  { name: "TRIP", href: "https://www.tripdatabase.com/", job: "Guidelines and secondary evidence" },
+  { name: "ClinicalTrials.gov", href: "https://clinicaltrials.gov/", job: "Registered, unpublished, and ongoing" },
+  { name: "PROSPERO", href: "https://www.crd.york.ac.uk/prospero/", job: "Review protocols" },
+  { name: "EQUATOR", href: "https://www.equator-network.org/", job: "Reporting guidelines" },
+  { name: "Cochrane Library", href: "https://www.cochranelibrary.com/", job: "Trusted reviews and CENTRAL" },
+  { name: "Canada's Drug Agency", href: "https://www.cda-amc.ca/", job: "HTA, CADTH legacy, Canadian context" },
+] as const;
+
+export const FRAMEWORKS = [
+  {
+    id: "seips",
+    name: "SEIPS 2.0 / 3.0",
+    useWhen: "Safety, work systems, night shift, medication errors, QI in anesthesia",
+  },
+  {
+    id: "ihi",
+    name: "IHI Model for Improvement",
+    useWhen: "PDSA, aims, measures, changes — the default QI spine",
+  },
+  {
+    id: "comb",
+    name: "COM-B / Theoretical Domains",
+    useWhen: "Behaviour change in clinicians or patients",
+  },
+  {
+    id: "cfir",
+    name: "CFIR 2.0",
+    useWhen: "Why an evidence-based practice is or is not taken up",
+  },
+  {
+    id: "reaim",
+    name: "RE-AIM",
+    useWhen: "Reach, effectiveness, adoption, implementation, maintenance",
+  },
+  {
+    id: "realist",
+    name: "Realist evaluation",
+    useWhen: "What works, for whom, in what context, why",
+  },
+  {
+    id: "donabedian",
+    name: "Donabedian",
+    useWhen: "Structure–process–outcome in quality and perioperative systems",
+  },
+  {
+    id: "grade-etd",
+    name: "GRADE Evidence-to-Decision",
+    useWhen: "Moving from evidence to a practice or policy recommendation",
+  },
+];

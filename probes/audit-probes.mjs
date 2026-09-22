@@ -1,0 +1,37 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {applyAppraisal} from './repo/src/lib/evidence/appraise.ts';
+import {ledgerIssues} from './repo/src/lib/evidence/ledger.ts';
+import {applyDecision,evaluateDecision,evidenceRevision} from './repo/src/lib/evidence/decision.ts';
+import {applyLookupOutcome,compareWithRegistry} from './repo/src/lib/evidence/verify.ts';
+import {applyAiResult} from './repo/src/lib/apply-ai.ts';
+import {collapseIdenticalRecords} from './repo/src/lib/evidence/dedupe.ts';
+import {compactStudy} from './repo/src/lib/compact.ts';
+import {kindFromProviderType} from './repo/src/lib/evidence/records.ts';
+const ROOT=process.env.AUDIT_PACKET_ROOT || '/mnt/data/Meridian_Audit_Packet_20260921T225049Z';
+const read=p=>JSON.parse(fs.readFileSync(ROOT+'/'+p,'utf8'));
+const study=k=>read(`trial/case-${k}/study.json`);
+const results=[];
+function probe(name, action){try {const details=action(); results.push({name,safetyAssertion:'PASS',details});}catch(e){results.push({name,safetyAssertion:'FAIL',error:e.message});}}
+const C=study('C'); const A=study('A');
+probe('reject_unsupported_48_hour_claim',()=>{const c=C.scan.claims.find(x=>x.id==='scan-c5');const r=applyAppraisal(C.scan.items,{claims:[c]}); const blocks=ledgerIssues(r.claims,r.items).filter(x=>x.severity==='block');assert.ok(r.claims.length===0||blocks.length>0,'48-hour claim retained without blocking issue');});
+probe('reject_forged_passage',()=>{const r=applyAppraisal(C.scan.items,{claims:[{id:'forged',kind:'source-derived',text:'Mortality was reduced by 99%.',sourceIds:[C.scan.items[0].id],passage:'Mortality was reduced by 99%.',location:'Invented page',uncertainty:'moderate'}]});assert.ok(r.claims.length===0||ledgerIssues(r.claims,r.items).some(x=>x.severity==='block'),'Invented passage retained without a source-span check');});
+probe('reject_model_created_local_capacity',()=>{const r=applyAppraisal([],{claims:[{id:'local-new',kind:'local-fact',text:'Two full-time study nurses are funded.',sourceIds:[],uncertainty:'low'}]});assert.ok(r.claims.length===0||ledgerIssues(r.claims,[]).some(x=>x.severity==='block'),'Model-created low-uncertainty local fact accepted without investigator evidence');});
+function decision(s,over={}){return applyDecision({kind:'pursue',statement:'Start study.',claimIds:['local-1'],criteria:[],gates:[],alternatives:['Defer'],...over},s).decision;}
+probe('reject_unresolved_approval_evidence',()=>{let d=decision(A,{gates:[{id:'approval',requirement:'Research approval',status:'met',evidence:'Approved, trust me.'}]});d.status='accepted';assert.equal(evaluateDecision(d,A).canAct,false,'Arbitrary approval text allows canAct=true');});
+probe('block_orphan_source_dependency',()=>{const s=study('A');s.scan.claims.push({id:'orphan',kind:'source-derived',text:'A useful outcome.',sourceIds:['ev-does-not-exist'],uncertainty:'high'});let d=decision(s,{claimIds:['orphan']});d.status='accepted';assert.equal(evaluateDecision(d,s).canAct,false,'Claim with nonexistent source allows canAct=true');});
+probe('block_criterion_only_mismatch',()=>{const s=study('A');s.scan.items[0].provenance.status='mismatch';s.scan.claims.push({id:'bad-criterion',kind:'source-derived',text:'Supports decision.',sourceIds:[s.scan.items[0].id],uncertainty:'moderate'});let d=decision(s,{criteria:[{id:'crit',role:'justifies',status:'met',text:'Effective',claimIds:['bad-criterion']}]});d.status='accepted';assert.equal(evaluateDecision(d,s).canAct,false,'Mismatch used only by criterion is ignored');});
+probe('invalidate_on_passage_or_source_edit',()=>{const s=study('A');const before=evidenceRevision(s);s.scan.items[0].notes='CORRECTION: result reversed';s.scan.claims.find(x=>x.kind==='source-derived').passage='CORRECTION: effect reversed';assert.notEqual(evidenceRevision(s),before,'Evidence revision unchanged after source and passage edits');});
+probe('retain_known_mismatch_on_transport_failure',()=>{const i=structuredClone(C.scan.items.find(x=>x.doi));i.provenance.status='mismatch';const r=applyLookupOutcome([i],[i.doi],'crossref',{status:'blocked',records:[]});assert.equal(r.items[0].provenance.status,'mismatch','Blocked recheck erases mismatch state');});
+probe('do_not_verify_opposite_title',()=>{const r=compareWithRegistry({title:'Drug X prevents mortality after surgery',year:2020},{title:'Drug X does not prevent mortality after surgery',year:2020,authors:'Different',venue:'Other'});assert.equal(r.result,'mismatch',`Opposite title verified at similarity=${r.similarity}`);});
+probe('clear_explicit_null_grade',()=>{const i=structuredClone(C.scan.items[0]);i.grade='high';const r=applyAppraisal([i],{annotations:[{id:i.id,grade:null}]});assert.notEqual(r.items[0].grade,'high','Null reports clear but retains high grade');});
+probe('clear_explicit_null_recommendation',()=>{const r=applyAiResult('design',{recommended:null,rationale:'No design selected.'},A.family,A);const after={...A.design,...r.stagePatch};assert.notEqual(after.recommended,'retrospective','Null reports clear but retains retrospective');});
+probe('proposed_design_does_not_change_family',()=>{const r=applyAiResult('design',{recommended:'qi-pdsa',rationale:'Proposal only.'},A.family,A);assert.ok(!r.studyPatch?.family||r.studyPatch.family===A.family,'Unaccepted proposal mutates family');});
+probe('preserve_original_abstract',()=>{const i=structuredClone(C.scan.items[0]);i.notes='Abstract (from test): Original result.';const r=applyAppraisal([i],{annotations:[{id:i.id,notes:'Model appraisal'}]});assert.ok(r.items[0].notes.includes('Original result.')||r.items[0].abstract?.includes('Original result.'),'Original abstract is overwritten');});
+probe('do_not_discard_later_duplicate_content',()=>{const i=structuredClone(C.scan.items.find(x=>x.doi));i.notes='Short abstract';const j=structuredClone(i);j.notes='Full corrected abstract with decisive outcome';const r=collapseIdenticalRecords([i,j]);assert.ok(JSON.stringify(r).includes('decisive outcome'),'Later duplicate abstract is discarded');});
+probe('appraisal_contract_supported_by_live_scan_mapper',()=>{const r=applyAiResult('scan',{annotations:[{id:C.scan.items[0].id,keyFindings:'Provided finding'}],claims:[C.scan.claims.find(x=>x.id==='scan-c5')]},C.family,C);assert.ok(r.ok&&JSON.stringify(r.stagePatch).includes('scan-c5'),'Live scan mapper does not apply appraisal claims');});
+probe('keep_methodology_review_type_unresolved',()=>{assert.notEqual(kindFromProviderType('review'),'systematic-review','Generic provider Review is promoted to systematic-review');});
+fs.writeFileSync(new URL('./audit-probes.json',import.meta.url),JSON.stringify({command:'node --import ./ts-loader.mjs audit-probes.mjs',node:process.version,results},null,2));
+for(const r of results)console.log(r.safetyAssertion, r.name, r.error??'');
+console.log('TOTAL',results.length,'SAFETY ASSERTIONS FAILED',results.filter(x=>x.safetyAssertion==='FAIL').length);
+process.exitCode=results.some(x=>x.safetyAssertion==='FAIL')?1:0;

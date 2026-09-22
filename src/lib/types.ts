@@ -43,7 +43,101 @@ export type StageId = (typeof STAGE_IDS)[number];
 
 export type StudyStatus = "draft" | "active" | "complete";
 export type GradeLevel = "high" | "moderate" | "low" | "very-low";
+
+/**
+ * Model-assigned citation label. Kept for compatibility with existing studies and panels.
+ * It is a *hint from the generator*, never a verification result. The authoritative record of
+ * whether a source was actually retrieved or checked is `EvidenceItem.provenance` (below).
+ * @deprecated read `provenance.status` for anything user-facing.
+ */
 export type Verification = "landmark" | "verify" | "ai-lead";
+
+/**
+ * Where a record stands on observable evidence. Only a recorded `SourceCheck` with result
+ * "match" may set "verified"; a model label, a confident tone or the word "landmark" cannot.
+ *
+ * - unverified: exists only as a lead (model-suggested or user-typed), no retrieval, no check
+ * - retrieved: returned by a real search (a RetrievalEvent) but identity not yet checked
+ * - verified: identity checked against a bibliographic registry (title/year agree)
+ * - mismatch: an identifier resolved to a different work than claimed (possible misattribution)
+ * - check-failed: a check was attempted but the channel errored or was blocked
+ * - access-blocked: the record is known to exist but its content could not be accessed
+ *
+ * "verified" means the *source exists as described*. It says nothing about whether the source
+ * supports a particular claim — that is the job of the claim ledger (`Claim`).
+ */
+export type SourceStatus =
+  | "unverified"
+  | "retrieved"
+  | "verified"
+  | "mismatch"
+  | "check-failed"
+  | "access-blocked";
+
+export type AccessLevel = "unknown" | "metadata" | "abstract" | "full-text" | "model-suggested";
+
+export type CheckProvider = "crossref" | "openalex" | "pubmed" | "clinicaltrials" | "manual";
+
+export interface SourceCheck {
+  id: string;
+  at: string;
+  provider: CheckProvider;
+  /** The identifier that was looked up (DOI, PMID, NCT…). */
+  identifier: string;
+  result: "match" | "mismatch" | "not-found" | "error" | "blocked" | "unresolved";
+  /** What the registry actually returned, so a reviewer can see the comparison. */
+  observed?: { title?: string; year?: number | null; venue?: string };
+  note?: string;
+}
+
+export interface Provenance {
+  /** model: generated as a lead; retrieval: came back from a search; user: typed or imported by the investigator */
+  origin: "model" | "retrieval" | "user";
+  retrievalEventIds: string[];
+  identifiers: { doi?: string; pmid?: string; openalex?: string; nct?: string };
+  access: AccessLevel;
+  status: SourceStatus;
+  checks: SourceCheck[];
+  /** Records that are different reports of the same underlying study share a groupId. */
+  groupId?: string;
+}
+
+/** One real search or lookup, as performed — not as described by a model. */
+export interface RetrievalEvent {
+  id: string;
+  at: string;
+  /** e.g. "openalex", "crossref", "pubmed", "consensus-connector" */
+  provider: string;
+  query: string;
+  filters?: Record<string, string>;
+  /** Total hits reported by the provider; null when the provider does not report it or the call failed. */
+  resultCount: number | null;
+  /** Ids of EvidenceItems produced by this event. */
+  recordIds: string[];
+  status: "ok" | "partial" | "error" | "blocked";
+  /** app: Meridian's own adapter; connector: a development-time tool (e.g. a Cowork connector); manual: a person */
+  performedBy: "app" | "connector" | "manual";
+  note?: string;
+}
+
+export type ClaimKind = "source-derived" | "local-fact" | "assumption" | "inference" | "scenario" | "unknown";
+
+/** A consequential assertion linked to where it comes from. */
+export interface Claim {
+  id: string;
+  text: string;
+  kind: ClaimKind;
+  /** EvidenceItem ids that support the claim; empty is allowed only for local-fact/assumption/scenario. */
+  sourceIds: string[];
+  /** Section, table, figure or page in the source. */
+  location?: string;
+  /** Short quotation or close paraphrase from that location (check reuse rights before publishing). */
+  passage?: string;
+  interpretation?: string;
+  uncertainty: "low" | "moderate" | "high";
+  /** Who wrote the claim. Historical unproven claims migrate as "unknown". */
+  origin?: "investigator" | "model" | "system" | "unknown";
+}
 
 export type EvidenceKind =
   | "guideline"
@@ -60,22 +154,79 @@ export type EvidenceKind =
 
 export type GraphKind = EvidenceKind | "context" | "gap" | "outcome" | "stakeholder" | "framework";
 
+/** Canonical stored source bytes. Immutable after capture. */
+export interface SourceDocument {
+  id: string;
+  recordId: string;
+  retrievalEventId?: string;
+  sha256: string;
+  text: string;
+  mediaType: string;
+  sourceScope: "abstract" | "full-text" | "metadata" | "unknown";
+  shortenedAtSource: true | false | "unknown";
+  capturedAt: string;
+  license?: string;
+  supersedes?: string;
+}
+
+/** View of a SourceDocument. `text` is a copy at ingestion; `hash` ties it to the document. */
+export interface StoredText {
+  documentId: string;
+  sha256: string;
+  text: string;
+}
+
+export interface UsageEvent {
+  id: string;
+  at: string;
+  stage?: StageId;
+  model?: string;
+  elapsedMs?: number | null;
+  reasonUnknown?: string;
+}
+
+export interface ActivityEvent {
+  t: string;
+  type: string;
+}
+
 export interface EvidenceItem {
   id: string;
   title: string;
   authors: string;
-  year: number;
+  /** null when not reported. Never a guessed year. */
+  year: number | null;
   source: string;
   kind: EvidenceKind;
-  grade: GradeLevel;
-  methodQuality: number;
-  relevance: number;
+  /** "unrated" when no certainty judgement has been made. Never a default "low". */
+  grade: GradeLevel | "unrated";
+  /** 0–100 or null when not assessed. Never a default 50. */
+  methodQuality: number | null;
+  relevance: number | null;
   notes: string;
+  /** Retrieved source text. Model notes must not overwrite this. */
+  abstract?: StoredText;
+  /** Additional captured versions of the same work (D12). Never discarded for being longer or later. */
+  contentVersions?: StoredText[];
+  pairingIssue?: "suspect-content-pairing";
+  publicationStatus?: "unknown" | "published" | "preprint" | "retracted" | "withdrawn" | "ahead-of-print";
+  /** Completed only after a full-text body is stored and every listed section is marked read (F3). */
+  fullTextRead?: {
+    documentId: string;
+    sections: { id: string; heading?: string; read: boolean }[];
+    complete: boolean;
+    at: string;
+  };
+  /** Last failed full-text access attempt. Presence is not a read. */
+  fullTextAccess?: { ok: false; note: string; at: string } | { ok: true; route: string; at: string };
+  /** @deprecated model label; see `provenance.status` */
   verification: Verification;
   doi?: string;
+  pmid?: string;
   contextTags: string[];
   keyFindings: string;
   limitations: string;
+  provenance: Provenance;
 }
 
 export interface GraphNode {
@@ -103,11 +254,12 @@ export interface GapItem {
 export interface Hypothesis {
   id: string;
   statement: string;
-  novelty: number;
-  need: number;
-  practiceChange: number;
-  feasibility: number;
-  parsimony: number;
+  /** 0–100 judgements, or null when not made. A number here must be explained in `rationale`. */
+  novelty: number | null;
+  need: number | null;
+  practiceChange: number | null;
+  feasibility: number | null;
+  parsimony: number | null;
   rationale: string;
   risks: string;
 }
@@ -115,11 +267,15 @@ export interface Hypothesis {
 export interface ResearchQuestion {
   id: string;
   text: string;
-  framework: "PICO" | "PECO" | "SPIDER" | "PICOT" | "FINER" | "QI-aim";
+  /** PCC (Population–Concept–Context) is the frame scoping reviews actually use. */
+  framework: "PICO" | "PECO" | "SPIDER" | "PICOT" | "FINER" | "QI-aim" | "PCC";
   population: string;
   intervention?: string;
   comparator?: string;
+  /** Scoping (PCC) work states a concept rather than an outcome; `outcome` may then be empty. */
   outcome: string;
+  concept?: string;
+  context?: string;
   time?: string;
   setting?: string;
 }
@@ -132,10 +288,10 @@ export interface BiasFlag {
 }
 
 export interface Parsimony {
-  score: number;
-  primaryOutcomeCount: number;
-  secondaryOutcomeCount: number;
-  covariateCount: number;
+  score: number | null;
+  primaryOutcomeCount: number | null;
+  secondaryOutcomeCount: number | null;
+  covariateCount: number | null;
   flags: string[];
   simplestPath: string;
 }
@@ -147,7 +303,8 @@ export interface OutcomeItem {
   measure: string;
   timing: string;
   why: string;
-  patientCentered: boolean;
+  /** null when the generator did not say (or said it malformed). Never coerced. */
+  patientCentered: boolean | null;
 }
 
 export interface VoiceItem {
@@ -173,12 +330,41 @@ export interface ProblemStage {
 
 export interface ScanStage {
   query: string;
+  /**
+   * Human-readable list derived from `retrievalEvents`. Kept for existing panels.
+   * Must not be populated from model text; see `apply-ai.ts`.
+   */
   sourcesConsulted: string[];
   items: EvidenceItem[];
+  /** Real searches and lookups, in order. Empty means nothing was actually searched. */
+  retrievalEvents: RetrievalEvent[];
+  /** Consequential assertions with their sources (claim–source ledger). */
+  claims: Claim[];
+  /** Sources or channels that could not be accessed (paywall, blocked host, robots policy…). */
+  unresolvedAccess: string[];
   gradeOverall: GradeLevel | "";
   gradeRationale: string;
   synthesis: string;
   generatedAt?: string;
+  quarantine?: { claims: Claim[]; annotations: unknown[]; items?: EvidenceItem[] };
+  coverage?: { calls: { callId: string; recordIds: string[]; chars: number }[] };
+  /**
+   * Set only by an investigator screen action in the store. Model JSON cannot write this.
+   * Valid only while queryHash and revision still match the current scan content (D26).
+   */
+  emptySearchConfirmation?: {
+    by: "investigator";
+    at: string;
+    queryHash: string;
+    revision: string;
+  };
+  emptySearchConfirmedBy?: "investigator";
+  emptySearchConfirmedAt?: string;
+  /** @deprecated use emptySearchConfirmation */
+  emptySearchConfirmed?: { at: string; actor: "investigator" };
+  /** Historical GRADE assignment that was not supported by retrieved records. Display is not this value. */
+  unsupportedGradeOverall?: { value: GradeLevel; reason: string; status: "stale" | "unknown" };
+  completionWithdrawn?: { wasComplete: true; reason: string };
 }
 
 export interface MapStage {
@@ -208,8 +394,61 @@ export interface QuestionsStage {
   generatedAt?: string;
 }
 
+/*
+ * Decision record — an evidence-backed decision that stays linked to the claims it rests on, the
+ * criteria that would justify or defeat it, the gates that must be met before anyone acts on it,
+ * and the exact evidence revision it was made against. Status is derived from data
+ * (`evidence/decision.ts`), never from a model's own "success" flag.
+ *
+ * Concepts adapted (no code copied) from AutoSciRub (criteria with verifiable satisfaction
+ * conditions), InnoEval's negative example (gates are non-compensatory; no score can cancel them)
+ * and OpenResearch (content-identified input snapshot). See docs/EVIDENCE.md.
+ */
+export type DecisionKind = "pursue" | "narrow" | "defer" | "no-new-study" | "refer" | "implementation" | "replicate";
+export type GateStatus = "met" | "unmet" | "unknown";
+
+/** A requirement that must be met before the decision is acted on. Never averaged away. */
+export interface DecisionGate {
+  id: string;
+  requirement: string;
+  status: GateStatus;
+  /** Where the evidence that the gate is met lives (a document, an approval number) — never model prose. */
+  evidence?: string;
+}
+
+/** What would justify or defeat the decision, with the claims that speak to it. */
+export interface DecisionCriterion {
+  id: string;
+  text: string;
+  role: "justifies" | "defeats";
+  status: "met" | "unmet" | "unknown";
+  claimIds: string[];
+}
+
+export interface DecisionRecord {
+  id: string;
+  at: string;
+  actor: "model" | "investigator";
+  kind: DecisionKind;
+  statement: string;
+  question: string;
+  claimIds: string[];
+  criteria: DecisionCriterion[];
+  gates: DecisionGate[];
+  /** Simpler credible alternatives that were considered. */
+  alternatives: string[];
+  /** `evidenceRevision(study)` when the decision was made; a different current revision makes it stale. */
+  inputRevision: string;
+  status: "proposed" | "accepted" | "stale" | "withdrawn";
+  note?: string;
+}
+
 export interface DesignStage {
   recommended: StudyFamily | "";
+  /** How `recommended` was reached: stated by the investigator, inferred from cues, or not resolvable yet. */
+  basis?: "explicit" | "inferred" | "unresolved";
+  /** Evidence-backed decisions, newest last. History is kept; superseded ones become "withdrawn" or "stale". */
+  decisions: DecisionRecord[];
   rationale: string;
   alternatives: string[];
   guidelines: string[];
@@ -293,17 +532,27 @@ export interface AuditStage {
   lastReview?: string;
 }
 
+/** Bump when a persisted Study needs migration; see `store.ts` migrate(). Schema 4 is frozen in this phase. */
+export const STUDY_SCHEMA_VERSION = 4;
+
 export interface Study {
   id: string;
   title: string;
   subtitle: string;
-  family: StudyFamily;
+  family: StudyFamily | null;
   setting: string;
   status: StudyStatus;
   createdAt: string;
   updatedAt: string;
   currentStage: StageId;
   completedStages: StageId[];
+  /**
+   * Stages that were completed and then had an upstream stage change. They stay "completed"
+   * in `completedStages` (history is not erased) but must be re-reviewed before the study can be
+   * called complete again. Set by `store.mergeStage`, cleared by `store.markComplete`/`clearReview`.
+   */
+  needsReview: StageId[];
+  schemaVersion: number;
   problem: ProblemStage;
   scan: ScanStage;
   map: MapStage;
@@ -317,6 +566,27 @@ export interface Study {
   voices: VoicesStage;
   manuscript: ManuscriptStage;
   audit: AuditStage;
+  documents?: SourceDocument[];
+  usage?: UsageEvent[];
+  activity?: ActivityEvent[];
+  idAliases?: Record<string, string>;
+  replayKey?: string;
+  /** Schema-3 JSON hash taken before this study was migrated. Not a substitute for the byte backup (D25). */
+  migrationBackupHash?: string;
+  migrationEvents?: { at: string; from: number; to: number; note: string }[];
+  /** Idempotent repair ids already applied (D23). */
+  repairsApplied?: string[];
+  /** Honest report when the immutable byte backup could not be written. */
+  migrationBackupReport?: { written: boolean; key?: string; reason?: string };
+  /** Last Illuminate attempt, including refusals. Used by the UI scenario runner. */
+  lastIlluminate?: {
+    stage: StageId;
+    ok: boolean;
+    summary: string;
+    issues: { path: string; code: string; message?: string }[];
+    error?: string;
+    at: string;
+  };
 }
 
 export type StageKey = {

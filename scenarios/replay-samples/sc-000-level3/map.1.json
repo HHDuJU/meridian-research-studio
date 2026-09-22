@@ -1,0 +1,109 @@
+{
+  "contexts": [
+    "450-bed teaching hospital, medical wards",
+    "hospital pharmacy dispensing system",
+    "regional admission data from three public hospitals",
+    "no community refill data",
+    "recorded search returned no records"
+  ],
+  "reading": "The exposure is observable at discharge and the outcome in regional admission data, so the question is answerable from existing records. Frailty sits upstream of both exposure and outcome, and indications such as incontinence and depression carry their own fall risk; the conflicting leads differ on exactly these two paths. Exposure drifts after 30 days. The recorded search found nothing, so every evidence node below is an unchecked lead.",
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Anticholinergic burden score at discharge",
+      "kind": "context",
+      "detail": "Computed from dispensed regular medicines, 0 to 3 points per drug."
+    },
+    {
+      "id": "n2",
+      "label": "Injurious fall within 90 days",
+      "kind": "outcome",
+      "detail": "Emergency visit or admission coded for a fall with injury."
+    },
+    {
+      "id": "n3",
+      "label": "Frailty",
+      "kind": "context",
+      "detail": "Common cause of prescribing and of falls; measurable from discharge diagnoses."
+    },
+    {
+      "id": "n4",
+      "label": "Indications with their own fall risk",
+      "kind": "context",
+      "detail": "Incontinence, depression, psychosis, sleep problems."
+    },
+    {
+      "id": "n5",
+      "label": "Lead: regional cohort with hazard ratio about 1.4",
+      "kind": "observational",
+      "detail": "Unchecked lead; no direct frailty measure."
+    },
+    {
+      "id": "n6",
+      "label": "Lead: preprint with null result after frailty adjustment",
+      "kind": "preprint",
+      "detail": "Unchecked and undated; possible over-adjustment."
+    },
+    {
+      "id": "n7",
+      "label": "Lead: meta-analysis of 17 observational studies",
+      "kind": "systematic-review",
+      "detail": "Unchecked lead; pooled odds ratio 1.29 that shrinks with adjustment."
+    },
+    {
+      "id": "n8",
+      "label": "Empty recorded search",
+      "kind": "gap",
+      "detail": "The fixture search returned no records."
+    },
+    {
+      "id": "n9",
+      "label": "Clinical pharmacy team",
+      "kind": "stakeholder",
+      "detail": "Time at stake if review becomes routine."
+    }
+  ],
+  "edges": [
+    {
+      "from": "n3",
+      "to": "n1",
+      "relation": "raises"
+    },
+    {
+      "from": "n3",
+      "to": "n2",
+      "relation": "raises"
+    },
+    {
+      "from": "n4",
+      "to": "n1",
+      "relation": "drives prescribing that raises"
+    },
+    {
+      "from": "n1",
+      "to": "n2",
+      "relation": "hypothesised to raise"
+    },
+    {
+      "from": "n5",
+      "to": "n1",
+      "relation": "reports association for"
+    },
+    {
+      "from": "n6",
+      "to": "n5",
+      "relation": "conflicts with"
+    },
+    {
+      "from": "n7",
+      "to": "n3",
+      "relation": "shows sensitivity to adjustment for"
+    },
+    {
+      "from": "n8",
+      "to": "n9",
+      "relation": "leaves the decision to local data for"
+    }
+  ],
+  "summary": "Map shows frailty and indication as the confounding paths behind the conflicting leads, over an empty recorded search."
+}

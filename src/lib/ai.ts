@@ -1,6 +1,54 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { StageId, StudyFamily } from "./types";
+import { STAGE_IDS, STUDY_FAMILIES } from "./types";
 import { STAGE_BY_ID } from "./stages";
+import { DECISION_SCHEMA } from "./evidence/decision";
+import {
+  parseReplayKey,
+} from "./replay-key";
+
+export interface MeridianRequest {
+  stage: StageId;
+  family: StudyFamily | null;
+  compact: string;
+  instruction?: string;
+  replayKey?: string;
+}
+
+// Sized for the Scan (appraisal) stage, where up to ~40 retrieved records are shown with clipped abstracts.
+export const MAX_COMPACT_CHARS = 32_000;
+export const MAX_INSTRUCTION_CHARS = 2_000;
+
+/**
+ * Runtime validation of the server-function input. Rejects unknown stages/families and oversized
+ * payloads with a readable message instead of forwarding whatever arrived to the model.
+ */
+export function validateMeridianRequest(input: unknown): MeridianRequest {
+  if (!input || typeof input !== "object") throw new Error("Request must be an object.");
+  const r = input as Record<string, unknown>;
+  if (typeof r.stage !== "string" || !(STAGE_IDS as readonly string[]).includes(r.stage)) {
+    throw new Error(`Unknown stage "${String(r.stage)}".`);
+  }
+  if (r.family !== null && (typeof r.family !== "string" || !(STUDY_FAMILIES as readonly string[]).includes(r.family))) {
+    throw new Error(`Unknown study family "${String(r.family)}".`);
+  }
+  if (typeof r.compact !== "string" || !r.compact.trim()) throw new Error("Study context is missing.");
+  if (r.compact.length > MAX_COMPACT_CHARS) {
+    throw new Error(`Study context is ${r.compact.length} characters; the limit is ${MAX_COMPACT_CHARS}. Narrow the context instead of truncating silently.`);
+  }
+  if (r.instruction !== undefined) {
+    if (typeof r.instruction !== "string") throw new Error("Instruction must be a string.");
+    if (r.instruction.length > MAX_INSTRUCTION_CHARS) throw new Error(`Instruction exceeds ${MAX_INSTRUCTION_CHARS} characters.`);
+  }
+  const replayKey = parseReplayKey(r.replayKey);
+  return {
+    stage: r.stage as StageId,
+    family: r.family as StudyFamily | null,
+    compact: r.compact,
+    instruction: r.instruction as string | undefined,
+    replayKey,
+  };
+}
 
 const SYSTEM = `You are Meridian, a senior methodologist sitting with an anesthesiologist / pain physician / improvement scientist.
 
@@ -92,6 +140,7 @@ function schemaFor(stage: StageId): string {
   "alternatives": string[],
   "guidelines": string[],
   "whyNotMoreComplex": string,
+  ${DECISION_SCHEMA},
   "summary": string
 }`;
     case "protocol":
@@ -144,23 +193,11 @@ function extractJson(text: string): Record<string, unknown> {
   return JSON.parse(raw.slice(start, end + 1)) as Record<string, unknown>;
 }
 
-export const runMeridian = createServerFn({ method: "POST" })
-  .validator((input: {
-    stage: StageId;
-    family: StudyFamily;
-    compact: string;
-    instruction?: string;
-  }) => input)
-  .handler(async ({ data }) => {
-    const apiKey = process.env.XAI_API_KEY;
-    if (!apiKey) {
-      return { ok: false as const, error: "AI is not available in this environment." };
-    }
-
-    const meta = STAGE_BY_ID[data.stage];
-    const user = `Stage to generate: ${meta.label} (${meta.kicker})
+async function liveXaiCall(data: MeridianRequest, apiKey: string): Promise<string> {
+  const meta = STAGE_BY_ID[data.stage];
+  const user = `Stage to generate: ${meta.label} (${meta.kicker})
 Hint: ${meta.hint}
-Declared family: ${data.family}
+Declared family: ${data.family ?? "undetermined"}
 
 STUDY CONTEXT:
 ${data.compact}
@@ -172,38 +209,78 @@ ${schemaFor(data.stage)}
 
 Produce  the richest defensible content you can without inventing evidence. For scan, 6–10 items is enough. For hypotheses, 3 ranked. For questions, 1–2. One primary outcome always.`;
 
-    const res = await fetch("https://api.x.ai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "grok-4.5",
-        temperature: data.stage === "hypotheses" || data.stage === "voices" ? 0.5 : 0.25,
-        max_tokens: data.stage === "manuscript" ? 3500 : 2600,
-        messages: [
-          { role: "system", content: SYSTEM },
-          { role: "user", content: user },
-        ],
-      }),
-    });
+  const base = (process.env.XAI_BASE_URL?.trim() || "https://api.x.ai/v1").replace(/\/$/, "");
+  const res = await fetch(`${base}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: "grok-4.5",
+      temperature: data.stage === "hypotheses" || data.stage === "voices" ? 0.5 : 0.25,
+      max_tokens: data.stage === "manuscript" ? 3500 : 2600,
+      messages: [
+        { role: "system", content: SYSTEM },
+        { role: "user", content: user },
+      ],
+    }),
+  });
 
-    if (!res.ok) {
-      return { ok: false as const, error: `xAI API error ${res.status}` };
-    }
+  if (!res.ok) {
+    throw new Error(`xAI API error ${res.status}`);
+  }
 
-    const body = (await res.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-    const text = body.choices?.[0]?.message?.content ?? "";
+  const body = (await res.json()) as {
+    choices?: { message?: { content?: string } }[];
+  };
+  return body.choices?.[0]?.message?.content ?? "";
+}
+
+export const getMeridianRuntime = createServerFn({ method: "GET" }).handler(async () => {
+  const { replayEnabledFromEnv: enabled, scenarioBuildPermission } = await import("./replay-key");
+  const replay = enabled(process.env, scenarioBuildPermission());
+  return { mode: replay ? ("replay" as const) : ("live" as const) };
+});
+
+export const runMeridian = createServerFn({ method: "POST" })
+  .validator((input: unknown) => validateMeridianRequest(input))
+  .handler(async ({ data }) => {
+    const { parseModelMode: modeOf, resolveModelText } = await import("./model-runtime");
+    const { replayEnabledFromEnv: enabled, scenarioBuildPermission } = await import("./replay-key");
+    const replay = enabled(process.env, scenarioBuildPermission());
+    const mode = replay ? modeOf(process.env.MERIDIAN_MODEL_MODE) : "live";
+    const replayKey = replay ? data.replayKey : undefined;
     try {
-      const parsed = extractJson(text);
-      return { ok: true as const, json: JSON.stringify(parsed) };
+      const resolved = await resolveModelText({
+        mode,
+        replayKey,
+        stage: data.stage,
+        live: async () => {
+          const apiKey = process.env.XAI_API_KEY;
+          if (!apiKey) {
+            throw new Error("AI is not available in this environment.");
+          }
+          return liveXaiCall(data, apiKey);
+        },
+      });
+      try {
+        const parsed = extractJson(resolved.text);
+        return { ok: true as const, json: JSON.stringify(parsed), modelMode: resolved.mode, replayKey: replayKey ?? null };
+      } catch (err) {
+        return {
+          ok: false as const,
+          error: err instanceof Error ? err.message : "Could not parse the model output.",
+          modelMode: resolved.mode,
+          replayKey: replayKey ?? null,
+        };
+      }
     } catch (err) {
       return {
         ok: false as const,
-        error: err instanceof Error ? err.message : "Could not parse the model output.",
+        error: err instanceof Error ? err.message : "Generation failed.",
+        modelMode: mode,
+        replayKey: replayKey ?? null,
       };
     }
   });

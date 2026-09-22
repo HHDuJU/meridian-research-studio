@@ -1,0 +1,1066 @@
+#!/usr/bin/env node
+/**
+ * Meridian scenario runner (A3 S17 / A3.3).
+ * Usage: npx tsx scripts/run-scenarios.mjs <bankDir> <outDir> [--ids sc-001] [--mode ui|store] [--base-url url]
+ */
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import { pathToFileURL, fileURLToPath } from "node:url";
+import { treeSha256 as digestSourceTree } from "./tree-digest.mjs";
+
+function usage(msg) {
+  if (msg) console.error(`error: ${msg}`);
+  console.error("usage: npx tsx scripts/run-scenarios.mjs <bankDir> <outDir> [--ids a,b] [--mode ui|store] [--base-url url]");
+  process.exit(2);
+}
+
+const ROOT = path.resolve(".");
+let ids = null;
+let mode = "store";
+let baseUrl = null;
+let bankDir = ROOT;
+let outDir = path.join(ROOT, "results");
+
+function parseArgv(argv) {
+  const positional = [];
+  ids = null;
+  mode = "store";
+  baseUrl = null;
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === "--ids") ids = (argv[++i] || "").split(",").map((s) => s.trim()).filter(Boolean);
+    else if (argv[i] === "--mode") mode = argv[++i];
+    else if (argv[i] === "--base-url") baseUrl = argv[++i];
+    else if (argv[i].startsWith("-")) usage(`unknown flag ${argv[i]}`);
+    else positional.push(argv[i]);
+  }
+  if (positional.length < 2) usage("bankDir and outDir required");
+  if (mode !== "ui" && mode !== "store") usage("mode must be ui or store");
+  bankDir = path.resolve(positional[0]);
+  outDir = path.resolve(positional[1]);
+}
+const PERSIST_KEY = "meridian-studio-v2";
+const STAGE_LABEL = {
+  problem: "Problem",
+  scan: "Scan",
+  map: "Map",
+  gaps: "Gaps",
+  hypotheses: "Hypotheses",
+  questions: "Questions",
+  design: "Design",
+  protocol: "Protocol",
+  stats: "Stats",
+  ethics: "Ethics",
+  voices: "Voices",
+  manuscript: "Manuscript",
+  audit: "Audit",
+};
+
+export function canonicalJson(value) {
+  if (value === undefined) return undefined;
+  if (value === null || typeof value !== "object") return value;
+  if (Array.isArray(value)) return value.map((v) => canonicalJson(v));
+  const out = {};
+  for (const k of Object.keys(value).sort()) {
+    const v = canonicalJson(value[k]);
+    if (v !== undefined) out[k] = v;
+  }
+  return out;
+}
+
+export function normalizeJson(value) {
+  return canonicalJson(value) ?? null;
+}
+
+export function deepEqualJson(a, b) {
+  return JSON.stringify(canonicalJson(a) ?? null) === JSON.stringify(canonicalJson(b) ?? null);
+}
+
+export function parsePersistedStudio(raw) {
+  if (!raw) return [];
+  const parsed = JSON.parse(raw);
+  if (Array.isArray(parsed?.state?.studies)) return parsed.state.studies;
+  if (Array.isArray(parsed?.studies)) return parsed.studies;
+  return [];
+}
+
+export function studyWithoutEnvelope(obj) {
+  if (!obj || typeof obj !== "object") return obj;
+  const { meta: _meta, ...rest } = obj;
+  return rest;
+}
+
+export function sourceContentChanged(beforeVal, afterVal) {
+  return JSON.stringify(canonicalJson(beforeVal) ?? null) !== JSON.stringify(canonicalJson(afterVal) ?? null);
+}
+
+export function sha256Of(buf) {
+  return crypto.createHash("sha256").update(buf).digest("hex");
+}
+
+export function collectArtifactHashes(dir, names) {
+  const artifacts = [];
+  const artifactSha256 = {};
+  for (const name of names) {
+    const p = path.join(dir, name);
+    if (!fs.existsSync(p) || !fs.statSync(p).isFile()) continue;
+    const buf = fs.readFileSync(p);
+    artifacts.push(name);
+    artifactSha256[name] = sha256Of(buf);
+  }
+  return { artifacts, artifactSha256 };
+}
+
+export function statusOfCheckpoints(checkpoints) {
+  const failed = (checkpoints ?? []).filter((c) => !c.ok);
+  if (!checkpoints || checkpoints.length === 0) return "INCOMPLETE";
+  if (failed.some((c) => /could not start|server/i.test(c.reason || ""))) return "BLOCKED";
+  return failed.length ? "FAIL" : "PASS";
+}
+
+export function exitCodeForStatuses(statuses) {
+  return statuses.some((s) => s !== "PASS") ? 1 : 0;
+}
+
+function readPersistedById(studyId) {
+  try {
+    const raw = globalThis.localStorage?.getItem(PERSIST_KEY);
+    if (!raw) return { raw: null, study: null, studies: [] };
+    const studies = parsePersistedStudio(raw);
+    const study = studyId ? (studies.find((s) => s.id === studyId) ?? null) : (studies.at(-1) ?? null);
+    return { raw, study, studies };
+  } catch {
+    return { raw: null, study: null, studies: [] };
+  }
+}
+
+const WORK_ORDER_PATHS = [
+  [/(^|\.)selectionStatus$/, "S11"],
+  [/(^|\.)actionStatus$/, "S11"],
+  [/(^|\.)recommendedFamily$/, "S11"],
+  [/(^|\.)priorFamily$/, "S11"],
+  [/^design\.routing(\.|$)/, "S11"],
+  [/^design\.basis$/, "S11"],
+  [/(^|\.)resourcesAssumed(\[|\.|$)/, "D10"],
+  [/(^|\.)legacyScores(\.|$)/, "M6"],
+  [/^scan\.comparisons(\[|\.|$)/, "S9"],
+];
+
+const IMPLEMENTED = new Set(["D1", "D7", "D20", "D20(a)", "D21", "L1", "P1", "P2", "R1", "S3", "S16", "S17", "F4"]);
+
+function capabilityOf(storePath) {
+  for (const [re, entry] of WORK_ORDER_PATHS) {
+    if (re.test(storePath)) return entry;
+  }
+  return null;
+}
+
+function getPath(obj, p) {
+  const parts = p.replace(/\[(-?\d+)\]/g, ".$1").split(".").filter(Boolean);
+  let cur = obj;
+  for (const part of parts) {
+    if (cur == null) return undefined;
+    if (/^-?\d+$/.test(part)) {
+      const i = Number(part);
+      if (!Array.isArray(cur)) return undefined;
+      cur = cur[i < 0 ? cur.length + i : i];
+    } else cur = cur[part];
+  }
+  return cur;
+}
+
+function matchPred(observed, expected) {
+  if (expected && typeof expected === "object" && !Array.isArray(expected)) {
+    if ("length" in expected && !("min" in expected) && !("max" in expected)) {
+      const n = Array.isArray(observed) ? observed.length : observed == null ? 0 : String(observed).length;
+      return n === expected.length;
+    }
+    if ("includes" in expected && !("path" in expected)) return String(observed ?? "").includes(expected.includes);
+    if ("isNull" in expected) return expected.isNull ? observed === null : observed !== null;
+    if ("absent" in expected) return expected.absent ? observed === undefined : observed !== undefined;
+    if ("oneOf" in expected) return expected.oneOf.some((v) => matchPred(observed, v));
+    if ("min" in expected || "max" in expected) {
+      const n = typeof observed === "number" ? observed : Array.isArray(observed) ? observed.length : Number(observed);
+      if (Number.isNaN(n)) return false;
+      if ("min" in expected && n < expected.min) return false;
+      if ("max" in expected && n > expected.max) return false;
+      return true;
+    }
+    if ("notEquals" in expected) return JSON.stringify(canonicalJson(observed)) !== JSON.stringify(canonicalJson(expected.notEquals));
+    if ("matches" in expected) return new RegExp(expected.matches).test(String(observed ?? ""));
+  }
+  return JSON.stringify(canonicalJson(observed) ?? null) === JSON.stringify(canonicalJson(expected) ?? null);
+}
+
+export function evalIssues(expectIssues, lastIssues, step, n, action, checkpoints) {
+  const issues = Array.isArray(lastIssues) ? lastIssues : [];
+  let emitted = false;
+  if (expectIssues.count !== undefined) {
+    emitted = true;
+    const observed = issues.length;
+    const ok = matchPred(observed, expectIssues.count);
+    checkpoints.push(checkpoint({
+      step: n,
+      action,
+      check: "issues.count",
+      expected: expectIssues.count,
+      observed,
+      ok,
+      reason: ok ? "" : `observed ${observed}`,
+    }));
+  }
+  if (Array.isArray(expectIssues.includes)) {
+    for (const want of expectIssues.includes) {
+      emitted = true;
+      const ok = issues.some((i) => i.path === want.path && i.code === want.code);
+      checkpoints.push(checkpoint({
+        step: n,
+        action,
+        check: `issues.${want.path}`,
+        expected: want,
+        observed: issues,
+        ok,
+        reason: ok ? "" : "issue not recorded",
+      }));
+    }
+  }
+  if (!emitted) {
+    checkpoints.push(checkpoint({
+      step: n,
+      action,
+      check: "issues",
+      expected: expectIssues,
+      observed: issues,
+      ok: false,
+      reason: "issues expect has no evaluable assertion",
+    }));
+  }
+}
+
+export function evalError(expectError, lastError, screenText, step, n, action, checkpoints) {
+  const hay = `${lastError ?? ""}\n${screenText ?? ""}`;
+  if (expectError.shown !== undefined) {
+    const shown = /failed|rejected|error|not applied|did not return JSON|nothing applied/i.test(hay) && hay.trim().length > 0;
+    const ok = expectError.shown ? shown : !shown;
+    checkpoints.push(checkpoint({
+      step: n,
+      action,
+      check: "error.shown",
+      expected: expectError.shown,
+      observed: shown,
+      ok,
+      reason: ok ? "" : "error not visible",
+    }));
+  }
+  if (expectError.includes) {
+    const ok = hay.includes(expectError.includes);
+    checkpoints.push(checkpoint({
+      step: n,
+      action,
+      check: "error.includes",
+      expected: expectError.includes,
+      observed: hay.slice(0, 240),
+      ok,
+      reason: ok ? "" : `required refusal text omitted: ${expectError.includes}`,
+    }));
+  }
+  if (expectError.shown === undefined && !expectError.includes) {
+    checkpoints.push(checkpoint({
+      step: n,
+      action,
+      check: "error",
+      expected: expectError,
+      observed: hay.slice(0, 240),
+      ok: false,
+      reason: "error expect has no evaluable assertion",
+    }));
+  }
+}
+
+function evalExpect({ study, persistedStudy, step, n, action, checkpoints, lastIssues, lastError, screenText, exportJson, requires }) {
+  if (step.expect?.store) evalStoreExpect(study, step.expect.store, requires || [], n, action, checkpoints, lastIssues);
+  if (step.expect?.stage) {
+    for (const [st, want] of Object.entries(step.expect.stage)) {
+      const observed = study ? stageState(study, st) : "missing";
+      checkpoints.push(checkpoint({ step: n, action, check: `stage.${st}`, expected: want, observed, ok: observed === want, reason: observed === want ? "" : `observed ${observed}` }));
+    }
+  }
+  if (step.expect?.issues) evalIssues(step.expect.issues, lastIssues, step, n, action, checkpoints);
+  if (step.expect?.error) evalError(step.expect.error, lastError, screenText, step, n, action, checkpoints);
+  if (step.expect?.screen?.includes) {
+    const body = screenText ?? "";
+    for (const t of step.expect.screen.includes) {
+      const ok = body.includes(t);
+      checkpoints.push(checkpoint({ step: n, action, check: "screen.includes", expected: t, observed: ok ? t : body.slice(0, 200), ok, reason: ok ? "" : "text not visible" }));
+    }
+  }
+  if (step.expect?.screen?.excludes) {
+    const body = screenText ?? "";
+    for (const t of step.expect.screen.excludes) {
+      const ok = !body.includes(t);
+      checkpoints.push(checkpoint({ step: n, action, check: "screen.excludes", expected: t, observed: ok, ok, reason: ok ? "" : "text was visible" }));
+    }
+  }
+  if (step.expect?.export) {
+    if (!exportJson) {
+      checkpoints.push(checkpoint({ step: n, action, check: "export", expected: "file", observed: null, ok: false, reason: "export.json not written" }));
+    } else {
+      const parsed = JSON.parse(exportJson);
+      const rest = studyWithoutEnvelope(parsed);
+      if (step.expect.export.equalsStore) {
+        const saved = persistedStudy ?? null;
+        const ok = saved != null && deepEqualJson(rest, studyWithoutEnvelope(saved));
+        checkpoints.push(checkpoint({
+          step: n,
+          action,
+          check: "export.equalsStore",
+          expected: true,
+          observed: ok,
+          ok,
+          reason: ok ? "" : saved == null ? "no persisted study to compare" : "export JSON does not deep-equal persisted study (key order ignored only)",
+        }));
+      }
+      if (step.expect.export.path) evalStoreExpect(parsed, step.expect.export.path, requires || [], n, { ...step, do: "export" }, checkpoints, lastIssues);
+    }
+  }
+}
+
+function polyfillStorage() {
+  if (globalThis.localStorage) return;
+  const mem = new Map();
+  globalThis.localStorage = {
+    getItem: (k) => (mem.has(k) ? mem.get(k) : null),
+    setItem: (k, v) => mem.set(String(k), String(v)),
+    removeItem: (k) => mem.delete(k),
+    clear: () => mem.clear(),
+    key: (i) => [...mem.keys()][i] ?? null,
+    get length() {
+      return mem.size;
+    },
+  };
+  if (!globalThis.window) globalThis.window = globalThis;
+}
+
+async function loadLib() {
+  polyfillStorage();
+  const store = await import(pathToFileURL(path.join(ROOT, "src/lib/store.ts")).href);
+  const defaults = await import(pathToFileURL(path.join(ROOT, "src/lib/defaults.ts")).href);
+  const stages = await import(pathToFileURL(path.join(ROOT, "src/lib/stages.ts")).href);
+  const decision = await import(pathToFileURL(path.join(ROOT, "src/lib/evidence/decision.ts")).href);
+  const apply = await import(pathToFileURL(path.join(ROOT, "src/lib/apply-ai.ts")).href);
+  const exp = await import(pathToFileURL(path.join(ROOT, "src/lib/export.ts")).href);
+  const retrieve = await import(pathToFileURL(path.join(ROOT, "src/lib/evidence/retrieve.ts")).href);
+  const fixture = await import(pathToFileURL(path.join(ROOT, "src/lib/evidence/fixture-adapter.ts")).href);
+  const transport = await import(pathToFileURL(path.join(ROOT, "src/lib/evidence/transport.ts")).href);
+  const runtime = await import(pathToFileURL(path.join(ROOT, "src/lib/model-runtime.ts")).href);
+  return { store, defaults, stages, decision, apply, exp, runtime, retrieve, fixture, transport };
+}
+
+function listScenarios(dir) {
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".json") && f !== "INDEX.json")
+    .map((f) => path.join(dir, f));
+}
+
+function checkpoint({ step, action, check, expected, observed, ok, reason }) {
+  return { step, do: action.do, stage: action.stage, check, expected, observed, ok, reason: reason || "" };
+}
+
+function stageState(study, stageId) {
+  if ((study.needsReview ?? []).includes(stageId)) return "needs-review";
+  if ((study.completedStages ?? []).includes(stageId)) return "complete";
+  return "incomplete";
+}
+
+function evalStoreExpect(study, expectStore, requires, step, action, checkpoints, lastIssues) {
+  void lastIssues;
+  for (const [p, pred] of Object.entries(expectStore || {})) {
+    const observed = getPath(study, p);
+    let ok = matchPred(observed, pred);
+    let reason = "";
+    const cap = capabilityOf(p);
+    const required = cap && (requires.includes(cap) || requires.some((r) => cap.startsWith(r)));
+    if (required && !IMPLEMENTED.has(cap)) {
+      if (ok) {
+        ok = false;
+        reason = `capability absent: ${cap}`;
+      } else if (observed === undefined) {
+        reason = `capability absent: ${cap}`;
+      } else {
+        reason = `observed ${JSON.stringify(observed)}`;
+      }
+    } else if (!ok) {
+      if (observed === undefined && cap && !IMPLEMENTED.has(cap)) reason = `capability absent: ${cap}`;
+      else reason = `observed ${JSON.stringify(observed)}`;
+    }
+    checkpoints.push(checkpoint({ step, action, check: `store.${p}`, expected: pred, observed, ok, reason }));
+  }
+}
+
+function resetPersistedStudio(lib) {
+  try {
+    if (globalThis.localStorage) {
+      const keys = [];
+      for (let i = 0; i < globalThis.localStorage.length; i++) {
+        const k = globalThis.localStorage.key(i);
+        if (k && (k === PERSIST_KEY || k.startsWith(`${PERSIST_KEY}.`))) keys.push(k);
+      }
+      for (const k of keys) globalThis.localStorage.removeItem(k);
+    }
+  } catch {
+    /* storage may refuse */
+  }
+  if (lib.store?.useStudio) {
+    lib.store.useStudio.setState({ studies: [], hydrated: true, backupFailure: null });
+  }
+}
+
+async function waitStoreHydrated(lib) {
+  const api = lib.store?.useStudio?.persist;
+  if (!api) return;
+  if (api.hasHydrated?.()) return;
+  await new Promise((resolve) => {
+    const unsub = api.onFinishHydration?.(() => {
+      unsub?.();
+      resolve();
+    });
+    if (api.hasHydrated?.()) {
+      unsub?.();
+      resolve();
+    }
+    setTimeout(resolve, 1000);
+  });
+}
+
+async function runStore(scenario, lib) {
+  const { store, stages, decision, exp } = lib;
+  await waitStoreHydrated(lib);
+  resetPersistedStudio(lib);
+  const S = () => store.useStudio.getState();
+  const fam = stages.guessFamily(scenario.inputs.need);
+  const created = S().create({
+    family: fam,
+    setting: "Unspecified setting",
+    rawNeed: scenario.inputs.need,
+    replayKey: scenario.id,
+    constraints: scenario.inputs.constraints || "",
+  });
+  let studyId = created.id;
+  let lastIssues = [];
+  let lastError = "";
+  let exportJson = null;
+  const checkpoints = [];
+  const artifacts = [];
+  const actionRoutes = [];
+
+  function study() {
+    return S().studies.find((s) => s.id === studyId);
+  }
+
+  for (let i = 0; i < scenario.steps.length; i++) {
+    const step = scenario.steps[i];
+    const n = i + 1;
+    try {
+      if (step.do === "create") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+      } else if (step.do === "retrieve") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        const adapter = lib.fixture.fixtureAdapter();
+        const url = lib.fixture.fixtureRecordingUrl(step.query || "");
+        const raw = step.response ?? {};
+        const body = typeof raw.body === "string" ? raw.body : JSON.stringify(raw);
+        const status = typeof raw.status === "number" ? raw.status : 200;
+        const transport = lib.transport.recordedTransport({ [url]: { status, body } });
+        const result = await lib.retrieve.runSearch(adapter, step.query || "", transport);
+        S().applyRetrieval(studyId, result);
+      } else if (step.do === "confirm-empty-search") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        S().confirmEmptySearch(studyId);
+        S().markComplete(studyId, "scan");
+      } else if (step.do === "illuminate") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        let payload = step.response ?? null;
+        let parseError = "";
+        if (payload == null && step.responseText) {
+          try {
+            payload = JSON.parse(step.responseText);
+          } catch {
+            parseError = "The model did not return JSON.";
+            payload = null;
+          }
+        }
+        if (parseError) {
+          S().recordIlluminateFailure(studyId, step.stage, parseError);
+          lastError = parseError;
+          lastIssues = [];
+        } else {
+          const s = study();
+          const rev = decision.studyRevision(s);
+          const result = S().illuminateApply(studyId, step.stage, payload, rev);
+          lastIssues = result.issues ?? [];
+          lastError = result.ok ? "" : (result.reason || result.summary || "");
+        }
+      } else if (step.do === "accept-decision") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        S().acceptDecision(studyId, step.which ?? "latest");
+      } else if (step.do === "withdraw-decision") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        S().withdrawDecision(studyId, step.which ?? "latest");
+      } else if (step.do === "mark-complete") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        S().markComplete(studyId, step.stage);
+      } else if (step.do === "set-field") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        const parts = String(step.path).split(".");
+        const stage = parts[0];
+        const rest = parts.slice(1).join(".");
+        if (["problem", "scan", "map", "gaps", "hypotheses", "questions", "design", "protocol", "stats", "ethics", "voices", "manuscript", "audit"].includes(stage) && rest) {
+          const patch = {};
+          const segs = rest.split(".");
+          let cur = patch;
+          segs.forEach((seg, idx) => {
+            if (idx === segs.length - 1) cur[seg] = step.value;
+            else {
+              cur[seg] = {};
+              cur = cur[seg];
+            }
+          });
+          S().mergeStage(studyId, stage, patch);
+        } else {
+          S().update(studyId, { [step.path]: step.value });
+        }
+      } else if (step.do === "change-source") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        const s = study();
+        const beforeItem = s.scan.items.find((it) => it.title === step.record);
+        const beforeVal = beforeItem ? beforeItem[step.field] : undefined;
+        let extraDocs = [];
+        const items = s.scan.items.map((it) => {
+          if (it.title !== step.record) return it;
+          if (step.field === "status") return { ...it, provenance: { ...it.provenance, status: step.value } };
+          if (step.field === "year") return { ...it, year: step.value };
+          if (step.field === "keyFindings") return { ...it, keyFindings: step.value };
+          if (step.field === "limitations") return { ...it, limitations: step.value };
+          if (step.field === "abstract") {
+            const text = String(step.value ?? "");
+            const sha = crypto.createHash("sha256").update(text).digest("hex");
+            const documentId = `doc-${sha.slice(0, 12)}`;
+            extraDocs.push({ id: documentId, recordId: it.id, sha256: sha, text, mediaType: "text/plain", sourceScope: "abstract" });
+            return { ...it, abstract: { documentId, sha256: sha, text } };
+          }
+          return it;
+        });
+        S().mergeStage(studyId, "scan", { items });
+        if (extraDocs.length) S().update(studyId, { documents: [...(study().documents ?? []), ...extraDocs] });
+        const afterItem = study().scan.items.find((it) => it.title === step.record);
+        const afterVal = afterItem ? afterItem[step.field] : undefined;
+        const changed = sourceContentChanged(beforeVal, afterVal);
+        checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: changed, ok: changed, reason: changed ? "" : "source content did not change; staleness not supported" }));
+      } else if (step.do === "reload") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        const raw = globalThis.localStorage?.getItem(PERSIST_KEY);
+        if (!raw) {
+          checkpoints.push(checkpoint({ step: n, action: step, check: "reload.storage", expected: "persisted bytes", observed: 0, ok: false, reason: "storage empty after writes; reload cannot roundtrip" }));
+          store.useStudio.setState({ studies: [] });
+        } else {
+          const persisted = parsePersistedStudio(raw).map((x) => lib.defaults.migrateStudy(x));
+          store.useStudio.setState({ studies: persisted, hydrated: true });
+        }
+      } else if (step.do === "reopen") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        const raw = globalThis.localStorage?.getItem(PERSIST_KEY);
+        if (!raw) {
+          checkpoints.push(checkpoint({ step: n, action: step, check: "reopen.storage", expected: "persisted bytes", observed: 0, ok: false, reason: "storage empty; reopen cannot roundtrip" }));
+        } else {
+          const persisted = parsePersistedStudio(raw).map((x) => lib.defaults.migrateStudy(x));
+          store.useStudio.setState({ studies: persisted, hydrated: true });
+          const found = persisted.find((x) => x.id === studyId);
+          if (!found) checkpoints.push(checkpoint({ step: n, action: step, check: "reopen.study", expected: studyId, observed: null, ok: false, reason: "study missing after storage reopen" }));
+        }
+      } else if (step.do === "export") {
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        const json = exp.studyToJson(study());
+        exportJson = json;
+        artifacts.push("export.json");
+      } else if (step.do === "wait") {
+        await new Promise((r) => setTimeout(r, Math.min(step.ms || 0, 5000)));
+      } else {
+        checkpoints.push(checkpoint({ step: n, action: step, check: "do", expected: "known", observed: step.do, ok: false, reason: "unknown do" }));
+      }
+    } catch (err) {
+      checkpoints.push(checkpoint({ step: n, action: step, check: "run", expected: "ok", observed: String(err), ok: false, reason: err instanceof Error ? err.message : String(err) }));
+    }
+
+    const s = study();
+    const illum = s?.lastIlluminate;
+    const persisted = readPersistedById(studyId).study;
+    evalExpect({
+      study: s,
+      persistedStudy: persisted,
+      step,
+      n,
+      action: step,
+      checkpoints,
+      lastIssues: lastIssues.length ? lastIssues : (illum?.issues ?? []),
+      lastError: lastError || illum?.error || "",
+      screenText: [lastError, illum?.error, illum?.summary, s ? JSON.stringify(s) : ""].filter(Boolean).join("\n"),
+      exportJson,
+      requires: scenario.requires || [],
+    });
+  }
+
+  const persistedFinal = readPersistedById(studyId).study;
+  return {
+    checkpoints,
+    artifacts,
+    study: persistedFinal ?? study(),
+    actionRoutes,
+    exportJson,
+    consoleErrors: [],
+    pageErrors: [],
+    files: {},
+  };
+}
+
+async function readPersistedStudies(page) {
+  const raw = await page.evaluate((key) => localStorage.getItem(key), PERSIST_KEY);
+  return parsePersistedStudio(raw);
+}
+
+async function readPersistedStudy(page, studyId, replayKey) {
+  const studies = await readPersistedStudies(page);
+  if (studyId) {
+    const hit = studies.find((s) => s.id === studyId);
+    if (hit) return hit;
+  }
+  if (replayKey) {
+    const hit = studies.find((s) => s.replayKey === replayKey);
+    if (hit) return hit;
+  }
+  return studies.at(-1) ?? null;
+}
+
+function unsupported(checkpoints, step, n, reason, actionRoutes) {
+  actionRoutes.push({ do: step.do, route: "unsupported" });
+  checkpoints.push(checkpoint({ step: n, action: step, check: "action", expected: "executed", observed: "unsupported", ok: true, reason }));
+}
+
+async function waitIlluminateIdle(page) {
+  const btn = page.locator("[data-meridian-illuminate]");
+  if (await btn.count()) {
+    await page.waitForFunction(() => {
+      const el = document.querySelector("[data-meridian-illuminate]");
+      return el && !el.hasAttribute("disabled") && !/Working/i.test(el.textContent || "");
+    }, null, { timeout: 30000 }).catch(() => undefined);
+  }
+}
+
+async function waitPersistedLastIlluminate(page, stage) {
+  await page.waitForFunction(({ key, stage: st }) => {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return false;
+      const parsed = JSON.parse(raw);
+      const studies = parsed?.state?.studies ?? parsed?.studies ?? [];
+      return studies.some((s) => s?.lastIlluminate?.stage === st);
+    } catch {
+      return false;
+    }
+  }, { key: PERSIST_KEY, stage }, { timeout: 8000 }).catch(() => undefined);
+}
+
+async function waitRetrieveIdle(page) {
+  const btn = page.locator("[data-meridian-retrieve]");
+  if (await btn.count()) {
+    await page.waitForFunction(() => {
+      const el = document.querySelector("[data-meridian-retrieve]");
+      return el && !el.hasAttribute("disabled") && !/Retrieving/i.test(el.textContent || "");
+    }, null, { timeout: 15000 }).catch(() => undefined);
+  }
+}
+
+async function clickFirstVisible(locator) {
+  const n = await locator.count();
+  for (let i = 0; i < n; i++) {
+    const el = locator.nth(i);
+    if (await el.isVisible().catch(() => false)) {
+      await el.click();
+      return true;
+    }
+  }
+  return false;
+}
+
+async function gotoStage(page, stage) {
+  const label = STAGE_LABEL[stage] || stage;
+  if (await clickFirstVisible(page.locator(`[data-meridian-stage="${stage}"]`))) return;
+  if (await clickFirstVisible(page.getByRole("button", { name: label, exact: true }))) return;
+  if (await clickFirstVisible(page.getByRole("button", { name: new RegExp(label, "i") }))) return;
+  throw new Error(`stage control not found: ${stage}`);
+}
+
+async function screenshotStep(page, files, artifacts, n, name) {
+  const file = `step-${String(n).padStart(2, "0")}-${name}.png`;
+  const buf = await page.screenshot({ fullPage: false });
+  files[file] = buf;
+  artifacts.push(file);
+}
+
+async function ensureScenarioServer(preferred) {
+  if (preferred) return { url: preferred.replace(/\/$/, ""), child: null };
+  const port = 8091;
+  const url = `http://127.0.0.1:${port}`;
+  try {
+    const r = await fetch(url, { signal: AbortSignal.timeout(1500) });
+    if (r.ok || r.status === 404) {
+      const probe = await fetch(`${url}/__scenario/reset?key=probe`, { method: "POST" });
+      if (probe.status !== 404) return { url, child: null };
+    }
+  } catch {
+    /* start our own */
+  }
+  const env = {
+    ...process.env,
+    VITE_SCENARIO_MODE: "true",
+    MERIDIAN_MODEL_MODE: "replay",
+    MERIDIAN_REPLAY_DIR: path.join(ROOT, "scenarios/replay"),
+  };
+  const child = spawn("node", ["scripts/with-app-env.mjs", "vite", "dev", "--host", "127.0.0.1", "--port", String(port), "--strictPort"], {
+    cwd: ROOT,
+    env,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  let ready = false;
+  const onData = (buf) => {
+    const s = buf.toString();
+    if (/ready in/i.test(s) || /Local:/i.test(s)) ready = true;
+  };
+  child.stdout.on("data", onData);
+  child.stderr.on("data", onData);
+  const start = Date.now();
+  while (!ready && Date.now() - start < 25000) {
+    await new Promise((r) => setTimeout(r, 300));
+    try {
+      const r = await fetch(url, { signal: AbortSignal.timeout(800) });
+      if (r.status) {
+        ready = true;
+        break;
+      }
+    } catch {
+      /* wait */
+    }
+  }
+  if (!ready) {
+    child.kill();
+    throw new Error("could not start scenario server on 8091");
+  }
+  return { url, child };
+}
+
+async function runUi(scenario, lib, url) {
+  void lib;
+  const { chromium } = await import("playwright");
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({ acceptDownloads: true, viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  const checkpoints = [];
+  const artifacts = [];
+  const actionRoutes = [];
+  const consoleErrors = [];
+  const pageErrors = [];
+  const files = {};
+  let studyId = null;
+  let exportJson = null;
+  page.on("console", (msg) => {
+    if (msg.type() === "error") consoleErrors.push(msg.text());
+  });
+  page.on("pageerror", (err) => {
+    pageErrors.push(err instanceof Error ? err.message : String(err));
+  });
+  try {
+    await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
+    await page.evaluate((key) => {
+      const drop = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && (k === key || k.startsWith(`${key}.`))) drop.push(k);
+      }
+      for (const k of drop) localStorage.removeItem(k);
+    }, PERSIST_KEY);
+    await page.reload({ waitUntil: "networkidle" });
+    for (let i = 0; i < scenario.steps.length; i++) {
+      const step = scenario.steps[i];
+      const n = i + 1;
+      const consequential = ["create", "illuminate", "retrieve", "confirm-empty-search", "accept-decision", "withdraw-decision", "change-source", "reload", "reopen", "export", "set-field", "mark-complete"].includes(step.do);
+      try {
+        if (step.do === "create") {
+          actionRoutes.push({ do: step.do, route: "ui" });
+          const needBox = page.getByPlaceholder(/Adults with refractory neuropathic pain/i).or(page.locator("textarea").first());
+          await needBox.fill(scenario.inputs.need);
+          if (scenario.inputs.constraints) {
+            const boxes = page.locator("textarea");
+            if ((await boxes.count()) > 1) await boxes.nth(1).fill(scenario.inputs.constraints);
+          }
+          const key = page.getByPlaceholder("sc-000-level1");
+          if ((await key.count()) === 0) throw new Error("scenario-key field not on screen");
+          await key.fill(scenario.id);
+          await page.getByRole("button", { name: /Begin a study/i }).click();
+          await page.waitForURL(/\/studio\//, { timeout: 15000 });
+          await page.locator("[data-meridian-illuminate]").waitFor({ timeout: 15000 });
+          await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 8000 }).catch(() => undefined);
+          const s = await readPersistedStudy(page, null, scenario.id);
+          studyId = s?.id ?? null;
+        } else if (step.do === "illuminate") {
+          actionRoutes.push({ do: step.do, route: "ui" });
+          await gotoStage(page, step.stage);
+          const btn = page.getByRole("button", { name: /Illuminate/i }).or(page.locator("[data-meridian-illuminate]")).first();
+          if ((await btn.count()) === 0) throw new Error("Illuminate control not on screen");
+          await btn.click();
+          await waitIlluminateIdle(page);
+          await waitPersistedLastIlluminate(page, step.stage);
+        } else if (step.do === "retrieve") {
+          await gotoStage(page, "scan");
+          const q = page.getByLabel(/Search query/i);
+          if ((await q.count()) && step.query) {
+            await q.fill(step.query);
+            await page.waitForTimeout(150);
+          }
+          const btn = page.locator("[data-meridian-retrieve]");
+          if ((await btn.count()) === 0) {
+            unsupported(checkpoints, step, n, "Run recorded search control not on screen", actionRoutes);
+          } else {
+            actionRoutes.push({ do: step.do, route: "ui" });
+            await btn.click();
+            await waitRetrieveIdle(page);
+            await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 8000 }).catch(() => undefined);
+          }
+        } else if (step.do === "confirm-empty-search") {
+          await gotoStage(page, "scan");
+          const btn = page.getByRole("button", { name: /I confirm the search was run/i });
+          if ((await btn.count()) === 0) {
+            unsupported(checkpoints, step, n, "empty-search confirmation control not on screen", actionRoutes);
+          } else {
+            actionRoutes.push({ do: step.do, route: "ui" });
+            await btn.click();
+          }
+        } else if (step.do === "accept-decision") {
+          await gotoStage(page, "design");
+          const btn = page.getByRole("button", { name: /^Accept$/ });
+          if ((await btn.count()) === 0) {
+            unsupported(checkpoints, step, n, "Accept control not on screen", actionRoutes);
+          } else {
+            actionRoutes.push({ do: step.do, route: "ui" });
+            await btn.first().click();
+          }
+        } else if (step.do === "withdraw-decision") {
+          await gotoStage(page, "design");
+          const btn = page.getByRole("button", { name: /^Withdraw$/ });
+          if ((await btn.count()) === 0) {
+            unsupported(checkpoints, step, n, "Withdraw control not on screen", actionRoutes);
+          } else {
+            actionRoutes.push({ do: step.do, route: "ui" });
+            await btn.first().click();
+          }
+        } else if (step.do === "export") {
+          actionRoutes.push({ do: step.do, route: "ui" });
+          const downloads = [];
+          page.on("download", (d) => downloads.push(d));
+          const wait = page.waitForEvent("download", { timeout: 10000 });
+          await page.getByRole("button", { name: /Export JSON/i }).click();
+          let download = null;
+          try {
+            download = await wait;
+          } catch (err) {
+            checkpoints.push(checkpoint({ step: n, action: step, check: "export.download", expected: "file", observed: String(err), ok: false, reason: "no download event" }));
+          }
+          const count = downloads.length + (download && !downloads.includes(download) ? 1 : 0);
+          const unique = new Set(downloads.map((d) => d)).size || (download ? 1 : 0);
+          checkpoints.push(checkpoint({ step: n, action: step, check: "export.downloadCount", expected: 1, observed: unique || count, ok: (unique || count) === 1, reason: (unique || count) === 1 ? "" : `D22 expected 1 download, observed ${unique || count}` }));
+          if (download) {
+            const tmp = await download.path();
+            if (tmp) exportJson = fs.readFileSync(tmp, "utf8");
+          }
+        } else if (step.do === "reload") {
+          actionRoutes.push({ do: step.do, route: "ui" });
+          await page.reload({ waitUntil: "networkidle" });
+          await page.evaluate(() => new Promise((r) => setTimeout(r, 50)));
+        } else if (step.do === "reopen") {
+          actionRoutes.push({ do: step.do, route: "ui" });
+          const s = await readPersistedStudy(page, studyId, scenario.id);
+          const title = s?.title || scenario.inputs.need.slice(0, 40);
+          await page.getByRole("link", { name: /All studies/i }).click();
+          await page.waitForURL(/\/$/, { timeout: 10000 }).catch(() => page.goto(url));
+          await page.getByRole("heading", { name: title }).first().click();
+          await page.waitForURL(/\/studio\//, { timeout: 15000 });
+        } else if (step.do === "set-field") {
+          const label = String(step.path).split(".").pop();
+          const field = page.getByLabel(new RegExp(label, "i"));
+          if ((await field.count()) === 0) {
+            unsupported(checkpoints, step, n, `no screen control for ${step.path}`, actionRoutes);
+          } else {
+            actionRoutes.push({ do: step.do, route: "ui" });
+            await field.fill(String(step.value ?? ""));
+          }
+        } else if (step.do === "change-source") {
+          unsupported(checkpoints, step, n, "no screen control for change-source (store action only)", actionRoutes);
+          checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: false, ok: false, reason: "source content did not change; UI change-source is unsupported" }));
+        } else if (step.do === "mark-complete") {
+          unsupported(checkpoints, step, n, "no dedicated mark-complete control on screen", actionRoutes);
+        } else if (step.do === "wait") {
+          actionRoutes.push({ do: step.do, route: "ui" });
+          await page.waitForTimeout(Math.min(step.ms || 0, 5000));
+        } else {
+          unsupported(checkpoints, step, n, `unknown do ${step.do}`, actionRoutes);
+        }
+      } catch (err) {
+        actionRoutes.push({ do: step.do, route: "ui" });
+        checkpoints.push(checkpoint({ step: n, action: step, check: "run", expected: "ok", observed: String(err), ok: false, reason: err instanceof Error ? err.message : String(err) }));
+      }
+
+      if (consequential) await screenshotStep(page, files, artifacts, n, step.do).catch(() => undefined);
+
+      const s = await readPersistedStudy(page, studyId, scenario.id);
+      if (s?.id) studyId = s.id;
+      const illum = s?.lastIlluminate;
+      const body = await page.locator("body").innerText().catch(() => "");
+      evalExpect({
+        study: s,
+        persistedStudy: s,
+        step,
+        n,
+        action: step,
+        checkpoints,
+        lastIssues: illum?.issues ?? [],
+        lastError: illum?.error || (illum && !illum.ok ? illum.summary : "") || "",
+        screenText: body,
+        exportJson,
+        requires: scenario.requires || [],
+      });
+    }
+  } catch (err) {
+    checkpoints.push(checkpoint({ step: 0, action: { do: "ui" }, check: "run", expected: "ok", observed: String(err), ok: false, reason: err instanceof Error ? err.message : String(err) }));
+  }
+  let study = null;
+  try {
+    study = await readPersistedStudy(page, studyId, scenario.id);
+  } catch {
+    study = null;
+  }
+  await browser.close();
+  return { checkpoints, artifacts, study, studyId, actionRoutes, exportJson, consoleErrors, pageErrors, files };
+}
+
+async function main() {
+  const files = listScenarios(bankDir).filter((f) => {
+    if (!ids) return true;
+    const id = JSON.parse(fs.readFileSync(f, "utf8")).id;
+    return ids.includes(id);
+  });
+  if (!files.length) usage("no scenarios matched");
+  const pinnedTreeSha256 = digestSourceTree(ROOT);
+  const lib = mode === "store" ? await loadLib() : { runtime: { resetReplayCounters() {} } };
+  const runId = `run-${new Date().toISOString().replace(/[:.]/g, "-")}`;
+  const runDir = path.join(outDir, runId);
+  fs.mkdirSync(runDir, { recursive: true });
+  const summaryPath = path.join(runDir, "summary.jsonl");
+  const statuses = [];
+
+  let server = { url: baseUrl || "http://127.0.0.1:8080", child: null };
+  if (mode === "ui") {
+    try {
+      server = await ensureScenarioServer(baseUrl);
+    } catch (err) {
+      console.error(err);
+      process.exit(1);
+    }
+  }
+
+  try {
+    for (const file of files) {
+      const scenario = JSON.parse(fs.readFileSync(file, "utf8"));
+      const startedAt = new Date().toISOString();
+      const resultDir = path.join(runDir, scenario.id);
+      fs.mkdirSync(resultDir, { recursive: true });
+      let run;
+      try {
+        if (mode === "ui") {
+          await fetch(`${server.url}/__scenario/reset?key=${encodeURIComponent(scenario.id)}`, { method: "POST" }).catch(() => undefined);
+          run = await runUi(scenario, lib, server.url);
+        } else {
+          if (lib.runtime?.resetReplayCounters) lib.runtime.resetReplayCounters(scenario.id);
+          run = await runStore(scenario, lib);
+        }
+      } catch (err) {
+        run = { checkpoints: [checkpoint({ step: 0, action: { do: "run" }, check: "start", expected: "ok", observed: String(err), ok: false, reason: err instanceof Error ? err.message : String(err) })], artifacts: [], study: null, actionRoutes: [], consoleErrors: [], pageErrors: [], files: {}, exportJson: null };
+      }
+
+      const pending = [];
+      if (run.exportJson) {
+        fs.writeFileSync(path.join(resultDir, "export.json"), run.exportJson.endsWith("\n") ? run.exportJson : `${run.exportJson}\n`);
+        pending.push("export.json");
+      }
+      if (run.study) {
+        fs.writeFileSync(path.join(resultDir, "store-final.json"), `${JSON.stringify(run.study, null, 2)}\n`);
+        pending.push("store-final.json");
+      }
+      for (const [name, buf] of Object.entries(run.files || {})) {
+        fs.writeFileSync(path.join(resultDir, name), buf);
+        pending.push(name);
+      }
+      for (const name of run.artifacts ?? []) {
+        if (!pending.includes(name) && fs.existsSync(path.join(resultDir, name))) pending.push(name);
+      }
+      const { artifacts, artifactSha256 } = collectArtifactHashes(resultDir, pending);
+
+      const status = statusOfCheckpoints(run.checkpoints);
+      statuses.push(status);
+      const routes = run.actionRoutes ?? [];
+      const usedStoreFallback = routes.some((r) => r.route === "store-fallback");
+      const usedUnsupported = routes.some((r) => r.route === "unsupported");
+      const capabilityAbsent = run.checkpoints.some((c) => /capability absent/i.test(c.reason || ""));
+      const executedWorkflow =
+        status === "PASS" &&
+        mode === "ui" &&
+        routes.length > 0 &&
+        !usedStoreFallback &&
+        !usedUnsupported &&
+        !capabilityAbsent;
+      const failed = run.checkpoints.filter((c) => !c.ok);
+      const result = {
+        scenarioId: scenario.id,
+        runId,
+        mode,
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        treeSha256: pinnedTreeSha256,
+        appVersion: "a33",
+        status,
+        executedWorkflow,
+        actionRoutes: routes,
+        checkpoints: run.checkpoints,
+        consoleErrors: run.consoleErrors ?? [],
+        pageErrors: run.pageErrors ?? [],
+        artifacts,
+        artifactSha256,
+      };
+      fs.writeFileSync(path.join(resultDir, "result.json"), `${JSON.stringify(result, null, 2)}\n`);
+      const line = JSON.stringify({ scenarioId: scenario.id, status, failed: failed.length, checkpoints: run.checkpoints.length, executedWorkflow, mode });
+      fs.appendFileSync(summaryPath, `${line}\n`);
+      console.log(`${scenario.id} ${mode} ${status} ${run.checkpoints.length} checks ${failed.length} fail`);
+    }
+  } finally {
+    if (server.child) server.child.kill();
+  }
+  console.log(`wrote ${runDir}`);
+  process.exitCode = exitCodeForStatuses(statuses);
+}
+
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+if (isMain) {
+  parseArgv(process.argv.slice(2));
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

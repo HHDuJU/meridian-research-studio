@@ -1,0 +1,91 @@
+{
+  "overview": "Cohort of index discharges built from existing hospital pharmacy dispensing records linked to regional admission and emergency department data, following adults aged 70 and over for 90 days after discharge.",
+  "population": "Adults aged 70 and over discharged alive from the medical wards between 1 October 2024 and 30 September 2026, first eligible discharge per patient; excluded are discharges to palliative care, stays under 24 hours and residence outside the regional catchment.",
+  "exposure": "Anticholinergic burden score at discharge from all dispensed regular medicines with the hospital's drug-weighting score (0 to 3 points per drug): exposed 3 or more, comparator 0 to 2; secondary categories 0, 1 to 2, 3 to 4 and 5 or more.",
+  "procedures": "After the information governance decision, the informatics analyst extracts discharge and dispensing records; the data custodian links them to regional admission and emergency records by health number and returns a de-identified analysis file with shifted dates. Frailty comes from discharge diagnoses with a diagnosis-based frailty score that excludes medicine-related codes; indication groups (urinary incontinence, depression, psychosis, allergy, sleep problems) come from diagnoses and medicines. Follow-up runs from discharge to the first injurious fall, death or day 90; days spent in hospital after a readmission are excluded from time at risk.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Injurious fall within 90 days",
+      "measure": "First emergency visit or admission at any of the three regional hospitals coded for a fall with injury",
+      "timing": "0 to 90 days after index discharge",
+      "why": "Falls with injury are what patients and the consultants care about and what deprescribing review would aim to prevent.",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Hip fracture within 90 days",
+      "measure": "Admission with a hip fracture code",
+      "timing": "0 to 90 days after index discharge",
+      "why": "The most serious and most reliably coded injury.",
+      "patientCentered": true
+    },
+    {
+      "id": "o3",
+      "role": "secondary",
+      "name": "Any fall-related hospital contact",
+      "measure": "Emergency visit or admission coded for a fall with or without injury",
+      "timing": "0 to 90 days after index discharge",
+      "why": "Captures falls that reach hospital without a coded injury.",
+      "patientCentered": true
+    },
+    {
+      "id": "o4",
+      "role": "process",
+      "name": "Completeness of burden scoring",
+      "measure": "Proportion of index discharges with every regular medicine mapped to the burden score",
+      "timing": "At extraction",
+      "why": "Unmapped medicines would misclassify exposure.",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "About 40 analyst hours for extraction and linkage preparation, within the stated cap; no new data collection; analysis within six months of data access approval.",
+  "biasMitigation": [
+    "Frailty measured from discharge diagnoses with medicine-related codes removed, adjusted for in all models",
+    "New-user sensitivity analysis limited to medicines started during the admission",
+    "Active-comparator sensitivity analysis for bladder antimuscarinics versus beta-3 agonists",
+    "Negative control outcome (admission for cellulitis) to detect residual confounding",
+    "30-day exposure window as a sensitivity analysis to limit misclassification"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Confounding by frailty",
+      "severity": "high",
+      "note": "The central threat and the reason the leads conflict."
+    },
+    {
+      "id": "b2",
+      "label": "Confounding by indication",
+      "severity": "high",
+      "note": "Handled by indication adjustment and the active-comparator analysis."
+    },
+    {
+      "id": "b3",
+      "label": "Exposure misclassification",
+      "severity": "watch",
+      "note": "Grows after 30 days because refills are not visible."
+    },
+    {
+      "id": "b4",
+      "label": "Outcome ascertainment outside the region",
+      "severity": "watch",
+      "note": "Falls treated outside the three hospitals are missed; the residence filter limits this."
+    }
+  ],
+  "parsimony": {
+    "score": 74,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 2,
+    "covariateCount": 12,
+    "flags": [
+      "Twelve covariates fixed before data access, about 30 events per variable",
+      "Three named sensitivity analyses and no others"
+    ],
+    "simplestPath": "One exposure contrast, one primary outcome, one pre-specified covariate set, one cause-specific Cox model."
+  },
+  "theoreticalFramework": "Target trial emulation as a planning device to define eligibility, exposure and time zero at discharge; no other framework.",
+  "summary": "Cohort from existing linked data with one primary outcome, two secondary outcomes, a process check and three pre-specified sensitivity analyses."
+}
