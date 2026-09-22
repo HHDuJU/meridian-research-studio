@@ -482,6 +482,7 @@ async function runStore(scenario, lib) {
     rawNeed: scenario.inputs.need,
     replayKey: scenario.id,
     constraints: scenario.inputs.constraints || "",
+    localFacts: Array.isArray(scenario.inputs.localFacts) ? scenario.inputs.localFacts.filter((f) => typeof f === "string") : [],
   });
   let studyId = created.id;
   let lastIssues = [];
@@ -838,6 +839,15 @@ async function runUi(scenario, lib, url) {
           if (scenario.inputs.constraints) {
             const boxes = page.locator("textarea");
             if ((await boxes.count()) > 1) await boxes.nth(1).fill(scenario.inputs.constraints);
+          }
+          // Local facts the scenario's investigator can document (approvals, resources) are entered on
+          // screen, one per line, so gates can rest on them; before this field existed they were never
+          // given to the application.
+          const facts = Array.isArray(scenario.inputs.localFacts) ? scenario.inputs.localFacts.filter((f) => typeof f === "string" && f.trim()) : [];
+          if (facts.length) {
+            const factBox = page.locator("[data-meridian-local-facts-input]");
+            if ((await factBox.count()) === 0) throw new Error("local-facts field not on screen");
+            await factBox.fill(facts.join("\n"));
           }
           const key = page.getByPlaceholder("sc-000-level1");
           if ((await key.count()) === 0) throw new Error("scenario-key field not on screen");

@@ -69,14 +69,16 @@ You design research that can change practice. You are allergic to:
 Rules:
 1. Return ONLY valid JSON matching the schema for the requested stage. No markdown fences.
 2. Citations: only well-known landmark papers you are confident exist. Set verification to "landmark" for those, "ai-lead" for anything you are not sure of. Never invent a DOI. Prefer "verify" when unsure.
-3. Patient-important outcomes beat surrogate numbers. One primary outcome.
+3. Patient-important outcomes beat surrogate numbers. A comparative quantitative study prespecifies one primary outcome; a QI project names its outcome measure with process and balancing measures; qualitative work has no primary outcome and no sample-size calculation.
 4. Simplest design that answers the question. Name why a more complex design is refused.
 5. Name bias, equity (PROGRESS-Plus), feasibility, and the REB/ethics path (Canada TCPS 2 when setting is Canadian; otherwise ICH-GCP / Helsinki).
 6. Theoretical frameworks only when they earn their place (SEIPS, IHI, GRADE, IMMPACT, CFIR, COM-B, realist, Donabedian).
 7. Language: scholarly, fluent, concrete. Comparable to a good methods paper in BJA, RAPM, Anesthesiology, BMJ Qual Saf — not a grant brochure.
 8. If evidence is thin, say so. Do not fill silence with confidence.
 9. Stakeholder "quotes" must be labelled as composite/paraphrase, not real identifiable people.
-10. Always include a parsimony judgement.`;
+10. Always include a parsimony judgement.
+11. Local facts and authority: an approval, resource, budget or data agreement exists only if it appears under LOCAL FACTS or Constraints in the study context. Never write that something was "supplied by the investigator" otherwise; mark such gates "unknown".
+12. Claims about a record quote it: "passage" holds exact words copied from that record's TEXT, and every number in a claim must appear in that text. Derived or pooled numbers are "inference" claims, not "source-derived".`;
 
 export function schemaFor(stage: StageId, scanPurpose?: "appraisal" | "discovery"): string {
   switch (stage) {
@@ -203,7 +205,21 @@ function extractJson(text: string): Record<string, unknown> {
   return JSON.parse(raw.slice(start, end + 1)) as Record<string, unknown>;
 }
 
-async function liveXaiCall(data: MeridianRequest, apiKey: string): Promise<string> {
+/** Identifies the prompt a call used: system text, stage schema and the user-message template. */
+export const PROMPT_TEMPLATE_VERSION = "meridian-prompt-2026-09-22b";
+export const LIVE_MODEL = "grok-4.5";
+
+export function promptFingerprintText(stage: StageId, scanPurpose?: "appraisal" | "discovery"): string {
+  return [PROMPT_TEMPLATE_VERSION, SYSTEM, schemaFor(stage, scanPurpose)].join("\n#\n");
+}
+
+interface LiveCallResult {
+  text: string;
+  model: string | null;
+  usage?: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
+}
+
+async function liveXaiCall(data: MeridianRequest, apiKey: string): Promise<LiveCallResult> {
   const meta = STAGE_BY_ID[data.stage];
   const user = `Stage to generate: ${meta.label} (${meta.kicker})
 Hint: ${meta.hint}
@@ -217,7 +233,7 @@ ${data.instruction ? `Investigator steer: ${data.instruction}` : "No extra steer
 JSON schema:
 ${schemaFor(data.stage, data.scanPurpose)}
 
-Produce  the richest defensible content you can without inventing evidence. For scan, 6–10 items is enough. For hypotheses, 3 ranked. For questions, 1–2. One primary outcome always.`;
+Produce the richest defensible content you can without inventing evidence. For scan, 6–10 items is enough. For hypotheses, 3 ranked. For questions, 1–2. Outcomes follow rule 3.`;
 
   const base = (process.env.XAI_BASE_URL?.trim() || "https://api.x.ai/v1").replace(/\/$/, "");
   const res = await fetch(`${base}/chat/completions`, {
@@ -227,7 +243,7 @@ Produce  the richest defensible content you can without inventing evidence. For 
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "grok-4.5",
+      model: LIVE_MODEL,
       temperature: data.stage === "hypotheses" || data.stage === "voices" ? 0.5 : 0.25,
       max_tokens: data.stage === "manuscript" ? 3500 : 2600,
       messages: [
@@ -242,9 +258,17 @@ Produce  the richest defensible content you can without inventing evidence. For 
   }
 
   const body = (await res.json()) as {
+    model?: string;
     choices?: { message?: { content?: string } }[];
+    usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
   };
-  return body.choices?.[0]?.message?.content ?? "";
+  return {
+    text: body.choices?.[0]?.message?.content ?? "",
+    model: typeof body.model === "string" ? body.model : LIVE_MODEL,
+    usage: body.usage
+      ? { promptTokens: body.usage.prompt_tokens, completionTokens: body.usage.completion_tokens, totalTokens: body.usage.total_tokens }
+      : undefined,
+  };
 }
 
 export const getMeridianRuntime = createServerFn({ method: "GET" }).handler(async () => {
@@ -261,6 +285,23 @@ export const runMeridian = createServerFn({ method: "POST" })
     const replay = enabled(process.env, scenarioBuildPermission());
     const mode = replay ? modeOf(process.env.MERIDIAN_MODEL_MODE) : "live";
     const replayKey = replay ? data.replayKey : undefined;
+    const { createHash } = await import("node:crypto");
+    const sha = (t: string) => createHash("sha256").update(t, "utf8").digest("hex");
+    const started = Date.now();
+    let live: LiveCallResult | null = null;
+    // Reproducibility record returned with every reply (applied or not): which model, which prompt,
+    // which context and which exact output text.
+    const run = (outputText: string | null) => ({
+      model: mode === "live" ? live?.model ?? LIVE_MODEL : null,
+      provider: mode === "live" ? "xai" : "replay",
+      promptSha256: sha(promptFingerprintText(data.stage, data.scanPurpose)),
+      contextSha256: sha(data.compact),
+      contextChars: data.compact.length,
+      instructionSha256: data.instruction ? sha(data.instruction) : undefined,
+      outputSha256: outputText === null ? null : sha(outputText),
+      elapsedMs: Date.now() - started,
+      usage: live?.usage,
+    });
     try {
       const resolved = await resolveModelText({
         mode,
@@ -271,18 +312,20 @@ export const runMeridian = createServerFn({ method: "POST" })
           if (!apiKey) {
             throw new Error("AI is not available in this environment.");
           }
-          return liveXaiCall(data, apiKey);
+          live = await liveXaiCall(data, apiKey);
+          return live.text;
         },
       });
       try {
         const parsed = extractJson(resolved.text);
-        return { ok: true as const, json: JSON.stringify(parsed), modelMode: resolved.mode, replayKey: replayKey ?? null };
+        return { ok: true as const, json: JSON.stringify(parsed), modelMode: resolved.mode, replayKey: replayKey ?? null, run: run(resolved.text) };
       } catch (err) {
         return {
           ok: false as const,
           error: err instanceof Error ? err.message : "Could not parse the model output.",
           modelMode: resolved.mode,
           replayKey: replayKey ?? null,
+          run: run(resolved.text),
         };
       }
     } catch (err) {
@@ -291,6 +334,7 @@ export const runMeridian = createServerFn({ method: "POST" })
         error: err instanceof Error ? err.message : "Generation failed.",
         modelMode: mode,
         replayKey: replayKey ?? null,
+        run: run(null),
       };
     }
   });

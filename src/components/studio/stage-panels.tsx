@@ -16,7 +16,12 @@ import { chart } from "@/lib/chart-tokens";
 import { familyOf } from "@/lib/stages";
 import { emptySearchConfirmationValid, scanHasRetrievedRecord, scanMayComplete } from "@/lib/defaults";
 import { evaluateDecision, decisionIsSupported } from "@/lib/evidence/decision";
-import { useStudio } from "@/lib/store";
+import { claimSupport, type SupportStatus } from "@/lib/evidence/support";
+import { checkIdentities, searchLiterature } from "@/lib/evidence-server";
+import type { LiveProvider } from "@/lib/evidence/live";
+import type { LookupOutcome } from "@/lib/evidence/verify";
+import { MANUAL_SOURCE_STATUSES, useStudio } from "@/lib/store";
+import { nowIso, uid } from "@/lib/utils";
 import type { GradeLevel, StageId, Study } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import { EmptyHint, Field, GradeBadge, Panel, Prose, ScoreBar, VerifyBadge } from "./bits";
@@ -86,7 +91,57 @@ function ProblemPanel({ study }: { study: Study }) {
           />
         </div>
       </Panel>
+      <LocalFactsPanel study={study} />
     </div>
+  );
+}
+
+/** Investigator-owned facts about the setting. The only basis on which a model may call a gate met. */
+function LocalFactsPanel({ study }: { study: Study }) {
+  const facts = study.problem.localFacts ?? [];
+  const addLocalFact = useStudio((st) => st.addLocalFact);
+  const removeLocalFact = useStudio((st) => st.removeLocalFact);
+  const [draft, setDraft] = useState("");
+  return (
+    <Panel title="Local facts you can document">
+      <p className="mb-3 text-sm text-muted-foreground">
+        Approvals with their reference, protected time, budget lines, data-access agreements. Only you can add or remove these. A decision gate counts as met only when it rests on one of them or on your own confirmation.
+      </p>
+      {facts.length ? (
+        <ul className="mb-3 space-y-2" data-meridian-local-facts="">
+          {facts.map((f) => (
+            <li key={f.id} className="flex items-start justify-between gap-3 rounded-md border border-border p-2 text-sm">
+              <span>{f.text}</span>
+              <Button type="button" size="sm" variant="ghost" onClick={() => removeLocalFact(study.id, f.id)}>
+                Remove
+              </Button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mb-3 text-sm text-muted-foreground">None entered.</p>
+      )}
+      <div className="flex gap-2">
+        <input
+          className="w-full rounded-md border border-border bg-background p-2 text-sm"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="e.g. REB file 26-311 approved 2026-08-27"
+          data-meridian-local-fact-draft=""
+        />
+        <Button
+          type="button"
+          size="sm"
+          disabled={!draft.trim()}
+          onClick={() => {
+            const r = addLocalFact(study.id, draft);
+            if (r.ok) setDraft("");
+          }}
+        >
+          Add
+        </Button>
+      </div>
+    </Panel>
   );
 }
 
@@ -129,6 +184,7 @@ function ScanPanel({ study }: { study: Study }) {
             An accepted decision is now stale; review required on Design.
           </p>
         ) : null}
+        {!SCENARIO_MODE ? <LiveSearch study={study} /> : null}
         {SCENARIO_MODE ? (
           <div className="mt-3">
             <Button
@@ -217,6 +273,21 @@ function ScanPanel({ study }: { study: Study }) {
           </div>
         </Panel>
       ) : null}
+      {s.retrievalEvents?.length ? (
+        <Panel title="Searches actually run">
+          <ul className="space-y-2 text-sm" data-meridian-searches="">
+            {s.retrievalEvents.map((e) => (
+              <li key={e.id} className="rounded-md border border-border p-2">
+                <span className="font-medium">{e.provider}</span> · "{e.query}" · {e.status}
+                {e.resultCount !== null ? ` · ${e.resultCount} hits` : ""} · {e.recordIds.length} records kept
+                {e.performedBy !== "app" ? ` · by ${e.performedBy}` : ""}
+                {e.note ? <span className="block text-xs text-muted-foreground">{e.note}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      ) : null}
+      {s.claims?.length ? <ClaimLedger study={study} /> : null}
       <Panel title="Synthesis">
         {s.synthesis ? (
           <Field label="Reading of the body of evidence" value={s.synthesis} rows={7} onChange={(v) => merge(study.id, "scan", { synthesis: v })} />
@@ -281,16 +352,22 @@ function ScanPanel({ study }: { study: Study }) {
                   defaultValue={item.provenance?.status}
                   onChange={(e) => {
                     if (e.target.value !== item.provenance?.status) {
-                      useStudio.getState().changeSource(study.id, { id: item.id }, "status", e.target.value);
+                      const r = useStudio.getState().changeSource(study.id, { id: item.id }, "status", e.target.value);
+                      if (!r.ok) toast.warning(r.reason ?? "Status change refused");
                     }
                   }}
                 >
-                  <option value="unverified">unverified</option>
-                  <option value="retrieved">retrieved</option>
-                  <option value="verified">verified</option>
-                  <option value="mismatch">mismatch</option>
-                  <option value="check-failed">check-failed</option>
-                  <option value="access-blocked">access-blocked</option>
+                  {/* "retrieved" and "verified" come only from a real search or a registry check. */}
+                  {(MANUAL_SOURCE_STATUSES as readonly string[]).includes(item.provenance?.status ?? "unverified") ? null : (
+                    <option value={item.provenance?.status} disabled>
+                      {item.provenance?.status} (set by search or registry check)
+                    </option>
+                  )}
+                  {MANUAL_SOURCE_STATUSES.map((st) => (
+                    <option key={st} value={st}>
+                      {st}
+                    </option>
+                  ))}
                 </select>
               </label>
               <label className="block text-xs sm:col-span-2">
@@ -518,6 +595,7 @@ function DesignPanel({ study }: { study: Study }) {
                 {ev.blockers.length ? (
                   <p className="mt-1 text-xs text-muted-foreground">{ev.blockers.join("; ")}</p>
                 ) : null}
+                {dec.gates.length ? <GateList study={study} decisionIndex={idx} /> : null}
                 {(dec.selectionStatus ?? dec.status) === "proposed" ? (
                   <div className="mt-2 flex gap-2">
                     <Button
@@ -853,5 +931,238 @@ function AuditPanel({ study }: { study: Study }) {
         )}
       </Panel>
     </div>
+  );
+}
+
+
+const SUPPORT_LABEL: Record<SupportStatus, string> = {
+  supported: "Quoted passage found in the source",
+  "close-paraphrase": "Close paraphrase of the source",
+  "no-passage": "No passage quoted; numbers found in the source",
+  "no-source-text": "Not checkable: no stored text for the source",
+  "passage-not-found": "Passage not in the source text",
+  "numbers-not-in-source": "Number not in the source text",
+  "not-source-derived": "",
+};
+
+/** The claim ledger with a deterministic check of each source-derived claim against stored text. */
+function ClaimLedger({ study }: { study: Study }) {
+  const claims = study.scan.claims ?? [];
+  const byId = new Map(study.scan.items.map((i) => [i.id, i]));
+  const checks = claims.map((c) => ({ c, sup: claimSupport(c, study) }));
+  const blocked = checks.filter((x) => x.sup.blocking).length;
+  return (
+    <Panel title="Claim ledger">
+      <p className="mb-3 text-sm text-muted-foreground" data-meridian-claim-summary="">
+        {claims.length} claims · {checks.filter((x) => x.sup.status === "supported" || x.sup.status === "close-paraphrase" || x.sup.status === "no-passage").length} checked against source text ·{" "}
+        {blocked} not supported by the cited text{(study.scan.supersededClaims?.length ?? 0) ? ` · ${study.scan.supersededClaims!.length} superseded kept` : ""}
+      </p>
+      <ul className="space-y-3">
+        {checks.map(({ c, sup }) => (
+          <li key={c.id} data-meridian-claim={c.id} data-support={sup.status} className="rounded-lg border border-border p-3">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+              {c.id} · {c.kind} · {c.uncertainty} uncertainty · {c.origin ?? "unknown"}
+            </p>
+            <p className="mt-1 text-sm leading-relaxed">{c.text}</p>
+            {c.passage ? <p className="mt-1 text-xs italic text-muted-foreground">"{c.passage}"{c.location ? ` (${c.location})` : ""}</p> : null}
+            <p className="mt-1 text-xs text-muted-foreground">
+              Sources: {c.sourceIds.map((id) => byId.get(id)?.title ?? id).join("; ") || "none"}
+            </p>
+            {sup.status !== "not-source-derived" ? (
+              <p className={`mt-1 text-xs ${sup.blocking ? "text-amber-700" : "text-muted-foreground"}`} data-meridian-claim-support="">
+                {SUPPORT_LABEL[sup.status]}
+                {sup.missingNumbers.length ? `: ${sup.missingNumbers.join(", ")}` : ""}
+              </p>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    </Panel>
+  );
+}
+
+const LIVE_LABEL: Record<LiveProvider, string> = { pubmed: "PubMed", openalex: "OpenAlex", clinicaltrials: "ClinicalTrials.gov" };
+
+/** Production literature search and identity checks (server functions; live network on the app host). */
+function LiveSearch({ study }: { study: Study }) {
+  const applyRetrieval = useStudio((st) => st.applyRetrieval);
+  const applyIdentityChecks = useStudio((st) => st.applyIdentityChecks);
+  const recordEvidenceRun = useStudio((st) => st.recordEvidenceRun);
+  const [sources, setSources] = useState<Record<LiveProvider, boolean>>({ pubmed: true, openalex: true, clinicaltrials: true });
+  const [busy, setBusy] = useState<string | null>(null);
+  const [last, setLast] = useState<string>("");
+  const query = (study.scan.query ?? "").trim();
+  const dois = [
+    ...new Set(
+      study.scan.items
+        .filter((i) => i.provenance?.status !== "verified" && i.provenance?.status !== "mismatch")
+        .map((i) => i.doi ?? i.provenance?.identifiers?.doi)
+        .filter((d): d is string => !!d),
+    ),
+  ];
+
+  async function search() {
+    const chosen = (Object.keys(sources) as LiveProvider[]).filter((p) => sources[p]);
+    if (!query) {
+      toast.warning("Enter a search query first (Illuminate can suggest one).");
+      return;
+    }
+    const lines: string[] = [];
+    try {
+      for (const provider of chosen) {
+        setBusy(`Searching ${LIVE_LABEL[provider]}`);
+        const started = Date.now();
+        const res = await searchLiterature({ data: { provider, query, max: 20 } });
+        if (!res || !res.ok) {
+          const error = res && "error" in res ? String(res.error) : "search failed";
+          lines.push(`${LIVE_LABEL[provider]}: refused (${error})`);
+          recordEvidenceRun(study.id, { id: uid("erun"), at: nowIso(), kind: "search", provider, query, requests: [], status: "error", records: 0, elapsedMs: Date.now() - started, note: error });
+          continue;
+        }
+        const data = JSON.parse(res.json) as {
+          event: Study["scan"]["retrievalEvents"][number];
+          items: Study["scan"]["items"];
+          documents: NonNullable<Study["documents"]>;
+          requests: string[];
+        };
+        applyRetrieval(study.id, { event: data.event, items: data.items, documents: data.documents });
+        recordEvidenceRun(study.id, {
+          id: uid("erun"),
+          at: nowIso(),
+          kind: "search",
+          provider,
+          query,
+          requests: data.requests,
+          status: data.event.status,
+          records: data.items.length,
+          elapsedMs: typeof res.elapsedMs === "number" ? res.elapsedMs : Date.now() - started,
+          note: data.event.note,
+        });
+        lines.push(`${LIVE_LABEL[provider]}: ${data.event.status}, ${data.items.length} records${data.event.resultCount !== null ? ` of ${data.event.resultCount}` : ""}`);
+      }
+    } finally {
+      setBusy(null);
+      setLast(lines.join(" · "));
+      if (lines.length) toast.message("Literature search finished", { description: lines.join(" · ") });
+    }
+  }
+
+  async function checkIds() {
+    if (!dois.length) return;
+    setBusy("Checking identities");
+    const started = Date.now();
+    try {
+      const res = await checkIdentities({ data: { dois: dois.slice(0, 100) } });
+      if (!res || !res.ok) {
+        const error = res && "error" in res ? String(res.error) : "identity check failed";
+        toast.error(error);
+        recordEvidenceRun(study.id, { id: uid("erun"), at: nowIso(), kind: "identity-check", provider: "crossref", requests: [], status: "error", records: 0, elapsedMs: Date.now() - started, note: error });
+        return;
+      }
+      const data = JSON.parse(res.json) as { provider: "crossref"; chunks: { requested: string[]; outcome: LookupOutcome }[]; requests: string[] };
+      const summary = applyIdentityChecks(study.id, data.provider, data.chunks);
+      const failed = data.chunks.filter((c) => c.outcome.status !== "ok");
+      recordEvidenceRun(study.id, {
+        id: uid("erun"),
+        at: nowIso(),
+        kind: "identity-check",
+        provider: data.provider,
+        requests: data.requests,
+        status: failed.length === 0 ? "ok" : failed.length === data.chunks.length ? failed[0].outcome.status === "blocked" ? "blocked" : "error" : "partial",
+        records: summary.checked,
+        elapsedMs: Date.now() - started,
+        note: `${summary.verified} verified, ${summary.mismatch} mismatch, ${summary.notFound} not found, ${summary.unresolved} unresolved, ${summary.failed} failed`,
+      });
+      const line = `Crossref: ${summary.verified} verified, ${summary.mismatch} mismatch, ${summary.notFound} not found, ${summary.unresolved} unresolved, ${summary.failed} failed`;
+      setLast(line);
+      toast.message("Identity check finished", { description: line });
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  return (
+    <div className="mt-4 rounded-lg border border-border p-3" data-meridian-live-search="">
+      <p className="text-sm font-medium">Search the literature</p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Runs the query above against the sources you tick. Every record keeps where it came from; its abstract is stored as retrieved and never rewritten.
+      </p>
+      <div className="mt-2 flex flex-wrap gap-3 text-sm">
+        {(Object.keys(LIVE_LABEL) as LiveProvider[]).map((p) => (
+          <label key={p} className="flex items-center gap-1.5">
+            <input type="checkbox" checked={sources[p]} onChange={(e) => setSources({ ...sources, [p]: e.target.checked })} />
+            {LIVE_LABEL[p]}
+          </label>
+        ))}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Button type="button" size="sm" variant="secondary" disabled={!!busy || !query} onClick={() => void search()} data-meridian-search-live="">
+          {busy?.startsWith("Searching") ? busy : "Search"}
+        </Button>
+        <Button type="button" size="sm" variant="outline" disabled={!!busy || !dois.length} onClick={() => void checkIds()} data-meridian-check-identities="">
+          {busy === "Checking identities" ? busy : `Check identities (${dois.length} DOIs)`}
+        </Button>
+      </div>
+      {last ? <p className="mt-2 text-xs text-muted-foreground" data-meridian-live-result="">{last}</p> : null}
+    </div>
+  );
+}
+
+
+/** Gates of one decision. Only the investigator can mark a gate met by hand, with the evidence. */
+function GateList({ study, decisionIndex }: { study: Study; decisionIndex: number }) {
+  const setGate = useStudio((st) => st.setGate);
+  const dec = study.design.decisions[decisionIndex];
+  const [editing, setEditing] = useState<string | null>(null);
+  const [evidence, setEvidence] = useState("");
+  if (!dec) return null;
+  return (
+    <ul className="mt-2 space-y-1.5" data-meridian-gates="">
+      {dec.gates.map((g) => (
+        <li key={g.id} data-meridian-gate={g.id} data-gate-status={g.status} className="rounded-md bg-muted/40 p-2 text-xs">
+          <span className="font-medium">{g.status}</span> · {g.requirement}
+          {g.evidence ? <span className="block text-muted-foreground">Evidence: {g.evidence}{g.setBy ? ` (${g.setBy === "investigator" ? "you" : "model"})` : ""}</span> : null}
+          {g.grounding && g.setBy !== "investigator" ? <span className="block text-muted-foreground">{g.grounding}</span> : null}
+          {editing === g.id ? (
+            <span className="mt-1 flex gap-1.5">
+              <input
+                className="w-full rounded border border-border bg-background px-1.5 py-1"
+                value={evidence}
+                onChange={(e) => setEvidence(e.target.value)}
+                placeholder="Reference that shows it (approval number, memo, agreement)"
+              />
+              <Button
+                type="button"
+                size="sm"
+                disabled={!evidence.trim()}
+                onClick={() => {
+                  const r = setGate(study.id, decisionIndex, g.id, "met", evidence);
+                  if (!r.ok) toast.warning(r.reason ?? "Refused");
+                  else {
+                    setEditing(null);
+                    setEvidence("");
+                  }
+                }}
+              >
+                Save
+              </Button>
+            </span>
+          ) : (
+            <span className="mt-1 flex gap-1.5">
+              {g.status !== "met" || g.setBy !== "investigator" ? (
+                <Button type="button" size="sm" variant="outline" onClick={() => setEditing(g.id)}>
+                  I can document this
+                </Button>
+              ) : null}
+              {g.status !== "unmet" ? (
+                <Button type="button" size="sm" variant="ghost" onClick={() => setGate(study.id, decisionIndex, g.id, "unmet")}>
+                  Not in place
+                </Button>
+              ) : null}
+            </span>
+          )}
+        </li>
+      ))}
+    </ul>
   );
 }
