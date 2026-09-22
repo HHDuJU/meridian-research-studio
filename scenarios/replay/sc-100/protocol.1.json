@@ -1,0 +1,84 @@
+{
+  "overview": "Cohort of all peripheral intravenous catheters inserted on adult medical and surgical wards from 1 March 2024 to 28 February 2026, comparing the 12 months after the change to clinically indicated replacement with the 12 months before, built from existing flowsheet and infection surveillance data.",
+  "population": "Catheters inserted on adult medical and surgical wards in patients aged 18 and over; catheters inserted in the emergency department or operating theatres are excluded from the primary analysis and described separately; catheters without a removal record at discharge are counted and handled in a sensitivity analysis.",
+  "exposure": "Insertion from 1 March 2025 to 28 February 2026 (after the change) versus 1 March 2024 to 28 February 2025 (before).",
+  "procedures": "Clinical informatics extracts every eligible flowsheet record and links it to the admission episode and to the infection prevention surveillance list inside the hospital's secure environment; the analysis file carries study identifiers only. Removal reasons are mapped to failure (phlebitis, infiltration, occlusion, dislodgement) or non-failure (end of treatment, discharge, routine resite) with a coding rule fixed before extraction, because flowsheet reasons were missing for 11 percent of removals in a validation study (c6); a second nurse recodes a random 5 percent of free-text reasons. Co-interventions on the wards (staffing changes, new catheter products, education sessions) are listed by month from ward managers' records.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Catheter failure",
+      "measure": "Removal for phlebitis, infiltration, occlusion or dislodgement before the end of treatment, per catheter",
+      "timing": "From insertion to removal",
+      "why": "Failure interrupts treatment and means another insertion; it is the harm ward nurses fear from longer dwell.",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Catheters per admission",
+      "measure": "Number of peripheral catheters inserted per admission episode",
+      "timing": "Whole admission",
+      "why": "The benefit the policy was meant to bring and the one patients notice.",
+      "patientCentered": true
+    },
+    {
+      "id": "o3",
+      "role": "secondary",
+      "name": "Peripheral catheter-associated bloodstream infection",
+      "measure": "Surveillance-confirmed infections, reported as counts and per 1,000 catheter-days without a test",
+      "timing": "During dwell and 48 hours after removal",
+      "why": "The executive's concern; too rare for a comparison but must be reported.",
+      "patientCentered": true
+    },
+    {
+      "id": "o4",
+      "role": "process",
+      "name": "Documentation completeness",
+      "measure": "Proportion of catheter shifts with a documented phlebitis score, by day, night and weekend, and proportion of removals with a coded reason",
+      "timing": "Every shift during dwell; at removal",
+      "why": "The policy relies on assessment every shift, and failure can only be measured where a reason is recorded.",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "About 30 hours of clinical informatics time for extraction and linkage (request CI-2026-117); analysis by the investigator with a hospital statistician; results before June 2027.",
+  "biasMitigation": [
+    "Failure coding rule fixed before extraction, with a 5 percent recode by a second nurse",
+    "Patient-level clustering in every model",
+    "Monthly time series with 12 points on each side and co-interventions annotated",
+    "Six covariates fixed before extraction; dwell time not adjusted for because it lies on the causal path of the policy"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Secular trends and co-interventions",
+      "severity": "high",
+      "note": "Two consecutive years differ in more than the policy; the time series and co-intervention list limit but do not remove this."
+    },
+    {
+      "id": "b2",
+      "label": "Documentation differing between periods",
+      "severity": "watch",
+      "note": "Removal reasons may have been recorded more carefully after the change; the recode and missing-reason sensitivity analysis check this."
+    },
+    {
+      "id": "b3",
+      "label": "Clustering of catheters within patients",
+      "severity": "watch",
+      "note": "Handled with a patient-level frailty term (claim c4)."
+    }
+  ],
+  "parsimony": {
+    "score": 78,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 2,
+    "covariateCount": 6,
+    "flags": [
+      "Six pre-specified covariates",
+      "Bloodstream infection reported without a test"
+    ],
+    "simplestPath": "One exposure contrast, one primary outcome, one clustered model and one pre-specified time series."
+  },
+  "theoreticalFramework": "No framework is needed beyond the causal diagram used to choose covariates; the question is a comparison of two policies with routine data.",
+  "summary": "Cohort of catheters on both sides of the policy change; one primary outcome, two secondary outcomes and one process measure, with clustering and secular trends handled by design."
+}

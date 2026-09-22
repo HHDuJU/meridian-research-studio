@@ -1,0 +1,93 @@
+{
+  "overview": "Diagnostic accuracy study of a deployed boarding-risk flag, using a consecutive series of all admission decisions from March 2025 to February 2027 with complete verification against a documented timestamp reference standard.",
+  "population": "All adult admission decisions in the emergency department in the period (about 38,000); decisions later cancelled or transferred to another hospital are excluded and counted.",
+  "exposure": "Index test: the flag at the deployed threshold, as logged at the admission decision; the underlying score is used for calibration and discrimination.",
+  "procedures": "The analyst links the score log to emergency timestamps and ward arrival times. The reference standard is boarding of four hours or more from the admission decision to emergency department departure; when departure is missing or more than 60 minutes after ward arrival, ward arrival minus 10 minutes is used, and the rule is fixed before analysis. Escalation by bed managers is recorded from the command centre log. The analyst who applies the reference standard rule does not see the flag.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Sensitivity and specificity of the flag at the deployed threshold",
+      "measure": "Proportions with 95 percent confidence intervals against the reference standard, reported as a pair",
+      "timing": "At the admission decision",
+      "why": "The flag is used as a binary signal; both errors matter to escalation.",
+      "patientCentered": false
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Calibration of the score",
+      "measure": "Calibration intercept and slope, and a calibration plot by decile of predicted risk",
+      "timing": "At the admission decision",
+      "why": "Miscalibration was common at external sites (claim c2).",
+      "patientCentered": false
+    },
+    {
+      "id": "o3",
+      "role": "secondary",
+      "name": "Discrimination compared with occupancy alone",
+      "measure": "c statistic of the score and of an occupancy and time-of-day model",
+      "timing": "At the admission decision",
+      "why": "Tests whether the score adds to occupancy.",
+      "patientCentered": false
+    },
+    {
+      "id": "o4",
+      "role": "balancing",
+      "name": "Escalations triggered by false-positive flags",
+      "measure": "Number of escalations per week for patients who did not board four hours",
+      "timing": "Weekly",
+      "why": "The workload cost of the flag's errors.",
+      "patientCentered": false
+    },
+    {
+      "id": "o5",
+      "role": "process",
+      "name": "Reference standard completeness",
+      "measure": "Proportion of decisions needing the missing-time rule",
+      "timing": "At linkage",
+      "why": "Shows how much the reference standard depends on the rule (claim c3).",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "Linkage and analysis need about 25 analyst days, within one day a week until June 2027.",
+  "biasMitigation": [
+    "Consecutive series with complete verification",
+    "Reference standard rule fixed before analysis and applied blind to the flag",
+    "Accuracy by time of day, weekday and admitting service",
+    "Sensitivity analysis excluding escalated patients"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Treatment paradox from escalation",
+      "severity": "high",
+      "note": "Escalated flagged patients may board less; analysed with and without them."
+    },
+    {
+      "id": "b2",
+      "label": "Reference standard misclassification",
+      "severity": "watch",
+      "note": "Late and missing timestamps; rule fixed in advance."
+    },
+    {
+      "id": "b3",
+      "label": "Spectrum effect",
+      "severity": "watch",
+      "note": "Reported by subgroup rather than averaged."
+    }
+  ],
+  "parsimony": {
+    "score": 78,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 2,
+    "covariateCount": 3,
+    "flags": [
+      "Primary outcome is a sensitivity and specificity pair",
+      "Three pre-specified subgroup variables"
+    ],
+    "simplestPath": "One index test at one threshold against one reference standard, with three subgroups."
+  },
+  "theoreticalFramework": "None; STARD 2015 and TRIPOD structure the accuracy and validation reporting.",
+  "summary": "Consecutive-series accuracy study with a fixed reference standard rule, calibration and spectrum reporting."
+}

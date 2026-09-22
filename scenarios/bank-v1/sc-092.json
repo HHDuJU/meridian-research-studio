@@ -1,0 +1,1454 @@
+{
+  "id": "sc-092",
+  "version": 1,
+  "title": "Regional referral intake: lean redesign with structured templates, empty first search confirmed, conflicting evidence",
+  "field": "health-services",
+  "level": 3,
+  "family": "qi-lean",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D20",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path on an explicit lean need (value stream mapping and A3 named). A narrow first search for the intake's own combination returns zero records; the investigator confirms on screen that it was run and empty, which completes the stage with certainty unassessed (G1, G2; an investigator record, A3.2). A broader second search then returns six records; the empty event stays in the history. The records conflict on the outcome that matters most: an uncontrolled before-after study reports triage time halving while a stepped introduction across 48 practices finds no difference. The appraisal records claim c3 as an inference over both records with uncertainty 'high', and declines one overall rating with an explicit null on the model-owned gradeOverall (issue 'cleared'), so certainty stays unassessed through the export. The decision cites the conflicting claims and states the conflict; both gates are met on investigator-supplied records, so the acceptance is a supported positive with a ready action. A reopen after ten stages checks the history is kept. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 4, 6 (ev-1fkbpja, ev-1qoekf8, ev-0fxopuo, ev-1i9wli1); the titleYearKey(title, year) hash for records 3, 5 (ev-14m5911, ev-16af51q). Requires D20 (empty search, investigator confirmation, 'not assessed'), S13 (appraisal payload), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a certainty label invented over an empty search or over conflicting evidence the model declined to rate, an empty event erased when a later search succeeds, a high-uncertainty claim softened or dropped, and work lost on reopen or reload.",
+  "inputs": {
+    "need": "I am the physician lead for the regional central intake for adult gastroenterology referrals. About 9,400 referral letters a year arrive from 160 family practices as free-text letters or faxes; two triage nurses sort them and a gastroenterologist assigns urgency. Last quarter 22 percent of referrals were sent back to the family practice for missing information, most often a missing faecal immunochemical test result, missing blood results or no medication list, and the median time from receipt to a triage decision was nine working days. Family doctors complain that returned referrals disappear, and our triage nurses spend much of their day chasing information.\n\nThe region's digital health office is ready to switch on a structured electronic referral template with required fields for the six most common reasons for referral. Before we do, I want to redesign the whole triage process with lean methods: map the value stream from the moment a referral is written to the triage decision, find the waste, and use A3 problem solving with the nurses, two family doctors and the booking clerks. I want to know what published work says about structured referral templates and triage, whether they reduce returned referrals and triage time or just move the work to family practices, and how we should measure success without adding a burden to teams that are already stretched. We have no research money, but the region has given us a lean coach for three months.",
+    "constraints": "No research funding; a lean coach for three months from January 2027; changes to the referral template go through the digital health office's monthly release schedule; triage nurse time cannot increase.",
+    "localFacts": [
+      "The central intake received 9,412 gastroenterology referrals in the last 12 months from 160 family practices.",
+      "Last quarter 22 percent of referrals were returned for missing information; the median time from receipt to triage decision was nine working days.",
+      "The regional lean office has assigned a lean coach to the intake from January to March 2027 (assignment LO-2027-04).",
+      "Two family doctors from the regional primary care network and the two booking clerks agreed on 2026-09-10 to join the A3 team."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the physician lead for the regional central intake for adult gastroenterology referrals. About 9,400 referral letters a year arrive from 160 family practices as free-text letters or faxes; two triage nurses sort them and a gastroenterologist assigns urgency. Last quarter 22 percent of referrals were sent back to the family practice for missing information, most often a missing faecal immunochemical test result, missing blood results or no medication list, and the median time from receipt to a triage decision was nine working days. Family doctors complain that returned referrals disappear, and our triage nurses spend much of their day chasing information.\n\nThe region's digital health office is ready to switch on a structured electronic referral template with required fields for the six most common reasons for referral. Before we do, I want to redesign the whole triage process with lean methods: map the value stream from the moment a referral is written to the triage decision, find the waste, and use A3 problem solving with the nurses, two family doctors and the booking clerks. I want to know what published work says about structured referral templates and triage, whether they reduce returned referrals and triage time or just move the work to family practices, and how we should measure success without adding a burden to teams that are already stretched. We have no research money, but the region has given us a lean coach for three months.",
+          "family": "qi-lean",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the physician lead for the regional central intake"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Structured referral templates and lean redesign of gastroenterology referral triage at a regional central intake",
+        "subtitle": "Lean redesign with value stream mapping and A3 problem solving before the template goes live",
+        "family": "qi-lean",
+        "statement": "A regional central intake receives about 9,400 gastroenterology referrals a year from 160 family practices; 22 percent are returned for missing information and the median time to a triage decision is nine working days. A structured electronic referral template is ready to switch on. The intake wants to redesign triage with lean methods first, so that the template is one countermeasure within a redesigned process rather than a change that simply moves work into family practices.",
+        "whoAffected": "Adults referred for gastroenterology assessment, including those with suspected cancer; family doctors and practice staff; triage nurses, gastroenterologists and booking clerks.",
+        "whatHurts": "Returned referrals delay assessment, some are never re-sent, and triage nurses spend much of their time chasing information; family practices see returned referrals as lost work.",
+        "currentPractice": "Free-text letters and faxes, triaged by two nurses and a gastroenterologist; missing information leads to a returned referral without a tracked queue.",
+        "whyNow": "The template can be released on the next monthly schedule, and a lean coach is assigned from January to March 2027.",
+        "constraints": "No research funding; a lean coach for three months from January 2027; changes to the referral template go through the digital health office's monthly release schedule; triage nurse time cannot increase.",
+        "patientCenteredGoal": "Every referred patient gets a triage decision quickly, and no referral is lost between the practice and the intake.",
+        "summary": "Problem framed as a lean redesign of referral triage with the template as one possible countermeasure."
+      },
+      "note": "The typed constraints are restated unchanged (G11).",
+      "expect": {
+        "store": {
+          "title": "Structured referral templates and lean redesign of gastroenterology referral triage at a regional central intake",
+          "family": "qi-lean",
+          "problem.constraints": "No research funding; a lean coach for three months from January 2027; changes to the referral template go through the digital health office's monthly release schedule; triage nurse time cannot increase.",
+          "problem.rawNeed": "I am the physician lead for the regional central intake for adult gastroenterology referrals. About 9,400 referral letters a year arrive from 160 family practices as free-text letters or faxes; two triage nurses sort them and a gastroenterologist assigns urgency. Last quarter 22 percent of referrals were sent back to the family practice for missing information, most often a missing faecal immunochemical test result, missing blood results or no medication list, and the median time from receipt to a triage decision was nine working days. Family doctors complain that returned referrals disappear, and our triage nurses spend much of their day chasing information.\n\nThe region's digital health office is ready to switch on a structured electronic referral template with required fields for the six most common reasons for referral. Before we do, I want to redesign the whole triage process with lean methods: map the value stream from the moment a referral is written to the triage decision, find the waste, and use A3 problem solving with the nurses, two family doctors and the booking clerks. I want to know what published work says about structured referral templates and triage, whether they reduce returned referrals and triage time or just move the work to family practices, and how we should measure success without adding a burden to teams that are already stretched. We have no research money, but the region has given us a lean coach for three months.",
+          "problem.statement": {
+            "includes": "one countermeasure"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Structured referral templates and lean redesign of gastroenterology referral triage at a regional central intake"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "structured electronic referral template gastroenterology central intake triage lean value stream A3 returned referrals",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "The narrow first search, aimed at this intake's own combination of template, central intake and lean redesign, returns HTTP 200 with zero records: an event with status 'ok' and 0 hits. 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-empty-search",
+      "note": "The investigator confirms on screen that the narrow search was run and returned nothing, documenting that no evaluation of this combination was found; this completes the stage with certainty unassessed (G1, G2). The confirmation is an investigator record (A3.2). Requires D20.",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.emptySearchConfirmation.by": "investigator",
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents[0].resultCount": 0
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "structured referral forms required fields specialist triage returned referrals waiting time family practice workload",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "A structured electronic referral form for specialist outpatient referrals and the proportion of referrals returned for missing information",
+            "authors": "Okwuosa-Brandt L, Hollis-Nakamura E, Sepulveda-Grant R",
+            "year": 2018,
+            "venue": "Journal of Referral and Access Management",
+            "doi": "10.5555/jram.2018.0204",
+            "providerType": "journal-article",
+            "abstract": "Two specialist services replaced free-text referral letters with an electronic form containing required fields for the most common referral reasons. We compared the 12 months before and after the change. Referrals returned to family practices for missing information fell from 19 percent to 7 percent, and the median time from receipt to a triage decision fell from 8 to 4 working days. The number of referrals received did not change. The comparison was uncontrolled, a new triage coordinator started in the same month, and the authors did not measure the time family practices spent completing the form."
+          },
+          {
+            "title": "Mandatory-field referral templates and triage time: a stepped introduction across 48 family practices",
+            "authors": "Lindqvist-Adeyemi K, Carvalho-Stroud P, Mensah-Fairbairn A",
+            "year": 2022,
+            "venue": "Health Services Access Review",
+            "doi": "10.5555/hsar.2022.0319",
+            "providerType": "journal-article",
+            "abstract": "A mandatory-field referral template was introduced to 48 family practices in four steps over eight months, in a random order of practice groups. Across 11,260 referrals there was no difference in the time from receipt to triage decision between periods with and without the template (adjusted difference 0.3 days, 95 percent CI -0.6 to 1.2). Returned referrals fell only in practices that used the template for more than half of their referrals. Overall, 38 percent of referrals bypassed the required fields by attaching a free-text letter. Practices reported that the template took longer to complete than a letter."
+          },
+          {
+            "title": "Tick boxes and workarounds: family physicians' views of structured specialist referral templates",
+            "authors": "Achebe-Morrow T, Varga-Hendricks S",
+            "year": 2020,
+            "venue": "Primary Care Organisation Studies",
+            "providerType": "journal-article",
+            "abstract": "We spoke with 24 family physicians and 11 practice staff in three regions about structured referral templates. Participants valued templates that pulled test results automatically and disliked required fields that repeated information already in the letter. Many described the templates as moving the specialist service's work into the practice without extra time. Several admitted attaching a letter to avoid required fields, especially for complex patients. Participants wanted to know what happened to returned referrals. The sample was drawn from practices that had volunteered for a regional template group."
+          },
+          {
+            "title": "Required faecal immunochemical test results in suspected lower gastrointestinal cancer referrals: an interrupted time series",
+            "authors": "Petrossian-Kaye D, Obi-Lindgren M",
+            "year": 2023,
+            "venue": "Journal of Referral and Access Management",
+            "doi": "10.5555/jram.2023.0077",
+            "providerType": "journal-article",
+            "abstract": "A regional referral service made a faecal immunochemical test result a required field for urgent lower gastrointestinal referrals. In an interrupted time series over 30 months, the proportion of urgent referrals with a test result rose from 54 percent to 91 percent. Returned referrals rose in the first three months after the change and returned to the previous level by six months. Time to colonoscopy for urgent referrals did not change. Practices without access to rapid test kits returned the most referrals, and the authors warn that required fields can delay referrals from those practices."
+          },
+          {
+            "title": "Value stream mapping of a central referral intake: waste in handoffs and rework",
+            "authors": "Grieve-Otieno B, Salazar-Whitby J",
+            "year": 2016,
+            "venue": "Lean Health Operations",
+            "providerType": "journal-article",
+            "abstract": "A central referral intake serving six specialties mapped its value stream with nurses, clerks and referring practices. Staff spent about 60 percent of triage nurse time on rework: chasing missing information, re-keying faxed letters and answering practice queries about returned referrals. After a redesign that added a single returned-referral queue and a fixed daily triage time, the median lead time from receipt to triage fell from 12 to 6 working days over four months. No referral template was introduced. The evaluation was a before-after comparison without a control and without follow-up beyond four months."
+          },
+          {
+            "title": "Referral forms and guidelines for specialist referral: a systematic review of effects on referral quality and access",
+            "authors": "Harcourt-Ibeh N, Tanaka-Poulsen R, Oduya-Ferris C, Kamara-Lind J",
+            "year": 2021,
+            "venue": "Health Services Access Review",
+            "doi": "10.5555/hsar.2021.0142",
+            "providerType": "journal-article",
+            "abstract": "We included 21 studies of structured referral forms or referral guidelines for specialist outpatient services. Thirteen reported better referral quality, usually more complete information, with structured forms. Effects on waiting times were measured in seven studies and were inconsistent: three reported shorter times and four found no change. Only two studies measured the time family practices spent on referrals. Most studies were uncontrolled before-after comparisons, and definitions of referral quality varied. The authors conclude that structured forms improve completeness but that effects on access remain uncertain."
+          }
+        ]
+      },
+      "note": "A broader second search returns six records; the empty first event stays in the history. The stage now rests on retrieved records rather than on the confirmation (A3.2, D26), and no certainty exists before an appraisal (G1). Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 6,
+          "scan.retrievalEvents[1].recordIds": [
+            "ev-1fkbpja",
+            "ev-1qoekf8",
+            "ev-14m5911",
+            "ev-0fxopuo",
+            "ev-16af51q",
+            "ev-1i9wli1"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].id": "ev-1fkbpja",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].grade": "unrated",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1fkbpja",
+            "relevance": 86,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Returned referrals fell from 19 to 7 percent and time to triage from 8 to 4 working days after a required-field electronic form in two specialist services.",
+            "limitations": "Uncontrolled before-after comparison; a new triage coordinator started in the same month; practice workload not measured.",
+            "contextTags": [
+              "before-after",
+              "returned referrals",
+              "triage time"
+            ]
+          },
+          {
+            "id": "ev-1qoekf8",
+            "relevance": 90,
+            "methodQuality": 70,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In a stepped introduction across 48 practices, time to triage did not differ (adjusted difference 0.3 days); returned referrals fell only where the template was used for most referrals, and 38 percent of referrals bypassed it.",
+            "limitations": "Allocation order was random but uptake varied; eight months only; one region.",
+            "contextTags": [
+              "stepped introduction",
+              "bypass",
+              "triage time"
+            ]
+          },
+          {
+            "id": "ev-14m5911",
+            "relevance": 78,
+            "methodQuality": 55,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Family physicians saw templates as moving work into practices, disliked duplicate fields and bypassed them by attaching letters for complex patients.",
+            "limitations": "Volunteer practices; no link to referral outcomes.",
+            "contextTags": [
+              "family practice",
+              "workarounds",
+              "balancing measure"
+            ]
+          },
+          {
+            "id": "ev-0fxopuo",
+            "relevance": 88,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A required test-result field raised urgent referrals with a result from 54 to 91 percent; returned referrals rose for three months and then settled; time to colonoscopy did not change.",
+            "limitations": "One region; practices without rapid kits returned most referrals.",
+            "contextTags": [
+              "gastroenterology",
+              "interrupted time series",
+              "required field"
+            ]
+          },
+          {
+            "id": "ev-16af51q",
+            "relevance": 74,
+            "methodQuality": 40,
+            "kind": "qi-report",
+            "grade": "very-low",
+            "keyFindings": "About 60 percent of triage nurse time was rework; a redesign with a returned-referral queue and fixed triage time cut lead time from 12 to 6 working days without a template.",
+            "limitations": "Before-after comparison without control; four months of follow-up.",
+            "contextTags": [
+              "value stream mapping",
+              "rework",
+              "lead time"
+            ]
+          },
+          {
+            "id": "ev-1i9wli1",
+            "relevance": 82,
+            "methodQuality": 64,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Thirteen of 21 studies reported more complete referrals with structured forms; effects on waiting times were inconsistent (three shorter, four no change) and practice time was rarely measured.",
+            "limitations": "Mostly uncontrolled studies; varied definitions of referral quality.",
+            "contextTags": [
+              "systematic review",
+              "referral quality",
+              "access"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "After a required-field electronic referral form, returned referrals fell from 19 to 7 percent and the median time to triage from 8 to 4 working days.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1fkbpja"
+            ],
+            "location": "Abstract",
+            "passage": "Referrals returned to family practices for missing information fell from 19 percent to 7 percent, and the median time from receipt to a triage decision fell from 8 to 4 working days.",
+            "interpretation": "A large before-after effect, confounded by a new coordinator.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "In a stepped introduction across 48 practices, a mandatory-field template did not change the time to triage, and 38 percent of referrals bypassed the required fields.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1qoekf8"
+            ],
+            "location": "Abstract",
+            "passage": "Overall, 38 percent of referrals bypassed the required fields by attaching a free-text letter.",
+            "interpretation": "The best-controlled study finds no effect on triage time and widespread bypass.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Whether a structured referral template shortens the time to triage is uncertain: an uncontrolled before-after study reported a halving, while a stepped introduction across 48 practices found no difference.",
+            "kind": "inference",
+            "sourceIds": [
+              "ev-1fkbpja",
+              "ev-1qoekf8"
+            ],
+            "location": "Abstracts of both records",
+            "passage": "there was no difference in the time from receipt to triage decision between periods with and without the template",
+            "interpretation": "The evidence conflicts on the outcome the intake cares most about; the local redesign must measure it rather than assume it.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c4",
+            "text": "Family physicians described structured templates as moving the specialist service's work into practices and bypassed required fields by attaching letters.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-14m5911"
+            ],
+            "location": "Abstract",
+            "passage": "Many described the templates as moving the specialist service's work into the practice without extra time.",
+            "interpretation": "Practice workload and bypass are balancing measures, not side notes.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "A required test-result field raised urgent lower gastrointestinal referrals with a result from 54 to 91 percent, while returned referrals rose for about three months.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0fxopuo"
+            ],
+            "location": "Abstract",
+            "passage": "the proportion of urgent referrals with a test result rose from 54 percent to 91 percent",
+            "interpretation": "Required fields improve completeness but create a transition cost for practices without rapid test kits.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records from a second, broader search, appraised at abstract level; the first, narrow search for this intake's own question returned nothing and was confirmed empty by the investigator. Structured forms make referrals more complete (a review of 21 studies and a gastroenterology time series), but effects on access conflict: an uncontrolled before-after study reported triage time halving, while the best-controlled study, a stepped introduction across 48 practices, found no difference and widespread bypass of required fields. Family physicians describe templates as moving work into practices, and practices without rapid test kits return the most referrals. A value stream study shows that most triage nurse time is rework and that process redesign alone halved lead time. The body of evidence answers different questions with different designs, and no single certainty rating would be meaningful across completeness, triage time and practice workload.",
+        "gradeOverall": null,
+        "gradeRationale": "Not assessed as one rating: completeness, triage time and practice workload are separate outcomes, the only controlled study conflicts with the uncontrolled ones on triage time, and practice workload is barely measured. Per-record grades are given; overall certainty is left unassessed.",
+        "summary": "Six retrieved records appraised; five claims recorded, one an inference with high uncertainty about conflicting results; overall certainty deliberately not assessed."
+      },
+      "note": "Appraisal of the six retrieved records (S13). The records conflict on triage time; claim c3 is an inference over both conflicting records with uncertainty 'high'. The model declines one overall rating (explicit null on a model-owned field): issue 'cleared' at gradeOverall, and the stored certainty stays '' (not assessed), which holds at 875fe59 because nothing earlier was stored.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].grade": "very-low",
+          "scan.items[1].grade": "low",
+          "scan.items[1].methodQuality": 70,
+          "scan.items[4].kind": "qi-report",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[2].id": "c3",
+          "scan.claims[2].kind": "inference",
+          "scan.claims[2].uncertainty": "high",
+          "scan.claims[2].sourceIds": [
+            "ev-1fkbpja",
+            "ev-1qoekf8"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-1qoekf8"
+          ],
+          "scan.gradeOverall": "",
+          "scan.gradeRationale": {
+            "includes": "Not assessed as one rating"
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ],
+          "excludes": [
+            "low certainty",
+            "very low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional central intake, adult gastroenterology",
+          "160 referring family practices",
+          "structured template ready for release",
+          "lean coach January to March 2027"
+        ],
+        "reading": "Delay and returned referrals come from two sources: incomplete information at the practice and rework inside the intake. A template addresses the first and can worsen practice workload and bypass; process redesign addresses the second and halved lead time in one intake without any template. The evidence conflicts on whether templates shorten triage time (claim c3), so the redesign should treat the template as a countermeasure to test, with practice workload and bypass as balancing measures.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Free-text referral letter",
+            "kind": "context",
+            "detail": "Current input from 160 practices."
+          },
+          {
+            "id": "n2",
+            "label": "Missing information",
+            "kind": "context",
+            "detail": "Leads to 22 percent returned referrals."
+          },
+          {
+            "id": "n3",
+            "label": "Rework inside the intake",
+            "kind": "context",
+            "detail": "Chasing, re-keying, answering queries."
+          },
+          {
+            "id": "n4",
+            "label": "Time from receipt to triage decision",
+            "kind": "outcome",
+            "detail": "Median nine working days."
+          },
+          {
+            "id": "n5",
+            "label": "Structured template with required fields",
+            "kind": "framework",
+            "detail": "Countermeasure to test."
+          },
+          {
+            "id": "n6",
+            "label": "Stepped introduction across 48 practices",
+            "kind": "observational",
+            "detail": "No change in triage time, 38 percent bypass (claim c2)."
+          },
+          {
+            "id": "n7",
+            "label": "Before-after form study",
+            "kind": "observational",
+            "detail": "Triage time halved, confounded (claim c1)."
+          },
+          {
+            "id": "n8",
+            "label": "Family practices",
+            "kind": "stakeholder",
+            "detail": "Bear the template's workload (claim c4)."
+          },
+          {
+            "id": "n9",
+            "label": "Conflicting evidence on triage time",
+            "kind": "gap",
+            "detail": "High-uncertainty inference (claim c3)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "often lacks"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "causes"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "lengthens"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "targets"
+          },
+          {
+            "from": "n5",
+            "to": "n8",
+            "relation": "adds work for"
+          },
+          {
+            "from": "n6",
+            "to": "n9",
+            "relation": "conflicts with"
+          },
+          {
+            "from": "n7",
+            "to": "n9",
+            "relation": "conflicts with"
+          }
+        ],
+        "summary": "Map separates practice-side and intake-side causes of delay and marks the conflicting evidence on triage time."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[8].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Conflicting evidence on triage time",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The controlled study found no change in triage time while the uncontrolled one found a halving (claim c3); the intake cannot assume the template will shorten its nine days.",
+            "opportunity": "Measure lead time weekly before and after each countermeasure instead of predicting it."
+          },
+          {
+            "id": "g2",
+            "title": "No evaluation of this intake's combination",
+            "kind": "evidence",
+            "severity": "moderate",
+            "whyItMatters": "The confirmed empty search found no study of a template introduced within a lean redesign of a central intake.",
+            "opportunity": "Report the redesign so others can learn from it."
+          },
+          {
+            "id": "g3",
+            "title": "Practice workload and bypass are rarely measured",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "Templates can move work into practices and 38 percent of referrals bypassed fields in one study (claims c2, c4).",
+            "opportunity": "Track bypass (attached letters) and sample practice completion time as balancing measures."
+          },
+          {
+            "id": "g4",
+            "title": "Practices without rapid test kits",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Required test fields returned the most referrals from practices without rapid kits (claim c5), which may be rural or low-resource practices.",
+            "opportunity": "Report returned referrals by practice group and allow a documented exception when a test is unavailable."
+          },
+          {
+            "id": "g5",
+            "title": "Rework inside the intake",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Most triage nurse time may be rework, which a template alone does not remove.",
+            "opportunity": "Map the value stream first and remove intake-side waste before or alongside the template."
+          }
+        ],
+        "errorsFound": [
+          "The need frames the template as the solution; the evidence supports it only for completeness, not for triage time."
+        ],
+        "reevaluation": "The gaps favour a lean redesign that tests the template as one countermeasure, with triage time measured locally and practice workload as a balancing measure.",
+        "summary": "Five gaps; the conflict on triage time and the unmeasured practice workload are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Conflicting evidence on triage time"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "A lean redesign of intake rework (a returned-referral queue and a fixed daily triage time) followed by the structured template will reduce returned referrals from 22 percent to 10 percent or less and the median time to triage from nine to five working days by June 2027, without raising template bypass above 25 percent.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 75,
+            "rationale": "Combines the intake-side redesign that halved lead time elsewhere with the completeness gains of required fields, and names bypass as a limit.",
+            "risks": "Triage time may not move (claim c3); practice pushback may raise bypass."
+          },
+          {
+            "id": "h2",
+            "statement": "The template alone, without intake redesign, will reduce returned referrals but not triage time.",
+            "novelty": 35,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "Consistent with the controlled study.",
+            "risks": "Tests a change the intake does not intend to make alone."
+          },
+          {
+            "id": "h3",
+            "statement": "Allowing a documented exception when a rapid test is unavailable will prevent a rise in returned referrals from practices without kits.",
+            "novelty": 50,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Addresses the transition cost seen in the time series.",
+            "risks": "Exceptions may be overused."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the aim of the redesign."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "At the regional gastroenterology central intake, will a lean redesign of intake rework followed by a structured referral template reduce returned referrals from 22 percent to 10 percent or less and the median time from receipt to triage decision from nine to five working days by June 2027, without raising template bypass above 25 percent?",
+            "framework": "QI-aim",
+            "population": "Adult gastroenterology referrals from 160 family practices",
+            "intervention": "Returned-referral queue, fixed daily triage time, then the structured template with a documented test exception",
+            "comparator": "Twelve-week baseline of the current process",
+            "outcome": "Weekly proportion of returned referrals and median time to triage decision",
+            "time": "Twelve baseline weeks, then January to June 2027",
+            "setting": "Regional central intake"
+          }
+        ],
+        "finer": "Feasible with the lean coach and existing data; interesting to practices and the intake; novel in its combination; ethical as service improvement; relevant because the template goes live in 2027 either way.",
+        "summary": "One time-bound improvement aim with a balancing limit."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-lean",
+        "rationale": "The problem is a process with waste on both sides of the referral: missing information from practices and rework inside the intake. Lean methods (value stream mapping, A3 problem solving, standard work) fit a redesign led by the people who do the work, with the template as a countermeasure tested in sequence. Because the evidence conflicts on triage time (c1, c2, c3), the design measures it weekly rather than assuming it, and tracks practice workload and bypass (c4) and test-result completeness (c5).",
+        "alternatives": [
+          "Switch on the template without redesign (refused: the controlled evidence shows no change in triage time and widespread bypass)",
+          "Stepped introduction of the template across practice groups with a formal comparison (refused: the region has one release schedule and no research resources; the aim is local improvement)",
+          "Model for Improvement with PDSA cycles (considered: similar measurement, but the intake's main problem is flow and rework, which value stream mapping addresses directly)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0"
+        ],
+        "whyNotMoreComplex": "A controlled comparison would answer whether templates work in general, which the region does not need to know; the intake needs to know whether its redesigned process improves, which weekly run charts can show.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Redesign referral triage with lean methods from January 2027, removing intake rework first and releasing the structured template as a tested countermeasure with a documented exception for unavailable tests, while measuring returned referrals, time to triage, template bypass and practice workload weekly.",
+          "question": "How should the intake introduce the structured referral template?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Required fields make referrals more complete.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c5"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Time to triage does not fall once the template is in routine use.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c2",
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Lean coach assigned to the intake",
+              "status": "met",
+              "evidence": "Regional lean office assignment LO-2027-04 for January to March 2027, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Family doctors and booking clerks on the A3 team",
+              "status": "met",
+              "evidence": "Agreement of two family doctors and the two booking clerks on 2026-09-10, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Switch on the template without redesign",
+            "Delay the template until triage time is measured for three months"
+          ],
+          "note": "Rests on ledger claims c1 to c5 from retrieved records, including the high-uncertainty inference c3 that the evidence on triage time conflicts; the decision states that conflict rather than resolving it."
+        },
+        "summary": "Lean redesign recommended; the decision acknowledges the conflicting evidence and both gates are met on investigator-supplied records."
+      },
+      "note": "The decision cites the conflicting claims and the high-uncertainty inference; conflicting sources are not a contradiction of a decision that states the conflict (S8). selectionStatus requires S11, the claims S13, the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-lean",
+          "family": "qi-lean",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.decisions[-1].criteria[1].status": "unknown",
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: the five claims exist in the ledger and rest on retrieved records; high uncertainty in c3 is stated, not hidden, and both gates are met, so the selection is accepted and the action ready (G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.basis": "explicit",
+          "family": "qi-lean"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Lean redesign of the gastroenterology central intake from January to June 2027: a value stream map with nurses, clerks and two family doctors, then A3 cycles that first remove intake rework (a returned-referral queue and a fixed daily triage time) and then release the structured template with a documented exception when a rapid test is unavailable.",
+        "population": "All adult gastroenterology referrals received by the central intake from 160 family practices; a twelve-week baseline from October to December 2026.",
+        "exposure": "Returned-referral queue with a tracked status visible to practices; fixed daily triage time; structured template with required fields for the six most common referral reasons, released on the digital health office's monthly schedule.",
+        "procedures": "Weeks 1 to 2: value stream mapping and A3 problem statement. From week 3: the returned-referral queue and fixed triage time. From the April 2027 release: the template. The intake extracts weekly counts from the referral system; a random sample of 20 referrals a week is reviewed for bypass (an attached letter instead of the required fields). Practice workload is sampled by asking five practices a month to time template completion.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Returned referrals",
+            "measure": "Weekly proportion of referrals returned for missing information",
+            "timing": "Weekly, baseline and redesign",
+            "why": "The main failure the redesign targets and the one the evidence says templates can change.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Time to triage decision",
+            "measure": "Weekly median working days from receipt to triage decision",
+            "timing": "Weekly",
+            "why": "The access outcome on which the evidence conflicts (claim c3).",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Template bypass",
+            "measure": "Proportion of sampled referrals with an attached letter instead of completed fields",
+            "timing": "Weekly from template release",
+            "why": "High bypass would mean the template shifted work without improving information.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Practice completion time",
+            "measure": "Minutes to complete a template, timed by five practices a month",
+            "timing": "Monthly from template release",
+            "why": "Practice workload is the main cost of templates (claim c4).",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Urgent referrals with a test result",
+            "measure": "Proportion of urgent lower gastrointestinal referrals with a faecal immunochemical test result",
+            "timing": "Weekly",
+            "why": "Shows whether the required field works for the referrals where it matters most.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Weekly counts come from the referral system; bypass review takes about one hour a week of clerk time; the lean coach supports the A3 cycles for three months.",
+        "biasMitigation": [
+          "Twelve-week baseline before any change",
+          "Countermeasures introduced in sequence with dates on the charts",
+          "Random weekly sample for bypass review",
+          "Returned referrals reported by practice group, including practices without rapid kits"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Referral volume changes",
+            "severity": "watch",
+            "note": "Seasonal volume may move lead time; plot volume alongside."
+          },
+          {
+            "id": "b2",
+            "label": "Overlapping countermeasures",
+            "severity": "watch",
+            "note": "Queue and template effects are separated only by timing."
+          },
+          {
+            "id": "b3",
+            "label": "Unmeasured practice burden",
+            "severity": "high",
+            "note": "Timing by five practices a month is a small sample."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "Two balancing measures and one process measure",
+            "No statistical adjustment; run and control charts only"
+          ],
+          "simplestPath": "One intake, one primary measure on a p-chart, countermeasures in sequence."
+        },
+        "theoreticalFramework": "Lean thinking: value stream mapping, A3 problem solving and standard work; no additional framework.",
+        "summary": "Six-month lean redesign with returned referrals as the primary measure and bypass and practice time as balancing measures."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[1].patientCentered": true,
+          "protocol.outcomes[2].role": "balancing",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Weekly time series: p-chart of returned referrals and run chart of median time to triage, with a twelve-week baseline and dated countermeasures.",
+        "sampleSize": "The intake receives about 180 referrals a week. With a baseline of 22 percent, the p-chart's three-sigma limits sit about 9 percentage points either side of the centre line, so a sustained fall to 10 percent would show as a shift within a few weeks and single weeks below about 13 percent would signal special cause. Twelve baseline weeks give a stable centre line. The 20-referral weekly sample for bypass estimates a proportion of 25 percent with a 95 percent interval of about 19 points per week, so bypass is judged on four-week pooled samples.",
+        "primaryAnalysis": "p-chart of weekly returned referrals with the baseline centre line and limits frozen after twelve weeks; shift, trend and point-outside-limits rules fixed before the redesign; limits recalculated only after a sustained shift.",
+        "secondaryAnalysis": "Run chart of weekly median time to triage with the same rules; four-week pooled bypass proportions; descriptive practice timing; returned referrals by practice group.",
+        "missingData": "Weeks with system outages are annotated and excluded from limit calculation, never imputed; missing bypass samples are recorded.",
+        "multiplicity": "One primary measure; others are described with their charts and not tested.",
+        "software": "Spreadsheet control chart template maintained with the lean coach.",
+        "overfittingGuards": [
+          "Chart rules fixed before the redesign",
+          "Baseline limits frozen",
+          "Countermeasure dates marked before looking at the following weeks",
+          "No post hoc subgroup charts beyond the planned practice groups"
+        ],
+        "summary": "About 180 referrals a week make a p-chart sensitive to the targeted fall; bypass judged on pooled samples."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "180 referrals a week"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low for patients if no referral is lost; the main risk is that required fields delay urgent referrals from practices without rapid tests, which the documented exception addresses.",
+        "consent": "No individual consent: the redesign changes a service process and uses aggregate counts; practices are informed before each change and can comment through the primary care network.",
+        "data": "Weekly aggregate counts and a de-identified sample for bypass review; no patient identifiers leave the referral system.",
+        "equity": "PROGRESS-Plus: practices without rapid test kits, often rural or in deprived areas, returned the most referrals when a test field was required. Returned referrals are reported by practice group, the exception is monitored, and urgent referrals are never returned without a same-day call to the practice.",
+        "effectiveness": "Success is fewer returned referrals and a shorter or unchanged time to triage without high bypass or practice burden.",
+        "efficiency": "Uses the lean coach and existing staff; the template is already built.",
+        "costs": "No new costs beyond staff time within existing roles.",
+        "grants": "None needed; the write-up could support a regional application to spread the redesign to other specialties.",
+        "partnerships": "Triage nurses, booking clerks, two family doctors, the digital health office and a patient partner from the regional patient advisory council.",
+        "rebPath": "Service improvement using aggregate data; the regional quality office will be asked to confirm that no research ethics review is needed before publication, following the TCPS 2 guidance on quality improvement.",
+        "limitations": "One intake, overlapping countermeasures, small practice timing sample.",
+        "summary": "Low-risk service redesign with an urgent-referral safeguard and equity reporting by practice group."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "ethics.rebPath": {
+            "includes": "TCPS 2"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after ten of thirteen stages: the confirmed empty event, the second search and the unassessed certainty must all be kept; statuses are checked in the export.",
+      "expect": {
+        "store": {
+          "title": "Structured referral templates and lean redesign of gastroenterology referral triage at a regional central intake",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ],
+          "needsReview": [],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.items": {
+            "length": 6
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[2].uncertainty": "high",
+          "design.decisions": {
+            "length": 1
+          },
+          "voices.items": {
+            "length": 0
+          }
+        },
+        "stage": {
+          "ethics": "complete",
+          "voices": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Structured referral templates and lean redesign of gastroenterology referral triage at a regional central intake"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A patient partner from the regional advisory council and two family doctors join the A3 team; practice managers comment on the template wording before release.",
+        "socialListening": "No social media listening; complaints to the intake about returned referrals over the last year are read and themed.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Waiting without knowing",
+            "quote": "Composite paraphrase: My doctor said she had referred me, and three weeks later I found out it had been sent back.",
+            "implication": "Make the status of returned referrals visible to practices and tell patients when a referral is returned.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Moving the work",
+            "quote": "Composite paraphrase: Every required field is a minute I do not have between patients.",
+            "implication": "Keep required fields to what triage needs and time template completion.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Chasing",
+            "quote": "Composite paraphrase: Half my morning is phoning practices for a blood result that is already in their system.",
+            "implication": "Pull results automatically where possible and remove chasing from nurse work.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Practices without test kits",
+            "quote": "Composite paraphrase: We are an hour from the lab; a required result means a week's delay for our patients.",
+            "implication": "Keep the documented exception and report returned referrals by practice group.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on invisible returns, practice workload, chasing and access to tests."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "partner",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Lean redesign of gastroenterology referral triage with a structured referral template: an improvement report from a regional central intake",
+        "abstract": "Problem: 22 percent of gastroenterology referrals to a regional central intake were returned for missing information and the median time to triage was nine working days. Intervention: lean redesign of intake rework, then a structured referral template with a documented test exception. Measures: weekly returned referrals, time to triage, template bypass and practice completion time. Results and conclusions will be written after June 2027.",
+        "introduction": "Structured referral forms improve completeness, but evidence on triage time conflicts and practice workload is rarely measured. No evaluation of a template introduced within a lean redesign of a central intake was found.",
+        "methods": "Value stream mapping and A3 cycles from January 2027 after a twelve-week baseline; countermeasures introduced in sequence; p-chart and run charts with rules fixed in advance; SQUIRE 2.0 reporting.",
+        "results": "No data have been collected yet. The report will present the value stream map, the charts with dated countermeasures, bypass, practice timing and returned referrals by practice group.",
+        "discussion": "The discussion will interpret any change against the conflicting published results on triage time and state whether the template or the intake redesign accounts for it.",
+        "limitations": "One intake; overlapping countermeasures; small practice timing sample; aggregate data only.",
+        "conclusion": "To be written after June 2027; it will be limited to this intake and will not claim that templates shorten triage time in general.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE-structured draft with results left empty until data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Overall certainty is not assessed; any statement about triage time must cite the conflict (claim c3) rather than a single estimate",
+          "Ask the regional quality office to confirm that no ethics review is needed before publication",
+          "Run identity checks on the six retrieved records before the report cites them"
+        ],
+        "improvementNotes": "The first search was confirmed empty by the investigator; a broader second search returned six records whose results conflict on triage time. The model declined a single certainty rating and the stored certainty stays unassessed. The accepted decision states the conflict and rests on five ledger claims.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: how to cite the conflict, the ethics confirmation and identity checks."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 the store defect of A3 L1.6 drops it (not a missing work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Structured referral templates and lean redesign of gastroenterology referral triage at a regional central intake",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "No research funding; a lean coach for three months from January 2027; changes to the referral template go through the digital health office's monthly release schedule; triage nurse time cannot increase.",
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Structured referral templates and lean redesign of gastroenterology referral triage at a regional central intake"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "scan.gradeOverall '' after an empty search and an appraisal that declined one rating (D20, S13); selectionStatus and actionStatus require S11. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.gradeOverall": "",
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.retrievalEvents[1].resultCount": 6,
+            "scan.claims[2].kind": "inference",
+            "scan.claims[2].uncertainty": "high",
+            "scan.claims[2].sourceIds": [
+              "ev-1fkbpja",
+              "ev-1qoekf8"
+            ],
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c2",
+              "c3",
+              "c4",
+              "c5"
+            ]
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

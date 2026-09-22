@@ -1,0 +1,83 @@
+{
+  "overview": "Retrospective comparison of completion between remote and centre-based cardiac rehabilitation using programme records for all referrals from January 2023 to December 2025.",
+  "population": "All 1,146 adults referred after myocardial infarction, stenting or bypass surgery who chose a programme; each patient's first referral only.",
+  "exposure": "Programme chosen at the booking call: remote (436) or centre-based (710).",
+  "procedures": "The analyst extracts referral date, diagnosis, age, sex, postcode (converted to deprivation quintile and road distance, then deleted), programme chosen, sessions attended or coaching weeks completed, and six-minute walk distances. Completion is derived with one attendance-equivalent rule written before extraction.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Completion",
+      "measure": "At least 12 of 16 sessions (centre) or 6 of 8 coaching weeks (remote), all referrals who chose a programme in the denominator",
+      "timing": "Eight weeks from the first scheduled session",
+      "why": "The board's question and the benefit patients lose by dropping out.",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Weeks engaged before stopping",
+      "measure": "Last week with an attended session or completed call",
+      "timing": "Up to eight weeks",
+      "why": "Shows when each programme loses patients.",
+      "patientCentered": false
+    },
+    {
+      "id": "o3",
+      "role": "secondary",
+      "name": "Change in six-minute walk distance among completers",
+      "measure": "End minus start distance in metres",
+      "timing": "End of programme",
+      "why": "Described for completers only, never compared as an effect.",
+      "patientCentered": true
+    },
+    {
+      "id": "o4",
+      "role": "process",
+      "name": "Uptake of each programme by group",
+      "measure": "Proportion choosing remote by sex, age group, deprivation quintile and distance band",
+      "timing": "At booking",
+      "why": "Describes who each programme reaches.",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "About 30 analyst hours for extraction, derivation and the model; records exist for all referrals.",
+  "biasMitigation": [
+    "One completion rule fixed before extraction",
+    "Non-starters kept in both denominators",
+    "Adjustment for age, sex, diagnosis, deprivation quintile and distance",
+    "E-value for unmeasured confounding"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Confounding by choice",
+      "severity": "high",
+      "note": "Employment and car access are not recorded; the E-value states how strong they would need to be."
+    },
+    {
+      "id": "b2",
+      "label": "Definition bias",
+      "severity": "watch",
+      "note": "Handled by one rule; the published regional comparison failed here."
+    },
+    {
+      "id": "b3",
+      "label": "Selective outcome recording",
+      "severity": "watch",
+      "note": "Walk distance exists only for completers."
+    }
+  ],
+  "parsimony": {
+    "score": 79,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 2,
+    "covariateCount": 5,
+    "flags": [
+      "Five adjustment variables fixed in advance"
+    ],
+    "simplestPath": "One exposure, one completion rule, one adjusted model, subgroup reporting."
+  },
+  "theoreticalFramework": "No framework; the analysis follows STROBE with the RECORD extension.",
+  "summary": "One completion rule, full denominators and five pre-specified adjustment variables."
+}

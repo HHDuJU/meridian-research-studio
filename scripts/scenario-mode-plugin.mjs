@@ -18,7 +18,8 @@ export function scenarioModePlugin() {
         }
         const allowed =
           process.env.VITE_SCENARIO_MODE === "true" && process.env.MERIDIAN_MODEL_MODE === "replay";
-        if (!allowed) {
+        const retrieveAllowed = allowed && process.env.MERIDIAN_RETRIEVAL_MODE === "replay";
+        if (pathOnly === "/__scenario/retrieve" ? !retrieveAllowed : !allowed) {
           res.statusCode = 404;
           res.setHeader("content-type", "text/plain; charset=utf-8");
           res.end("not found");

@@ -1,0 +1,1589 @@
+{
+  "id": "sc-030",
+  "version": 1,
+  "title": "Anaesthesia department: difficult airway alert system, a landmark-labelled lead that stays unverified, and a mismatched source after acceptance",
+  "field": "anesthesia",
+  "level": 4,
+  "family": "retrospective",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on a clear retrospective design (the need names a retrospective study; routing explicit). A fixture search returns seven records. A discovery reply then recalls three leads; the first presents the investigator's untraced national figure as a 'landmark' survey with the invented identifier 10.5555/jas.2015.0404 and grade 'high'. It must be stored as a model lead appended after the retrieved records (D1), provenance origin model and status unverified with no checks, whatever its label (G3), and stay unverified on screen, after reload and reopen, and in the export. The appraisal of the seven records also carries an annotation keyed to 'ev-nsaa2015', an identifier that exists nowhere in the study: it is dropped with an issue (holds at 875fe59 in applyAppraisal), so the lead gains no appraisal. The first decision rests on claims c1 to c3 and both gates are met: accepted, ready. After protocol and stats are drafted, an identity check sets the record behind claim c1 to 'mismatch' through the store: the decision becomes stale and blocked (evidenceRevision at 875fe59 already covers provenance status), and every completed stage after Scan is flagged. The investigator re-runs Design; the new decision rests on c2 to c4, is accepted and ready, while the old one stays stale in the history; Design leaves the review list, the other flagged stages stay flagged. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator; all seven records carry DOIs (ev-07tncvr, ev-0xz7bs2, ev-0de9zjp, ev-0z3z6ig, ev-04dpbpv, ev-08q6nfo, ev-12x9zs1). Requires D1 (leads appended, never replacing records), S13 (appraisal dispatch), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a landmark label or an identifier treated as verification, appraisal of a record that does not exist, an accepted decision left current on a misattributed source, and a stale decision overwritten instead of kept.",
+  "inputs": {
+    "need": "I am a consultant anaesthetist and the airway lead at a 900-bed teaching hospital. Since 2019 we have kept a difficult airway database of patients in whom intubation or mask ventilation was unexpectedly difficult. In March 2023 we implemented an alert system for these patients: a red wristband while they are in hospital, an alert on the electronic record, and a letter to the patient and their GP. The idea is that the next anaesthetist, here or elsewhere, knows before induction. Anecdotally the system works better than what we had before, but we still hear of patients with a known difficult airway arriving in theatre or the emergency department with nobody aware of it.\n\nI want a retrospective study of our own records to find out whether the alert system has changed what happens at the next anaesthetic: how often the alert was present and seen before airway management, how often difficulty was unanticipated, and whether the airway plan was different. We have the database, the electronic anaesthetic records and incident reports going back to 2019, so there are about four years before and three and a half years after the change. Two anaesthetic trainees can do the record review in protected audit time. There is no funding and no patient contact. I would like the analysis to be honest about the limits of a before-and-after comparison, because several other airway initiatives started around the same time, and our airway committee wants the results in March 2027. A colleague keeps quoting a national survey saying only a third of alerts ever reach the next anaesthetist, and I have never found the source.",
+    "constraints": "No funding; record review by two anaesthetic trainees in protected audit time under the airway lead's supervision. Existing records only; no patient contact. Results to the airway committee in March 2027.",
+    "localFacts": [
+      "The hospital's difficult airway database held 1,146 patients registered between January 2019 and August 2026.",
+      "The Caldicott guardian approved access to the difficult airway database and linked anaesthetic records for this study on 2 September 2026 (reference CG-2026-118).",
+      "The trust research office classified the study as a retrospective service evaluation on 9 September 2026 (reference RSE-26-044).",
+      "The wristband, electronic alert and letter system was introduced on 1 March 2023."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "Retrospective study named; routing explicit (S11).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a consultant anaesthetist and the airway lead at a 900-bed teaching hospital. Since 2019 we have kept a difficult airway database of patients in whom intubation or mask ventilation was unexpectedly difficult. In March 2023 we implemented an alert system for these patients: a red wristband while they are in hospital, an alert on the electronic record, and a letter to the patient and their GP. The idea is that the next anaesthetist, here or elsewhere, knows before induction. Anecdotally the system works better than what we had before, but we still hear of patients with a known difficult airway arriving in theatre or the emergency department with nobody aware of it.\n\nI want a retrospective study of our own records to find out whether the alert system has changed what happens at the next anaesthetic: how often the alert was present and seen before airway management, how often difficulty was unanticipated, and whether the airway plan was different. We have the database, the electronic anaesthetic records and incident reports going back to 2019, so there are about four years before and three and a half years after the change. Two anaesthetic trainees can do the record review in protected audit time. There is no funding and no patient contact. I would like the analysis to be honest about the limits of a before-and-after comparison, because several other airway initiatives started around the same time, and our airway committee wants the results in March 2027. A colleague keeps quoting a national survey saying only a third of alerts ever reach the next anaesthetist, and I have never found the source.",
+          "problem.constraints": "No funding; record review by two anaesthetic trainees in protected audit time under the airway lead's supervision. Existing records only; no patient contact. Results to the airway committee in March 2027.",
+          "family": "retrospective",
+          "design.basis": "explicit",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a consultant anaesthetist and the airway lead"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Difficult airway alert wristbands and electronic alerts: recognition of known airway difficulty at the next anaesthetic",
+        "subtitle": "Retrospective before-after study of the hospital's difficult airway alert system",
+        "family": "retrospective",
+        "statement": "A teaching hospital introduced a difficult airway alert system in March 2023 (wristband, electronic alert, letter), but it does not know whether known airway difficulty is now recognised before the next airway management, whether unanticipated difficulty has fallen, or whether airway plans change. The hospital's difficult airway database, anaesthetic records and incident reports from 2019 allow a retrospective comparison before and after the change, with the limits that concurrent initiatives impose.",
+        "whoAffected": "Patients with a known difficult airway (about 1,150 in the hospital's database), anaesthetists and emergency teams who manage their airways later, and the airway committee.",
+        "whatHurts": "Unrecognised known difficulty leads to repeated intubation attempts, hypoxia and emergency front-of-neck access; an alert system that does not reach the next anaesthetist gives false reassurance.",
+        "currentPractice": "Since March 2023 patients receive a wristband, an electronic alert and a letter; no evaluation of whether alerts reach the next anaesthetist has been done.",
+        "whyNow": "The airway committee wants results in March 2027, near-miss reports continue, and a widely quoted national figure cannot be traced.",
+        "constraints": "No funding; record review by two anaesthetic trainees in protected audit time under the airway lead's supervision. Existing records only; no patient contact. Results to the airway committee in March 2027.",
+        "patientCenteredGoal": "Every patient with a known difficult airway is recognised and planned for before anyone manages their airway again.",
+        "summary": "Problem framed as a retrospective before-after evaluation of an alert system, with an untraced national figure to check."
+      },
+      "note": "The constraints equal the typed text (G11 not engaged).",
+      "expect": {
+        "store": {
+          "title": "Difficult airway alert wristbands and electronic alerts: recognition of known airway difficulty at the next anaesthetic",
+          "family": "retrospective",
+          "problem.constraints": "No funding; record review by two anaesthetic trainees in protected audit time under the airway lead's supervision. Existing records only; no patient contact. Results to the airway committee in March 2027.",
+          "problem.statement": {
+            "includes": "allow a retrospective comparison before and after the change"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Difficult airway alert wristbands and electronic alerts: recognition of known airway difficulty at the next anaesthetic"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "difficult airway alert wristband electronic alert recognition next anaesthetic unanticipated difficulty",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Difficult airway alert systems in hospitals: a systematic review of communication tools",
+            "authors": "Rasmussen-Adeyemi K, Holloway-Chen P, Mbeki-Sorensen A",
+            "year": 2021,
+            "venue": "Journal of Airway Management Research",
+            "doi": "10.5555/jamr.2021.0162",
+            "providerType": "review",
+            "abstract": "We reviewed 17 studies of tools used to communicate a known difficult airway: wristbands, electronic alerts, patient letters, alert cards and national registers. The proportion of patients whose alert was available at the next anaesthetic ranged from 45 to 80 percent, and combined systems performed better than single tools. Only four studies measured whether the next anaesthetist actually saw the alert before airway management, and none measured patient harm. Most were single-centre before-after comparisons without adjustment for concurrent airway initiatives."
+          },
+          {
+            "title": "Wristband alerts for known difficult airway: a before-after study in a teaching hospital",
+            "authors": "Castellano-Brightwell J, Oyelaran-Frost M",
+            "year": 2019,
+            "venue": "Anaesthesia Practice and Safety",
+            "doi": "10.5555/aps.2019.0317",
+            "providerType": "journal-article",
+            "abstract": "After introducing a coloured wristband for inpatients with a documented difficult airway, we compared 18 months before and after. The proportion of patients whose known difficulty was documented as recognised before their next anaesthetic rose from 38 to 71 percent. Recognition was lowest for emergency airway management outside theatres. A new electronic record was introduced during the after period, and staff training on airway alerts ran at the same time, so the change cannot be attributed to the wristband alone."
+          },
+          {
+            "title": "Visibility of electronic difficult airway alerts to anaesthetists before induction: an observational study",
+            "authors": "Nakashima-Doyle F, Petrov-Asante L, Whitcombe-Obi R",
+            "year": 2022,
+            "venue": "Journal of Airway Management Research",
+            "doi": "10.5555/jamr.2022.0288",
+            "providerType": "journal-article",
+            "abstract": "We examined 412 subsequent anaesthetics in patients with an electronic difficult airway alert in two hospitals. The alert was displayed in the anaesthetic record in 88 percent of cases, but documented as read before induction in only 54 percent. Alerts were missed more often out of hours and when the patient was transferred from another hospital. Anaesthetists reported alert fatigue from other electronic warnings. Documentation of reading the alert may underestimate how often it was actually seen. Alerts were displayed less often for patients transferred in, because records from other hospitals did not carry them."
+          },
+          {
+            "title": "Unanticipated difficult tracheal intubation after a documented difficult airway: frequency and consequences",
+            "authors": "Lindqvist-Mahlangu T, Ferreira-Kowalski D",
+            "year": 2020,
+            "venue": "Anaesthesia Practice and Safety",
+            "doi": "10.5555/aps.2020.0409",
+            "providerType": "journal-article",
+            "abstract": "In a regional database of 2,030 patients with a documented difficult tracheal intubation, we reviewed the next airway management within five years. Difficulty was unanticipated in 31 percent of cases, and unanticipated cases more often involved multiple attempts, desaturation below 80 percent and emergency front-of-neck access. Unanticipated difficulty was commoner in emergency settings and in patients treated at a different hospital from the index event. The database relied on voluntary reporting and probably missed some events. Patients whose difficulty was unanticipated were more often older and admitted as emergencies."
+          },
+          {
+            "title": "Do patients know? Awareness of difficult airway status and use of alert letters",
+            "authors": "Achebe-Morrison S, Tanaka-Whitlock J",
+            "year": 2023,
+            "venue": "Patient Safety in Perioperative Care",
+            "doi": "10.5555/pspc.2023.0074",
+            "providerType": "journal-article",
+            "abstract": "We telephoned 180 patients who had been sent a difficult airway letter between 6 and 36 months earlier. Forty percent could say that they had a difficult airway and 22 percent reported carrying the letter or an alert card. Awareness was lower in older patients, patients with limited English and patients whose index anaesthetic had been an emergency. Several patients said the letter used technical language they did not understand. The response rate was 61 percent. Patients who had discussed the letter with their GP were more likely to know their status."
+          },
+          {
+            "title": "Using a hospital difficult airway database for research: completeness and linkage to later anaesthetics",
+            "authors": "Brennan-Oyelowo P, Suzuki-Hartmann E",
+            "year": 2018,
+            "venue": "Perioperative Data and Informatics",
+            "doi": "10.5555/pdi.2018.0023",
+            "providerType": "journal-article",
+            "abstract": "We compared a hospital's difficult airway database with a manual review of anaesthetic records over two years. The database captured 76 percent of events meeting its own definition, with lower capture for events outside theatres. Linkage of database entries to later anaesthetics in the same hospital succeeded for 90 percent using the hospital number. Anaesthetics in other hospitals were invisible to the database. The authors recommend reporting capture rates alongside any outcome derived from such databases. Capture improved after a reporting prompt was added to the anaesthetic record in the second year."
+          },
+          {
+            "title": "Interrupted time series for evaluating hospital safety interventions: pitfalls with few data points and concurrent changes",
+            "authors": "Okafor-Linde R, Delacroix-Bhatt S",
+            "year": 2024,
+            "venue": "Quality and Safety Methods",
+            "doi": "10.5555/qsm.2024.0012",
+            "providerType": "journal-article",
+            "abstract": "We re-analysed 42 published interrupted time series of hospital safety interventions. Twenty-six had fewer than eight data points on one side of the change, and 19 did not mention concurrent interventions. Re-analysis with autocorrelation and seasonality taken into account changed the conclusion in 11 studies. We recommend at least eight points before and after, a pre-specified model, a control series where possible, and an explicit list of co-interventions with their dates. Studies with a control series were less likely to change conclusion on re-analysis, but only five of the 42 used one."
+          }
+        ]
+      },
+      "note": "Seven records; ids from stableRecordId (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-07tncvr",
+            "ev-0xz7bs2",
+            "ev-0de9zjp",
+            "ev-0z3z6ig",
+            "ev-04dpbpv",
+            "ev-08q6nfo",
+            "ev-12x9zs1"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].id": "ev-0xz7bs2",
+          "scan.items[1].doi": "10.5555/aps.2019.0317",
+          "scan.items[1].provenance.status": "retrieved",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Wristband alerts for known difficult airway: a before-after study in a teaching hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "difficult airway alert wristband electronic alert recognition next anaesthetic",
+        "sourcesConsulted": [
+          "model recall",
+          "national airway safety literature (described, not searched)"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "Leads only; certainty is left to the appraisal of the retrieved records.",
+        "synthesis": "Three leads recalled to set alongside the retrieved records, none checked: a national survey that is often quoted as showing that only about a third of alerts reach the next anaesthetist, a report on alert cards carried by patients, and a study of emergency department airway handovers.",
+        "items": [
+          {
+            "title": "Fourth national survey of difficult airway alerts: communication of known airway difficulty across 180 hospitals",
+            "authors": "National Airway Safety Collaborative",
+            "year": 2015,
+            "source": "Journal of Airway Safety",
+            "kind": "observational",
+            "grade": "high",
+            "methodQuality": 85,
+            "relevance": 92,
+            "verification": "landmark",
+            "doi": "10.5555/jas.2015.0404",
+            "contextTags": [
+              "national survey",
+              "alerts",
+              "communication"
+            ],
+            "keyFindings": "Known airway difficulty was communicated to the next anaesthetist in only 34 percent of cases across 180 hospitals; wristbands and letters were the commonest tools.",
+            "limitations": "Survey of departments rather than patient records.",
+            "notes": "The landmark national survey of airway alerts."
+          },
+          {
+            "title": "Alert cards carried by patients with a difficult airway: uptake and use in an emergency",
+            "authors": "Suleiman-Frost A, Ekwueme-Lund B",
+            "year": 2017,
+            "source": "Emergency Airway Journal",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 48,
+            "relevance": 60,
+            "verification": "verify",
+            "contextTags": [
+              "alert card",
+              "patients"
+            ],
+            "keyFindings": "Few patients produced their alert card when they arrived as an emergency.",
+            "limitations": "Small study; one region.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Airway handover between emergency department and anaesthetic teams: an observational study",
+            "authors": "Okonjo-Reid M, Halvorsen-Pike J",
+            "year": 2021,
+            "source": "Emergency Medicine Practice",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 52,
+            "relevance": 58,
+            "verification": "ai-lead",
+            "contextTags": [
+              "handover",
+              "emergency department"
+            ],
+            "keyFindings": "Known airway difficulty was mentioned in fewer than half of observed handovers.",
+            "limitations": "Observation may have changed behaviour.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Three leads, one labelled landmark with an identifier; none has been verified."
+      },
+      "note": "The landmark-labelled lead is appended after the seven records as a model lead, unverified, with no checks (G3, D1); its label and identifier are not verification. gradeOverall null leaves the certainty unassessed ('cleared', holds at 875fe59); sourcesConsulted text is dropped. The retrieved records keep the stage completable (G2).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[1].id": "ev-0xz7bs2",
+          "scan.items[1].provenance.origin": "retrieval",
+          "scan.items[7].title": "Fourth national survey of difficult airway alerts: communication of known airway difficulty across 180 hospitals",
+          "scan.items[7].doi": "10.5555/jas.2015.0404",
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[7].provenance.checks": {
+            "length": 0
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": {
+            "min": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-07tncvr",
+            "relevance": 88,
+            "methodQuality": 62,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Alerts were available at the next anaesthetic in 45 to 80 percent of patients; combined systems did better; few studies measured whether the alert was seen.",
+            "limitations": "Mostly single-centre before-after studies without adjustment for co-interventions.",
+            "contextTags": [
+              "alert tools",
+              "review"
+            ]
+          },
+          {
+            "id": "ev-0xz7bs2",
+            "relevance": 92,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Documented recognition before the next anaesthetic rose from 38 to 71 percent after wristbands were introduced.",
+            "limitations": "Concurrent electronic record and training changes.",
+            "contextTags": [
+              "wristband",
+              "before-after"
+            ]
+          },
+          {
+            "id": "ev-0de9zjp",
+            "relevance": 90,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Electronic alerts were displayed in 88 percent but documented as read before induction in 54 percent; missed out of hours and after transfer.",
+            "limitations": "Documentation may underestimate reading.",
+            "contextTags": [
+              "electronic alert",
+              "alert fatigue"
+            ]
+          },
+          {
+            "id": "ev-0z3z6ig",
+            "relevance": 86,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Difficulty was unanticipated in 31 percent of next airway managements, with more attempts, desaturation and front-of-neck access.",
+            "limitations": "Voluntary database; under-reporting likely.",
+            "contextTags": [
+              "unanticipated difficulty",
+              "harm"
+            ]
+          },
+          {
+            "id": "ev-04dpbpv",
+            "relevance": 70,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Forty percent of patients knew they had a difficult airway; 22 percent carried the letter or a card.",
+            "limitations": "61 percent response; recall.",
+            "contextTags": [
+              "patient awareness",
+              "letters",
+              "equity"
+            ]
+          },
+          {
+            "id": "ev-08q6nfo",
+            "relevance": 80,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A hospital airway database captured 76 percent of qualifying events; linkage to later anaesthetics in the same hospital succeeded for 90 percent.",
+            "limitations": "One hospital; other hospitals invisible.",
+            "contextTags": [
+              "data completeness",
+              "linkage"
+            ]
+          },
+          {
+            "id": "ev-12x9zs1",
+            "relevance": 74,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Many safety time series had too few points or ignored co-interventions; re-analysis changed 11 of 42 conclusions.",
+            "limitations": "Methods study across topics.",
+            "contextTags": [
+              "interrupted time series",
+              "methods"
+            ]
+          },
+          {
+            "id": "ev-nsaa2015",
+            "relevance": 95,
+            "methodQuality": 85,
+            "kind": "observational",
+            "grade": "high",
+            "keyFindings": "Only 34 percent of alerts reached the next anaesthetist nationally.",
+            "limitations": "None noted.",
+            "contextTags": [
+              "landmark"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "After wristbands were introduced in one teaching hospital, documented recognition of known difficulty before the next anaesthetic rose from 38 to 71 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0xz7bs2"
+            ],
+            "location": "Abstract, results",
+            "passage": "The proportion of patients whose known difficulty was documented as recognised before their next anaesthetic rose from 38 to 71 percent.",
+            "interpretation": "A planning value for the primary outcome; confounded by concurrent changes.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Electronic difficult airway alerts were displayed in 88 percent of later anaesthetic records but documented as read before induction in only 54 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0de9zjp"
+            ],
+            "location": "Abstract",
+            "passage": "The alert was displayed in the anaesthetic record in 88 percent of cases, but documented as read before induction in only 54 percent.",
+            "interpretation": "Measure recognition before airway management, not only the presence of an alert.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Difficulty was unanticipated in 31 percent of next airway managements after a documented difficult intubation.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0z3z6ig"
+            ],
+            "location": "Abstract",
+            "passage": "Difficulty was unanticipated in 31 percent of cases",
+            "interpretation": "A baseline value for the secondary outcome.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "A hospital difficult airway database captured about three quarters of qualifying events, and linkage to later anaesthetics in the same hospital succeeded for 90 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-08q6nfo"
+            ],
+            "location": "Abstract",
+            "passage": "The database captured 76 percent of events meeting its own definition",
+            "interpretation": "Report database capture alongside outcomes and restrict follow-up to this hospital.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Alert systems make known difficulty available at the next anaesthetic in roughly half to four fifths of patients, but presence is not recognition: one study found alerts displayed in 88 percent and documented as read in 54 percent. Difficulty is unanticipated in about three in ten next airway managements after a documented difficult intubation. Hospital airway databases miss about a quarter of events, and time series of safety interventions are often too short and confounded by co-interventions. The national 34 percent figure recalled by the model is a lead with an unverified identifier, not a retrieved record, and it was not appraised.",
+        "gradeOverall": "low",
+        "gradeRationale": "Single-centre before-after and observational studies with concurrent changes and incomplete databases; consistent direction but serious risk of bias.",
+        "summary": "Seven retrieved records appraised; an annotation for an identifier that is not in the study was dropped; four claims recorded."
+      },
+      "note": "Annotations for the seven retrieved records apply (S13); the annotation keyed 'ev-nsaa2015' matches nothing in the study and is dropped (holds at 875fe59). The lead is not annotated and stays unverified and unrated.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[1].grade": "low",
+          "scan.items[6].grade": "moderate",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[7].provenance.origin": "model",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0xz7bs2"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-08q6nfo"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-nsaa2015]",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "900-bed teaching hospital",
+          "alert system since 1 March 2023",
+          "difficult airway database since 2019",
+          "concurrent airway initiatives"
+        ],
+        "reading": "The alert chain has three links: the alert must exist in the record, the next anaesthetist must see it before airway management (claim c2), and the plan must change so that difficulty is no longer unanticipated (claim c3). A before-after rise in recognition has been reported elsewhere (claim c1) but concurrent changes cloud it, and the database behind any local study misses events (claim c4). The untraced national figure appears only as an unverified lead.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Wristband, electronic alert and letter",
+            "kind": "context",
+            "detail": "Introduced 1 March 2023."
+          },
+          {
+            "id": "n2",
+            "label": "Alert seen before airway management",
+            "kind": "outcome",
+            "detail": "Primary outcome."
+          },
+          {
+            "id": "n3",
+            "label": "Unanticipated difficulty at the next airway management",
+            "kind": "outcome",
+            "detail": "About 31 percent elsewhere (c3)."
+          },
+          {
+            "id": "n4",
+            "label": "Before-after wristband study",
+            "kind": "observational",
+            "detail": "38 to 71 percent recognition (c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Electronic alert visibility study",
+            "kind": "observational",
+            "detail": "Displayed 88, read 54 percent (c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Database capture",
+            "kind": "gap",
+            "detail": "About three quarters of events (c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Patients with limited English or emergency index events",
+            "kind": "stakeholder",
+            "detail": "Least aware of their status."
+          },
+          {
+            "id": "n8",
+            "label": "Unverified national survey lead",
+            "kind": "gap",
+            "detail": "Landmark label and identifier not checked."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "should increase"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "should reduce"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "reports a rise in"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "separates display from"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "under-counts"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "benefit less from letters in"
+          }
+        ],
+        "summary": "Map follows the alert from record to recognition to planning, with the database's limits and the unverified national figure marked."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Presence of an alert is not recognition",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "Alerts can be displayed yet unread (claim c2); counting alerts would overstate success.",
+            "opportunity": "Make documented recognition before airway management the primary outcome."
+          },
+          {
+            "id": "g2",
+            "title": "Concurrent airway initiatives",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Other changes started around March 2023, as in the retrieved before-after study.",
+            "opportunity": "List co-interventions with dates and use a segmented time series with enough points on each side."
+          },
+          {
+            "id": "g3",
+            "title": "Database misses events",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "About a quarter of qualifying events may be missing (claim c4).",
+            "opportunity": "Report capture against a manual sample and restrict follow-up to this hospital."
+          },
+          {
+            "id": "g4",
+            "title": "Patients least aware of their status",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Older patients, patients with limited English and emergency patients know least about their airway status.",
+            "opportunity": "Report recognition by age, language and emergency status."
+          },
+          {
+            "id": "g5",
+            "title": "Untraced national figure",
+            "kind": "error",
+            "severity": "watch",
+            "whyItMatters": "The quoted one-third figure matches only an unverified model lead with an identifier nobody has checked.",
+            "opportunity": "Do not cite it unless an identity check succeeds."
+          }
+        ],
+        "errorsFound": [
+          "A discovery lead labelled 'landmark' carries an identifier that has not been checked; the label is not verification.",
+          "An appraisal annotation used an identifier that does not exist in the study and was dropped."
+        ],
+        "reevaluation": "The study should measure recognition before airway management in a segmented time series from the database and anaesthetic records, report database capture and co-interventions, and leave the untraced national figure out.",
+        "summary": "Five gaps; presence versus recognition and concurrent initiatives are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[4].kind": "error",
+          "gaps.errorsFound": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Presence of an alert is not recognition"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "After the alert system was introduced, the proportion of next airway managements in which known difficulty was documented as recognised beforehand rose by at least 20 percentage points above the pre-existing trend.",
+            "novelty": 40,
+            "need": 82,
+            "practiceChange": 75,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Recognition is the mechanism the system targets; the database and records allow a segmented series.",
+            "risks": "Co-interventions; documentation of recognition."
+          },
+          {
+            "id": "h2",
+            "statement": "Unanticipated difficulty at the next airway management fell after the alert system was introduced.",
+            "novelty": 45,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 60,
+            "parsimony": 65,
+            "rationale": "The patient-relevant consequence; fewer events limit precision.",
+            "risks": "Small numbers; under-reporting."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Two hypotheses; h1 selected."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among patients in the hospital's difficult airway database who later needed airway management in the hospital, did documented recognition of known difficulty before airway management change after the March 2023 alert system, compared with the pre-existing trend?",
+            "framework": "PECO",
+            "population": "Patients registered in the difficult airway database with a later airway management episode in the hospital, 2019 to 2026",
+            "intervention": "Airway management after 1 March 2023 (alert system in place)",
+            "comparator": "Airway management before 1 March 2023, with the pre-existing trend",
+            "outcome": "Known difficulty documented as recognised before airway management",
+            "time": "January 2019 to August 2026",
+            "setting": "900-bed teaching hospital"
+          }
+        ],
+        "finer": "Feasible with approved access and trainee time; interesting to the airway committee; novel locally; ethical as a service evaluation of records; relevant because near misses continue.",
+        "summary": "One PECO question for a segmented before-after comparison."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "retrospective",
+        "alternatives": [
+          "Prospective audit of new airway events from now on (refused: cannot show change since 2023 and takes years to accrue events)",
+          "Simple before-after comparison of two periods (refused: ignores the pre-existing trend and co-interventions)",
+          "Survey of anaesthetists about alerts (refused as the main design: measures opinion, not recognition)"
+        ],
+        "guidelines": [
+          "RECORD",
+          "STROBE",
+          "SQUIRE 2.0 for the service context"
+        ],
+        "whyNotMoreComplex": "A controlled design across hospitals is not possible because other hospitals' records are not accessible; a segmented series within the hospital is the strongest feasible design.",
+        "rationale": "The alert system started on a known date and the hospital holds records on both sides of it, so a retrospective segmented comparison of recognition before airway management is the simplest design that answers the committee's question. A before-after rise elsewhere (claim c1), the gap between display and reading (claim c2) and the rate of unanticipated difficulty (claim c3) set the planning values.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct a retrospective segmented time series of documented recognition of known airway difficulty before later airway management, January 2019 to August 2026, from the difficult airway database and anaesthetic records, reporting co-interventions and database capture.",
+          "question": "How should the hospital evaluate its difficult airway alert system?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Recognition can change after alert systems but display is not recognition, so a local measure of recognition would inform the committee.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Too few later airway management episodes exist on either side of the change for a time series.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Approval to access the difficult airway database and linked anaesthetic records",
+              "status": "met",
+              "evidence": "Caldicott guardian approval CG-2026-118 dated 2 September 2026, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research governance classification of the study",
+              "status": "met",
+              "evidence": "Trust research office classification RSE-26-044 dated 9 September 2026, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Simple two-period comparison",
+            "Prospective audit"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; both gates met on investigator-supplied approvals."
+        },
+        "summary": "Retrospective segmented series recommended; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "Decision on claims c1 to c3 (S13); both gates met. selectionStatus requires S11; panel text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "retrospective",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive predecessor of the source change: claims on retrieved records, both gates met (G7). S11 for the fields; D5 for the text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "family": "retrospective",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Retrospective segmented time series of recognition of known airway difficulty before later airway management, January 2019 to August 2026, using the difficult airway database linked to anaesthetic records and incident reports.",
+        "population": "Patients registered in the difficult airway database who had a later airway management episode (anaesthetic or emergency intubation) in the hospital; the first later episode per patient per quarter is counted.",
+        "exposure": "Airway management after 1 March 2023, when the wristband, electronic alert and letter were in place, compared with the pre-existing trend.",
+        "procedures": "Two trainees review the anaesthetic record of each later episode using a tested form: whether the alert was present, whether known difficulty was documented as recognised before airway management, the airway plan, and whether difficulty was unanticipated. A random 15 percent are reviewed by both trainees. Database capture is checked against a manual review of one year's anaesthetic records. Co-interventions (training, equipment, guidelines) are listed with dates.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Known difficulty recognised before airway management",
+            "measure": "Proportion of later airway management episodes with documented recognition of known difficulty beforehand, per quarter",
+            "timing": "Each later episode",
+            "why": "The mechanism the alert system exists to deliver.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Unanticipated difficulty",
+            "measure": "Proportion of later episodes with difficulty not anticipated in the plan",
+            "timing": "Each later episode",
+            "why": "The patient-relevant consequence.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Alert present in the record",
+            "measure": "Proportion of later episodes with the electronic alert displayed",
+            "timing": "Each later episode",
+            "why": "Separates missing alerts from unread ones.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Alert burden",
+            "measure": "Number of other electronic warnings displayed to the anaesthetist",
+            "timing": "Each later episode",
+            "why": "Alert fatigue may reduce recognition.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 400 later episodes over the period; two trainees at two sessions a week can review them in about five months.",
+        "biasMitigation": [
+          "Segmented regression with the pre-existing trend",
+          "Co-interventions listed with dates and modelled where possible",
+          "Double review of 15 percent of records",
+          "Database capture reported"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Co-interventions",
+            "severity": "high",
+            "note": "Other airway initiatives started around the change."
+          },
+          {
+            "id": "b2",
+            "label": "Documentation of recognition",
+            "severity": "watch",
+            "note": "Recognition may happen without being written down."
+          },
+          {
+            "id": "b3",
+            "label": "Episodes in other hospitals",
+            "severity": "watch",
+            "note": "Invisible to the database."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 3,
+          "flags": [
+            "Three co-intervention terms at most"
+          ],
+          "simplestPath": "One series, one primary outcome, one change point."
+        },
+        "theoreticalFramework": "None beyond the segmented time series structure.",
+        "summary": "Segmented series with recognition as the primary outcome and database capture reported."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.biasFlags[0].severity": "high",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Segmented regression of quarterly proportions, 17 quarters before and 14 after the change.",
+        "sampleSize": "About 400 later episodes give about 12 per quarter, 200 before and 200 after. With recognition near 45 percent before and 70 percent after, a two-period comparison would have more than 95 percent power, but the segmented model is less precise: with 17 and 14 quarterly points and moderate autocorrelation, a level change of 20 percentage points is detectable with about 80 percent power. A change of 10 points would not be distinguishable from noise.",
+        "primaryAnalysis": "Segmented binomial regression of quarterly recognition with terms for pre-existing trend, level change and slope change at March 2023, with autocorrelation checked and a pre-specified model.",
+        "secondaryAnalysis": "The same model for unanticipated difficulty; alert presence described; recognition by emergency status, age band and language where recorded.",
+        "missingData": "Episodes with missing anaesthetic records are counted and reported; not imputed.",
+        "multiplicity": "One primary outcome; secondary outcomes reported with intervals.",
+        "software": "R; analysis code fixed before extraction.",
+        "overfittingGuards": [
+          "One change point fixed in advance",
+          "At most three co-intervention terms",
+          "No search for alternative change points"
+        ],
+        "summary": "About 400 episodes; a 20-point level change is detectable, a 10-point change is not."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "A change of 10 points would not be distinguishable"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "change-source",
+      "record": "Wristband alerts for known difficult airway: a before-after study in a teaching hospital",
+      "field": "status",
+      "value": "mismatch",
+      "note": "An identity check finds that the identifier of the record behind claim c1 resolves to a different work; the status is changed through the store's own action while the route is on Stats. The accepted decision becomes stale and blocked (evidenceRevision at 875fe59 includes provenance status; evaluateDecision adds the mismatch blocker), and every completed stage after Scan is flagged. The decision panel is not on this route, so the screen check here is the stage list's 'review required'; 'stale' is checked on the Design route in the next two steps.",
+      "expect": {
+        "store": {
+          "scan.items[1].provenance.status": "mismatch",
+          "scan.items[1].title": "Wristband alerts for known difficult airway: a before-after study in a teaching hospital",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "scan": "complete",
+          "design": "needs-review",
+          "stats": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 2,
+      "response": {
+        "recommended": "retrospective",
+        "alternatives": [
+          "Prospective audit of new airway events from now on (refused: cannot show change since 2023 and takes years to accrue events)",
+          "Simple before-after comparison of two periods (refused: ignores the pre-existing trend and co-interventions)",
+          "Survey of anaesthetists about alerts (refused as the main design: measures opinion, not recognition)"
+        ],
+        "guidelines": [
+          "RECORD",
+          "STROBE",
+          "SQUIRE 2.0 for the service context"
+        ],
+        "whyNotMoreComplex": "A controlled design across hospitals is not possible because other hospitals' records are not accessible; a segmented series within the hospital is the strongest feasible design.",
+        "rationale": "The before-after wristband study behind claim c1 no longer counts as support: its identifier resolved to a different work. The design question is unchanged, and the remaining retrieved evidence still supports a retrospective segmented series: display is not recognition (claim c2), unanticipated difficulty is common (claim c3) and database capture must be reported (claim c4). Planning values for recognition come from the hospital's own pre-change data instead of claim c1.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct the retrospective segmented time series of documented recognition before later airway management from the database and anaesthetic records, with planning values taken from the hospital's own pre-change data and database capture reported alongside every outcome.",
+          "question": "How should the hospital evaluate its difficult airway alert system now that one supporting record has been found to be misattributed?",
+          "claimIds": [
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Display is not recognition and unanticipated difficulty is common, so a local measure of recognition would inform the committee.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Database capture is too low to support outcome estimates.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c4"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Approval to access the difficult airway database and linked anaesthetic records",
+              "status": "met",
+              "evidence": "Caldicott guardian approval CG-2026-118 dated 2 September 2026, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research governance classification of the study",
+              "status": "met",
+              "evidence": "Trust research office classification RSE-26-044 dated 9 September 2026, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Simple two-period comparison",
+            "Prospective audit"
+          ],
+          "note": "Replaces the stale decision; rests on claims c2 to c4, none of which cites the mismatched record."
+        },
+        "summary": "Same design re-decided on the evidence that remains after the mismatch; claims c2 to c4."
+      },
+      "note": "Design re-run on the current evidence: the new decision rests on c2 to c4 and is proposed; the old decision stays stale in the history (only proposed decisions are superseded). Completing Design clears its own review flag; protocol and stats stay flagged. S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].status": "stale",
+          "design.decisions[0].selectionStatus": "stale",
+          "design.decisions[1].status": "proposed",
+          "design.decisions[1].selectionStatus": "proposed",
+          "design.decisions[1].claimIds": [
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "design": "complete",
+          "protocol": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: the stale first decision and the proposed second decision survive (G7).",
+      "expect": {
+        "store": {
+          "title": "Difficult airway alert wristbands and electronic alerts: recognition of known airway difficulty at the next anaesthetic",
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].selectionStatus": "stale",
+          "design.decisions[1].selectionStatus": "proposed",
+          "scan.items[1].provenance.status": "mismatch",
+          "scan.items[7].provenance.status": "unverified",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "protocol",
+            "stats"
+          ]
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "proposed",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The new decision is supported (claims c2 to c4 rest on retrieved records, none mismatched) and both gates are met: accepted and ready; the first decision stays stale. S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[1].status": "accepted",
+          "design.decisions[1].selectionStatus": "accepted",
+          "design.decisions[1].actionStatus": "ready",
+          "design.decisions[0].selectionStatus": "stale",
+          "family": "retrospective"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "stale"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: review of existing records by clinical staff; no patient contact.",
+        "consent": "Not sought: service evaluation of existing records under the research office classification and Caldicott approval.",
+        "data": "Pseudonymised review forms; hospital numbers kept on the secure trust drive; results reported without identifiable cases.",
+        "equity": "PROGRESS-Plus: older patients, patients with limited English and patients whose index event was an emergency know least about their status and may be recognised least. Recognition is reported by age band, language where recorded and emergency status.",
+        "effectiveness": "Useful if the committee learns whether the alert system improves recognition and where it fails.",
+        "efficiency": "Existing records and trainee audit time.",
+        "costs": "Trainee and consultant time within existing roles.",
+        "grants": "None needed.",
+        "partnerships": "Airway committee, emergency department airway lead, clinical informatics team and a patient partner who holds a difficult airway letter.",
+        "rebPath": "Classified as a retrospective service evaluation (RSE-26-044) with Caldicott approval (CG-2026-118); no research ethics review is required for this scope.",
+        "limitations": "Co-interventions, documentation of recognition and episodes outside the hospital.",
+        "summary": "Records-only service evaluation with approvals in place and equity reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "RSE-26-044"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          }
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A patient partner with a difficult airway letter reviews the plain-language summary and the letter template; the emergency department airway lead reviews the emergency episodes.",
+        "socialListening": "No social media listening.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "The letter",
+            "quote": "Composite paraphrase: I got a letter full of words I did not understand and put it in a drawer.",
+            "implication": "Report awareness and review the letter's language.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Out of hours",
+            "quote": "Composite paraphrase: At three in the morning in the emergency department nobody opens the alerts tab.",
+            "implication": "Report recognition by time of day and setting.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Alert fatigue",
+            "quote": "Composite paraphrase: There are eleven warnings on every record; the airway one looks like all the rest.",
+            "implication": "Record the number of other warnings as a balancing measure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Speaking up",
+            "quote": "Composite paraphrase: I told them about his airway three times before anyone listened.",
+            "implication": "Consider families as part of the alert chain.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on the letter, out-of-hours care, alert fatigue and families."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "family"
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Recognition of known difficult airway before later airway management after introduction of a wristband and electronic alert system: a retrospective segmented time series",
+        "abstract": "Objective: to assess whether a difficult airway alert system changed documented recognition of known difficulty before later airway management. Design: retrospective segmented time series, January 2019 to August 2026, from a hospital difficult airway database linked to anaesthetic records. Results will be reported after analysis.",
+        "introduction": "Alert systems aim to ensure that the next anaesthetist knows about a patient's difficult airway, but alerts can be displayed without being read.",
+        "methods": "Later airway management episodes were identified from the database and reviewed for documented recognition, alert presence and unanticipated difficulty. Quarterly proportions were analysed with segmented regression, listing co-interventions and reporting database capture.",
+        "results": "No records have been reviewed yet. The report will present episodes per quarter, recognition before and after the change, unanticipated difficulty and database capture.",
+        "discussion": "The discussion will interpret any change against co-interventions and database capture and will not cite the untraced national figure.",
+        "limitations": "Co-interventions, documentation of recognition, and episodes outside the hospital.",
+        "conclusion": "To be written after analysis.",
+        "reportingChecklist": "RECORD with STROBE",
+        "summary": "RECORD-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "RECORD with STROBE",
+          "manuscript.discussion": {
+            "includes": "will not cite the untraced national figure"
+          }
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The first accepted decision is stale because the record behind claim c1 resolved to a different work; the replacement decision rests on claims c2 to c4",
+          "Stages after Scan drafted before the mismatch are flagged for review; re-read them before the committee report",
+          "The landmark-labelled national survey lead remains unverified; do not cite it unless an identity check succeeds"
+        ],
+        "improvementNotes": "A discovery lead presented the untraced national figure as a landmark survey with an identifier; it stayed an unverified model lead, and an appraisal annotation for an identifier that does not exist in the study was dropped. After acceptance, an identity check found a mismatch for the before-after wristband study; the decision went stale and a new decision was made on the remaining claims.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the replaced decision, the flagged stages and the unverified landmark lead."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 mergeStage overwrites the audit patch (deliverable 1b item L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "complete",
+          "stats": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "The landmark lead stays unverified and the flags stay (G3, G8); statuses are checked in the export.",
+      "expect": {
+        "store": {
+          "title": "Difficult airway alert wristbands and electronic alerts: recognition of known airway difficulty at the next anaesthetic",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[7].provenance.origin": "model",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "protocol",
+            "stats"
+          ],
+          "design.decisions": {
+            "length": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "stale first decision, accepted second decision, mismatched record, unverified landmark lead. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "design.decisions[0].status": "stale",
+            "design.decisions[0].selectionStatus": "stale",
+            "design.decisions[1].selectionStatus": "accepted",
+            "design.decisions[1].actionStatus": "ready",
+            "design.decisions[1].claimIds": [
+              "c2",
+              "c3",
+              "c4"
+            ],
+            "scan.items[1].provenance.status": "mismatch",
+            "scan.items[7].provenance.status": "unverified",
+            "scan.items[7].doi": "10.5555/jas.2015.0404",
+            "scan.items[7].provenance.checks": {
+              "length": 0
+            },
+            "needsReview": [
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "protocol",
+              "stats"
+            ],
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ]
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

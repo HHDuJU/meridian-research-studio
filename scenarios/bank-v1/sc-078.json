@@ -1,0 +1,1461 @@
+{
+  "id": "sc-078",
+  "version": 1,
+  "title": "Hospital palliative care: serious illness conversation template, conflicting evidence, feasibility study first",
+  "field": "palliative-care",
+  "level": 3,
+  "family": "feasibility",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Level 3 with an unresolved family and conflicting evidence. The need names two designs (a stepped-wedge randomised trial and a retrospective chart review), so routing is unresolved at create (family null, basis 'unresolved'); the problem reply returns family null, which leaves both unchanged with a 'cleared' issue (D2), and echoes the typed constraints byte for byte (no rejected-change, G11). A fixture search returns seven records, one of them an undated grey report whose year stays null (G4). The appraisal records five claims; c3 cites two records that disagree on whether templates improve note quality and carries uncertainty 'high', which is stored as given. The scenario reopens after the questions stage (partial work) and checks that no family has been substituted. At design the recommendation 'feasibility' is proposed without changing the family (D3 under S11); the investigator accepts the supported decision (claims c1, c3, c4, c5 on retrieved records; three gates met on investigator-supplied records), and only then is the family 'feasibility' with basis 'explicit'. The scenario's family is the design the correct path reaches. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 3, 4, 6, 7 (ev-0uj8202, ev-0d76jre, ev-1ev1jp5, ev-0m99s1m, ev-0iqpn4s) and titleYearKey-keyed for record 2 (ev-180gane) and for the undated record 5, whose key ends in '|?' (ev-0x5p5ks). Requires D2 (null family keeps routing unresolved), S11 (routing at create, no family change before acceptance, recommendedFamily, selectionStatus, actionStatus, basis), S13 (appraisal payload) and D5 (status text). Catches: a substituted family, a proposed recommendation that changes the family, a guessed year, a high-uncertainty claim silently upgraded, and work lost on reopen.",
+  "inputs": {
+    "need": "I am a nurse practitioner with the palliative care consult team at a 600-bed teaching hospital. Our medical and oncology wards are supposed to document advance care planning conversations in a structured note, but when we looked at 120 patients who died in hospital last year, only 22 had any documented conversation about their goals before the last week of life, and most of those were a single line such as 'discussed, not for resuscitation'. The hospital wants a better approach: a serious illness conversation template in the electronic health record, a prompt when a patient meets triggers (for example a second unplanned admission within six months, or a clinician answering no to the question whether they would be surprised if the patient died within a year), and a short communication skills session for ward doctors and nurses.\n\nI am not sure how to evaluate this. We could run a stepped-wedge randomised trial across the six medical and oncology wards, which the hospital research office likes. Or we could start with a retrospective chart review of what gets documented now and compare it with what is documented after the template goes live. I have read papers saying that structured prompts double documentation and others saying the notes turn into tick boxes that do not reflect what patients want, so I am not even sure documentation is the right thing to measure.\n\nI need help deciding what to do first and what to measure: how often conversations are documented, the quality of what is written, whether care matches what patients said they wanted, and what families experience. We have a small internal grant, a data analyst for a few hours a month, and ward managers who are supportive but worried about workload.",
+    "constraints": "Internal grant of 15,000 for one year. Data analyst available 6 hours per month. Ward staff can attend at most one 60-minute training session each. The template can only go live in the record build team's February 2027 release.",
+    "localFacts": [
+      "In a review of 120 patients who died in hospital in 2025, 22 had a documented goals-of-care conversation before the last week of life.",
+      "The record build team scheduled the serious illness conversation template for the February 2027 release (change request CR-2026-3341).",
+      "The palliative care program director approved 4 hours per week of the nurse practitioner's time for the evaluation from October 2026 (approval PC-2026-19).",
+      "The medicine and oncology division's nursing director agreed on 2026-09-11 to release ward staff on two wards for one 60-minute session each (reference DIV-NUR-2026-44)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names two designs (a stepped-wedge randomised trial and a retrospective chart review), so routing is unresolved: family null and design.basis 'unresolved' (S11 routing record).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a nurse practitioner with the palliative care consult team at a 600-bed teaching hospital. Our medical and oncology wards are supposed to document advance care planning conversations in a structured note, but when we looked at 120 patients who died in hospital last year, only 22 had any documented conversation about their goals before the last week of life, and most of those were a single line such as 'discussed, not for resuscitation'. The hospital wants a better approach: a serious illness conversation template in the electronic health record, a prompt when a patient meets triggers (for example a second unplanned admission within six months, or a clinician answering no to the question whether they would be surprised if the patient died within a year), and a short communication skills session for ward doctors and nurses.\n\nI am not sure how to evaluate this. We could run a stepped-wedge randomised trial across the six medical and oncology wards, which the hospital research office likes. Or we could start with a retrospective chart review of what gets documented now and compare it with what is documented after the template goes live. I have read papers saying that structured prompts double documentation and others saying the notes turn into tick boxes that do not reflect what patients want, so I am not even sure documentation is the right thing to measure.\n\nI need help deciding what to do first and what to measure: how often conversations are documented, the quality of what is written, whether care matches what patients said they wanted, and what families experience. We have a small internal grant, a data analyst for a few hours a month, and ward managers who are supportive but worried about workload.",
+          "problem.constraints": "Internal grant of 15,000 for one year. Data analyst available 6 hours per month. Ward staff can attend at most one 60-minute training session each. The template can only go live in the record build team's February 2027 release.",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a nurse practitioner with the palliative"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Serious illness conversation template and prompts on medical and oncology wards: what to test first",
+        "subtitle": "Evaluation design not yet settled",
+        "family": null,
+        "statement": "Only 22 of 120 patients who died in the hospital last year had a documented goals-of-care conversation before the last week of life, and most notes recorded only resuscitation status. The hospital plans a serious illness conversation template with prognostic prompts and a short skills session on six medical and oncology wards from February 2027. It is not yet clear whether to evaluate this with a stepped-wedge randomised design or a chart review before and after, or whether documentation is even the right outcome, because published results conflict on whether templates improve what is written.",
+        "whoAffected": "Adults with serious illness admitted to the medical and oncology wards, their families, ward doctors and nurses, and the palliative care consult team.",
+        "whatHurts": "Patients reach the last week of life without their goals known; families are left to guess; notes that record only resuscitation status give a false impression that planning happened.",
+        "currentPractice": "A free-text advance care planning note, completed inconsistently; conversations mostly happen late or not at all.",
+        "whyNow": "The template is scheduled for the February 2027 release, a small internal grant is available, and the research office wants an evaluation plan.",
+        "constraints": "Internal grant of 15,000 for one year. Data analyst available 6 hours per month. Ward staff can attend at most one 60-minute training session each. The template can only go live in the record build team's February 2027 release.",
+        "patientCenteredGoal": "Patients with serious illness have a timely conversation about what matters to them, recorded in a way that shapes their care.",
+        "summary": "Problem framed; the design family is left unresolved (randomised or chart review) until the evidence is reviewed."
+      },
+      "note": "family null in the reply leaves the family unset and design.basis 'unresolved' with a 'cleared' issue (D2, amendment A1 item A7). Constraints are echoed byte for byte, so no rejected-change arises (G11).",
+      "expect": {
+        "store": {
+          "title": "Serious illness conversation template and prompts on medical and oncology wards: what to test first",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "problem.statement": {
+            "includes": "results conflict"
+          },
+          "problem.rawNeed": "I am a nurse practitioner with the palliative care consult team at a 600-bed teaching hospital. Our medical and oncology wards are supposed to document advance care planning conversations in a structured note, but when we looked at 120 patients who died in hospital last year, only 22 had any documented conversation about their goals before the last week of life, and most of those were a single line such as 'discussed, not for resuscitation'. The hospital wants a better approach: a serious illness conversation template in the electronic health record, a prompt when a patient meets triggers (for example a second unplanned admission within six months, or a clinician answering no to the question whether they would be surprised if the patient died within a year), and a short communication skills session for ward doctors and nurses.\n\nI am not sure how to evaluate this. We could run a stepped-wedge randomised trial across the six medical and oncology wards, which the hospital research office likes. Or we could start with a retrospective chart review of what gets documented now and compare it with what is documented after the template goes live. I have read papers saying that structured prompts double documentation and others saying the notes turn into tick boxes that do not reflect what patients want, so I am not even sure documentation is the right thing to measure.\n\nI need help deciding what to do first and what to measure: how often conversations are documented, the quality of what is written, whether care matches what patients said they wanted, and what families experience. We have a small internal grant, a data analyst for a few hours a month, and ward managers who are supportive but worried about workload.",
+          "problem.constraints": "Internal grant of 15,000 for one year. Data analyst available 6 hours per month. Ward staff can attend at most one 60-minute training session each. The template can only go live in the record build team's February 2027 release.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Serious illness conversation template and prompts on medical and oncology wards: what to test first"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "serious illness conversation template prompts advance care planning documentation quality hospital wards",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Serious illness conversation prompts and documented goals-of-care discussions on medical wards: a cluster randomised trial",
+            "authors": "Oyelowo-Bergman A, Castillo-Faraday N, Iwu-Hendricks M",
+            "year": 2019,
+            "venue": "Journal of Hospital Palliative Care",
+            "doi": "10.5555/jhpc.2019.0415",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomly allocated 12 medical wards to electronic prompts for serious illness conversations with a 90-minute clinician training session, or to usual care. Among 1,480 patients who met prognostic triggers, documented goals-of-care discussions before the last week of life rose from 18 to 41 percent on intervention wards and were unchanged on control wards. Documentation happened a median of 19 days earlier. The trial did not assess the content of the notes and did not measure whether care matched patients' stated goals. Staff on intervention wards reported that the prompts added about four minutes per eligible patient."
+          },
+          {
+            "title": "Tick-box documentation after an electronic advance care planning template: a content analysis of hospital notes",
+            "authors": "Lindgren-Oduya S, Pacheco-Wren T",
+            "year": 2022,
+            "venue": "Palliative Care Documentation Studies",
+            "providerType": "observational study",
+            "abstract": "We analysed 400 advance care planning notes written in the year before and the year after a hospital introduced a structured electronic template. The number of notes rose sharply after the template, but 63 percent of notes contained only resuscitation status and 12 percent documented anything about the patient's values or priorities. On a six-point quality score, the mean was 2.1 before and 2.3 after the template. Notes written by palliative care clinicians scored higher than those written by ward teams. The authors conclude that templates can increase the number of notes without improving what they say."
+          },
+          {
+            "title": "A structured template with ward training and the quality of documented advance care planning conversations: a before-after study",
+            "authors": "Achterberg-Nkosi J, Rowan-Takeda L, Faris-Olsen D",
+            "year": 2021,
+            "venue": "End of Life Care Quality",
+            "doi": "10.5555/elcq.2021.0098",
+            "providerType": "journal-article",
+            "abstract": "On four medical wards we introduced a structured conversation template together with a 60-minute communication skills session and monthly feedback on note quality. Documentation of advance care planning conversations for patients meeting prognostic triggers rose from 21 to 47 percent over nine months. Two trained raters scored a random sample of notes on a six-point quality scale; the mean quality score rose from 1.8 to 3.9 of 6, with the largest gains in documenting patient values and what matters most. The study had no concurrent comparison, and raters knew the period of each note."
+          },
+          {
+            "title": "Interventions to improve advance care planning documentation in hospital: a systematic review",
+            "authors": "Mbeki-Sorensen K, Haddad-Pryce E, Olawale-Lund F",
+            "year": 2017,
+            "venue": "Supportive and Palliative Care Reviews",
+            "doi": "10.5555/spcr.2017.0231",
+            "providerType": "systematic review",
+            "abstract": "We searched five databases for studies of interventions to increase documented advance care planning among hospital inpatients and included 23 studies. Documentation improved in 17 studies, most often after electronic prompts or templates combined with education. Only 5 studies assessed the quality of documentation and only 3 measured whether care received matched patients' documented preferences, with inconsistent results. Most studies were uncontrolled before-after comparisons at single sites. The review recommends that future evaluations measure the content of conversations and patient-centred outcomes, not documentation alone."
+          },
+          {
+            "title": "Regional review of advance care planning documentation in acute hospitals",
+            "authors": "Regional End of Life Care Network",
+            "year": null,
+            "venue": "Regional network report series",
+            "providerType": "report",
+            "abstract": "This network report reviewed the notes of patients who died in 14 acute hospitals in the region. The median proportion with a documented advance care planning conversation before the last week of life was 19 percent, ranging from 8 to 37 percent between hospitals. Five hospitals used a structured template; their median was 24 percent. Data were collected by local staff with different definitions, and the report does not state the period covered or its year of publication. It recommends a common definition and a quality measure for documented conversations."
+          },
+          {
+            "title": "Inter-rater reliability of a six-point quality score for documented serious illness conversations",
+            "authors": "Grant-Oyelaran P, Kimura-Bassey R",
+            "year": 2024,
+            "venue": "Journal of Palliative Care Measurement",
+            "doi": "10.5555/jpcm.2024.0052",
+            "providerType": "journal-article",
+            "abstract": "Two palliative care nurses independently rated 150 documented serious illness conversations on a six-point quality score covering prognosis, values, fears, trade-offs, family involvement and recommendations. Before training, agreement was moderate (kappa 0.48). After a two-hour calibration session with worked examples, agreement rose to kappa 0.71. Rating took a median of 6 minutes per note. Notes that recorded only resuscitation status were rated consistently low. The authors recommend calibration and double rating of a sample when the score is used to evaluate an intervention."
+          },
+          {
+            "title": "Bereaved family members' views of end-of-life care planning in hospital: a postal questionnaire study",
+            "authors": "Omondi-Castellano R, Wexler-Achebe H",
+            "year": 2023,
+            "venue": "Family Perspectives in Palliative Care",
+            "doi": "10.5555/fppc.2023.0117",
+            "providerType": "cross-sectional study",
+            "abstract": "We sent a postal questionnaire to the next of kin of 600 patients who died in two hospitals, three to six months after the death. The response rate was 34 percent, lower among families of younger patients and in deprived neighbourhoods. Families who recalled a conversation about goals of care more often reported that care matched the patient's wishes (72 percent compared with 51 percent). Families valued being included in conversations and wanted clearer explanations of what treatments would and would not do. Non-response limits how far the results apply to all bereaved families."
+          }
+        ]
+      },
+      "note": "Seven records; the regional report has year null and must stay null (G4). Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0uj8202",
+            "ev-180gane",
+            "ev-0d76jre",
+            "ev-1ev1jp5",
+            "ev-0x5p5ks",
+            "ev-0m99s1m",
+            "ev-0iqpn4s"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-0uj8202",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.items[4].id": "ev-0x5p5ks",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Regional review of advance care planning documentation in acute hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0uj8202",
+            "relevance": 90,
+            "methodQuality": 72,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Documented goals-of-care discussions before the last week of life rose from 18 to 41 percent on intervention wards, a median of 19 days earlier; note content and goal-concordant care were not assessed.",
+            "limitations": "Documentation only; 12 wards in one system; staff time of about four minutes per patient.",
+            "contextTags": [
+              "cluster randomised",
+              "prompts",
+              "documentation"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-180gane",
+            "relevance": 88,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "After a template, 63 percent of notes recorded only resuscitation status and 12 percent recorded values; mean quality 2.1 before and 2.3 after on a six-point score.",
+            "limitations": "One hospital; single rater; no training component.",
+            "contextTags": [
+              "note quality",
+              "template",
+              "unintended effects"
+            ],
+            "notes": "Conflicts with the before-after quality result."
+          },
+          {
+            "id": "ev-0d76jre",
+            "relevance": 86,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "With training and feedback, documentation rose from 21 to 47 percent and mean quality from 1.8 to 3.9 of 6.",
+            "limitations": "No concurrent comparison; raters knew the period.",
+            "contextTags": [
+              "note quality",
+              "training",
+              "feedback"
+            ],
+            "notes": "Conflicts with the content analysis."
+          },
+          {
+            "id": "ev-1ev1jp5",
+            "relevance": 78,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Documentation improved in 17 of 23 studies; only 5 assessed quality and 3 measured goal-concordant care, with inconsistent results.",
+            "limitations": "Mostly uncontrolled single-site studies; search dated.",
+            "contextTags": [
+              "systematic review",
+              "outcome choice"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0x5p5ks",
+            "relevance": 60,
+            "methodQuality": 30,
+            "kind": "grey",
+            "grade": "very-low",
+            "keyFindings": "Median documentation 19 percent across 14 hospitals, 24 percent where a template was used; definitions varied.",
+            "limitations": "Period and year of publication not stated; local definitions.",
+            "contextTags": [
+              "regional benchmark",
+              "grey literature"
+            ],
+            "notes": "Year unknown; kept unknown."
+          },
+          {
+            "id": "ev-0m99s1m",
+            "relevance": 80,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Agreement on the six-point quality score rose from kappa 0.48 to 0.71 after a two-hour calibration; rating took a median of 6 minutes per note.",
+            "limitations": "Two raters from one team.",
+            "contextTags": [
+              "measurement",
+              "reliability"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0iqpn4s",
+            "relevance": 76,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Response 34 percent; families recalling a goals-of-care conversation more often reported care matching wishes (72 versus 51 percent).",
+            "limitations": "Low response, lower in deprived neighbourhoods; recall.",
+            "contextTags": [
+              "families",
+              "bereavement",
+              "response rate"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0uj8202"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "In a cluster randomised trial on 12 medical wards, documented goals-of-care discussions before the last week of life rose from 18 to 41 percent with electronic prompts and training.",
+            "passage": "documented goals-of-care discussions before the last week of life rose from 18 to 41 percent on intervention wards",
+            "interpretation": "Prompts plausibly increase documentation enough for a later trial to be worthwhile."
+          },
+          {
+            "id": "c2",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-180gane"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "After an electronic template was introduced, 63 percent of notes recorded only resuscitation status and 12 percent recorded the patient's values or priorities.",
+            "passage": "63 percent of notes contained only resuscitation status and 12 percent documented anything about the patient's values or priorities",
+            "interpretation": "Documentation counts alone can mislead; note content must be measured."
+          },
+          {
+            "id": "c3",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0d76jre",
+              "ev-180gane"
+            ],
+            "uncertainty": "high",
+            "location": "Abstracts of both studies",
+            "text": "Evidence conflicts on whether a structured template improves the quality of documented conversations: with training and feedback, mean quality rose from 1.8 to 3.9 of 6, while after a template alone it was 2.1 before and 2.3 after.",
+            "passage": "the mean quality score rose from 1.8 to 3.9 of 6",
+            "interpretation": "The effect on quality is uncertain and may depend on training and feedback; the quality measure must be shown to work locally before a trial relies on it."
+          },
+          {
+            "id": "c4",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0m99s1m"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "After a two-hour calibration, two raters agreed on a six-point quality score for documented conversations with kappa 0.71, taking a median of 6 minutes per note.",
+            "passage": "After a two-hour calibration session with worked examples, agreement rose to kappa 0.71.",
+            "interpretation": "Quality rating is feasible but needs calibration and rater time."
+          },
+          {
+            "id": "c5",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0iqpn4s"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "A postal questionnaire to bereaved next of kin achieved a 34 percent response, lower in deprived neighbourhoods.",
+            "passage": "The response rate was 34 percent, lower among families of younger patients and in deprived neighbourhoods.",
+            "interpretation": "Family-reported outcomes need a tested recruitment approach before a trial depends on them."
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level; one has no stated year. A cluster randomised trial and most studies in a systematic review show that prompts and templates increase documented conversations. The records conflict on quality: a before-after study with training and feedback reported large gains in note quality, while a content analysis after a template alone found notes that mostly recorded resuscitation status and quality scores that barely moved. Only a few studies measured whether care matched patients' goals. A six-point quality score can be rated reliably after calibration, and a family questionnaire reached about a third of bereaved relatives. Documentation is achievable; whether it reflects real conversations is uncertain.",
+        "gradeOverall": "low",
+        "gradeRationale": "One randomised trial for documentation, but conflicting uncontrolled evidence on quality, few patient-centred outcomes, and one undated grey report; certainty that the template improves conversations, not only notes, is low.",
+        "summary": "Seven retrieved records appraised; five claims, one with high uncertainty because the evidence conflicts; overall certainty low."
+      },
+      "note": "Appraisal over seven retrieved records (S13). Claim c3 cites two conflicting records and carries uncertainty 'high', stored as given; the undated record keeps year null (identity is not annotatable). Certainty 'low' is the appraisal's value (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[1].grade": "low",
+          "scan.items[4].grade": "very-low",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].kind": "grey",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[2].id": "c3",
+          "scan.claims[2].uncertainty": "high",
+          "scan.claims[2].sourceIds": [
+            "ev-0d76jre",
+            "ev-180gane"
+          ],
+          "scan.claims[0].uncertainty": "moderate",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "Six medical and oncology wards, 600-bed teaching hospital",
+          "Template live in the February 2027 release",
+          "Palliative care consult team",
+          "Internal grant and 6 analyst hours per month"
+        ],
+        "reading": "Prompts and templates reliably increase the number of notes, but the conflict between the before-after and content-analysis studies shows that the number of notes and the quality of conversations can come apart. Training and feedback may be what separates the two. A trial would depend on outcomes the hospital has never measured: a quality score, goal-concordant care and family reports. Before a stepped-wedge trial, the hospital needs to know whether these can be measured and whether the intervention can be delivered.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Template with prognostic prompts",
+            "kind": "framework",
+            "detail": "Planned for February 2027."
+          },
+          {
+            "id": "n2",
+            "label": "Communication skills session",
+            "kind": "framework",
+            "detail": "One 60-minute session per staff member."
+          },
+          {
+            "id": "n3",
+            "label": "Documented conversations",
+            "kind": "outcome",
+            "detail": "Rose from 18 to 41 percent in a randomised trial (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "Quality of what is written",
+            "kind": "outcome",
+            "detail": "Conflicting evidence (claim c3)."
+          },
+          {
+            "id": "n5",
+            "label": "Tick-box notes",
+            "kind": "gap",
+            "detail": "Resuscitation status only (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Six-point quality score",
+            "kind": "context",
+            "detail": "Reliable after calibration (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Bereaved families",
+            "kind": "stakeholder",
+            "detail": "One third respond to a postal questionnaire (claim c5)."
+          },
+          {
+            "id": "n8",
+            "label": "Ward doctors and nurses",
+            "kind": "stakeholder",
+            "detail": "Worried about workload."
+          },
+          {
+            "id": "n9",
+            "label": "Goal-concordant care",
+            "kind": "outcome",
+            "detail": "Rarely measured."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "increases"
+          },
+          {
+            "from": "n1",
+            "to": "n5",
+            "relation": "may produce"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "may improve"
+          },
+          {
+            "from": "n6",
+            "to": "n4",
+            "relation": "measures"
+          },
+          {
+            "from": "n4",
+            "to": "n9",
+            "relation": "hypothesised to shape"
+          },
+          {
+            "from": "n7",
+            "to": "n9",
+            "relation": "report on"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "deliver"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "inflates"
+          }
+        ],
+        "summary": "Map separates the number of notes from their quality and shows the unmeasured outcomes a trial would need."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Conflicting evidence on whether templates improve what is written",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "A before-after study reported large quality gains and a content analysis found almost none (claim c3); a trial built on documentation counts could reward tick boxes (claim c2).",
+            "opportunity": "Measure note quality with a calibrated score alongside documentation, and include training and feedback in the intervention."
+          },
+          {
+            "id": "g2",
+            "title": "Outcomes a trial would need have never been measured here",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Quality rating, goal-concordant care and family reports all need local testing before a stepped-wedge trial depends on them.",
+            "opportunity": "Test rater agreement, extraction time and family questionnaire response on two wards first."
+          },
+          {
+            "id": "g3",
+            "title": "Families of younger and poorer patients respond least",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "A postal questionnaire reached about a third of families, fewer in deprived neighbourhoods (claim c5).",
+            "opportunity": "Test telephone and online options and track response by neighbourhood deprivation."
+          },
+          {
+            "id": "g4",
+            "title": "Undated regional benchmark",
+            "kind": "evidence",
+            "severity": "watch",
+            "whyItMatters": "The regional report gives no period or year, so its 19 percent median cannot be compared over time.",
+            "opportunity": "Use the hospital's own 2025 baseline and treat the regional figure as context only."
+          }
+        ],
+        "errorsFound": [
+          "Documentation rates alone would count a note recording only resuscitation status as a conversation."
+        ],
+        "reevaluation": "The evidence argues against going straight to a trial whose outcomes are untested; a feasibility study on two wards should come first.",
+        "summary": "Four gaps; the conflict about note quality and the untested outcomes are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[0].whyItMatters": {
+            "includes": "claim c3"
+          },
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Conflicting evidence on whether templates improve what is written"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "On two wards over six months, the template, prompts and skills session can be delivered to at least 80 percent of eligible patients' teams, and a calibrated quality score can be rated with kappa of at least 0.6.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 70,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "These are the conditions a later trial depends on; the evidence conflicts on quality, so measurement must be proven first.",
+            "risks": "Rater time; staff turnover on the wards."
+          },
+          {
+            "id": "h2",
+            "statement": "Mean note quality will rise by at least 1 point on the six-point score when training and monthly feedback accompany the template.",
+            "novelty": 50,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Suggested by the before-after study with training and contradicted by the template-only study.",
+            "risks": "No comparison group in a feasibility study; estimate is imprecise."
+          },
+          {
+            "id": "h3",
+            "statement": "A telephone option will raise bereaved family response above the 34 percent reported for a postal questionnaire.",
+            "novelty": 45,
+            "need": 65,
+            "practiceChange": 55,
+            "feasibility": 70,
+            "parsimony": 75,
+            "rationale": "Families valued being included, and postal response was low and unequal.",
+            "risks": "Telephone contact soon after a death may distress some families."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 frames progression criteria for a later trial."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "On two medical and oncology wards over six months from February 2027, can a serious illness conversation template with prompts and a skills session be delivered, can note quality be rated reliably, and can bereaved families be reached well enough to justify a stepped-wedge trial across six wards?",
+            "framework": "PICOT",
+            "population": "Patients meeting prognostic triggers on two wards, their clinicians and bereaved families",
+            "intervention": "Template with prompts, 60-minute skills session and monthly feedback",
+            "comparator": "2025 baseline documentation on the same wards",
+            "outcome": "Delivery, rater agreement, extraction time, family response, and preliminary change in documentation and quality",
+            "time": "Six months",
+            "setting": "Two wards of a teaching hospital"
+          }
+        ],
+        "finer": "Feasible within the grant and analyst hours; interesting to the research office; novel in measuring quality alongside documentation; ethical with a waiver for chart review and consent for family contact; relevant because it decides whether a trial is worth running.",
+        "summary": "One feasibility question with progression criteria."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICOT",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work (6 of 13 stages): routing is still unresolved and no family has been substituted (S11).",
+      "expect": {
+        "store": {
+          "title": "Serious illness conversation template and prompts on medical and oncology wards: what to test first",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ],
+          "needsReview": [],
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.claims[2].uncertainty": "high",
+          "design.decisions": {
+            "length": 0
+          },
+          "protocol.outcomes": {
+            "length": 0
+          }
+        },
+        "stage": {
+          "questions": "complete",
+          "design": "incomplete",
+          "audit": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Serious illness conversation template and prompts on medical and oncology wards: what to test first"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "feasibility",
+        "rationale": "Neither a stepped-wedge trial nor a before-after chart review is the right first step. Prompts increase documentation (c1), but whether the notes reflect real conversations is contested (c3), templates alone can produce tick-box notes (c2), and the outcomes a trial would rely on have not been tested here: quality rating needs calibration (c4) and family response is low (c5). A six-month feasibility study on two wards tests delivery, measurement and recruitment against pre-specified progression criteria before six wards are committed to a trial.",
+        "alternatives": [
+          "Stepped-wedge randomised trial across six wards now (deferred: outcomes untested and the evidence on quality conflicts)",
+          "Before-after chart review of documentation rates (refused: would count tick-box notes as success)",
+          "Implement the template without evaluation (refused: the hospital cannot tell whether conversations improve)"
+        ],
+        "guidelines": [
+          "CONSORT extension for pilot and feasibility studies (adapted for a non-randomised feasibility study)"
+        ],
+        "whyNotMoreComplex": "A trial now would spend the hospital's one release window and the grant on outcomes that may not be measurable; the feasibility study answers that at a fraction of the cost.",
+        "decision": {
+          "kind": "narrow",
+          "statement": "Before any stepped-wedge trial, run a six-month feasibility study on two wards that tests delivery of the template, prompts and skills session, the reliability of a calibrated quality score and the response of bereaved families, with progression criteria set in advance.",
+          "question": "What should the hospital do first to evaluate the serious illness conversation template?",
+          "claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Prompts increased documentation in a randomised trial, so a later trial could be worthwhile.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Whether templates improve the quality of documented conversations is uncertain, so the quality measure must be tested before a trial.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The quality score cannot reach kappa of 0.6 with local raters after calibration.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c4"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Template scheduled in a record build release",
+              "status": "met",
+              "evidence": "Change request CR-2026-3341 for the February 2027 release, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Protected nurse practitioner time for the evaluation",
+              "status": "met",
+              "evidence": "Program director approval PC-2026-19, supplied by the investigator"
+            },
+            {
+              "id": "g3",
+              "requirement": "Release of ward staff on two wards for the skills session",
+              "status": "met",
+              "evidence": "Nursing director agreement DIV-NUR-2026-44 dated 2026-09-11, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Stepped-wedge trial now",
+            "Chart review of documentation rates only"
+          ],
+          "note": "Rests on ledger claims c1, c3, c4 and c5 from retrieved records, including c3, which carries high uncertainty because the evidence conflicts; that uncertainty is the reason for the feasibility step."
+        },
+        "summary": "Feasibility study first; the decision rests on four ledger claims, one of them highly uncertain, and all gates are met."
+      },
+      "note": "The recommendation 'feasibility' is proposed; it does not change the study family before acceptance (D3 under S11, test proposed_decision_does_not_mutate_study_family), so family stays null here. recommendedFamily and selectionStatus require S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "feasibility",
+          "family": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "narrow",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].recommendedFamily": "feasibility",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.decisions[-1].criteria[1].claimIds": [
+            "c3"
+          ],
+          "design.decisions[-1].gates[2].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: the four claims exist and rest on retrieved records; c3's high uncertainty is the stated reason for a feasibility step, not a contradiction of the decision (G7). Acceptance sets family 'feasibility' with basis 'explicit' (A1 A2). Requires S11, S13, D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "family": "feasibility",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Six-month non-randomised feasibility study on two medical and oncology wards, testing delivery of a serious illness conversation template with prompts, a 60-minute skills session and monthly feedback, and the measures a later stepped-wedge trial would use.",
+        "population": "Adult inpatients on two wards who meet a prognostic trigger (second unplanned admission within six months or a clinician answering no to the surprise question); ward doctors and nurses; next of kin of patients who die during or within three months of the study.",
+        "exposure": "Template and prompts from February 2027, one skills session per staff member, monthly feedback of anonymised note quality to each ward.",
+        "procedures": "Monthly extraction of triggered patients and notes by the analyst; double rating of a random 25 percent of notes on the six-point score after calibration; family questionnaire by post, telephone or online three months after a death; field notes on delivery problems.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Delivery of the intervention",
+            "measure": "Proportion of triggered patients whose team received a prompt and whose clinicians attended the skills session",
+            "timing": "Monthly over six months",
+            "why": "The first progression criterion for a trial.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Rater agreement on note quality",
+            "measure": "Kappa between two calibrated raters on a random 25 percent of notes",
+            "timing": "Months 2 and 5",
+            "why": "A trial outcome is useless if it cannot be rated reliably.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Family response",
+            "measure": "Proportion of next of kin responding by any route, by neighbourhood deprivation",
+            "timing": "Three months after death",
+            "why": "Tests whether family-reported outcomes are usable.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Documentation and quality",
+            "measure": "Proportion with a documented conversation before the last week of life and mean quality score, against the 2025 baseline",
+            "timing": "End of study",
+            "why": "Preliminary signal, not an effect estimate.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Staff time",
+            "measure": "Minutes per triggered patient reported by ward staff",
+            "timing": "Months 1 and 4",
+            "why": "Ward managers are worried about workload.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Two wards, about 180 triggered patients in six months, within 6 analyst hours per month, 4 nurse practitioner hours per week and the internal grant.",
+        "biasMitigation": [
+          "Progression criteria fixed before the study",
+          "Raters calibrated and blinded to ward where possible",
+          "Family contact routes offered in parallel"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "No comparison group",
+            "severity": "watch",
+            "note": "Change in documentation is descriptive only."
+          },
+          {
+            "id": "b2",
+            "label": "Rater knowledge of period",
+            "severity": "watch",
+            "note": "Notes are rated in mixed batches."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "Feasibility outcomes only; effect questions deferred to the trial"
+          ],
+          "simplestPath": "Two wards, six months, pre-specified progression criteria."
+        },
+        "theoreticalFramework": "Normalisation Process Theory to organise field notes on delivery; no other framework.",
+        "summary": "Feasibility study with delivery as the primary outcome and progression criteria for a later trial."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].name": "Delivery of the intervention",
+          "protocol.outcomes[2].patientCentered": true,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Non-randomised feasibility study with descriptive estimates and pre-specified progression criteria.",
+        "sampleSize": "About 180 triggered patients are expected on two wards in six months. A delivery proportion of 80 percent would have a 95 percent confidence interval of about 6 percentage points either side; 45 double-rated notes estimate kappa with a standard error of about 0.08, enough to tell whether it clears 0.6. About 60 deaths are expected, so a family response of 34 percent would come from about 20 families; response is reported with its interval, not tested.",
+        "primaryAnalysis": "Proportion of triggered patients reached by the intervention with 95 percent interval, against the progression criterion of 80 percent.",
+        "secondaryAnalysis": "Kappa with 95 percent interval; family response by route and deprivation; descriptive change in documentation and mean quality against the 2025 baseline; staff minutes per patient.",
+        "missingData": "Missing notes and unreturned questionnaires are counted and reported; no imputation in a feasibility study.",
+        "multiplicity": "No hypothesis tests; progression criteria are judged together.",
+        "software": "R for descriptive estimates; spreadsheet for the rating log.",
+        "overfittingGuards": [
+          "Progression criteria fixed in advance",
+          "No effect claims from uncontrolled change",
+          "All triggered patients counted"
+        ],
+        "summary": "Descriptive estimates against progression criteria; about 180 patients and 45 double-rated notes."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "45 double-rated notes"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low for patients (no change to care beyond prompting conversations); possible distress for bereaved families contacted after a death.",
+        "consent": "Waiver of consent requested for chart review of triggered patients; bereaved families receive an invitation letter and may decline any contact; consent is implied by return of the questionnaire, with a telephone option only if the family opts in.",
+        "data": "Extracted notes are pseudonymised; quality ratings stored without names; family responses kept separate from clinical data.",
+        "equity": "PROGRESS-Plus: families of younger patients, in deprived neighbourhoods and with limited English respond least. Telephone and online routes, translated letters and response reporting by deprivation address this; the template prompts apply to all triggered patients regardless of diagnosis.",
+        "effectiveness": "Success is meeting the progression criteria, not showing an effect.",
+        "efficiency": "Two wards instead of six keep costs within the grant.",
+        "costs": "Analyst time, rater time, postage and printing within the internal grant.",
+        "grants": "A positive feasibility result would support an external grant application for the stepped-wedge trial.",
+        "partnerships": "Ward managers, the record build team, the bereavement service and two bereaved family members as partners.",
+        "rebPath": "Research ethics board review as minimal risk with a waiver of consent for chart review, following TCPS 2; the bereavement service advises on the timing and wording of family contact.",
+        "limitations": "Two wards; no comparison group; small numbers of families.",
+        "summary": "Minimal-risk feasibility study with a chart review waiver and careful family contact."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "Waiver of consent"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two bereaved family members and a palliative care volunteer review the family letter and questionnaire; a ward nurse and a resident review the prompt wording.",
+        "socialListening": "No social media listening; the hospital's bereavement service feedback is read in anonymised form.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Too late",
+            "quote": "Composite paraphrase: The first time anyone asked what Dad wanted was the night before he died.",
+            "implication": "Measure timing of the first documented conversation.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Tick boxes",
+            "quote": "Composite paraphrase: If the prompt only wants a code status, that is all we will write.",
+            "implication": "Rate note content, not only whether a note exists.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Being asked",
+            "quote": "Composite paraphrase: I would rather be asked what matters to me than told what the options are.",
+            "implication": "Include patient values and priorities in the quality score.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Workload",
+            "quote": "Composite paraphrase: Another alert on a busy ward just gets clicked away.",
+            "implication": "Measure staff time and prompt dismissal as balancing measures.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "family",
+            "theme": "Being contacted",
+            "quote": "Composite paraphrase: A letter three months later is fine, but a phone call would have been too soon.",
+            "implication": "Let families choose the route and timing of contact.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on timing, tick boxes, what matters, workload and family contact."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[4].source": "family",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A serious illness conversation template with prompts and skills training on two hospital wards: a feasibility study",
+        "abstract": "Objective: to test whether a serious illness conversation template with prompts, a skills session and feedback can be delivered on two wards, and whether note quality and family-reported outcomes can be measured, before a stepped-wedge trial. Design: six-month non-randomised feasibility study with progression criteria. Results will follow data collection.",
+        "introduction": "Prompts increase documented conversations, but evidence conflicts on whether notes improve in quality, and few studies measure what patients and families experience.",
+        "methods": "Triggered patients on two wards; template, prompts, skills session and feedback; delivery, rater agreement, family response, documentation and quality measured against progression criteria.",
+        "results": "No data have been collected yet. The report will present delivery, kappa, family response and descriptive change against the progression criteria.",
+        "discussion": "The discussion will judge the progression criteria and state whether and how a stepped-wedge trial should proceed.",
+        "limitations": "Two wards, no comparison group, small family sample.",
+        "conclusion": "To be written after analysis; it will not claim an effect of the template.",
+        "reportingChecklist": "CONSORT extension for pilot and feasibility studies, adapted for a non-randomised design",
+        "summary": "Feasibility report structure with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "manuscript.reportingChecklist": {
+            "includes": "pilot and feasibility"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Fix the progression criteria with the research office before February 2027",
+          "Calibrate the two raters on worked examples before the first rating round",
+          "Check the undated regional report's period with the network before citing it"
+        ],
+        "improvementNotes": "Routing stayed unresolved from creation until the design stage, where the feasibility study was accepted. The decision rests on four ledger claims, one of them highly uncertain because the evidence on note quality conflicts; that uncertainty is stated rather than averaged away.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes on progression criteria, rater calibration and an undated source."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 store.ts mergeStage overwrites it (L1.6, a store defect).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Serious illness conversation template and prompts on medical and oncology wards: what to test first",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "feasibility",
+          "design.basis": "explicit",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.claims[2].uncertainty": "high",
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Serious illness conversation template and prompts on medical and oncology wards: what to test first"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Serious illness conversation template and prompts on medical and oncology wards: what to test first",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "feasibility",
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Serious illness conversation template and prompts on medical and oncology wards: what to test first"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "family 'feasibility' only after acceptance and basis 'explicit' require S11; selectionStatus S11; claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "feasibility",
+            "design.basis": "explicit",
+            "scan.gradeOverall": "low",
+            "scan.items[4].year": {
+              "isNull": true
+            },
+            "scan.claims[2].uncertainty": "high",
+            "scan.claims[2].sourceIds": [
+              "ev-0d76jre",
+              "ev-180gane"
+            ],
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].recommendedFamily": "feasibility",
+            "problem.constraints": "Internal grant of 15,000 for one year. Data analyst available 6 hours per month. Ward staff can attend at most one 60-minute training session each. The template can only go live in the record build team's February 2027 release."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

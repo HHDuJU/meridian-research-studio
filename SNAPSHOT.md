@@ -91,3 +91,42 @@ Zero qualifying full workflows. Sample FAILs are not readiness. `executedWorkflo
 | D25 | TESTED | Same-version schema-4 rehydrate that fills `documents:[]` / `claim.origin` with no new repair id now backs up the pre-repair raw. Corrupt prior backup + quota on that path refuses MAIN_KEY. Twelve ordinary autosaves create no backups. Tests in `tests/receipt-fixes.test.ts`. |
 | G11 | TESTED | Successful apply with dropped investigator constraints shows `Applied with notes.` plus path and message (`data-meridian-partial-apply`, `toast.warning`). Allowed fields still apply. Null/empty/replacement protection and human clear remain. |
 
+
+## A4 (2026-09-22)
+
+A4 accepted (zip sha256 7a1e0fa5..., A4 file ee00a4ce...). Bank installed at `scenarios/bank-v1` (103 + INDEX) and `scenarios/replay`. Sample goldens are version 3 (G11, `dropped`); v2 kept under `bank-samples/original-v2`. G11 screen wording uses **refused** (`investigator constraints are not model-editable; null, empty string, or replacement was refused`). First qualifying full workflow: sc-000-level3 ui PASS (193/193, executedWorkflow true, no store-fallback). sc-000-level1 and sc-000-level4 still FAIL on S13 appraisal grades (unrated) and S1 issue order; those are listed, not counted as S11.
+
+### C7 edit list (before → after SHA-256)
+
+| File | Before | After |
+|---|---|---|
+| `scripts/tree-digest.mjs` | `c0dcbf9753c2f337013301b6a8c5e9b30df90d7d2783907f0725caf86ec54801` | `64d414fa5b9c9aeeeffd16fc568c7bb88d8be5af88d1f9b9ebde58131ace51f3` |
+| `src/lib/types.ts` | `e5b466869c2ecb7857a12a94034e725d6ad8d3184bb2391b923d774057057790` | `cca438563565ea23debad8fe116525e14dbed96f3ad234b2ffe13e38d2f6e887` |
+| `src/lib/store.ts` | `6eee9c8b9c92900111cbf8a683c23ff287b5604324e52eb5e9ff6e211b34bb84` | `9e55f282d4ad789da5847d49ad075aa31e88159aa0f5d2ba77576d6924e598f1` |
+| `src/lib/evidence/decision.ts` | `c59bef8d5f5e8b9e6c67ca48ed531cfed405ce3e4f9673ce6aefdd9b7172d810` | `c662b1d472f0e4395c6ae97e32824e4994f56b144983ff9333b35dd791117e46` |
+| `src/lib/defaults.ts` | `c1678dce23dd875ac73d502232db78dffebf152c76edb0ece487864d58350dcf` | `1f4a9e0d6160890392dbe71cf9719d514df1e30e605cc152d294a62d77c0f5af` |
+| `src/lib/apply-ai.ts` | `845ba30a4ffdc75a73ed33ef440ba1345deddd2af06a77e2ba194ab935973982` | `0aa48230cb39e571a5080dfe187d5d174e3dc2da6fa6d438b64e12d9405234ca` |
+| `src/components/studio/stage-panels.tsx` | `f188e517664e36ef2672c616c4db4f63cf11083eca5b0f7d766c0705227fb7c1` | `9e2cb8b58b37e9422584bd89e86e5815741e4b640f309ab6df42a721fb081576` |
+| `scripts/run-scenarios.mjs` | `3b610abf7137ca881f8435171d054021a21cb8c21c0bb129888d89140a3ff824` | `4c83ccde28f7b77f64c574e4ad3a189ef4d092e72640b1200261a64d7546c795` |
+| `scripts/scenario-mode-plugin.mjs` | `12eeaa32d66b7d78294b9fc54d3efe92045ded5cdd8ec915f960e6749c52ace6` | `c98a6f2cf73027202a0bd7715e4cef48a3f38ae848607893223c02815ef1e0b4` |
+| `tests/s11.test.ts` | `8deee9ef0ef5e62c75743ea49bcadb4504805056fc3570e47c2777eee329ae05` | `1668ddb8a36a3afc281dd3822873a4d4ac3188847543a8294e3e8b2a6971565a` |
+| `tests/run-scenarios.test.ts` | `3d26ecef9667dad442888f2c4884d0739f5a89606a43e1beb523afa3866705ee` | `b1ea00368d852b0f23ecb4315bae158f9d08d02a5ae9d37cb8c70ab5f948e548` |
+
+| Entry | Status | Notes |
+|---|---|---|
+| C1 | TESTED | `.vercel` skipped in source digest; generated-output change does not move the digest; source change does. |
+| C2 | TESTED | `treeSha256` filled from pinned digest in every result record. |
+| C3 | TESTED | G11 wording uses `refused`; bank `anyOf` accepted on screen. |
+| C4 | TESTED | Existing-backup controls kept. |
+| C5 | TESTED | F3 binding controls kept. |
+| C6 | TESTED | Rules 6, 14, 15, 17, 20. |
+| C7 | TESTED | Before/after hashes in this table. |
+| C8 | TESTED | COUNTS.json authored / executedAttempts / qualifyingFullWorkflows; screenHas anyOf + case-insensitive. |
+| C9 | TESTED | Retrieve replay + fixture under scenario flags; Scan `Run recorded search` used as ui route on samples. |
+| S11 | TESTED | selectionStatus separate from actionStatus; unsupported pursue refused; narrow without claims accepted / action blocked. |
+| D2 part 1 | TESTED | `design.basis` unresolved at create / null family; `recommendedFamily` stamped; basis explicit on accept. |
+| D3 part 1 | TESTED | `acceptDecision` / `withdrawDecision` through the Design screen. |
+| D4 | TESTED | Support check: committing kinds need ledger claims on retrieved records; contradiction refused. Not a full mention classifier. |
+| D5/S10 | TESTED | `changeSource` store + Scan panel controls targeted by record; accepted decision goes stale on screen, store, export, reload. |
+| D18 | TESTED | Scan search action on screen used as ui retrieve route. |
+| S17 samples | TESTED | store + ui sample runs shipped; 1 qualifying full workflow (level 3 ui). Whole bank not run (not a releasable candidate while S13 remains). |

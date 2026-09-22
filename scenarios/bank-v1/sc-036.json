@@ -1,0 +1,1340 @@
+{
+  "id": "sc-036",
+  "version": 1,
+  "title": "District school immunization program: catch-up campaign coverage with the design left open until data access is decided",
+  "field": "public-health",
+  "level": 3,
+  "family": "unresolved",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path whose correct end state is an unresolved family. The need names two designs (a register-based cohort and a cross-sectional school survey), so routing is unresolved at create (S11); the problem reply returns family null (design.basis stays 'unresolved', issue 'cleared', D2). A fixture search returns six records, one a district report with no year (year null) whose method quality the appraisal leaves null (not assessed, G4). The appraisal (S13) records four claims. The investigator reopens the study after the Questions stage, before any design work, and the partial work must be intact. The design reply returns recommended null because the right design depends on a data-access decision nobody has made: design.recommended stays '' with basis 'unresolved' (D2: an explicit null clears to the documented unresolved value, never to a guessed family). Its decision is 'defer', resting on claims c1 and c2, with two gates that stay unknown to the end (the register custodian's decision and the school board committee's approval), so the accepted selection never becomes ready (G7; A2 item 9). Acceptance of a decision without a recommended family leaves the family unresolved (A1: family and basis 'explicit' are written only from a non-null recommendedFamily). Later stages draft both branches. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-05rwrdl, 2 ev-0y4dtih, 3 ev-1jin8rp, 4 ev-09ul5tu, 5 ev-05ivroy), or of titleYearKey(title, year) when there is no DOI (records 6 ev-0aiwpbs). Catches: a family invented from ambiguous language or from a null, a gate that turns 'met' without evidence, an action allowed while gates are unknown, and partial work lost on reopen.",
+  "inputs": {
+    "need": "I coordinate the school immunization program for the Brenmoor District Health Department, which covers 41 secondary schools and about 23,000 students in grades 7 to 9. After two disrupted school years, many students missed the adolescent vaccines we give in school: HPV, meningococcal ACWY and the tetanus, diphtheria and pertussis booster. From March to May 2026 we ran a catch-up campaign. Nurses visited every school twice, consent forms went home on paper and by text message, and each of our four towns had a Saturday clinic.\n\nWe now need to know what coverage we achieved, and for whom, so that next year's program goes where the gaps are. My problem is that I do not know which kind of study we can do. If the regional immunization register gives us student-level records with school and home postcode, we could follow the grade 7 to 9 students from before to after the campaign as a cohort and see who caught up. If the register only releases aggregate counts, we would need a cross-sectional coverage survey in a sample of schools, checking vaccination cards or asking parents. The register's data custodian has not answered the request we sent in June.\n\nI also want to understand why consent forms did not come back from some schools, and whether the remaining gaps follow neighbourhood deprivation or the language spoken at home. We have one epidemiologist two days a week and the program nurses during school hours, and the school board has to approve anything that happens in schools.",
+    "constraints": "One epidemiologist two days a week until June 2027 and the program nurses during school hours; no new funding. Nothing may be collected in schools without school board approval, and no student may be identifiable in any output.",
+    "localFacts": [
+      "The catch-up campaign visited all 41 secondary schools twice between 2026-03-02 and 2026-05-29 and held Saturday clinics in four towns.",
+      "The data access request to the regional immunization register was sent on 2026-06-11 and has had no reply.",
+      "The school board research committee meets quarterly; its next meeting is on 2026-11-18."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names both a cohort and a cross-sectional survey; classifyFamily returns family null with basis unresolved. design.basis at create requires S11.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I coordinate the school immunization program for the Brenmoor District Health Department, which covers 41 secondary schools and about 23,000 students in grades 7 to 9. After two disrupted school years, many students missed the adolescent vaccines we give in school: HPV, meningococcal ACWY and the tetanus, diphtheria and pertussis booster. From March to May 2026 we ran a catch-up campaign. Nurses visited every school twice, consent forms went home on paper and by text message, and each of our four towns had a Saturday clinic.\n\nWe now need to know what coverage we achieved, and for whom, so that next year's program goes where the gaps are. My problem is that I do not know which kind of study we can do. If the regional immunization register gives us student-level records with school and home postcode, we could follow the grade 7 to 9 students from before to after the campaign as a cohort and see who caught up. If the register only releases aggregate counts, we would need a cross-sectional coverage survey in a sample of schools, checking vaccination cards or asking parents. The register's data custodian has not answered the request we sent in June.\n\nI also want to understand why consent forms did not come back from some schools, and whether the remaining gaps follow neighbourhood deprivation or the language spoken at home. We have one epidemiologist two days a week and the program nurses during school hours, and the school board has to approve anything that happens in schools.",
+          "problem.constraints": "One epidemiologist two days a week until June 2027 and the program nurses during school hours; no new funding. Nothing may be collected in schools without school board approval, and no student may be identifiable in any output.",
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "completedStages": [],
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I coordinate the school immunization program"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Coverage after a school-based adolescent vaccination catch-up campaign: who caught up and who did not",
+        "subtitle": "Register-based follow-up or school coverage survey, depending on data access",
+        "family": null,
+        "statement": "A district catch-up campaign in spring 2026 offered the adolescent HPV, meningococcal ACWY and pertussis-containing vaccines to about 23,000 students in grades 7 to 9 across 41 schools after two disrupted school years. The district needs to know coverage after the campaign, which groups of students remain unvaccinated, and why consent forms did not return from some schools. Whether this can be answered from student-level register data or needs a school survey depends on a data-access decision that has not been made.",
+        "whoAffected": "Students in grades 7 to 9 and their families, school nurses, schools and the district health department; students in deprived neighbourhoods and families speaking other languages at home are most likely to remain unvaccinated.",
+        "whatHurts": "Students who missed doses remain unprotected against HPV-related cancers, meningococcal disease and pertussis, and next year's program cannot be targeted without knowing where the gaps are.",
+        "currentPractice": "Doses given in schools are entered in the regional register; coverage is reported only as district totals, and nobody has looked at who caught up.",
+        "whyNow": "Next year's program is planned in early 2027 and the campaign data are fresh; register access has been requested but not answered.",
+        "constraints": "One epidemiologist two days a week until June 2027 and the program nurses during school hours; no new funding. Nothing may be collected in schools without school board approval, and no student may be identifiable in any output.",
+        "patientCenteredGoal": "Every student in grades 7 to 9 who wants the adolescent vaccines can get them, and next year's effort goes to the schools and families the campaign did not reach.",
+        "summary": "Problem framed; the design is left unresolved between a register-based follow-up and a school coverage survey until data access is known."
+      },
+      "note": "family null: design.basis stays 'unresolved' and the issue 'cleared' at 'family' is logged (D2, A1 item A7). The constraints are returned exactly as typed, so they are unchanged and no G11 issue arises.",
+      "expect": {
+        "store": {
+          "title": "Coverage after a school-based adolescent vaccination catch-up campaign: who caught up and who did not",
+          "problem.constraints": "One epidemiologist two days a week until June 2027 and the program nurses during school hours; no new funding. Nothing may be collected in schools without school board approval, and no student may be identifiable in any output.",
+          "design.basis": "unresolved",
+          "problem.statement": {
+            "includes": "depends on a data-access decision"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Coverage after a school-based adolescent vaccination catch-up campaign: who caught up and who did not"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "school-based adolescent vaccination catch-up campaign coverage register completeness consent return deprivation",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Catch-up of adolescent vaccines through school-located clinics after pandemic disruption: coverage by grade and school",
+            "authors": "Haldane-Okoro M, Feng-Albright C, Duarte-Nkemelu S",
+            "year": 2024,
+            "venue": "Tarrowby Immunization Reports",
+            "doi": "10.5555/tir.2024.0203",
+            "providerType": "journal-article",
+            "abstract": "We describe a school-located catch-up program in 58 secondary schools after two disrupted school years. Using register data from before and six months after the program, coverage of the adolescent HPV series rose from 54 to 71 percent, meningococcal ACWY from 68 to 83 percent and the pertussis-containing booster from 70 to 84 percent. Gains were smallest in schools in the most deprived quintile, where HPV coverage rose from 41 to 52 percent. Schools that sent consent reminders by text message had higher consent return. The analysis relied on a register whose completeness for adolescents was not assessed."
+          },
+          {
+            "title": "Completeness of a regional immunization register for adolescent vaccines compared with school vaccination cards",
+            "authors": "Sorensen-Baptiste L, Oyelowo-Kerr A",
+            "year": 2021,
+            "venue": "Register Science and Surveillance",
+            "doi": "10.5555/rss.2021.0102",
+            "providerType": "journal-article",
+            "abstract": "We compared register entries with vaccination cards for 1,480 students in 30 schools. The register agreed with the card for 91 percent of doses given in school programs and 78 percent of doses given in community clinics or pharmacies. Agreement was lowest for students who had moved into the region in the previous two years (64 percent). Register-based coverage underestimated card-based coverage by 4 to 9 percentage points, depending on the vaccine. The authors recommend a correction for doses given outside school programs when registers are used to measure coverage."
+          },
+          {
+            "title": "Paper forms and text message reminders for parental consent in school vaccination programs",
+            "authors": "Mbeki-Lorenzo T, Whitfield-Arora N, Castell-Ibe O",
+            "year": 2022,
+            "venue": "Tarrowby Immunization Reports",
+            "doi": "10.5555/tir.2022.0317",
+            "providerType": "journal-article",
+            "abstract": "In a program covering 44 schools, consent forms were sent home on paper, and from the second term parents also received text message reminders with a link to an electronic form. Consent return rose from 61 to 79 percent after reminders were added. The rise was smaller in schools where more than a third of families spoke a language other than the program language at home (from 52 to 63 percent), and electronic forms were used less by parents in those schools. Translated reminders were introduced late and could not be evaluated separately."
+          },
+          {
+            "title": "Neighbourhood deprivation and completion of adolescent vaccines in school programs: a cross-sectional analysis",
+            "authors": "Rahman-Ostrowski J, Beaumont-Addo K",
+            "year": 2019,
+            "venue": "Journal of Population Immunization",
+            "doi": "10.5555/jpi.2019.0055",
+            "providerType": "journal-article",
+            "abstract": "Using linked school program and area data for 21,600 students, we examined HPV series completion by quintile of neighbourhood deprivation. Completion was 74 percent in the least deprived quintile and 49 percent in the most deprived, a gradient that persisted after adjustment for school and grade. Consent refusal explained less of the gap than consent forms that were never returned. Students absent on vaccination days were concentrated in the most deprived quintile. The analysis could not separate deprivation from the language spoken at home."
+          },
+          {
+            "title": "Cluster sampling for school vaccination coverage surveys: design effects from twelve surveys",
+            "authors": "Kiplagat-Moreno D, Halvorsen-Pike R",
+            "year": 2017,
+            "venue": "Survey Methods in Public Health",
+            "doi": "10.5555/smph.2017.0009",
+            "providerType": "journal-article",
+            "abstract": "We pooled data from twelve school-based vaccination coverage surveys that sampled schools and then students within schools. Design effects for coverage estimates ranged from 1.6 to 2.8, with a median of 2.1, and were largest where coverage differed most between schools. Checking vaccination cards changed estimates by up to 11 percentage points compared with parent report. Response was lower among students whose parents had to return a card or form. We provide design effects to plan sample sizes for future surveys."
+          },
+          {
+            "title": "Saturday community clinics as an adjunct to school vaccination: who attends?",
+            "authors": "Brenton-Achieng F, Lowe-Zamora P",
+            "year": null,
+            "venue": "District public health service report series",
+            "providerType": "report",
+            "abstract": "Four district health units offered Saturday vaccination clinics alongside school visits during a catch-up campaign. Of 1,930 students vaccinated at Saturday clinics, 62 percent had missed a school visit through absence and 21 percent had returned a consent form too late for the school visit. Students from the most deprived neighbourhoods were under-represented at Saturday clinics relative to their share of missed doses. The report does not state its year of publication, and attendance was counted from clinic lists rather than the register."
+          }
+        ]
+      },
+      "note": "Six records with abstracts; the district report has no year (null, G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-05rwrdl",
+            "ev-0y4dtih",
+            "ev-1jin8rp",
+            "ev-09ul5tu",
+            "ev-05ivroy",
+            "ev-0aiwpbs"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[5].year": {
+            "isNull": true
+          },
+          "scan.items[5].doi": {
+            "absent": true
+          },
+          "scan.items[5].provenance.status": "retrieved",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Completeness of a regional immunization register for adolescent vaccines compared with school vaccination cards"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-05rwrdl",
+            "relevance": 90,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A school-located catch-up raised HPV series coverage from 54 to 71 percent, ACWY from 68 to 83 and the booster from 70 to 84; the gain was smallest in the most deprived schools (HPV 41 to 52 percent).",
+            "limitations": "Register completeness not assessed; no comparison group.",
+            "contextTags": [
+              "catch-up campaign",
+              "school-located clinics",
+              "deprivation"
+            ],
+            "notes": "Planning values for the coverage outcome."
+          },
+          {
+            "id": "ev-0y4dtih",
+            "relevance": 92,
+            "methodQuality": 68,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "The register matched vaccination cards for 91 percent of school-program doses but 78 percent of community doses; register coverage was 4 to 9 points too low.",
+            "limitations": "One region; cards may also be incomplete.",
+            "contextTags": [
+              "register completeness",
+              "measurement"
+            ],
+            "notes": "Decides whether a register-based follow-up is usable and what correction it needs."
+          },
+          {
+            "id": "ev-1jin8rp",
+            "relevance": 80,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Text reminders raised consent return from 61 to 79 percent, but only from 52 to 63 percent where many families spoke another language.",
+            "limitations": "Before-after; translated reminders not evaluated.",
+            "contextTags": [
+              "consent return",
+              "language"
+            ],
+            "notes": "Informs the consent question."
+          },
+          {
+            "id": "ev-09ul5tu",
+            "relevance": 84,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "HPV completion was 74 percent in the least deprived quintile and 49 percent in the most deprived; unreturned forms explained more of the gap than refusals.",
+            "limitations": "Deprivation and language not separable.",
+            "contextTags": [
+              "deprivation",
+              "equity",
+              "cross-sectional"
+            ],
+            "notes": "Equity stratifier for either design."
+          },
+          {
+            "id": "ev-05ivroy",
+            "relevance": 78,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "School coverage surveys had design effects of 1.6 to 2.8 (median 2.1); card checks changed estimates by up to 11 points against parent report.",
+            "limitations": "Pooled from twelve surveys with different methods.",
+            "contextTags": [
+              "survey design",
+              "sample size"
+            ],
+            "notes": "Planning values for the survey branch."
+          },
+          {
+            "id": "ev-0aiwpbs",
+            "relevance": 58,
+            "methodQuality": null,
+            "kind": "grey",
+            "grade": "very-low",
+            "keyFindings": "Of 1,930 students vaccinated at Saturday clinics, 62 percent had been absent at the school visit; the most deprived neighbourhoods were under-represented.",
+            "limitations": "Undated report; methods not described well enough to judge quality.",
+            "contextTags": [
+              "Saturday clinics",
+              "access"
+            ],
+            "notes": "Method quality not assessable from the report."
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "The regional register agreed with vaccination cards for 91 percent of doses given in school programs but only 78 percent of doses given elsewhere.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0y4dtih"
+            ],
+            "location": "Abstract",
+            "passage": "The register agreed with the card for 91 percent of doses given in school programs and 78 percent of doses given in community clinics or pharmacies.",
+            "interpretation": "A register-based follow-up is usable for school doses but needs a correction for doses given elsewhere.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "School vaccination coverage surveys that sample schools and then students had a median design effect of 2.1.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-05ivroy"
+            ],
+            "location": "Abstract",
+            "passage": "Design effects for coverage estimates ranged from 1.6 to 2.8, with a median of 2.1",
+            "interpretation": "A cluster survey of feasible size can give useful precision.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "HPV series completion was 74 percent in the least deprived quintile and 49 percent in the most deprived.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-09ul5tu"
+            ],
+            "location": "Abstract",
+            "passage": "Completion was 74 percent in the least deprived quintile and 49 percent in the most deprived",
+            "interpretation": "Deprivation must be a stratifier in either design.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Text message reminders raised consent return from 61 to 79 percent, less so where many families spoke another language.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1jin8rp"
+            ],
+            "location": "Abstract",
+            "passage": "Consent return rose from 61 to 79 percent after reminders were added.",
+            "interpretation": "Consent return by school and language belongs in the analysis.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level. A comparable catch-up program raised coverage by 14 to 17 points but least in deprived schools. The regional register captures school doses well and community doses less well, so a register-based follow-up is usable with a correction, while a cluster survey with a design effect near 2.1 is a workable fallback. Deprivation and unreturned consent forms explain much of the remaining gap, and text reminders helped least where families speak other languages. One undated report could not be judged for quality.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational before-after and cross-sectional studies, one register validation and pooled survey methods data; indirect to this district and at risk of confounding.",
+        "summary": "Six retrieved records appraised; four claims recorded; overall certainty low."
+      },
+      "note": "S13 applies annotations and claims. methodQuality null for the undated report stays null and renders 'not assessed' (G4; L1.5); an explicit null score is not an issue in contracts.ts.",
+      "expect": {
+        "store": {
+          "scan.items[1].grade": "moderate",
+          "scan.items[5].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[5].relevance": 58,
+          "scan.items[5].year": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0y4dtih"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-05ivroy"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "41 secondary schools, grades 7 to 9",
+          "catch-up campaign March to May 2026",
+          "register access requested, unanswered",
+          "school board approval needed in schools"
+        ],
+        "reading": "Coverage after the campaign can be seen through two windows: the register, which sees school doses well and community doses less well, or a school survey, which sees everything but only for a sample. Behind both windows the same pattern is likely: gains smallest where deprivation is highest and where consent forms never came back, with language as a second axis that cannot yet be separated from deprivation.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Catch-up campaign",
+            "kind": "context",
+            "detail": "Two school visits, paper and text consent, Saturday clinics."
+          },
+          {
+            "id": "n2",
+            "label": "Up to date for all three adolescent vaccines",
+            "kind": "outcome",
+            "detail": "Primary outcome in either design."
+          },
+          {
+            "id": "n3",
+            "label": "Regional immunization register",
+            "kind": "context",
+            "detail": "Good for school doses (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "School cluster coverage survey",
+            "kind": "framework",
+            "detail": "Design effect near 2.1 (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Neighbourhood deprivation",
+            "kind": "context",
+            "detail": "Gradient in completion (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Unreturned consent forms",
+            "kind": "gap",
+            "detail": "Explain more of the gap than refusals."
+          },
+          {
+            "id": "n7",
+            "label": "Families speaking other languages",
+            "kind": "stakeholder",
+            "detail": "Smaller gains from reminders (claim c4)."
+          },
+          {
+            "id": "n8",
+            "label": "Data access decision",
+            "kind": "gap",
+            "detail": "Unanswered since June; decides the design."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "aims to raise"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "measures, with a correction"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "measures in a sample"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "lowers"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "lowers"
+          },
+          {
+            "from": "n7",
+            "to": "n6",
+            "relation": "more often affected by"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "gates use of"
+          }
+        ],
+        "summary": "Map shows two measurement routes to the same outcome and the data-access decision that chooses between them."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "The design depends on an unanswered data-access request",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "A register-based follow-up and a school survey need different approvals, staff time and analysis.",
+            "opportunity": "Prepare both branches so either can start as soon as access is decided."
+          },
+          {
+            "id": "g2",
+            "title": "Register misses doses given outside schools",
+            "kind": "evidence",
+            "severity": "moderate",
+            "whyItMatters": "Register coverage ran 4 to 9 points low where community doses were common (claim c1).",
+            "opportunity": "Apply a correction or validate a sample of records against cards."
+          },
+          {
+            "id": "g3",
+            "title": "Deprivation and home language are entangled",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "Both lower coverage and consent return, and they cannot yet be separated (claims c3, c4).",
+            "opportunity": "Record school-level language data and report both stratifiers."
+          },
+          {
+            "id": "g4",
+            "title": "Why consent forms did not return is unknown",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Unreturned forms explain more of the gap than refusals.",
+            "opportunity": "Count forms sent, returned and refused by school and delivery route."
+          }
+        ],
+        "errorsFound": [
+          "District totals mask school-level gaps; a single coverage figure would hide where next year's effort should go."
+        ],
+        "reevaluation": "Both branches share the outcome and stratifiers; only the data source, sampling and approvals differ.",
+        "summary": "Four gaps: undecided data access, register undercount, entangled equity axes, and unexplained consent return."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[2].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "The design depends on an unanswered data-access request"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "After the campaign, the proportion of grade 7 to 9 students up to date for all three adolescent vaccines will be at least 15 percentage points lower in schools in the most deprived quintile than in the least deprived.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "The gradient elsewhere was 25 points; knowing its local size targets next year's program.",
+            "risks": "Register undercount of community doses may differ by deprivation."
+          },
+          {
+            "id": "h2",
+            "statement": "Schools where more than a third of families speak another language at home will have lower consent return and lower coverage than other schools with similar deprivation.",
+            "novelty": 45,
+            "need": 70,
+            "practiceChange": 70,
+            "feasibility": 60,
+            "parsimony": 65,
+            "rationale": "Separating language from deprivation would change how consent is sought.",
+            "risks": "Only school-level language data may be available."
+          },
+          {
+            "id": "h3",
+            "statement": "Saturday clinics mainly reached students who were absent at school visits rather than students whose consent forms were never returned.",
+            "novelty": 40,
+            "need": 50,
+            "practiceChange": 55,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Decides whether Saturday clinics are worth repeating.",
+            "risks": "Clinic lists may not link to the register."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected because it holds in either design."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "What proportion of students in grades 7 to 9 in the district were up to date for HPV, meningococcal ACWY and the pertussis-containing booster on 2026-06-30, overall and by quintile of neighbourhood deprivation?",
+            "framework": "PECO",
+            "population": "Students in grades 7 to 9 in 41 district secondary schools",
+            "intervention": "Attending a school in a more deprived neighbourhood",
+            "comparator": "Attending a school in the least deprived quintile",
+            "outcome": "Up to date for all three adolescent vaccines",
+            "time": "2026-06-30, after the catch-up campaign",
+            "setting": "District school immunization program"
+          },
+          {
+            "id": "q2",
+            "text": "How did consent form return and refusal differ between schools, and between delivery by paper and by text message, during the catch-up campaign?",
+            "framework": "PECO",
+            "population": "Consent forms sent to families of grade 7 to 9 students",
+            "intervention": "Text message reminder with electronic form",
+            "comparator": "Paper form only",
+            "outcome": "Consent form returned (signed or refused)",
+            "time": "March to May 2026",
+            "setting": "41 secondary schools"
+          }
+        ],
+        "finer": "Feasible in either branch with one epidemiologist and program nurses; interesting to the district and schools; novel locally; ethical with no identifiable output; relevant to next year's plan.",
+        "summary": "Two questions shared by both branches: coverage by deprivation, and consent return by school and route."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[1].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work (6 of 13 stages), before the Design stage: every completed stage, the unknown values and the unresolved routing must survive.",
+      "expect": {
+        "store": {
+          "title": "Coverage after a school-based adolescent vaccination catch-up campaign: who caught up and who did not",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ],
+          "needsReview": [],
+          "design.decisions": {
+            "length": 0
+          },
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "problem.constraints": "One epidemiologist two days a week until June 2027 and the program nurses during school hours; no new funding. Nothing may be collected in schools without school board approval, and no student may be identifiable in any output.",
+          "scan.items[5].year": {
+            "isNull": true
+          },
+          "scan.items[5].methodQuality": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "questions.items": {
+            "length": 2
+          }
+        },
+        "stage": {
+          "questions": "complete",
+          "design": "incomplete",
+          "audit": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Coverage after a school-based adolescent vaccination catch-up campaign: who caught up and who did not"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": null,
+        "rationale": "The right design depends on whether the register releases student-level records. With them, a register-based follow-up of all grade 7 to 9 students from before to after the campaign gives complete coverage by school and neighbourhood, corrected for doses given outside schools (c1). Without them, a two-stage cluster survey of schools with card checks gives an estimate with a design effect near 2.1 (c2). Choosing now would either waste the epidemiologist's time on a branch that cannot run or commit to a survey that the register might make unnecessary.",
+        "alternatives": [
+          "Register-based follow-up of all grade 7 to 9 students (needs student-level access)",
+          "Two-stage cluster coverage survey with vaccination card checks (needs school board approval)",
+          "District totals from aggregate register counts (refused as the sole design: hides the school-level gaps)"
+        ],
+        "guidelines": [
+          "STROBE",
+          "RECORD for the register branch"
+        ],
+        "whyNotMoreComplex": "Running both branches in full would double the work for no gain; one decision from the custodian settles which branch runs.",
+        "decision": {
+          "kind": "defer",
+          "statement": "Defer the choice between a register-based follow-up and a school cluster coverage survey until the register's data custodian decides on student-level access, and prepare both branches so that either can start in January 2027.",
+          "question": "Which design should the district use to measure coverage after the catch-up campaign?",
+          "claimIds": [
+            "c1",
+            "c2"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "The register records school-program doses well enough to support a student-level follow-up if access is granted.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A cluster survey of feasible size can estimate coverage with useful precision if access is refused.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Data custodian decision on a student-level register extract with school and home postcode",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "School board research committee approval for any data collection in schools",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "District totals from aggregate register counts"
+          ],
+          "note": "Rests on claims c1 and c2; neither gate can be resolved from the investigator's facts (request unanswered since 2026-06-11; committee meets 2026-11-18)."
+        },
+        "summary": "Design deliberately left unresolved; a defer decision rests on two claims and waits for two approvals."
+      },
+      "note": "recommended null: design.recommended stays '' and basis 'unresolved' with the issue 'cleared' at 'recommended' (D2: design_null_recommended_is_unresolved). recommendedFamily null, selectionStatus and actionStatus require S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "defer",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].recommendedFamily": {
+            "isNull": true
+          },
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2"
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "recommended",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The defer selection is supported by c1 and c2 and is accepted; both gates stay unknown, so the action stays blocked (G7; A2 item 9). With recommendedFamily null the family is not rewritten and design.basis stays 'unresolved' (A1: family and basis 'explicit' only from a non-null recommendedFamily). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.basis": "unresolved",
+          "design.recommended": ""
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Two-branch protocol with a shared outcome: branch A, a register-based follow-up of all grade 7 to 9 students if student-level access is granted; branch B, a two-stage cluster coverage survey with vaccination card checks if it is refused. Only one branch will run.",
+        "population": "Students enrolled in grades 7 to 9 in the 41 district secondary schools during the 2025 to 2026 school year.",
+        "exposure": "School neighbourhood deprivation quintile and school-level share of families speaking another language at home.",
+        "procedures": "Branch A: extract register records with school and home postcode, apply the documented correction for doses given outside schools, and validate 300 records against vaccination cards. Branch B: sample 24 schools with probability proportional to size and 30 students per school, check vaccination cards at school with parental permission, and use parent report only when no card exists. Both branches count consent forms sent, returned and refused by school and delivery route.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Up to date for all three adolescent vaccines",
+            "measure": "Proportion of students with a complete HPV series, meningococcal ACWY and the pertussis-containing booster",
+            "timing": "Status on 2026-06-30",
+            "why": "The protection the campaign aimed to restore.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Coverage of each vaccine",
+            "measure": "Proportion up to date for each vaccine separately",
+            "timing": "2026-06-30",
+            "why": "Gaps may differ by vaccine.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Consent form return",
+            "measure": "Forms returned (signed or refused) divided by forms sent, by school and route",
+            "timing": "Campaign period",
+            "why": "The main reason for missed doses elsewhere.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Status not determinable",
+            "measure": "Proportion of sampled or registered students whose status cannot be established",
+            "timing": "At data collection",
+            "why": "Shows how much the estimate rests on assumptions.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Branch A needs about 25 epidemiologist days; branch B about 40 days plus nurse time for card checks during school hours, within the two days a week available until June 2027.",
+        "biasMitigation": [
+          "Register correction for doses given outside schools",
+          "Card checks rather than parent report in the survey",
+          "Probability sampling of schools",
+          "Status-not-determinable reported rather than hidden"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Register undercount",
+            "severity": "watch",
+            "note": "Branch A only; corrected and validated."
+          },
+          {
+            "id": "b2",
+            "label": "Survey non-response",
+            "severity": "high",
+            "note": "Branch B only; families who do not return cards may be less vaccinated."
+          },
+          {
+            "id": "b3",
+            "label": "Ecological stratifiers",
+            "severity": "watch",
+            "note": "Deprivation and language are school or area measures."
+          }
+        ],
+        "parsimony": {
+          "score": 72,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 3,
+          "flags": [
+            "Two branches drafted, one will run"
+          ],
+          "simplestPath": "Whichever data source is available, one outcome and two stratifiers."
+        },
+        "theoreticalFramework": "None; a descriptive coverage question does not need one.",
+        "summary": "Two-branch protocol with one shared primary outcome; the branch is chosen by the data-access decision."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Branch A: census of about 23,000 students from the register with a completeness correction. Branch B: two-stage cluster survey of 24 schools and 30 students per school.",
+        "sampleSize": "Branch A needs no sample: all students are included and precision is limited by register completeness, not sampling. Branch B: to estimate coverage near 70 percent within 5 percentage points with a design effect of 2.1, about 680 students are needed (1.96 squared times 0.21 divided by 0.0025, times 2.1); 24 schools of 30 students (720) allow for about 6 percent non-response. Comparing the most and least deprived quintiles within the survey will be imprecise and is reported descriptively.",
+        "primaryAnalysis": "Proportion up to date on 2026-06-30 with 95 percent confidence interval: branch A with the completeness correction and a sensitivity analysis without it; branch B with survey weights and cluster-robust intervals.",
+        "secondaryAnalysis": "Coverage by deprivation quintile and by school language share; consent return by school and delivery route; each vaccine separately.",
+        "missingData": "Branch A: students not found in the register are counted as not vaccinated in a sensitivity analysis and as missing in the main one. Branch B: non-responding students are compared with responders on school and grade.",
+        "multiplicity": "One primary outcome; stratified estimates are descriptive.",
+        "software": "R with survey weighting for branch B.",
+        "overfittingGuards": [
+          "No modelling beyond two pre-specified stratifiers",
+          "Branch chosen by data access, not by results",
+          "Analysis plan fixed before any data arrive"
+        ],
+        "summary": "Census or cluster survey, each with a single primary estimate and descriptive stratified results."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 680 students are needed"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: no intervention; risks are to privacy of student-level data and to families asked to show vaccination cards.",
+        "consent": "Branch A uses register data under the custodian's authority without individual consent, subject to its decision. Branch B asks parents for permission to check cards at school, with an opt-out form translated into the main home languages; students may decline.",
+        "data": "No names leave the register or the school; outputs are aggregated so that no cell has fewer than ten students.",
+        "equity": "PROGRESS-Plus: place of residence (neighbourhood deprivation), language spoken at home and socioeconomic position are the central stratifiers; consent materials and reminders are translated.",
+        "effectiveness": "Shows where next year's program should go.",
+        "efficiency": "Uses existing data or a small survey.",
+        "costs": "Translation of the survey permission form; nurse time within school hours.",
+        "grants": "None needed.",
+        "partnerships": "School board research committee, school principals, the register custodian and two parent representatives from schools with low consent return.",
+        "rebPath": "Public health program evaluation reviewed by the district's research ethics committee; school board research committee approval required before any in-school data collection (next meeting 2026-11-18).",
+        "limitations": "Design undecided until data access is resolved; ecological stratifiers.",
+        "summary": "Low-risk evaluation whose ethical path differs by branch; translated materials and aggregated outputs protect families."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "2026-11-18"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two parent representatives from schools with low consent return review the permission form and the consent-return findings; school nurses review the card-check procedure.",
+        "socialListening": "None; the district's public enquiry line log is read for questions about the campaign.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Forms in the bag",
+            "quote": "Composite paraphrase: The form came home in a bag full of other papers, in a language I read slowly.",
+            "implication": "Count forms by delivery route and translate reminders.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Absent on the day",
+            "quote": "Composite paraphrase: The students we miss are the ones who are not in school when we come.",
+            "implication": "Record absence as a reason for missed doses.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Principals' workload",
+            "quote": "Composite paraphrase: We will help, but not with another form to chase.",
+            "implication": "Keep in-school data collection to one visit.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "public",
+            "theme": "Trust",
+            "quote": "Composite paraphrase: I wanted to talk to someone before I signed, and there was nobody to ask.",
+            "implication": "Offer a phone contact with the reminder.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on forms, absence, school workload and trust."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].source": "family",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Adolescent vaccine coverage after a school-based catch-up campaign in 41 secondary schools",
+        "abstract": "Objective: to estimate coverage of the adolescent HPV, meningococcal ACWY and pertussis-containing vaccines among students in grades 7 to 9 after a spring 2026 catch-up campaign, overall and by neighbourhood deprivation. Design: a register-based follow-up of all students or a two-stage cluster coverage survey, depending on a pending data-access decision. Results will be reported when the branch that runs is complete.",
+        "introduction": "Catch-up campaigns after disrupted school years restore coverage unevenly, with the smallest gains in deprived schools. District totals hide which schools and families are still missed, and registers can miss doses given outside school programs.",
+        "methods": "The report will name the branch that ran and why. Both branches share the primary outcome (up to date for all three vaccines on 2026-06-30), the stratifiers (deprivation quintile and school language share) and the consent-return measures. The register branch corrects for doses given outside schools; the survey branch samples schools with probability proportional to size and checks vaccination cards.",
+        "results": "No data have been collected; the design branch is not yet decided. The report will give coverage with its interval, the deprivation gradient and consent return by school and delivery route.",
+        "discussion": "The discussion will set the local gradient against published gradients and state what the district will change for next year's program. It will separate what the data show about access from what they show about consent.",
+        "limitations": "The stratifiers are school or area measures, not household ones. The register branch depends on a completeness correction and the survey branch on response.",
+        "conclusion": "To be written once one branch has run. It will report coverage and gaps, not the effect of the campaign.",
+        "reportingChecklist": "STROBE, with RECORD if the register branch runs",
+        "summary": "Draft with the design branch and results left open."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "RECORD"
+          },
+          "manuscript.results": {
+            "includes": "branch is not yet decided"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Chase the register custodian's decision on student-level access (request of 2026-06-11)",
+          "Submit the survey branch to the school board research committee for 2026-11-18",
+          "Keep the design unresolved until one gate is met; do not start either branch before then"
+        ],
+        "improvementNotes": "Six retrieved records were appraised at abstract level; the accepted defer decision rests on claims c1 and c2. Both gates are unknown and the family is unresolved by design, not by omission.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes; the study waits on two approvals."
+      },
+      "note": "audit.openFixes and audit.lastReview FAIL at 875fe59 because of the store defect L1.6, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Statuses are checked in the export; the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Coverage after a school-based adolescent vaccination catch-up campaign: who caught up and who did not",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions": {
+            "length": 1
+          },
+          "scan.items[5].methodQuality": {
+            "isNull": true
+          },
+          "problem.constraints": "One epidemiologist two days a week until June 2027 and the program nurses during school hours; no new funding. Nothing may be collected in schools without school board approval, and no student may be identifiable in any output."
+        },
+        "screen": {
+          "includes": [
+            "Coverage after a school-based adolescent vaccination catch-up campaign: who caught up and who did not"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus, actionStatus and recommendedFamily require S11; the unresolved basis after a null recommendation D2; the claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "design.recommended": "",
+            "design.basis": "unresolved",
+            "design.decisions[-1].kind": "defer",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[0].status": "unknown",
+            "design.decisions[-1].gates[1].status": "unknown",
+            "design.decisions[-1].recommendedFamily": {
+              "isNull": true
+            },
+            "scan.items[5].year": {
+              "isNull": true
+            },
+            "scan.gradeOverall": "low",
+            "problem.rawNeed": "I coordinate the school immunization program for the Brenmoor District Health Department, which covers 41 secondary schools and about 23,000 students in grades 7 to 9. After two disrupted school years, many students missed the adolescent vaccines we give in school: HPV, meningococcal ACWY and the tetanus, diphtheria and pertussis booster. From March to May 2026 we ran a catch-up campaign. Nurses visited every school twice, consent forms went home on paper and by text message, and each of our four towns had a Saturday clinic.\n\nWe now need to know what coverage we achieved, and for whom, so that next year's program goes where the gaps are. My problem is that I do not know which kind of study we can do. If the regional immunization register gives us student-level records with school and home postcode, we could follow the grade 7 to 9 students from before to after the campaign as a cohort and see who caught up. If the register only releases aggregate counts, we would need a cross-sectional coverage survey in a sample of schools, checking vaccination cards or asking parents. The register's data custodian has not answered the request we sent in June.\n\nI also want to understand why consent forms did not come back from some schools, and whether the remaining gaps follow neighbourhood deprivation or the language spoken at home. We have one epidemiologist two days a week and the program nurses during school hours, and the school board has to approve anything that happens in schools."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

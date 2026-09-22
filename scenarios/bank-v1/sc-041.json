@@ -1,0 +1,1244 @@
+{
+  "id": "sc-041",
+  "version": 1,
+  "title": "Hospital pharmacy: substitution errors during drug shortages, two empty searches confirmed, privacy decision pending",
+  "field": "pharmacy",
+  "level": 3,
+  "family": "retrospective",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D20",
+    "S11"
+  ],
+  "notes": "Demanding path with nothing retrieved. The need names a retrospective review (routing explicit). The first recorded fixture search returns HTTP 200 with zero records. A scan reply (shape discovery, certainty keys omitted) offers four model leads, one with no year, no method score and no grade: they are stored as unverified leads with unknowns kept unknown, and the stage stays incomplete, shown as leads only (G1 to G4). A second, broader search is also empty. The investigator then confirms on screen that the search was run and returned nothing; only this completes the stage, recorded as an investigator action tied to the query (D20; A3.2 part 1 and D26), and certainty stays unassessed ('not assessed') because nothing was inspected. With no appraisal there are no ledger claims, so the design decision is a claimless 'narrow' decision (no text contradicted, acceptable as a selection) whose privacy gate stays unknown to the end: the action stays blocked (G7; A2 item 9). A second protocol reply removes the theoretical framework with an explicit null: a model-owned field is cleared to '' with issue 'cleared' (the investigator's constraints are never the target, G11). No record is retrieved, so no record ids exist in this scenario. Catches: certainty or completion over empty searches, a model field that completes the stage, invented defaults for unknown lead values, a gate met without evidence, and an explicit null that fails to clear a model-owned field.",
+  "inputs": {
+    "need": "I manage the medication safety program in the pharmacy department of Ellery Park Hospital, a 600-bed teaching hospital. Between March 2024 and October 2025 we had three shortages that forced us to substitute products: premixed potassium chloride bags were replaced by a different concentration, an intravenous antibiotic came in a different vial size that needed a new dilution, and a paediatric oral solution was replaced by a product with a different concentration. Each time we sent out alerts and changed the electronic prescribing entries, but staff told us about near misses, and I suspect some errors reached patients.\n\nI want to do a retrospective review of our incident reports and the pharmacy intervention log to estimate how often the substitutions were followed by medication errors, what kinds of errors happened (wrong dose, wrong dilution, wrong rate, wrong product selected), where in the medication process they occurred, and whether the rate differed between the three shortages. Incident reports in our system are not flagged as shortage-related, so we will have to search the free text and match dates and products. The pharmacy intervention log lists every prescription a pharmacist changed, which may catch errors that were never reported as incidents.\n\nI would also like to know what other hospitals have found, and whether there is a standard way to define a shortage-related error. The results are meant to shape how we manage the next shortage, not to blame staff. The hospital privacy office has not yet told us whether incident reports can be used for research without asking patients for consent.",
+    "constraints": "Existing incident reports and the pharmacy intervention log only; chart review limited to 150 cases. One pharmacy resident for 100 hours between November 2026 and April 2027. Results reported by shortage episode, never naming staff or wards.",
+    "localFacts": [
+      "Three shortage episodes required product substitution between 2024-03-01 and 2025-10-31: premixed potassium chloride bags, an intravenous antibiotic vial size, and a paediatric oral solution concentration.",
+      "The incident reporting system logged 1,204 medication incidents between 2024-03-01 and 2025-10-31; none is flagged as shortage-related.",
+      "The hospital privacy office has not decided whether incident reports can be used for research without patient consent."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I manage the medication safety program in the pharmacy department of Ellery Park Hospital, a 600-bed teaching hospital. Between March 2024 and October 2025 we had three shortages that forced us to substitute products: premixed potassium chloride bags were replaced by a different concentration, an intravenous antibiotic came in a different vial size that needed a new dilution, and a paediatric oral solution was replaced by a product with a different concentration. Each time we sent out alerts and changed the electronic prescribing entries, but staff told us about near misses, and I suspect some errors reached patients.\n\nI want to do a retrospective review of our incident reports and the pharmacy intervention log to estimate how often the substitutions were followed by medication errors, what kinds of errors happened (wrong dose, wrong dilution, wrong rate, wrong product selected), where in the medication process they occurred, and whether the rate differed between the three shortages. Incident reports in our system are not flagged as shortage-related, so we will have to search the free text and match dates and products. The pharmacy intervention log lists every prescription a pharmacist changed, which may catch errors that were never reported as incidents.\n\nI would also like to know what other hospitals have found, and whether there is a standard way to define a shortage-related error. The results are meant to shape how we manage the next shortage, not to blame staff. The hospital privacy office has not yet told us whether incident reports can be used for research without asking patients for consent.",
+          "problem.constraints": "Existing incident reports and the pharmacy intervention log only; chart review limited to 150 cases. One pharmacy resident for 100 hours between November 2026 and April 2027. Results reported by shortage episode, never naming staff or wards.",
+          "family": "retrospective",
+          "completedStages": [],
+          "scan.retrievalEvents": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I manage the medication safety program"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Medication errors after product substitution during drug shortages: a retrospective review of incident reports and pharmacist interventions",
+        "subtitle": "Three shortage episodes, 2024 to 2025, Ellery Park Hospital",
+        "family": "retrospective",
+        "statement": "Three drug shortages between March 2024 and October 2025 forced product substitutions with different concentrations or vial sizes. Staff reported near misses, but shortage-related incidents are not flagged and nobody knows how often substitutions were followed by errors, of what kind, where in the medication process, or whether some substitutions were riskier than others.",
+        "whoAffected": "Inpatients, including children, receiving the substituted products; nurses, prescribers and pharmacists who handle substitutions; the medication safety program.",
+        "whatHurts": "Concentration and dilution changes can lead to wrong doses or rates, including with high-alert medicines such as intravenous potassium.",
+        "currentPractice": "Alerts and electronic prescribing changes at each substitution; no review of what happened afterwards.",
+        "whyNow": "Shortages recur and the next substitution plan should be informed by what went wrong in the last three.",
+        "constraints": "Existing incident reports and the pharmacy intervention log only; chart review limited to 150 cases. One pharmacy resident for 100 hours between November 2026 and April 2027. Results reported by shortage episode, never naming staff or wards.",
+        "patientCenteredGoal": "Patients receive the right dose at the right rate when a product has to be substituted.",
+        "summary": "Problem framed as a retrospective review of substitution-related errors in three shortage episodes."
+      },
+      "expect": {
+        "store": {
+          "title": "Medication errors after product substitution during drug shortages: a retrospective review of incident reports and pharmacist interventions",
+          "family": "retrospective",
+          "problem.constraints": "Existing incident reports and the pharmacy intervention log only; chart review limited to 150 cases. One pharmacy resident for 100 hours between November 2026 and April 2027. Results reported by shortage episode, never naming staff or wards.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Medication errors after product substitution during drug shortages: a retrospective review of incident reports and pharmacist interventions"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "drug shortage product substitution medication error rate hospital incident reports pharmacy intervention log",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "Empty search: event 'ok' with zero hits. 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "omitKeys": [
+        "gradeOverall",
+        "gradeRationale"
+      ],
+      "response": {
+        "query": "drug shortage product substitution medication error rate hospital incident reports pharmacy intervention log",
+        "sourcesConsulted": [
+          "model knowledge"
+        ],
+        "synthesis": "The recorded search returned nothing. From general knowledge, four leads may be worth checking: a national survey of pharmacists on shortage-related errors, a paediatric study of concentration changes, a consensus definition, and a case series on potassium substitutions. None has been retrieved or read.",
+        "items": [
+          {
+            "title": "Medication errors associated with drug shortages: a national survey of hospital pharmacists",
+            "authors": "Harwood-Oduya L, Stenberg-Ade P",
+            "year": 2019,
+            "source": "Hospital Pharmacy Practice Review",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 45,
+            "relevance": 80,
+            "verification": "verify",
+            "contextTags": [
+              "survey",
+              "shortages"
+            ],
+            "keyFindings": "Most responding pharmacists reported at least one shortage-related error in the previous year, most often involving dose or concentration.",
+            "limitations": "Self-reported recall; response rate unclear.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Concentration changes during shortages and dosing errors in paediatric inpatients",
+            "authors": "Moreira-Lindqvist A",
+            "year": null,
+            "source": "Paediatric medication safety preprint",
+            "kind": "observational",
+            "grade": null,
+            "methodQuality": null,
+            "relevance": 75,
+            "verification": "ai-lead",
+            "contextTags": [
+              "paediatrics",
+              "concentration"
+            ],
+            "keyFindings": "Dosing errors rose after an oral solution concentration change until labels were revised.",
+            "limitations": "Year and methods not known.",
+            "notes": "Recalled as a lead; no year or quality rating available."
+          },
+          {
+            "title": "Defining shortage-related medication errors: a consensus statement",
+            "authors": "Shortage Safety Working Group",
+            "year": 2022,
+            "source": "Medication Safety Consensus Series",
+            "kind": "expert",
+            "grade": "very-low",
+            "methodQuality": 35,
+            "relevance": 70,
+            "verification": "ai-lead",
+            "contextTags": [
+              "definition"
+            ],
+            "keyFindings": "Defines a shortage-related error as one in which the substituted product, its concentration or its preparation contributed.",
+            "limitations": "Consensus without empirical testing.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Intravenous potassium product substitution and hyperkalaemia events: a case series",
+            "authors": "Castellan-Obi R, Frey-Nakamura J",
+            "year": 2017,
+            "source": "Clinical Pharmacy Case Reports",
+            "kind": "observational",
+            "grade": "very-low",
+            "methodQuality": 30,
+            "relevance": 72,
+            "verification": "verify",
+            "contextTags": [
+              "potassium",
+              "high-alert medicines"
+            ],
+            "keyFindings": "Five hyperkalaemia events followed a switch to a more concentrated potassium product.",
+            "limitations": "Case series without a denominator.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Four unchecked leads after an empty search."
+      },
+      "note": "Leads only after an empty search: stored as model leads, unverified, with the unknown year, score and grade kept unknown (G3, G4, hold at 875fe59). The reply omits the certainty keys, so no certainty is stored; the stage stays incomplete and is shown as leads only (G1, G2; D20). The grade null on the second lead logs 'cleared' at 875fe59, hence a minimum count.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": {
+            "min": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed",
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "drug shortages medication errors hospital",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "A broader second search is also empty; both searches are recorded events.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 0,
+          "scan.items": {
+            "length": 4
+          },
+          "scan.gradeOverall": ""
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-empty-search",
+      "note": "The investigator confirms on screen that the search was run and returned nothing. Only this completes the stage (G2); the confirmation is a store record written by the screen action, by the investigator, tied to the confirmed query (A3.2 part 1, D26), never a model field. Certainty stays unassessed (G1). Requires D20.",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 4
+          },
+          "scan.retrievalEvents[1].resultCount": 0,
+          "scan.emptySearchConfirmation.by": "investigator"
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "600-bed teaching hospital",
+          "three substitution episodes, 2024 to 2025",
+          "incident reports not flagged for shortages",
+          "pharmacy intervention log"
+        ],
+        "reading": "A substitution changes the product that prescribers, pharmacists and nurses see, and errors can enter at prescribing, preparation or administration. Incident reports capture what staff chose to report; the intervention log captures what pharmacists intercepted; neither alone gives the error rate. No external evidence was retrieved, so the local data must carry the analysis.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Product substitution",
+            "kind": "context",
+            "detail": "Concentration, vial size or product change."
+          },
+          {
+            "id": "n2",
+            "label": "Substitution-related medication error",
+            "kind": "outcome",
+            "detail": "Primary outcome, per 1,000 doses dispensed."
+          },
+          {
+            "id": "n3",
+            "label": "Incident reports",
+            "kind": "context",
+            "detail": "Free text, not flagged."
+          },
+          {
+            "id": "n4",
+            "label": "Pharmacy intervention log",
+            "kind": "context",
+            "detail": "Intercepted errors."
+          },
+          {
+            "id": "n5",
+            "label": "Paediatric oral solution",
+            "kind": "stakeholder",
+            "detail": "Children at particular risk from concentration changes."
+          },
+          {
+            "id": "n6",
+            "label": "No external evidence retrieved",
+            "kind": "gap",
+            "detail": "Two empty recorded searches."
+          },
+          {
+            "id": "n7",
+            "label": "Privacy office decision",
+            "kind": "gap",
+            "detail": "Pending."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "may cause"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "records some"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "records intercepted"
+          },
+          {
+            "from": "n5",
+            "to": "n1",
+            "relation": "affected by"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "gates research use of"
+          }
+        ],
+        "summary": "Map shows two partial data sources for the same outcome and the pending privacy decision."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 5
+          },
+          "map.nodes[5].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No external evidence was retrieved",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Two recorded searches were empty; the leads are unchecked.",
+            "opportunity": "Present local rates without external comparison and check the leads before citing any."
+          },
+          {
+            "id": "g2",
+            "title": "Shortage-related incidents are not flagged",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Finding them needs free-text search and matching by date and product.",
+            "opportunity": "Pre-specify search terms and a two-person agreement check on a sample."
+          },
+          {
+            "id": "g3",
+            "title": "No agreed definition of a shortage-related error",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Rates depend on the definition.",
+            "opportunity": "Adopt a written definition before extraction."
+          },
+          {
+            "id": "g4",
+            "title": "Children exposed to a concentration change",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Paediatric dosing errors can be larger in relative terms.",
+            "opportunity": "Report the paediatric episode separately."
+          }
+        ],
+        "errorsFound": [
+          "Incident counts alone would understate errors; the intervention log is needed as a second source."
+        ],
+        "reevaluation": "A local retrospective review with two sources and a written definition is feasible and useful even without external comparison.",
+        "summary": "Four gaps: no external evidence, unflagged incidents, no definition, and paediatric exposure."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].severity": "high",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No external evidence was retrieved"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Substitutions involving a concentration change will have a higher rate of substitution-related errors per 1,000 doses dispensed than the vial-size substitution.",
+            "novelty": 40,
+            "need": 80,
+            "practiceChange": 75,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "Concentration changes alter dose calculations at every step.",
+            "risks": "Small numbers per episode."
+          },
+          {
+            "id": "h2",
+            "statement": "More substitution-related errors are intercepted by pharmacists than are reported as incidents.",
+            "novelty": 45,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Supports using both data sources.",
+            "risks": "Different definitions in the two sources."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Two hypotheses; h1 selected."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "During three shortage episodes at one teaching hospital between March 2024 and October 2025, what was the rate of substitution-related medication errors per 1,000 doses dispensed of each substituted product, by error type and stage of the medication process?",
+            "framework": "PECO",
+            "population": "Doses of the three substituted products dispensed during each shortage episode",
+            "intervention": "Substituted product (concentration or vial-size change)",
+            "comparator": "Between episodes",
+            "outcome": "Substitution-related medication errors per 1,000 doses dispensed",
+            "time": "2024-03-01 to 2025-10-31",
+            "setting": "600-bed teaching hospital"
+          }
+        ],
+        "finer": "Feasible with existing data and 100 resident hours if the privacy office agrees; interesting to the medication safety program; novel locally; ethical with no naming of staff; relevant to the next shortage.",
+        "summary": "One PECO question on error rates by episode."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "retrospective",
+        "rationale": "The events have happened and the data exist, so a retrospective review of incident reports and the pharmacy intervention log is the direct design. The recorded searches found nothing to compare with, so the question is narrowed to local rates by episode, error type and stage, with no claim about other hospitals.",
+        "alternatives": [
+          "Prospective surveillance during the next shortage (refused as the first step: the next shortage date is unknown; recommended as a follow-on)",
+          "Staff survey about near misses (refused: recall bias and no denominator)"
+        ],
+        "guidelines": [
+          "STROBE",
+          "RECORD"
+        ],
+        "whyNotMoreComplex": "A multi-hospital study would need shared definitions that do not yet exist; one hospital's data answer the local question.",
+        "decision": {
+          "kind": "narrow",
+          "statement": "Narrow the study to a retrospective review of the three local shortage episodes, estimating substitution-related errors per 1,000 doses dispensed of each substituted product from incident reports and the pharmacy intervention log, without any external comparison because the recorded searches returned nothing.",
+          "question": "What should the medication safety program study about substitution errors during shortages?",
+          "claimIds": [],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Incident reports and intervention log entries can be matched to substituted products by date and product name.",
+              "role": "justifies",
+              "status": "unknown",
+              "claimIds": []
+            },
+            {
+              "id": "k2",
+              "text": "Substitution-related errors cannot be distinguished from routine errors with the same products.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Privacy office decision on research use of incident reports without patient consent",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "Pharmacy resident time for data extraction",
+              "status": "met",
+              "evidence": "Investigator constraint: one pharmacy resident for 100 hours between November 2026 and April 2027"
+            }
+          ],
+          "alternatives": [
+            "Prospective surveillance during the next shortage"
+          ],
+          "note": "No ledger claims exist because nothing was retrieved; the decision cites none and makes no claim about published evidence."
+        },
+        "summary": "Retrospective review recommended; the decision is narrowed to local data and waits on the privacy office."
+      },
+      "note": "A claimless 'narrow' decision after a confirmed empty search. selectionStatus and actionStatus require S11; status text D5. The unknown privacy gate keeps the action blocked.",
+      "expect": {
+        "store": {
+          "design.recommended": "retrospective",
+          "design.decisions[-1].kind": "narrow",
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Conditional acceptance: the decision cites no claim (nothing was retrieved) and none of its text is contradicted, so the selection is acceptable while the unknown privacy gate keeps the action blocked (A2 item 9; G7). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "family": "retrospective",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Retrospective review of incident reports and the pharmacy intervention log for the three shortage episodes, estimating substitution-related error rates by episode.",
+        "population": "All doses of the three substituted products dispensed during their shortage episodes, and all incident reports and intervention log entries in the same periods.",
+        "exposure": "Dispensing of a substituted product during a shortage episode.",
+        "procedures": "The resident searches incident report free text with pre-specified product and concentration terms, matches entries to episode dates and products, and reviews the intervention log for the same products. Up to 150 charts are reviewed to confirm classification. A second pharmacist classifies a random 20 percent independently.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Substitution-related medication errors",
+            "measure": "Errors per 1,000 doses dispensed, by episode",
+            "timing": "During each shortage episode",
+            "why": "Comparable across episodes of different size.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Error type and stage",
+            "measure": "Distribution of wrong dose, dilution, rate or product by prescribing, preparation or administration",
+            "timing": "During each episode",
+            "why": "Shows where to intervene next time.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Errors reaching the patient",
+            "measure": "Proportion of errors that reached the patient, with harm category",
+            "timing": "During each episode",
+            "why": "Severity matters for planning.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Dispensing counts are available from the pharmacy system; 100 resident hours cover free-text search, log review and 150 charts.",
+        "biasMitigation": [
+          "Written definition before extraction",
+          "Two data sources",
+          "Independent classification of 20 percent",
+          "Staff and wards never named"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Under-reporting in incident reports",
+            "severity": "high",
+            "note": "Partly offset by the intervention log."
+          },
+          {
+            "id": "b2",
+            "label": "Classification by one resident",
+            "severity": "watch",
+            "note": "Checked on a 20 percent sample."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [],
+          "simplestPath": "Three episodes, two sources, one rate per episode."
+        },
+        "theoreticalFramework": "SEIPS 2.0 to classify where in the work system substitution errors arose.",
+        "summary": "Retrospective two-source review with a work-system framework."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "protocol.theoreticalFramework": {
+            "includes": "SEIPS"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 2,
+      "response": {
+        "overview": "Retrospective review of incident reports and the pharmacy intervention log for the three shortage episodes, estimating substitution-related error rates by episode; revised to drop the framework and to add a pre-shortage baseline period for each product.",
+        "population": "All doses of the three products dispensed during their shortage episodes and during the three months before each episode, with the incident reports and intervention log entries for the same periods.",
+        "exposure": "Dispensing of a substituted product during a shortage episode, compared with the original product in the three months before.",
+        "procedures": "As before, with the same search terms applied to the three months before each episode to estimate the baseline error rate for the original product.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Substitution-related medication errors",
+            "measure": "Errors per 1,000 doses dispensed during each episode, with the rate for the original product in the three months before",
+            "timing": "Episode and pre-episode periods",
+            "why": "A baseline shows how much the substitution added.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Error type and stage",
+            "measure": "Distribution by error type and stage",
+            "timing": "Episode periods",
+            "why": "Shows where to intervene.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Errors reaching the patient",
+            "measure": "Proportion reaching the patient, with harm category",
+            "timing": "Episode periods",
+            "why": "Severity matters for planning.",
+            "patientCentered": true
+          }
+        ],
+        "theoreticalFramework": null,
+        "summary": "Protocol revised: pre-episode baseline added; no framework, because none changes what is measured."
+      },
+      "omitKeys": [
+        "feasibility",
+        "biasMitigation",
+        "biasFlags",
+        "parsimony"
+      ],
+      "note": "Revised protocol reply. theoreticalFramework null is an explicit clear of a model-owned field: stored '' with issue 'cleared' (holds at 875fe59; G11 limits explicit clears to model-owned fields). Omitted keys keep the first reply's feasibility, bias mitigation, bias flags and parsimony. No downstream stage is complete yet, so nothing is flagged for review.",
+      "expect": {
+        "store": {
+          "protocol.theoreticalFramework": "",
+          "protocol.population": {
+            "includes": "three months before each episode"
+          },
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "protocol.biasFlags": {
+            "length": 2
+          },
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "theoreticalFramework",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Descriptive rates per 1,000 doses by episode, with the pre-episode rate for the original product as a baseline.",
+        "sampleSize": "All doses and reports in the defined periods are included, so there is no sampling. With perhaps 2,000 to 10,000 doses per episode and error rates of a few per 1,000, each rate will have a wide interval; the analysis is descriptive and compares episodes cautiously.",
+        "primaryAnalysis": "Rate per 1,000 doses with exact Poisson 95 percent confidence intervals for each episode and its baseline period; rate ratio of episode to baseline per product.",
+        "secondaryAnalysis": "Error type and stage by episode; proportion reaching the patient.",
+        "missingData": "Incident reports without a product name are reviewed by date and ward; unresolvable reports are counted and reported.",
+        "multiplicity": "Three episodes described; no formal testing between them.",
+        "software": "R for rates and exact intervals.",
+        "overfittingGuards": [
+          "No modelling beyond rates and rate ratios",
+          "Search terms fixed before extraction",
+          "Definition fixed before classification"
+        ],
+        "summary": "Descriptive rates with exact intervals and a pre-episode baseline."
+      },
+      "expect": {
+        "store": {
+          "stats.primaryAnalysis": {
+            "includes": "exact Poisson"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Privacy of patients named in incident reports; blame of staff if results identify individuals or wards.",
+        "consent": "Research use without individual consent depends on the privacy office's decision; if refused, the work proceeds only as internal quality review under existing safety policy, without publication.",
+        "data": "Extraction into a de-identified dataset on the pharmacy's restricted drive; no staff or ward names; results by episode only.",
+        "equity": "PROGRESS-Plus: children (the paediatric oral solution) and patients with limited English, who may be less able to question an unfamiliar product, are considered; the paediatric episode is reported separately.",
+        "effectiveness": "Shapes the next substitution plan.",
+        "efficiency": "Existing data and 100 resident hours.",
+        "costs": "Resident time only.",
+        "grants": "None.",
+        "partnerships": "Medication safety committee, nursing practice leads, paediatric pharmacy team.",
+        "rebPath": "Hospital research ethics review after the privacy office decision; publication only if research use is approved.",
+        "limitations": "Under-reporting; one hospital; no external comparison.",
+        "summary": "Privacy decision pending; no staff blame; paediatric episode reported separately."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "privacy office"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two nurses and one prescriber who worked through the shortages review the definition and the report.",
+        "socialListening": "None.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Look-alike bags",
+            "quote": "Composite paraphrase: The new potassium bags looked like the old ones until you read the small print.",
+            "implication": "Record label and packaging differences.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Alert fatigue",
+            "quote": "Composite paraphrase: We had three alerts that week; the substitution one got lost.",
+            "implication": "Record how alerts were sent.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Paediatric doses",
+            "quote": "Composite paraphrase: The medicine bottle changed and nobody told us the dose in millilitres had changed too.",
+            "implication": "Report the paediatric episode separately and review family information.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Three composite voices on packaging, alerts and paediatric dosing."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Medication errors after product substitution in three drug shortages at a teaching hospital: a retrospective review",
+        "abstract": "Objective: to estimate substitution-related medication error rates per 1,000 doses dispensed in three shortage episodes, with pre-episode baselines for the original products. Design: retrospective review of incident reports and the pharmacy intervention log. Results will be reported if research use of incident reports is approved.",
+        "introduction": "Shortages force substitutions that change concentrations, vial sizes and preparation steps. Local error rates during substitutions are rarely measured, and incident reports are not flagged as shortage-related.",
+        "methods": "Incident reports are searched with pre-specified product and concentration terms and matched to episode dates; the pharmacy intervention log is reviewed for the same products. A written definition of a substitution-related error is fixed before extraction, and a second pharmacist classifies a random 20 percent. Rates use doses dispensed as the denominator and are compared with the three months before each episode.",
+        "results": "No data have been extracted; the privacy decision is pending.",
+        "discussion": "No external evidence was retrieved in two recorded searches, so the discussion will describe local rates without comparison with other hospitals. It will focus on where in the medication process errors arose and what the next substitution plan should change.",
+        "limitations": "Under-reporting in incident reports; one hospital; small numbers per episode.",
+        "conclusion": "To be written. Results will be reported by episode, never by staff member or ward.",
+        "reportingChecklist": "RECORD (STROBE extension for routinely collected data)",
+        "summary": "RECORD-structured draft."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "RECORD"
+          },
+          "manuscript.discussion": {
+            "includes": "No external evidence was retrieved"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Obtain the privacy office's decision before any extraction; the decision stays blocked until then",
+          "Check the four scan leads before citing any; they are unverified",
+          "Fix the written definition of a substitution-related error before the resident starts"
+        ],
+        "improvementNotes": "Two recorded searches returned nothing and the investigator confirmed the empty search; certainty is not assessed. The accepted narrow decision cites no claim and waits on the privacy office.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes; the privacy decision gates everything."
+      },
+      "note": "audit.openFixes and audit.lastReview FAIL at 875fe59 because of the store defect L1.6, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Medication errors after product substitution during drug shortages: a retrospective review of incident reports and pharmacist interventions",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "protocol.theoreticalFramework": "",
+          "design.decisions": {
+            "length": 1
+          },
+          "problem.constraints": "Existing incident reports and the pharmacy intervention log only; chart review limited to 150 cases. One pharmacy resident for 100 hours between November 2026 and April 2027. Results reported by shortage episode, never naming staff or wards."
+        },
+        "screen": {
+          "includes": [
+            "Medication errors after product substitution during drug shortages: a retrospective review of incident reports and pharmacist interventions"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Certainty is unassessed and the stage list shows the Scan stage complete; 'not assessed' names the certainty status on screen (D20).",
+      "expect": {
+        "store": {
+          "title": "Medication errors after product substitution during drug shortages: a retrospective review of incident reports and pharmacist interventions",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.gradeOverall": "",
+          "scan.claims": {
+            "length": 0
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Medication errors after product substitution during drug shortages: a retrospective review of incident reports and pharmacist interventions",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "No certainty over empty searches and the investigator's confirmation require D20; selectionStatus and actionStatus S11. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.gradeOverall": "",
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.retrievalEvents[1].resultCount": 0,
+            "scan.emptySearchConfirmation.by": "investigator",
+            "scan.items[1].grade": "unrated",
+            "design.decisions[-1].claimIds": [],
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "protocol.theoreticalFramework": "",
+            "problem.rawNeed": "I manage the medication safety program in the pharmacy department of Ellery Park Hospital, a 600-bed teaching hospital. Between March 2024 and October 2025 we had three shortages that forced us to substitute products: premixed potassium chloride bags were replaced by a different concentration, an intravenous antibiotic came in a different vial size that needed a new dilution, and a paediatric oral solution was replaced by a product with a different concentration. Each time we sent out alerts and changed the electronic prescribing entries, but staff told us about near misses, and I suspect some errors reached patients.\n\nI want to do a retrospective review of our incident reports and the pharmacy intervention log to estimate how often the substitutions were followed by medication errors, what kinds of errors happened (wrong dose, wrong dilution, wrong rate, wrong product selected), where in the medication process they occurred, and whether the rate differed between the three shortages. Incident reports in our system are not flagged as shortage-related, so we will have to search the free text and match dates and products. The pharmacy intervention log lists every prescription a pharmacist changed, which may catch errors that were never reported as incidents.\n\nI would also like to know what other hospitals have found, and whether there is a standard way to define a shortage-related error. The results are meant to shape how we manage the next shortage, not to blame staff. The hospital privacy office has not yet told us whether incident reports can be used for research without asking patients for consent."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

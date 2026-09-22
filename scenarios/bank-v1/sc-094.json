@@ -1,0 +1,1602 @@
+{
+  "id": "sc-094",
+  "version": 1,
+  "title": "Health authority simulation centre: in-situ simulation for rapid response teams, late Stats reply refused after a protocol edit",
+  "field": "medical-education",
+  "level": 5,
+  "family": "mixed-methods",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S10",
+    "S11",
+    "S13"
+  ],
+  "notes": "Expert path on an explicit multi-site mixed methods need. Eight fixture records are appraised (certainty 'low'); the decision rests on five claims and its board-of-record ethics gate stays unknown, so the accepted selection keeps a blocked action. The protocol is written for all calls at four hospitals (about 2,860 a year). The investigator then clicks Illuminate for Stats and, while that request is in flight, restricts the protocol's population to adult ward calls (about 2,310 a year) through the screen. Encoding of the late reply within the format's step types: the set-field step carries the edit and its note tells the runner to issue the Stats request first and hold the replay reply; the following illuminate step (stats call 1) releases that held reply, which was computed for the old population, and it must be refused by the studyRevision guard: nothing merged, Stats incomplete, the investigator's text kept, an error shown and the refusal logged in the audit entries (G6). A reload shows the refusal persists. Dependency closure across protocol and stats: a second protocol reply reconciles the other protocol text and omits population (listed in omitKeys) so the investigator's text stays; the second Stats reply (stats call 2) then computes the sample size for the adult ward population with the intracluster correlation from a retrieved record and a small-sample correction for four clusters. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 3, 4, 5, 7, 8 (ev-1hezq7w, ev-03tbpnq, ev-0k5qs13, ev-1wti2ae, ev-1kjarsp, ev-0uzdfhc, ev-0npnrbz); the titleYearKey(title, year) hash for record 6 (ev-1bzo348). Requires S10 (studyRevision guard at the commit boundary; mergeStageIfRevision exists at 875fe59, its use on the Illuminate path is A3 L1.2 as corrected by A3.1), D5 (refusal and statuses shown), S11 (selectionStatus, actionStatus) and S13 (appraisal payload). Catches: a late reply merged after an edit, a refused reply that still completes the stage, an investigator edit overwritten by a later model reply, and stats that no longer match the protocol.",
+  "inputs": {
+    "need": "I direct the simulation centre for a health authority with four hospitals, and I lead the education programme for their rapid response teams: a critical care nurse, a respiratory therapist and a physician on call for deteriorating ward patients. Each hospital runs its own training, mostly an annual lecture and an online module, and last year's case reviews found delays in recognising the need to escalate, poor role clarity when the team arrived, and handover problems when patients moved to intensive care. We want to introduce in-situ simulation: short, unannounced scenarios run on the wards with the real team every month, each followed by a structured debrief.\n\nI would like to evaluate this as a multi-site mixed methods study across the four hospitals, introducing the programme one hospital at a time over a year. The quantitative strand would measure what happens in real rapid response calls: time from the call to the first critical intervention, unplanned intensive care admission after a call, and death within 24 hours, with team performance in the simulations as a secondary measure. The qualitative strand would explore how teams, ward nurses and families experience the calls and the simulations, through interviews and observation of debriefs. I need help with the design, the sample size given only four hospitals, measures that are not just checklist scores, and the ethics of unannounced simulations on working wards. Each hospital's education lead has agreed to take part, and we have a small grant.",
+    "constraints": "A grant of 48,000 for 18 months; simulation faculty time is limited to 8 hours a month per hospital; unannounced simulations must never delay real patient care and must stop immediately if a real call occurs on the ward.",
+    "localFacts": [
+      "The four hospitals' rapid response teams attended 2,860 calls last year, between 480 and 1,020 per hospital.",
+      "Education leads at all four hospitals signed letters of participation between 2026-08-20 and 2026-09-05.",
+      "The simulation education grant of 48,000 was awarded on 2026-07-30 (grant SEF-2026-14).",
+      "The health authority research ethics board is the board of record for multi-site studies; no application has been submitted yet."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I direct the simulation centre for a health authority with four hospitals, and I lead the education programme for their rapid response teams: a critical care nurse, a respiratory therapist and a physician on call for deteriorating ward patients. Each hospital runs its own training, mostly an annual lecture and an online module, and last year's case reviews found delays in recognising the need to escalate, poor role clarity when the team arrived, and handover problems when patients moved to intensive care. We want to introduce in-situ simulation: short, unannounced scenarios run on the wards with the real team every month, each followed by a structured debrief.\n\nI would like to evaluate this as a multi-site mixed methods study across the four hospitals, introducing the programme one hospital at a time over a year. The quantitative strand would measure what happens in real rapid response calls: time from the call to the first critical intervention, unplanned intensive care admission after a call, and death within 24 hours, with team performance in the simulations as a secondary measure. The qualitative strand would explore how teams, ward nurses and families experience the calls and the simulations, through interviews and observation of debriefs. I need help with the design, the sample size given only four hospitals, measures that are not just checklist scores, and the ethics of unannounced simulations on working wards. Each hospital's education lead has agreed to take part, and we have a small grant.",
+          "family": "mixed-methods",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I direct the simulation centre for a health authority with four hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "In-situ simulation for rapid response teams across four hospitals: a stepped multi-site mixed methods evaluation",
+        "subtitle": "Real-call outcomes, simulation performance and experience across four hospitals introduced in sequence",
+        "family": "mixed-methods",
+        "statement": "Rapid response teams in four hospitals train mainly through lectures and online modules, and case reviews show delays in escalation, poor role clarity and weak handovers. The health authority plans monthly unannounced in-situ simulation with structured debriefing, introduced one hospital at a time. It needs a multi-site evaluation that measures what happens in real calls, explains how teams, ward nurses and families experience the change, and handles the few clusters and the ethics of simulating on working wards.",
+        "whoAffected": "Deteriorating ward patients and their families, rapid response team members (critical care nurses, respiratory therapists, physicians), ward nurses and simulation faculty.",
+        "whatHurts": "Delays to the first critical intervention and confused roles at the bedside may worsen outcomes for deteriorating patients; families are left without information.",
+        "currentPractice": "Annual lecture and online module per hospital; no in-situ simulation; case review after serious events.",
+        "whyNow": "A grant awarded in July 2026, signed participation from all four hospitals, and case review findings the education programme must answer.",
+        "constraints": "A grant of 48,000 for 18 months; simulation faculty time is limited to 8 hours a month per hospital; unannounced simulations must never delay real patient care and must stop immediately if a real call occurs on the ward.",
+        "patientCenteredGoal": "Deteriorating ward patients receive critical interventions sooner from teams who know their roles, and families understand what is happening.",
+        "summary": "Problem framed as a four-hospital stepped mixed methods evaluation of in-situ simulation."
+      },
+      "note": "The typed constraints are restated unchanged (G11).",
+      "expect": {
+        "store": {
+          "title": "In-situ simulation for rapid response teams across four hospitals: a stepped multi-site mixed methods evaluation",
+          "family": "mixed-methods",
+          "problem.constraints": "A grant of 48,000 for 18 months; simulation faculty time is limited to 8 hours a month per hospital; unannounced simulations must never delay real patient care and must stop immediately if a real call occurs on the ward.",
+          "problem.rawNeed": "I direct the simulation centre for a health authority with four hospitals, and I lead the education programme for their rapid response teams: a critical care nurse, a respiratory therapist and a physician on call for deteriorating ward patients. Each hospital runs its own training, mostly an annual lecture and an online module, and last year's case reviews found delays in recognising the need to escalate, poor role clarity when the team arrived, and handover problems when patients moved to intensive care. We want to introduce in-situ simulation: short, unannounced scenarios run on the wards with the real team every month, each followed by a structured debrief.\n\nI would like to evaluate this as a multi-site mixed methods study across the four hospitals, introducing the programme one hospital at a time over a year. The quantitative strand would measure what happens in real rapid response calls: time from the call to the first critical intervention, unplanned intensive care admission after a call, and death within 24 hours, with team performance in the simulations as a secondary measure. The qualitative strand would explore how teams, ward nurses and families experience the calls and the simulations, through interviews and observation of debriefs. I need help with the design, the sample size given only four hospitals, measures that are not just checklist scores, and the ethics of unannounced simulations on working wards. Each hospital's education lead has agreed to take part, and we have a small grant.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "In-situ simulation for rapid response teams across four hospitals: a stepped multi-site mixed methods evaluation"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "in-situ simulation rapid response team real call outcomes time to intervention multi-site debriefing unannounced safety",
+      "response": {
+        "status": 200,
+        "total": 8,
+        "records": [
+          {
+            "title": "In-situ simulation for rapid response teams and time to first critical intervention: a before-after study in one hospital",
+            "authors": "Lindqvist-Oduya S, Marchetti-Brandt K, Achebe-Nakamura P",
+            "year": 2018,
+            "venue": "Acute Care Simulation Practice",
+            "doi": "10.5555/sace.2018.0114",
+            "providerType": "journal-article",
+            "abstract": "One hospital introduced monthly unannounced in-situ simulations for its rapid response team, each followed by a structured debrief. We compared 12 months of real calls before and after the change. The median time from call to first critical intervention fell from 11.2 to 8.4 minutes. Unplanned intensive care admission after a call did not change. The study had no control group, a new early warning score was introduced during the after period, and the team members changed over the two years, so the fall cannot be attributed to simulation alone."
+          },
+          {
+            "title": "A stepped-wedge evaluation of in-situ simulation for medical emergency teams across five hospitals",
+            "authors": "Ferreira-Holm D, Okafor-Lindgren T, Sato-Mensah R, Petit-Kowalski A",
+            "year": 2022,
+            "venue": "Journal of Interprofessional Resuscitation Education",
+            "doi": "10.5555/jire.2022.0207",
+            "providerType": "journal-article",
+            "abstract": "Five hospitals introduced monthly in-situ simulation for medical emergency teams in a random order over 15 months. Across 6,480 real calls, the median time from call to first critical intervention fell by 3.1 minutes after introduction, after adjustment for calendar time. Unplanned intensive care admission within 12 hours of a call did not change (odds ratio 0.96, 95 percent CI 0.81 to 1.14), and death within 24 hours was too rare to compare. Simulations were cancelled in 14 percent of planned months because of staffing. The authors note that five clusters gave imprecise estimates of between-hospital effects."
+          },
+          {
+            "title": "Team performance scores in simulation and performance in real rapid response calls: a validation study",
+            "authors": "Kaur-Whitfield M, Varadi-Osei J",
+            "year": 2020,
+            "venue": "Acute Care Simulation Practice",
+            "doi": "10.5555/sace.2020.0048",
+            "providerType": "journal-article",
+            "abstract": "We compared the scores of 38 rapid response teams on a standard simulation checklist with blinded ratings of the same teams in video-recorded real calls. Simulation checklist scores correlated weakly with real-call performance (correlation coefficient 0.21). Time to first critical intervention in simulation correlated better with the same time in real calls than checklist scores did. Teams that scored highly in simulation often lost role clarity in crowded real calls. The authors caution against using simulation checklist scores as the main outcome of team training."
+          },
+          {
+            "title": "Unannounced in-situ simulation on working wards: safety events, cancellations and staff experience",
+            "authors": "Mbatha-Rourke L, Castellanos-Iwu H",
+            "year": 2019,
+            "venue": "Ward Safety Practice Notes",
+            "doi": "10.5555/psip.2019.0133",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 212 unannounced in-situ simulations run on medical and surgical wards over three years. Three simulations were interrupted by a real call on the same ward and stopped at once, with no delay to the real call. No patient harm was attributed to a simulation. In a staff questionnaire, 41 percent of ward nurses reported anxiety when an unannounced simulation began, and several were unsure at first whether the event was real. Clear signage, a stop word and advance notice to the ward manager were added after the first year."
+          },
+          {
+            "title": "Debriefing structure and learning in interprofessional simulation: a systematic review",
+            "authors": "Harcourt-Adeyemi N, Rasmussen-Tanaka B, Oduya-Grieve C",
+            "year": 2021,
+            "venue": "Journal of Interprofessional Resuscitation Education",
+            "doi": "10.5555/jire.2021.0162",
+            "providerType": "journal-article",
+            "abstract": "We included 27 studies of debriefing after interprofessional simulation. Structured debriefing with a trained facilitator was associated with better learning outcomes than unstructured discussion in most comparisons, but outcomes were mostly knowledge and self-rated confidence measured immediately after the session. Only four studies measured behaviour in clinical practice, and none measured patient outcomes. Debriefs longer than 20 minutes were no better than shorter ones. Study quality was low to moderate, and most studies were run in simulation centres rather than on clinical wards, so their relevance to in-situ programmes is uncertain."
+          },
+          {
+            "title": "Families' experience of rapid response calls on general wards",
+            "authors": "Achterberg-Lemaire F, Nwosu-Hallberg K",
+            "year": 2017,
+            "venue": "Family-Centred Acute Care",
+            "providerType": "journal-article",
+            "abstract": "We spoke with 18 family members who had been present when a rapid response team was called for a relative on a general ward. Families described confusion about who the arriving clinicians were and what their roles were, being asked to leave without explanation, and a lack of information after the team left. Several families had noticed their relative's deterioration before staff did and did not know how to raise concern. Families valued a named person who explained what was happening. Participants came from two hospitals and were contacted by ward managers."
+          },
+          {
+            "title": "Latent safety threats identified by in-situ simulation on general wards",
+            "authors": "Rahman-Holt E, Sorensen-Brennan M",
+            "year": 2023,
+            "venue": "Ward Safety Practice Notes",
+            "doi": "10.5555/psip.2023.0079",
+            "providerType": "journal-article",
+            "abstract": "Across 146 in-situ simulations on general wards in three hospitals, teams and observers identified a mean of 1.8 latent safety threats per simulation, such as missing airway equipment, wrong suction connectors, blocked bed access and unclear calling procedures. Most threats were fixed within a month. Hospitals that fed threats into a safety tracking system resolved more of them than hospitals that relied on informal follow-up. The study did not measure whether resolving threats changed real-call outcomes, and threats were classified by the simulation faculty without a second rater."
+          },
+          {
+            "title": "Intracluster correlation of rapid response outcomes between hospitals: estimates for planning cluster studies",
+            "authors": "Petrov-Amadi J, Lindgren-Castillo R",
+            "year": 2024,
+            "venue": "Rapid Response Research Methods",
+            "doi": "10.5555/rrm.2024.0021",
+            "providerType": "journal-article",
+            "abstract": "We estimated intracluster correlation coefficients for rapid response call outcomes from 41,300 calls in 22 hospitals over three years. The coefficient was 0.04 for time from call to first critical intervention, 0.02 for unplanned intensive care admission within 12 hours and 0.01 for death within 24 hours. Coefficients were larger for hospitals of very different size and were stable across years. The authors provide the estimates, with their confidence intervals, for sample size calculations in cluster and stepped-wedge studies of rapid response interventions."
+          }
+        ]
+      },
+      "note": "Eight records; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 8,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1hezq7w",
+            "ev-03tbpnq",
+            "ev-0k5qs13",
+            "ev-1wti2ae",
+            "ev-1kjarsp",
+            "ev-1bzo348",
+            "ev-0uzdfhc",
+            "ev-0npnrbz"
+          ],
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[5].doi": {
+            "absent": true
+          },
+          "scan.items[1].provenance.status": "retrieved",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "A stepped-wedge evaluation of in-situ simulation for medical emergency teams across five hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1hezq7w",
+            "relevance": 82,
+            "methodQuality": 42,
+            "kind": "qi-report",
+            "grade": "very-low",
+            "keyFindings": "Median time from call to first critical intervention fell from 11.2 to 8.4 minutes after monthly in-situ simulation in one hospital; unplanned intensive care admission did not change.",
+            "limitations": "No control; a new early warning score and team turnover in the same period.",
+            "contextTags": [
+              "in-situ simulation",
+              "before-after",
+              "real calls"
+            ]
+          },
+          {
+            "id": "ev-03tbpnq",
+            "relevance": 95,
+            "methodQuality": 70,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Across five hospitals and 6,480 calls, time to first critical intervention fell by a median 3.1 minutes; unplanned intensive care admission did not change (odds ratio 0.96); simulations were cancelled in 14 percent of planned months.",
+            "limitations": "Five clusters gave imprecise between-hospital estimates; staggered order but open delivery.",
+            "contextTags": [
+              "stepped-wedge",
+              "multi-site",
+              "real-call outcomes"
+            ]
+          },
+          {
+            "id": "ev-0k5qs13",
+            "relevance": 88,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Simulation checklist scores correlated weakly with real-call performance (correlation coefficient 0.21); simulated time to first intervention tracked real calls better.",
+            "limitations": "38 teams; one validation cohort.",
+            "contextTags": [
+              "measurement",
+              "validity",
+              "checklists"
+            ]
+          },
+          {
+            "id": "ev-1wti2ae",
+            "relevance": 84,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Three of 212 unannounced simulations were stopped for real calls with no delay; 41 percent of ward nurses reported anxiety when a simulation began.",
+            "limitations": "Single programme; staff questionnaire response not reported.",
+            "contextTags": [
+              "safety",
+              "unannounced simulation",
+              "staff experience"
+            ]
+          },
+          {
+            "id": "ev-1kjarsp",
+            "relevance": 70,
+            "methodQuality": 60,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Structured facilitated debriefing improved immediate learning in most of 27 studies; only four measured clinical behaviour and none patient outcomes.",
+            "limitations": "Mostly immediate self-rated outcomes; low to moderate quality.",
+            "contextTags": [
+              "debriefing",
+              "learning outcomes"
+            ]
+          },
+          {
+            "id": "ev-1bzo348",
+            "relevance": 74,
+            "methodQuality": 54,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Families described confusion about the team's roles, being asked to leave without explanation and noticing deterioration before staff.",
+            "limitations": "18 family members from two hospitals, contacted by ward managers.",
+            "contextTags": [
+              "families",
+              "experience",
+              "communication"
+            ]
+          },
+          {
+            "id": "ev-0uzdfhc",
+            "relevance": 78,
+            "methodQuality": 56,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In-situ simulations identified a mean of 1.8 latent safety threats each; hospitals with a tracking system resolved more.",
+            "limitations": "No link to real-call outcomes.",
+            "contextTags": [
+              "latent safety threats",
+              "systems learning"
+            ]
+          },
+          {
+            "id": "ev-0npnrbz",
+            "relevance": 86,
+            "methodQuality": 72,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Intracluster correlation was 0.04 for time to first critical intervention, 0.02 for unplanned intensive care admission and 0.01 for death within 24 hours across 22 hospitals.",
+            "limitations": "Hospitals of varied size; coefficients larger when sizes differ widely.",
+            "contextTags": [
+              "sample size",
+              "intracluster correlation",
+              "planning"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a stepped evaluation across five hospitals, time from call to first critical intervention fell by a median 3.1 minutes after in-situ simulation, while unplanned intensive care admission did not change.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-03tbpnq"
+            ],
+            "location": "Abstract",
+            "passage": "the median time from call to first critical intervention fell by 3.1 minutes after introduction, after adjustment for calendar time",
+            "interpretation": "Time to first critical intervention is a responsive real-call outcome; admission outcomes may not move.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Simulation checklist scores correlated weakly with performance in real calls (correlation coefficient 0.21).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0k5qs13"
+            ],
+            "location": "Abstract",
+            "passage": "Simulation checklist scores correlated weakly with real-call performance (correlation coefficient 0.21).",
+            "interpretation": "Checklist scores should not be the main outcome; real-call measures should.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Of 212 unannounced ward simulations, three were stopped for a real call without delay to care, and 41 percent of ward nurses reported anxiety when a simulation began.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1wti2ae"
+            ],
+            "location": "Abstract",
+            "passage": "Three simulations were interrupted by a real call on the same ward and stopped at once, with no delay to the real call.",
+            "interpretation": "Stop rules work; the anxiety of ward staff is an ethical and practical cost to plan for.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Between-hospital intracluster correlation was 0.04 for time to first critical intervention and 0.02 for unplanned intensive care admission.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0npnrbz"
+            ],
+            "location": "Abstract",
+            "passage": "The coefficient was 0.04 for time from call to first critical intervention, 0.02 for unplanned intensive care admission within 12 hours",
+            "interpretation": "Planning values for a four-hospital stepped design.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "In-situ simulations identified a mean of 1.8 latent safety threats per simulation on general wards.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0uzdfhc"
+            ],
+            "location": "Abstract",
+            "passage": "identified a mean of 1.8 latent safety threats per simulation",
+            "interpretation": "System findings are a legitimate secondary product of the programme and need a tracking route.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Eight retrieved records, appraised at abstract level. In-situ simulation for rapid response teams was followed by shorter times to the first critical intervention in one uncontrolled study and in a five-hospital stepped evaluation, but unplanned intensive care admission did not change and death was too rare to compare. Simulation checklist scores predict real-call performance poorly, so real-call measures should carry the evaluation. Unannounced simulations can be stopped safely for real calls but cause anxiety among ward staff. Structured debriefing improves immediate learning, and simulations expose latent safety threats. Families describe confusion about the team's roles. Intracluster correlations from 22 hospitals give planning values for a stepped design with few hospitals.",
+        "gradeOverall": "low",
+        "gradeRationale": "One multi-site stepped evaluation with imprecise estimates, uncontrolled single-site data and indirect evidence on debriefing and measurement; certainty that in-situ simulation shortens time to first critical intervention is low, and very low for patient outcomes.",
+        "summary": "Eight retrieved records appraised; five source-derived claims; certainty low."
+      },
+      "note": "Appraisal of the eight retrieved records (S13); certainty over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[1].grade": "moderate",
+          "scan.items[7].keyFindings": {
+            "includes": "0.04"
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[3].sourceIds": [
+            "ev-0npnrbz"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "four hospitals of different size",
+          "rapid response teams of nurse, respiratory therapist and physician",
+          "monthly unannounced ward simulations",
+          "grant of 48,000 over 18 months"
+        ],
+        "reading": "The programme acts on teams (role clarity, speed), on wards (latent safety threats, ward nurse escalation) and indirectly on families. Real-call timing responds to training in the retrieved evidence while admissions do not, and simulation checklist scores are poor proxies for real performance. With four hospitals, clustering and calendar time dominate the analysis. The qualitative strand is needed to explain differences between hospitals that four clusters cannot estimate.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Monthly in-situ simulation with structured debrief",
+            "kind": "framework",
+            "detail": "Introduced one hospital every three months."
+          },
+          {
+            "id": "n2",
+            "label": "Team role clarity and speed",
+            "kind": "context",
+            "detail": "Case review findings."
+          },
+          {
+            "id": "n3",
+            "label": "Time to first critical intervention in real calls",
+            "kind": "outcome",
+            "detail": "Primary outcome (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "Unplanned intensive care admission",
+            "kind": "outcome",
+            "detail": "Did not change elsewhere."
+          },
+          {
+            "id": "n5",
+            "label": "Simulation checklist scores",
+            "kind": "context",
+            "detail": "Weak proxy (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Latent safety threats on wards",
+            "kind": "context",
+            "detail": "1.8 per simulation (claim c5)."
+          },
+          {
+            "id": "n7",
+            "label": "Ward nurses and families",
+            "kind": "stakeholder",
+            "detail": "Anxiety and confusion (claims c3, family study)."
+          },
+          {
+            "id": "n8",
+            "label": "Five-hospital stepped evaluation",
+            "kind": "observational",
+            "detail": "Claim c1."
+          },
+          {
+            "id": "n9",
+            "label": "Between-hospital variation",
+            "kind": "gap",
+            "detail": "Four clusters cannot estimate it well (claim c4)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "trains"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "shortens"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "may reduce"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "predicts poorly"
+          },
+          {
+            "from": "n1",
+            "to": "n6",
+            "relation": "exposes"
+          },
+          {
+            "from": "n1",
+            "to": "n7",
+            "relation": "affects"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "estimates effect on"
+          },
+          {
+            "from": "n9",
+            "to": "n1",
+            "relation": "limits inference about"
+          }
+        ],
+        "summary": "Map ties the programme to real-call timing and to ward and family effects, with between-hospital variation as the main analytic limit."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[8].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Patient outcomes after simulation are not shown",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Admissions did not change in the best study and death was too rare to compare (claim c1).",
+            "opportunity": "Keep time to first critical intervention primary and report admissions and deaths descriptively."
+          },
+          {
+            "id": "g2",
+            "title": "Checklist scores are poor proxies",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Simulation scores correlated weakly with real calls (claim c2).",
+            "opportunity": "Measure real calls; keep simulation scores secondary."
+          },
+          {
+            "id": "g3",
+            "title": "Four clusters",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Few hospitals give imprecise estimates and few degrees of freedom (claim c4).",
+            "opportunity": "Use a stepped design with calendar-time adjustment and small-sample corrections, and explain hospital differences qualitatively."
+          },
+          {
+            "id": "g4",
+            "title": "Families and patients with limited English in rapid response calls",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Families describe confusion about roles; those with limited English are least able to raise concern.",
+            "opportunity": "Include families, with interpreters, in the qualitative sample and a family communication step in scenarios."
+          },
+          {
+            "id": "g5",
+            "title": "Ward staff anxiety about unannounced simulation",
+            "kind": "implementation",
+            "severity": "watch",
+            "whyItMatters": "41 percent of ward nurses reported anxiety elsewhere (claim c3).",
+            "opportunity": "Announce the programme, use signage and a stop word, and explore anxiety in interviews."
+          }
+        ],
+        "errorsFound": [
+          "The need lists death within 24 hours as an outcome; it is too rare to compare between phases and should be a balancing measure."
+        ],
+        "reevaluation": "The gaps confirm a stepped mixed methods design with a real-call primary outcome, patient outcomes described, and a qualitative strand to explain hospital differences.",
+        "summary": "Five gaps; missing patient outcome evidence and weak proxies are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Checklist scores are poor proxies"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Monthly in-situ simulation with structured debriefing will shorten the median time from call to first critical intervention in real adult ward calls by at least 2 minutes after introduction, adjusting for calendar time.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "Consistent with the five-hospital evaluation (c1) and measurable with call records.",
+            "risks": "Four clusters; secular trends; missed simulations."
+          },
+          {
+            "id": "h2",
+            "statement": "Hospitals that route latent safety threats into the tracking system will show larger improvements than those that do not.",
+            "novelty": 55,
+            "need": 60,
+            "practiceChange": 60,
+            "feasibility": 55,
+            "parsimony": 55,
+            "rationale": "Suggested by the latent threat study (c5).",
+            "risks": "Cannot be estimated with four hospitals; qualitative only."
+          },
+          {
+            "id": "h3",
+            "statement": "Families will report clearer understanding of the team's roles after the programme, if scenarios include a family communication step.",
+            "novelty": 50,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 65,
+            "parsimony": 65,
+            "rationale": "Families describe role confusion.",
+            "risks": "Small qualitative sample."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 is the quantitative primary hypothesis."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In four hospitals introducing monthly in-situ simulation for rapid response teams one at a time, does time from call to first critical intervention in real calls fall after introduction, adjusting for calendar time?",
+            "framework": "PICOT",
+            "population": "Rapid response calls at four hospitals",
+            "intervention": "Monthly in-situ simulation with structured debriefing",
+            "comparator": "Periods before introduction in the same hospitals",
+            "outcome": "Time from call to first critical intervention",
+            "time": "18 months, six three-month periods",
+            "setting": "Four hospitals of one health authority"
+          },
+          {
+            "id": "q2",
+            "text": "How do rapid response teams, ward nurses and families experience the calls and the simulations, and what explains differences between hospitals?",
+            "framework": "SPIDER",
+            "population": "Team members, ward nurses and families",
+            "intervention": "Experience of calls and simulations",
+            "outcome": "Themes explaining change and differences between hospitals",
+            "setting": "Four hospitals"
+          }
+        ],
+        "finer": "Feasible within the grant and faculty time; interesting to education leads and the health authority; novel in combining real-call outcomes with experience across hospitals; ethical with safety rules and consent; relevant to case review findings.",
+        "summary": "One quantitative and one qualitative question."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PICOT",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "mixed-methods",
+        "rationale": "The quantitative question (does real-call timing improve) and the qualitative question (how and why, and why hospitals differ) need both strands. A stepped introduction across four hospitals in random order lets each hospital serve as its own control while adjusting for calendar time (c1), with planning values from the intracluster correlations (c4). Real-call outcomes carry the evaluation because checklist scores are poor proxies (c2). Safety rules for unannounced simulation follow the retrieved experience (c3), and latent threats are tracked (c5).",
+        "alternatives": [
+          "Parallel cluster randomised trial with two hospitals per arm (refused: two clusters per arm cannot separate programme from hospital)",
+          "Single-hospital before-after evaluation (refused: cannot separate the programme from secular change)",
+          "Simulation scores as the main outcome (refused: weak proxy for real calls)"
+        ],
+        "guidelines": [
+          "CONSORT extension for stepped-wedge trials, used for the quantitative strand",
+          "GRAMMS"
+        ],
+        "whyNotMoreComplex": "A trial with more hospitals would give better precision but no more hospitals exist in the authority; the stepped design with a qualitative strand uses the four available hospitals best.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a four-hospital stepped mixed methods evaluation of monthly in-situ simulation for rapid response teams, with time from call to first critical intervention in real calls as the primary quantitative outcome and interviews and debrief observation as the qualitative strand, integrated by joint displays.",
+          "question": "How should the health authority evaluate in-situ simulation for its rapid response teams?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Real-call timing responds to in-situ simulation and can be measured from call records.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Call records cannot give a reliable time of the first critical intervention.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics board of record approval for the multi-site study",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "Participation of the four hospitals' education leads",
+              "status": "met",
+              "evidence": "Letters of participation signed between 2026-08-20 and 2026-09-05, supplied by the investigator"
+            },
+            {
+              "id": "g3",
+              "requirement": "Funding for faculty, abstraction and interviews",
+              "status": "met",
+              "evidence": "Grant SEF-2026-14 of 48,000 awarded on 2026-07-30, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Single-hospital before-after evaluation",
+            "Simulation scores as the main outcome"
+          ],
+          "note": "Rests on ledger claims c1 to c5 from retrieved records; the ethics gate has no evidence and stays unknown."
+        },
+        "summary": "Stepped mixed methods evaluation recommended; blocked until the board of record decides."
+      },
+      "note": "selectionStatus and actionStatus require S11; the unknown ethics gate blocks the action; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "mixed-methods",
+          "family": "mixed-methods",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection accepted; the unknown ethics gate keeps the action blocked (G7; A2 item 9). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.basis": "explicit",
+          "family": "mixed-methods"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Stepped multi-site mixed methods evaluation over 18 months in four hospitals: a three-month baseline in all hospitals, then monthly in-situ simulation with structured debriefing introduced one hospital every three months in a random order, with a quantitative strand on real calls and a qualitative strand on experience, integrated by joint displays.",
+        "population": "All rapid response calls at the four hospitals, about 2,860 a year; rapid response team members, ward nurses and families for the qualitative strand.",
+        "exposure": "Monthly unannounced in-situ simulation on a general ward with the on-duty rapid response team, followed by a 20-minute structured debrief by trained faculty; latent safety threats logged in the hospital safety tracking system.",
+        "procedures": "Call data (activation time, first critical intervention time, disposition) are abstracted from the rapid response call record by trained abstractors blind to the programme phase where possible. Simulations follow a safety protocol: advance notice to the ward manager, signage, a stop word, and immediate cancellation if a real call occurs. The qualitative strand interviews team members, ward nurses and families and observes debriefs in each hospital after introduction.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Time from call to first critical intervention",
+            "measure": "Minutes from call activation to the first of a defined list of critical interventions, from the call record",
+            "timing": "Every real call",
+            "why": "The real-call outcome most responsive to team training (claim c1).",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Unplanned intensive care admission within 12 hours of a call",
+            "measure": "Admission to intensive care within 12 hours not planned before the call",
+            "timing": "12 hours after each call",
+            "why": "Patient outcome, expected to move little.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Death within 24 hours of a call",
+            "measure": "Death within 24 hours, excluding patients with a prior comfort-care order",
+            "timing": "24 hours after each call",
+            "why": "Safety check; too rare for inference.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Simulations delivered and latent safety threats resolved",
+            "measure": "Proportion of planned monthly simulations delivered; threats resolved within 30 days",
+            "timing": "Monthly",
+            "why": "Fidelity and system learning (claim c5).",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "secondary",
+            "name": "Experiences of teams, ward nurses and families",
+            "measure": "Themes from interviews and debrief observation",
+            "timing": "After introduction in each hospital",
+            "why": "Explains how and why real-call performance changes or not.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Eight faculty hours a month per hospital cover one simulation and debrief; abstraction and interviews are funded from the 48,000 grant.",
+        "biasMitigation": [
+          "Random order of hospital introduction",
+          "Adjustment for calendar time",
+          "Abstractors blind to phase where possible",
+          "Checklist scores kept secondary (claim c2)"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Secular trends across 18 months",
+            "severity": "high",
+            "note": "Handled by calendar-time adjustment in the stepped analysis."
+          },
+          {
+            "id": "b2",
+            "label": "Few clusters",
+            "severity": "high",
+            "note": "Four hospitals give few degrees of freedom; small-sample corrections."
+          },
+          {
+            "id": "b3",
+            "label": "Contamination between hospitals",
+            "severity": "watch",
+            "note": "Staff who work at two hospitals are recorded."
+          }
+        ],
+        "parsimony": {
+          "score": 72,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 4,
+          "flags": [
+            "One quantitative primary outcome; the qualitative strand is reported as its own aim",
+            "Four adjustment variables"
+          ],
+          "simplestPath": "One primary real-call outcome, four hospitals introduced in random order, interviews after introduction."
+        },
+        "theoreticalFramework": "Kirkpatrick levels to place outcomes (behaviour and results over reaction), and a convergent joint display for integration; no other framework.",
+        "summary": "Four-hospital stepped mixed methods evaluation with time to first critical intervention as the primary outcome."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.population": {
+            "includes": "about 2,860 a year"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "set-field",
+      "path": "protocol.population",
+      "value": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
+      "note": "In-flight edit (G6). The investigator clicked Illuminate for Stats first: the runner issues that request (stats call 1, carrying the studyRevision captured before this edit) and holds its replay reply; then the investigator restricts the protocol's population to adult ward calls through the Protocol screen; the held reply is released by the next step. This edit is the investigator's own text and changes the study revision.",
+      "expect": {
+        "store": {
+          "protocol.population": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
+          "stats.sampleSize": "",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "protocol": "complete",
+          "stats": "incomplete"
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Stepped design with four hospitals and six three-month periods; linear mixed model for time to first critical intervention.",
+        "sampleSize": "About 2,860 calls a year give about 180 calls per hospital per three-month period. With a standard deviation of 6 minutes and an intracluster correlation of 0.04, the stepped design has about 85 percent power to detect a 2-minute reduction in time to first critical intervention.",
+        "primaryAnalysis": "Linear mixed model with fixed effects for period and phase and a random effect for hospital.",
+        "secondaryAnalysis": "Logistic mixed model for unplanned intensive care admission; descriptive counts of deaths.",
+        "missingData": "Calls with missing intervention times are described and excluded from the primary model.",
+        "multiplicity": "One primary outcome.",
+        "software": "R with lme4.",
+        "overfittingGuards": [
+          "Model fixed before data collection"
+        ],
+        "summary": "About 180 calls per hospital per period give about 85 percent power for a 2-minute reduction."
+      },
+      "note": "Late reply (G6): this is the Stats reply requested before the previous step's edit, computed for all 2,860 calls. The study changed between request and reply, so the application must refuse it: nothing merged (stats stays empty and incomplete), the investigator's population text kept, the refusal shown and logged (store.mergeStageIfRevision at 875fe59 logs 'Stale model response for stats refused'; integration A3 L1.2 as corrected by A3.1). Requires S10 (revision guard at the commit boundary) and D5 (refusal shown).",
+      "expect": {
+        "store": {
+          "stats.sampleSize": "",
+          "stats.primaryAnalysis": "",
+          "protocol.population": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "audit.entries[0].summary": {
+            "matches": "[Rr]efused"
+          }
+        },
+        "stage": {
+          "stats": "incomplete"
+        },
+        "error": {
+          "shown": true
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "The refusal survives a reload: nothing from the late reply appears, and the edited population stands.",
+      "expect": {
+        "store": {
+          "stats.sampleSize": "",
+          "protocol.population": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "stage": {
+          "stats": "incomplete"
+        },
+        "screen": {
+          "excludes": [
+            "no recorded response",
+            "did not return JSON",
+            "2,860 calls a year give about 180"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 2,
+      "response": {
+        "overview": "Stepped multi-site mixed methods evaluation over 18 months in four hospitals, restricted to adult ward rapid response calls: a three-month baseline in all hospitals, then monthly in-situ simulation with structured debriefing introduced one hospital every three months in a random order, with a quantitative strand on real adult ward calls and a qualitative strand on experience, integrated by joint displays.",
+        "exposure": "Monthly unannounced in-situ simulation on a general ward with the on-duty rapid response team, followed by a 20-minute structured debrief by trained faculty; latent safety threats logged in the hospital safety tracking system.",
+        "procedures": "Adult ward call data (activation time, first critical intervention time, disposition) are abstracted from the rapid response call record by trained abstractors blind to the programme phase where possible; paediatric and obstetric calls are excluded because those units have separate teams. Simulations follow a safety protocol: advance notice to the ward manager, signage, a stop word, and immediate cancellation if a real call occurs. The qualitative strand interviews adult rapid response team members, ward nurses and families and observes debriefs in each hospital after introduction.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Time from call to first critical intervention",
+            "measure": "Minutes from call activation to the first of a defined list of critical interventions, from the call record",
+            "timing": "Every real call",
+            "why": "The real-call outcome most responsive to team training (claim c1).",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Unplanned intensive care admission within 12 hours of a call",
+            "measure": "Admission to intensive care within 12 hours not planned before the call",
+            "timing": "12 hours after each call",
+            "why": "Patient outcome, expected to move little.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Death within 24 hours of a call",
+            "measure": "Death within 24 hours, excluding patients with a prior comfort-care order",
+            "timing": "24 hours after each call",
+            "why": "Safety check; too rare for inference.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Simulations delivered and latent safety threats resolved",
+            "measure": "Proportion of planned monthly simulations delivered; threats resolved within 30 days",
+            "timing": "Monthly",
+            "why": "Fidelity and system learning (claim c5).",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "secondary",
+            "name": "Experiences of teams, ward nurses and families",
+            "measure": "Themes from interviews and debrief observation",
+            "timing": "After introduction in each hospital",
+            "why": "Explains how and why real-call performance changes or not.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Eight faculty hours a month per hospital cover one simulation and debrief on an adult ward; abstraction of about 2,310 adult ward calls a year and the interviews are funded from the 48,000 grant.",
+        "biasMitigation": [
+          "Random order of hospital introduction",
+          "Adjustment for calendar time",
+          "Abstractors blind to phase where possible",
+          "Checklist scores kept secondary (claim c2)"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Secular trends across 18 months",
+            "severity": "high",
+            "note": "Handled by calendar-time adjustment in the stepped analysis."
+          },
+          {
+            "id": "b2",
+            "label": "Few clusters",
+            "severity": "high",
+            "note": "Four hospitals give few degrees of freedom; small-sample corrections."
+          },
+          {
+            "id": "b3",
+            "label": "Contamination between hospitals",
+            "severity": "watch",
+            "note": "Staff who work at two hospitals are recorded."
+          }
+        ],
+        "parsimony": {
+          "score": 72,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 4,
+          "flags": [
+            "One quantitative primary outcome; the qualitative strand is reported as its own aim",
+            "Four adjustment variables"
+          ],
+          "simplestPath": "One primary real-call outcome, four hospitals introduced in random order, interviews after introduction."
+        },
+        "theoreticalFramework": "Kirkpatrick levels to place outcomes (behaviour and results over reaction), and a convergent joint display for integration; no other framework.",
+        "summary": "Protocol reconciled with the investigator's restriction to adult ward calls; population text kept as the investigator wrote it."
+      },
+      "omitKeys": [
+        "population"
+      ],
+      "note": "Dependency closure: the protocol's other text is reconciled with the investigator's restriction to adult ward calls. The reply omits population, so the investigator's text stays (omitted keys never overwrite; G11 by analogy for investigator-edited text). No completed stage lies downstream yet, so nothing is flagged.",
+      "expect": {
+        "store": {
+          "protocol.population": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
+          "protocol.procedures": {
+            "includes": "paediatric and obstetric calls are excluded"
+          },
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 2,
+      "response": {
+        "designSummary": "Stepped design with four hospitals and six three-month periods (one baseline period in all hospitals, then one hospital introduced every three months in a random order), restricted to adult ward calls; linear mixed model for time to first critical intervention with period and phase as fixed effects.",
+        "sampleSize": "About 2,310 adult ward calls a year give about 145 calls per hospital per three-month period, or about 3,470 calls over 18 months. With a standard deviation of 6 minutes and an intracluster correlation of 0.04 (claim c4), the stepped design with four hospitals and six periods has roughly 80 percent power at two-sided alpha 0.05 to detect a 2-minute reduction, which is smaller than the 3.1-minute fall seen in the five-hospital evaluation. Because four clusters give few degrees of freedom, the analysis uses a small-sample correction and the result is reported as an estimate with its interval, not a verdict. Unplanned intensive care admission (intracluster correlation 0.02, about 12 percent of calls) is underpowered for an effect of the size seen elsewhere and is reported descriptively with its interval.",
+        "primaryAnalysis": "Linear mixed model for log-transformed time to first critical intervention with fixed effects for period (calendar time) and programme phase, a random effect for hospital and a hospital-by-period random effect, Kenward-Roger small-sample correction; the phase effect is back-transformed to a ratio of median times with its 95 percent confidence interval.",
+        "secondaryAnalysis": "Logistic mixed model for unplanned intensive care admission within 12 hours with the same structure; descriptive counts of deaths within 24 hours by phase; run charts of simulations delivered and latent safety threats resolved; framework analysis of interviews and debrief observations, integrated with the quantitative results in a joint display by hospital.",
+        "missingData": "Calls with a missing first-intervention time are counted by hospital and phase; if more than 5 percent are missing, multiple imputation by chained equations with 20 imputations under a missing-at-random assumption, with a complete-case sensitivity analysis.",
+        "multiplicity": "One primary outcome; secondary and balancing outcomes are reported with intervals and are not tested for significance.",
+        "software": "R with lme4 and pbkrtest for the quantitative strand; NVivo for the qualitative strand.",
+        "overfittingGuards": [
+          "Model structure and adjustment variables fixed before data collection",
+          "Small-sample correction for four clusters",
+          "No subgroup analysis by hospital beyond the joint display",
+          "Checklist scores from simulations kept as a secondary description (claim c2)"
+        ],
+        "summary": "About 145 adult ward calls per hospital per period give roughly 80 percent power for a 2-minute reduction with a small-sample correction."
+      },
+      "note": "A fresh Stats reply requested after the edit and the reconciled protocol: applied, and its sample size follows the adult ward population (about 2,310 calls a year), closing the dependency between protocol and stats.",
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "2,310 adult ward calls"
+          },
+          "stats.primaryAnalysis": {
+            "includes": "Kenward-Roger"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Unannounced simulations on working wards could distract staff from real patients, cause anxiety or be mistaken for real emergencies; interviews may touch on distressing calls.",
+        "consent": "Rapid response team members and ward managers consent to the programme in advance and may opt out of being observed; ward nurses are told a simulation may occur on their ward in a given week; manikins are used, never patients; interviews need written consent; families are approached after the patient has stabilised, with interpreters.",
+        "data": "Call records are abstracted with study codes; recordings of debriefs are made only with the team's consent and deleted after transcription.",
+        "equity": "PROGRESS-Plus: patients and families with limited English, patients on wards with fewer staff at night and patients in the smaller hospitals may benefit least. Scenarios include night-time and interpreter elements, results are reported by hospital size and time of day, and families with limited English are included in interviews with interpreters.",
+        "effectiveness": "Success is a shorter time to first critical intervention with no harm from simulations and an explanation of hospital differences.",
+        "efficiency": "Eight faculty hours a month per hospital and a grant of 48,000.",
+        "costs": "About 21,000 for abstraction, 12,000 for transcription and interpreters, and 15,000 for faculty backfill.",
+        "grants": "Grant SEF-2026-14; a larger authority-wide programme could seek provincial education funding.",
+        "partnerships": "Education leads at the four hospitals, simulation faculty, rapid response teams, ward managers and a family partner from the patient and family advisory council.",
+        "rebPath": "Application to the health authority research ethics board as board of record for the multi-site study; the decision is unknown and no simulation for research purposes or data abstraction begins before approval. Stop rules for real calls are part of the application.",
+        "limitations": "Four hospitals; open programme delivery; call record timing may be imprecise.",
+        "summary": "Safety rules and consent for unannounced simulation, equity reporting and a board of record decision still unknown."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "manikins are used"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A family partner and two rapid response team members review the interview guides; ward managers from each hospital review the safety protocol for unannounced simulation.",
+        "socialListening": "No social media listening; anonymised staff comments from last year's case reviews are themed.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Who does what",
+            "quote": "Composite paraphrase: Eight people arrive and three of them start the same task.",
+            "implication": "Build role allocation into every scenario and debrief.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Is this real",
+            "quote": "Composite paraphrase: For the first ten seconds I did not know if the man on the bed was a manikin or my patient.",
+            "implication": "Use signage and a stop word, and explore ward nurse anxiety in interviews.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Asked to leave",
+            "quote": "Composite paraphrase: They filled the room and someone told me to wait outside, and nobody came back for an hour.",
+            "implication": "Add a family communication role to scenarios.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Noticing first",
+            "quote": "Composite paraphrase: I knew my mother was not right hours before anyone called the team.",
+            "implication": "Include family concern as a trigger in ward scenarios.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "partner",
+            "theme": "Smaller hospitals",
+            "quote": "Composite paraphrase: At night we are one physician for the whole hospital; your scenario must fit that.",
+            "implication": "Design night scenarios for the staffing of the smaller hospitals.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on roles, realism, families and small-hospital staffing."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "In-situ simulation for rapid response teams in four hospitals: a stepped multi-site mixed methods evaluation",
+        "abstract": "Objective: to evaluate monthly in-situ simulation for rapid response teams on real-call performance and to explain how teams, ward nurses and families experience it. Design: stepped introduction across four hospitals in random order over 18 months with a qualitative strand. Primary outcome: time from call to first critical intervention in adult ward calls. Results and conclusions will be written after the study.",
+        "introduction": "In-situ simulation has shortened time to first critical intervention in a multi-site evaluation, but patient outcomes did not change and simulation scores are poor proxies for real calls.",
+        "methods": "Six three-month periods; hospitals introduced in random order; linear mixed model with period and phase and a small-sample correction; about 3,470 adult ward calls; interviews and debrief observation analysed with the framework method and integrated in joint displays.",
+        "results": "No data have been collected yet. The report will present calls by period and hospital, the primary estimate with its interval, secondary and balancing outcomes, delivery and latent safety threats, themes and the joint display.",
+        "discussion": "The discussion will interpret the primary estimate given four clusters, use the qualitative strand to explain differences between hospitals, and state implications for the authority's programme.",
+        "limitations": "Four clusters; open delivery; call record timing; the qualitative sample may favour engaged staff.",
+        "conclusion": "To be written after the study; it will not claim effects on patient outcomes that the design cannot detect.",
+        "reportingChecklist": "CONSORT extension for stepped-wedge trials for the quantitative strand, with GRAMMS for the mixed methods report",
+        "summary": "Draft structured for a stepped multi-site mixed methods report with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "GRAMMS"
+          },
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The board of record decision is unknown; the action stays blocked",
+          "A late Stats reply computed for all calls was refused after the population edit; the applied Stats reflects adult ward calls only",
+          "Run identity checks on the eight retrieved records before the protocol cites them"
+        ],
+        "improvementNotes": "The investigator restricted the protocol to adult ward calls while a Stats request was in flight; the late reply was refused and logged, the protocol was reconciled without touching the investigator's text, and the fresh Stats reply followed the new population.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the ethics gate, the refused late reply and identity checks."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 the store defect of A3 L1.6 drops it (not a missing work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "In-situ simulation for rapid response teams across four hospitals: a stepped multi-site mixed methods evaluation",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "protocol.population": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
+          "stats.sampleSize": {
+            "includes": "2,310 adult ward calls"
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "scan.claims": {
+            "length": 5
+          }
+        },
+        "screen": {
+          "includes": [
+            "In-situ simulation for rapid response teams across four hospitals: a stepped multi-site mixed methods evaluation"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The export carries the investigator's population text, the Stats reply that matches it and nothing from the refused late reply (G6, G10); selectionStatus and actionStatus require S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "protocol.population": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
+            "stats.sampleSize": {
+              "includes": "about 145 calls per hospital per three-month period"
+            },
+            "design.decisions[-1].gates[0].status": "unknown",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "scan.gradeOverall": "low"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

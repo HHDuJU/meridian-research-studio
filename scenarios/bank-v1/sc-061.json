@@ -1,0 +1,1473 @@
+{
+  "id": "sc-061",
+  "version": 1,
+  "title": "Regional primary stroke centre: door-to-needle process mapping with PDSA cycles, a lead year given as text",
+  "field": "neurology",
+  "level": 2,
+  "family": "qi-pdsa",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary QI path. The fixture search returns six records; a discovery call then suggests four model leads, one of which gives its year as the 4-digit string \"2019\": it is stored as the number 2019 with no issue (contracts.ts yearOrNull), kept with origin model and status unverified (G3), and appended after the retrieved records rather than replacing them (D1). The discovery reply's null certainty is logged as cleared and nothing is assessed until the appraisal call over the six retrieved records assigns 'low' (G1). The decision rests on c1, c2, c4 and c5; both gates are met on investigator-supplied records, so it is accepted and ready. One ordinary null field: a protocol balancing outcome leaves patientCentered null, stored null without an issue. The problem reply omits the constraints key (G11). Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 2, 5, 6 (ev-0z5bvhg, ev-1rd9rtb, ev-0uu7lty, ev-1lxx31u), titleYearKey-based for records 3 and 4 (ev-0h9oq7m, ev-1j4vmvj). Requires D1 (leads appended, never replacing retrieved records), S13 (appraisal applied), S11 and D5. Catches: a text year rejected or stored as text, leads that overwrite retrieved records, a lead promoted to verified, certainty assigned before appraisal, and a null boolean coerced to false.",
+  "inputs": {
+    "need": "I am the stroke neurologist at a 400-bed regional hospital that is the primary stroke centre for a mostly rural catchment. We thrombolysed 94 patients last year. Our median door-to-needle time was 62 minutes, and only 27 percent of patients were treated within 45 minutes, which is our network's target. Every case is timed, so we know where we stand, but we do not really know where the minutes go.\n\nWe plan a quality improvement project: first map the process from ambulance pre-alert to needle with everyone involved (paramedics, emergency nurses, the CT radiographer, the stroke team and pharmacy), and then test changes in PDSA cycles over six months. Ideas people have raised include taking the patient straight to CT on the ambulance stretcher, preparing the thrombolytic while the scan is running, having the stroke nurse meet the ambulance at the door, and a single group page instead of three separate calls. Night and weekend cases seem slower because the stroke registrar comes in from home.\n\nI need help with the aim statement, the right outcome, process and balancing measures (for example symptomatic haemorrhage and treatment of stroke mimics), how to show monthly data when we only treat seven or eight patients a month, and how to run the mapping so that nobody feels blamed. We cannot hire anyone, and the CT scanner is shared with the emergency department's trauma cases.",
+    "constraints": "No new staff or funding. Six-month project from January to June 2027. The CT scanner is shared with trauma, so changes must not delay trauma imaging.",
+    "localFacts": [
+      "The hospital thrombolysed 94 patients with ischaemic stroke in 2025; median door-to-needle time was 62 minutes and 27 percent were treated within 45 minutes.",
+      "Every thrombolysis case is timed on a paper stroke timing sheet that the stroke nurse enters into the regional stroke dataset.",
+      "The emergency department director and the stroke program lead approved the improvement project on 2026-08-21 (memo SP-2026-14).",
+      "The research ethics office screened the project as quality improvement not requiring REB review on 2026-09-02 (screening QI-SCR-26-203)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the stroke neurologist at a 400-bed regional hospital that is the primary stroke centre for a mostly rural catchment. We thrombolysed 94 patients last year. Our median door-to-needle time was 62 minutes, and only 27 percent of patients were treated within 45 minutes, which is our network's target. Every case is timed, so we know where we stand, but we do not really know where the minutes go.\n\nWe plan a quality improvement project: first map the process from ambulance pre-alert to needle with everyone involved (paramedics, emergency nurses, the CT radiographer, the stroke team and pharmacy), and then test changes in PDSA cycles over six months. Ideas people have raised include taking the patient straight to CT on the ambulance stretcher, preparing the thrombolytic while the scan is running, having the stroke nurse meet the ambulance at the door, and a single group page instead of three separate calls. Night and weekend cases seem slower because the stroke registrar comes in from home.\n\nI need help with the aim statement, the right outcome, process and balancing measures (for example symptomatic haemorrhage and treatment of stroke mimics), how to show monthly data when we only treat seven or eight patients a month, and how to run the mapping so that nobody feels blamed. We cannot hire anyone, and the CT scanner is shared with the emergency department's trauma cases.",
+          "problem.constraints": "No new staff or funding. Six-month project from January to June 2027. The CT scanner is shared with trauma, so changes must not delay trauma imaging.",
+          "family": "qi-pdsa",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the stroke neurologist at a 400-bed regional hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Door-to-needle time for stroke thrombolysis at a regional primary stroke centre",
+        "subtitle": "Process mapping and PDSA cycles with case-by-case run charts",
+        "family": "qi-pdsa",
+        "statement": "The regional primary stroke centre thrombolysed 94 patients in 2025 with a median door-to-needle time of 62 minutes; only 27 percent were treated within the network's 45-minute target. Every case is timed, but the team does not know which steps between pre-alert and needle consume the time, especially at night and weekends. The project will map the pathway with all involved staff and test changes in PDSA cycles over six months.",
+        "whoAffected": "Patients with acute ischaemic stroke in a mostly rural catchment, paramedics, emergency nurses, CT radiographers, the stroke team, pharmacy, and trauma patients who share the CT scanner.",
+        "whatHurts": "Every minute of delay to thrombolysis costs brain tissue and lowers the chance of independent recovery. Staff describe frustration with repeated paging and waits for CT.",
+        "currentPractice": "Pre-alert by paramedics, triage in the emergency department, then CT; the stroke team is paged by three separate calls; the thrombolytic is prepared after the treatment decision; the registrar comes in from home out of hours.",
+        "whyNow": "A network target that is rarely met, approval from the emergency department and stroke program, and a completed QI screening.",
+        "patientCenteredGoal": "Every eligible patient receives thrombolysis as fast as safely possible, day or night, without more haemorrhage or treated mimics.",
+        "summary": "Problem framed as a QI project to shorten door-to-needle time through process mapping and PDSA cycles."
+      },
+      "note": "Constraints key omitted; the typed constraints stay (G11).",
+      "expect": {
+        "store": {
+          "title": "Door-to-needle time for stroke thrombolysis at a regional primary stroke centre",
+          "family": "qi-pdsa",
+          "problem.constraints": "No new staff or funding. Six-month project from January to June 2027. The CT scanner is shared with trauma, so changes must not delay trauma imaging.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Door-to-needle time for stroke thrombolysis at a regional primary stroke centre"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "door-to-needle time thrombolysis process mapping improvement primary stroke centre",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Direct-to-CT transfer on the ambulance stretcher and door-to-needle times at a regional stroke centre: an improvement report",
+            "authors": "Oduya-Hartmann L, Pike-Mensah R, Solberg-Achebe T",
+            "year": 2019,
+            "venue": "Stroke Pathway Improvement",
+            "doi": "10.5555/spi.2019.0052",
+            "providerType": "journal-article",
+            "abstract": "At a regional stroke centre treating about 100 patients a year with thrombolysis, direct transfer to CT on the ambulance stretcher and pre-notification reduced median door-to-needle time from 58 to 36 minutes over 18 months. The proportion treated within 45 minutes rose from 31 to 69 percent. Symptomatic intracranial haemorrhage occurred in 5 percent of treated patients before and 4 percent after the change. Treatment of stroke mimics rose from 2 to 5 percent. Night and weekend cases improved less than weekday daytime cases, and the authors describe the out-of-hours pathway as the next target."
+          },
+          {
+            "title": "Process mapping of acute stroke thrombolysis pathways: where do the minutes go?",
+            "authors": "Castellanos-Nyberg A, Obi-Fairweather K, Haddad-Lund M",
+            "year": 2022,
+            "venue": "Journal of Acute Neurology Services",
+            "doi": "10.5555/jans.2022.0138",
+            "providerType": "journal-article",
+            "abstract": "In four hospitals, observers timed 160 thrombolysis cases step by step. The largest delays occurred between arrival and CT (median 17 minutes) and between CT and the treatment decision (median 14 minutes). Drug preparation added a median of 7 minutes when it started after the decision. Delays were longest when the stroke physician was not present at arrival. Hospitals that paged the whole team with one call had shorter arrival-to-CT times than hospitals that called team members one by one."
+          },
+          {
+            "title": "Door-to-needle times at night and weekends: an analysis of a regional stroke dataset",
+            "authors": "Lindqvist-Adeyemi P, Brennan-Tanaka S",
+            "year": 2017,
+            "venue": "Regional Stroke Services Review",
+            "providerType": "journal-article",
+            "abstract": "Using a regional stroke dataset of 3,420 thrombolysis cases, median door-to-needle time was 12 minutes longer at night and at weekends than in weekday daytime. The difference was largest in hospitals where the stroke registrar was on call from home. Out-of-hours patients were not more severely affected on arrival. Hospitals that had moved to a single group page for the stroke team showed a smaller out-of-hours gap. The analysis could not separate the effect of staffing from the availability of imaging and radiographers, which also fell out of hours in most hospitals."
+          },
+          {
+            "title": "Balancing measures in stroke thrombolysis improvement: haemorrhage and stroke mimics",
+            "authors": "Achterberg-Silva J, Nakamura-Oyelaran D",
+            "year": 2024,
+            "venue": "Stroke Pathway Improvement",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 22 improvement reports that shortened door-to-needle times. Twelve reported symptomatic haemorrhage and nine reported treatment of stroke mimics. Symptomatic haemorrhage did not rise in any report, while treated mimics rose in four reports, reaching 6 percent in one. Most reports had too few patients to detect a change in haemorrhage. We recommend reporting both measures with their numerators and denominators, not only rates, and reviewing every treated mimic. Reports that reviewed every treated mimic described most as migraine, seizure or functional presentations with a benign course."
+          },
+          {
+            "title": "Statistical process control with small monthly samples: run charts for door-to-needle times",
+            "authors": "Varga-Okonkwo H, Reid-Castellano B, Sato-Lindgren E",
+            "year": 2020,
+            "venue": "Quality Measurement in Health Care",
+            "doi": "10.5555/qmhc.2020.0091",
+            "providerType": "journal-article",
+            "abstract": "Stroke centres treating fewer than ten patients a month produce unstable monthly medians. Using simulation and data from 30 hospitals, we show that case-by-case run charts of individual door-to-needle times, with a median line and the standard run rules, detect a sustained 15-minute improvement within about 20 cases, whereas monthly medians need five to six months. An individuals chart can flag unusually long cases for review without waiting for a monthly summary. The authors provide a template and advise freezing the baseline median before any change is tested."
+          },
+          {
+            "title": "Team debriefs after every thrombolysis case: feasibility and time to treatment",
+            "authors": "Ferreira-Mwangi O, Holt-Nakashima R",
+            "year": 2025,
+            "venue": "Journal of Acute Neurology Services",
+            "doi": "10.5555/jans.2025.0024",
+            "providerType": "journal-article",
+            "abstract": "In two hospitals, the treating team held a two-minute debrief after each thrombolysis case, recording the main delay on a card. Debriefs were held after 81 percent of cases. Staff described them as blame-free when a nurse led them. Median door-to-needle time fell by 9 minutes over six months, alongside other changes. Recorded delays most often concerned CT availability and paging. Night teams held debriefs less often than day teams. The authors could not separate the effect of debriefs from the other changes made at the same time."
+          }
+        ]
+      },
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0z5bvhg",
+            "ev-1rd9rtb",
+            "ev-0h9oq7m",
+            "ev-1j4vmvj",
+            "ev-0uu7lty",
+            "ev-1lxx31u"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].grade": "unrated",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Process mapping of acute stroke thrombolysis pathways: where do the minutes go?"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "door-to-needle time thrombolysis process mapping improvement primary stroke centre",
+        "sourcesConsulted": [
+          "model knowledge of stroke pathway improvement reports"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "Certainty is left to the appraisal of the retrieved records.",
+        "synthesis": "Four further reports are suggested as leads alongside the six retrieved records: mobile stroke units, nurse-initiated stroke protocols in regional emergency departments, single-bolus thrombolytics and telestroke in rural hospitals. None has been retrieved or checked; they are leads to search for, not evidence.",
+        "items": [
+          {
+            "title": "Mobile stroke units versus standard ambulance response: time to thrombolysis",
+            "authors": "Dubois-Kowalski F, Mbeki-Rasmussen A",
+            "year": 2021,
+            "source": "Prehospital Stroke Care",
+            "kind": "rct",
+            "grade": "moderate",
+            "methodQuality": 70,
+            "relevance": 45,
+            "verification": "verify",
+            "contextTags": [
+              "prehospital",
+              "mobile stroke unit"
+            ],
+            "keyFindings": "Treatment in the ambulance shortened time from alarm to thrombolysis by about 30 minutes in urban settings.",
+            "limitations": "Urban services; costly; not an option for this hospital.",
+            "notes": "Lead; not retrieved."
+          },
+          {
+            "title": "Nurse-initiated stroke protocols in regional emergency departments",
+            "authors": "Hughes-Adeleke M, Tveit-Oduya C",
+            "year": "2019",
+            "source": "Emergency Nursing Practice Reports",
+            "kind": "qi-report",
+            "grade": "low",
+            "methodQuality": 45,
+            "relevance": 75,
+            "verification": "ai-lead",
+            "contextTags": [
+              "nurse-initiated",
+              "regional emergency department"
+            ],
+            "keyFindings": "Emergency nurses ordering CT and bloods on pre-alert shortened arrival-to-CT times in three regional hospitals.",
+            "limitations": "Before-and-after reports without comparison.",
+            "notes": "Lead; the year came back as text."
+          },
+          {
+            "title": "Single-bolus thrombolytic and door-to-needle time: a single-centre comparison",
+            "authors": "Petrakis-Laurent G, Ng-Achebe W",
+            "year": 2023,
+            "source": "Journal of Stroke Therapeutics",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 55,
+            "verification": "ai-lead",
+            "contextTags": [
+              "drug preparation"
+            ],
+            "keyFindings": "A bolus-only drug removed the infusion set-up step and shortened needle times by a few minutes.",
+            "limitations": "One centre; drug change coincided with other changes.",
+            "notes": "Lead; formulary decisions are outside the project."
+          },
+          {
+            "title": "Telestroke consultation and thrombolysis times in rural hospitals: a systematic review",
+            "authors": "Oyelowo-Brandt S, Quist-Morales P, Fischer-Obi N",
+            "year": 2018,
+            "source": "Rural Neurology Reviews",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 60,
+            "relevance": 50,
+            "verification": "verify",
+            "contextTags": [
+              "telestroke",
+              "rural"
+            ],
+            "keyFindings": "Telestroke gave door-to-needle times similar to on-site assessment in most included studies.",
+            "limitations": "Heterogeneous studies.",
+            "notes": "Lead; relevant to the out-of-hours registrar problem."
+          }
+        ],
+        "summary": "Four leads suggested; certainty left to the appraisal of retrieved records."
+      },
+      "note": "Discovery leads are appended after the six retrieved records, never replacing them (D1; at 875fe59 the leads replace the retrieved records). The second lead's year arrives as the string \"2019\": it is a valid 4-digit year and is stored as the number 2019 with no issue (contracts.ts yearOrNull, holds at 875fe59). Leads keep origin model and status unverified (G3). The explicit null certainty is logged as cleared and nothing is assessed yet (G1); the stage completes because records were retrieved (G2).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].id": "ev-0z5bvhg",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[5].id": "ev-1lxx31u",
+          "scan.items[6].provenance.origin": "model",
+          "scan.items[6].provenance.status": "unverified",
+          "scan.items[7].title": "Nurse-initiated stroke protocols in regional emergency departments",
+          "scan.items[7].year": 2019,
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[7].relevance": 75,
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": 2
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0z5bvhg",
+            "relevance": 92,
+            "methodQuality": 50,
+            "kind": "qi-report",
+            "grade": "low",
+            "keyFindings": "Direct-to-CT on the ambulance stretcher and pre-notification cut the median door-to-needle time from 58 to 36 minutes; within-45-minute treatment rose from 31 to 69 percent; treated mimics rose from 2 to 5 percent.",
+            "limitations": "Single-centre before-and-after report; other changes may have contributed.",
+            "contextTags": [
+              "direct to CT",
+              "pre-notification",
+              "regional centre"
+            ]
+          },
+          {
+            "id": "ev-1rd9rtb",
+            "relevance": 90,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across 160 timed cases, arrival-to-CT (median 17 minutes) and CT-to-decision (median 14 minutes) were the largest delays; late drug preparation added 7 minutes; a single group page shortened arrival-to-CT.",
+            "limitations": "Four hospitals; observers present.",
+            "contextTags": [
+              "process mapping",
+              "time study",
+              "paging"
+            ]
+          },
+          {
+            "id": "ev-0h9oq7m",
+            "relevance": 80,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 3,420 cases, out-of-hours door-to-needle time was 12 minutes longer, most where the registrar was on call from home.",
+            "limitations": "Cannot separate staffing from imaging availability.",
+            "contextTags": [
+              "out of hours",
+              "registrar on call"
+            ]
+          },
+          {
+            "id": "ev-1j4vmvj",
+            "relevance": 78,
+            "methodQuality": 55,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 22 improvement reports, symptomatic haemorrhage did not rise in any, while treated mimics rose in four, up to 6 percent.",
+            "limitations": "Reports underpowered for haemorrhage; selective reporting likely.",
+            "contextTags": [
+              "balancing measures",
+              "mimics",
+              "haemorrhage"
+            ]
+          },
+          {
+            "id": "ev-0uu7lty",
+            "relevance": 85,
+            "methodQuality": 65,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Case-by-case run charts detect a sustained 15-minute improvement within about 20 cases; monthly medians need five to six months.",
+            "limitations": "Simulation and 30-hospital data; assumes stable case mix.",
+            "contextTags": [
+              "run charts",
+              "small samples",
+              "measurement"
+            ]
+          },
+          {
+            "id": "ev-1lxx31u",
+            "relevance": 70,
+            "methodQuality": 45,
+            "kind": "qi-report",
+            "grade": "very-low",
+            "keyFindings": "Two-minute nurse-led debriefs followed 81 percent of cases and were seen as blame-free; needle times fell 9 minutes alongside other changes.",
+            "limitations": "Two hospitals; effect of debriefs not separable.",
+            "contextTags": [
+              "debrief",
+              "just culture"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "At a regional stroke centre, direct transfer to CT on the ambulance stretcher and pre-notification reduced median door-to-needle time from 58 to 36 minutes over 18 months.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0z5bvhg"
+            ],
+            "location": "Abstract",
+            "passage": "reduced median door-to-needle time from 58 to 36 minutes over 18 months",
+            "interpretation": "Direct-to-CT is the first change to test.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Observers timing 160 thrombolysis cases found the largest delays between arrival and CT (median 17 minutes) and between CT and the treatment decision (median 14 minutes).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1rd9rtb"
+            ],
+            "location": "Abstract, results",
+            "passage": "The largest delays occurred between arrival and CT (median 17 minutes) and between CT and the treatment decision (median 14 minutes).",
+            "interpretation": "Map these two intervals in detail first.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "In a regional dataset of 3,420 thrombolysis cases, median door-to-needle time was 12 minutes longer at night and at weekends.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0h9oq7m"
+            ],
+            "location": "Abstract",
+            "passage": "median door-to-needle time was 12 minutes longer at night and at weekends than in weekday daytime",
+            "interpretation": "Plot out-of-hours cases distinctly on the run chart.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Across 22 improvement reports, symptomatic haemorrhage did not rise in any report, while treated stroke mimics rose in four, reaching 6 percent in one.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1j4vmvj"
+            ],
+            "location": "Abstract",
+            "passage": "Symptomatic haemorrhage did not rise in any report, while treated mimics rose in four reports, reaching 6 percent in one.",
+            "interpretation": "Track both as balancing measures with numerators and denominators.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Case-by-case run charts of door-to-needle times detect a sustained 15-minute improvement within about 20 cases, whereas monthly medians need five to six months.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0uu7lty"
+            ],
+            "location": "Abstract",
+            "passage": "detect a sustained 15-minute improvement within about 20 cases, whereas monthly medians need five to six months",
+            "interpretation": "Plot every case, not monthly medians.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level; four model leads remain unverified and are not appraised. Direct-to-CT transfer with pre-notification cut median door-to-needle time from 58 to 36 minutes at a comparable regional centre, and time studies place most delay between arrival and CT and between CT and the decision, with late drug preparation and serial paging adding minutes. Out-of-hours cases are 12 minutes slower where the registrar is on call from home. Treated mimics can rise with faster pathways, so they and haemorrhage are balancing measures. Case-by-case run charts suit a centre treating seven or eight patients a month.",
+        "gradeOverall": "low",
+        "gradeRationale": "Improvement reports and observational time studies, mostly single-centre and uncontrolled; consistent direction for pathway changes, low certainty about effect size here.",
+        "summary": "Six retrieved records appraised; five claims; overall certainty low; leads left unverified."
+      },
+      "note": "Appraisal of the six retrieved records only (S13); the leads are untouched and stay unverified. Certainty is assigned over the inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].kind": "qi-report",
+          "scan.items[4].grade": "moderate",
+          "scan.items[7].year": 2019,
+          "scan.items[7].provenance.status": "unverified",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0z5bvhg"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-0uu7lty"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "400-bed regional hospital, rural catchment",
+          "94 thrombolysed patients a year",
+          "CT scanner shared with trauma",
+          "registrar on call from home out of hours"
+        ],
+        "reading": "The minutes are spent in two stretches: from arrival to CT, where the patient waits for triage, a trolley and the scanner, and from CT to the decision and drug, where the team assembles and the drug is prepared after the decision. Serial paging and the registrar's travel lengthen both, most at night. The retrieved reports show that direct-to-CT, a single group page and preparing the drug during the scan remove these waits, at the cost of more treated mimics if the pace outruns assessment. Trauma imaging competes for the same scanner.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Pre-alert from paramedics",
+            "kind": "context",
+            "detail": "Starts the pathway before arrival."
+          },
+          {
+            "id": "n2",
+            "label": "Arrival to CT",
+            "kind": "context",
+            "detail": "Largest delay in time studies (claim c2)."
+          },
+          {
+            "id": "n3",
+            "label": "CT to treatment decision and drug",
+            "kind": "context",
+            "detail": "Second largest delay; late drug preparation."
+          },
+          {
+            "id": "n4",
+            "label": "Direct to CT on the ambulance stretcher",
+            "kind": "framework",
+            "detail": "Change idea with the strongest local precedent (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Single group page",
+            "kind": "framework",
+            "detail": "Change idea for team assembly."
+          },
+          {
+            "id": "n6",
+            "label": "Door-to-needle time per case",
+            "kind": "outcome",
+            "detail": "Plotted case by case (claim c5)."
+          },
+          {
+            "id": "n7",
+            "label": "Treated mimics and symptomatic haemorrhage",
+            "kind": "outcome",
+            "detail": "Balancing measures (claim c4)."
+          },
+          {
+            "id": "n8",
+            "label": "Out-of-hours registrar travel",
+            "kind": "context",
+            "detail": "About 12 minutes slower (claim c3)."
+          },
+          {
+            "id": "n9",
+            "label": "Trauma patients sharing CT",
+            "kind": "stakeholder",
+            "detail": "Must not be delayed."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n4",
+            "relation": "enables"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "shortens"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "shortens"
+          },
+          {
+            "from": "n2",
+            "to": "n6",
+            "relation": "adds to"
+          },
+          {
+            "from": "n3",
+            "to": "n6",
+            "relation": "adds to"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "lengthens"
+          },
+          {
+            "from": "n4",
+            "to": "n7",
+            "relation": "may raise mimics"
+          },
+          {
+            "from": "n9",
+            "to": "n4",
+            "relation": "competes for the scanner with"
+          }
+        ],
+        "summary": "Map locates the minutes in two stretches and links each change idea to the step it targets and the risk it carries."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[3].kind": "framework",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No step-by-step timing of the local pathway",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The timing sheet records door and needle but not the steps between, so the team cannot see where to act.",
+            "opportunity": "Add arrival-to-CT and CT-to-decision times to the timing sheet and map ten recent cases with the staff involved."
+          },
+          {
+            "id": "g2",
+            "title": "Monthly medians are too unstable at seven or eight cases a month",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Monthly summaries take five to six months to show a real change (claim c5).",
+            "opportunity": "Plot every case on a run chart with the baseline median."
+          },
+          {
+            "id": "g3",
+            "title": "Out-of-hours patients may not benefit",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Night and weekend cases are slower and improved less elsewhere (claims c1, c3).",
+            "opportunity": "Mark out-of-hours cases on the chart and give them their own PDSA cycle."
+          },
+          {
+            "id": "g4",
+            "title": "Faster pathways can treat more mimics",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Treated mimics rose in several reports (claim c4).",
+            "opportunity": "Review every treated mimic and haemorrhage at the monthly meeting."
+          },
+          {
+            "id": "g5",
+            "title": "Trauma imaging could be delayed",
+            "kind": "implementation",
+            "severity": "watch",
+            "whyItMatters": "The CT scanner is shared with trauma.",
+            "opportunity": "Log any trauma CT started late because of a stroke case."
+          }
+        ],
+        "errorsFound": [],
+        "reevaluation": "The gaps confirm a mapping-first QI project with case-level measurement, out-of-hours attention and explicit balancing measures.",
+        "summary": "Five gaps; the missing step timings are the main one."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[2].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Direct transfer to CT on the ambulance stretcher with a single group page on pre-alert will reduce the median door-to-needle time from 62 to 45 minutes or less within six months, without more symptomatic haemorrhage or more than 5 percent treated mimics.",
+            "novelty": 25,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 80,
+            "parsimony": 85,
+            "rationale": "The largest delays are in the steps these changes target (c1, c2); novelty is low, which suits local improvement.",
+            "risks": "CT conflicts with trauma; out-of-hours cases improve less."
+          },
+          {
+            "id": "h2",
+            "statement": "Preparing the thrombolytic during the CT scan saves about 7 minutes per case.",
+            "novelty": 30,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Late drug preparation added a median of 7 minutes in time studies.",
+            "risks": "Drug wasted when the scan excludes treatment."
+          },
+          {
+            "id": "h3",
+            "statement": "A nurse-led two-minute debrief after each case sustains the gains.",
+            "novelty": 40,
+            "need": 55,
+            "practiceChange": 55,
+            "feasibility": 80,
+            "parsimony": 70,
+            "rationale": "Debriefs were feasible and seen as blame-free elsewhere.",
+            "risks": "Effect not separable from other changes."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected for the first cycles."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "At the regional primary stroke centre, will process mapping and PDSA cycles from January to June 2027, starting with direct-to-CT transfer and a single group page, reduce the median door-to-needle time from 62 to 45 minutes or less, while symptomatic haemorrhage does not rise and treated mimics stay at or below 5 percent?",
+            "framework": "QI-aim",
+            "population": "Patients thrombolysed for acute ischaemic stroke at the regional hospital",
+            "intervention": "Pathway mapping and PDSA-tested changes: direct to CT, single group page, drug preparation during CT, nurse-led debriefs",
+            "comparator": "Twelve months of baseline cases from 2025 and 2026",
+            "outcome": "Door-to-needle time per case on a run chart",
+            "time": "January to June 2027",
+            "setting": "400-bed regional primary stroke centre"
+          }
+        ],
+        "finer": "Feasible without new staff; interesting to emergency, radiology and stroke teams; novel only locally; ethical under the QI screening; relevant to a network target rarely met.",
+        "summary": "One SMART aim with balancing thresholds."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-pdsa",
+        "rationale": "The aim is to improve a local care process quickly, with changes adapted between cycles, which is what the Model for Improvement is for. Case-by-case run charts fit seven or eight cases a month (c5). The evidence supports the change ideas (c1, c2) and names the balancing measures (c4). Reporting follows SQUIRE 2.0.",
+        "alternatives": [
+          "Before-and-after comparison of two annual medians (refused: too slow and confounded)",
+          "Stepped introduction across network hospitals (refused: one hospital, local aim)",
+          "Telestroke only (deferred: addresses out-of-hours only)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0",
+          "Model for Improvement"
+        ],
+        "whyNotMoreComplex": "A controlled comparison would need several hospitals and a stable intervention; the team needs to adapt changes case by case.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Map the thrombolysis pathway with all involved staff and test changes in PDSA cycles from January to June 2027, starting with direct-to-CT transfer and a single group page (c1, c2), plotting every case on a run chart (c5) and reviewing haemorrhage and treated mimics as balancing measures (c4).",
+          "question": "Should the stroke centre run a mapping and PDSA project on door-to-needle time, and which changes first?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "The targeted steps are where most delay occurs, and a comparable centre shortened them.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Direct-to-CT transfers delay trauma imaging.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Emergency department and stroke program approval of the project",
+              "status": "met",
+              "evidence": "Approval memo SP-2026-14 dated 2026-08-21, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Ethics office determination that the project is quality improvement",
+              "status": "met",
+              "evidence": "Screening QI-SCR-26-203 dated 2026-09-02, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Monthly feedback of door-to-needle medians without pathway changes",
+            "Telestroke for out-of-hours cases only"
+          ],
+          "note": "Rests on ledger claims c1, c2, c4 and c5 from retrieved records; the leads are not cited. Both gates are met on investigator-supplied records."
+        },
+        "summary": "QI with mapping and PDSA cycles recommended; both gates met."
+      },
+      "note": "Claims require S13; selectionStatus S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-pdsa",
+          "family": "qi-pdsa",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c4",
+            "c5"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive with both gates met: accepted and ready (G7). S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "qi-pdsa"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Six-month QI project using the Model for Improvement: two mapping sessions in December 2026, then PDSA cycles from January to June 2027, with every thrombolysis case plotted on a run chart against the 2025 to 2026 baseline.",
+        "population": "All patients thrombolysed for acute ischaemic stroke at the hospital from January to June 2027 (about 45 to 50 cases), day and night.",
+        "exposure": "Changes tested in sequence: cycle 1 direct-to-CT on the ambulance stretcher for pre-alerted patients in weekday daytime; cycle 2 a single group page on pre-alert; cycle 3 drug preparation during CT; cycle 4 extension of cycles 1 to 3 to nights and weekends; nurse-led two-minute debriefs after every case throughout.",
+        "procedures": "The stroke nurse adds arrival-to-CT and CT-to-decision times to the timing sheet. Mapping sessions include paramedics, emergency nurses, a CT radiographer, the stroke team and pharmacy, and follow a no-blame rule: steps are discussed, not people. The run chart is reviewed at a monthly meeting with every treated mimic and haemorrhage.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Door-to-needle time",
+            "measure": "Minutes from hospital arrival to thrombolytic bolus, per case",
+            "timing": "Every case, January to June 2027",
+            "why": "The measure the aim targets and the network reports.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Treated within 45 minutes",
+            "measure": "Proportion of cases per two-month block",
+            "timing": "Two-monthly",
+            "why": "The network's target.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Arrival-to-CT and CT-to-decision times",
+            "measure": "Minutes per case from the extended timing sheet",
+            "timing": "Every case",
+            "why": "Shows which change moved which step.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Symptomatic intracranial haemorrhage",
+            "measure": "Numerator and denominator per two-month block",
+            "timing": "Two-monthly",
+            "why": "Speed must not come at the cost of safety.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Treated stroke mimics",
+            "measure": "Numerator and denominator; each case reviewed",
+            "timing": "Monthly",
+            "why": "Faster pathways can treat more mimics.",
+            "patientCentered": true
+          },
+          {
+            "id": "o6",
+            "role": "balancing",
+            "name": "Trauma CT delayed by a stroke case",
+            "measure": "Count of trauma scans started late because a stroke patient was on the table",
+            "timing": "Monthly",
+            "why": "The scanner is shared.",
+            "patientCentered": null
+          }
+        ],
+        "feasibility": "Uses existing staff, the existing timing sheet with two added fields and a monthly meeting; about 45 to 50 cases in six months.",
+        "biasMitigation": [
+          "Baseline median frozen before cycle 1",
+          "Out-of-hours cases marked on the chart",
+          "Every treated mimic reviewed"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Secular trend in the network",
+            "severity": "watch",
+            "note": "Network-wide campaigns are annotated on the chart."
+          },
+          {
+            "id": "b2",
+            "label": "Incomplete step timings",
+            "severity": "watch",
+            "note": "The stroke nurse checks each sheet within 24 hours."
+          }
+        ],
+        "parsimony": {
+          "score": 84,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "Three balancing measures because each change carries a different risk"
+          ],
+          "simplestPath": "One run chart of every case with the baseline median."
+        },
+        "theoreticalFramework": "Model for Improvement with PDSA cycles; SEIPS to describe work-system factors found in mapping.",
+        "summary": "Four PDSA cycles over six months with case-level run charts and three balancing measures."
+      },
+      "note": "One null field: the trauma balancing measure leaves patientCentered null (the model does not decide for another patient group); it is stored null, never coerced to false, with no issue (contracts.ts strictBoolOrNull, holds at 875fe59).",
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 6
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.outcomes[2].patientCentered": false,
+          "protocol.outcomes[5].role": "balancing",
+          "protocol.outcomes[5].patientCentered": {
+            "isNull": true
+          },
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Run chart of individual door-to-needle times, with the 2025 to 2026 baseline median as the centre line and standard run rules; an individuals chart to flag unusually long cases.",
+        "sampleSize": "About 94 cases a year give roughly 45 to 50 cases in six months. With case-by-case plotting, a sustained 15-minute improvement is expected to trigger the shift rule within about 20 cases (c5), so a real change should be visible by the third cycle. The baseline uses the last 12 months of cases (about 94), which gives a stable median. Balancing measures are too rare for statistical comparison and are reviewed case by case.",
+        "primaryAnalysis": "Run chart rules fixed in advance: a shift of six or more consecutive cases below the baseline median, a trend of five, too few or too many runs; cycle start dates marked on the chart.",
+        "secondaryAnalysis": "Two-monthly proportion treated within 45 minutes; run charts of arrival-to-CT and CT-to-decision; counts of haemorrhage, treated mimics and delayed trauma scans with numerators and denominators.",
+        "missingData": "Cases with missing step times stay on the primary chart; step charts show the number of cases with missing times.",
+        "multiplicity": "One outcome measure carries the aim; the rest are descriptive.",
+        "software": "Spreadsheet run chart template maintained by the stroke nurse.",
+        "overfittingGuards": [
+          "Run rules and baseline fixed before cycle 1",
+          "No re-baselining until a sustained shift",
+          "Out-of-hours cases analysed within the same chart, marked, not removed"
+        ],
+        "summary": "Case-by-case run chart; a sustained 15-minute change expected to show within about 20 cases."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "within about 20 cases"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: pathway changes within standard stroke care. Risks are more treated mimics, trauma imaging delays and staff feeling blamed during mapping.",
+        "consent": "The changes are part of usual stroke care; no individual consent. Staff join mapping sessions voluntarily and the no-blame rule is agreed at the first session.",
+        "data": "The timing sheet is already collected for the regional dataset; project charts show case numbers, not names.",
+        "equity": "PROGRESS-Plus: patients who arrive at night or at weekends, by private car rather than ambulance (no pre-alert), or who need interpreters for the history may not benefit from pre-alert changes. Out-of-hours and walk-in cases are marked on the chart, and interpreter phones are placed in the CT area.",
+        "effectiveness": "Success is a sustained shift in door-to-needle time with stable haemorrhage, treated mimics at or below 5 percent and no trauma delays.",
+        "efficiency": "No new staff; a few minutes per case for timing and debrief.",
+        "costs": "None beyond staff time.",
+        "grants": "None needed.",
+        "partnerships": "Regional ambulance service, emergency department, radiology, pharmacy and two stroke survivors from the regional stroke association.",
+        "rebPath": "Screened as quality improvement not requiring REB review (QI-SCR-26-203); a publication would follow SQUIRE 2.0.",
+        "limitations": "Single hospital; about 50 cases; balancing measures too rare to compare statistically.",
+        "summary": "Low-risk QI under a completed screening, with attention to patients who arrive without pre-alert."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "QI-SCR-26-203"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two stroke survivors review the patient information on fast-track CT; a paramedic and a CT radiographer attend every monthly review.",
+        "socialListening": "No social media listening; the regional stroke association's feedback from members about emergency care is read for themes.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Waiting before the scan",
+            "quote": "Composite paraphrase: I lay in the corridor for what felt like ages before anyone told me I was having a scan.",
+            "implication": "Direct-to-CT and a clear word to the patient at the door.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Serial paging",
+            "quote": "Composite paraphrase: By the time the third person has been called, the patient has already been in CT for five minutes and nobody is there.",
+            "implication": "Test a single group page on pre-alert.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Paramedic handover",
+            "quote": "Composite paraphrase: We would happily take them straight to the scanner if someone met us at the door.",
+            "implication": "Stroke nurse meets pre-alerted ambulances at the door.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Trauma competition",
+            "quote": "Composite paraphrase: If a stroke is on the table and a major trauma rolls in, somebody waits, and I need to know who decides.",
+            "implication": "Agree a scanner priority rule and log conflicts.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on waiting, paging, paramedic handover and scanner conflicts."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Shortening door-to-needle time at a regional primary stroke centre through process mapping and PDSA cycles",
+        "abstract": "Problem: median door-to-needle time of 62 minutes with 27 percent treated within 45 minutes. Intervention: mapping with all staff involved and four PDSA cycles (direct to CT, single group page, drug preparation during CT, out-of-hours extension) with nurse-led debriefs. Measures: door-to-needle time per case on a run chart; haemorrhage, treated mimics and trauma delays as balancing measures. Results will be written after June 2027.",
+        "introduction": "Faster thrombolysis improves recovery after ischaemic stroke. Time studies place most delay between arrival and CT and between CT and the treatment decision, and small centres struggle to see change in monthly figures.",
+        "methods": "The Model for Improvement guided two mapping sessions and four PDSA cycles from January to June 2027. Every case was plotted on a run chart with rules fixed before cycle 1, and the project was screened as quality improvement.",
+        "results": "No data have been collected yet. The report will show the run chart of every case with cycle dates marked, the step-time charts and the balancing measures with numerators and denominators.",
+        "discussion": "The discussion will relate chart signals to the cycles and consider out-of-hours cases separately. It will review every treated mimic and haemorrhage against the speed gained.",
+        "limitations": "This is a single centre with about 50 cases, and balancing measures are too rare to compare statistically. Secular changes in the regional network may contribute.",
+        "conclusion": "To be written after the final cycle. It will report whether the aim was met and which changes the centre will keep.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE draft; results empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Four model leads, including one whose year arrived as text, are unverified; search for them before any is cited",
+          "Agree a scanner priority rule with trauma before cycle 1",
+          "Add the two step-time fields to the timing sheet before the baseline freeze"
+        ],
+        "improvementNotes": "Six retrieved records were appraised and support the decision; four model leads were kept as unverified leads. The trauma balancing measure's patient-centredness was left unknown by the model and stays unknown.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before the first cycle."
+      },
+      "note": "Audit fields fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Door-to-needle time for stroke thrombolysis at a regional primary stroke centre",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[7].year": 2019,
+          "scan.claims": {
+            "length": 5
+          },
+          "protocol.outcomes[5].patientCentered": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Door-to-needle time for stroke thrombolysis at a regional primary stroke centre"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Door-to-needle time for stroke thrombolysis at a regional primary stroke centre",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[7].year": 2019,
+          "scan.items[7].provenance.origin": "model",
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Door-to-needle time for stroke thrombolysis at a regional primary stroke centre"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The leads stay unverified in the export (G3); S11 for the decision fields; one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items": {
+              "length": 10
+            },
+            "scan.items[7].year": 2019,
+            "scan.items[7].provenance.status": "unverified",
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "protocol.outcomes[5].patientCentered": {
+              "isNull": true
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "contexts": [
+    "one CPET machine, 12 slots a week, four-week wait",
+    "110 major abdominal operations and 40 prehabilitation places a quarter",
+    "physiotherapists already doing bedside tests",
+    "surgery within five weeks of decision"
+  ],
+  "reading": "Triage is a race between the date of surgery and the time needed for testing and four weeks of prehabilitation. Exercise testing is the accepted reference but too slow; bedside tests are fast but their accuracy is uncertain and their published cut-offs were derived in their own data. The patients who cannot complete exercise testing are the frailest and the ones accuracy studies usually drop. A validation study of pre-specified cut-offs, including those patients, answers whether the fast test can replace the slow one for triage.",
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Exercise testing anaerobic threshold below 11 mL/kg/min",
+      "kind": "context",
+      "detail": "Reference standard."
+    },
+    {
+      "id": "n2",
+      "label": "30-second sit-to-stand, cut-off 10 or fewer",
+      "kind": "context",
+      "detail": "Index test (claim c1)."
+    },
+    {
+      "id": "n3",
+      "label": "Four-metre gait speed, below 1.0 m/s",
+      "kind": "context",
+      "detail": "Index test from an unrated abstract (claim c5)."
+    },
+    {
+      "id": "n4",
+      "label": "Sensitivity for a low anaerobic threshold",
+      "kind": "outcome",
+      "detail": "What triage needs most."
+    },
+    {
+      "id": "n5",
+      "label": "Patients unable to complete exercise testing",
+      "kind": "gap",
+      "detail": "Usually excluded (claim c3)."
+    },
+    {
+      "id": "n6",
+      "label": "Late start of prehabilitation",
+      "kind": "outcome",
+      "detail": "46 percent elsewhere (claim c6)."
+    },
+    {
+      "id": "n7",
+      "label": "Frail and older patients",
+      "kind": "stakeholder",
+      "detail": "Most likely to fail both tests."
+    },
+    {
+      "id": "n8",
+      "label": "Physiotherapists and exercise physiologists",
+      "kind": "stakeholder",
+      "detail": "Must be blind to each other's results."
+    }
+  ],
+  "edges": [
+    {
+      "from": "n2",
+      "to": "n4",
+      "relation": "estimated against n1 for"
+    },
+    {
+      "from": "n3",
+      "to": "n4",
+      "relation": "estimated against n1 for"
+    },
+    {
+      "from": "n5",
+      "to": "n4",
+      "relation": "biases if excluded"
+    },
+    {
+      "from": "n1",
+      "to": "n6",
+      "relation": "delays and causes"
+    },
+    {
+      "from": "n7",
+      "to": "n5",
+      "relation": "over-represented in"
+    },
+    {
+      "from": "n8",
+      "to": "n2",
+      "relation": "perform"
+    }
+  ],
+  "summary": "Map sets the bedside tests against the reference standard, with the untestable patients as the main bias."
+}

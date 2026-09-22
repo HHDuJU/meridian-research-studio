@@ -1,0 +1,97 @@
+{
+  "contexts": [
+    "28-bed geriatric medicine ward, district hospital",
+    "three nursing shifts, night staffing thinner",
+    "screening recorded in nursing notes",
+    "no fixed escalation route for positive screens"
+  ],
+  "reading": "Screening sits between two pressures: the start of a shift, when nurses have least time, and the night, when waking a patient to screen feels wrong. The retrieved evidence places the failures at night, at weekends and in patients with dementia or sensory loss (claims c1 and c3), and shows that documentation overstates what was done (claim c2). Even a completed positive screen often waits a day for review (claim c4), which feeds the belief that screening is futile. Measuring each step, from list to screen to review, is the basis for any later change.",
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Eligible patient-shift",
+      "kind": "context",
+      "detail": "Patient aged 65 or over present on the ward during a shift."
+    },
+    {
+      "id": "n2",
+      "label": "Screen actually performed",
+      "kind": "outcome",
+      "detail": "Documented and, on observed shifts, witnessed."
+    },
+    {
+      "id": "n3",
+      "label": "Night and weekend shifts",
+      "kind": "context",
+      "detail": "Lowest completion elsewhere (claim c1)."
+    },
+    {
+      "id": "n4",
+      "label": "People with dementia or sensory loss",
+      "kind": "stakeholder",
+      "detail": "Screened least, at highest risk (claim c3)."
+    },
+    {
+      "id": "n5",
+      "label": "Documented but not performed",
+      "kind": "gap",
+      "detail": "17 percent elsewhere (claim c2)."
+    },
+    {
+      "id": "n6",
+      "label": "Positive screen to medical review",
+      "kind": "outcome",
+      "detail": "38 percent within 24 hours elsewhere (claim c4)."
+    },
+    {
+      "id": "n7",
+      "label": "Ward nurses",
+      "kind": "stakeholder",
+      "detail": "Time at shift start; reluctance to wake patients."
+    },
+    {
+      "id": "n8",
+      "label": "Geriatricians",
+      "kind": "stakeholder",
+      "detail": "Act on positive screens."
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "relation": "should produce"
+    },
+    {
+      "from": "n3",
+      "to": "n2",
+      "relation": "lowers"
+    },
+    {
+      "from": "n4",
+      "to": "n2",
+      "relation": "less often receive"
+    },
+    {
+      "from": "n5",
+      "to": "n2",
+      "relation": "inflates the recorded rate of"
+    },
+    {
+      "from": "n2",
+      "to": "n6",
+      "relation": "should trigger"
+    },
+    {
+      "from": "n7",
+      "to": "n2",
+      "relation": "perform"
+    },
+    {
+      "from": "n8",
+      "to": "n6",
+      "relation": "complete"
+    }
+  ],
+  "summary": "Map traces the screening pathway from eligible patient-shift to medical review and marks where the retrieved evidence says it fails."
+}

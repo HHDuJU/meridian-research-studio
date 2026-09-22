@@ -1,0 +1,1393 @@
+{
+  "id": "sc-007",
+  "version": 1,
+  "title": "Regional surveillance: validating syndromic alerts, accuracy study or randomised comparison, two undated records left unrated",
+  "field": "epidemiology",
+  "level": 3,
+  "family": "rct",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path. A surveillance epidemiologist asks how to evaluate a structured alert validation checklist and names two designs, an accuracy study (sensitivity and specificity against panel review) and randomisation of alerts or duty days, so routing is unresolved at create with candidates rct and diagnostic; the problem response keeps the family null (issue 'cleared'; basis stays unresolved, D2). A fixture search returns eight records, two of them undated grey reports (year null). The appraisal annotates those two without any score or grade keys, so their scores stay null and their grade 'unrated' with no issue (omission preserves stored unknowns; G4), in contrast to an explicit null. A reload on the Scan route checks that the unknowns survive rehydration. The Design stage resolves to rct because panel review is a weak, hindsight-biased reference standard and duty-day randomisation limits contamination; the decision rests on claims c1 to c3 with both gates met on investigator-supplied records, so acceptance gives an accepted selection and a ready action, and the family becomes rct only then. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 6, 8 (ev-0lcpu72, ev-1jtaykx, ev-17adk93, ev-092v3i8, ev-017zujp); titleYearKey hash for records 2, 5, 7 (ev-0qo19bv, ev-11xd559, ev-1jlvvnw), the undated ones with year token '?'. Requires S11 (routing at create, recommendedFamily, selectionStatus, actionStatus, basis), D2 (null family keeps basis unresolved), S13 (appraisal) and D5 (status text). Catches: a default family chosen from the first design word, unknown scores filled on appraisal or on reload, and a family changed before acceptance.",
+  "inputs": {
+    "need": "I am a surveillance epidemiologist at a regional public health agency serving about 2.4 million people. Our syndromic surveillance system scans emergency department chief complaints and pharmacy sales every morning and generates about 35 statistical alerts a week for respiratory, gastrointestinal and rash syndromes. Each alert is validated by the epidemiologist on duty, who looks at line lists, calls hospitals if needed and decides whether to escalate. We have no written procedure: some of us spend two hours on an alert and others dismiss it in five minutes, and last winter a norovirus cluster in two care homes was dismissed twice before the third alert was escalated.\n\nWe have drafted a structured validation checklist with fixed data checks (duplicate records, reporting artefacts, clustering by age and place, comparison with laboratory reports) and a rule for when to escalate. I am not sure how to evaluate it. One option is to treat it like a test and estimate its sensitivity and specificity against a panel review of past alerts. Another is to randomise incoming alerts, or duty days, to the checklist or to usual validation for six months and compare the time to a validation decision and the events that were missed. My director wants to know whether the checklist makes validation faster without missing real events before it becomes standard procedure.\n\nSix epidemiologists share the duty rota and we cannot hire. Alerts and decisions are logged in our surveillance database with time stamps, and outbreak reports from laboratories and local health units tell us later which alerts were real. The chair of the agency's research ethics committee has confirmed that an evaluation of an internal procedure that uses no personal information counts as program evaluation.",
+    "constraints": "No new staff; six epidemiologists on the duty rota; a six-month evaluation from January to June 2027; alert logs and later outbreak reports are the only data sources.",
+    "localFacts": [
+      "The syndromic surveillance system generated 1,780 alerts in 2025, about 35 a week.",
+      "Six epidemiologists share the daily validation duty on a fixed rota.",
+      "The agency director approved a six-month evaluation of the validation checklist from January 2027 (memo PHA-DIR-2026-31).",
+      "The research ethics committee chair classified the evaluation as program evaluation not requiring review on 2026-09-10 (letter REC-2026-PE-07)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names two designs (sensitivity and specificity, and randomisation), so classifyFamily returns unresolved with candidates rct and diagnostic; design.basis 'unresolved' at create requires S11.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a surveillance epidemiologist at a regional public health agency serving about 2.4 million people. Our syndromic surveillance system scans emergency department chief complaints and pharmacy sales every morning and generates about 35 statistical alerts a week for respiratory, gastrointestinal and rash syndromes. Each alert is validated by the epidemiologist on duty, who looks at line lists, calls hospitals if needed and decides whether to escalate. We have no written procedure: some of us spend two hours on an alert and others dismiss it in five minutes, and last winter a norovirus cluster in two care homes was dismissed twice before the third alert was escalated.\n\nWe have drafted a structured validation checklist with fixed data checks (duplicate records, reporting artefacts, clustering by age and place, comparison with laboratory reports) and a rule for when to escalate. I am not sure how to evaluate it. One option is to treat it like a test and estimate its sensitivity and specificity against a panel review of past alerts. Another is to randomise incoming alerts, or duty days, to the checklist or to usual validation for six months and compare the time to a validation decision and the events that were missed. My director wants to know whether the checklist makes validation faster without missing real events before it becomes standard procedure.\n\nSix epidemiologists share the duty rota and we cannot hire. Alerts and decisions are logged in our surveillance database with time stamps, and outbreak reports from laboratories and local health units tell us later which alerts were real. The chair of the agency's research ethics committee has confirmed that an evaluation of an internal procedure that uses no personal information counts as program evaluation.",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a surveillance epidemiologist at a regional public health agency"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Structured validation of syndromic surveillance alerts in a regional public health agency",
+        "subtitle": "Design not yet settled: accuracy study or randomised comparison of validation procedures",
+        "family": null,
+        "statement": "About 35 syndromic surveillance alerts a week are validated by the epidemiologist on duty without a written procedure, with large differences in time spent and at least one recent cluster dismissed twice before escalation. A structured checklist has been drafted. Whether to evaluate it as a test (accuracy against a reference) or as a change in procedure (effect on time to decision and on missed events) is not yet settled, and the choice determines what the director will learn.",
+        "whoAffected": "Residents of the region, especially people in care homes and small rural communities where outbreaks are detected through few cases; the six duty epidemiologists; local health units that act on escalations.",
+        "whatHurts": "A real outbreak dismissed as an artefact delays control measures, as in the care home norovirus cluster last winter; hours spent on false alerts take epidemiologists away from other work.",
+        "currentPractice": "Unwritten validation by the epidemiologist on duty, ranging from minutes to hours per alert; no measurement of dismissed true events.",
+        "whyNow": "A drafted checklist, a director who wants evidence before making it standard, and a six-month evaluation window from January 2027.",
+        "constraints": "No new staff; six epidemiologists on the duty rota; a six-month evaluation from January to June 2027; alert logs and later outbreak reports are the only data sources.",
+        "patientCenteredGoal": "Real outbreaks, including small ones in care homes and rural areas, are recognised on the first alert, and staff time goes where it protects people.",
+        "summary": "Problem framed; the design family is left unresolved between an accuracy study and a randomised comparison."
+      },
+      "note": "Family null: issue 'cleared' at 'family' (875fe59) and design.basis stays 'unresolved' (D2).",
+      "expect": {
+        "store": {
+          "title": "Structured validation of syndromic surveillance alerts in a regional public health agency",
+          "problem.statement": {
+            "includes": "is not yet settled"
+          },
+          "design.basis": "unresolved",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Structured validation of syndromic surveillance alerts in a regional public health agency"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "syndromic surveillance alert validation procedure checklist time to decision missed outbreaks evaluation",
+      "response": {
+        "status": 200,
+        "total": 8,
+        "records": [
+          {
+            "title": "Structured versus usual validation of syndromic surveillance alerts: a randomised comparison in a regional public health unit",
+            "authors": "Lindqvist-Achebe M, Osei-Carvalho R, Brandt-Nakamura E",
+            "year": 2020,
+            "venue": "Brackenmoor Surveillance Practice Journal",
+            "doi": "10.5555/jphsp.2020.0217",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "Over 20 weeks, 412 syndromic surveillance alerts in one regional public health unit were randomised individually to a structured validation protocol or to usual review by the epidemiologist on duty. Randomising alerts to a structured protocol shortened the median time to a validation decision from 96 to 42 minutes. Escalations were similar (6 against 7 per 100 alerts). Two true events were dismissed at the first alert in the protocol arm and three in the usual arm, too few to compare. Epidemiologists reported applying parts of the protocol to usual-review alerts after the first month, which may have reduced the difference."
+          },
+          {
+            "title": "Positive predictive value of syndromic surveillance alerts for confirmed outbreaks: a five-year review",
+            "authors": "Kowalczyk-Obi T, Fairbanks-Mensah L",
+            "year": 2017,
+            "venue": "Epidemiology and Surveillance Notes",
+            "providerType": "journal-article",
+            "abstract": "We linked 8,900 alerts from a syndromic surveillance system over five years to outbreak reports from laboratories and local health units. Four percent of alerts corresponded to a confirmed outbreak or cluster within 14 days. Most false alerts arose from reporting artefacts, duplicate records and changes in emergency department coding. Gastrointestinal alerts in people aged 65 and over had the highest predictive value, often linked to care homes. The authors suggest that validation should concentrate on excluding artefacts quickly and on alerts in settings with vulnerable populations."
+          },
+          {
+            "title": "Validation practices for syndromic surveillance signals: a survey of 62 public health agencies",
+            "authors": "Haddad-Lindgren S, Mwale-Oduya P, Ferreira-Hart K",
+            "year": 2022,
+            "venue": "Wrenmouth Public Health Informatics Reports",
+            "doi": "10.5555/phir.2022.0063",
+            "providerType": "journal-article",
+            "abstract": "We surveyed 62 public health agencies about how syndromic surveillance alerts are validated. Seventy-one percent had no written validation procedure. The median reported time per alert was 45 minutes, with a range from under 10 minutes to more than three hours, and agencies rarely measured how often real events were dismissed. Agencies with a written procedure reported more consistent escalation decisions but not shorter times. Respondents identified duplicate records and coding changes as the commonest causes of false alerts and staff shortages at weekends as the commonest cause of delay."
+          },
+          {
+            "title": "Panel review as a reference standard for outbreak signals: agreement and hindsight bias",
+            "authors": "Sandoval-Pike R, Adeyemi-Holm J",
+            "year": 2019,
+            "venue": "Tamsford Epidemiologic Methods Letters",
+            "doi": "10.5555/eml.2019.0145",
+            "providerType": "journal-article",
+            "abstract": "We asked panels of three epidemiologists to classify 300 past syndromic alerts as true or false signals, first without and then with knowledge of later outbreak reports. Agreement between panels without outcome knowledge was moderate (kappa 0.52). With outcome knowledge, panels reclassified 18 percent of alerts, almost always towards the known outcome. Disagreement was greatest for small gastrointestinal clusters in older adults. The authors conclude that panel review is a weak reference standard for estimating the accuracy of validation procedures and that outcome-blinded panels still disagree substantially."
+          },
+          {
+            "title": "Checklist-based alert triage in a national surveillance centre: internal evaluation summary",
+            "authors": "National Surveillance Centre Signals Team",
+            "year": null,
+            "venue": "National Surveillance Centre internal reports",
+            "providerType": "report",
+            "abstract": "This summary describes the introduction of a checklist for triaging syndromic surveillance alerts in a national surveillance centre. Staff reported that the checklist made handovers easier and that decisions were easier to explain to managers. The summary states that validation became faster and that no outbreaks were missed, but it gives no figures for time, no definition of a missed outbreak and no comparison period. It lists the checklist items, which resemble those of other agencies. The summary carries no date, and the evaluation period and the number of alerts are not reported."
+          },
+          {
+            "title": "Randomising days rather than alerts: contamination and learning effects in trials of surveillance procedures",
+            "authors": "Okonkwo-Brennan A, Taniguchi-Voss L",
+            "year": 2023,
+            "venue": "Tamsford Epidemiologic Methods Letters",
+            "doi": "10.5555/eml.2023.0031",
+            "providerType": "journal-article",
+            "abstract": "Trials that randomise individual alerts to a new validation procedure risk contamination, because the same staff handle both arms on the same day and carry the new procedure over. Using simulation based on two completed evaluations, we compared individual alert randomisation with randomisation of duty days. Day randomisation reduced contamination because staff used only one procedure on a given day, at the cost of a modest design effect when alerts on the same day are correlated. With about five alerts a day and an intracluster correlation near 0.1, the design effect was about 1.4."
+          },
+          {
+            "title": "Syndromic surveillance signal validation: report of a regional workshop",
+            "authors": "Regional Surveillance Network Workshop Group",
+            "year": null,
+            "venue": "Regional Surveillance Network workshop reports",
+            "providerType": "report",
+            "abstract": "This report summarises a one-day workshop of epidemiologists from several regional agencies on validating syndromic surveillance signals. Participants agreed that a shared checklist would be useful and listed checks for duplicates, reporting artefacts, age and place clustering and laboratory confirmation. Participants disagreed on whether signals from small rural emergency departments should be escalated more readily, given small counts. The report records opinions only, gives no data on the performance of any procedure, and carries no date or list of participating agencies."
+          },
+          {
+            "title": "Time to public health action after syndromic alerts for norovirus in long-term care: a case series",
+            "authors": "Petrov-Asante D, Wakefield-Obi C",
+            "year": 2021,
+            "venue": "Brackenmoor Surveillance Practice Journal",
+            "doi": "10.5555/jphsp.2021.0088",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 11 norovirus clusters in long-term care homes that were preceded by a syndromic surveillance alert. In 5 of the 11 clusters, public health action followed the first alert by two days or more, usually because the first alert was dismissed as an artefact. Clusters with action within one day of the first alert had fewer cases on average, although the homes also differed in size and staffing. The authors recommend that gastrointestinal alerts involving older adults in a small area are never dismissed without checking for care homes."
+          }
+        ]
+      },
+      "note": "Eight records; records 5 and 7 are undated grey reports (year null, G4). Record 1's provider type maps to rct. Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 8,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0lcpu72",
+            "ev-0qo19bv",
+            "ev-1jtaykx",
+            "ev-17adk93",
+            "ev-11xd559",
+            "ev-092v3i8",
+            "ev-1jlvvnw",
+            "ev-017zujp"
+          ],
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[0].kind": "rct",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[6].year": {
+            "isNull": true
+          },
+          "scan.items[6].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Syndromic surveillance signal validation: report of a regional workshop"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0lcpu72",
+            "relevance": 94,
+            "methodQuality": 64,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Alert-level randomisation: median time to a validation decision 42 minutes with a structured protocol against 96 minutes with usual review; missed events too few to compare.",
+            "limitations": "One unit, 20 weeks, contamination reported after the first month.",
+            "contextTags": [
+              "randomised comparison",
+              "time to decision",
+              "contamination"
+            ]
+          },
+          {
+            "id": "ev-0qo19bv",
+            "relevance": 78,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Four percent of alerts matched a confirmed outbreak within 14 days; artefacts and duplicates caused most false alerts; alerts in older adults had the highest predictive value.",
+            "limitations": "One system; outbreak reports may miss small clusters.",
+            "contextTags": [
+              "positive predictive value",
+              "artefacts"
+            ]
+          },
+          {
+            "id": "ev-1jtaykx",
+            "relevance": 72,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Seventy-one percent of 62 agencies had no written validation procedure; median 45 minutes per alert; dismissed true events rarely measured.",
+            "limitations": "Self-reported practice.",
+            "contextTags": [
+              "current practice",
+              "variation"
+            ]
+          },
+          {
+            "id": "ev-17adk93",
+            "relevance": 88,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Outcome-blinded panels agreed only moderately (kappa 0.52), and panels aware of outcomes reclassified 18 percent of alerts towards the known outcome.",
+            "limitations": "Three-person panels; one set of alerts.",
+            "contextTags": [
+              "reference standard",
+              "hindsight bias",
+              "accuracy study"
+            ]
+          },
+          {
+            "id": "ev-11xd559",
+            "kind": "grey",
+            "keyFindings": "Staff reported faster validation and easier handovers with a triage checklist; no figures, definitions or comparison period.",
+            "limitations": "No methods, figures or dates.",
+            "contextTags": [
+              "grey literature",
+              "undated"
+            ],
+            "notes": "Not rated: no figures, no comparison and no date, so relevance to the local question and method quality cannot be judged."
+          },
+          {
+            "id": "ev-092v3i8",
+            "relevance": 86,
+            "methodQuality": 62,
+            "kind": "expert",
+            "grade": "low",
+            "keyFindings": "Randomising duty days rather than alerts reduced contamination; with about five alerts a day and intracluster correlation near 0.1 the design effect was about 1.4.",
+            "limitations": "Simulation based on two evaluations.",
+            "contextTags": [
+              "trial design",
+              "day randomisation",
+              "design effect"
+            ]
+          },
+          {
+            "id": "ev-1jlvvnw",
+            "kind": "grey",
+            "keyFindings": "Workshop participants listed checklist items and disagreed about escalating small-count rural signals.",
+            "limitations": "Opinions only; no data; undated.",
+            "contextTags": [
+              "grey literature",
+              "undated",
+              "rural signals"
+            ],
+            "notes": "Not rated: a record of opinions with no data and no date."
+          },
+          {
+            "id": "ev-017zujp",
+            "relevance": 80,
+            "methodQuality": 48,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 5 of 11 care home norovirus clusters, action followed the first alert by two days or more, usually after dismissal as an artefact.",
+            "limitations": "Case series; homes differed in size and staffing.",
+            "contextTags": [
+              "care homes",
+              "norovirus",
+              "delay"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a randomised comparison, a structured validation protocol shortened the median time to a validation decision from 96 to 42 minutes.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0lcpu72"
+            ],
+            "location": "Abstract, results",
+            "passage": "Randomising alerts to a structured protocol shortened the median time to a validation decision from 96 to 42 minutes.",
+            "interpretation": "A randomised comparison of procedures is feasible and time to decision is a responsive outcome.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Panel review is a weak reference standard: outcome-blinded panels agreed only moderately and outcome-aware panels shifted towards the known outcome.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-17adk93"
+            ],
+            "location": "Abstract, results and conclusions",
+            "passage": "The authors conclude that panel review is a weak reference standard for estimating the accuracy of validation procedures",
+            "interpretation": "An accuracy study against panel review would give biased sensitivity and specificity.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Randomising duty days rather than alerts reduces contamination at a design effect of about 1.4 with five alerts a day.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-092v3i8"
+            ],
+            "location": "Abstract, results",
+            "passage": "With about five alerts a day and an intracluster correlation near 0.1, the design effect was about 1.4.",
+            "interpretation": "Planning value for a day-randomised design.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Only four percent of alerts corresponded to a confirmed outbreak within 14 days.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0qo19bv"
+            ],
+            "location": "Abstract, results",
+            "passage": "Four percent of alerts corresponded to a confirmed outbreak or cluster within 14 days.",
+            "interpretation": "True events will be too few to compare missed events statistically in six months.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c5",
+            "text": "In 5 of 11 care home norovirus clusters, action followed the first alert by two days or more.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-017zujp"
+            ],
+            "location": "Abstract, results",
+            "passage": "In 5 of the 11 clusters, public health action followed the first alert by two days or more",
+            "interpretation": "Dismissed true events are the harm to watch.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Eight retrieved records; six appraised at abstract level and two undated grey records left unrated. A randomised comparison showed a structured protocol halving time to a validation decision, with contamination between arms; a simulation study shows that randomising duty days limits contamination at a small design effect. Panel review is a weak reference standard because panels disagree and hindsight shifts their judgement, which undermines an accuracy study. Only about four percent of alerts are real, so missed events will be few, and care home clusters show the cost of dismissal. The two undated records report opinions and unquantified claims.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "One randomised comparison and consistent methods evidence support the time outcome and the design choice; missed events rest on case series. Moderate certainty that structured validation can shorten decisions; low certainty about missed events.",
+        "summary": "Eight retrieved records; six appraised, two undated records not rated; five claims recorded; overall certainty moderate."
+      },
+      "note": "The two undated records are annotated without relevance, methodQuality or grade keys: omitted keys leave the stored unknowns in place (contracts.ts: omitted is not cleared), so scores stay null and grades 'unrated' with no issue (G4). Appraisal on the production scan path requires S13; 'not assessed' for null scores follows A3 L1.5.",
+      "expect": {
+        "store": {
+          "scan.items[0].grade": "moderate",
+          "scan.items[0].kind": "rct",
+          "scan.items[4].grade": "unrated",
+          "scan.items[4].relevance": {
+            "isNull": true
+          },
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[4].kind": "grey",
+          "scan.items[4].notes": {
+            "includes": "Not rated"
+          },
+          "scan.items[6].grade": "unrated",
+          "scan.items[6].relevance": {
+            "isNull": true
+          },
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[5].kind": "expert",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-17adk93"
+          ],
+          "scan.gradeOverall": "moderate",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty",
+            "unrated",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Scan route: unknown years, scores and grades must survive as unknowns, never replaced by defaults on rehydration (G4, G9).",
+      "expect": {
+        "store": {
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[4].grade": "unrated",
+          "scan.items[6].relevance": {
+            "isNull": true
+          },
+          "scan.gradeOverall": "moderate",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "moderate certainty"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional agency, 2.4 million people",
+          "about 35 alerts a week, four percent real",
+          "six duty epidemiologists, no written procedure",
+          "evaluation window January to June 2027"
+        ],
+        "reading": "The checklist acts on the epidemiologist's process, not on the signal, so its value lies in faster and more consistent decisions without more dismissed true events. An accuracy framing needs a reference standard that hindsight corrupts. A randomised comparison of procedures measures time directly, but contamination between arms is likely when the same people validate both, which day-level randomisation addresses. True events are rare, so missed events need case-by-case review rather than a test.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Structured validation checklist",
+            "kind": "framework",
+            "detail": "Fixed data checks and an escalation rule."
+          },
+          {
+            "id": "n2",
+            "label": "Time to validation decision",
+            "kind": "outcome",
+            "detail": "Responsive outcome (claim c1)."
+          },
+          {
+            "id": "n3",
+            "label": "True events dismissed at first alert",
+            "kind": "outcome",
+            "detail": "Harm to watch (claim c5)."
+          },
+          {
+            "id": "n4",
+            "label": "Panel review reference standard",
+            "kind": "gap",
+            "detail": "Weak and hindsight-biased (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Randomised comparison of protocols",
+            "kind": "rct",
+            "detail": "96 to 42 minutes (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Day-level randomisation",
+            "kind": "context",
+            "detail": "Limits contamination; design effect about 1.4 (claim c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Care homes and rural communities",
+            "kind": "stakeholder",
+            "detail": "Small-count signals most at risk of dismissal."
+          },
+          {
+            "id": "n8",
+            "label": "Undated grey reports",
+            "kind": "grey",
+            "detail": "Two records, not rated."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "expected to shorten"
+          },
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "must not increase"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "cannot fairly judge the accuracy of"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "reports effect on"
+          },
+          {
+            "from": "n6",
+            "to": "n5",
+            "relation": "improves the design of"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "bear the cost of"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "claim benefit for without data"
+          }
+        ],
+        "summary": "Map sets the checklist against the two outcomes that matter and shows why the accuracy framing is weak."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[3].kind": "gap",
+          "map.nodes[4].kind": "rct",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No trustworthy reference standard for alert accuracy",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Panels disagree and hindsight moves them towards the known outcome (claim c2), so sensitivity and specificity would be biased.",
+            "opportunity": "Evaluate the checklist as a procedure change with time to decision as the primary outcome."
+          },
+          {
+            "id": "g2",
+            "title": "Contamination between checklist and usual validation",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "The same six epidemiologists would validate both arms and carry the checklist over, as reported in the retrieved comparison (claim c1).",
+            "opportunity": "Randomise duty days so that only one procedure is used on any day (claim c3)."
+          },
+          {
+            "id": "g3",
+            "title": "Missed events are too rare to compare statistically",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "With about four percent true alerts (claim c4), each arm will see fewer than 20 real events in six months.",
+            "opportunity": "Review every dismissed true event case by case with a pre-specified safety rule."
+          },
+          {
+            "id": "g4",
+            "title": "Small-count signals from care homes and rural areas",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "A checklist that favours large counts could dismiss small clusters where vulnerable people live (claim c5).",
+            "opportunity": "Include an explicit care home and small-area check and report dismissals by setting."
+          },
+          {
+            "id": "g5",
+            "title": "Two undated reports claim benefit without data",
+            "kind": "evidence",
+            "severity": "watch",
+            "whyItMatters": "A triage summary and a workshop report cannot be rated and should not be cited as support.",
+            "opportunity": "Leave them unrated; request data from the national centre only if needed."
+          }
+        ],
+        "errorsFound": [
+          "The need frames the checklist as a test; it is a change in procedure, and its accuracy cannot be estimated without a reference standard that hindsight does not bias."
+        ],
+        "reevaluation": "The gaps favour a randomised comparison of procedures with day-level allocation, time to decision as the primary outcome and case review of missed events.",
+        "summary": "Five gaps; the weak reference standard and contamination are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].kind": "method",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No trustworthy reference standard for alert accuracy"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "On duty days randomised to the structured checklist, the median time from alert to validation decision is at least 20 percent shorter than on usual-validation days, without more true events dismissed at the first alert.",
+            "novelty": 45,
+            "need": 80,
+            "practiceChange": 85,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "Supported by one randomised comparison; the day-level design answers the director's question with existing logs.",
+            "risks": "Contamination despite day randomisation; too few true events to judge safety formally."
+          },
+          {
+            "id": "h2",
+            "statement": "The checklist makes escalation decisions more consistent between epidemiologists.",
+            "novelty": 40,
+            "need": 60,
+            "practiceChange": 60,
+            "feasibility": 75,
+            "parsimony": 65,
+            "rationale": "Agencies with written procedures reported more consistent decisions.",
+            "risks": "Consistency is hard to measure with six people."
+          },
+          {
+            "id": "h3",
+            "statement": "The checklist's sensitivity for true outbreaks exceeds 90 percent against panel review.",
+            "novelty": 35,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 50,
+            "parsimony": 50,
+            "rationale": "The accuracy framing the investigator considered.",
+            "risks": "Panel review is a weak reference standard (claim c2)."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected, h3 kept to show why the accuracy framing was set aside."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[2].feasibility": 50,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In a regional public health agency, does validating syndromic surveillance alerts with a structured checklist, compared with usual validation, on randomly allocated duty days over six months, shorten the time from alert to validation decision without increasing true events dismissed at the first alert?",
+            "framework": "PICOT",
+            "population": "Syndromic surveillance alerts generated on duty days from January to June 2027",
+            "intervention": "Structured validation checklist with an escalation rule",
+            "comparator": "Usual unwritten validation by the epidemiologist on duty",
+            "outcome": "Time from alert to validation decision; true events dismissed at first alert as the balancing outcome",
+            "time": "Six months",
+            "setting": "Regional public health agency, six duty epidemiologists"
+          }
+        ],
+        "finer": "Feasible with existing logs and staff; interesting to the director and other agencies; novel in using day-level randomisation; ethical as program evaluation; relevant to whether the checklist becomes standard.",
+        "summary": "One PICOT question with a balancing outcome for missed events."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICOT",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "rct",
+        "rationale": "The checklist is a change in procedure, and the director's question is whether it causes faster decisions without more missed events, which a randomised comparison answers directly. Randomising duty days rather than alerts limits contamination between procedures (c3), the retrieved randomised comparison shows time to decision responds to a structured protocol (c1), and the accuracy framing is set aside because panel review is a weak, hindsight-biased reference standard (c2). Missed events are too rare for a test (c4) and are reviewed case by case.",
+        "alternatives": [
+          "Diagnostic accuracy study against panel review (refused: the reference standard is weak and hindsight-biased)",
+          "Alert-level randomisation (refused: contamination through the same staff on the same day)",
+          "Before-after comparison of six months each (refused: seasonal alert patterns differ)"
+        ],
+        "guidelines": [
+          "CONSORT extension for cluster randomised trials",
+          "TIDieR"
+        ],
+        "whyNotMoreComplex": "A multi-agency trial could study missed events with more power, but the director needs a local answer within six months from existing logs.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Evaluate the structured checklist in a randomised comparison with duty days as the unit of allocation from January to June 2027, with time to validation decision as the primary outcome and every dismissed true event reviewed against a pre-specified safety rule.",
+          "question": "How should the agency evaluate its structured alert validation checklist before making it standard?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A randomised comparison of validation procedures is feasible and time to decision responds to them.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "An accuracy study would need a reference standard that hindsight does not bias.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "Alert volume in 2027 falls far below the 2025 level, leaving too few alerts to estimate time differences.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Director approval of a six-month evaluation",
+              "status": "met",
+              "evidence": "Memo PHA-DIR-2026-31, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Ethics committee classification of the evaluation",
+              "status": "met",
+              "evidence": "Letter REC-2026-PE-07 dated 2026-09-10 classifying it as program evaluation, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Diagnostic accuracy study against panel review",
+            "Adopt the checklist without evaluation"
+          ],
+          "note": "Rests on ledger claims c1 to c3; both gates are met on investigator-supplied records."
+        },
+        "summary": "Day-randomised comparison recommended over an accuracy study; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "Routing resolves at the Design stage to rct over the diagnostic candidate. recommendedFamily and selectionStatus require S11; the claims S13; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "rct",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].recommendedFamily": "rct",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive with both gates met on investigator-supplied records: accepted selection, ready action (G7). The family becomes rct and the basis explicit only on acceptance (S11); the status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "family": "rct",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Randomised comparison of a structured validation checklist with usual validation, with duty days allocated in random permuted blocks of four within month, January to June 2027.",
+        "population": "All syndromic surveillance alerts generated on study days; alerts arriving on a day are validated with that day's procedure.",
+        "exposure": "Checklist days: the surveillance system opens the checklist form with each alert and requires the escalation rule to be recorded. Usual days: the form is hidden and validation proceeds as now.",
+        "procedures": "The allocation list is held by an analyst outside the rota and released each morning. Time stamps for alert generation and the validation decision are taken from the system log. Outbreak reports up to 30 days later classify alerts as true or false events. A safety panel reviews every true event dismissed at the first alert within one week.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Time to validation decision",
+            "measure": "Minutes from alert generation to the recorded validation decision, from system time stamps",
+            "timing": "Per alert, January to June 2027",
+            "why": "The efficiency the director asked about, responsive to structured validation (claim c1).",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "balancing",
+            "name": "True events dismissed at the first alert",
+            "measure": "Alerts later linked to a confirmed outbreak within 14 days that were dismissed at first validation, each reviewed by the safety panel",
+            "timing": "Per alert, with 30-day follow-up",
+            "why": "The harm the checklist must not increase (claim c5).",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Escalations per 100 alerts",
+            "measure": "Alerts escalated to local health units",
+            "timing": "Monthly",
+            "why": "Workload passed on to local units.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Checklist completion",
+            "measure": "Proportion of alerts on checklist days with every check recorded",
+            "timing": "Weekly",
+            "why": "Separates a weak checklist from one that was not used.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Contamination",
+            "measure": "Usual-day validations whose free-text notes cite checklist items",
+            "timing": "Monthly sample of 30 alerts",
+            "why": "Measures carry-over between procedures.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 890 alerts over 180 duty days; no new staff; the form change is a configuration in the surveillance system.",
+        "biasMitigation": [
+          "Day-level allocation concealed until each morning",
+          "Outcome from system time stamps, not self-report",
+          "Outbreak classification by staff unaware of the day's allocation",
+          "Contamination measured, not assumed away"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Contamination between procedures",
+            "severity": "watch",
+            "note": "Reduced by day allocation and measured monthly."
+          },
+          {
+            "id": "b2",
+            "label": "Few true events",
+            "severity": "high",
+            "note": "Missed events cannot be compared statistically; case review instead."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 2,
+          "flags": [
+            "Adjustment for syndrome and weekday only"
+          ],
+          "simplestPath": "One allocation unit, one time outcome, one safety review."
+        },
+        "theoreticalFramework": "None beyond the trial design.",
+        "summary": "Day-randomised comparison over six months with time to decision as primary outcome and case review of dismissed true events."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[1].role": "balancing",
+          "protocol.outcomes[1].patientCentered": true,
+          "protocol.biasFlags[1].severity": "high",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Randomised comparison with duty days as clusters; alerts analysed individually with day as a random effect.",
+        "sampleSize": "About 890 alerts over six months, about 445 per arm, with about five alerts a day. Time to decision is right-skewed; on the log scale with a standard deviation near 0.9 and an intracluster correlation near 0.1 (design effect about 1.4, claim c3), the effective sample is about 318 alerts per arm, giving 80 percent power at two-sided alpha 0.05 to detect a ratio of median times of about 0.82, an 18 percent reduction. About 4 percent of alerts are real (claim c4), so each arm will see about 18 true events, too few for a statistical comparison of missed events.",
+        "primaryAnalysis": "Linear mixed model of log time to decision with procedure, syndrome and weekday as fixed effects and duty day as a random intercept; the result is reported as a ratio of geometric mean times with its 95 percent confidence interval.",
+        "secondaryAnalysis": "Escalations per 100 alerts by procedure with a mixed logistic model; dismissed true events listed and reviewed individually; contamination reported monthly.",
+        "missingData": "Alerts without a recorded decision time are counted and reported; the primary analysis excludes them, with a sensitivity analysis assigning them the 95th percentile time of their arm.",
+        "multiplicity": "One primary outcome; secondary outcomes reported with confidence intervals only.",
+        "software": "R with lme4; allocation list and analysis code held by the analyst outside the rota.",
+        "overfittingGuards": [
+          "Two adjustment variables fixed in advance",
+          "No epidemiologist-level comparison",
+          "Safety review criteria fixed before the first study day"
+        ],
+        "summary": "About 445 alerts per arm; 80 percent power for an 18 percent shorter decision time; missed events reviewed case by case."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "18 percent reduction"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "The main risk is to the public: a true event dismissed on a checklist or usual day. The safety panel reviews each dismissed true event within a week and can stop the evaluation.",
+        "consent": "No personal information is used beyond line lists already handled in routine surveillance; the six epidemiologists are informed and agree to the allocation of their duty days; individual consent is not required for program evaluation under the chair's classification.",
+        "data": "Only alert identifiers, time stamps, syndrome, decision and outbreak linkage are extracted; data stay in the agency's surveillance environment.",
+        "equity": "PROGRESS-Plus: people in care homes and in small rural communities generate small-count signals that are easiest to dismiss. The checklist includes an explicit care home and small-area check, and dismissals are reported by setting and by rural or urban area.",
+        "effectiveness": "The evaluation shows whether the checklist saves epidemiologist time without harming detection, which decides whether it becomes standard.",
+        "efficiency": "Uses existing staff and logs; configuration change only.",
+        "costs": "Analyst time for allocation and analysis within existing roles.",
+        "grants": "None needed.",
+        "partnerships": "Local health units (outbreak confirmation), the laboratory network (reports), and a care home sector representative on the safety panel.",
+        "rebPath": "Classified by the research ethics committee chair as program evaluation not requiring review (letter REC-2026-PE-07, 2026-09-10); the director approved the evaluation (memo PHA-DIR-2026-31).",
+        "limitations": "Six epidemiologists in one agency; contamination may persist; missed events too few to compare.",
+        "summary": "Program evaluation with a safety panel, staff agreement, and equity reporting for care homes and rural areas."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "REC-2026-PE-07"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A care home sector representative sits on the safety panel; two local health unit nurses review the escalation rule before January.",
+        "socialListening": "No social media listening.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Dismissing on instinct",
+            "quote": "Composite paraphrase: After twenty false alarms in a row you start clicking dismiss before you have really looked.",
+            "implication": "Keep the artefact checks quick so attention is left for the rest.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "partner",
+            "theme": "Care homes",
+            "quote": "Composite paraphrase: By the time anyone rang us, half the residents on one floor were ill.",
+            "implication": "Make the care home check explicit and review every dismissed true event.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Escalations passed on",
+            "quote": "Composite paraphrase: Every escalation lands on my desk; I would rather have fewer that are real.",
+            "implication": "Report escalations per 100 alerts as a secondary outcome.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "public",
+            "theme": "Small places",
+            "quote": "Composite paraphrase: In a town our size, three sick children at the clinic is already an outbreak.",
+            "implication": "Report dismissals by rural and urban area.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on alert fatigue, care homes, escalation workload and small communities."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "public",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Structured validation of syndromic surveillance alerts: a day-randomised comparison in a regional public health agency",
+        "abstract": "Objective: to test whether a structured validation checklist shortens the time from syndromic surveillance alert to validation decision without increasing dismissed true events. Design: randomised comparison with duty days allocated to the checklist or usual validation, January to June 2027. Primary outcome: time to validation decision. Results and conclusions will be written after the evaluation.",
+        "introduction": "Syndromic surveillance generates many alerts, few of them real, and validation practice varies widely. Accuracy studies of validation procedures depend on panel review, which hindsight biases.",
+        "methods": "Duty days were randomised in blocks within month. Time stamps came from the surveillance log, and outbreak reports classified alerts. A mixed model compared log times; a safety panel reviewed every dismissed true event.",
+        "results": "No data have been collected yet. The report will present alert flow, times by procedure, escalations, contamination and each dismissed true event.",
+        "discussion": "The discussion will weigh time saved against dismissed events and state whether the checklist should become standard.",
+        "limitations": "One agency; six epidemiologists; few true events.",
+        "conclusion": "To be written after the evaluation; it will not claim a change in outbreak detection rates.",
+        "reportingChecklist": "CONSORT extension for cluster randomised trials",
+        "summary": "CONSORT-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "CONSORT extension for cluster randomised trials",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Two undated grey records have no scores and no grade; keep them unrated and do not cite them as support",
+          "Fix the safety panel's stopping rule in writing before the first study day",
+          "Confirm that the surveillance system can hide the checklist form on usual days"
+        ],
+        "improvementNotes": "Routing stayed unresolved between an accuracy study and a randomised comparison until the Design stage, where the randomised comparison was chosen because the reference standard for accuracy is weak. Unknown scores and years were kept unknown.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the unrated records, the stopping rule and the form configuration."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour; at 875fe59 they fail because mergeStage overwrites the audit stage's patch (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Structured validation of syndromic surveillance alerts in a regional public health agency",
+          "family": "rct",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "Structured validation of syndromic surveillance alerts in a regional public health agency"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "recommendedFamily, selectionStatus and actionStatus require S11; the claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "rct",
+            "design.basis": "explicit",
+            "design.decisions[-1].recommendedFamily": "rct",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "scan.items[4].year": {
+              "isNull": true
+            },
+            "scan.items[4].grade": "unrated",
+            "scan.items[6].relevance": {
+              "isNull": true
+            },
+            "scan.items[6].grade": "unrated",
+            "scan.gradeOverall": "moderate",
+            "problem.rawNeed": "I am a surveillance epidemiologist at a regional public health agency serving about 2.4 million people. Our syndromic surveillance system scans emergency department chief complaints and pharmacy sales every morning and generates about 35 statistical alerts a week for respiratory, gastrointestinal and rash syndromes. Each alert is validated by the epidemiologist on duty, who looks at line lists, calls hospitals if needed and decides whether to escalate. We have no written procedure: some of us spend two hours on an alert and others dismiss it in five minutes, and last winter a norovirus cluster in two care homes was dismissed twice before the third alert was escalated.\n\nWe have drafted a structured validation checklist with fixed data checks (duplicate records, reporting artefacts, clustering by age and place, comparison with laboratory reports) and a rule for when to escalate. I am not sure how to evaluate it. One option is to treat it like a test and estimate its sensitivity and specificity against a panel review of past alerts. Another is to randomise incoming alerts, or duty days, to the checklist or to usual validation for six months and compare the time to a validation decision and the events that were missed. My director wants to know whether the checklist makes validation faster without missing real events before it becomes standard procedure.\n\nSix epidemiologists share the duty rota and we cannot hire. Alerts and decisions are logged in our surveillance database with time stamps, and outbreak reports from laboratories and local health units tell us later which alerts were real. The chair of the agency's research ethics committee has confirmed that an evaluation of an internal procedure that uses no personal information counts as program evaluation."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

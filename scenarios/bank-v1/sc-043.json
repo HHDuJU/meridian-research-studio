@@ -1,0 +1,1801 @@
+{
+  "id": "sc-043",
+  "version": 1,
+  "title": "Teaching hospital pre-assessment clinic: perioperative glucose protocol, a late reply refused and a trial replaced by a feasibility study",
+  "field": "anesthesia",
+  "level": 5,
+  "family": "feasibility",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Expert path. The need names a randomised trial, so routing is 'rct' at create. The problem reply returns constraints null: the investigator's typed constraints stay unchanged with issue rejected-change (G11; S5 named because no listed entry defines the code). A fixture search returns seven records. The first scan appraisal is a late reply: the request goes out, the investigator edits the constraints while it is pending (orthopaedic lists cannot schedule patients first), and the reply produced against the earlier study revision must be refused by the studyRevision guard: nothing applied, stage still incomplete, the refusal shown and logged (G6; A3.1 item 1). A second appraisal against the new revision is applied (S13) and reflects the edit (scheduling evidence rated less relevant). The first design decision (a definitive randomised trial) is accepted with its action blocked by the unknown ethics gate. The stats stage then shows that about 340 patients would be needed, nearly five years at this hospital. A second design reply recommends a single-site feasibility study with progression criteria; it flags the completed protocol and stats stages for review (G8), the investigator withdraws the first decision and accepts the second, so the family becomes 'feasibility' only on acceptance (S11), and re-running protocol and stats clears the review flags. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-0jr97rm, 2 ev-0b7ko0z, 4 ev-1uob0w3, 5 ev-0pty7n9, 7 ev-09rj0pl), or of titleYearKey(title, year) when there is no DOI (records 3 ev-1cem7kp, 6 ev-0eizjy8). Catches: a model null erasing investigator text, a stale reply merged after an edit, a proposed recommendation that changes the family before acceptance, two accepted decisions at once, and review flags that never clear.",
+  "inputs": {
+    "need": "I am a consultant anaesthetist at Castlemere University Hospital, a 500-bed teaching hospital, and I lead our pre-assessment clinic. Patients with insulin-treated diabetes who come in for elective surgery are managed according to whatever the ward and theatre teams remember: some have their long-acting insulin reduced the night before, some omit it altogether, and some are started on a variable-rate insulin infusion that then runs for days. Our pre-assessment audit last year found that 31 of 112 insulin-treated patients had a capillary glucose above 12 mmol/L on the day of surgery, and 9 had a value below 4 mmol/L in the 24 hours after surgery.\n\nWe have written a perioperative glucose management protocol with four parts: a personal dose-adjustment table handed out at pre-assessment, a diabetes specialist nurse phone call two days before surgery, first-on-the-list scheduling where possible, and a subcutaneous correction scale instead of routine infusions for shorter operations. I would like to run a randomised trial comparing the protocol with usual care, with glucose out of range on the day of surgery as the main outcome, but I am not sure how many patients we would need or whether our lists can cope with first-on-the-list scheduling. We see about 150 insulin-treated patients a year for elective general, orthopaedic and urological surgery.\n\nThe diabetes team supports the idea, but their specialist nurse has only a few hours a week. We have no continuous glucose monitors for surgical patients, so everything depends on finger-prick measurements. I would also like to hear from patients, because several have told us that conflicting instructions from different staff are the worst part of the experience, and I want the study to measure that too.",
+    "constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000.",
+    "localFacts": [
+      "The 2025 pre-assessment audit found 31 of 112 insulin-treated elective surgical patients with capillary glucose above 12 mmol/L on the day of surgery and 9 with a value below 4 mmol/L within 24 hours after surgery.",
+      "About 150 insulin-treated patients have elective general, orthopaedic or urological surgery at the hospital each year.",
+      "A departmental research grant of 12,000 was awarded on 2026-08-30 (award DRG-2026-09).",
+      "The hospital research ethics committee has not reviewed any version of this study."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a consultant anaesthetist at Castlemere University Hospital, a 500-bed teaching hospital, and I lead our pre-assessment clinic. Patients with insulin-treated diabetes who come in for elective surgery are managed according to whatever the ward and theatre teams remember: some have their long-acting insulin reduced the night before, some omit it altogether, and some are started on a variable-rate insulin infusion that then runs for days. Our pre-assessment audit last year found that 31 of 112 insulin-treated patients had a capillary glucose above 12 mmol/L on the day of surgery, and 9 had a value below 4 mmol/L in the 24 hours after surgery.\n\nWe have written a perioperative glucose management protocol with four parts: a personal dose-adjustment table handed out at pre-assessment, a diabetes specialist nurse phone call two days before surgery, first-on-the-list scheduling where possible, and a subcutaneous correction scale instead of routine infusions for shorter operations. I would like to run a randomised trial comparing the protocol with usual care, with glucose out of range on the day of surgery as the main outcome, but I am not sure how many patients we would need or whether our lists can cope with first-on-the-list scheduling. We see about 150 insulin-treated patients a year for elective general, orthopaedic and urological surgery.\n\nThe diabetes team supports the idea, but their specialist nurse has only a few hours a week. We have no continuous glucose monitors for surgical patients, so everything depends on finger-prick measurements. I would also like to hear from patients, because several have told us that conflicting instructions from different staff are the worst part of the experience, and I want the study to measure that too.",
+          "problem.constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000.",
+          "family": "rct",
+          "completedStages": [],
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a consultant anaesthetist at Castlemere University Hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Perioperative glucose management protocol for insulin-treated patients having elective surgery",
+        "subtitle": "Evaluation design to be settled against recruitment and theatre scheduling",
+        "family": "rct",
+        "statement": "Insulin-treated patients having elective surgery at a teaching hospital receive inconsistent perioperative glucose management: variable insulin advice, infusions that run for days, and conflicting instructions. A local review found out-of-range capillary glucose on the day of surgery in 31 of 112 patients and postoperative values below 4 mmol/L in 9. A four-part protocol has been written; its effect on day-of-surgery glucose and its deliverability across general, orthopaedic and urological surgery are unknown.",
+        "whoAffected": "About 150 insulin-treated adults a year having elective surgery, the pre-assessment and diabetes teams, theatre and ward staff.",
+        "whatHurts": "Hyperglycaemia is associated with infection and hypoglycaemia while fasting is dangerous; conflicting instructions lead patients to change insulin on their own.",
+        "currentPractice": "No written protocol; insulin advice varies by who sees the patient; infusions are started by default.",
+        "whyNow": "A protocol is ready, a small departmental grant has been awarded, and the diabetes team is willing.",
+        "constraints": null,
+        "patientCenteredGoal": "Patients receive one clear plan for their insulin, stay in a safe glucose range, and are not left fasting and uncertain.",
+        "summary": "Problem framed around a four-part perioperative glucose protocol whose effect and deliverability are unknown."
+      },
+      "note": "G11: constraints null would erase the investigator's text; the stored constraints stay as typed and the attempt is recorded as rejected-change at 'constraints', shown on screen. At 875fe59 the null clears the field to '' with issue 'cleared'. rejected-change is not an 875fe59 IssueCode; S5 is named (see notes).",
+      "expect": {
+        "store": {
+          "title": "Perioperative glucose management protocol for insulin-treated patients having elective surgery",
+          "family": "rct",
+          "problem.constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000.",
+          "problem.statement": {
+            "includes": "31 of 112 patients"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            {"anyOf": ["kept", "refused", "not applied"]},
+            "Capillary glucose meters only"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "perioperative glucose management protocol insulin-treated diabetes elective surgery pre-assessment dose adjustment hypoglycaemia hyperglycaemia",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "A pre-assessment insulin dose-adjustment plan and day-of-surgery glucose: a before-after study",
+            "authors": "Ferreira-Mensah D, Holloway-Iwu K, Lindgren-Obasi T",
+            "year": 2022,
+            "venue": "Perioperative Medicine Reports",
+            "doi": "10.5555/pmr.2022.0187",
+            "providerType": "journal-article",
+            "abstract": "We introduced a written insulin dose-adjustment plan, handed to patients at pre-assessment, for adults with insulin-treated diabetes having elective surgery, and compared 214 patients after the change with 198 before. Out-of-range glucose on the day of surgery, defined as a capillary value above 12 or below 4 mmol/L, fell from 34 percent to 21 percent. Use of variable-rate insulin infusions fell from 46 to 18 percent of patients. Hypoglycaemia in the 24 hours after surgery was similar (6 against 5 percent). The comparison was uncontrolled, and staff awareness of the evaluation may have changed practice beyond the plan itself."
+          },
+          {
+            "title": "Specialist nurse telephone contact before elective surgery for people with insulin-treated diabetes: a pilot randomised trial",
+            "authors": "Adeyemi-Castell R, Nakashima-Doyle F",
+            "year": 2020,
+            "venue": "Journal of Perioperative Diabetes Care",
+            "doi": "10.5555/jpdc.2020.0034",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomised 60 adults with insulin-treated diabetes to a diabetes specialist nurse phone call two days before elective surgery or to usual care. Recruitment was 48 percent of eligible patients, meeting the progression criterion of 40 percent, and 94 percent of intervention patients received the call. Out-of-range glucose on the day of surgery occurred in 30 percent of intervention and 43 percent of usual-care patients, an imprecise difference. Outcome data were complete for 79 percent, below the 90 percent criterion, mainly because capillary values were not documented on the ward. The authors did not proceed to a definitive trial."
+          },
+          {
+            "title": "First-on-the-list scheduling for patients with diabetes: feasibility across surgical specialties",
+            "authors": "Oyelaran-Whitby S, Kaur-Brandt M",
+            "year": 2019,
+            "venue": "Theatre Operations Research",
+            "providerType": "journal-article",
+            "abstract": "We measured how often adults with diabetes could be scheduled first on the morning operating list in three hospitals over one year. First-on-the-list scheduling was achieved for 71 percent of general surgery patients, 38 percent of orthopaedic patients and 64 percent of urology patients. Orthopaedic lists were often reordered for implant availability and trauma. When achieved, fasting time fell by a mean of 3.1 hours. Surgeons and theatre managers supported the principle but reported that it competed with other scheduling priorities such as children and patients with latex allergy."
+          },
+          {
+            "title": "Subcutaneous correction scales versus variable-rate insulin infusion for short elective operations: a cohort study",
+            "authors": "Brennan-Achterberg L, Moyo-Hartmann J, Silva-Okafor N",
+            "year": 2023,
+            "venue": "Perioperative Medicine Reports",
+            "doi": "10.5555/pmr.2023.0042",
+            "providerType": "cohort",
+            "abstract": "In 1,020 elective operations lasting under three hours in adults with insulin-treated diabetes, we compared patients managed with a subcutaneous insulin correction scale with those started on a variable-rate intravenous insulin infusion. Hypoglycaemia below 4 mmol/L within 24 hours occurred in 4 percent with the correction scale and 9 percent with the infusion. Hyperglycaemia above 12 mmol/L was similar in both groups. Patients started on an infusion were older and had longer operations, so confounding by indication is likely. Infusions continued for more than 24 hours in 31 percent of infusion patients."
+          },
+          {
+            "title": "Perioperative hyperglycaemia and surgical site infection in patients with diabetes: a systematic review",
+            "authors": "Tanaka-Ruiz E, Obi-Lindahl C, Graves-Mbatha P, Holm-Adebayo R",
+            "year": 2021,
+            "venue": "Surgical Infection Reviews",
+            "doi": "10.5555/sir.2021.0290",
+            "providerType": "review",
+            "abstract": "We searched four databases to 2020 for studies of perioperative glucose and surgical site infection in adults with diabetes. Nineteen studies met the criteria, most of them observational. Glucose above 10 to 12 mmol/L around the time of surgery was associated with higher odds of surgical site infection (pooled odds ratio 1.8, 95 percent CI 1.4 to 2.3), with moderate heterogeneity. Thresholds and timing of glucose measurement varied between studies. Two small trials of tighter perioperative control did not show a clear reduction in infection, and one reported more hypoglycaemia."
+          },
+          {
+            "title": "Patients' experience of conflicting diabetes instructions before surgery: a qualitative study",
+            "authors": "Lindqvist-Oduya M, Fairweather-Nkemelu A",
+            "year": 2024,
+            "venue": "Patient Experience in Surgery",
+            "providerType": "qualitative",
+            "abstract": "We spoke with 22 adults with insulin-treated diabetes after elective surgery about the instructions they had received. Most described receiving different advice about their insulin from the pre-assessment clinic, the surgical team and the ward. Several reduced or stopped insulin on their own because they feared low glucose while fasting. Participants valued a single written plan that all staff followed and a named person to call. Patients who had surgery late in the day described the longest periods of uncertainty. Participants were recruited from one hospital."
+          },
+          {
+            "title": "Capillary glucose meter accuracy in the perioperative period",
+            "authors": "Kowalczyk-Adeyemi B, Haldane-Tan S",
+            "year": 2016,
+            "venue": "Clinical Laboratory Practice",
+            "doi": "10.5555/clp.2016.0118",
+            "providerType": "journal-article",
+            "abstract": "We compared 410 paired capillary meter and laboratory glucose values in surgical patients before, during and after operations. Above 5.5 mmol/L, 95 percent of meter values were within 15 percent of the laboratory value. Below 4 mmol/L, agreement was poorer and meters tended to read high, which could delay recognition of hypoglycaemia. Low haematocrit after blood loss increased the meter bias. The authors recommend laboratory confirmation of low meter values and caution when meters are the only measure of hypoglycaemia in perioperative studies."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0jr97rm",
+            "ev-0b7ko0z",
+            "ev-1cem7kp",
+            "ev-1uob0w3",
+            "ev-0pty7n9",
+            "ev-0eizjy8",
+            "ev-09rj0pl"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].kind": "rct",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "First-on-the-list scheduling for patients with diabetes: feasibility across surgical specialties"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0jr97rm",
+            "relevance": 92,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A pre-assessment dose-adjustment plan was followed by fewer out-of-range day-of-surgery values (34 to 21 percent) and fewer infusions (46 to 18 percent).",
+            "limitations": "Uncontrolled before-after.",
+            "contextTags": [
+              "dose-adjustment plan",
+              "before-after"
+            ],
+            "notes": "Closest to the protocol's first component."
+          },
+          {
+            "id": "ev-0b7ko0z",
+            "relevance": 88,
+            "methodQuality": 66,
+            "kind": "rct",
+            "grade": "low",
+            "keyFindings": "A pilot trial of a pre-surgery nurse call recruited 48 percent of eligible patients but had only 79 percent outcome completeness.",
+            "limitations": "60 patients; imprecise.",
+            "contextTags": [
+              "pilot trial",
+              "nurse call"
+            ],
+            "notes": "Informs trial feasibility."
+          },
+          {
+            "id": "ev-1cem7kp",
+            "relevance": 78,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "First-on-the-list scheduling was achievable for most general surgery and urology patients and shortened fasting by about three hours.",
+            "limitations": "Three hospitals.",
+            "contextTags": [
+              "scheduling"
+            ],
+            "notes": "Supports the scheduling component across specialties."
+          },
+          {
+            "id": "ev-1uob0w3",
+            "relevance": 80,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Correction scales were associated with less hypoglycaemia than infusions for short operations (4 against 9 percent).",
+            "limitations": "Confounding by indication.",
+            "contextTags": [
+              "correction scale"
+            ],
+            "notes": "Supports the fourth component."
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "A pre-assessment dose-adjustment plan was followed by fewer patients with out-of-range glucose on the day of surgery.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0jr97rm"
+            ],
+            "location": "Abstract",
+            "passage": "fell from 34 percent to 21 percent",
+            "interpretation": "Planning value for the primary outcome.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "First-on-the-list scheduling was achieved for most general surgery and urology patients.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1cem7kp"
+            ],
+            "location": "Abstract",
+            "passage": "First-on-the-list scheduling was achieved for 71 percent of general surgery patients",
+            "interpretation": "The scheduling component is broadly feasible.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Four retrieved records appraised at abstract level: a dose-adjustment plan, a nurse call pilot, scheduling feasibility and correction scales each have supportive observational or pilot evidence.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational and pilot evidence only.",
+        "summary": "Retrieved records appraised; two claims recorded; certainty low."
+      },
+      "note": "Late reply (G6). The request is sent against the study revision of this moment; the runner holds this recorded reply (for example by intercepting the model request) until the next step, the investigator's constraints edit, has been saved, and only then releases it (the release is the wait step). The checks here describe the study while the request is pending: nothing applied yet. The refusal is checked after the wait. The guard is store.ts mergeStageIfRevision in the 875fe59 library; its use on the screen path is L1.2 (A3.1 item 1).",
+      "expect": {
+        "store": {
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": "",
+          "scan.items[0].grade": "unrated",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "set-field",
+      "path": "problem.constraints",
+      "value": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
+      "note": "While the scan reply is pending, the investigator adds a constraint on the Problem stage. G11: an investigator edit changes the investigator-owned field. The study revision changes; nothing downstream is complete yet, so nothing is flagged.",
+      "expect": {
+        "store": {
+          "problem.constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
+          "needsReview": [],
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "screen": {
+          "includes": [
+            "Orthopaedic lists cannot move insulin-treated patients"
+          ]
+        }
+      }
+    },
+    {
+      "do": "wait",
+      "ms": 3000,
+      "note": "The held reply arrives after the edit. It was produced against the earlier revision, so the guard refuses it: no annotation, claim or certainty is applied, the stage stays incomplete, the investigator's edit is intact, the refusal is shown and logged (G6; A3.1 item 1, intervening_edit_refuses_reply). The log text follows store.ts ('Stale model response for scan refused ...').",
+      "expect": {
+        "error": {
+          "shown": true,
+          "includes": "changed since the request"
+        },
+        "store": {
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": "",
+          "scan.items[2].relevance": {
+            "isNull": true
+          },
+          "scan.items[0].grade": "unrated",
+          "problem.constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
+          "audit.entries[0].summary": {
+            "includes": "refused"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0jr97rm",
+            "relevance": 94,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A written dose-adjustment plan given at pre-assessment was followed by fewer out-of-range day-of-surgery values (34 to 21 percent) and fewer infusions (46 to 18 percent), with similar postoperative hypoglycaemia.",
+            "limitations": "Uncontrolled before-after; evaluation awareness.",
+            "contextTags": [
+              "dose-adjustment plan",
+              "before-after"
+            ],
+            "notes": "Planning value for the primary outcome."
+          },
+          {
+            "id": "ev-0b7ko0z",
+            "relevance": 92,
+            "methodQuality": 66,
+            "kind": "rct",
+            "grade": "low",
+            "keyFindings": "A pilot trial of a pre-surgery nurse call met its recruitment criterion (48 percent) but not outcome completeness (79 against 90 percent), because ward capillary values were not documented.",
+            "limitations": "60 patients; imprecise effect.",
+            "contextTags": [
+              "pilot trial",
+              "progression criteria"
+            ],
+            "notes": "Shows what threatens a local trial."
+          },
+          {
+            "id": "ev-1cem7kp",
+            "relevance": 45,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "First-on-the-list scheduling was achieved for 71 percent of general surgery, 38 percent of orthopaedic and 64 percent of urology patients.",
+            "limitations": "Three hospitals; one year.",
+            "contextTags": [
+              "scheduling",
+              "orthopaedics"
+            ],
+            "notes": "Less relevant now that orthopaedic lists cannot move patients: scheduling applies to general surgery and urology only."
+          },
+          {
+            "id": "ev-1uob0w3",
+            "relevance": 82,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Correction scales were associated with less hypoglycaemia than infusions for operations under three hours (4 against 9 percent).",
+            "limitations": "Confounding by indication.",
+            "contextTags": [
+              "correction scale",
+              "infusion"
+            ],
+            "notes": "Supports the fourth component."
+          },
+          {
+            "id": "ev-0pty7n9",
+            "relevance": 60,
+            "methodQuality": 64,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Perioperative glucose above 10 to 12 mmol/L was associated with surgical site infection (odds ratio 1.8); small trials of tighter control did not reduce infection.",
+            "limitations": "Mostly observational; varied thresholds.",
+            "contextTags": [
+              "infection",
+              "systematic review"
+            ],
+            "notes": "Supports the outcome threshold, not the protocol."
+          },
+          {
+            "id": "ev-0eizjy8",
+            "relevance": 76,
+            "methodQuality": 55,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Patients described conflicting insulin advice, changed insulin on their own for fear of hypoglycaemia, and valued one written plan and a named contact.",
+            "limitations": "22 patients, one hospital.",
+            "contextTags": [
+              "patient experience"
+            ],
+            "notes": "Supports a patient-reported outcome on instructions."
+          },
+          {
+            "id": "ev-09rj0pl",
+            "relevance": 70,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Meters were accurate above 5.5 mmol/L but read high below 4 mmol/L, especially with low haematocrit.",
+            "limitations": "One laboratory comparison.",
+            "contextTags": [
+              "measurement",
+              "hypoglycaemia"
+            ],
+            "notes": "Low meter values need laboratory confirmation."
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "A written insulin dose-adjustment plan at pre-assessment was followed by fewer patients with out-of-range glucose on the day of surgery.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0jr97rm"
+            ],
+            "location": "Abstract",
+            "passage": "Out-of-range glucose on the day of surgery, defined as a capillary value above 12 or below 4 mmol/L, fell from 34 percent to 21 percent.",
+            "interpretation": "Planning values for the outcome; uncontrolled.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "A pilot trial of pre-surgery nurse calls recruited 48 percent of eligible patients but documented outcomes for only 79 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0b7ko0z"
+            ],
+            "location": "Abstract",
+            "passage": "Outcome data were complete for 79 percent, below the 90 percent criterion, mainly because capillary values were not documented on the ward.",
+            "interpretation": "Recruitment and outcome completeness are the risks for any local trial.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "First-on-the-list scheduling was achieved for only 38 percent of orthopaedic patients with diabetes.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1cem7kp"
+            ],
+            "location": "Abstract",
+            "passage": "First-on-the-list scheduling was achieved for 71 percent of general surgery patients, 38 percent of orthopaedic patients and 64 percent of urology patients.",
+            "interpretation": "Consistent with the investigator's constraint; scheduling cannot be a universal component.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c4",
+            "text": "For operations under three hours, subcutaneous correction scales were associated with less hypoglycaemia than variable-rate infusions.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1uob0w3"
+            ],
+            "location": "Abstract",
+            "passage": "Hypoglycaemia below 4 mmol/L within 24 hours occurred in 4 percent with the correction scale and 9 percent with the infusion.",
+            "interpretation": "Supports replacing routine infusions for short operations.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Patients valued a single written plan followed by all staff and a named person to call.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0eizjy8"
+            ],
+            "location": "Abstract",
+            "passage": "Participants valued a single written plan that all staff followed and a named person to call.",
+            "interpretation": "A patient-reported measure of consistent instructions belongs in the evaluation.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level against the revised constraints. A pre-assessment dose plan was followed by fewer out-of-range values (34 to 21 percent) and correction scales by less hypoglycaemia than infusions, both in observational studies. A pilot trial of a nurse call recruited adequately but failed on outcome completeness because ward values were not documented. First-on-the-list scheduling is unreliable in orthopaedics, which matches the new constraint. Patients want one plan and one contact. Low meter readings need laboratory confirmation.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational before-after and cohort evidence, one small pilot trial and qualitative data; consistent direction, serious risk of bias and imprecision.",
+        "summary": "Seven retrieved records appraised against the revised constraints; five claims recorded; certainty low."
+      },
+      "note": "Fresh request against the revision that includes the edit; applied (S13). The scheduling record's relevance (45) shows the reply reflects the new constraint, unlike the refused reply (78). Certainty is assigned over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items[2].relevance": 45,
+          "scan.items[1].grade": "low",
+          "scan.items[6].grade": "moderate",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[2].sourceIds": [
+            "ev-1cem7kp"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "500-bed teaching hospital",
+          "about 150 insulin-treated elective patients a year",
+          "nurse 4 hours a week",
+          "orthopaedic lists cannot reorder"
+        ],
+        "reading": "The protocol's four parts act at different points: the dose plan and the nurse call before admission, scheduling on the day, and the correction scale after surgery. Evidence supports each part weakly and separately. The practical risks for any evaluation are recruitment, documentation of ward capillary values, and scheduling that works in general surgery and urology but not orthopaedics.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Pre-assessment dose-adjustment plan",
+            "kind": "framework",
+            "detail": "Claim c1."
+          },
+          {
+            "id": "n2",
+            "label": "Specialist nurse call before surgery",
+            "kind": "framework",
+            "detail": "Nurse time 4 hours a week."
+          },
+          {
+            "id": "n3",
+            "label": "First-on-the-list scheduling",
+            "kind": "context",
+            "detail": "Not available for orthopaedics (claim c3)."
+          },
+          {
+            "id": "n4",
+            "label": "Subcutaneous correction scale",
+            "kind": "framework",
+            "detail": "Claim c4."
+          },
+          {
+            "id": "n5",
+            "label": "Glucose out of range on the day of surgery",
+            "kind": "outcome",
+            "detail": "Above 12 or below 4 mmol/L."
+          },
+          {
+            "id": "n6",
+            "label": "Documentation of ward capillary values",
+            "kind": "gap",
+            "detail": "Failed in the pilot trial (claim c2)."
+          },
+          {
+            "id": "n7",
+            "label": "Patients receiving one consistent plan",
+            "kind": "stakeholder",
+            "detail": "Claim c5."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n5",
+            "relation": "expected to reduce"
+          },
+          {
+            "from": "n2",
+            "to": "n1",
+            "relation": "reinforces"
+          },
+          {
+            "from": "n3",
+            "to": "n5",
+            "relation": "shortens fasting before"
+          },
+          {
+            "from": "n4",
+            "to": "n5",
+            "relation": "reduces low values in"
+          },
+          {
+            "from": "n6",
+            "to": "n5",
+            "relation": "limits measurement of"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "benefit from"
+          }
+        ],
+        "summary": "Map shows four protocol parts, one outcome and the documentation gap that threatens measurement."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "map.nodes[5].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No controlled evidence for the whole protocol",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Each part has weak separate support; the combination is untested.",
+            "opportunity": "Test deliverability first, then effect."
+          },
+          {
+            "id": "g2",
+            "title": "Ward capillary values often undocumented",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "A pilot trial failed its completeness criterion for this reason (claim c2).",
+            "opportunity": "Build a documentation check into the protocol and measure completeness."
+          },
+          {
+            "id": "g3",
+            "title": "Scheduling unavailable in orthopaedics",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "The protocol must work without it for orthopaedic patients (claim c3 and the investigator's constraint).",
+            "opportunity": "Make scheduling optional and record it."
+          },
+          {
+            "id": "g4",
+            "title": "Low meter values may be missed",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Meters read high below 4 mmol/L.",
+            "opportunity": "Confirm low values in the laboratory."
+          },
+          {
+            "id": "g5",
+            "title": "Patient experience of instructions not measured",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Conflicting instructions are what patients complain about most (claim c5).",
+            "opportunity": "Add a short patient-reported measure."
+          }
+        ],
+        "errorsFound": [
+          "Assuming a definitive trial is possible at one hospital before checking recruitment and outcome completeness."
+        ],
+        "reevaluation": "The main uncertainty is whether the protocol can be delivered and measured, not yet whether it works.",
+        "summary": "Five gaps: untested combination, documentation, orthopaedic scheduling, meter accuracy, and patient experience."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].severity": "high",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Ward capillary values often undocumented"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Compared with usual care, the protocol will reduce the proportion of patients with capillary glucose above 12 or below 4 mmol/L on the day of surgery from about 34 to 20 percent.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 85,
+            "feasibility": 50,
+            "parsimony": 75,
+            "rationale": "The retrieved before-after study suggests a reduction of this size; the local audit gives a similar baseline.",
+            "risks": "Recruitment and outcome completeness at one hospital."
+          },
+          {
+            "id": "h2",
+            "statement": "The protocol can be delivered to at least 80 percent of patients, and outcome data can be complete for at least 90 percent, across general, orthopaedic and urological surgery.",
+            "novelty": 45,
+            "need": 80,
+            "practiceChange": 70,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "The pilot trial failed on completeness; deliverability is the first uncertainty.",
+            "risks": "Scheduling is optional in orthopaedics."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Two hypotheses: effect (h1, selected) and deliverability (h2)."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In adults with insulin-treated diabetes having elective surgery, does the perioperative glucose protocol, compared with usual care, reduce the proportion with capillary glucose above 12 or below 4 mmol/L on the day of surgery?",
+            "framework": "PICO",
+            "population": "Adults with insulin-treated diabetes having elective general, orthopaedic or urological surgery",
+            "intervention": "Four-part perioperative glucose protocol",
+            "comparator": "Usual care",
+            "outcome": "Glucose out of range on the day of surgery",
+            "time": "Day of surgery and 24 hours after",
+            "setting": "One teaching hospital"
+          },
+          {
+            "id": "q2",
+            "text": "Can the protocol be delivered and can outcomes be measured completely across the three specialties, and what proportion of eligible patients agree to take part?",
+            "framework": "FINER",
+            "population": "Eligible insulin-treated elective surgical patients",
+            "intervention": "Protocol delivery",
+            "outcome": "Recruitment, delivery and outcome completeness rates",
+            "time": "Nine months",
+            "setting": "One teaching hospital"
+          }
+        ],
+        "finer": "The effect question needs more patients than one hospital sees quickly; the deliverability question is feasible now and would decide whether an effect study is worth running.",
+        "summary": "Two questions: effect (PICO) and deliverability (FINER)."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[1].framework": "FINER",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "rct",
+        "rationale": "The investigator asks whether the protocol works, which a randomised comparison with usual care answers most directly. The before-after evidence (c1) suggests a clinically useful reduction, and correction scales (c4) support one component.",
+        "alternatives": [
+          "Before-after study of the protocol (refused: cannot separate the protocol from secular change)",
+          "Feasibility study before any trial (considered; the pilot trial retrieved suggests recruitment is possible)"
+        ],
+        "guidelines": [
+          "CONSORT 2010",
+          "SPIRIT 2013"
+        ],
+        "whyNotMoreComplex": "A multicentre trial is not possible without first running the protocol at one site.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a two-arm randomised trial of the perioperative glucose protocol against usual care, with glucose above 12 or below 4 mmol/L on the day of surgery as the primary outcome.",
+          "question": "How should the hospital evaluate the perioperative glucose protocol?",
+          "claimIds": [
+            "c1",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A dose-adjustment plan has been followed by fewer out-of-range values.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Recruitment and outcome completeness at one hospital are too low for a definitive trial.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c2"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics committee approval",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "Funding for the study",
+              "status": "met",
+              "evidence": "Departmental grant DRG-2026-09 of 12,000 awarded on 2026-08-30, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Before-after study of the protocol"
+          ],
+          "note": "Rests on claims c1 and c4; the defeating condition on recruitment is not yet assessed."
+        },
+        "summary": "Randomised trial recommended; ethics approval unknown."
+      },
+      "note": "First decision. selectionStatus and actionStatus require S11; status text D5; claims S13. The unknown ethics gate keeps the action blocked.",
+      "expect": {
+        "store": {
+          "design.recommended": "rct",
+          "family": "rct",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[0].kind": "pursue",
+          "design.decisions[0].status": "proposed",
+          "design.decisions[0].selectionStatus": "proposed",
+          "design.decisions[0].actionStatus": "blocked",
+          "design.decisions[0].claimIds": [
+            "c1",
+            "c4"
+          ],
+          "design.decisions[0].recommendedFamily": "rct",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection accepted; the unknown ethics gate keeps the action blocked (G7; A2 item 9). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[0].status": "accepted",
+          "design.decisions[0].selectionStatus": "accepted",
+          "design.decisions[0].actionStatus": "blocked",
+          "family": "rct",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Two-arm parallel randomised trial of the perioperative glucose protocol against usual care in adults with insulin-treated diabetes having elective surgery at one teaching hospital.",
+        "population": "Adults with insulin-treated diabetes listed for elective general, orthopaedic or urological surgery with an expected stay of at least one night.",
+        "exposure": "Protocol arm: dose-adjustment table at pre-assessment, nurse call two days before surgery, first-on-the-list scheduling where the specialty allows, subcutaneous correction scale for operations under three hours. Usual care arm: current variable practice.",
+        "procedures": "Randomisation 1:1 at pre-assessment by a central web system, stratified by specialty. Capillary glucose recorded at admission, before induction, in recovery and four-hourly for 24 hours, with laboratory confirmation of values below 4 mmol/L.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Glucose out of range on the day of surgery",
+            "measure": "Any capillary value above 12 or below 4 mmol/L from admission to midnight",
+            "timing": "Day of surgery",
+            "why": "Captures both dangers the protocol targets.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Hypoglycaemia within 24 hours",
+            "measure": "Laboratory-confirmed value below 4 mmol/L",
+            "timing": "24 hours after surgery",
+            "why": "Main safety concern.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Theatre list disruption",
+            "measure": "Operations moved or cancelled because of scheduling changes",
+            "timing": "Per list",
+            "why": "Scheduling must not disrupt other patients.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "At about 150 eligible patients a year and 48 percent recruitment, about 72 patients a year would be randomised.",
+        "biasMitigation": [
+          "Central randomisation",
+          "Laboratory confirmation of low values",
+          "Outcome extraction blind to arm"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Contamination between arms",
+            "severity": "high",
+            "note": "The same staff care for both arms."
+          },
+          {
+            "id": "b2",
+            "label": "Incomplete ward glucose documentation",
+            "severity": "high",
+            "note": "Failed in a comparable pilot trial."
+          }
+        ],
+        "parsimony": {
+          "score": 70,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 1,
+          "flags": [
+            "Contamination risk at one site"
+          ],
+          "simplestPath": "Two arms, one primary outcome."
+        },
+        "theoreticalFramework": "None.",
+        "summary": "Two-arm trial protocol with one primary outcome."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.biasFlags": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Two-arm parallel trial; comparison of proportions with glucose out of range on the day of surgery.",
+        "sampleSize": "To detect a reduction from 34 to 20 percent with 80 percent power at a two-sided 5 percent level, about 154 patients per arm are needed ((1.96 + 0.84) squared times (0.34 x 0.66 + 0.20 x 0.80) divided by 0.14 squared), 308 in total, or about 342 allowing for 10 percent loss. At about 150 eligible patients a year and the 48 percent recruitment seen in a comparable pilot, the hospital would randomise about 72 a year, so recruitment would take nearly five years. A definitive single-site trial is not feasible; a feasibility study or a multicentre trial would be needed.",
+        "primaryAnalysis": "Risk difference with 95 percent confidence interval, adjusted for specialty.",
+        "secondaryAnalysis": "Laboratory-confirmed hypoglycaemia; list disruption.",
+        "missingData": "Multiple imputation if outcome completeness falls below 90 percent; completeness itself reported.",
+        "multiplicity": "One primary outcome.",
+        "software": "R.",
+        "overfittingGuards": [
+          "Stratification by specialty only",
+          "No interim efficacy analysis"
+        ],
+        "summary": "About 342 patients needed; nearly five years at this hospital; a definitive single-site trial is not feasible."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "nearly five years"
+          },
+          "stats.overfittingGuards": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 2,
+      "response": {
+        "recommended": "feasibility",
+        "rationale": "The sample size calculation shows that a definitive trial at this hospital would take nearly five years, and the retrieved pilot trial failed on outcome completeness because ward values were not documented (c2). First-on-the-list scheduling cannot be relied on in orthopaedics (c3). A single-site feasibility study of the protocol, with pre-specified progression criteria, answers the questions that decide whether a multicentre trial is worth running, and the dose plan evidence (c1) justifies testing the protocol at all.",
+        "alternatives": [
+          "Definitive two-arm randomised trial at this hospital (refused: about 342 participants would take nearly five years)",
+          "Multicentre definitive trial now (refused: no data yet on delivery, recruitment or outcome completeness)",
+          "Randomised pilot trial (refused for now: the key uncertainties are delivery and documentation, which a single-arm study can measure with fewer patients)"
+        ],
+        "guidelines": [
+          "CONSORT extension for pilot and feasibility trials (applicable items)"
+        ],
+        "whyNotMoreComplex": "Randomising within a feasibility study would halve the patients receiving the protocol without answering the delivery questions any better.",
+        "decision": {
+          "kind": "narrow",
+          "statement": "Replace the definitive trial with a nine-month single-site feasibility study of the protocol, with progression criteria for recruitment (at least 50 percent of eligible patients), protocol delivery (dose table and nurse call for at least 80 percent) and outcome completeness (at least 90 percent), before any randomised trial.",
+          "question": "How should the hospital evaluate the perioperative glucose protocol, given the recruitment it can achieve?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Outcome completeness and recruitment, not effect, are the main uncertainties for a trial at this hospital.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Scheduling cannot be delivered for orthopaedic patients, so the protocol must be shown to work without it.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics committee approval",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "Funding for the study",
+              "status": "met",
+              "evidence": "Departmental grant DRG-2026-09 of 12,000 awarded on 2026-08-30, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Multicentre definitive trial after the feasibility study"
+          ],
+          "note": "Rests on claims c1 to c3 and on the stats stage's sample size; replaces the accepted trial decision."
+        },
+        "summary": "Feasibility study recommended in place of the trial; the second decision is proposed."
+      },
+      "note": "A consequential design change after protocol and stats were completed flags both for review (G8; mergeStage at 875fe59). The accepted first decision stays accepted: a new reply supersedes only proposed decisions (apply-ai.ts), so the investigator withdraws it explicitly in the next step. The recommended family is stored as proposed; study.family stays 'rct' until acceptance (S11; at 875fe59 it changes immediately). recommendedFamily and selectionStatus require S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "feasibility",
+          "family": "rct",
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].status": "accepted",
+          "design.decisions[0].selectionStatus": "accepted",
+          "design.decisions[1].kind": "narrow",
+          "design.decisions[1].status": "proposed",
+          "design.decisions[1].selectionStatus": "proposed",
+          "design.decisions[1].recommendedFamily": "feasibility",
+          "design.decisions[1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "needsReview": [
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "design": "complete",
+          "protocol": "needs-review",
+          "stats": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "accepted",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "withdraw-decision",
+      "which": 0,
+      "note": "The investigator withdraws the accepted trial decision; it is kept in the history as withdrawn, never erased. selectionStatus requires S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].status": "withdrawn",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "design.decisions[1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "withdrawn",
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The second decision is supported (c1 to c3 on retrieved records) and accepted; the unknown ethics gate keeps the action blocked (G7). Only now does the family become 'feasibility', with basis 'explicit' (S11). One decision is accepted and one withdrawn.",
+      "expect": {
+        "store": {
+          "design.decisions[1].status": "accepted",
+          "design.decisions[1].selectionStatus": "accepted",
+          "design.decisions[1].actionStatus": "blocked",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "family": "feasibility",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 2,
+      "response": {
+        "overview": "Single-site, single-arm feasibility study of the four-part perioperative glucose protocol over nine months, with pre-specified progression criteria for a later randomised trial.",
+        "population": "Adults with insulin-treated diabetes listed for elective general, orthopaedic or urological surgery with an expected stay of at least one night, from March to November 2027.",
+        "exposure": "The protocol: dose-adjustment table at pre-assessment, nurse call two days before surgery, first-on-the-list scheduling for general surgery and urology only, subcutaneous correction scale for operations under three hours.",
+        "procedures": "Eligible patients are identified at pre-assessment and invited. The nurse call is logged. Capillary glucose is recorded at admission, before induction, in recovery and four-hourly for 24 hours on a study chart, with laboratory confirmation of values below 4 mmol/L. A five-item patient questionnaire on consistency of instructions is completed before discharge.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Recruitment rate",
+            "measure": "Proportion of eligible patients who consent; progression criterion at least 50 percent",
+            "timing": "Over nine months",
+            "why": "Decides whether a trial can recruit.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "process",
+            "name": "Protocol delivery",
+            "measure": "Proportion receiving both the dose table and the nurse call; criterion at least 80 percent",
+            "timing": "Before surgery",
+            "why": "Decides whether the protocol can be delivered.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Outcome completeness",
+            "measure": "Proportion with all scheduled capillary values documented; criterion at least 90 percent",
+            "timing": "24 hours after surgery",
+            "why": "The criterion the retrieved pilot trial failed.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "secondary",
+            "name": "Glucose out of range on the day of surgery",
+            "measure": "Any value above 12 or below 4 mmol/L, described with its interval",
+            "timing": "Day of surgery",
+            "why": "Informs the trial's sample size; not an effect estimate.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "secondary",
+            "name": "Consistency of instructions",
+            "measure": "Five-item patient questionnaire",
+            "timing": "Before discharge",
+            "why": "What patients said matters most.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 112 eligible patients in nine months; the nurse's 4 hours a week cover about 10 calls a week; the grant covers the study charts and a research nurse day each month.",
+        "biasMitigation": [
+          "Consecutive eligible patients logged, including those not approached",
+          "Progression criteria fixed before recruitment",
+          "Laboratory confirmation of low values"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "No comparison group",
+            "severity": "watch",
+            "note": "Deliberate: effect is not estimated."
+          },
+          {
+            "id": "b2",
+            "label": "Staff attention during the study",
+            "severity": "watch",
+            "note": "Delivery rates may be higher than in routine use."
+          }
+        ],
+        "parsimony": {
+          "score": 84,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "Feasibility outcomes, not effect"
+          ],
+          "simplestPath": "One site, one arm, three progression criteria."
+        },
+        "theoreticalFramework": "None; progression criteria carry the decision.",
+        "summary": "Single-arm feasibility protocol with three progression criteria."
+      },
+      "note": "Re-running the flagged protocol stage clears its review flag (markComplete) and flags the completed stats stage again, which is already flagged (G8).",
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].name": "Recruitment rate",
+          "protocol.exposure": {
+            "includes": "general surgery and urology only"
+          },
+          "needsReview": [
+            "stats"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "stats": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 2,
+      "response": {
+        "designSummary": "Single-arm feasibility study; estimation of recruitment, delivery and completeness rates against progression criteria.",
+        "sampleSize": "About 112 eligible patients are expected in nine months. With 112 eligible patients, a recruitment rate near 50 percent is estimated within about 9 percentage points (95 percent confidence). With about 56 recruited patients, delivery and completeness rates near 85 to 90 percent are estimated within about 8 to 9 points. This is enough to judge the progression criteria, not to estimate an effect.",
+        "primaryAnalysis": "Recruitment rate with a 95 percent confidence interval, compared with the 50 percent criterion; a traffic-light rule (proceed, amend, stop) fixed in advance.",
+        "secondaryAnalysis": "Delivery and completeness rates against their criteria; proportion with glucose out of range and its interval to inform a trial sample size; questionnaire scores.",
+        "missingData": "Missing glucose values are the completeness outcome itself and are reported, not imputed.",
+        "multiplicity": "No hypothesis tests; three criteria judged by pre-specified rules.",
+        "software": "R.",
+        "overfittingGuards": [
+          "Progression rules fixed before recruitment",
+          "No effect estimate reported as efficacy",
+          "Specialty results described, not tested"
+        ],
+        "summary": "Precision adequate to judge three progression criteria."
+      },
+      "note": "Re-running stats clears its flag; nothing is left for review (G8).",
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "within about 9 percentage points"
+          },
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete",
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "The protocol changes insulin management, with a small risk of hypoglycaemia while fasting; low values are confirmed in the laboratory and treated by the ward's existing policy.",
+        "consent": "Written informed consent at pre-assessment for the protocol's research data collection and the questionnaire; patients who decline receive usual care and are counted anonymously in the recruitment log.",
+        "data": "Study charts are coded; the key stays in the pre-assessment clinic; only coded data enter the analysis.",
+        "equity": "PROGRESS-Plus: patients with limited English receive the dose table in their language and interpreter-supported calls; patients in orthopaedics, who cannot be scheduled first, are reported separately so the protocol is shown to work without scheduling.",
+        "effectiveness": "Decides whether a multicentre trial is worth running.",
+        "efficiency": "Uses the nurse's existing hours and the departmental grant.",
+        "costs": "Study charts, translation of the dose table, and research nurse time within the 12,000 grant.",
+        "grants": "Departmental grant DRG-2026-09; a multicentre trial would need external funding.",
+        "partnerships": "Diabetes team, theatre managers for general surgery and urology, two patient partners with insulin-treated diabetes.",
+        "rebPath": "Hospital research ethics committee review under ICH-GCP and the Declaration of Helsinki before any recruitment; the committee has not yet reviewed any version.",
+        "limitations": "Single site; no comparison group; staff attention may inflate delivery.",
+        "summary": "Consent at pre-assessment, translated materials, and ethics review before recruitment."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "Written informed consent"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners with insulin-treated diabetes review the dose table and the questionnaire; the diabetes nurse and a theatre manager join the progression review.",
+        "socialListening": "None.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Conflicting advice",
+            "quote": "Composite paraphrase: The clinic said halve it, the ward said stop it, and nobody told me what to do at seven in the morning.",
+            "implication": "One written plan followed by everyone.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Fear of going low",
+            "quote": "Composite paraphrase: I skipped my insulin because I was frightened of going low with nothing to eat.",
+            "implication": "The dose table must address fasting explicitly.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Theatre lists",
+            "quote": "Composite paraphrase: I can put diabetic patients first in general surgery, but my orthopaedic colleagues cannot.",
+            "implication": "Scheduling is optional by specialty.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Documentation",
+            "quote": "Composite paraphrase: We check the glucose; it just does not always get written down.",
+            "implication": "A study chart and completeness as an outcome.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on advice, fear of hypoglycaemia, theatre lists and documentation."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "clinician",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A perioperative glucose management protocol for insulin-treated patients having elective surgery: a single-site feasibility study",
+        "abstract": "Objective: to assess recruitment, protocol delivery and outcome completeness for a four-part perioperative glucose protocol against pre-specified progression criteria. Design: single-arm feasibility study over nine months at one teaching hospital. Participants: adults with insulin-treated diabetes having elective general, orthopaedic or urological surgery. Results will be reported after recruitment ends.",
+        "introduction": "Perioperative glucose management for insulin-treated patients varies between staff, and patients report conflicting instructions. A definitive randomised trial at one hospital would need about 340 participants and nearly five years, and a comparable pilot trial failed on outcome completeness.",
+        "methods": "Consecutive eligible patients are invited at pre-assessment; the dose table, the nurse call and scheduling are logged. Capillary glucose is recorded on a study chart at fixed times for 24 hours, with laboratory confirmation of values below 4 mmol/L. Progression criteria are at least 50 percent recruitment, 80 percent protocol delivery and 90 percent outcome completeness, judged by a traffic-light rule fixed in advance.",
+        "results": "Recruitment has not started; ethics review is pending.",
+        "discussion": "The discussion will apply the traffic-light rules and describe what a multicentre trial would need. Orthopaedic patients, who cannot be scheduled first, will be reported separately.",
+        "limitations": "No comparison group; one site; staff attention during the study may inflate delivery rates.",
+        "conclusion": "To be written after recruitment ends. It will report feasibility, not effectiveness.",
+        "reportingChecklist": "CONSORT extension for pilot and feasibility trials, items applicable to a single-arm design",
+        "summary": "Feasibility report draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "pilot and feasibility"
+          },
+          "manuscript.results": {
+            "includes": "Recruitment has not started"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Submit the feasibility protocol to the research ethics committee; the accepted decision stays blocked until approval",
+          "Translate the dose table before recruitment",
+          "Confirm with general surgery and urology theatre managers that first-on-the-list scheduling can be offered"
+        ],
+        "improvementNotes": "A scan reply that arrived after the constraints were edited was refused and a fresh appraisal applied. The trial decision was withdrawn after the sample size showed nearly five years of recruitment; the feasibility decision is accepted and blocked on ethics. The model's null for the constraints was rejected.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes; ethics review is the gate."
+      },
+      "note": "audit.openFixes and audit.lastReview FAIL at 875fe59 because of the store defect L1.6, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Statuses are checked in the export; the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Perioperative glucose management protocol for insulin-treated patients having elective surgery",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "feasibility",
+          "design.decisions": {
+            "length": 2
+          },
+          "problem.constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
+          "scan.claims": {
+            "length": 5
+          },
+          "protocol.outcomes": {
+            "length": 5
+          }
+        },
+        "screen": {
+          "includes": [
+            "Perioperative glucose management protocol for insulin-treated patients having elective surgery"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Perioperative glucose management protocol for insulin-treated patients having elective surgery",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "design.recommended": "feasibility",
+          "scan.items[2].relevance": 45,
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Perioperative glucose management protocol for insulin-treated patients having elective surgery"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus, actionStatus and the family on acceptance require S11; the rejected constraints change S5; claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "needsReview": [],
+            "family": "feasibility",
+            "design.decisions[0].status": "withdrawn",
+            "design.decisions[0].selectionStatus": "withdrawn",
+            "design.decisions[1].selectionStatus": "accepted",
+            "design.decisions[1].actionStatus": "blocked",
+            "problem.constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
+            "scan.claims": {
+              "length": 5
+            },
+            "scan.items[2].relevance": 45,
+            "problem.rawNeed": "I am a consultant anaesthetist at Castlemere University Hospital, a 500-bed teaching hospital, and I lead our pre-assessment clinic. Patients with insulin-treated diabetes who come in for elective surgery are managed according to whatever the ward and theatre teams remember: some have their long-acting insulin reduced the night before, some omit it altogether, and some are started on a variable-rate insulin infusion that then runs for days. Our pre-assessment audit last year found that 31 of 112 insulin-treated patients had a capillary glucose above 12 mmol/L on the day of surgery, and 9 had a value below 4 mmol/L in the 24 hours after surgery.\n\nWe have written a perioperative glucose management protocol with four parts: a personal dose-adjustment table handed out at pre-assessment, a diabetes specialist nurse phone call two days before surgery, first-on-the-list scheduling where possible, and a subcutaneous correction scale instead of routine infusions for shorter operations. I would like to run a randomised trial comparing the protocol with usual care, with glucose out of range on the day of surgery as the main outcome, but I am not sure how many patients we would need or whether our lists can cope with first-on-the-list scheduling. We see about 150 insulin-treated patients a year for elective general, orthopaedic and urological surgery.\n\nThe diabetes team supports the idea, but their specialist nurse has only a few hours a week. We have no continuous glucose monitors for surgical patients, so everything depends on finger-prick measurements. I would also like to hear from patients, because several have told us that conflicting instructions from different staff are the worst part of the experience, and I want the study to measure that too."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

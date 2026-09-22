@@ -1,0 +1,83 @@
+{
+  "overview": "Cohort study of patients with type 2 diabetes due for kidney testing across 31 practices, using the staggered rollout of dashboard version 2 (16 practices from March 2026, 15 from September 2026) as a concurrent comparison.",
+  "population": "All patients with type 2 diabetes registered on 2 March 2026 who are due or become due for kidney testing before 6 September 2026 (about 4,900 of 9,870).",
+  "exposure": "Registration with a practice on dashboard version 2 during the window; feature use from usage logs.",
+  "procedures": "Pseudonymised extracts under DSA-PCN-2025-07 give due dates, test results and hospital results where linked; usage logs give list views, chart views and log-ins per practice. Pre-rollout trends from 2024 and 2025 are compared between waves before outcome data for 2026 are examined.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Both kidney tests completed",
+      "measure": "eGFR and urine albumin-to-creatinine ratio both resulted within the window, among patients due",
+      "timing": "2 March to 6 September 2026",
+      "why": "The guideline's aim; completed tests, not orders (claim c3).",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Urine albumin test completed",
+      "measure": "Urine albumin-to-creatinine ratio resulted",
+      "timing": "Same window",
+      "why": "The test most often not completed.",
+      "patientCentered": true
+    },
+    {
+      "id": "o3",
+      "role": "balancing",
+      "name": "Duplicate kidney testing",
+      "measure": "Kidney test in primary care within 30 days of a hospital result",
+      "timing": "Same window",
+      "why": "Feedback can cause duplicate testing.",
+      "patientCentered": true
+    },
+    {
+      "id": "o4",
+      "role": "process",
+      "name": "Patient list use",
+      "measure": "Practice-level list views per month from usage logs",
+      "timing": "Monthly",
+      "why": "Shows whether the feature expected to act was used (claim c4).",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "Extracts and logs exist; the analysis fits within the lead's time over three months after September 2026.",
+  "biasMitigation": [
+    "Pre-rollout trends compared between waves before outcomes are examined",
+    "Adjustment for practice baseline adherence",
+    "Practice as a random effect",
+    "Outcome from laboratory results, not orders"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Schedule related to performance",
+      "severity": "high",
+      "note": "Checked with pre-rollout trends; defeating criterion k3 stays unknown until then."
+    },
+    {
+      "id": "b2",
+      "label": "Spillover between practices sharing staff",
+      "severity": "watch",
+      "note": "Shared staff are identified and a sensitivity analysis excludes those practices."
+    },
+    {
+      "id": "b3",
+      "label": "Incomplete hospital linkage",
+      "severity": "watch",
+      "note": "Duplicate testing may be undercounted."
+    }
+  ],
+  "parsimony": {
+    "score": 80,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 1,
+    "covariateCount": 3,
+    "flags": [
+      "Three adjustment variables fixed in advance"
+    ],
+    "simplestPath": "One exposure, one primary outcome, one mixed model with baseline adjustment."
+  },
+  "theoreticalFramework": "Clinical Performance Feedback Intervention Theory is used only to name the feedback features being compared.",
+  "summary": "Cohort across a staggered rollout with completed tests as the primary outcome and duplicate testing as the balancing measure."
+}

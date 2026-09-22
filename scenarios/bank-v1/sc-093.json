@@ -1,0 +1,1406 @@
+{
+  "id": "sc-093",
+  "version": 1,
+  "title": "Hospital laboratory: haemolysis by collection method and site, conflicting evidence, design unresolved until the Design stage",
+  "field": "laboratory-medicine",
+  "level": 3,
+  "family": "systematic-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path. The need is torn between doing a systematic review and doing a retrospective study of laboratory data, so classifyFamily returns unresolved at create and the problem reply returns family null (issue 'cleared'); design.basis stays 'unresolved' until the investigator accepts the Design stage's systematic-review recommendation. Eight fixture records conflict on the cannula effect (several-fold in a non-randomised study, almost none in a randomised crossover with low-vacuum technique, a heterogeneous meta-analysis between them). The appraisal records claim c3 as an inference over three records with uncertainty 'high', leaves the method quality of an undated conference abstract null (not assessed, G4; its year stays null), and assigns 'very-low' certainty over inspected records. A reload on the Scan route checks that the certainty, the unknowns and the high uncertainty survive. The local data cannot identify collection method (a local fact and claim c5), which is the reason the path arrives at a systematic review. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 3, 4, 6, 7, 8 (ev-1hkazfx, ev-0ey7l1w, ev-1nxi9t6, ev-1eli1nm, ev-0se76nu, ev-1284on1, ev-0tvrw4m); the titleYearKey(title, year) hash for record 5 (ev-1r0q7sd). Requires D2 (null problem family keeps basis 'unresolved'), S11 (routing at create, recommendedFamily, selectionStatus, actionStatus, basis 'explicit'), S13 (appraisal payload) and D5 (status text). Catches: a default family chosen for an undecided need, a conflict flattened into one confident estimate, a high-uncertainty claim lost, unknown year or score invented, and statuses lost on reload or reopen.",
+  "inputs": {
+    "need": "I am a clinical biochemist and the laboratory's quality lead at a hospital with a busy emergency department. Our haemolysis index flags about 8 percent of emergency department potassium samples as haemolysed, against about 1.5 percent from the wards and outpatient phlebotomy. Haemolysed samples are rejected or reported with a comment, the test is repeated, and emergency physicians complain about the delays. Most emergency samples are drawn through a newly placed peripheral intravenous cannula, while ward samples are drawn by phlebotomists with a needle, and emergency samples travel by pneumatic tube while outpatient samples are carried by hand.\n\nThe emergency department wants to keep drawing from cannulas because it saves a second needle stick, especially for children and people with difficult veins. The published studies point in different directions: some report several-fold higher haemolysis with cannula draws, others find little difference when a particular technique or a small syringe is used. I am torn between doing a systematic review of haemolysis by collection method and site, so that any policy rests on the whole literature, and doing a retrospective study of our own laboratory information system data, where we can see collection site, collector role and tube transport for every sample since 2023. I need help choosing, and in either case with defining the outcome and handling the ways the studies differ.",
+    "constraints": "No research funding; the laboratory quality lead and one biochemistry trainee can give about 80 hours between them before June 2027; any change to emergency department collection policy needs the joint approval of the emergency and laboratory directors.",
+    "localFacts": [
+      "The laboratory information system records collection site, collector role, tube transport route and the haemolysis index for every sample since January 2023; it does not record whether a sample was drawn through a cannula or a needle.",
+      "In the last 12 months, 8.1 percent of emergency department potassium samples and 1.5 percent of ward and outpatient samples had a haemolysis index above the rejection threshold.",
+      "The hospital librarian runs database searches for the laboratory on request (standing agreement LIB-LAB-2025).",
+      "The emergency and laboratory directors must jointly approve any change to emergency collection policy."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need is torn between doing a systematic review and doing a retrospective study, so routing is unresolved; design.basis 'unresolved' at create requires S11.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a clinical biochemist and the laboratory's quality lead at a hospital with a busy emergency department. Our haemolysis index flags about 8 percent of emergency department potassium samples as haemolysed, against about 1.5 percent from the wards and outpatient phlebotomy. Haemolysed samples are rejected or reported with a comment, the test is repeated, and emergency physicians complain about the delays. Most emergency samples are drawn through a newly placed peripheral intravenous cannula, while ward samples are drawn by phlebotomists with a needle, and emergency samples travel by pneumatic tube while outpatient samples are carried by hand.\n\nThe emergency department wants to keep drawing from cannulas because it saves a second needle stick, especially for children and people with difficult veins. The published studies point in different directions: some report several-fold higher haemolysis with cannula draws, others find little difference when a particular technique or a small syringe is used. I am torn between doing a systematic review of haemolysis by collection method and site, so that any policy rests on the whole literature, and doing a retrospective study of our own laboratory information system data, where we can see collection site, collector role and tube transport for every sample since 2023. I need help choosing, and in either case with defining the outcome and handling the ways the studies differ.",
+          "completedStages": [],
+          "needsReview": [],
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions": {
+            "length": 0
+          },
+          "scan.items": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a clinical biochemist and the laboratory's quality lead"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Haemolysis by collection method and site: choosing between a systematic review and a local laboratory data study",
+        "subtitle": "Design not yet settled: a systematic review of collection method or a retrospective laboratory data study",
+        "family": null,
+        "statement": "Emergency department potassium samples haemolyse at about five times the ward rate (8.1 against 1.5 percent), causing rejected results, repeat draws and delays. Emergency samples differ from ward samples in collection method (cannula rather than needle), collector (nurses rather than phlebotomists) and transport (pneumatic tube rather than hand-carried). The emergency department wants to keep cannula draws to spare patients a second needle stick. The laboratory needs to decide whether a policy on collection method is justified, and by which kind of study.",
+        "whoAffected": "Emergency patients, especially children and people with difficult veins; emergency nurses and physicians; laboratory staff who reject and repeat samples.",
+        "whatHurts": "Rejected potassium results delay decisions and cause repeat needle sticks; a policy banning cannula draws would add needle sticks for the patients least able to tolerate them.",
+        "currentPractice": "Cannula draws with standard vacuum tubes by emergency nurses; high-speed pneumatic tube transport; rejection or comment on haemolysed samples; no routine monitoring by collection site.",
+        "whyNow": "Emergency physicians are pressing the laboratory about delays, and the directors must jointly decide any policy change.",
+        "constraints": "No research funding; the laboratory quality lead and one biochemistry trainee can give about 80 hours between them before June 2027; any change to emergency department collection policy needs the joint approval of the emergency and laboratory directors.",
+        "patientCenteredGoal": "Emergency patients get reliable potassium results from a single needle stick whenever possible.",
+        "summary": "Problem framed; the design is left unresolved between a systematic review and a local retrospective study until the evidence is reviewed."
+      },
+      "note": "A null family keeps routing unresolved: issue 'cleared' at 'family' (875fe59) and design.basis 'unresolved' (A1 item A7, D2). The constraints are restated unchanged (G11).",
+      "expect": {
+        "store": {
+          "title": "Haemolysis by collection method and site: choosing between a systematic review and a local laboratory data study",
+          "problem.statement": {
+            "includes": "8.1 against 1.5 percent"
+          },
+          "problem.constraints": "No research funding; the laboratory quality lead and one biochemistry trainee can give about 80 hours between them before June 2027; any change to emergency department collection policy needs the joint approval of the emergency and laboratory directors.",
+          "problem.rawNeed": "I am a clinical biochemist and the laboratory's quality lead at a hospital with a busy emergency department. Our haemolysis index flags about 8 percent of emergency department potassium samples as haemolysed, against about 1.5 percent from the wards and outpatient phlebotomy. Haemolysed samples are rejected or reported with a comment, the test is repeated, and emergency physicians complain about the delays. Most emergency samples are drawn through a newly placed peripheral intravenous cannula, while ward samples are drawn by phlebotomists with a needle, and emergency samples travel by pneumatic tube while outpatient samples are carried by hand.\n\nThe emergency department wants to keep drawing from cannulas because it saves a second needle stick, especially for children and people with difficult veins. The published studies point in different directions: some report several-fold higher haemolysis with cannula draws, others find little difference when a particular technique or a small syringe is used. I am torn between doing a systematic review of haemolysis by collection method and site, so that any policy rests on the whole literature, and doing a retrospective study of our own laboratory information system data, where we can see collection site, collector role and tube transport for every sample since 2023. I need help choosing, and in either case with defining the outcome and handling the ways the studies differ.",
+          "design.basis": "unresolved",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Haemolysis by collection method and site: choosing between a systematic review and a local laboratory data study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "haemolysis peripheral intravenous catheter draw versus venepuncture emergency department collection site pneumatic tube collector",
+      "response": {
+        "status": 200,
+        "total": 8,
+        "records": [
+          {
+            "title": "Haemolysis in blood drawn through peripheral intravenous catheters versus venepuncture in adult emergency patients",
+            "authors": "Saarinen-Obi K, Delacroix-Mwangi R, Brandt-Oyelaran T",
+            "year": 2015,
+            "venue": "Journal of Preanalytical Laboratory Practice",
+            "doi": "10.5555/jplp.2015.0211",
+            "providerType": "journal-article",
+            "abstract": "We compared 620 potassium samples from adult emergency patients, 310 drawn through a newly inserted peripheral intravenous catheter and 310 by venepuncture with a needle, over six months in one emergency department. Haemolysis, defined as a haemolysis index above the analyser's rejection threshold, occurred in 19.6 percent of catheter draws and 4.2 percent of venepuncture samples. Catheters of 20 gauge or smaller haemolysed more often than larger ones. Samples were drawn by emergency nurses using standard vacuum tubes. Allocation to method was by clinical situation, not by chance, and the authors could not account for difficult venous access."
+          },
+          {
+            "title": "Catheter-drawn samples collected with a low-vacuum tube or small syringe: haemolysis compared with venepuncture in a randomised crossover study",
+            "authors": "Nakamura-Ellis P, Achterberg-Osei L",
+            "year": 2020,
+            "venue": "Hospital Laboratory Methods Review",
+            "doi": "10.5555/ccmr.2020.0147",
+            "providerType": "journal-article",
+            "abstract": "In 260 emergency patients who needed both a peripheral intravenous catheter and blood tests, we drew one sample through the new catheter using a low-vacuum tube or a small syringe and one by venepuncture, in random order. Haemolysis occurred in 3.9 percent of catheter samples and 3.1 percent of venepuncture samples, a difference of 0.8 percentage points (95 percent CI -1.4 to 3.0). Potassium results differed by less than 0.1 mmol per litre on average. All samples were drawn by two trained research nurses, which may not reflect routine emergency practice."
+          },
+          {
+            "title": "Pneumatic tube transport and haemolysis index: the effect of tube speed and distance",
+            "authors": "Varadi-Holm S, Castellanos-Ruiz M",
+            "year": 2018,
+            "venue": "Specimen Transport Notes",
+            "doi": "10.5555/lal.2018.0063",
+            "providerType": "journal-article",
+            "abstract": "We measured the haemolysis index in 1,480 paired samples sent from the emergency department to the laboratory either by hand or by a pneumatic tube system at two speed settings. Haemolysis above the rejection threshold occurred in 2.0 percent of hand-carried samples and 5.6 percent of samples sent at the high speed setting. Reducing the tube speed brought the rate down to 2.4 percent without a clinically important delay in delivery. Longer routes with more bends were associated with higher haemolysis. The study was done in one hospital with one tube system."
+          },
+          {
+            "title": "Blood sampling through peripheral intravenous catheters and haemolysis: a systematic review and meta-analysis",
+            "authors": "Rasmussen-Adeyemi J, Lindqvist-Tanaka H, Oduya-Kowalski B, Ferreira-Mbeki S",
+            "year": 2022,
+            "venue": "Hospital Laboratory Methods Review",
+            "doi": "10.5555/ccmr.2022.0305",
+            "providerType": "journal-article",
+            "abstract": "We included 24 studies comparing haemolysis in samples drawn through peripheral intravenous catheters with venepuncture samples. The pooled odds ratio for haemolysis with catheter draws was 3.4 (95 percent CI 2.1 to 5.5), with very high heterogeneity (I-squared 88 percent). The effect was smaller in studies using low-vacuum tubes or syringes and in studies with trained collectors. Only four studies were randomised; most were before-after or cross-sectional comparisons at high risk of bias. Definitions of haemolysis ranged from visual inspection to analyser index thresholds, and the authors rated certainty as very low."
+          },
+          {
+            "title": "Haemolysis in paediatric emergency samples by collection method",
+            "authors": "Mwangi-Lorenz A, Petit-Harcourt D",
+            "year": null,
+            "venue": "Paediatric laboratory medicine conference abstracts",
+            "providerType": "conference abstract",
+            "abstract": "We reviewed 410 paediatric emergency samples collected through a newly inserted intravenous catheter, by venepuncture or by capillary puncture. Haemolysis above the analyser threshold occurred in 11 percent of catheter samples, 7 percent of venepuncture samples and 16 percent of capillary samples. Catheter draws avoided a second puncture in most children. The abstract does not state when the samples were collected, how collection method was chosen or whether collectors differed between methods, and no full paper has been identified. Results are presented as percentages without confidence intervals."
+          },
+          {
+            "title": "Who draws the sample matters: haemolysis rates by collector role in the emergency department",
+            "authors": "Okonkwo-Stroud E, Lemaire-Achebe N",
+            "year": 2019,
+            "venue": "Journal of Preanalytical Laboratory Practice",
+            "doi": "10.5555/jplp.2019.0092",
+            "providerType": "journal-article",
+            "abstract": "Across 9,850 emergency department samples over 12 months, haemolysis above the rejection threshold occurred in 2.1 percent of samples drawn by phlebotomists, 7.8 percent drawn by nurses and 9.6 percent drawn by physicians. Most nurse and physician samples were drawn through catheters, so collector role and method could not be separated. After a 30-minute training session for emergency nurses, their haemolysis rate fell to 4.4 percent over the next six months. The comparison was uncontrolled and the training coincided with a change of tube supplier."
+          },
+          {
+            "title": "Monitoring haemolysis by collection site with laboratory information system data: a retrospective analysis of 1.2 million samples",
+            "authors": "Grieve-Nwosu R, Haddad-Lindgren T, Kaur-Whitfield A",
+            "year": 2023,
+            "venue": "Laboratory Quality Indicators",
+            "doi": "10.5555/lqi.2023.0018",
+            "providerType": "journal-article",
+            "abstract": "We analysed 1.2 million samples from four hospitals using laboratory information system fields for collection site, collector role and transport route. Haemolysis above the rejection threshold occurred in 6.9 percent of emergency department samples and 1.8 percent of inpatient samples. Variation between collection sites was larger than variation between analysers. The data could not identify whether samples were drawn through a catheter, so the effect of collection method could not be estimated. The authors recommend site-level haemolysis rates as a routine quality indicator rather than as evidence about collection method."
+          },
+          {
+            "title": "Recommendations on preanalytical sample quality and haemolysis management from a laboratory medicine working group",
+            "authors": "Preanalytical Quality Working Group",
+            "year": 2021,
+            "venue": "Laboratory medicine consensus papers",
+            "doi": "10.5555/lmcp.2021.0004",
+            "providerType": "report",
+            "abstract": "A working group of 12 laboratory specialists and emergency clinicians reviewed evidence on haemolysis and agreed recommendations by consensus. The group recommends monitoring haemolysis rates by collection location, using analyser haemolysis indices rather than visual inspection, and training all collectors. It makes no recommendation for or against drawing samples through peripheral intravenous catheters because the evidence was judged conflicting. The group notes that reducing repeat venepuncture matters to patients with difficult venous access and to children, and asks laboratories to publish haemolysis rates by site so that practices can be compared."
+          }
+        ]
+      },
+      "note": "Eight records; record 5 is an undated conference abstract (year null). Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 8,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1hkazfx",
+            "ev-0ey7l1w",
+            "ev-1nxi9t6",
+            "ev-1eli1nm",
+            "ev-1r0q7sd",
+            "ev-0se76nu",
+            "ev-1284on1",
+            "ev-0tvrw4m"
+          ],
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[1].id": "ev-0ey7l1w",
+          "scan.items[4].id": "ev-1r0q7sd",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].provenance.status": "retrieved",
+          "scan.items[4].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Haemolysis in paediatric emergency samples by collection method"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1hkazfx",
+            "relevance": 88,
+            "methodQuality": 48,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Catheter draws haemolysed in 19.6 percent and venepuncture samples in 4.2 percent among 620 adult emergency samples; smaller catheters haemolysed more.",
+            "limitations": "Method chosen by clinical situation; difficult access not accounted for; one department.",
+            "contextTags": [
+              "catheter draw",
+              "adults",
+              "non-randomised"
+            ]
+          },
+          {
+            "id": "ev-0ey7l1w",
+            "relevance": 90,
+            "methodQuality": 72,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "With a low-vacuum tube or small syringe, catheter samples haemolysed in 3.9 percent and venepuncture samples in 3.1 percent (difference 0.8 points, 95 percent CI -1.4 to 3.0).",
+            "limitations": "Trained research nurses only; 260 patients; may not reflect routine practice.",
+            "contextTags": [
+              "randomised crossover",
+              "low-vacuum tube",
+              "technique"
+            ]
+          },
+          {
+            "id": "ev-1nxi9t6",
+            "relevance": 70,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Haemolysis was 2.0 percent for hand-carried and 5.6 percent for high-speed pneumatic tube samples, falling to 2.4 percent at a lower speed.",
+            "limitations": "One hospital and tube system.",
+            "contextTags": [
+              "transport",
+              "pneumatic tube",
+              "confounder"
+            ]
+          },
+          {
+            "id": "ev-1eli1nm",
+            "relevance": 92,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "very-low",
+            "keyFindings": "Pooled odds ratio 3.4 (95 percent CI 2.1 to 5.5) across 24 studies with I-squared 88 percent; smaller effects with low-vacuum tubes, syringes and trained collectors.",
+            "limitations": "Mostly non-randomised studies at high risk of bias; varied haemolysis definitions.",
+            "contextTags": [
+              "meta-analysis",
+              "heterogeneity",
+              "technique subgroups"
+            ]
+          },
+          {
+            "id": "ev-1r0q7sd",
+            "relevance": 58,
+            "methodQuality": null,
+            "kind": "grey",
+            "grade": "very-low",
+            "keyFindings": "In 410 paediatric samples, haemolysis was 11 percent with catheter draws, 7 percent with venepuncture and 16 percent with capillary samples.",
+            "limitations": "Conference abstract without a date, methods or full paper; method quality not assessed.",
+            "contextTags": [
+              "children",
+              "capillary",
+              "conference abstract"
+            ]
+          },
+          {
+            "id": "ev-0se76nu",
+            "relevance": 76,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Haemolysis was 2.1 percent for phlebotomists, 7.8 percent for nurses and 9.6 percent for physicians; nurse training was followed by 4.4 percent.",
+            "limitations": "Role and method confounded; training coincided with a tube supplier change.",
+            "contextTags": [
+              "collector role",
+              "training",
+              "confounding"
+            ]
+          },
+          {
+            "id": "ev-1284on1",
+            "relevance": 74,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across 1.2 million samples, haemolysis was 6.9 percent in emergency and 1.8 percent in inpatient samples; laboratory data could not identify catheter draws.",
+            "limitations": "Collection method not recorded; site-level rates only.",
+            "contextTags": [
+              "laboratory information system",
+              "quality indicator",
+              "retrospective"
+            ]
+          },
+          {
+            "id": "ev-0tvrw4m",
+            "relevance": 72,
+            "methodQuality": 50,
+            "kind": "guideline",
+            "grade": "very-low",
+            "keyFindings": "Recommends site-level monitoring, analyser indices and collector training, and makes no recommendation on catheter draws because the evidence conflicts.",
+            "limitations": "Consensus of one working group.",
+            "contextTags": [
+              "consensus",
+              "monitoring",
+              "difficult venous access"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In adult emergency patients, catheter draws haemolysed in 19.6 percent of samples and venepuncture in 4.2 percent, with method chosen by clinical situation.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1hkazfx"
+            ],
+            "location": "Abstract",
+            "passage": "Haemolysis, defined as a haemolysis index above the analyser's rejection threshold, occurred in 19.6 percent of catheter draws and 4.2 percent of venepuncture samples.",
+            "interpretation": "A large difference, but confounded by who needed a catheter.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "When catheter samples were drawn with a low-vacuum tube or small syringe in random order with venepuncture, haemolysis was 3.9 against 3.1 percent, a difference of 0.8 points.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0ey7l1w"
+            ],
+            "location": "Abstract",
+            "passage": "Haemolysis occurred in 3.9 percent of catheter samples and 3.1 percent of venepuncture samples, a difference of 0.8 percentage points",
+            "interpretation": "Technique may remove most of the excess, at least with trained collectors.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Whether drawing through a peripheral catheter raises haemolysis enough to justify a venepuncture policy is uncertain: estimates range from several-fold to almost no difference, and the size of the excess appears to depend on technique and collector training.",
+            "kind": "inference",
+            "sourceIds": [
+              "ev-1hkazfx",
+              "ev-0ey7l1w",
+              "ev-1eli1nm"
+            ],
+            "location": "Abstracts of the three records",
+            "passage": "The effect was smaller in studies using low-vacuum tubes or syringes and in studies with trained collectors.",
+            "interpretation": "The conflict is probably explained by technique and collector, which a review with subgroups can examine; no policy should rest on a single study.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c4",
+            "text": "High-speed pneumatic tube transport raised haemolysis from 2.0 to 5.6 percent, and a lower speed brought it to 2.4 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1nxi9t6"
+            ],
+            "location": "Abstract",
+            "passage": "Haemolysis above the rejection threshold occurred in 2.0 percent of hand-carried samples and 5.6 percent of samples sent at the high speed setting.",
+            "interpretation": "Transport confounds any comparison of emergency and ward samples.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Laboratory information system data showed site-level differences (6.9 against 1.8 percent) but could not identify catheter draws, so they cannot estimate the effect of collection method.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1284on1"
+            ],
+            "location": "Abstract",
+            "passage": "The data could not identify whether samples were drawn through a catheter, so the effect of collection method could not be estimated.",
+            "interpretation": "The local retrospective option cannot answer the method question, because the local system does not record method either.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Eight retrieved records, appraised at abstract level; one is an undated conference abstract whose method quality cannot be assessed. The evidence on catheter draws conflicts: a non-randomised emergency study found 19.6 against 4.2 percent haemolysis, a randomised crossover study with low-vacuum tubes or syringes found almost no difference, and a meta-analysis of 24 mostly non-randomised studies reported a pooled odds ratio of 3.4 with very high heterogeneity that shrank with better technique and trained collectors. Transport speed and collector role each change haemolysis and are entangled with collection method in routine data. Laboratory information system data show site differences but cannot identify catheter draws. A consensus group declined to recommend for or against catheter draws. The conflict is plausibly explained by technique, but the certainty of any single estimate is very low.",
+        "gradeOverall": "very-low",
+        "gradeRationale": "Mostly non-randomised comparisons at high risk of bias, very high inconsistency across studies, and indirectness from trained research collectors; only one small randomised study. Certainty that catheter draws themselves raise haemolysis in routine practice is very low.",
+        "summary": "Eight retrieved records appraised; the evidence conflicts; claim c3 records the conflict with high uncertainty; overall certainty very low."
+      },
+      "note": "Appraisal of the eight retrieved records (S13). The records conflict; claim c3 is an inference over three records with uncertainty 'high'. Record 5's method quality is null (not assessed) and its year stays null (G4). The certainty 'very-low' is the appraisal's own value over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[1].kind": "rct",
+          "scan.items[1].grade": "moderate",
+          "scan.items[3].grade": "very-low",
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[4].relevance": 58,
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[2].kind": "inference",
+          "scan.claims[2].uncertainty": "high",
+          "scan.claims[2].sourceIds": [
+            "ev-1hkazfx",
+            "ev-0ey7l1w",
+            "ev-1eli1nm"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-1284on1"
+          ],
+          "scan.gradeOverall": "very-low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "very low certainty",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Scan route: the very low certainty, the high-uncertainty inference and the unknown year and score must survive (G4).",
+      "expect": {
+        "store": {
+          "scan.gradeOverall": "very-low",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.claims[2].uncertainty": "high",
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "design.basis": "unresolved"
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "very low certainty",
+            "not assessed"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "hospital emergency department and central laboratory",
+          "pneumatic tube transport from the emergency department",
+          "laboratory information system without a collection-method field",
+          "joint policy approval by two directors"
+        ],
+        "reading": "The emergency excess in haemolysis has three candidate causes that travel together: cannula draws, collector role and pneumatic tube transport. The published evidence on cannula draws conflicts (claim c3), plausibly because technique and collector training vary, while transport speed has its own effect (claim c4). The laboratory's own data can separate site, collector role and transport but not collection method (claim c5), so a local study cannot answer the method question on which a policy would rest.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Cannula draw with a vacuum tube",
+            "kind": "context",
+            "detail": "Usual emergency collection."
+          },
+          {
+            "id": "n2",
+            "label": "Collector role",
+            "kind": "context",
+            "detail": "Nurses and physicians rather than phlebotomists."
+          },
+          {
+            "id": "n3",
+            "label": "High-speed pneumatic tube",
+            "kind": "context",
+            "detail": "Transport from the emergency department."
+          },
+          {
+            "id": "n4",
+            "label": "Haemolysed potassium sample",
+            "kind": "outcome",
+            "detail": "8.1 percent in the emergency department."
+          },
+          {
+            "id": "n5",
+            "label": "Non-randomised emergency comparison",
+            "kind": "observational",
+            "detail": "19.6 against 4.2 percent (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Randomised crossover with low-vacuum technique",
+            "kind": "rct",
+            "detail": "3.9 against 3.1 percent (claim c2)."
+          },
+          {
+            "id": "n7",
+            "label": "Meta-analysis with very high heterogeneity",
+            "kind": "systematic-review",
+            "detail": "Effect shrinks with better technique."
+          },
+          {
+            "id": "n8",
+            "label": "Conflicting evidence on cannula draws",
+            "kind": "gap",
+            "detail": "High-uncertainty inference (claim c3)."
+          },
+          {
+            "id": "n9",
+            "label": "Children and people with difficult veins",
+            "kind": "stakeholder",
+            "detail": "Benefit most from avoiding a second stick."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n4",
+            "relation": "may raise"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "may raise"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "raises"
+          },
+          {
+            "from": "n5",
+            "to": "n8",
+            "relation": "conflicts with"
+          },
+          {
+            "from": "n6",
+            "to": "n8",
+            "relation": "conflicts with"
+          },
+          {
+            "from": "n7",
+            "to": "n8",
+            "relation": "explains part of"
+          },
+          {
+            "from": "n9",
+            "to": "n1",
+            "relation": "benefit from"
+          }
+        ],
+        "summary": "Map shows three entangled causes and the conflict that a review with technique subgroups could explain."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Conflicting estimates of the cannula effect",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Estimates range from several-fold to almost no difference (claim c3); a policy based on one study could add needle sticks for no benefit or keep a harmful practice.",
+            "opportunity": "Synthesise all comparative studies with subgroups by technique, catheter gauge and collector training."
+          },
+          {
+            "id": "g2",
+            "title": "Local data cannot identify collection method",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "The laboratory system has no method field, as in the retrieved four-hospital analysis (claim c5).",
+            "opportunity": "Use local data for site-level monitoring, not for the method question."
+          },
+          {
+            "id": "g3",
+            "title": "Transport and collector confound comparisons",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Tube speed and collector role each change haemolysis (claim c4) and travel with cannula draws.",
+            "opportunity": "Record transport and collector in the review's data extraction and treat them as effect modifiers."
+          },
+          {
+            "id": "g4",
+            "title": "Children and people with difficult veins",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "A ban on cannula draws adds needle sticks for those least able to tolerate them, and paediatric evidence is thin and undated.",
+            "opportunity": "Extract paediatric and difficult-access results separately and weigh redraws against extra punctures."
+          },
+          {
+            "id": "g5",
+            "title": "Definitions of haemolysis vary",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Visual inspection and analyser index thresholds are not comparable.",
+            "opportunity": "Prefer analyser index definitions and run a sensitivity analysis restricted to them."
+          }
+        ],
+        "errorsFound": [
+          "Comparing emergency and ward haemolysis rates does not measure the effect of cannula draws, because transport and collector differ too."
+        ],
+        "reevaluation": "The gaps point to a systematic review with technique subgroups for the policy question, and to local data only for monitoring.",
+        "summary": "Five gaps; the conflicting estimates and the missing method field are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Conflicting estimates of the cannula effect"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Across comparative studies, the excess haemolysis with cannula draws is concentrated in studies using standard vacuum tubes and untrained collectors, and is small (odds ratio below 1.5) when low-vacuum tubes or syringes are used.",
+            "novelty": 55,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 75,
+            "rationale": "Explains the conflict (c1, c2, c3) and would support a technique change rather than a ban.",
+            "risks": "Too few studies per technique subgroup; technique poorly reported."
+          },
+          {
+            "id": "h2",
+            "statement": "Transport by high-speed pneumatic tube accounts for part of the emergency excess independent of collection method.",
+            "novelty": 40,
+            "need": 60,
+            "practiceChange": 65,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Supported by the tube speed study (c4).",
+            "risks": "Few comparative studies report transport."
+          },
+          {
+            "id": "h3",
+            "statement": "In children, cannula draws haemolyse less often than capillary samples, so avoiding cannula draws would not reduce paediatric haemolysis.",
+            "novelty": 50,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 50,
+            "parsimony": 65,
+            "rationale": "Suggested only by an undated abstract.",
+            "risks": "Very thin paediatric evidence."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected because it addresses the conflict directly."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In blood samples from emergency and acute care patients, is collection through a peripheral intravenous catheter, compared with venepuncture, associated with more haemolysis, and does the association differ by tube type, catheter gauge, collector training and transport?",
+            "framework": "PECO",
+            "population": "Blood samples from adults and children in emergency or acute care",
+            "intervention": "Collection through a peripheral intravenous catheter (exposure)",
+            "comparator": "Venepuncture with a needle",
+            "outcome": "Haemolysis defined by analyser index or visual inspection; sample rejection",
+            "time": "At collection and analysis",
+            "setting": "Emergency and acute care settings"
+          }
+        ],
+        "finer": "Feasible within 80 hours with librarian support if restricted to comparative studies; interesting to the emergency and laboratory directors; novel in its focus on technique subgroups; ethical as a literature review; relevant because it decides a joint policy.",
+        "summary": "One PECO question with pre-specified effect modifiers."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "systematic-review",
+        "rationale": "The policy question is whether drawing through a catheter itself raises haemolysis, and under what technique. The published estimates conflict (c1, c2) and the conflict appears to depend on technique and collector (c3), which a systematic review with pre-specified subgroups can examine. A local retrospective study cannot answer the question because the laboratory system does not record collection method, as in the retrieved four-hospital analysis (c5), and transport confounds site comparisons (c4). The local data are better used afterwards for site-level monitoring of any change.",
+        "alternatives": [
+          "Retrospective study of local laboratory data (refused for the method question: collection method is not recorded; kept for monitoring)",
+          "Local randomised comparison of draw techniques (refused: no research funding and the review may make it unnecessary)",
+          "Adopt the working group's recommendations without a review (refused: they make no recommendation on catheter draws)"
+        ],
+        "guidelines": [
+          "PRISMA 2020",
+          "GRADE"
+        ],
+        "whyNotMoreComplex": "An individual participant data meta-analysis or a local trial would cost far more than the 80 hours available; a systematic review with subgroups is the simplest design that can explain the conflict.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct a systematic review with meta-analysis of haemolysis in catheter-drawn versus venepuncture samples, with subgroups by tube type, catheter gauge, collector training and transport, and use local laboratory data only for site-level monitoring.",
+          "question": "Which study should inform the emergency collection policy?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Published estimates conflict in a way that technique subgroups could explain.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Local data can identify catheter draws.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": [
+                "c5"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Librarian-supported database searches",
+              "status": "met",
+              "evidence": "Standing agreement LIB-LAB-2025, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Reviewer time for screening and extraction",
+              "status": "met",
+              "evidence": "Investigator constraint: about 80 hours between the quality lead and a biochemistry trainee before June 2027"
+            }
+          ],
+          "alternatives": [
+            "Retrospective study of local laboratory data",
+            "Adopt the working group's recommendations"
+          ],
+          "note": "Rests on ledger claims c1 to c5, including the high-uncertainty inference c3 that motivates the review. The policy itself still needs the directors' joint approval after the review."
+        },
+        "summary": "Systematic review recommended to explain conflicting evidence; local data kept for monitoring; both gates met on investigator-supplied records."
+      },
+      "note": "The recommendation resolves the unresolved family to systematic-review as a proposal; recommendedFamily and selectionStatus require S11, the claims S13 and the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "systematic-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].recommendedFamily": "systematic-review",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: the claims rest on retrieved records and the decision states the conflict; both gates are met, so the selection is accepted, the family resolves to systematic-review with basis 'explicit', and the action is ready (G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "family": "systematic-review",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Systematic review with meta-analysis of comparative studies of haemolysis in blood drawn through peripheral intravenous catheters versus venepuncture, registered before screening, with pre-specified subgroups by technique, catheter gauge, collector training and transport.",
+        "population": "Blood samples from adults and children in emergency or acute care settings in comparative studies of any design (randomised, crossover, cohort, before-after and cross-sectional).",
+        "exposure": "Collection through a newly inserted or existing peripheral intravenous catheter, with tube type or syringe recorded.",
+        "procedures": "Librarian-designed searches of three databases and conference proceedings from 2000 to 2026 under agreement LIB-LAB-2025. Two reviewers (the quality lead and the trainee) screen and extract independently, resolving disagreements by discussion. Risk of bias is assessed with RoB 2 for randomised comparisons and ROBINS-I for non-randomised ones; certainty is rated with GRADE for each outcome.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Haemolysis",
+            "measure": "Proportion of samples with haemolysis, preferring analyser index definitions; odds ratio for catheter versus venepuncture",
+            "timing": "At analysis",
+            "why": "The outcome that causes rejection and repeat draws.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Sample rejection or redraw",
+            "measure": "Proportion of samples rejected or redrawn",
+            "timing": "Within the same visit",
+            "why": "Closer to what patients experience.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Potassium difference",
+            "measure": "Mean difference in potassium between paired samples",
+            "timing": "At analysis",
+            "why": "Shows whether haemolysis changes clinical decisions.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Additional needle sticks",
+            "measure": "Extra punctures per patient under venepuncture-only strategies, where reported",
+            "timing": "Same visit",
+            "why": "The cost to patients of avoiding catheter draws.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 80 hours between two reviewers: 10 for search refinement with the librarian, 30 for dual screening, 25 for extraction and risk of bias, 15 for analysis and writing.",
+        "biasMitigation": [
+          "Protocol registered before screening",
+          "Independent dual screening and extraction",
+          "Separate analysis of randomised and non-randomised studies",
+          "Sensitivity analysis restricted to analyser index definitions",
+          "Funnel plot and small-study test if ten or more studies"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by indication in non-randomised studies",
+            "severity": "high",
+            "note": "Patients with difficult access get catheter draws; analysed separately from randomised studies."
+          },
+          {
+            "id": "b2",
+            "label": "Heterogeneous haemolysis definitions",
+            "severity": "watch",
+            "note": "Sensitivity analysis on analyser index definitions."
+          },
+          {
+            "id": "b3",
+            "label": "Publication bias",
+            "severity": "watch",
+            "note": "Conference abstracts searched; small-study test if enough studies."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 4,
+          "flags": [
+            "Four pre-specified effect modifiers and no others"
+          ],
+          "simplestPath": "One comparison, one primary outcome, four pre-specified subgroups."
+        },
+        "theoreticalFramework": "GRADE for certainty; no other framework.",
+        "summary": "Registered systematic review with one primary outcome and four pre-specified effect modifiers."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.parsimony.covariateCount": 4,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Random-effects meta-analysis of log odds ratios for haemolysis, randomised and non-randomised studies analysed separately, with pre-specified subgroup analyses and meta-regression.",
+        "sampleSize": "The prior review found 24 studies to 2022; with later studies about 30 to 35 are expected. Subgroup analysis and meta-regression are planned only for effect modifiers with at least ten studies, because with I-squared near 88 percent fewer studies give unstable estimates. A 95 percent prediction interval is reported alongside every pooled estimate so that the likely range in a new setting is visible.",
+        "primaryAnalysis": "Random-effects model (restricted maximum likelihood with Hartung-Knapp adjustment) for the odds ratio of haemolysis with catheter draws versus venepuncture, separately for randomised and non-randomised comparisons.",
+        "secondaryAnalysis": "Subgroups by tube type or syringe, catheter gauge, collector training and transport; meta-regression on the proportion of low-vacuum draws if at least ten studies report it; sensitivity analysis restricted to analyser index definitions; descriptive paediatric results.",
+        "missingData": "Authors are not contacted within the available hours; studies without extractable counts are described narratively and counted in the flow diagram.",
+        "multiplicity": "One primary estimate per design group; subgroup findings are reported as hypothesis-generating with an interaction test.",
+        "software": "R with the metafor package.",
+        "overfittingGuards": [
+          "Effect modifiers limited to four, fixed in the registered protocol",
+          "Meta-regression only with ten or more studies",
+          "No data-driven subgroup search",
+          "Prediction intervals reported with every pooled estimate"
+        ],
+        "summary": "About 30 to 35 studies expected; subgroups only with ten or more studies; prediction intervals throughout."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "prediction interval"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No participants. The risk lies in the policy that follows: a ban on catheter draws would add needle sticks for vulnerable patients, and an unchanged practice would keep delays.",
+        "consent": "Not applicable to the review.",
+        "data": "Published and conference material only; the local haemolysis rates are quoted in aggregate from laboratory quality reports.",
+        "equity": "PROGRESS-Plus: children, people with difficult venous access, people with disabilities who find needle sticks distressing, and frail older adults carry the cost of extra punctures. The review extracts their results separately where possible and weighs redraws against extra needle sticks.",
+        "effectiveness": "Success is a policy the two directors can justify on the evidence, with local monitoring of the result.",
+        "efficiency": "About 80 hours of existing staff time and library searches.",
+        "costs": "No direct costs.",
+        "grants": "None needed; a local randomised comparison of techniques could seek hospital research funding if the review leaves the question open.",
+        "partnerships": "Emergency department nursing lead, the hospital librarian, and a patient partner with difficult venous access.",
+        "rebPath": "No research ethics review is needed for a review of published literature; a later local comparison of draw techniques would need full review.",
+        "limitations": "Mostly non-randomised primary studies; heterogeneous definitions; thin paediatric evidence.",
+        "summary": "No participants; equity weighed through extra needle sticks for vulnerable groups."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A patient partner with difficult venous access and the emergency nursing lead review the protocol's outcomes, especially the balancing outcome of extra needle sticks.",
+        "socialListening": "No social media listening; anonymised emergency department complaints mentioning repeat blood tests over the last year are counted.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Difficult veins",
+            "quote": "Composite paraphrase: It takes them four tries to find a vein on a good day, so one draw from the drip is a mercy.",
+            "implication": "Treat extra needle sticks as a real cost in the review.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Delay",
+            "quote": "Composite paraphrase: A rejected potassium in a patient with a wide QRS costs us forty minutes we do not have.",
+            "implication": "Report sample rejection and redraws, not only haemolysis.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Children",
+            "quote": "Composite paraphrase: After the cannula went in, the idea of another needle for bloods was too much for my son.",
+            "implication": "Extract paediatric results separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Laboratory view",
+            "quote": "Composite paraphrase: We see the haemolysed tubes but not how they were drawn, so we keep arguing past each other.",
+            "implication": "Add collection method to the request form for future monitoring.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on needle sticks, delay, children and missing method data."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Haemolysis in blood samples drawn through peripheral intravenous catheters versus venepuncture: a systematic review and meta-analysis with technique subgroups",
+        "abstract": "Objective: to estimate the association between catheter draws and haemolysis and to examine whether technique, catheter gauge, collector training and transport explain conflicting results. Design: registered systematic review and random-effects meta-analysis. Results and conclusions will be written after the analysis.",
+        "introduction": "Published estimates of haemolysis with catheter draws range from several-fold to almost no difference. Emergency departments value catheter draws because they avoid extra needle sticks, while laboratories see rejected samples.",
+        "methods": "Librarian-designed search, dual screening and extraction, RoB 2 and ROBINS-I, GRADE certainty, random-effects meta-analysis separately for randomised and non-randomised studies, four pre-specified effect modifiers and prediction intervals.",
+        "results": "Not yet written. The section will report study flow, study characteristics, pooled estimates with prediction intervals by design group, subgroup analyses and GRADE certainty.",
+        "discussion": "The discussion will state whether technique explains the conflict and what that means for an emergency collection policy that weighs haemolysis against extra needle sticks.",
+        "limitations": "Mostly non-randomised primary studies with heterogeneous definitions; limited paediatric data.",
+        "conclusion": "To be written after analysis; it will be worded by GRADE certainty.",
+        "reportingChecklist": "PRISMA 2020",
+        "summary": "PRISMA-structured draft with results left empty until analysis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRISMA 2020",
+          "manuscript.results": {
+            "includes": "Not yet written"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Register the review protocol before screening starts",
+          "Record 5 is an undated conference abstract with no full paper; report it only in the paediatric narrative",
+          "Ask the directors to add a collection-method field to the emergency request form so local monitoring can separate method from site",
+          "Run identity checks on the eight retrieved records before the protocol cites them"
+        ],
+        "improvementNotes": "Routing stayed unresolved until the design stage, where the missing collection-method field in local data ruled out the retrospective option for the policy question. The accepted decision rests on five ledger claims, including a high-uncertainty inference that records the conflict; overall certainty is very low.",
+        "lastReview": "2026-09-22",
+        "summary": "Four open fixes: registration, an undated record, a request form field and identity checks."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 the store defect of A3 L1.6 drops it (not a missing work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list; statuses are checked in the export.",
+      "expect": {
+        "store": {
+          "title": "Haemolysis by collection method and site: choosing between a systematic review and a local laboratory data study",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "systematic-review",
+          "design.basis": "explicit",
+          "problem.constraints": "No research funding; the laboratory quality lead and one biochemistry trainee can give about 80 hours between them before June 2027; any change to emergency department collection policy needs the joint approval of the emergency and laboratory directors.",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.claims[2].uncertainty": "high",
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 4
+          }
+        },
+        "screen": {
+          "includes": [
+            "Haemolysis by collection method and site: choosing between a systematic review and a local laboratory data study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click gives one file equal to the store (G10); selectionStatus, actionStatus and recommendedFamily require S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "systematic-review",
+            "design.basis": "explicit",
+            "scan.gradeOverall": "very-low",
+            "scan.items[4].year": {
+              "isNull": true
+            },
+            "scan.items[4].methodQuality": {
+              "isNull": true
+            },
+            "scan.claims[2].uncertainty": "high",
+            "scan.claims[2].sourceIds": [
+              "ev-1hkazfx",
+              "ev-0ey7l1w",
+              "ev-1eli1nm"
+            ],
+            "design.decisions[-1].recommendedFamily": "systematic-review",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

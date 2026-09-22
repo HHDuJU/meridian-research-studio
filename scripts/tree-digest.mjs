@@ -17,6 +17,7 @@ export const SKIP_DIRS = new Set([
   ".nitro",
   ".tanstack",
   ".vite",
+  ".vercel",
   "dist",
   "artifacts",
   "attachments",
@@ -25,6 +26,7 @@ export const SKIP_DIRS = new Set([
 ]);
 
 export function skipFile(rel) {
+  if (rel.startsWith(".vercel/") || rel === ".vercel") return true;
   if (rel.startsWith("public/artifacts/") && /\.tar\.gz/.test(rel)) return true;
   if (rel.endsWith(".tar.gz") || rel.endsWith(".tar.gz.bin") || rel.endsWith(".tar.gz.sha256")) return true;
   if (rel === ".env") return true;

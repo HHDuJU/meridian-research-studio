@@ -80,6 +80,7 @@ export function emptyQuestions(): QuestionsStage {
 export function emptyDesign(): DesignStage {
   return {
     recommended: "",
+    basis: "unresolved",
     decisions: [],
     rationale: "",
     alternatives: [],
@@ -410,7 +411,13 @@ export function migrateStudy(raw: unknown): Study {
     design: {
       ...emptyDesign(),
       ...(isObj(s.design) ? (s.design as Partial<DesignStage>) : {}),
-      decisions: isObj(s.design) && Array.isArray((s.design as Record<string, unknown>).decisions) ? ((s.design as DesignStage).decisions) : [],
+      decisions: isObj(s.design) && Array.isArray((s.design as Record<string, unknown>).decisions)
+        ? ((s.design as DesignStage).decisions).map((d) => ({
+            ...d,
+            selectionStatus: d.selectionStatus ?? d.status ?? "proposed",
+            actionStatus: d.actionStatus ?? (d.status === "accepted" ? "ready" : "blocked"),
+          }))
+        : [],
     },
     audit: isObj(s.audit) ? { ...emptyAudit(), ...(s.audit as Partial<AuditStage>) } : emptyAudit(),
   } as Study;

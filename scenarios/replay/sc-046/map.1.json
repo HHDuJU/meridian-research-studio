@@ -1,0 +1,93 @@
+{
+  "contexts": [
+    "hospital anticoagulation clinic, three sites",
+    "paper nomogram at the main site",
+    "computer-assisted dosing tool at two satellites since October 2025",
+    "home INR results entered by clerical staff",
+    "recorded search returned no records"
+  ],
+  "reading": "The comparison the director wants runs across sites, so the dosing approach is tangled with site: the satellites see younger patients with fewer interacting medicines, and home testing adds entry delays that may differ by site. Time in therapeutic range can only be calculated where INR records are complete, which is exactly what is unknown. With an empty recorded search and no inspected evidence, the local records are the only source, and their fitness for purpose decides which design is possible.",
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Paper nomogram dosing",
+      "kind": "context",
+      "detail": "Main site; dose from the latest INR."
+    },
+    {
+      "id": "n2",
+      "label": "Computer-assisted dosing tool",
+      "kind": "context",
+      "detail": "Satellites; weekly dose from the last three INRs."
+    },
+    {
+      "id": "n3",
+      "label": "Time in therapeutic range",
+      "kind": "outcome",
+      "detail": "Needs complete, timely INR records."
+    },
+    {
+      "id": "n4",
+      "label": "Site case mix",
+      "kind": "context",
+      "detail": "Satellites younger, fewer interacting medicines."
+    },
+    {
+      "id": "n5",
+      "label": "Late or missing home INR entries",
+      "kind": "context",
+      "detail": "Delay between test and entry is not recorded."
+    },
+    {
+      "id": "n6",
+      "label": "Empty recorded search",
+      "kind": "gap",
+      "detail": "No records retrieved; the investigator confirmed it empty."
+    },
+    {
+      "id": "n7",
+      "label": "Anticoagulation committee",
+      "kind": "stakeholder",
+      "detail": "Approves any change to dosing practice."
+    },
+    {
+      "id": "n8",
+      "label": "Patients on home testing",
+      "kind": "stakeholder",
+      "detail": "Most exposed to entry delays."
+    }
+  ],
+  "edges": [
+    {
+      "from": "n4",
+      "to": "n2",
+      "relation": "confounds comparison of"
+    },
+    {
+      "from": "n4",
+      "to": "n3",
+      "relation": "influences"
+    },
+    {
+      "from": "n5",
+      "to": "n3",
+      "relation": "may make incalculable"
+    },
+    {
+      "from": "n8",
+      "to": "n5",
+      "relation": "generate"
+    },
+    {
+      "from": "n1",
+      "to": "n3",
+      "relation": "hypothesised to give lower"
+    },
+    {
+      "from": "n6",
+      "to": "n7",
+      "relation": "leaves the decision to local data for"
+    }
+  ],
+  "summary": "Map shows site case mix and record completeness standing between the two dosing approaches and any honest comparison."
+}

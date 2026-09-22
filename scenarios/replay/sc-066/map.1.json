@@ -1,0 +1,97 @@
+{
+  "contexts": [
+    "city public health unit, about 900,000 people",
+    "about 110 pulmonary cases and 1,300 contacts a year",
+    "three community clinics and a hospital radiology department",
+    "fax and courier result routing"
+  ],
+  "reading": "Each handoff in the pathway (case nurse, second nurse, clinic, central office, hospital) is a queue where contacts wait and some are lost. The biggest leak elsewhere is between a positive test and the radiograph, and the hardest-to-reach contacts leak most. Moving the blood draw into the first home visit and routing results to the case nurse remove two handoffs. Measurement depends on a system that misses dates unless checked.",
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Case notification and interview",
+      "kind": "context",
+      "detail": "Contacts listed by the case nurse."
+    },
+    {
+      "id": "n2",
+      "label": "Phone contact by a second nurse",
+      "kind": "context",
+      "detail": "First handoff."
+    },
+    {
+      "id": "n3",
+      "label": "Clinic blood draw and result routing",
+      "kind": "context",
+      "detail": "Fax or courier to the central office."
+    },
+    {
+      "id": "n4",
+      "label": "Positive test to chest X-ray",
+      "kind": "gap",
+      "detail": "Largest loss elsewhere (claim c1)."
+    },
+    {
+      "id": "n5",
+      "label": "Completed evaluation within 60 days",
+      "kind": "outcome",
+      "detail": "71 percent in 2025."
+    },
+    {
+      "id": "n6",
+      "label": "Home blood draw and same-visit X-ray booking",
+      "kind": "framework",
+      "detail": "Countermeasures (claims c2, c3)."
+    },
+    {
+      "id": "n7",
+      "label": "Contacts in shelters, on shift work or needing interpreters",
+      "kind": "stakeholder",
+      "detail": "Lowest completion (claim c5)."
+    },
+    {
+      "id": "n8",
+      "label": "Case management system extract",
+      "kind": "context",
+      "detail": "Missing dates unless checked (claim c4)."
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "relation": "hands off to"
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "relation": "refers to"
+    },
+    {
+      "from": "n3",
+      "to": "n4",
+      "relation": "feeds"
+    },
+    {
+      "from": "n4",
+      "to": "n5",
+      "relation": "limits"
+    },
+    {
+      "from": "n6",
+      "to": "n3",
+      "relation": "removes handoffs in"
+    },
+    {
+      "from": "n7",
+      "to": "n5",
+      "relation": "lowest in"
+    },
+    {
+      "from": "n8",
+      "to": "n5",
+      "relation": "measures"
+    }
+  ],
+  "summary": "Map lays out the handoffs as queues and marks where redesign acts."
+}

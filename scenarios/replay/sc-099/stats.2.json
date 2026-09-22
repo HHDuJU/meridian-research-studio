@@ -1,0 +1,16 @@
+{
+  "designSummary": "Development of a penalised logistic model on 2019 to 2023 records and temporal validation on 2024 to 2025 records, with surgeon clustering.",
+  "sampleSize": "Development data from 2019 to 2023 hold about 2,600 procedures and, at about 42 percent failure, about 1,100 events; with eight pre-specified predictors and about 12 parameters after categories and splines, that is about 90 events per parameter, well above the level at which the retrieved review found overfitting (median 6 events per candidate predictor). Minimum sample size criteria for a model of this size (expected shrinkage of at least 0.9 and precise estimation of the overall risk) are met with a wide margin. The 2024 to 2025 validation set holds about 1,050 procedures and about 440 events, above the usual minimum of 200 events for precise calibration.",
+  "primaryAnalysis": "Logistic regression with ridge penalisation on the pre-specified predictors, age modelled with restricted cubic splines, surgeon as a random intercept in a sensitivity model, and bootstrap optimism correction for apparent performance.",
+  "secondaryAnalysis": "Temporal validation: c statistic, calibration intercept and slope, and a calibration plot on 2024 to 2025; decision curve analysis for booking thresholds; sensitivity analysis adding time of first walking from mid-2021; calibration reported for patients living alone and for those living more than an hour away.",
+  "missingData": "Body mass index and living alone are expected to be missing in about 8 percent; multiple imputation by chained equations with 20 imputations including the outcome, with imputation applied separately in development and validation data.",
+  "multiplicity": "Not applicable to a prediction model; no significance testing of individual predictors.",
+  "software": "R with rms, glmnet and mice.",
+  "overfittingGuards": [
+    "Predictors fixed before extraction",
+    "No selection by significance",
+    "Penalised estimation with bootstrap optimism correction",
+    "Temporal validation on data never used for development"
+  ],
+  "summary": "About 1,100 development events and 440 validation events support a penalised model with temporal validation."
+}

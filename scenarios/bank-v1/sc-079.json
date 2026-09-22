@@ -1,0 +1,1477 @@
+{
+  "id": "sc-079",
+  "version": 1,
+  "title": "Medical school: near-peer examination-skills teaching, cost-effectiveness with a concurrent comparison",
+  "field": "medical-education",
+  "level": 2,
+  "family": "economic",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Level 2, ordinary ambiguity on an explicitly economic question. Routing at create is explicit ('economic', from 'cost-effectiveness analysis' with an intent verb); the problem reply keeps it and echoes the typed constraints byte for byte (no rejected-change, G11). A fixture search returns six records; the appraisal call (scan call 1) annotates them and records four source-derived claims (certainty 'low' over inspected records, G1). A second scan call of shape discovery then asks for supplementary costing leads: its four leads are appended after the retrieved records (D1) as unverified model leads (G3), and the first carries year \"2021\" as a 4-digit string, which the contract stores as 2021 without an issue. The discovery reply omits gradeOverall, gradeRationale and synthesis (omitKeys), so the appraisal's certainty and synthesis are unchanged; the only issue is the routine drop of sourcesConsulted. Ordinary ambiguity: two candidate designs weighed at the design stage, a constraint the investigator left out (the perspective and willingness to pay, named in gaps), and one null score (h2 novelty stays null, G4). The decision rests on c1 to c3 and two gates met on investigator-supplied records, so acceptance is a supported positive. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 2, 4, 5 (ev-0mwqby2, ev-1xsdm9y, ev-15ov4hn, ev-0q0a1ak) and titleYearKey-keyed for records 3 and 6 (ev-1en9gz4, ev-0kk5k37). Requires D1 (leads appended, never replacing retrieved records), S13 (appraisal payload), S11 (selectionStatus, actionStatus, recommendedFamily, basis) and D5 (status text). Catches: a year string rejected or guessed, leads that replace retrieved records, a certainty overwritten by an omitted key, and a null score turned into a number.",
+  "inputs": {
+    "need": "I direct the clinical skills centre at a medical school with 180 students per year. Second-year students get eight faculty-led sessions on examination skills before their first OSCE, taught by clinicians who are paid sessional rates and are increasingly hard to book. For two years we have also run optional near-peer sessions in which trained final-year students teach small groups of second-years, and the student feedback is very positive. The dean has asked whether we could replace half of the faculty-led sessions with near-peer sessions from next year.\n\nI would like to do a cost-effectiveness analysis of that change before we commit. Costs on our side are faculty sessional fees, tutor training and small payments to near-peer tutors, room bookings and simulated patients. The main effect we care about is whether second-years pass the examination skills stations of the OSCE at the first attempt; we also hear that tutors themselves learn a lot, and some faculty worry that near-peer tutors teach shortcuts. We have OSCE station scores for the last four years, attendance registers for both kinds of session since 2024, and the finance office can give us sessional fees.\n\nI need help with how to compare the options fairly when students chose whether to attend the near-peer sessions, what outcome to use as the effect measure, which expenses to include and from whose perspective, and how many years of students we need before a result means anything. Nobody is funding this; it has to be done with existing data and a small amount of my own and an education fellow's time.",
+    "constraints": "No funding. Existing data only, plus about 4 hours per week of the director's and an education fellow's time from October 2026 to May 2027. Student data may be used only in de-identified form under the school's education data policy.",
+    "localFacts": [
+      "OSCE examination-skills station scores are held for the 2023, 2024, 2025 and 2026 second-year classes, about 180 students each.",
+      "Attendance registers exist for faculty-led and near-peer sessions since January 2024.",
+      "The finance office confirmed on 2026-09-12 that it can provide sessional fees, simulated patient and room charges by academic year (request FIN-2026-088).",
+      "The education research committee approved use of de-identified assessment and attendance data for this evaluation on 2026-09-17 (approval ERC-2026-14)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I direct the clinical skills centre at a medical school with 180 students per year. Second-year students get eight faculty-led sessions on examination skills before their first OSCE, taught by clinicians who are paid sessional rates and are increasingly hard to book. For two years we have also run optional near-peer sessions in which trained final-year students teach small groups of second-years, and the student feedback is very positive. The dean has asked whether we could replace half of the faculty-led sessions with near-peer sessions from next year.\n\nI would like to do a cost-effectiveness analysis of that change before we commit. Costs on our side are faculty sessional fees, tutor training and small payments to near-peer tutors, room bookings and simulated patients. The main effect we care about is whether second-years pass the examination skills stations of the OSCE at the first attempt; we also hear that tutors themselves learn a lot, and some faculty worry that near-peer tutors teach shortcuts. We have OSCE station scores for the last four years, attendance registers for both kinds of session since 2024, and the finance office can give us sessional fees.\n\nI need help with how to compare the options fairly when students chose whether to attend the near-peer sessions, what outcome to use as the effect measure, which expenses to include and from whose perspective, and how many years of students we need before a result means anything. Nobody is funding this; it has to be done with existing data and a small amount of my own and an education fellow's time.",
+          "problem.constraints": "No funding. Existing data only, plus about 4 hours per week of the director's and an education fellow's time from October 2026 to May 2027. Student data may be used only in de-identified form under the school's education data policy.",
+          "family": "economic",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I direct the clinical skills centre at a"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Replacing half of faculty-led examination-skills teaching with near-peer sessions: cost and effect",
+        "subtitle": "Cost-effectiveness analysis for a medical school decision",
+        "family": "economic",
+        "statement": "The clinical skills centre is asked to replace four of the eight faculty-led examination-skills sessions for second-year students with near-peer sessions taught by trained final-year students. The school needs to know what the change would cost and whether first-attempt pass rates on the OSCE examination-skills stations would be maintained, when existing comparisons are distorted because students chose whether to attend near-peer sessions.",
+        "whoAffected": "About 180 second-year students per year, final-year near-peer tutors, faculty clinicians paid at sessional rates, and the school's budget holders.",
+        "whatHurts": "Faculty sessions are hard to book and expensive; replacing them without evidence could lower examination performance, while keeping them may waste scarce clinician time.",
+        "currentPractice": "Eight faculty-led sessions for all second-years, plus optional near-peer sessions since 2024.",
+        "whyNow": "The dean wants a decision for next year's timetable, and four years of station scores and two years of attendance registers are available.",
+        "constraints": "No funding. Existing data only, plus about 4 hours per week of the director's and an education fellow's time from October 2026 to May 2027. Student data may be used only in de-identified form under the school's education data policy.",
+        "patientCenteredGoal": "Future patients are examined competently by graduates, whichever teaching format is used.",
+        "summary": "Problem framed as a cost-effectiveness question about a teaching change, with self-selection as the main threat."
+      },
+      "note": "Constraints are echoed byte for byte, so no rejected-change issue arises (G11).",
+      "expect": {
+        "store": {
+          "title": "Replacing half of faculty-led examination-skills teaching with near-peer sessions: cost and effect",
+          "family": "economic",
+          "problem.statement": {
+            "includes": "first-attempt pass rates"
+          },
+          "problem.rawNeed": "I direct the clinical skills centre at a medical school with 180 students per year. Second-year students get eight faculty-led sessions on examination skills before their first OSCE, taught by clinicians who are paid sessional rates and are increasingly hard to book. For two years we have also run optional near-peer sessions in which trained final-year students teach small groups of second-years, and the student feedback is very positive. The dean has asked whether we could replace half of the faculty-led sessions with near-peer sessions from next year.\n\nI would like to do a cost-effectiveness analysis of that change before we commit. Costs on our side are faculty sessional fees, tutor training and small payments to near-peer tutors, room bookings and simulated patients. The main effect we care about is whether second-years pass the examination skills stations of the OSCE at the first attempt; we also hear that tutors themselves learn a lot, and some faculty worry that near-peer tutors teach shortcuts. We have OSCE station scores for the last four years, attendance registers for both kinds of session since 2024, and the finance office can give us sessional fees.\n\nI need help with how to compare the options fairly when students chose whether to attend the near-peer sessions, what outcome to use as the effect measure, which expenses to include and from whose perspective, and how many years of students we need before a result means anything. Nobody is funding this; it has to be done with existing data and a small amount of my own and an education fellow's time.",
+          "problem.constraints": "No funding. Existing data only, plus about 4 hours per week of the director's and an education fellow's time from October 2026 to May 2027. Student data may be used only in de-identified form under the school's education data policy.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Replacing half of faculty-led examination-skills teaching with near-peer sessions: cost and effect"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "near-peer teaching clinical examination skills OSCE performance costs medical students",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Near-peer versus faculty teaching of clinical examination skills: a randomised comparison of OSCE performance",
+            "authors": "Okoro-Lindberg F, Delacroix-Mensah P, Watanabe-Hurst G",
+            "year": 2018,
+            "venue": "Journal of Clinical Skills Education",
+            "doi": "10.5555/jcse.2018.0144",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomly allocated 124 second-year medical students to four examination-skills sessions taught either by trained final-year students or by faculty clinicians. The outcome was performance on four examination stations of the end-of-year OSCE, marked by examiners unaware of allocation. Station pass rates were 88 percent after near-peer teaching and 86 percent after faculty teaching, and the mean station score difference was 0.9 points in favour of near-peer teaching (95 percent CI -1.8 to 3.6). Students rated both formats highly, and near-peer tutors reported more confidence in their own examination technique. The study was at one school and too small to show a difference of less than 10 percentage points in pass rates."
+          },
+          {
+            "title": "Near-peer teaching in undergraduate medical education: a systematic review of learner and tutor outcomes",
+            "authors": "Harrow-Adeyemi S, Kristensen-Obi T, Mahlaba-Ruiz C, Petersen-Kaur A",
+            "year": 2021,
+            "venue": "Medical Education Evidence Reviews",
+            "doi": "10.5555/meer.2021.0209",
+            "providerType": "systematic review",
+            "abstract": "We searched four databases to 2020 for studies comparing near-peer with faculty teaching in undergraduate medicine. We included 32 studies, of which 7 were randomised. Most studies reported similar or better learner performance after near-peer teaching, but outcomes were heterogeneous and usually measured immediately after teaching. Learner satisfaction was high in almost all studies. Tutors reported gains in knowledge and teaching skills. Only 4 studies reported costs, and none valued the time of student tutors. The review concludes that near-peer teaching is at least comparable for skills teaching but that economic evidence is sparse."
+          },
+          {
+            "title": "Costs of near-peer and faculty-led clinical skills teaching at one medical school: a cost comparison",
+            "authors": "Lemieux-Otieno B, Sorensen-Diallo K",
+            "year": 2023,
+            "venue": "Health Professions Education Finance",
+            "providerType": "journal-article",
+            "abstract": "We costed one academic year of examination-skills teaching at a medical school from the school's perspective. Faculty-led teaching cost 46 currency units per student contact hour, mainly sessional fees, and near-peer teaching cost 11 units per student contact hour, including tutor training, tutor payments and supervision. When the time of student tutors was valued at the rate paid for research assistant work, the near-peer cost rose to 19 units. Room and simulated patient charges were the same for both formats. The analysis did not measure learning outcomes, so it cannot say whether the cheaper option was equally effective."
+          },
+          {
+            "title": "Self-selection into optional near-peer sessions and OSCE results: an analysis of three student years",
+            "authors": "Achebe-Lindqvist M, Farrow-Nakamura J, Osei-Brandt L",
+            "year": 2020,
+            "venue": "Assessment in Medical Education",
+            "doi": "10.5555/amed.2020.0063",
+            "providerType": "observational study",
+            "abstract": "We examined 510 students across three years in which near-peer examination-skills sessions were optional. Students who attended had higher first-year assessment scores than those who did not. The unadjusted difference in OSCE examination-station scores between attenders and non-attenders was 5.2 points, which shrank to 1.1 points after adjustment for first-year scores and sex. Attendance was lowest among students who commuted long distances. The authors caution that comparisons based on optional attendance mainly reflect who chooses to attend, and recommend allocation by timetable or randomisation for future evaluations."
+          },
+          {
+            "title": "What final-year tutors gain from near-peer teaching: an interview study",
+            "authors": "Quigley-Mbatha R, Oyelaran-Holt D",
+            "year": 2016,
+            "venue": "Journal of Peer Learning in Medicine",
+            "doi": "10.5555/jplm.2016.0021",
+            "providerType": "qualitative research",
+            "abstract": "We interviewed 18 final-year medical students who had tutored second-years in examination skills. Tutors described consolidating their own knowledge, learning to give feedback and growing confidence in front of groups. Several described time pressure in the months before their final examinations and asked for sessions to be scheduled earlier in the year. Some tutors felt unsure how far to correct technique that differed from what faculty had taught them. The authors recommend a short training course, a teaching guide aligned with faculty expectations and a limit on tutoring hours before finals."
+          },
+          {
+            "title": "Detection of examination technique errors by near-peer and faculty tutors: an observational comparison",
+            "authors": "Varga-Okonjo T, Lindgren-Assefa H, Brooks-Ishikawa N",
+            "year": 2025,
+            "venue": "Clinical Teaching Quality",
+            "providerType": "observational study",
+            "abstract": "We video-recorded 60 small-group examination-skills sessions, 30 led by near-peer tutors and 30 by faculty, and compared the errors in student technique that tutors corrected with those identified by two independent reviewers. Near-peer tutors left 22 percent of technique errors uncorrected compared with 12 percent for faculty tutors. The difference was largest for cardiovascular and neurological examinations. After a one-hour calibration session for tutors, the proportion of errors missed by near-peer tutors fell to 15 percent. Sessions were at one school and tutors knew they were being recorded."
+          }
+        ]
+      },
+      "note": "Six records with abstracts; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0mwqby2",
+            "ev-1xsdm9y",
+            "ev-1en9gz4",
+            "ev-15ov4hn",
+            "ev-0q0a1ak",
+            "ev-0kk5k37"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].id": "ev-0mwqby2",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.items[2].id": "ev-1en9gz4",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.items[5].id": "ev-0kk5k37",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Costs of near-peer and faculty-led clinical skills teaching at one medical school: a cost comparison"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0mwqby2",
+            "relevance": 90,
+            "methodQuality": 68,
+            "kind": "rct",
+            "grade": "low",
+            "keyFindings": "Station pass rates were 88 percent after near-peer teaching and 86 percent after faculty teaching; mean station score difference 0.9 points (95 percent CI -1.8 to 3.6).",
+            "limitations": "One school, 124 students; too small to exclude a difference below 10 percentage points; four sessions only.",
+            "contextTags": [
+              "randomised",
+              "OSCE",
+              "examination skills"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1xsdm9y",
+            "relevance": 82,
+            "methodQuality": 64,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "32 studies (7 randomised) mostly found similar or better learner performance with near-peer teaching; only 4 reported costs and none valued tutor time.",
+            "limitations": "Heterogeneous outcomes measured soon after teaching; search to 2020.",
+            "contextTags": [
+              "systematic review",
+              "economic evidence sparse"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1en9gz4",
+            "relevance": 86,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Faculty-led teaching cost 46 units per student contact hour and near-peer teaching 11 units, rising to 19 units when tutor time was valued.",
+            "limitations": "Costs only; one school; one year.",
+            "contextTags": [
+              "costing",
+              "school perspective",
+              "tutor time"
+            ],
+            "notes": "Shows how the result depends on valuing tutor time."
+          },
+          {
+            "id": "ev-15ov4hn",
+            "relevance": 84,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "The 5.2-point advantage of optional near-peer attenders shrank to 1.1 points after adjustment for first-year scores and sex.",
+            "limitations": "Residual confounding; three years at one school.",
+            "contextTags": [
+              "self-selection",
+              "confounding"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0q0a1ak",
+            "relevance": 60,
+            "methodQuality": 55,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "18 tutors described consolidating knowledge and feedback skills but also time pressure before finals and uncertainty about correcting technique.",
+            "limitations": "Tutor perspective only; older study.",
+            "contextTags": [
+              "tutor benefit",
+              "workload"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0kk5k37",
+            "relevance": 78,
+            "methodQuality": 56,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Near-peer tutors left 22 percent of technique errors uncorrected versus 12 percent for faculty, falling to 15 percent after a one-hour calibration session.",
+            "limitations": "60 sessions at one school; tutors knew they were recorded.",
+            "contextTags": [
+              "feedback quality",
+              "calibration"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0mwqby2"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "In a randomised comparison of 124 second-year students, station pass rates were 88 percent after near-peer teaching and 86 percent after faculty teaching.",
+            "passage": "Station pass rates were 88 percent after near-peer teaching and 86 percent after faculty teaching",
+            "interpretation": "Supports a non-inferiority framing for the effect measure; the study cannot exclude small differences."
+          },
+          {
+            "id": "c2",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1en9gz4"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Faculty-led teaching cost 46 currency units per student contact hour and near-peer teaching 11 units, rising to 19 units when student tutor time was valued.",
+            "passage": "When the time of student tutors was valued at the rate paid for research assistant work, the near-peer cost rose to 19 units.",
+            "interpretation": "Tutor time must be valued explicitly and tested in a sensitivity analysis."
+          },
+          {
+            "id": "c3",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-15ov4hn"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "When attendance was optional, the 5.2-point score advantage of near-peer attenders shrank to 1.1 points after adjustment for first-year scores.",
+            "passage": "The unadjusted difference in OSCE examination-station scores between attenders and non-attenders was 5.2 points, which shrank to 1.1 points after adjustment for first-year scores and sex.",
+            "interpretation": "Existing attendance data cannot give a fair effect estimate; allocation by timetable is needed."
+          },
+          {
+            "id": "c4",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0kk5k37"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Near-peer tutors left 22 percent of technique errors uncorrected compared with 12 percent for faculty tutors, and 15 percent after a one-hour calibration session.",
+            "passage": "Near-peer tutors left 22 percent of technique errors uncorrected compared with 12 percent for faculty tutors.",
+            "interpretation": "Calibration training belongs in the cost of the near-peer option."
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level. One small randomised comparison and a review of 32 studies suggest that near-peer teaching of examination skills gives similar results to faculty teaching, but they cannot exclude small differences. A single-school costing shows near-peer teaching is much cheaper per contact hour, less so when tutor time is valued. Comparisons based on optional attendance are dominated by self-selection. Near-peer tutors miss more technique errors, which a short calibration session reduces. The evidence supports an economic evaluation with a fair comparison of groups and explicit valuation of tutor time.",
+        "gradeOverall": "low",
+        "gradeRationale": "One small randomised study and a heterogeneous review for effect, single-school observational costing, and confounded attendance data; direction consistent but imprecise and indirect.",
+        "summary": "Six retrieved records appraised; four source-derived claims; overall certainty low."
+      },
+      "note": "Appraisal of the six retrieved records (S13); certainty 'low' over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].kind": "rct",
+          "scan.items[2].keyFindings": {
+            "includes": "19 units"
+          },
+          "scan.items[3].methodQuality": 58,
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-1en9gz4"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-15ov4hn"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 2,
+      "response": {
+        "query": "economic evaluation methods for peer-assisted learning, valuation of student tutor time",
+        "sourcesConsulted": [
+          "model knowledge of health professions education economics"
+        ],
+        "items": [
+          {
+            "title": "Valuing student tutor time in economic evaluations of medical education: a methods note",
+            "authors": "Grieve-Adomako L, Santos-Whitlock E",
+            "year": "2021",
+            "source": "Journal of Education Economics Methods",
+            "kind": "expert",
+            "relevance": 72,
+            "methodQuality": null,
+            "verification": "verify",
+            "contextTags": [
+              "methods",
+              "tutor time"
+            ],
+            "keyFindings": "Proposes valuing tutor time at the wage for comparable student work and testing a zero value in sensitivity analysis.",
+            "limitations": "Methods note without data.",
+            "notes": "Lead for the costing approach; not retrieved by the recorded search."
+          },
+          {
+            "title": "Cost-effectiveness of peer-assisted learning for OSCE preparation at two schools",
+            "authors": "Moyo-Carlsson T, Bianchi-Owusu R",
+            "year": 2019,
+            "source": "Health Professions Economics Letters",
+            "kind": "observational",
+            "relevance": 80,
+            "methodQuality": null,
+            "verification": "ai-lead",
+            "contextTags": [
+              "cost-effectiveness",
+              "OSCE"
+            ],
+            "keyFindings": "Reported a lower cost per student passing when peer sessions replaced part of faculty teaching.",
+            "limitations": "Details uncertain; needs retrieval and checking.",
+            "notes": "Unchecked lead."
+          },
+          {
+            "title": "Guidance on economic evaluation in health professions education research",
+            "authors": "Health Professions Education Economics Group",
+            "year": 2017,
+            "source": "Education research guidance series",
+            "kind": "guideline",
+            "relevance": 66,
+            "methodQuality": null,
+            "verification": "ai-lead",
+            "contextTags": [
+              "guidance",
+              "perspective"
+            ],
+            "keyFindings": "Recommends stating the perspective, the time horizon and which costs fall on learners.",
+            "limitations": "Consensus guidance.",
+            "notes": "Unchecked lead."
+          },
+          {
+            "title": "Faculty time released by near-peer teaching: a multi-school workload comparison",
+            "authors": "Ekwueme-Rossi D, Hartmann-Iqbal S",
+            "year": 2022,
+            "source": "Medical Education Workforce",
+            "kind": "observational",
+            "relevance": 58,
+            "methodQuality": null,
+            "verification": "ai-lead",
+            "contextTags": [
+              "faculty workload"
+            ],
+            "keyFindings": "Estimated the faculty hours released when near-peer sessions replaced part of the timetable.",
+            "limitations": "Self-reported hours.",
+            "notes": "Unchecked lead."
+          }
+        ],
+        "summary": "Four supplementary leads on costing methods; none retrieved or checked."
+      },
+      "omitKeys": [
+        "gradeOverall",
+        "gradeRationale",
+        "synthesis"
+      ],
+      "note": "A supplementary discovery call after the appraisal. Its four leads are appended after the six retrieved records, never replacing them (D1), with origin 'model' and status unverified (G3). The first lead carries year \"2021\" as a 4-digit string, stored as the number 2021 without an issue (contracts.ts yearOrNull). The reply omits gradeOverall, gradeRationale and synthesis, so the appraisal's certainty and synthesis stay (omitted keys never overwrite; an explicit null would clear, D2). The model's sourcesConsulted text is dropped with an issue.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].id": "ev-0mwqby2",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[5].id": "ev-0kk5k37",
+          "scan.items[6].title": "Valuing student tutor time in economic evaluations of medical education: a methods note",
+          "scan.items[6].year": 2021,
+          "scan.items[6].provenance.origin": "model",
+          "scan.items[6].provenance.status": "unverified",
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[6].grade": "unrated",
+          "scan.items[9].provenance.status": "unverified",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.gradeOverall": "low",
+          "scan.synthesis": {
+            "includes": "Six retrieved records"
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "Medical school, 180 second-year students per year",
+          "Eight faculty-led sessions plus optional near-peer sessions since 2024",
+          "Four years of station scores; two years of attendance registers",
+          "No funding; 4 hours per week of staff time"
+        ],
+        "reading": "The decision turns on two quantities: the effect of replacing half the faculty sessions on first-attempt pass rates, and the change in cost. The retrieved effect evidence suggests similar performance, but local comparisons based on optional attendance are dominated by self-selection, so the existing data cannot give a fair effect estimate. Costs depend heavily on whether tutor time is valued and on calibration training. A fair comparison needs allocation by timetable block, with the historical years as context only.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Faculty sessional teaching",
+            "kind": "context",
+            "detail": "Costly and hard to book."
+          },
+          {
+            "id": "n2",
+            "label": "Near-peer sessions replacing four faculty sessions",
+            "kind": "framework",
+            "detail": "The change under evaluation."
+          },
+          {
+            "id": "n3",
+            "label": "Randomised comparison at one school",
+            "kind": "rct",
+            "detail": "88 versus 86 percent pass (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "Single-school costing",
+            "kind": "observational",
+            "detail": "46 versus 11 units per contact hour (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Self-selection into optional sessions",
+            "kind": "gap",
+            "detail": "Advantage shrinks after adjustment (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "First-attempt pass on examination-skills stations",
+            "kind": "outcome",
+            "detail": "Effect measure."
+          },
+          {
+            "id": "n7",
+            "label": "Teaching cost per student",
+            "kind": "outcome",
+            "detail": "School perspective."
+          },
+          {
+            "id": "n8",
+            "label": "Final-year tutors",
+            "kind": "stakeholder",
+            "detail": "Benefit and time pressure before finals."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "to": "n6",
+            "relation": "may change"
+          },
+          {
+            "from": "n2",
+            "to": "n7",
+            "relation": "expected to lower"
+          },
+          {
+            "from": "n3",
+            "to": "n6",
+            "relation": "estimates effect on"
+          },
+          {
+            "from": "n4",
+            "to": "n7",
+            "relation": "informs"
+          },
+          {
+            "from": "n5",
+            "to": "n6",
+            "relation": "biases local estimates of"
+          },
+          {
+            "from": "n8",
+            "to": "n2",
+            "relation": "deliver"
+          },
+          {
+            "from": "n1",
+            "to": "n7",
+            "relation": "drives"
+          }
+        ],
+        "summary": "Map shows the effect and cost components of the decision and the self-selection that distorts local data."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No fair local estimate of the effect on pass rates",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Optional attendance makes attenders look better than they are (claim c3), so the existing registers cannot supply the effect for the analysis.",
+            "opportunity": "Allocate 2027 tutorial groups to the two formats by timetable block and use the historical years only as context."
+          },
+          {
+            "id": "g2",
+            "title": "The perspective and the value of tutor time are not stated",
+            "kind": "evidence",
+            "severity": "moderate",
+            "whyItMatters": "The investigator's constraints do not say whose costs count; valuing tutor time moves the near-peer cost from 11 to 19 units (claim c2).",
+            "opportunity": "State the school perspective as the base case and a perspective that values tutor time in sensitivity analysis."
+          },
+          {
+            "id": "g3",
+            "title": "Feedback quality of near-peer tutors",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Near-peer tutors miss more technique errors (claim c4), which could affect later clinical examination even if the first OSCE is passed.",
+            "opportunity": "Include calibration training in the near-peer arm and cost it."
+          },
+          {
+            "id": "g4",
+            "title": "Students who cannot attend evening near-peer sessions",
+            "kind": "equity",
+            "severity": "watch",
+            "whyItMatters": "Students with caring duties or paid work may lose teaching if near-peer sessions run outside timetabled hours.",
+            "opportunity": "Timetable near-peer sessions within the normal day and report attendance by these groups where recorded."
+          }
+        ],
+        "errorsFound": [
+          "The investigator's constraints leave out the perspective of the analysis and the willingness to pay for an extra student passing; both must be set before any result is read."
+        ],
+        "reevaluation": "An economic evaluation is still the right frame, but the effect must come from a fair comparison in 2027 rather than from past optional attendance.",
+        "summary": "Four gaps: no fair effect estimate, an unstated perspective, tutor feedback quality and timetable equity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].kind": "method",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No fair local estimate of the effect on pass rates"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Replacing four of eight faculty sessions with calibrated near-peer sessions keeps the first-attempt pass rate on examination-skills stations within 5 percentage points of faculty-only teaching while lowering the teaching cost per student.",
+            "novelty": 35,
+            "need": 80,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "The retrieved randomised comparison and costing point this way, but neither was designed as an economic evaluation with a fair local comparison.",
+            "risks": "One year of students cannot give a precise effect; calibration may not be delivered as planned."
+          },
+          {
+            "id": "h2",
+            "statement": "Valuing tutor time at the research assistant rate will not reverse the cost advantage of the near-peer option.",
+            "novelty": null,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 90,
+            "parsimony": 85,
+            "rationale": "The costing record reports 19 against 46 units with tutor time valued; novelty is not rated because it depends on local pay rates not yet supplied.",
+            "risks": "Local tutor payments may differ."
+          },
+          {
+            "id": "h3",
+            "statement": "Near-peer teaching will release at least 60 faculty sessional hours per year.",
+            "novelty": 25,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 90,
+            "parsimony": 90,
+            "rationale": "Four sessions for 18 groups of 10 students would otherwise need faculty time.",
+            "risks": "Faculty supervision of tutors takes back part of the time released."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; one novelty judgement is left unrated (null) because the local pay rate is not known."
+      },
+      "note": "h2's novelty is null in the reply and stays null (unknown stays unknown, G4); no issue, because null is a legitimate score answer.",
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.items[1].novelty": {
+            "isNull": true
+          },
+          "hypotheses.items[1].need": 60,
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "For the 2027 second-year class, what is the incremental cost per additional student passing all examination-skills stations at the first attempt when four of eight faculty sessions are replaced by calibrated near-peer sessions, compared with eight faculty sessions?",
+            "framework": "PICO",
+            "population": "Second-year medical students, 2027 class, about 180",
+            "intervention": "Four near-peer and four faculty-led sessions, with tutor calibration",
+            "comparator": "Eight faculty-led sessions",
+            "outcome": "First-attempt pass on all examination-skills stations; teaching cost per student",
+            "time": "Through the first OSCE, May 2027",
+            "setting": "One medical school clinical skills centre"
+          }
+        ],
+        "finer": "Feasible with existing assessment and cost data and allocation by timetable; interesting to the dean; novel because economic evidence is sparse; ethical with de-identified data; relevant because it decides next year's timetable.",
+        "summary": "One PICO question pairing effect and cost."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "economic",
+        "rationale": "The question is whether a cheaper teaching format keeps performance, which is an economic evaluation. Two candidate designs were weighed: an analysis of the historical years with optional attendance, and a concurrent comparison in 2027 with tutorial groups allocated to the formats by timetable block. The historical option is refused because self-selection dominates optional attendance (c3). The concurrent comparison supplies a fair effect; the costing approach follows the retrieved costing record, with tutor time valued in sensitivity analysis (c2), and the effect is framed around similar pass rates (c1).",
+        "alternatives": [
+          "Cost-effectiveness analysis from historical optional attendance (refused: self-selection)",
+          "Cost comparison alone (refused: says nothing about performance)",
+          "Randomising individual students within tutorial groups (refused: contamination between students in the same group)"
+        ],
+        "guidelines": [
+          "CHEERS 2022",
+          "CONSORT extension for cluster allocation as a guide for reporting the allocation"
+        ],
+        "whyNotMoreComplex": "A multi-school comparison or a model with long-term outcomes would need data the school does not have; one year of allocation by timetable answers the dean's question with stated uncertainty.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a cost-effectiveness analysis of replacing four of eight faculty sessions with calibrated near-peer sessions, using a concurrent comparison of 2027 tutorial groups allocated by timetable block and the school perspective, with tutor time valued in sensitivity analysis.",
+          "question": "Should the school replace half of the faculty-led examination-skills sessions with near-peer sessions?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Near-peer teaching gives similar pass rates to faculty teaching in a randomised comparison, so a cheaper option may be acceptable.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Existing attendance data cannot give a fair effect estimate.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The curriculum committee refuses allocation by timetable block.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Approval to use de-identified assessment and attendance data",
+              "status": "met",
+              "evidence": "Education research committee approval ERC-2026-14 dated 2026-09-17, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Access to sessional fees and teaching charges by year",
+              "status": "met",
+              "evidence": "Finance office confirmation FIN-2026-088 dated 2026-09-12, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Cost comparison of the formats without an effect measure",
+            "Keep faculty sessions and add optional near-peer sessions"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; both gates rest on investigator-supplied records."
+        },
+        "summary": "Economic evaluation with a concurrent comparison; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "Two candidate designs are weighed in the rationale; the recommendation equals the investigator's stated family, so the family does not change. selectionStatus and recommendedFamily require S11; the claims require S13; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "economic",
+          "family": "economic",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].recommendedFamily": "economic",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: claims c1 to c3 rest on retrieved records and both gates are met (G7). Requires S11, S13, D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "economic"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Cost-effectiveness analysis alongside a concurrent comparison of the 2027 second-year tutorial groups, allocated by timetable block to four near-peer plus four faculty sessions or to eight faculty sessions.",
+        "population": "All second-year students in 2027 (about 180 in 18 tutorial groups of 10); students with an agreed learning adjustment are included in their allocated group.",
+        "exposure": "Near-peer arm: four sessions by final-year tutors who completed a one-hour calibration session and a teaching guide, plus four faculty sessions. Comparator: eight faculty sessions.",
+        "procedures": "Timetable blocks alternate between arms, fixed before students are placed in groups. Station results come from the May 2027 OSCE, marked by examiners unaware of arm. Costs from finance records: sessional fees, tutor payments, training and supervision time, rooms and simulated patients.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "First-attempt pass on all examination-skills stations",
+            "measure": "Proportion of students passing all examination-skills stations at the first sitting",
+            "timing": "May 2027 OSCE",
+            "why": "The performance the school must protect; the effect measure for the ratio.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Teaching cost per student",
+            "measure": "School-perspective cost of examination-skills teaching divided by students taught",
+            "timing": "Academic year 2026 to 2027",
+            "why": "The other half of the ratio.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Incremental cost per additional student passing",
+            "measure": "Difference in cost per student divided by difference in pass proportion, with a cost-effectiveness acceptability curve",
+            "timing": "After the OSCE",
+            "why": "The decision measure the dean asked for.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Session delivery and calibration",
+            "measure": "Sessions delivered as timetabled and tutors completing calibration",
+            "timing": "Each term",
+            "why": "Separates a failed format from failed delivery.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Tutor time before finals",
+            "measure": "Hours tutors report spending on teaching in the eight weeks before their finals",
+            "timing": "Spring term",
+            "why": "Guards against harm to tutors' own preparation.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Uses scheduled teaching, existing examinations and finance records; about 4 hours per week of staff time for data and analysis.",
+        "biasMitigation": [
+          "Allocation by timetable block fixed before group placement",
+          "Examiners unaware of arm",
+          "Costs taken from finance records, not estimates",
+          "Tutor time valued in sensitivity analysis"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Contamination between arms",
+            "severity": "watch",
+            "note": "Students may attend the other arm's sessions informally; attendance registers are checked."
+          },
+          {
+            "id": "b2",
+            "label": "Imprecision with one year",
+            "severity": "high",
+            "note": "One class cannot estimate a small difference in pass rates; results are presented as probabilities of cost-effectiveness."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 1,
+          "flags": [
+            "First-year assessment score is the only adjustment variable"
+          ],
+          "simplestPath": "One allocation by timetable, one effect measure, one cost measure, one ratio."
+        },
+        "theoreticalFramework": "None beyond standard economic evaluation methods (CHEERS reporting).",
+        "summary": "Concurrent comparison of 18 tutorial groups with one primary effect measure and cost outcomes."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[2].role": "secondary",
+          "protocol.outcomes[4].role": "balancing",
+          "protocol.parsimony.secondaryOutcomeCount": 2,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cost-effectiveness analysis alongside a comparison of tutorial groups allocated by timetable block; clustering by tutorial group.",
+        "sampleSize": "One class of about 180 students gives about 90 per arm. With pass rates near 87 percent, a 95 percent interval for the difference in pass proportions is about 10 percentage points either side of the estimate before allowing for clustering, so one year cannot show non-inferiority within a 5-point margin; that would need about 700 students per arm. The analysis therefore reports the probability that the near-peer option is cost-effective at stated values per additional student passing, and plans to add the 2028 class before any firm conclusion.",
+        "primaryAnalysis": "Difference in first-attempt pass proportion between arms from a mixed-effects logistic model with tutorial group as a random effect and first-year assessment score as a covariate; incremental cost per student; non-parametric bootstrap of 5,000 resamples by tutorial group for the joint distribution of cost and effect; cost-effectiveness acceptability curve.",
+        "secondaryAnalysis": "Sensitivity analyses valuing tutor time at the research assistant rate and at zero, and excluding calibration costs; faculty hours released.",
+        "missingData": "Students who do not sit the May OSCE are reported by arm; the primary analysis includes students who sat it, with a sensitivity analysis counting absentees as not passing.",
+        "multiplicity": "One primary effect measure; other analyses are labelled as secondary or sensitivity.",
+        "software": "R (lme4 and boot packages); code written before the OSCE results are released.",
+        "overfittingGuards": [
+          "One adjustment variable fixed in advance",
+          "Bootstrap resampling by tutorial group",
+          "Values per additional student passing stated before results"
+        ],
+        "summary": "About 90 students per arm; results as probabilities of cost-effectiveness, with a second year planned before firm conclusions."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 700 students per arm"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: all students receive eight sessions of examination-skills teaching; the risk is a small difference in examination preparation between arms.",
+        "consent": "Students are told about the evaluation at the start of the year and may ask for their data to be excluded; allocation follows the normal timetable process.",
+        "data": "Assessment and attendance data are de-identified by the assessment office before analysis under approval ERC-2026-14.",
+        "equity": "PROGRESS-Plus: students with caring duties, paid work, disabilities or who study in a second language may be affected differently. Sessions are timetabled within the normal day, learning adjustments continue in both arms, and pass rates are reported by arm for groups large enough to protect anonymity.",
+        "effectiveness": "The school keeps the change only if pass rates are maintained with stated uncertainty.",
+        "efficiency": "Near-peer teaching may release faculty time for clinical teaching elsewhere.",
+        "costs": "Staff time within existing roles; tutor payments already budgeted.",
+        "grants": "A small education research grant could fund the 2028 extension.",
+        "partnerships": "Assessment office, finance office, student representatives and the near-peer tutor society.",
+        "rebPath": "Approved by the education research committee on 2026-09-17 (ERC-2026-14) as evaluation of routine teaching with de-identified data, under TCPS 2 guidance for education research.",
+        "limitations": "One school and one year; allocation by timetable is not randomisation.",
+        "summary": "Low-risk education evaluation with de-identified data, an opt-out and equity reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "ERC-2026-14"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two second-year representatives and two near-peer tutors review the information sheet and the timetable plan.",
+        "socialListening": "No social media listening; the school's module feedback comments from 2024 to 2026 are read for mentions of near-peer sessions.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "public",
+            "theme": "Near-peer approachability",
+            "quote": "Composite paraphrase: I asked the final-years things I would never ask a consultant.",
+            "implication": "Record student confidence as context, not as the effect measure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Technique shortcuts",
+            "quote": "Composite paraphrase: They teach what gets you through the station, not always what finds the murmur.",
+            "implication": "Include tutor calibration and track technique errors.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Tutor workload",
+            "quote": "Composite paraphrase: I loved teaching, but not six weeks before my own finals.",
+            "implication": "Schedule near-peer sessions early and measure tutor time before finals.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "public",
+            "theme": "Fairness of allocation",
+            "quote": "Composite paraphrase: If my group gets fewer consultants, I want to know it is not making my exam harder.",
+            "implication": "Explain the allocation and publish pass rates by arm to students.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on approachability, technique, tutor workload and fairness."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "partner",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Replacing half of faculty-led examination-skills teaching with near-peer sessions: a cost-effectiveness analysis alongside a concurrent comparison",
+        "abstract": "Objective: to estimate the incremental cost per additional student passing all examination-skills stations when four of eight faculty sessions are replaced by calibrated near-peer sessions. Design: cost-effectiveness analysis alongside allocation of 2027 tutorial groups by timetable block, school perspective. Results and conclusions will follow the May 2027 OSCE.",
+        "introduction": "Near-peer teaching gives similar short-term performance in small studies and is cheaper per contact hour, but economic evaluations with fair comparisons are rare.",
+        "methods": "Eighteen tutorial groups are allocated by timetable block. The effect measure is first-attempt pass on all examination-skills stations; costs come from finance records. Uncertainty is shown by bootstrap and acceptability curves.",
+        "results": "No data have been collected yet. The report will present costs, pass proportions, the incremental ratio and acceptability curves.",
+        "discussion": "The discussion will set the result against the retrieved randomised comparison and costing, and state what a second year of data would add.",
+        "limitations": "One school, one year, allocation by timetable rather than randomisation, and imprecise effect estimates.",
+        "conclusion": "To be written after analysis.",
+        "reportingChecklist": "CHEERS 2022",
+        "summary": "CHEERS-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "CHEERS 2022",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Agree allocation by timetable block with the curriculum committee before groups are placed",
+          "Retrieve and check the four supplementary costing leads before any of them is cited",
+          "State the willingness-to-pay values per additional student passing before results are seen"
+        ],
+        "improvementNotes": "Six records were retrieved and appraised; four supplementary leads from the model remain unverified and uncited. One hypothesis score was left unrated because a local pay rate is unknown.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before the 2027 timetable is set."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 store.ts mergeStage overwrites it (L1.6, a store defect).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Replacing half of faculty-led examination-skills teaching with near-peer sessions: cost and effect",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[6].year": 2021,
+          "scan.items[6].provenance.status": "unverified",
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Replacing half of faculty-led examination-skills teaching with near-peer sessions: cost and effect",
+            "unverified"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Replacing half of faculty-led examination-skills teaching with near-peer sessions: cost and effect",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 10
+          },
+          "hypotheses.items[1].novelty": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "family": "economic"
+        },
+        "screen": {
+          "includes": [
+            "Replacing half of faculty-led examination-skills teaching with near-peer sessions: cost and effect"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The appended leads require D1; selectionStatus and actionStatus S11; claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.gradeOverall": "low",
+            "scan.items": {
+              "length": 10
+            },
+            "scan.items[0].provenance.origin": "retrieval",
+            "scan.items[6].year": 2021,
+            "scan.items[6].provenance.origin": "model",
+            "scan.items[6].provenance.status": "unverified",
+            "hypotheses.items[1].novelty": {
+              "isNull": true
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "problem.constraints": "No funding. Existing data only, plus about 4 hours per week of the director's and an education fellow's time from October 2026 to May 2027. Student data may be used only in de-identified form under the school's education data policy."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

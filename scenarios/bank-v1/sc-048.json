@@ -1,0 +1,1382 @@
+{
+  "id": "sc-048",
+  "version": 1,
+  "title": "Long-term care homes: implementing monthly interdisciplinary deprescribing rounds, RE-AIM outcomes from routine records",
+  "field": "geriatrics",
+  "level": 1,
+  "family": "implementation",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Routine path on a clear implementation question (routing explicit implementation from 'We plan an implementation study' and 'RE-AIM'; no other design word in the need). A fixture search returns six records with abstracts; the appraisal (scan call 1, shape appraisal) annotates all six by id and records four source-derived claims whose passages are exact substrings of the abstracts; certainty 'low'. The design decision (kind implementation) rests on c1 to c3, both gates are met on investigator-supplied records (OPS-2026-31, QA-2026-077), and acceptance is a supported positive (accepted, ready). The protocol has one primary implementation outcome (reach), three process measures, a secondary medicine count and a balancing pair, so no clinical benefit is claimed. A reopen follows the Ethics stage (partial work, later stages incomplete) and a reload follows the last stage. The problem reply restates the typed constraints verbatim (no G11 issue). Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 2, 4, 6 (ev-1d5yowi, ev-1cxc24r, ev-0sboarb, ev-0ttf5e9); titleYearKey hash for records 3, 5 (ev-023aey9, ev-15ls9bi). Requires S13 (appraisal), S11 (selectionStatus, actionStatus, basis explicit) and D5 (status text). Catches: an appraisal that never reaches the ledger, a supported decision not accepted or not ready, partial work lost on reopen, and an export that differs from the store.",
+  "inputs": {
+    "need": "I am a geriatrician working with three long-term care homes run by the same non-profit operator, 168 beds in total. Our residents take a median of nine regular medicines, and the consultant pharmacist and I keep finding the same problems: sedatives started in hospital and never reviewed, proton pump inhibitors without an indication, and statins and bisphosphonates continued in people in the last year of life. Last year we ran monthly interdisciplinary deprescribing rounds at one home: the pharmacist, the attending physician, the nurse in charge and, when possible, the resident or family meet for about an hour and go through four or five residents with a structured medication review checklist. Staff liked it and the number of regular medicines seemed to fall, but the rounds stopped whenever the pharmacist was on leave.\n\nThe operator now wants the rounds in all three homes. We plan an implementation study to find out whether the rounds can be adopted and sustained in every home, how many residents they actually reach, whether recommendations are carried out, and what helps or gets in the way, using RE-AIM to organise the measures. We would also track the number of regular medicines and falls, but we are not trying to prove that deprescribing prevents harm.\n\nI need help choosing the implementation outcomes, deciding what we can take from the medication administration records without extra burden on care staff, and planning how to report fidelity and sustainability honestly. The operator has approved the rounds and the pharmacist's time, but there is no research funding.",
+    "constraints": "No research funding. The consultant pharmacist has 0.4 FTE across the three homes. Data must come from existing medication administration records, round notes and incident reports, with no new forms for care staff. Every recommendation must respect the wishes of the resident or substitute decision-maker.",
+    "localFacts": [
+      "The operator approved monthly deprescribing rounds in all three homes and 0.4 FTE of consultant pharmacist time for 2027 (operator decision OPS-2026-31, dated 2026-08-27).",
+      "The three homes have 168 beds (64, 58 and 46); residents take a median of nine regular medicines.",
+      "The regional research ethics board classified the evaluation as quality assurance using routine data, not requiring REB review (determination QA-2026-077, dated 2026-09-04).",
+      "Medication administration records are electronic in all three homes and the operator's informatics lead can export them monthly."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a geriatrician working with three long-term care homes run by the same non-profit operator, 168 beds in total. Our residents take a median of nine regular medicines, and the consultant pharmacist and I keep finding the same problems: sedatives started in hospital and never reviewed, proton pump inhibitors without an indication, and statins and bisphosphonates continued in people in the last year of life. Last year we ran monthly interdisciplinary deprescribing rounds at one home: the pharmacist, the attending physician, the nurse in charge and, when possible, the resident or family meet for about an hour and go through four or five residents with a structured medication review checklist. Staff liked it and the number of regular medicines seemed to fall, but the rounds stopped whenever the pharmacist was on leave.\n\nThe operator now wants the rounds in all three homes. We plan an implementation study to find out whether the rounds can be adopted and sustained in every home, how many residents they actually reach, whether recommendations are carried out, and what helps or gets in the way, using RE-AIM to organise the measures. We would also track the number of regular medicines and falls, but we are not trying to prove that deprescribing prevents harm.\n\nI need help choosing the implementation outcomes, deciding what we can take from the medication administration records without extra burden on care staff, and planning how to report fidelity and sustainability honestly. The operator has approved the rounds and the pharmacist's time, but there is no research funding.",
+          "family": "implementation",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a geriatrician working with three long-term care homes"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Implementing monthly interdisciplinary deprescribing rounds across three long-term care homes",
+        "subtitle": "Implementation study organised by RE-AIM, using routine records",
+        "family": "implementation",
+        "statement": "Residents of three long-term care homes (168 beds) take a median of nine regular medicines, and review repeatedly finds sedatives, proton pump inhibitors and preventive medicines that no longer serve them. Monthly interdisciplinary deprescribing rounds were welcomed in one home but stopped whenever the pharmacist was absent. The operator wants rounds in all three homes; the open questions are whether they can be adopted and sustained, how many residents they reach, and whether their recommendations are carried out.",
+        "whoAffected": "Frail older residents, many near the end of life, their families and substitute decision-makers, and the nurses, physicians and pharmacist who run the rounds.",
+        "whatHurts": "Medicines that no longer help add falls, confusion, swallowing burden and administration time; reviews that happen only when one person is present leave most residents unreviewed.",
+        "currentPractice": "Ad hoc medication review at admission and when problems arise; one home held monthly rounds last year until the pharmacist's leave interrupted them.",
+        "whyNow": "The operator has approved rounds and pharmacist time for 2027, and the one-home experience showed that sustainability, not enthusiasm, is the problem to solve.",
+        "constraints": "No research funding. The consultant pharmacist has 0.4 FTE across the three homes. Data must come from existing medication administration records, round notes and incident reports, with no new forms for care staff. Every recommendation must respect the wishes of the resident or substitute decision-maker.",
+        "patientCenteredGoal": "Each resident takes only the medicines that still serve their goals, decided with them or their family, and changes are carried out and followed up.",
+        "summary": "Problem framed as an implementation question: adoption, reach, fidelity and sustainability of deprescribing rounds."
+      },
+      "expect": {
+        "store": {
+          "title": "Implementing monthly interdisciplinary deprescribing rounds across three long-term care homes",
+          "family": "implementation",
+          "problem.constraints": "No research funding. The consultant pharmacist has 0.4 FTE across the three homes. Data must come from existing medication administration records, round notes and incident reports, with no new forms for care staff. Every recommendation must respect the wishes of the resident or substitute decision-maker.",
+          "problem.statement": {
+            "includes": "adopted and sustained"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Implementing monthly interdisciplinary deprescribing rounds across three long-term care homes"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "interdisciplinary deprescribing medication review rounds long-term care homes implementation reach adoption sustainability",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Interdisciplinary deprescribing rounds in long-term care: a stepped introduction across four homes",
+            "authors": "Lindahl-Mwangi K, Osborne-Tanaka R, Carvalho-Bright E",
+            "year": 2021,
+            "venue": "Ashcombe Journal of Long-Term Care Medicine",
+            "doi": "10.5555/ajltcm.2021.0265",
+            "providerType": "journal-article",
+            "abstract": "Monthly interdisciplinary rounds, in which a pharmacist, a physician and the nurse in charge reviewed residents' medicines with a checklist, were introduced one home at a time across four long-term care homes. Using round notes and medication administration records, we found that 71 percent of residents were reviewed at least once within six months of rounds starting, and 58 percent of the recommendations made were implemented within four weeks. The mean number of regular medicines fell from 9.4 to 8.1 per resident over twelve months. Rounds were cancelled most often when the pharmacist was absent. The design cannot separate the effect of rounds from other changes over time."
+          },
+          {
+            "title": "What sustains medication review in nursing homes? A process evaluation of pharmacist-led rounds",
+            "authors": "Fernandes-Oyelaran M, Kowalski-Ahn J",
+            "year": 2023,
+            "venue": "Kestrelmoor Geriatric Practice Review",
+            "doi": "10.5555/kgpr.2023.0148",
+            "providerType": "journal-article",
+            "abstract": "We followed pharmacist-led medication review rounds in five nursing homes for two years using observation, round notes and conversations with staff. Rounds were sustained in homes where a named deputy could lead them and a fixed monthly slot was protected, and they stopped in two of five homes after the pharmacist left. Staff valued rounds that ended with a clear list of actions and an owner for each action. Physicians were more likely to attend when rounds were scheduled next to their regular visit. Homes that recorded recommendations in the medication administration record found it easier to check whether they had been carried out."
+          },
+          {
+            "title": "Resident and family involvement in deprescribing decisions in residential aged care: an observational study",
+            "authors": "Achebe-Lorentzen S, Park-Moreno D",
+            "year": 2019,
+            "venue": "Harthill Ageing and Medicines Letters",
+            "providerType": "journal-article",
+            "abstract": "We observed 312 medication reviews in six residential aged care homes and recorded who took part and whether recommendations were accepted. A resident took part in 19 percent of reviews and a family member in 23 percent. Recommendations were accepted more often when a family member took part (74 percent) than when no family member was involved (52 percent). Families most often questioned stopping medicines for dementia and for preventing fractures. Staff said that arranging family attendance was difficult outside visiting hours. The observers were known to staff, and acceptance was recorded at the end of the review rather than at follow-up."
+          },
+          {
+            "title": "Deprescribing interventions in long-term care: a systematic review of effects on medicines, falls and mortality",
+            "authors": "Mbatha-Lindqvist P, Oduya-Harrington C, Silva-Kaur A, Nakamura-Fox J",
+            "year": 2020,
+            "venue": "Vellmar Clinical Pharmacology Reviews",
+            "doi": "10.5555/vcpr.2020.0331",
+            "providerType": "journal-article",
+            "abstract": "We searched four databases for controlled studies of deprescribing interventions in long-term care and included 21 studies with about 6,900 residents. Interventions reduced the number of regular medicines, but effects on falls and mortality were imprecise and inconsistent. Few studies reported whether medicines were restarted, and none reported residents' own views of the changes. Most studies were at high risk of bias because staff and outcome assessors knew which homes received the intervention. The certainty of evidence for effects on falls and mortality was low. Future studies should report restarts and implementation outcomes alongside clinical outcomes."
+          },
+          {
+            "title": "Measuring fidelity of structured medication review rounds with a checklist completion index",
+            "authors": "Whitaker-Nnamdi O, Sorensen-Rao L",
+            "year": 2016,
+            "venue": "Ashcombe Journal of Long-Term Care Medicine",
+            "providerType": "journal-article",
+            "abstract": "We developed a checklist completion index for structured medication review rounds in care homes, scoring whether each of eight core steps was documented for each resident reviewed. Two pharmacists scored 150 round notes independently and agreed well. Mean completion was 78 percent, and the steps most often missed were checking the resident's goals of care and recording who would carry out each recommendation. Completion was higher when the checklist was built into the round note template. The index relies on documentation and cannot show whether undocumented steps took place."
+          },
+          {
+            "title": "Reach and adoption of a medication review programme across 22 care homes: an analysis of routine data",
+            "authors": "Grant-Obi H, Ellison-Ferraro M, Adeyemi-Holm S",
+            "year": 2025,
+            "venue": "Kestrelmoor Geriatric Practice Review",
+            "doi": "10.5555/kgpr.2025.0012",
+            "providerType": "journal-article",
+            "abstract": "A regional medication review programme was offered to 22 care homes. Using programme records and electronic medication administration records, we measured adoption as the number of monthly reviews held and reach as the proportion of residents reviewed in each home. Adoption ranged from 30 percent to 90 percent of scheduled reviews. Homes with electronic medication administration records reached more of their residents than homes with paper records. Reach was lowest for residents admitted for short stays. The analysis describes routine data and cannot explain why homes differed, and outcomes for residents were not examined."
+          }
+        ]
+      },
+      "note": "Six records with abstracts; ids are stableRecordId values computed by the generator (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1d5yowi",
+            "ev-1cxc24r",
+            "ev-023aey9",
+            "ev-0sboarb",
+            "ev-15ls9bi",
+            "ev-0ttf5e9"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].id": "ev-1d5yowi",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.items[2].id": "ev-023aey9",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.items[2].grade": "unrated",
+          "scan.items[2].relevance": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Interdisciplinary deprescribing rounds in long-term care: a stepped introduction across four homes"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1d5yowi",
+            "relevance": 94,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across four homes, 71 percent of residents were reviewed within six months and 58 percent of recommendations were implemented within four weeks; mean regular medicines fell from 9.4 to 8.1.",
+            "limitations": "Stepped introduction without concurrent control; secular change possible.",
+            "contextTags": [
+              "reach",
+              "implementation of recommendations",
+              "long-term care"
+            ],
+            "notes": "Closest to the planned rounds."
+          },
+          {
+            "id": "ev-1cxc24r",
+            "relevance": 90,
+            "methodQuality": 60,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Rounds lasted where a named deputy and a fixed monthly slot existed; they stopped in two of five homes after the pharmacist left.",
+            "limitations": "Five homes; observers were part of the programme.",
+            "contextTags": [
+              "sustainability",
+              "process evaluation"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-023aey9",
+            "relevance": 76,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Families took part in 23 percent of reviews; acceptance of recommendations was 74 percent with family involvement against 52 percent without.",
+            "limitations": "Acceptance recorded at the review, not at follow-up.",
+            "contextTags": [
+              "family involvement",
+              "shared decisions"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0sboarb",
+            "relevance": 70,
+            "methodQuality": 72,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "21 controlled studies: fewer regular medicines; imprecise and inconsistent effects on falls and mortality; restarts rarely reported.",
+            "limitations": "Most included studies at high risk of bias.",
+            "contextTags": [
+              "clinical outcomes",
+              "systematic review"
+            ],
+            "notes": "Supports not claiming effects on falls."
+          },
+          {
+            "id": "ev-15ls9bi",
+            "relevance": 72,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A checklist completion index scored eight core steps; mean completion 78 percent; goals of care and action owners most often missed.",
+            "limitations": "Documentation-based.",
+            "contextTags": [
+              "fidelity",
+              "measurement"
+            ],
+            "notes": "Usable fidelity measure from round notes."
+          },
+          {
+            "id": "ev-0ttf5e9",
+            "relevance": 80,
+            "methodQuality": 56,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across 22 homes, adoption ranged from 30 to 90 percent of scheduled reviews; homes with electronic records reached more residents; short-stay residents were reached least.",
+            "limitations": "Routine data; no resident outcomes.",
+            "contextTags": [
+              "adoption",
+              "reach",
+              "routine data"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a stepped introduction across four homes, 71 percent of residents were reviewed within six months and 58 percent of recommendations were implemented.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1d5yowi"
+            ],
+            "location": "Abstract, results",
+            "passage": "71 percent of residents were reviewed at least once within six months of rounds starting, and 58 percent of the recommendations made were implemented within four weeks",
+            "interpretation": "Planning values for reach and for implementation of recommendations.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Rounds were sustained where a named deputy could lead them and a fixed monthly slot was protected, and stopped in two of five homes after the pharmacist left.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1cxc24r"
+            ],
+            "location": "Abstract",
+            "passage": "Rounds were sustained in homes where a named deputy could lead them and a fixed monthly slot was protected, and they stopped in two of five homes after the pharmacist left.",
+            "interpretation": "Build a deputy and a fixed slot into each home's rounds.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Deprescribing interventions in long-term care reduced regular medicines, while effects on falls and mortality were imprecise and inconsistent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0sboarb"
+            ],
+            "location": "Abstract, results",
+            "passage": "Interventions reduced the number of regular medicines, but effects on falls and mortality were imprecise and inconsistent.",
+            "interpretation": "Track falls as a balancing measure without claiming benefit.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c4",
+            "text": "Recommendations were accepted more often when a family member took part (74 percent) than when none was involved (52 percent).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-023aey9"
+            ],
+            "location": "Abstract, results",
+            "passage": "Recommendations were accepted more often when a family member took part (74 percent) than when no family member was involved (52 percent).",
+            "interpretation": "Invite families and record their participation.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level. Interdisciplinary rounds in comparable homes reached most residents within six months and led to most recommendations being implemented, but sustainability depended on a named deputy and a protected monthly slot. Family participation was associated with higher acceptance. A systematic review shows fewer medicines with deprescribing but no clear effect on falls or mortality, so clinical outcomes should be tracked, not claimed. Routine data can measure reach and adoption, and a checklist completion index can measure fidelity from round notes.",
+        "gradeOverall": "low",
+        "gradeRationale": "Uncontrolled and observational implementation studies with consistent findings on reach and sustainability; the clinical effect evidence is low certainty and imprecise.",
+        "summary": "Six records appraised; four source-derived claims; certainty low."
+      },
+      "note": "Appraisal over six retrieved records on the production scan path (S13); certainty assigned over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].relevance": 94,
+          "scan.items[3].grade": "moderate",
+          "scan.items[3].kind": "systematic-review",
+          "scan.items[4].keyFindings": {
+            "includes": "78 percent"
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-1d5yowi"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-1cxc24r"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0sboarb"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-023aey9"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "three long-term care homes, 168 beds",
+          "consultant pharmacist 0.4 FTE",
+          "electronic medication administration records",
+          "rounds stopped when the pharmacist was on leave"
+        ],
+        "reading": "Whether rounds help residents depends first on whether they happen and reach residents, and then on whether recommendations are carried out. The retrieved evidence puts reach and implementation of recommendations at a majority in comparable homes (c1) and shows that rounds survive only with a deputy and a protected slot (c2). Families raise acceptance (c4). Falls are a balancing concern rather than a promised benefit (c3). Routine records can carry most of the measurement.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Monthly interdisciplinary rounds",
+            "kind": "framework",
+            "detail": "Pharmacist, physician, nurse in charge, resident or family."
+          },
+          {
+            "id": "n2",
+            "label": "Named deputy and protected slot",
+            "kind": "context",
+            "detail": "Conditions for sustainability (c2)."
+          },
+          {
+            "id": "n3",
+            "label": "Reach: residents reviewed",
+            "kind": "outcome",
+            "detail": "71 percent within six months elsewhere (c1)."
+          },
+          {
+            "id": "n4",
+            "label": "Recommendations carried out",
+            "kind": "outcome",
+            "detail": "58 percent within four weeks elsewhere (c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Family participation",
+            "kind": "stakeholder",
+            "detail": "Associated with higher acceptance (c4)."
+          },
+          {
+            "id": "n6",
+            "label": "Falls and restarts",
+            "kind": "outcome",
+            "detail": "Balancing measures; no promised effect (c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Electronic administration records",
+            "kind": "context",
+            "detail": "Source for reach and implementation data."
+          },
+          {
+            "id": "n8",
+            "label": "Short-stay residents",
+            "kind": "stakeholder",
+            "detail": "Least reached in routine programmes."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "to": "n1",
+            "relation": "sustains"
+          },
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "produces"
+          },
+          {
+            "from": "n1",
+            "to": "n4",
+            "relation": "produces recommendations for"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "raises acceptance of"
+          },
+          {
+            "from": "n4",
+            "to": "n6",
+            "relation": "must be monitored against"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "measures"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "are missed by"
+          }
+        ],
+        "summary": "Map from rounds to reach and carried-out recommendations, with the conditions that sustain them and the balancing outcomes."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[0].kind": "framework",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Sustainability without the pharmacist is untested",
+            "kind": "implementation",
+            "severity": "high",
+            "whyItMatters": "Rounds stopped in the first home during leave, and elsewhere they stopped in two of five homes after the pharmacist left (c2).",
+            "opportunity": "Train a named deputy in each home and measure rounds held when the pharmacist is absent."
+          },
+          {
+            "id": "g2",
+            "title": "No local measure of reach or carried-out recommendations",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The first home's impression that medicines fell was never measured against how many residents were reviewed.",
+            "opportunity": "Measure reach and implementation of recommendations from round notes and administration records."
+          },
+          {
+            "id": "g3",
+            "title": "Short-stay and cognitively impaired residents may be missed",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Programmes reach short-stay residents least, and residents who cannot speak for themselves depend on families who may not attend.",
+            "opportunity": "Report reach by length of stay and by whether a substitute decision-maker took part."
+          },
+          {
+            "id": "g4",
+            "title": "Restarted medicines are rarely reported",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "A stopped medicine that is restarted within weeks signals harm or a poor decision (c3's review found restarts rarely reported).",
+            "opportunity": "Count restarts within 30 days from administration records as a balancing measure."
+          },
+          {
+            "id": "g5",
+            "title": "Fidelity is documented, not observed",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "A checklist completion index relies on round notes.",
+            "opportunity": "Use the index and observe one round per home per quarter."
+          }
+        ],
+        "errorsFound": [
+          "The need's impression that medicines 'seemed to fall' in the first home is unmeasured and should not be used as a planning value."
+        ],
+        "reevaluation": "The gaps confirm an implementation study that measures adoption, reach, carried-out recommendations and sustainability, with falls and restarts as balancing measures.",
+        "summary": "Five gaps; sustainability and missing local measures are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].kind": "implementation",
+          "gaps.items[2].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Sustainability without the pharmacist is untested"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "With a named deputy and a protected monthly slot in each home, rounds will be held in at least 10 of 12 months in all three homes and will review at least 70 percent of residents within six months.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "Targets follow the retrieved reach figures (c1) and the conditions for sustainability (c2); need and practice change are high because the operator will decide on continuation.",
+            "risks": "Staff turnover and physician attendance."
+          },
+          {
+            "id": "h2",
+            "statement": "Recommendations made with a family member present are carried out more often than those made without.",
+            "novelty": 40,
+            "need": 60,
+            "practiceChange": 60,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Supported elsewhere (c4); worth describing, not testing.",
+            "risks": "Confounded by resident characteristics."
+          },
+          {
+            "id": "h3",
+            "statement": "Falls will not increase after rounds are introduced.",
+            "novelty": 30,
+            "need": 70,
+            "practiceChange": 50,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "A balancing proposition, not a claim of benefit (c3).",
+            "risks": "Too few falls for a precise estimate."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "h1 selected: adoption, reach and sustainability targets; h2 and h3 descriptive."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].need": 85,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In three long-term care homes, can monthly interdisciplinary deprescribing rounds with a named deputy and a protected slot be adopted and sustained through 2027, what proportion of residents do they reach within six months, and what proportion of recommendations are carried out within four weeks?",
+            "framework": "PICO",
+            "population": "Residents of three long-term care homes (168 beds) and the staff who run the rounds",
+            "intervention": "Monthly interdisciplinary deprescribing rounds with a checklist, a named deputy and a protected slot",
+            "comparator": "No comparator; pre-specified targets",
+            "outcome": "Adoption, reach, implementation of recommendations and sustainability (RE-AIM), with falls and restarts as balancing measures",
+            "time": "January to December 2027",
+            "setting": "Three homes of one non-profit operator"
+          }
+        ],
+        "finer": "Feasible with 0.4 FTE pharmacist time and routine records; interesting to the operator; novel locally; ethical under determination QA-2026-077 with residents' wishes respected; relevant because the operator decides on continuation at the end of 2027.",
+        "summary": "One implementation question with RE-AIM outcomes."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "implementation",
+        "rationale": "The rounds' clinical benefit is not the open question; the evidence shows fewer medicines without a clear effect on falls (c3). What the operator needs to know is whether rounds can be adopted, reach residents, lead to carried-out recommendations and survive the pharmacist's absence (c1, c2). An implementation study organised by RE-AIM answers that from routine records, with fidelity measured by a checklist completion index. Reporting follows StaRI.",
+        "alternatives": [
+          "Controlled comparison of homes with and without rounds (refused: all three homes will receive rounds and the clinical question is not the operator's question)",
+          "Continue rounds without evaluation (refused: the first home's experience shows sustainability must be measured)",
+          "Pharmacist-only desk review without rounds"
+        ],
+        "guidelines": [
+          "StaRI",
+          "RE-AIM"
+        ],
+        "whyNotMoreComplex": "A hybrid effectiveness design would need a comparison and outcome assessment the homes cannot fund; implementation outcomes from routine records answer the operator's decision.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Introduce monthly interdisciplinary deprescribing rounds in all three homes with a named deputy and a protected slot in each, and evaluate adoption, reach, carried-out recommendations and sustainability from routine records, with falls and restarts as balancing measures.",
+          "question": "Should the operator introduce and evaluate deprescribing rounds in all three homes in 2027?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Rounds reached most residents and led to most recommendations being carried out in comparable homes, and sustainability depended on a deputy and a protected slot.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "An evaluated deprescribing programme is already running in the three homes.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Operator approval of rounds and pharmacist time in all three homes",
+              "status": "met",
+              "evidence": "Operator decision OPS-2026-31 dated 2026-08-27, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Ethics determination for the evaluation using routine data",
+              "status": "met",
+              "evidence": "Determination QA-2026-077 dated 2026-09-04 (quality assurance, no REB review required), supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Pharmacist-only desk review without rounds",
+            "Rounds in one home only"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records and on two investigator-supplied determinations."
+        },
+        "summary": "Implementation study recommended; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "The decision cites c1 to c3 from the appraisal (S13). selectionStatus requires S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "implementation",
+          "family": "implementation",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].criteria[0].claimIds": [
+            "c1",
+            "c2"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: c1 to c3 exist in the ledger and rest on retrieved records; both gates are met on investigator-supplied determinations; accepted and ready (G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "implementation"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Implementation study in three long-term care homes, January to December 2027: monthly interdisciplinary deprescribing rounds with a structured checklist, a named deputy and a protected slot in each home, evaluated with RE-AIM outcomes from round notes, medication administration records and incident reports.",
+        "population": "All residents of the three homes (168 beds) during 2027, including short-stay residents; the staff who run the rounds.",
+        "exposure": "Monthly rounds of about one hour: pharmacist (or the named deputy), attending physician, nurse in charge and, when possible, the resident or substitute decision-maker; four to six residents per round, prioritised by number of medicines and time since last review; recommendations recorded in the administration record with an owner and a date.",
+        "procedures": "Before January, each home names a deputy (a senior nurse trained by the pharmacist) and fixes a monthly slot next to the physician's visit. Round notes use a template with the eight checklist steps. The informatics lead exports administration records monthly; the pharmacist links recommendations to changes within four weeks and to restarts within 30 days. One round per home per quarter is observed with a short fidelity checklist.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Reach",
+            "measure": "Proportion of residents with at least one round review within six months of admission or of the first round, by home",
+            "timing": "Six-monthly, reported at 12 months",
+            "why": "Whether rounds touch the residents they are meant for.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "process",
+            "name": "Adoption and maintenance",
+            "measure": "Rounds held out of 12 scheduled per home, including rounds held when the pharmacist was absent",
+            "timing": "Monthly",
+            "why": "Sustainability was the failure in the first home.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Recommendations carried out",
+            "measure": "Proportion of recommendations implemented in the administration record within four weeks",
+            "timing": "Monthly",
+            "why": "A recommendation that is not carried out changes nothing for the resident.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Fidelity",
+            "measure": "Checklist completion index (eight core steps) from round notes, with quarterly observation",
+            "timing": "Monthly and quarterly",
+            "why": "Shows whether goals of care and action owners are recorded.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "secondary",
+            "name": "Regular medicines per resident",
+            "measure": "Count of regular medicines from the administration record",
+            "timing": "Baseline, 6 and 12 months",
+            "why": "The expected direct result of rounds.",
+            "patientCentered": false
+          },
+          {
+            "id": "o6",
+            "role": "balancing",
+            "name": "Falls and restarts",
+            "measure": "Falls per 1,000 resident-days from incident reports; proportion of stopped medicines restarted within 30 days",
+            "timing": "Monthly",
+            "why": "Deprescribing must not cause harm or reversals.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "The pharmacist's 0.4 FTE covers one round per home per month plus follow-up; data come from existing records exported by the informatics lead; no forms are added for care staff.",
+        "biasMitigation": [
+          "Outcomes defined from routine records before the first round",
+          "Reach reported by home, length of stay and substitute decision-maker participation",
+          "Quarterly observation to check documentation-based fidelity",
+          "Secular changes in prescribing noted on a timeline of events"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "No comparison group",
+            "severity": "watch",
+            "note": "Changes in medicines cannot be attributed to rounds alone; the study does not claim they can."
+          },
+          {
+            "id": "b2",
+            "label": "Documentation-based fidelity",
+            "severity": "watch",
+            "note": "Undocumented steps are invisible; quarterly observation limits this."
+          },
+          {
+            "id": "b3",
+            "label": "Selective prioritisation of residents",
+            "severity": "ok",
+            "note": "A fixed prioritisation rule avoids choosing easy reviews."
+          }
+        ],
+        "parsimony": {
+          "score": 83,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "Three process measures follow RE-AIM; clinical outcomes are secondary or balancing only"
+          ],
+          "simplestPath": "One primary implementation outcome from routine records, three process measures, one balancing pair."
+        },
+        "theoreticalFramework": "RE-AIM organises the outcomes; no further framework is added because the study does not test causal mechanisms.",
+        "summary": "RE-AIM implementation study with reach as the primary outcome, three process measures, medicine count as secondary and falls with restarts as balancing."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 6
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].name": "Reach",
+          "protocol.outcomes[5].role": "balancing",
+          "protocol.outcomes[5].patientCentered": true,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Descriptive implementation study; proportions with confidence intervals by home and in total, and monthly run charts of adoption and recommendations carried out.",
+        "sampleSize": "All residents are included, so there is no sampling. With about 168 residents in the first six months, a reach of 70 percent is estimated with a 95 percent confidence interval of about plus or minus 7 percentage points overall and about plus or minus 11 points in the largest home (64 beds). Falls are expected at about 5 per 1,000 resident-days, about 300 falls a year across the homes, which describes the rate but cannot show a small change.",
+        "primaryAnalysis": "Reach as a proportion with a Wilson 95 percent confidence interval, overall and by home, against the pre-stated target of 70 percent.",
+        "secondaryAnalysis": "Rounds held per home (target 10 of 12); recommendations carried out within four weeks; checklist completion index; change in regular medicines per resident from baseline to 12 months as a mean difference with its interval; falls per 1,000 resident-days and restarts within 30 days, described monthly.",
+        "missingData": "Residents who die or leave before six months contribute to reach only while resident; missing round notes are counted as rounds not documented, not imputed.",
+        "multiplicity": "One primary outcome with a target; other measures are descriptive.",
+        "software": "Spreadsheet templates for monthly counts, with R for intervals; export and linkage rules archived before January.",
+        "overfittingGuards": [
+          "Targets and outcome definitions fixed before the first round",
+          "No home-level comparisons presented as effects",
+          "Falls described, never tested for benefit"
+        ],
+        "summary": "Whole-population measurement; reach of 70 percent estimated within about 7 points; clinical measures descriptive."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "plus or minus 7 percentage points"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: rounds are part of care and follow existing prescribing responsibilities. Risks are stopping a medicine a resident still needs, and discussing end-of-life medicines without the resident or family.",
+        "consent": "Rounds are care, not research: residents or substitute decision-makers are told about the rounds at admission and before their review, and may decline changes. The evaluation uses routine data under determination QA-2026-077, with no individual consent.",
+        "data": "The informatics lead exports administration records with study numbers; the pharmacist links them to round notes on the operator's secure drive; reports show counts by home only.",
+        "equity": "PROGRESS-Plus: residents with dementia, residents without family, residents whose first language differs from staff, and short-stay residents may be reviewed less or have their wishes heard less. Reach and family participation are reported by length of stay and by whether a substitute decision-maker took part; interpreters are booked for reviews where needed.",
+        "effectiveness": "Success is sustained rounds that reach most residents and lead to carried-out recommendations without more falls or restarts.",
+        "efficiency": "About one hour of pharmacist, physician and nurse time per home per month, within approved time.",
+        "costs": "Staff time within approved roles; no additional budget.",
+        "grants": "None needed; results could support regional funding to extend the model.",
+        "partnerships": "The operator's quality lead, the three directors of care, a family council representative from each home, and the informatics lead.",
+        "rebPath": "The regional research ethics board determined the evaluation to be quality assurance using routine data, not requiring REB review (QA-2026-077, 2026-09-04); any publication will state this determination.",
+        "limitations": "No comparison group; documentation-based fidelity; the study cannot show clinical benefit.",
+        "summary": "Low-risk evaluation of routine care under a quality assurance determination, with equity reporting by length of stay and family participation."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "QA-2026-077"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work (10 of 13 stages): the stages done so far, the appraisal and the accepted decision must come back; later stages stay incomplete.",
+      "expect": {
+        "store": {
+          "title": "Implementing monthly interdisciplinary deprescribing rounds across three long-term care homes",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "protocol.outcomes": {
+            "length": 6
+          },
+          "voices.items": {
+            "length": 0
+          }
+        },
+        "stage": {
+          "ethics": "complete",
+          "voices": "incomplete",
+          "audit": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Implementing monthly interdisciplinary deprescribing rounds across three long-term care homes"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A family council representative from each home reviews the information given to residents and families before rounds start and the lay summary of results; the directors of care review the deputy role.",
+        "socialListening": "No social media listening; the homes' compliment and complaint logs for the last year are read for comments about medicines.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Being asked first",
+            "quote": "Composite paraphrase: I did not mind them stopping Mum's cholesterol tablet; I minded hearing about it from the pharmacy bag.",
+            "implication": "Tell families before a change and record their view in the round note.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "The rounds without the pharmacist",
+            "quote": "Composite paraphrase (nurse in charge): When she was away we just cancelled, because none of us felt we could run it.",
+            "implication": "Train and support a named deputy in each home.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Fewer tablets",
+            "quote": "Composite paraphrase (resident): Nine tablets at breakfast is a meal in itself.",
+            "implication": "Report medicine counts in terms residents recognise.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Physician time",
+            "quote": "Composite paraphrase (attending physician): If the round is next to my visit I will be there; if it is on another day I will not.",
+            "implication": "Schedule rounds next to the physician's regular visit.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on family communication, deputies, pill burden and scheduling."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].source": "family",
+          "voices.items[1].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Adoption, reach and sustainability of interdisciplinary deprescribing rounds in three long-term care homes: an implementation study",
+        "abstract": "Objective: to evaluate whether monthly interdisciplinary deprescribing rounds with a named deputy and a protected slot can be adopted and sustained in three long-term care homes, and how many residents they reach. Design: implementation study organised by RE-AIM using routine records, January to December 2027. Results and conclusions will be written after the year.",
+        "introduction": "Residents of long-term care take many medicines that may no longer serve them. Retrieved studies show that interdisciplinary rounds can reach most residents, but that rounds stop when their pharmacist leaves, and that effects on falls are uncertain.",
+        "methods": "Monthly rounds with a checklist in three homes; outcomes of reach, adoption, recommendations carried out and fidelity from round notes and administration records; falls and restarts as balancing measures. The evaluation was determined to be quality assurance (QA-2026-077).",
+        "results": "No data have been collected yet. The report will present reach by home, rounds held per month, recommendations carried out, fidelity, medicine counts and balancing measures.",
+        "discussion": "The discussion will focus on what sustained the rounds, who was not reached, and what the operator should decide, without attributing clinical change to the rounds.",
+        "limitations": "No comparison group; documentation-based fidelity; three homes of one operator.",
+        "conclusion": "To be written after the year; it will address implementation outcomes and balancing measures.",
+        "reportingChecklist": "StaRI",
+        "summary": "StaRI-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "StaRI",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Name and train a deputy in each home before the first round in January",
+          "Agree the export format for administration records with the informatics lead",
+          "Run an identity check on the six retrieved records before the report cites them"
+        ],
+        "improvementNotes": "Six records came from a recorded search and were appraised at abstract level; the decision rests on three ledger claims and two investigator-supplied determinations. Clinical outcomes are tracked, not claimed.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before the rounds start."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 the audit patch is overwritten by store.ts mergeStage (the L1.6 defect, sheet A3).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Browser reload on the Audit route after the last stage.",
+      "expect": {
+        "store": {
+          "title": "Implementing monthly interdisciplinary deprescribing rounds across three long-term care homes",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "voices.items": {
+            "length": 4
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Implementing monthly interdisciplinary deprescribing rounds across three long-term care homes"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click, one file equal to the store (G10). selectionStatus and actionStatus require S11; scan.claims S13.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 4
+            },
+            "design.recommended": "implementation",
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "protocol.outcomes[0].name": "Reach",
+            "problem.rawNeed": "I am a geriatrician working with three long-term care homes run by the same non-profit operator, 168 beds in total. Our residents take a median of nine regular medicines, and the consultant pharmacist and I keep finding the same problems: sedatives started in hospital and never reviewed, proton pump inhibitors without an indication, and statins and bisphosphonates continued in people in the last year of life. Last year we ran monthly interdisciplinary deprescribing rounds at one home: the pharmacist, the attending physician, the nurse in charge and, when possible, the resident or family meet for about an hour and go through four or five residents with a structured medication review checklist. Staff liked it and the number of regular medicines seemed to fall, but the rounds stopped whenever the pharmacist was on leave.\n\nThe operator now wants the rounds in all three homes. We plan an implementation study to find out whether the rounds can be adopted and sustained in every home, how many residents they actually reach, whether recommendations are carried out, and what helps or gets in the way, using RE-AIM to organise the measures. We would also track the number of regular medicines and falls, but we are not trying to prove that deprescribing prevents harm.\n\nI need help choosing the implementation outcomes, deciding what we can take from the medication administration records without extra burden on care staff, and planning how to report fidelity and sustainability honestly. The operator has approved the rounds and the pharmacist's time, but there is no research funding."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

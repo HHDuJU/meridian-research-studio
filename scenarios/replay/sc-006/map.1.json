@@ -1,0 +1,97 @@
+{
+  "contexts": [
+    "core laboratory for three hospitals and 40 community clinics",
+    "about 14,000 critical value calls a year",
+    "policy LAB-POL-012: read-back within 30 minutes",
+    "single technologist on nights"
+  ],
+  "reading": "Delay accumulates where a verified result meets nobody to call: community clinics after closing, outpatients after 17:00 and nights when one technologist also runs the analysers. Call attempts are the visible trace of that search. The data to measure all of this already sit in the call logs, and the definition of the interval matters as much as the analysis.",
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Verified critical value",
+      "kind": "context",
+      "detail": "Start of the notification interval (claim c2)."
+    },
+    {
+      "id": "n2",
+      "label": "Documented read-back within 30 minutes",
+      "kind": "outcome",
+      "detail": "Policy standard and primary outcome."
+    },
+    {
+      "id": "n3",
+      "label": "Community clinics after hours",
+      "kind": "context",
+      "detail": "No responsible clinician reachable for about a quarter of results."
+    },
+    {
+      "id": "n4",
+      "label": "Repeated call attempts",
+      "kind": "context",
+      "detail": "Main mechanism of delay (claim c5)."
+    },
+    {
+      "id": "n5",
+      "label": "Single night technologist",
+      "kind": "context",
+      "detail": "Associated with more delay (claim c4)."
+    },
+    {
+      "id": "n6",
+      "label": "Multicentre call-log analysis",
+      "kind": "observational",
+      "detail": "71 against 94 percent within 30 minutes (claim c1)."
+    },
+    {
+      "id": "n7",
+      "label": "Escalation route",
+      "kind": "framework",
+      "detail": "Option the director is considering (claim c3)."
+    },
+    {
+      "id": "n8",
+      "label": "Patients at home with a critical result",
+      "kind": "stakeholder",
+      "detail": "Bear the risk of delay."
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "relation": "starts the interval ending in"
+    },
+    {
+      "from": "n3",
+      "to": "n4",
+      "relation": "produces"
+    },
+    {
+      "from": "n4",
+      "to": "n2",
+      "relation": "delays"
+    },
+    {
+      "from": "n5",
+      "to": "n2",
+      "relation": "delays"
+    },
+    {
+      "from": "n6",
+      "to": "n2",
+      "relation": "benchmarks"
+    },
+    {
+      "from": "n7",
+      "to": "n4",
+      "relation": "would shorten"
+    },
+    {
+      "from": "n8",
+      "to": "n3",
+      "relation": "are served by"
+    }
+  ],
+  "summary": "Map follows a critical value from verification to read-back and marks where delay accumulates."
+}

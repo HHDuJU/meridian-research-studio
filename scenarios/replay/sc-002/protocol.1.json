@@ -1,0 +1,84 @@
+{
+  "overview": "Case-control study nested in discharges of patients aged 75 and over from the medical wards between January 2023 and December 2025, with exposure read from social work notes using a fixed abstraction form.",
+  "population": "Eligible discharges: patients aged 75 and over discharged alive from the medical wards with a social work referral during the admission. Cases: 160 randomly sampled eligible discharges followed by an unplanned readmission within 30 days. Controls: 320 eligible discharges without readmission, frequency matched to cases by discharge quarter and ward group.",
+  "exposure": "Primary: a family discharge planning meeting attended in person or by telephone by at least one family member or carer and ending with a written plan given to the family. Secondary: any booked meeting in the activity log. Unattended bookings form a separate category.",
+  "procedures": "The informatics team draws cases from the readmission report and controls from the discharge list, and removes the readmission date from the reading packet. Two senior social workers read notes with the abstraction form, blind to case status where possible; 10 percent are read by both. Complexity (prior admissions in 12 months, frailty score, living alone, dementia, number of regular medicines, discharge destination) comes from the discharge summary.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Unplanned readmission within 30 days",
+      "measure": "Emergency readmission to this hospital within 30 days of discharge, from the readmission report; defines case status",
+      "timing": "0 to 30 days after discharge",
+      "why": "The outcome the medical director asked about and the one patients and carers notice.",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Readmission within 7 days",
+      "measure": "Emergency readmission within 7 days, among cases",
+      "timing": "0 to 7 days after discharge",
+      "why": "Very early readmission is most plausibly linked to the discharge plan.",
+      "patientCentered": true
+    },
+    {
+      "id": "o3",
+      "role": "process",
+      "name": "Readable exposure",
+      "measure": "Proportion of sampled notes in which attendance and a written plan can be determined",
+      "timing": "During reading",
+      "why": "Unreadable notes would bias the exposure.",
+      "patientCentered": false
+    },
+    {
+      "id": "o4",
+      "role": "process",
+      "name": "Reader agreement",
+      "measure": "Kappa for the primary exposure on the 10 percent read twice",
+      "timing": "After the first 100 notes and at the end",
+      "why": "Checks that the exposure is read consistently.",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "480 notes at about fifteen minutes each is 120 hours, matching the approved time; sampling and linkage take about 10 hours of informatics time.",
+  "biasMitigation": [
+    "Exposure defined in a written abstraction form before reading starts",
+    "Readmission status hidden from readers where the notes allow",
+    "Complexity measured from discharge summaries and adjusted for",
+    "Unattended bookings analysed as a separate category to expose selection"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Confounding by case complexity",
+      "severity": "high",
+      "note": "The central threat; measured confounders cannot remove family conflict or engagement."
+    },
+    {
+      "id": "b2",
+      "label": "Reader knowledge of case status",
+      "severity": "watch",
+      "note": "Some notes mention readmission; hidden where possible and checked by double reading."
+    },
+    {
+      "id": "b3",
+      "label": "Readmissions to other hospitals",
+      "severity": "watch",
+      "note": "Missed by the local report; biases toward the null if non-differential."
+    }
+  ],
+  "parsimony": {
+    "score": 76,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 1,
+    "covariateCount": 8,
+    "flags": [
+      "Eight pre-specified covariates, two matching factors and six complexity measures",
+      "One pre-specified secondary contrast (unattended bookings)"
+    ],
+    "simplestPath": "One exposure contrast, one outcome, one adjusted logistic model."
+  },
+  "theoreticalFramework": "No framework beyond the case-control sampling design; the exposure definition follows the retrieved evidence on attended meetings.",
+  "summary": "Case-control study of 160 cases and 320 frequency-matched controls with note-based exposure and complexity adjustment."
+}

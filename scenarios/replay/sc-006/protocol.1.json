@@ -1,0 +1,77 @@
+{
+  "overview": "Retrospective review of laboratory information system call logs for all critical values verified by the core laboratory from January 2024 to December 2025.",
+  "population": "Every critical value on the policy list verified in the period, from inpatient, emergency, outpatient and community clinic specimens; repeat critical values for the same patient and analyte within 24 hours are counted once, with the first notification kept.",
+  "exposure": "Patient location (inpatient, emergency, outpatient, community clinic), time block of verification (08:00 to 16:59, 17:00 to 22:59, 23:00 to 07:59), weekday or weekend, analyte group, night staffing (single or two staff, from rosters) and number of call attempts.",
+  "procedures": "The laboratory information system manager extracts de-identified call logs with verification time, each attempt time, person reached, read-back flag and location; the quality officer links night rosters by date and shift; the interval runs from verification to documented read-back.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Read-back within 30 minutes",
+      "measure": "Documented read-back by a responsible clinician within 30 minutes of verification; a missing read-back time counts as not within 30 minutes",
+      "timing": "Per critical value, 2024 to 2025",
+      "why": "The policy standard, measurable from reliable time stamps (claim c2).",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Never successfully notified",
+      "measure": "Critical values with no documented read-back at any time",
+      "timing": "Per critical value",
+      "why": "The most dangerous failure, hidden if only completed calls are analysed.",
+      "patientCentered": true
+    },
+    {
+      "id": "o3",
+      "role": "secondary",
+      "name": "Time to read-back",
+      "measure": "Minutes from verification to documented read-back, summarised by median and 90th percentile",
+      "timing": "Per critical value",
+      "why": "Shows the size of delays beyond the threshold.",
+      "patientCentered": false
+    },
+    {
+      "id": "o4",
+      "role": "process",
+      "name": "Read-back documentation",
+      "measure": "Proportion of successful calls with read-back documented",
+      "timing": "Per call",
+      "why": "Documentation quality affects the primary outcome.",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "About 28,000 critical values in two years; extraction by the system manager; analysis within the quality officer's 60 hours.",
+  "biasMitigation": [
+    "Interval and missing-time rule fixed before extraction",
+    "Repeat values within 24 hours counted once",
+    "Roster linkage done before outcomes are examined",
+    "Missing read-back times reported by location and time block"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Missing read-back times",
+      "severity": "watch",
+      "note": "Treated as unsuccessful in the primary analysis; sensitivity analysis excludes them."
+    },
+    {
+      "id": "b2",
+      "label": "Location coding",
+      "severity": "ok",
+      "note": "Location is assigned by the ordering system, not by the technologist."
+    }
+  ],
+  "parsimony": {
+    "score": 85,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 2,
+    "covariateCount": 6,
+    "flags": [
+      "Six pre-specified factors; no data-driven selection"
+    ],
+    "simplestPath": "One binary outcome, six factors, one regression model."
+  },
+  "theoreticalFramework": "None needed; the review is descriptive with a pre-specified set of factors.",
+  "summary": "Retrospective review of about 28,000 critical values with one primary outcome, two secondary outcomes and six pre-specified factors."
+}

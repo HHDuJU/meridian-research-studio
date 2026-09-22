@@ -1,0 +1,84 @@
+{
+  "overview": "Registry-based cohort of adults discharged alive after community-acquired pneumonia in 2016 to 2021, with five years of linked follow-up and two comparison groups.",
+  "population": "All 11,800 registry patients discharged alive, first admission per person; comparison groups of general population adults matched four to one on age, sex and area, and adults discharged after urinary tract infection or cellulitis in the same hospitals and years.",
+  "exposure": "Hospitalisation for community-acquired pneumonia; secondary exposure categories by severity score and by bacteraemia.",
+  "procedures": "After approval, the statistics office links registry and comparison groups to the death register and regional admissions and returns a de-identified file. Frailty is calculated from admissions in the two years before the index date; follow-up starts at discharge and ends at death, leaving the region or five years.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "First cardiovascular event",
+      "measure": "Myocardial infarction, stroke, heart failure admission or cardiovascular death, defined from hospital diagnoses",
+      "timing": "0 to 1 year and 1 to 5 years after discharge",
+      "why": "The long-term risk clinicians believe persists (claim c1).",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "All-cause death",
+      "measure": "Death from any cause from the national register",
+      "timing": "Five years",
+      "why": "Patient-important and completely ascertained.",
+      "patientCentered": true
+    },
+    {
+      "id": "o3",
+      "role": "secondary",
+      "name": "Care home entry",
+      "measure": "First change of address to a registered care home among people living at home before admission",
+      "timing": "Two years",
+      "why": "Loss of independence (claim c5).",
+      "patientCentered": true
+    },
+    {
+      "id": "o4",
+      "role": "process",
+      "name": "Linkage completeness",
+      "measure": "Proportion of registry patients linked to both data sources",
+      "timing": "At linkage",
+      "why": "Incomplete linkage biases outcomes (claim c4).",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "Existing registry of 11,800 patients; linkage by the statistics office; analysis by one epidemiologist and a part-time statistician within twelve months of approval.",
+  "biasMitigation": [
+    "Two comparison groups reported side by side",
+    "Frailty measured before the index admission",
+    "Complications of the index admission excluded from the main model",
+    "Censoring at leaving the region"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Confounding by frailty",
+      "severity": "high",
+      "note": "Measured from prior admissions; residual confounding likely."
+    },
+    {
+      "id": "b2",
+      "label": "Comparison group choice",
+      "severity": "watch",
+      "note": "Handled by reporting both."
+    },
+    {
+      "id": "b3",
+      "label": "Out-of-region admissions",
+      "severity": "watch",
+      "note": "Censoring at leaving the region."
+    }
+  ],
+  "parsimony": {
+    "score": 76,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 2,
+    "covariateCount": 9,
+    "flags": [
+      "Nine pre-specified covariates",
+      "Two comparison groups by design"
+    ],
+    "simplestPath": "One outcome, two windows, two comparisons, one covariate set."
+  },
+  "theoreticalFramework": "Target trial emulation to fix time zero at discharge and eligibility; no other framework.",
+  "summary": "Registry cohort with one primary outcome in two windows, two comparison groups and care home entry as a secondary outcome."
+}

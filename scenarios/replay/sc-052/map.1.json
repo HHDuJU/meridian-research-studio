@@ -1,0 +1,92 @@
+{
+  "contexts": [
+    "day surgery unit, about 6,000 adult procedures a year",
+    "four-factor risk score and one to three agents",
+    "paper drug section of the anaesthetic record",
+    "recovery nausea log",
+    "60 hours of fellow time for record reading"
+  ],
+  "reading": "Prophylaxis sits between the risk score and two opposite harms: under-prophylaxis leading to rescue treatment (c2) and over-prophylaxis leading to sedation and delayed discharge (c4). Adherence is likely to be partial (c1). The recovery log defines cases reliably enough (c3), while the paper drug record limits how many patients can be examined, which favours sampling cases and controls. Longer operations, opioids and sicker patients push toward both more prophylaxis and more nausea, which is the main confounding path.",
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Four-factor risk score",
+      "kind": "context",
+      "detail": "Sets the recommended number of agents."
+    },
+    {
+      "id": "n2",
+      "label": "Prophylaxis given against the protocol",
+      "kind": "context",
+      "detail": "Under, matched or over; read from paper records."
+    },
+    {
+      "id": "n3",
+      "label": "Rescue treatment for nausea or vomiting",
+      "kind": "outcome",
+      "detail": "From the recovery nausea log (c3)."
+    },
+    {
+      "id": "n4",
+      "label": "Sedation delaying discharge",
+      "kind": "outcome",
+      "detail": "Possible harm of over-prophylaxis (c4)."
+    },
+    {
+      "id": "n5",
+      "label": "Duration of surgery and opioid dose",
+      "kind": "context",
+      "detail": "Confounders raising both prophylaxis and nausea."
+    },
+    {
+      "id": "n6",
+      "label": "Prior case-control analysis",
+      "kind": "observational",
+      "detail": "Adjusted odds ratio 1.8 for under-prophylaxis (c2)."
+    },
+    {
+      "id": "n7",
+      "label": "Anaesthetists",
+      "kind": "stakeholder",
+      "detail": "Adherence varies more between anaesthetists than specialties."
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "relation": "should determine"
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "relation": "under-prophylaxis raises"
+    },
+    {
+      "from": "n2",
+      "to": "n4",
+      "relation": "over-prophylaxis raises"
+    },
+    {
+      "from": "n5",
+      "to": "n2",
+      "relation": "increases"
+    },
+    {
+      "from": "n5",
+      "to": "n3",
+      "relation": "increases"
+    },
+    {
+      "from": "n6",
+      "to": "n2",
+      "relation": "quantifies the effect of"
+    },
+    {
+      "from": "n7",
+      "to": "n2",
+      "relation": "decide"
+    }
+  ],
+  "summary": "Map of prophylaxis between risk score and two opposite harms, with the confounding path through surgery and opioids."
+}

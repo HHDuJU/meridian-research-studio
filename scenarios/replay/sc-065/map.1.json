@@ -1,0 +1,97 @@
+{
+  "contexts": [
+    "600-bed teaching hospital, about 380 colorectal resections a year",
+    "seven-element bundle adopted two years ago",
+    "active 30-day surveillance with a day-30 phone call",
+    "elective and emergency cases"
+  ],
+  "reading": "Infection follows from patient risk (emergency surgery, contamination, stoma, diabetes, obesity), from operation length and from which bundle elements were actually delivered. Emergency cases have both more infection and less compliance, so an unadjusted comparison would credit the bundle with the difference between emergency and elective surgery. Elements travel together, so element-level estimates are unstable. Half of the outcome happens after discharge, and patients living alone are the hardest to reach.",
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Full compliance over applicable elements",
+      "kind": "context",
+      "detail": "All-or-none score with applicability rules (claim c3)."
+    },
+    {
+      "id": "n2",
+      "label": "Surgical site infection within 30 days",
+      "kind": "outcome",
+      "detail": "Including post-discharge (claim c2)."
+    },
+    {
+      "id": "n3",
+      "label": "Emergency surgery and contamination",
+      "kind": "context",
+      "detail": "Lower compliance and more infection (claim c4)."
+    },
+    {
+      "id": "n4",
+      "label": "Multicentre association, odds ratio 0.61",
+      "kind": "observational",
+      "detail": "Claim c1."
+    },
+    {
+      "id": "n5",
+      "label": "Correlated elements",
+      "kind": "gap",
+      "detail": "Element estimates unstable."
+    },
+    {
+      "id": "n6",
+      "label": "Day-30 phone call",
+      "kind": "context",
+      "detail": "Finds most post-discharge infections."
+    },
+    {
+      "id": "n7",
+      "label": "Patients living alone",
+      "kind": "stakeholder",
+      "detail": "Hardest to reach after discharge."
+    },
+    {
+      "id": "n8",
+      "label": "Theatre and anaesthesia teams",
+      "kind": "stakeholder",
+      "detail": "Record the elements."
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "relation": "hypothesised to reduce"
+    },
+    {
+      "from": "n3",
+      "to": "n1",
+      "relation": "lowers"
+    },
+    {
+      "from": "n3",
+      "to": "n2",
+      "relation": "raises"
+    },
+    {
+      "from": "n4",
+      "to": "n1",
+      "relation": "reports association for"
+    },
+    {
+      "from": "n6",
+      "to": "n2",
+      "relation": "detects"
+    },
+    {
+      "from": "n7",
+      "to": "n6",
+      "relation": "missed by"
+    },
+    {
+      "from": "n8",
+      "to": "n1",
+      "relation": "record"
+    }
+  ],
+  "summary": "Map shows emergency status as the main confounder and post-discharge follow-up as the main measurement risk."
+}

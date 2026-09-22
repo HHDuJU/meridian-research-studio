@@ -1,0 +1,1700 @@
+{
+  "id": "sc-100",
+  "version": 1,
+  "title": "Medical and surgical wards: peripheral catheter failure before and after a clinically indicated replacement policy, one explicit null",
+  "field": "nursing",
+  "level": 2,
+  "family": "cohort",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "D20",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path with one explicit null. The need names a cohort comparing catheters inserted in the 12 months before and after a change to clinically indicated replacement; the local facts include an ethics approval with a waiver of consent and agreed informatics time. The problem reply restates the investigator's constraints exactly (G11: nothing to reject). A first fixture search on failure and phlebitis returns five records, and the first appraisal rates overall certainty low. A second search on the sub-questions the first did not cover (infection, several catheters per patient, removal-reason documentation, nursing time) adds five records; the re-appraisal annotates only the new records, restates the whole ledger (c1 to c6) and returns gradeOverall null: an explicit null on a model-owned field, which must clear the stored 'low' to '' (unassessed, shown as not assessed) with an issue 'cleared' at gradeOverall, while the first five records keep their earlier grades because omitted annotations never overwrite. This is the scenario's only null; the investigator's constraints and need are never nulled (G11). The Scan stays complete throughout because records were retrieved (G2). The cohort decision rests on ledger claims c1 to c4, both gates are met on the investigator's records (not on constraint text), and acceptance gives selection accepted and action ready. Record ids are stableRecordId(record) imported by the generator from src/lib/evidence/records.ts at 875fe59: the DOI hash, or the titleYearKey hash for the records without a DOI (records 4, 8, 9); every id is listed in the retrieve steps' notes. Requires D2 (explicit null clears gradeOverall and the cleared issue matches the value), S13 (appraisal payloads on the production scan path), D20 (not assessed as the display of an unassessed certainty), S11 (explicit basis, selectionStatus, actionStatus) and D5 (status text). Catches: a cleared log that leaves the earlier certainty in place (the 875fe59 pattern where enumOrResolve returns undefined and a compact patch keeps the old value), a null turned into a default grade, a re-appraisal that wipes annotations it omitted, a Scan made incomplete by an unrated certainty, and work lost on reload or reopen.",
+  "inputs": {
+    "need": "I am the vascular access nurse specialist at a 520-bed teaching hospital. On 1 March 2025 we changed our peripheral intravenous catheter policy on the adult medical and surgical wards from routine resiting every 96 hours to replacement only when clinically indicated, with a documented site assessment every shift using a phlebitis score. The change followed complaints from patients about repeated cannulation and a push from the wards to save nursing time.\n\nSince then I hear two stories. Some ward nurses say they are seeing more phlebitis and more infiltration because catheters now stay in for a week or longer. Others say patients get far fewer painful reinsertions and that nothing bad has happened. Infection prevention has recorded two bloodstream infections linked to peripheral catheters since the change, against one in the year before, and that has worried our nursing executive.\n\nI want to design a cohort study comparing catheters inserted in the 12 months before the policy change with catheters inserted in the 12 months after. The main outcome I have in mind is catheter failure, meaning removal for phlebitis, infiltration, occlusion or dislodgement before the end of treatment. I would also like to look at the number of catheters per admission, dwell time and bloodstream infections, although I know infections are rare. Insertion date, site, gauge, removal date and removal reason are documented in the vascular access flowsheet in our electronic health record, and infection prevention keeps its own line infection surveillance list.\n\nI need help with the comparison, how to handle the fact that one patient can have several catheters, what to do about secular trends and other changes on the wards, and how many catheters we need.",
+    "constraints": "Secondary use of existing flowsheet and surveillance data only; no new data collection from patients. The clinical informatics team can give about 30 hours for data extraction. The nursing executive wants results by June 2027.",
+    "localFacts": [
+      "The clinically indicated replacement policy took effect on all adult medical and surgical wards on 1 March 2025; the previous policy required resiting every 96 hours.",
+      "The vascular access flowsheet records insertion date and time, site, gauge, inserter role, removal date and time, and removal reason for each peripheral catheter.",
+      "Infection prevention recorded two peripheral catheter-associated bloodstream infections from March 2025 to February 2026 and one in the 12 months before.",
+      "The research ethics board approved secondary use of flowsheet and surveillance data for this evaluation with a waiver of consent on 2026-08-27 (REB-2026-0412).",
+      "The clinical informatics manager agreed to provide about 30 hours of extraction and linkage time for this evaluation (request CI-2026-117)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names one design (cohort), so classifyFamily in src/lib/stages.ts at 875fe59 routes it as explicit cohort. design.basis 'explicit' at create requires S11.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the vascular access nurse specialist at a 520-bed teaching hospital. On 1 March 2025 we changed our peripheral intravenous catheter policy on the adult medical and surgical wards from routine resiting every 96 hours to replacement only when clinically indicated, with a documented site assessment every shift using a phlebitis score. The change followed complaints from patients about repeated cannulation and a push from the wards to save nursing time.\n\nSince then I hear two stories. Some ward nurses say they are seeing more phlebitis and more infiltration because catheters now stay in for a week or longer. Others say patients get far fewer painful reinsertions and that nothing bad has happened. Infection prevention has recorded two bloodstream infections linked to peripheral catheters since the change, against one in the year before, and that has worried our nursing executive.\n\nI want to design a cohort study comparing catheters inserted in the 12 months before the policy change with catheters inserted in the 12 months after. The main outcome I have in mind is catheter failure, meaning removal for phlebitis, infiltration, occlusion or dislodgement before the end of treatment. I would also like to look at the number of catheters per admission, dwell time and bloodstream infections, although I know infections are rare. Insertion date, site, gauge, removal date and removal reason are documented in the vascular access flowsheet in our electronic health record, and infection prevention keeps its own line infection surveillance list.\n\nI need help with the comparison, how to handle the fact that one patient can have several catheters, what to do about secular trends and other changes on the wards, and how many catheters we need.",
+          "family": "cohort",
+          "design.basis": "explicit",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the vascular access nurse specialist at a 520-bed teaching hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Peripheral intravenous catheter failure before and after a change to clinically indicated replacement",
+        "subtitle": "Cohort from existing flowsheet and surveillance data, adult medical and surgical wards",
+        "family": "cohort",
+        "statement": "On 1 March 2025 the hospital replaced routine resiting of peripheral intravenous catheters every 96 hours with replacement only when clinically indicated. Ward nurses disagree about whether longer dwell has brought more phlebitis and infiltration, and the nursing executive is concerned about bloodstream infections. A cohort comparing catheters inserted in the 12 months before and after the change will estimate whether catheter failure increased, and by how much insertions per admission fell.",
+        "whoAffected": "Adults on the medical and surgical wards who need peripheral intravenous therapy, the ward nurses who insert and assess catheters, and the nursing executive and infection prevention team who own the policy.",
+        "whatHurts": "A failed catheter interrupts treatment and means another painful insertion; a policy that raised failure would harm patients, while a return to routine resiting would bring back unnecessary insertions if the concern is unfounded.",
+        "currentPractice": "Catheters stay in place while functioning and clinically needed, with a phlebitis score documented every shift; the removal reason is recorded in the vascular access flowsheet.",
+        "whyNow": "Twelve months of data after the change now exist, the nursing executive wants an answer by June 2027, and ethics approval for secondary use is in place.",
+        "constraints": "Secondary use of existing flowsheet and surveillance data only; no new data collection from patients. The clinical informatics team can give about 30 hours for data extraction. The nursing executive wants results by June 2027.",
+        "patientCenteredGoal": "Patients receive intravenous treatment with as few insertions as possible and without more catheter failure or infection.",
+        "summary": "Problem framed as a before-after cohort of catheters from existing records, with catheter failure as the main outcome."
+      },
+      "note": "The reply restates the investigator's constraints exactly as typed, so G11 has nothing to reject; the scenario's one explicit null comes later and targets a model-owned field.",
+      "expect": {
+        "store": {
+          "title": "Peripheral intravenous catheter failure before and after a change to clinically indicated replacement",
+          "family": "cohort",
+          "problem.statement": {
+            "includes": "12 months before and after the change"
+          },
+          "problem.constraints": "Secondary use of existing flowsheet and surveillance data only; no new data collection from patients. The clinical informatics team can give about 30 hours for data extraction. The nursing executive wants results by June 2027.",
+          "problem.rawNeed": {
+            "includes": "cohort study"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Peripheral intravenous catheter failure before and after a change to clinically indicated replacement"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "clinically indicated versus routine replacement peripheral intravenous catheter policy change failure phlebitis adult wards",
+      "response": {
+        "status": 200,
+        "total": 5,
+        "records": [
+          {
+            "title": "Clinically indicated versus routine replacement of peripheral intravenous catheters after a policy change: a before-after cohort on four surgical wards",
+            "authors": "Adebayo-Lindqvist T, Moreau-Kaplan S, Hughes-Oyelowo R",
+            "year": 2017,
+            "venue": "Northfold Vascular Access Nursing",
+            "doi": "10.5555/nvan.2017.0215",
+            "providerType": "journal-article",
+            "abstract": "Four surgical wards changed from routine replacement of peripheral intravenous catheters every 72 hours to replacement only when clinically indicated. We compared 2,310 catheters inserted in the six months before the change with 2,188 catheters inserted in the six months after. Catheter failure, defined as removal for phlebitis, infiltration, occlusion or dislodgement before the end of treatment, occurred in 31 percent of catheters before and 33 percent after. Median dwell time rose from 58 to 81 hours, and the number of catheters inserted per 100 patient-days fell from 36 to 27. Phlebitis was recorded for 6 percent of catheters in both periods. The comparison used ward records without adjustment for patient mix or for other changes on the wards."
+          },
+          {
+            "title": "Monthly catheter failure before and after a switch to clinically indicated replacement: an interrupted time series in a general hospital",
+            "authors": "Grey-Olawale M, Fenwick-Duarte S",
+            "year": 2015,
+            "venue": "Hospital Nursing Quality Reports",
+            "doi": "10.5555/hnqr.2015.0093",
+            "providerType": "journal-article",
+            "abstract": "A general hospital switched all adult wards from routine replacement of peripheral catheters every 72 hours to clinically indicated replacement. We plotted the monthly proportion of catheters removed for failure for 18 months before and 18 months after the switch and fitted a segmented regression. Failure was 28 percent in the month before the switch, and there was no step change at the switch (0.9 percentage points, 95 percent confidence interval -2.1 to 3.9) and no change in slope. A change of catheter brand eight months after the switch coincided with a short rise in occlusions. The analysis used ward-level monthly counts and could not account for patients with several catheters."
+          },
+          {
+            "title": "Shift-by-shift phlebitis scoring and catheter dwell beyond 96 hours on medical wards: an observational study",
+            "authors": "Oyelaran-Castaneda B, Lindgren-Adu P, Whitcombe-Sato K",
+            "year": 2022,
+            "venue": "Tarnvale Infusion Practice",
+            "doi": "10.5555/tip.2022.0147",
+            "providerType": "journal-article",
+            "abstract": "After the hospital adopted clinically indicated replacement, nurses on three medical wards scored insertion sites every shift with a five-point phlebitis scale. Of 1,694 catheters, 431 stayed in place beyond 96 hours. The rate of phlebitis did not rise with dwell beyond 96 hours: 4.1 per 1,000 catheter-days up to 96 hours and 3.8 per 1,000 catheter-days afterwards. Site assessment was documented in 83 percent of shifts, and documentation was least complete at night and at weekends. Catheters with incomplete site documentation were more often removed for infiltration. The study could not examine bloodstream infection because only two occurred."
+          },
+          {
+            "title": "Routine resiting and the pain of repeated insertion in adult medical inpatients: a two-hospital cohort",
+            "authors": "Petrakis-Nwosu E, Salgado-Whitfield M",
+            "year": 2020,
+            "venue": "Clinical Nursing Evidence Letters",
+            "providerType": "journal-article",
+            "abstract": "We followed 406 adult medical inpatients with a peripheral intravenous catheter at two hospitals, one with a policy of routine resiting every 96 hours and one replacing catheters only when clinically indicated. Patients at the routine resiting hospital had a median of three insertions per admission, against two at the other hospital. Patients rated the pain of each observed insertion on a scale from 0 to 10; 38 percent of patients at the routine resiting hospital reported at least one insertion scored 7 or higher, against 24 percent at the other hospital. Catheter failure was similar at the two hospitals. Patient mix differed between the hospitals, and pain was recorded only for insertions that a research nurse observed."
+          },
+          {
+            "title": "Infiltration with longer peripheral catheter dwell in inpatients aged 75 and over: an observational study on two medical wards",
+            "authors": "Solberg-Nakamura T, Achebe-Quist L",
+            "year": 2025,
+            "venue": "Gerontological Nursing Practice",
+            "doi": "10.5555/gnp.2025.0044",
+            "providerType": "journal-article",
+            "abstract": "We followed 812 peripheral catheters in patients aged 75 and over on two medical wards that used clinically indicated replacement. Infiltration occurred in 14 percent of catheters and became more frequent after the fourth day of dwell (hazard ratio 1.6 for each further day, 95 percent confidence interval 1.2 to 2.1). Most infiltrations were found at the scheduled site check rather than reported by patients, and infiltrations in patients with delirium were found later than in other patients. Phlebitis was uncommon. The two wards had higher nurse staffing than the hospital average, which may limit how far the findings apply."
+          }
+        ]
+      },
+      "note": "First search, on failure and phlebitis after policy changes: five records. Ids are stableRecordId values: record 1 ev-0e63y3q (DOI), record 2 ev-13lq29m (DOI), record 3 ev-01cf15s (DOI), record 4 ev-0ob6zjb (title and year), record 5 ev-06rt3mb (DOI).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 5,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0e63y3q",
+            "ev-13lq29m",
+            "ev-01cf15s",
+            "ev-0ob6zjb",
+            "ev-06rt3mb"
+          ],
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[0].id": "ev-0e63y3q",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[3].id": "ev-0ob6zjb",
+          "scan.items[3].doi": {
+            "absent": true
+          },
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Clinically indicated versus routine replacement of peripheral intravenous catheters after a policy change: a before-after cohort on four surgical wards"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0e63y3q",
+            "relevance": 90,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Failure occurred in 31 percent of catheters before and 33 percent after the change to clinically indicated replacement, while catheters per 100 patient-days fell from 36 to 27 and median dwell rose from 58 to 81 hours.",
+            "limitations": "Six-month periods on four surgical wards; ward records without adjustment for patient mix or other ward changes.",
+            "contextTags": [
+              "policy change",
+              "before-after cohort",
+              "catheter failure"
+            ]
+          },
+          {
+            "id": "ev-13lq29m",
+            "relevance": 86,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Monthly failure was 28 percent before the switch, with no step change (0.9 percentage points, -2.1 to 3.9) and no change in slope over 18 months on each side; a catheter brand change produced a short rise in occlusions.",
+            "limitations": "Ward-level monthly counts; several catheters per patient not accounted for; one hospital.",
+            "contextTags": [
+              "interrupted time series",
+              "policy change",
+              "co-intervention"
+            ]
+          },
+          {
+            "id": "ev-01cf15s",
+            "relevance": 82,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Phlebitis did not rise with dwell beyond 96 hours (4.1 and 3.8 per 1,000 catheter-days), but site assessment was documented in 83 percent of shifts, least often at night and at weekends.",
+            "limitations": "Three medical wards of one hospital; visual phlebitis scoring; too few bloodstream infections to study.",
+            "contextTags": [
+              "phlebitis",
+              "site assessment",
+              "documentation"
+            ]
+          },
+          {
+            "id": "ev-0ob6zjb",
+            "relevance": 76,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Routine resiting meant a median of three insertions per admission against two, and 38 percent against 24 percent of patients reported at least one insertion scored 7 or higher for pain.",
+            "limitations": "Two hospitals with different patient mix; pain recorded only for observed insertions.",
+            "contextTags": [
+              "patient experience",
+              "insertion pain",
+              "routine resiting"
+            ]
+          },
+          {
+            "id": "ev-06rt3mb",
+            "relevance": 74,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Among 812 catheters in patients aged 75 and over, infiltration occurred in 14 percent and became more frequent after the fourth day (hazard ratio 1.6 for each further day); infiltrations in patients with delirium were found later.",
+            "limitations": "Two wards with higher than average nurse staffing; older patients only.",
+            "contextTags": [
+              "older inpatients",
+              "infiltration",
+              "delirium"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "After four surgical wards moved from routine to clinically indicated replacement, catheter failure occurred in 31 percent of catheters before and 33 percent after, in an unadjusted before-after comparison.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0e63y3q"
+            ],
+            "location": "Abstract, results",
+            "passage": "occurred in 31 percent of catheters before and 33 percent after",
+            "interpretation": "A planning value for the local comparison; unadjusted, so the small difference may reflect patient mix.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "On medical wards using clinically indicated replacement, phlebitis did not rise with dwell beyond 96 hours (4.1 per 1,000 catheter-days up to 96 hours and 3.8 afterwards), while site assessment was documented in 83 percent of shifts.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-01cf15s"
+            ],
+            "location": "Abstract",
+            "passage": "4.1 per 1,000 catheter-days up to 96 hours and 3.8 per 1,000 catheter-days afterwards",
+            "interpretation": "Longer dwell need not mean more phlebitis where sites are scored every shift; documentation gaps are the weak point.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "In an interrupted time series over 18 months on each side of a switch to clinically indicated replacement, monthly catheter failure showed no step change (0.9 percentage points, 95 percent confidence interval -2.1 to 3.9) and no change in slope.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-13lq29m"
+            ],
+            "location": "Abstract, results",
+            "passage": "there was no step change at the switch (0.9 percentage points, 95 percent confidence interval -2.1 to 3.9) and no change in slope",
+            "interpretation": "A monthly series can separate a policy from trends; the same series showed a co-intervention (a catheter brand change).",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Five retrieved records from the first search, appraised at abstract level. After moves to clinically indicated replacement, catheter failure was similar in an unadjusted before-after cohort (31 and 33 percent) and showed no step change in an interrupted time series, insertions per patient fell, and phlebitis did not rise with dwell beyond 96 hours on wards that scored sites every shift. Infiltration rose after the fourth day of dwell in patients aged 75 and over. Patients reported less insertion pain where catheters were not routinely resited. None of the five examined bloodstream infection or accounted for several catheters per patient.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational comparisons from single hospitals, mostly without adjustment for patient mix; broadly consistent in direction, serious risk of bias.",
+        "summary": "Five retrieved records appraised; three source-derived claims; overall certainty low."
+      },
+      "note": "First appraisal over the five retrieved records; the certainty 'low' is its own value over inspected records (G1). Applied through the appraisal mapper on the production scan path (S13).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].methodQuality": 50,
+          "scan.items[0].relevance": 90,
+          "scan.items[0].kind": "observational",
+          "scan.items[2].keyFindings": {
+            "includes": "83 percent of shifts"
+          },
+          "scan.claims": {
+            "length": 3
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0e63y3q"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-01cf15s"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-13lq29m"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "peripheral intravenous catheter bloodstream infection dwell time clustering removal reason documentation nursing time",
+      "response": {
+        "status": 200,
+        "total": 5,
+        "records": [
+          {
+            "title": "Clinically indicated replacement of peripheral intravenous catheters in adults: a systematic review of catheter failure, phlebitis and bloodstream infection",
+            "authors": "Delacroix-Mensah L, Nakamura-Pike J, Oduya-Fraser C, Brennan-Soto R",
+            "year": 2021,
+            "venue": "Nursing Evidence Syntheses",
+            "doi": "10.5555/nes.2021.0306",
+            "providerType": "journal-article",
+            "abstract": "We searched five databases to June 2020 for trials and cohort studies comparing clinically indicated with routine replacement of peripheral intravenous catheters in adults. The review included 9 trials and 11 cohort studies. In the trials, phlebitis and bloodstream infection did not differ between the two strategies, and clinically indicated replacement led to fewer insertions per patient. The cohort studies reported more variable results: catheter failure was higher after a policy change in 3 of 11. Few studies accounted for patients who had several catheters, and most cohort studies did not adjust for changes in patient mix over time."
+          },
+          {
+            "title": "Peripheral catheter-associated bloodstream infection by dwell time in adult inpatients: a surveillance cohort from six hospitals",
+            "authors": "Rutherford-Mbeki A, Kowalczyk-Obi D, Tanaka-Holm E",
+            "year": 2019,
+            "venue": "Infection Surveillance Reports",
+            "doi": "10.5555/isr.2019.0072",
+            "providerType": "journal-article",
+            "abstract": "Six hospitals reported peripheral catheter-associated bloodstream infections through a shared surveillance system for three years, covering about 214,000 peripheral catheters. The infection rate was 0.08 per 1,000 catheter-days overall. Rates were similar for catheters in place up to 96 hours and for catheters in place longer, but catheters inserted in the emergency department had about twice the rate of catheters inserted on the wards. Staphylococcus aureus caused most infections. Only 58 infections occurred in total, so the estimates by dwell time were imprecise, and the hospitals used different replacement policies during the period."
+          },
+          {
+            "title": "Accounting for several catheters per patient in analyses of peripheral intravenous catheter failure: a methodological case study",
+            "authors": "Varela-Achterberg N, Holt-Adeyemi S",
+            "year": 2024,
+            "venue": "Clinical Nursing Evidence Letters",
+            "providerType": "journal-article",
+            "abstract": "Using 6,120 peripheral catheters from 2,874 adult admissions, we compared analyses of catheter failure that treated catheters as independent with analyses that accounted for several catheters per patient. The analysis that ignored clustering gave a hazard ratio of 1.24 for dwell beyond 96 hours, with a 95 percent confidence interval of 1.08 to 1.42, while a shared frailty model gave 1.12, with an interval of 0.93 to 1.35. Patients with many catheters were sicker and contributed a disproportionate share of failures. We recommend patient-level clustering in every analysis of catheter failure and reporting the number of catheters per patient."
+          },
+          {
+            "title": "Removal reasons for peripheral intravenous catheters in the electronic flowsheet: completeness and agreement with bedside observation",
+            "authors": "Pike-Oduya R, Lindholm-Varga E",
+            "year": 2016,
+            "venue": "Clinical Documentation in Nursing",
+            "providerType": "journal-article",
+            "abstract": "We compared the removal reason recorded in the electronic flowsheet with the reason observed by a research nurse at the bedside for 540 peripheral catheter removals on four wards. A removal reason was missing for 11 percent of removals. Where a reason was recorded, it agreed with the observed reason for 86 percent of removals; disagreement was most common between infiltration and occlusion and between end of treatment and dislodgement. Removals on night shifts more often lacked a reason. We recommend a fixed list of removal reasons and a check of free-text entries before any analysis of catheter failure."
+          },
+          {
+            "title": "Nursing time for peripheral catheter care before and after a change to clinically indicated replacement: a time-motion study",
+            "authors": "Linwood-Okafor J, Castellanos-Moreau D",
+            "year": 2023,
+            "venue": "Ward Nursing Outcomes Quarterly",
+            "doi": "10.5555/wnoq.2023.0019",
+            "providerType": "journal-article",
+            "abstract": "Trained observers timed peripheral catheter tasks on two medical wards for four weeks before and four weeks after a change from routine resiting to clinically indicated replacement. Time spent on insertions fell from 41 to 26 minutes per 10 patients per day, while time spent on site assessment and documentation rose from 12 to 19 minutes. Nurses reported fewer difficult insertions at night. The study did not measure catheter complications, and the observers knew which period they were observing, which may have influenced the timings."
+          }
+        ]
+      },
+      "note": "Second search, on the questions the first did not cover (infection, analysis of several catheters per patient, removal-reason documentation, nursing time): five more records, appended after the first five. Ids: record 6 ev-07krvbp (DOI), record 7 ev-0l9pcy2 (DOI), record 8 ev-0qp99r8 (title and year), record 9 ev-0z3fqo3 (title and year), record 10 ev-12ljil7 (DOI). The first appraisal's annotations stay on the first five records.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[1].provider": "fixture",
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 5,
+          "scan.retrievalEvents[1].recordIds": [
+            "ev-07krvbp",
+            "ev-0l9pcy2",
+            "ev-0qp99r8",
+            "ev-0z3fqo3",
+            "ev-12ljil7"
+          ],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[5].id": "ev-07krvbp",
+          "scan.items[5].provenance.origin": "retrieval",
+          "scan.items[5].grade": "unrated",
+          "scan.items[7].id": "ev-0qp99r8",
+          "scan.items[7].doi": {
+            "absent": true
+          },
+          "scan.claims": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Accounting for several catheters per patient in analyses of peripheral intravenous catheter failure: a methodological case study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-07krvbp",
+            "relevance": 88,
+            "methodQuality": 70,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "In 9 trials, phlebitis and bloodstream infection did not differ between strategies and clinically indicated replacement led to fewer insertions; catheter failure was higher after a policy change in 3 of 11 cohort studies.",
+            "limitations": "Search ended in June 2020; few studies accounted for several catheters per patient; most cohort studies did not adjust for changes in patient mix.",
+            "contextTags": [
+              "systematic review",
+              "trials and cohorts",
+              "insertions per patient"
+            ]
+          },
+          {
+            "id": "ev-0l9pcy2",
+            "relevance": 70,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Across about 214,000 catheters in six hospitals the bloodstream infection rate was 0.08 per 1,000 catheter-days and was similar up to and beyond 96 hours; catheters inserted in the emergency department had about twice the rate.",
+            "limitations": "Only 58 infections, so estimates by dwell time were imprecise; the hospitals used different replacement policies.",
+            "contextTags": [
+              "bloodstream infection",
+              "surveillance",
+              "emergency department insertion"
+            ]
+          },
+          {
+            "id": "ev-0qp99r8",
+            "relevance": 80,
+            "methodQuality": 65,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Ignoring several catheters per patient gave a hazard ratio of 1.24 (1.08 to 1.42) for dwell beyond 96 hours; a shared frailty model gave 1.12 (0.93 to 1.35).",
+            "limitations": "One dataset; a methods case study rather than an evaluation of a policy.",
+            "contextTags": [
+              "clustering",
+              "analysis methods",
+              "catheter failure"
+            ]
+          },
+          {
+            "id": "ev-0z3fqo3",
+            "relevance": 72,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "The flowsheet removal reason was missing for 11 percent of 540 removals and agreed with bedside observation for 86 percent where recorded; removals on night shifts more often lacked a reason.",
+            "limitations": "Four wards of one hospital; bedside observation by a single research nurse.",
+            "contextTags": [
+              "documentation",
+              "measurement",
+              "removal reason"
+            ]
+          },
+          {
+            "id": "ev-12ljil7",
+            "relevance": 60,
+            "methodQuality": 40,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Insertion time fell from 41 to 26 minutes per 10 patients per day, while site assessment and documentation rose from 12 to 19 minutes.",
+            "limitations": "Two wards and four weeks per period; observers knew the period; no complication data.",
+            "contextTags": [
+              "nursing time",
+              "time-motion",
+              "workload"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "After four surgical wards moved from routine to clinically indicated replacement, catheter failure occurred in 31 percent of catheters before and 33 percent after, in an unadjusted before-after comparison.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0e63y3q"
+            ],
+            "location": "Abstract, results",
+            "passage": "occurred in 31 percent of catheters before and 33 percent after",
+            "interpretation": "A planning value for the local comparison; unadjusted, so the small difference may reflect patient mix.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "On medical wards using clinically indicated replacement, phlebitis did not rise with dwell beyond 96 hours (4.1 per 1,000 catheter-days up to 96 hours and 3.8 afterwards), while site assessment was documented in 83 percent of shifts.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-01cf15s"
+            ],
+            "location": "Abstract",
+            "passage": "4.1 per 1,000 catheter-days up to 96 hours and 3.8 per 1,000 catheter-days afterwards",
+            "interpretation": "Longer dwell need not mean more phlebitis where sites are scored every shift; documentation gaps are the weak point.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "In an interrupted time series over 18 months on each side of a switch to clinically indicated replacement, monthly catheter failure showed no step change (0.9 percentage points, 95 percent confidence interval -2.1 to 3.9) and no change in slope.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-13lq29m"
+            ],
+            "location": "Abstract, results",
+            "passage": "there was no step change at the switch (0.9 percentage points, 95 percent confidence interval -2.1 to 3.9) and no change in slope",
+            "interpretation": "A monthly series can separate a policy from trends; the same series showed a co-intervention (a catheter brand change).",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "In 6,120 catheters from 2,874 admissions, ignoring several catheters per patient gave a hazard ratio of 1.24 for dwell beyond 96 hours, while a shared frailty model gave 1.12 with an interval of 0.93 to 1.35.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0qp99r8"
+            ],
+            "location": "Abstract",
+            "passage": "while a shared frailty model gave 1.12, with an interval of 0.93 to 1.35",
+            "interpretation": "The local analysis must account for several catheters per patient, or it may overstate a dwell effect.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "In a six-hospital surveillance cohort, peripheral catheter-associated bloodstream infection occurred at 0.08 per 1,000 catheter-days, with similar rates up to and beyond 96 hours but only 58 infections in total.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0l9pcy2"
+            ],
+            "location": "Abstract",
+            "passage": "The infection rate was 0.08 per 1,000 catheter-days overall.",
+            "interpretation": "Bloodstream infection is too rare for a local comparison and should be reported as counts.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c6",
+            "text": "Against bedside observation of 540 removals, the flowsheet removal reason was missing for 11 percent and, where recorded, agreed with the observed reason for 86 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0z3fqo3"
+            ],
+            "location": "Abstract",
+            "passage": "A removal reason was missing for 11 percent of removals.",
+            "interpretation": "Flowsheet removal reasons can measure failure if coded with a fixed rule and checked; local completeness must be measured at extraction.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Ten retrieved records from two searches, appraised at abstract level. After moves to clinically indicated replacement, catheter failure was similar in a before-after cohort (31 and 33 percent) and in an interrupted time series, but higher after a policy change in 3 of 11 cohort studies in a systematic review whose 9 trials found no difference in phlebitis or bloodstream infection and fewer insertions. Phlebitis did not rise with dwell beyond 96 hours where sites were scored every shift, while infiltration rose after the fourth day in patients aged 75 and over. Ignoring several catheters per patient inflated a dwell effect from 1.12 to 1.24. Bloodstream infection is rare (0.08 per 1,000 catheter-days); flowsheet removal reasons were missing for 11 percent of removals in one validation; nursing time moved from insertion to site assessment.",
+        "gradeOverall": null,
+        "gradeRationale": "Overall certainty is not rated across these records: they address different outcomes with different designs, and one label would hide that. Per outcome: catheter failure after a policy change, low (observational comparisons with inconsistent results); phlebitis, low; infiltration in older patients, low; bloodstream infection, very low (few events, imprecise); insertions per patient, moderate (consistent in trials).",
+        "summary": "Ten retrieved records appraised; six source-derived claims; no single overall certainty, with certainty stated per outcome in the rationale."
+      },
+      "note": "The scenario's one explicit null: gradeOverall null on a model-owned field (G11 allows it; the investigator's text is untouched). It must clear the stored 'low' to '' (unassessed) with an issue 'cleared' at gradeOverall that matches the cleared value (D2: clear_explicit_null_grade, cleared_issue_always_matches_a_cleared_value). The reply annotates only the five new records, so the first five keep their earlier annotations (an omitted key never overwrites), and it restates the whole ledger (c1 to c3 unchanged, c4 to c6 new); claim ids are unique, so the ledger holds six claims whether the application replaces the ledger or merges by id. The Scan stays complete because records were retrieved (G2). 'not assessed' is the display of an unassessed certainty (D20, A3 item L1.5).",
+      "expect": {
+        "store": {
+          "scan.gradeOverall": "",
+          "scan.gradeRationale": {
+            "includes": "not rated across these records"
+          },
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].relevance": 90,
+          "scan.items[5].kind": "systematic-review",
+          "scan.items[5].grade": "moderate",
+          "scan.items[6].grade": "very-low",
+          "scan.items[7].keyFindings": {
+            "includes": "1.24"
+          },
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.claims[0].id": "c1",
+          "scan.claims[3].id": "c4",
+          "scan.claims[3].sourceIds": [
+            "ev-0qp99r8"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-0l9pcy2"
+          ],
+          "scan.claims[5].sourceIds": [
+            "ev-0z3fqo3"
+          ],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "520-bed teaching hospital, adult medical and surgical wards",
+          "policy change on 1 March 2025",
+          "vascular access flowsheet in the electronic health record",
+          "infection prevention surveillance list"
+        ],
+        "reading": "The policy acts through dwell time: catheters stay longer, fewer are inserted, and shift-by-shift site assessment carries the safety load. The retrieved records show little change in failure and no rise in phlebitis with longer dwell where sites are scored, but infiltration rises after the fourth day in older patients and documentation weakens at night and at weekends. Patients who need many catheters are sicker and dominate failures, so the unit of analysis matters. Bloodstream infection worries the executive but is too rare to compare locally.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Clinically indicated replacement policy",
+            "kind": "context",
+            "detail": "In force on adult medical and surgical wards from 1 March 2025."
+          },
+          {
+            "id": "n2",
+            "label": "Longer dwell time",
+            "kind": "context",
+            "detail": "Median dwell rose after similar changes elsewhere."
+          },
+          {
+            "id": "n3",
+            "label": "Catheters per admission",
+            "kind": "outcome",
+            "detail": "Expected to fall; valued by patients."
+          },
+          {
+            "id": "n4",
+            "label": "Catheter failure",
+            "kind": "outcome",
+            "detail": "Removal for phlebitis, infiltration, occlusion or dislodgement."
+          },
+          {
+            "id": "n5",
+            "label": "Shift-by-shift site assessment",
+            "kind": "context",
+            "detail": "Least complete at night and weekends (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Before-after cohort and time series",
+            "kind": "observational",
+            "detail": "Failure 31 and 33 percent (claim c1); no step change in a monthly series (claim c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Several catheters per patient",
+            "kind": "context",
+            "detail": "Ignoring clustering inflated a dwell effect (claim c4)."
+          },
+          {
+            "id": "n8",
+            "label": "Bloodstream infection",
+            "kind": "outcome",
+            "detail": "0.08 per 1,000 catheter-days in surveillance data (claim c5)."
+          },
+          {
+            "id": "n9",
+            "label": "Ward nurses and patients",
+            "kind": "stakeholder",
+            "detail": "Disagree about what the policy has done."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "extends"
+          },
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "reduces"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "may raise"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "detects early"
+          },
+          {
+            "from": "n6",
+            "to": "n4",
+            "relation": "found little change in"
+          },
+          {
+            "from": "n7",
+            "to": "n4",
+            "relation": "can inflate estimates of"
+          },
+          {
+            "from": "n2",
+            "to": "n8",
+            "relation": "feared to raise"
+          },
+          {
+            "from": "n9",
+            "to": "n3",
+            "relation": "values fewer"
+          }
+        ],
+        "summary": "Map links the policy to dwell, insertions, failure and infection, with site assessment and clustering as the two things the analysis must handle."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[5].kind": "observational",
+          "map.nodes[7].kind": "outcome",
+          "map.reading": {
+            "includes": "unit of analysis"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local estimate of catheter failure before and after the change",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The executive is deciding on anecdotes and on one versus two infections, which chance alone can produce.",
+            "opportunity": "Estimate failure for every catheter inserted in the 12 months on each side of 1 March 2025."
+          },
+          {
+            "id": "g2",
+            "title": "Secular trends and other ward changes",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Two consecutive years differ in staffing, patient mix and equipment, not only in policy; a catheter brand change showed up in one retrieved time series (claim c3).",
+            "opportunity": "Plot monthly failure with 12 points on each side, annotate co-interventions, and fit a segmented model."
+          },
+          {
+            "id": "g3",
+            "title": "Several catheters per patient",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Treating catheters as independent inflated a dwell effect in the retrieved methods study (claim c4).",
+            "opportunity": "Model failure with a patient-level frailty term and report catheters per patient."
+          },
+          {
+            "id": "g4",
+            "title": "Gaps in site assessment and removal reasons",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "The policy relies on assessment every shift, documented in 83 percent of shifts elsewhere (claim c2), and removal reasons were missing for 11 percent of removals in a validation study (claim c6).",
+            "opportunity": "Report documentation completeness by shift and measure missing removal reasons by period at extraction."
+          },
+          {
+            "id": "g5",
+            "title": "Harm may be recognised late in some patients",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Infiltration was found later in patients with delirium in one retrieved study, visual phlebitis scoring is less reliable on darker skin, and patients with limited English may not report pain.",
+            "opportunity": "Report failure by age group and by interpreter need, and state the limits of visual scoring."
+          }
+        ],
+        "errorsFound": [
+          "The two bloodstream infections since the change cannot show an effect of the policy; with infection at about 0.08 per 1,000 catheter-days, one or two events a year are expected by chance."
+        ],
+        "reevaluation": "The gaps confirm a cohort of all catheters on both sides of the change, with patient-level clustering, a monthly time series for secular trends, checked removal reasons, and infections reported as counts.",
+        "summary": "Five gaps; the missing local estimate and secular trends are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].severity": "high",
+          "gaps.items[4].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Secular trends and other ward changes"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Catheter failure among catheters inserted in the 12 months after the policy change is no more than 3 percentage points higher than in the 12 months before, after accounting for several catheters per patient and pre-existing trends.",
+            "novelty": 30,
+            "need": 85,
+            "practiceChange": 75,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "The need is high because the executive may reverse the policy; retrieved comparisons found little change in failure (claims c1 and c3), so the question is whether a meaningful local rise can be ruled out; the data exist.",
+            "risks": "Secular change between the two years, and removal reasons recorded differently between periods."
+          },
+          {
+            "id": "h2",
+            "statement": "The policy reduced the number of catheters per admission by at least 20 percent.",
+            "novelty": 25,
+            "need": 60,
+            "practiceChange": 60,
+            "feasibility": 90,
+            "parsimony": 80,
+            "rationale": "Fewer insertions is the expected benefit and the one patients notice.",
+            "risks": "Length of stay may have changed between the periods."
+          },
+          {
+            "id": "h3",
+            "statement": "Failure after the change is concentrated in catheters with gaps in site assessment documentation.",
+            "novelty": 50,
+            "need": 55,
+            "practiceChange": 60,
+            "feasibility": 65,
+            "parsimony": 55,
+            "rationale": "Incomplete documentation was linked with infiltration elsewhere (claim c2).",
+            "risks": "Documentation gaps may mark sicker patients rather than missed assessments."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the decision-relevant question, with insertions per admission as the main secondary question."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].need": 85,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among peripheral intravenous catheters inserted on adult medical and surgical wards, is insertion in the 12 months after the change to clinically indicated replacement, compared with the 12 months before, associated with a higher proportion of catheter failure?",
+            "framework": "PECO",
+            "population": "Peripheral intravenous catheters inserted on adult medical and surgical wards from 1 March 2024 to 28 February 2026",
+            "intervention": "Insertion after the policy change (exposure)",
+            "comparator": "Insertion in the 12 months before the change",
+            "outcome": "Catheter failure: removal for phlebitis, infiltration, occlusion or dislodgement before the end of treatment",
+            "time": "From insertion to removal",
+            "setting": "520-bed teaching hospital, adult medical and surgical wards"
+          },
+          {
+            "id": "q2",
+            "text": "Did the number of peripheral catheters per admission fall after the policy change?",
+            "framework": "PECO",
+            "population": "Admissions to the same wards in the same two years",
+            "intervention": "Admission after the policy change (exposure)",
+            "comparator": "Admission in the 12 months before the change",
+            "outcome": "Number of peripheral catheters inserted per admission",
+            "time": "Whole admission",
+            "setting": "Same as q1"
+          }
+        ],
+        "finer": "Feasible from existing records within the agreed informatics time; interesting to the executive, ward nurses and infection prevention; novel locally; ethical under the approved waiver of consent; relevant because the policy may be reversed.",
+        "summary": "One primary PECO question on failure and one secondary question on insertions per admission."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[0].comparator": "Insertion in the 12 months before the change",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "cohort",
+        "rationale": "The exposure (insertion before or after 1 March 2025) and the outcome (removal reason) are recorded for every catheter, so a cohort of all catheters on both sides of the change answers the executive's question directly. Retrieved comparisons found little change in failure after similar policies (c1, c3) and no rise in phlebitis with longer dwell where sites are scored every shift (c2), so the local study must be precise enough to rule out a meaningful rise; it must also account for several catheters per patient, which changed a dwell estimate materially (c4). A monthly time series within the same data guards against secular trends.",
+        "alternatives": [
+          "Cluster randomised comparison of replacement policies between wards (refused: the policy is already hospital-wide and reversing it on some wards for a trial is not proposed)",
+          "Ward-level interrupted time series only (kept as a secondary analysis: it cannot adjust for patient-level differences)",
+          "Prospective observation of new catheters for three months (refused: slower, and the constraint is secondary use of existing data)"
+        ],
+        "guidelines": [
+          "STROBE",
+          "RECORD"
+        ],
+        "whyNotMoreComplex": "A trial would answer a question the published trials have largely answered; the local question is whether the policy as delivered on these wards changed failure, which existing records can answer within the executive's timeline.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run the cohort comparing catheters inserted in the 12 months before and after 1 March 2025, built from existing flowsheet and surveillance data, with catheter failure as the primary outcome, several catheters per patient accounted for, and a monthly time series to separate the policy from secular trends.",
+          "question": "Should the question about the clinically indicated replacement policy be answered with a before-after cohort from existing records?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Published comparisons found little change in failure and no rise in phlebitis with longer dwell, so a local estimate able to rule out a meaningful rise is informative.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "An analysis that accounts for several catheters per patient is available and changes the estimate.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c4"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "Removal reasons are missing or wrong locally so often that failure cannot be measured.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c6"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics board approval with a waiver of consent for secondary use of flowsheet and surveillance data",
+              "status": "met",
+              "evidence": "Approval REB-2026-0412 dated 2026-08-27, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Clinical informatics time for extraction and linkage",
+              "status": "met",
+              "evidence": "Informatics request CI-2026-117 for about 30 hours, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Ward-level interrupted time series only",
+            "Prospective observation of new catheters for three months"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records; both gates are met on the investigator's records. The completeness of local removal reasons is measured at extraction."
+        },
+        "summary": "Cohort recommended; the decision rests on four ledger claims and both gates are met."
+      },
+      "note": "The decision cites ledger claims c1 to c4, which exist only if S13 applied both appraisals; the defeating criterion k3 cites c6 and stays unknown until extraction. The unassessed overall certainty does not block a decision; support comes from the claims (G7). selectionStatus requires S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "cohort",
+          "family": "cohort",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].criteria[2].claimIds": [
+            "c6"
+          ],
+          "design.decisions[-1].criteria[2].status": "unknown",
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: claims c1 to c4 exist in the ledger and rest on retrieved records; the only unknown criterion is a defeating condition that is not met, and both gates are met on the investigator's records, so the selection is accepted and the action is ready (G7). S11 for selectionStatus, actionStatus and basis; S13 for the claims; D5 for the status text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "cohort"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Cohort of all peripheral intravenous catheters inserted on adult medical and surgical wards from 1 March 2024 to 28 February 2026, comparing the 12 months after the change to clinically indicated replacement with the 12 months before, built from existing flowsheet and infection surveillance data.",
+        "population": "Catheters inserted on adult medical and surgical wards in patients aged 18 and over; catheters inserted in the emergency department or operating theatres are excluded from the primary analysis and described separately; catheters without a removal record at discharge are counted and handled in a sensitivity analysis.",
+        "exposure": "Insertion from 1 March 2025 to 28 February 2026 (after the change) versus 1 March 2024 to 28 February 2025 (before).",
+        "procedures": "Clinical informatics extracts every eligible flowsheet record and links it to the admission episode and to the infection prevention surveillance list inside the hospital's secure environment; the analysis file carries study identifiers only. Removal reasons are mapped to failure (phlebitis, infiltration, occlusion, dislodgement) or non-failure (end of treatment, discharge, routine resite) with a coding rule fixed before extraction, because flowsheet reasons were missing for 11 percent of removals in a validation study (c6); a second nurse recodes a random 5 percent of free-text reasons. Co-interventions on the wards (staffing changes, new catheter products, education sessions) are listed by month from ward managers' records.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Catheter failure",
+            "measure": "Removal for phlebitis, infiltration, occlusion or dislodgement before the end of treatment, per catheter",
+            "timing": "From insertion to removal",
+            "why": "Failure interrupts treatment and means another insertion; it is the harm ward nurses fear from longer dwell.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Catheters per admission",
+            "measure": "Number of peripheral catheters inserted per admission episode",
+            "timing": "Whole admission",
+            "why": "The benefit the policy was meant to bring and the one patients notice.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Peripheral catheter-associated bloodstream infection",
+            "measure": "Surveillance-confirmed infections, reported as counts and per 1,000 catheter-days without a test",
+            "timing": "During dwell and 48 hours after removal",
+            "why": "The executive's concern; too rare for a comparison but must be reported.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Documentation completeness",
+            "measure": "Proportion of catheter shifts with a documented phlebitis score, by day, night and weekend, and proportion of removals with a coded reason",
+            "timing": "Every shift during dwell; at removal",
+            "why": "The policy relies on assessment every shift, and failure can only be measured where a reason is recorded.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 30 hours of clinical informatics time for extraction and linkage (request CI-2026-117); analysis by the investigator with a hospital statistician; results before June 2027.",
+        "biasMitigation": [
+          "Failure coding rule fixed before extraction, with a 5 percent recode by a second nurse",
+          "Patient-level clustering in every model",
+          "Monthly time series with 12 points on each side and co-interventions annotated",
+          "Six covariates fixed before extraction; dwell time not adjusted for because it lies on the causal path of the policy"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Secular trends and co-interventions",
+            "severity": "high",
+            "note": "Two consecutive years differ in more than the policy; the time series and co-intervention list limit but do not remove this."
+          },
+          {
+            "id": "b2",
+            "label": "Documentation differing between periods",
+            "severity": "watch",
+            "note": "Removal reasons may have been recorded more carefully after the change; the recode and missing-reason sensitivity analysis check this."
+          },
+          {
+            "id": "b3",
+            "label": "Clustering of catheters within patients",
+            "severity": "watch",
+            "note": "Handled with a patient-level frailty term (claim c4)."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 6,
+          "flags": [
+            "Six pre-specified covariates",
+            "Bloodstream infection reported without a test"
+          ],
+          "simplestPath": "One exposure contrast, one primary outcome, one clustered model and one pre-specified time series."
+        },
+        "theoreticalFramework": "No framework is needed beyond the causal diagram used to choose covariates; the question is a comparison of two policies with routine data.",
+        "summary": "Cohort of catheters on both sides of the policy change; one primary outcome, two secondary outcomes and one process measure, with clustering and secular trends handled by design."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.outcomes[3].patientCentered": false,
+          "protocol.parsimony.covariateCount": 6,
+          "protocol.theoreticalFramework": {
+            "includes": "causal diagram"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cohort of catheters clustered within patients, comparing the 12 months after the change with the 12 months before, with an interrupted time series of monthly failure as the main check on secular trends.",
+        "sampleSize": "If the wards insert about 9,000 catheters a year (an assumption to confirm from the 2024 flowsheet count), about 18,000 catheters are available. With failure near 31 percent before the change, the planning value from c1, detecting a rise to 34 percent (3 percentage points) with 90 percent power at two-sided alpha 0.05 needs about 5,100 catheters per period if catheters were independent; with a design effect of 1.4 for several catheters per patient, about 7,200 per period. Both periods should exceed this, so the study can detect or rule out a 3-point rise. Bloodstream infection is too rare for a comparison and is reported as counts.",
+        "primaryAnalysis": "Cause-specific Cox model for time from insertion to failure, with removal for other reasons as a competing event and a shared frailty term for the patient (c4), period after versus before as the exposure, adjusted for age, sex, admitting service, insertion site, catheter gauge and inserter role; reported as a hazard ratio and as an absolute difference in 7-day cumulative incidence with 95 percent confidence intervals.",
+        "secondaryAnalysis": "Segmented regression of the monthly proportion of failed catheters with 12 points on each side (level and slope change), as in the retrieved time series (c3); catheters per admission compared with negative binomial regression; bloodstream infections described as counts and rates; documentation completeness described by shift and period.",
+        "missingData": "Catheters without a removal reason are counted by period and analysed in a sensitivity analysis that treats them first as failures and then as non-failures; missing covariates are handled by multiple imputation with 20 imputations.",
+        "multiplicity": "One primary comparison; secondary outcomes are reported with confidence intervals and labelled secondary.",
+        "software": "R with the survival and coxme packages, inside the hospital's secure analysis environment.",
+        "overfittingGuards": [
+          "Six covariates and the failure coding rule fixed before extraction",
+          "No adjustment for dwell time in the primary model",
+          "Segmented regression specified in advance with 12 points on each side",
+          "No subgroup claims beyond the pre-specified age and interpreter-need groups"
+        ],
+        "summary": "About 7,200 catheters per period are needed for a 3-point difference after clustering; the likely available numbers exceed this."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "design effect of 1.4"
+          },
+          "stats.primaryAnalysis": {
+            "includes": "shared frailty term"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: secondary use of existing records with no patient contact. The main risks are privacy harm from linkage and blame directed at wards or individual nurses.",
+        "consent": "The research ethics board approved a waiver of consent for secondary use (REB-2026-0412); patients are not contacted.",
+        "data": "Extraction and linkage inside the hospital's secure environment; the analysis file holds study identifiers and month of insertion only; results are reported by service and never by nurse.",
+        "equity": "PROGRESS-Plus: older patients, patients with delirium (in whom infiltration was found later in one retrieved study), patients with darker skin, on whom visual phlebitis scoring is less reliable, and patients with limited English, who may not report pain, may be affected differently. Failure is reported by age group and by interpreter need, and the limits of visual scoring are stated.",
+        "effectiveness": "The study tells the executive whether the policy is associated with more catheter failure and how many insertions it saved.",
+        "efficiency": "Uses existing records and about 30 hours of informatics time; no participant contact.",
+        "costs": "Informatics, nursing and statistician time within existing roles; no direct costs.",
+        "grants": "None needed; a clear local result could support a multi-hospital comparison later.",
+        "partnerships": "Infection prevention for surveillance definitions, ward nurse managers for the co-intervention list, clinical informatics, a hospital statistician, and two patient partners from the patient and family advisory council.",
+        "rebPath": "Approved by the hospital research ethics board with a waiver of consent for secondary use (REB-2026-0412), following Declaration of Helsinki principles for research with identifiable data.",
+        "limitations": "A before-after comparison remains open to secular trends; documentation may differ between periods; bloodstream infection is too rare to compare.",
+        "summary": "Minimal-risk secondary use under an approved waiver, with results reported by service and equity groups."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "REB-2026-0412"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners review the outcome definitions and the plain-language summary; a ward nurse from each service and an infection prevention nurse review the failure coding rule before extraction.",
+        "socialListening": "No social media listening; patient complaints about cannulation from the two years are counted by month as context for the time series.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Repeated insertions",
+            "quote": "Composite paraphrase: By the fourth day I dreaded the morning round, because it meant another needle whether the old one worked or not.",
+            "implication": "Report catheters per admission as a main secondary outcome.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Fear of harm from longer dwell",
+            "quote": "Composite paraphrase: I have seen arms swell up on day six, and nobody will convince me that leaving them in is harmless.",
+            "implication": "Keep infiltration inside the failure definition and show failure by dwell day descriptively.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Night shift assessment",
+            "quote": "Composite paraphrase: At three in the morning with twelve patients, the phlebitis score is the first thing that gets skipped.",
+            "implication": "Report documentation completeness by shift as a process measure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Recognising problems",
+            "quote": "Composite paraphrase: My mother could not tell anyone her arm hurt, and it was me who noticed the redness.",
+            "implication": "Report failure for patients with delirium or limited English and state the limits of visual scoring.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "partner",
+            "theme": "Reading two infections",
+            "quote": "Composite paraphrase: Two infections in a year is a signal to look, not a result; we would need years of data to see a real change.",
+            "implication": "Report bloodstream infections as counts and do not test them.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on insertions, fear of longer dwell, night assessment, recognising problems and reading rare infections."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[4].source": "partner",
+          "voices.items[0].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Peripheral intravenous catheter failure before and after a change to clinically indicated replacement: a cohort study using routinely collected data",
+        "abstract": "Objective: to estimate whether a change from routine resiting every 96 hours to clinically indicated replacement was associated with more catheter failure on adult medical and surgical wards. Design: cohort of all catheters inserted in the 12 months before and after 1 March 2025, from flowsheet and surveillance records. Outcome: removal for phlebitis, infiltration, occlusion or dislodgement before the end of treatment. Analysis: cause-specific Cox model with a patient frailty term and an interrupted time series. Results and conclusions will be written after the analysis.",
+        "introduction": "Clinically indicated replacement reduces insertions without more phlebitis in published comparisons, but results after local policy changes vary and few analyses account for patients with several catheters. Ward nurses disagree about the effect of the change here, and two bloodstream infections have raised concern.",
+        "methods": "Existing flowsheet records for catheters inserted from 1 March 2024 to 28 February 2026 are linked to admissions and infection surveillance. Removal reasons are coded with a rule fixed in advance and checked on a random sample. The primary model accounts for competing removal and for several catheters per patient; a segmented regression of monthly failure addresses secular trends.",
+        "results": "No data have been analysed yet. The report will present the cohort flow, catheters per patient, failure by period with the adjusted hazard ratio and absolute difference, the monthly time series, catheters per admission, infection counts and documentation completeness.",
+        "discussion": "The discussion will weigh the local estimate against published comparisons, the time series and the co-intervention list, and state what the result means for the policy.",
+        "limitations": "Before-after design open to secular trends; documentation may differ between periods; infections too rare to compare; visual phlebitis scoring.",
+        "conclusion": "To be written after analysis; it will be limited to failure and insertions in this hospital and will not claim an effect on bloodstream infection.",
+        "reportingChecklist": "STROBE with the RECORD extension",
+        "summary": "STROBE and RECORD structured draft with results left empty until analysis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE with the RECORD extension",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Confirm the 2024 flowsheet count of catheters before relying on the sample size assumption",
+          "Recode a random 5 percent of free-text removal reasons and measure missing reasons by period before analysis",
+          "Keep certainty per outcome in the report: the second appraisal explicitly cleared the single overall certainty"
+        ],
+        "improvementNotes": "The first search returned five records and the appraisal rated certainty low; a second search on infection, analysis methods, documentation and nursing time added five more, and the re-appraisal left overall certainty unrated on purpose and stated it per outcome. The decision rests on four ledger claims from retrieved records; no record has an identity check yet.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the catheter count assumption, the removal-reason check and per-outcome certainty in the report."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour and FAIL at 875fe59 because of the store defect named in A3 item L1.6 (mergeStage overwrites the Audit stage's patch with the audit entries), not a missing work-order entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "The cleared certainty and the first appraisal's record grades must survive the reload; the grade values are checked in the export because status fields need status text on the current route.",
+      "expect": {
+        "store": {
+          "title": "Peripheral intravenous catheter failure before and after a change to clinically indicated replacement",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.gradeRationale": {
+            "includes": "not rated across these records"
+          },
+          "scan.items": {
+            "length": 10
+          },
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "problem.constraints": "Secondary use of existing flowsheet and surveillance data only; no new data collection from patients. The clinical informatics team can give about 30 hours for data extraction. The nursing executive wants results by June 2027."
+        },
+        "screen": {
+          "includes": [
+            "Peripheral intravenous catheter failure before and after a change to clinically indicated replacement"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Peripheral intravenous catheter failure before and after a change to clinically indicated replacement",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.claims": {
+            "length": 6
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "stats.sampleSize": {
+            "includes": "7,200 per period"
+          }
+        },
+        "screen": {
+          "includes": [
+            "Peripheral intravenous catheter failure before and after a change to clinically indicated replacement"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "gradeOverall '' after the explicit null requires D2 (with S13 for the appraisal path); selectionStatus and actionStatus require S11. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.gradeOverall": "",
+            "scan.items[0].grade": "low",
+            "scan.items[5].grade": "moderate",
+            "scan.retrievalEvents[1].recordIds": [
+              "ev-07krvbp",
+              "ev-0l9pcy2",
+              "ev-0qp99r8",
+              "ev-0z3fqo3",
+              "ev-12ljil7"
+            ],
+            "scan.claims": {
+              "length": 6
+            },
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c2",
+              "c3",
+              "c4"
+            ],
+            "problem.constraints": "Secondary use of existing flowsheet and surveillance data only; no new data collection from patients. The clinical informatics team can give about 30 hours for data extraction. The nursing executive wants results by June 2027.",
+            "problem.rawNeed": "I am the vascular access nurse specialist at a 520-bed teaching hospital. On 1 March 2025 we changed our peripheral intravenous catheter policy on the adult medical and surgical wards from routine resiting every 96 hours to replacement only when clinically indicated, with a documented site assessment every shift using a phlebitis score. The change followed complaints from patients about repeated cannulation and a push from the wards to save nursing time.\n\nSince then I hear two stories. Some ward nurses say they are seeing more phlebitis and more infiltration because catheters now stay in for a week or longer. Others say patients get far fewer painful reinsertions and that nothing bad has happened. Infection prevention has recorded two bloodstream infections linked to peripheral catheters since the change, against one in the year before, and that has worried our nursing executive.\n\nI want to design a cohort study comparing catheters inserted in the 12 months before the policy change with catheters inserted in the 12 months after. The main outcome I have in mind is catheter failure, meaning removal for phlebitis, infiltration, occlusion or dislodgement before the end of treatment. I would also like to look at the number of catheters per admission, dwell time and bloodstream infections, although I know infections are rare. Insertion date, site, gauge, removal date and removal reason are documented in the vascular access flowsheet in our electronic health record, and infection prevention keeps its own line infection surveillance list.\n\nI need help with the comparison, how to handle the fact that one patient can have several catheters, what to do about secular trends and other changes on the wards, and how many catheters we need."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

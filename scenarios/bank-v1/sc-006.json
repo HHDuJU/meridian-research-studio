@@ -1,0 +1,1409 @@
+{
+  "id": "sc-006",
+  "version": 1,
+  "title": "Core laboratory network: critical value notification timeliness measured from two years of call logs",
+  "field": "laboratory-medicine",
+  "level": 1,
+  "family": "retrospective",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Routine path with clean inputs: a clinical biochemist plans a retrospective review of laboratory information system call logs to measure critical value notification against a 30-minute standard (routing explicit retrospective from 'retrospective review'). Two recorded fixture searches, a broad one and a targeted one on how to define the interval and on night staffing, return five and two well-formed records (2018 to 2024), each with its own retrieval event; the appraisal annotates all seven and records five source-derived claims with passages that are exact substrings of the abstracts; certainty 'moderate' over inspected records. The decision rests on claims c1, c2 and c4, both gates (ethics approval and data extract) are met on investigator-supplied records, and acceptance gives an accepted selection with a ready action. Reload, reopen and export follow the last stage. Record ids are stableRecordId values computed as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 6, 7 (ev-1v7d48w, ev-0k1rkxu, ev-0bewzz2, ev-0omcvk3, ev-1u6a1f4); titleYearKey hash for records 2 and 5 (ev-05vqp6b, ev-12c2ip1). Requires S13 (appraisal on the production scan path), S11 (selectionStatus, actionStatus, basis) and D5 (status text). Catches: a second search that replaces instead of adding to the first, certainty without retrieval, claims lost between appraisal and ledger, an unsupported acceptance, a never-notified outcome dropped from the protocol, and work lost on reload or reopen.",
+  "inputs": {
+    "need": "I am the clinical biochemist who leads the core laboratory for a network of three hospitals and 40 community clinics. Our policy says critical values (for example potassium above 6.2 or below 2.8 mmol/L, sodium below 120 mmol/L, glucose below 2.5 mmol/L, haemoglobin below 60 g/L, INR above 6 and positive blood cultures) must be telephoned to a responsible clinician with read-back within 30 minutes of the result being verified. The laboratory information system logs every call attempt with a time stamp, the person reached, and whether read-back was documented, but nobody has looked at these logs in a structured way. Staff tell me that results for outpatients and community clinics after 17:00 take much longer, that we sometimes cannot find anyone to call, and that at night a single technologist does the calling alongside the bench work.\n\nI want to do a retrospective review of the laboratory information system call logs for 2024 and 2025 to measure how long notification takes from verification to successful read-back, what proportion meet the 30-minute standard, and where the delays are: by patient location (inpatient, emergency, outpatient, community clinic), time of day, analyte and number of call attempts. I would then like to know which factors are associated with delays of more than 30 minutes, so the laboratory director can decide whether to set up an escalation route for community results after hours.\n\nThe research ethics board approved the project with a waiver of consent in August, and the laboratory information system manager has agreed to provide a de-identified extract. I need help with definitions, the analysis plan and a sensible way to handle results where no successful call was ever documented.",
+    "constraints": "No new data collection; the extract covers January 2024 to December 2025; about 60 hours of the laboratory quality officer's time for analysis; results needed by the laboratory director in February 2027.",
+    "localFacts": [
+      "The research ethics board approved the review with a waiver of consent on 2026-08-27 (REB file 26-311).",
+      "The laboratory information system manager agreed on 2026-09-02 to provide a de-identified call-log extract for 2024 and 2025 (data request LIS-DR-2026-19).",
+      "About 14,000 critical value calls were logged across the network in 2025.",
+      "Policy LAB-POL-012 requires telephone notification of critical values with read-back within 30 minutes of verification."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical biochemist who leads the core laboratory for a network of three hospitals and 40 community clinics. Our policy says critical values (for example potassium above 6.2 or below 2.8 mmol/L, sodium below 120 mmol/L, glucose below 2.5 mmol/L, haemoglobin below 60 g/L, INR above 6 and positive blood cultures) must be telephoned to a responsible clinician with read-back within 30 minutes of the result being verified. The laboratory information system logs every call attempt with a time stamp, the person reached, and whether read-back was documented, but nobody has looked at these logs in a structured way. Staff tell me that results for outpatients and community clinics after 17:00 take much longer, that we sometimes cannot find anyone to call, and that at night a single technologist does the calling alongside the bench work.\n\nI want to do a retrospective review of the laboratory information system call logs for 2024 and 2025 to measure how long notification takes from verification to successful read-back, what proportion meet the 30-minute standard, and where the delays are: by patient location (inpatient, emergency, outpatient, community clinic), time of day, analyte and number of call attempts. I would then like to know which factors are associated with delays of more than 30 minutes, so the laboratory director can decide whether to set up an escalation route for community results after hours.\n\nThe research ethics board approved the project with a waiver of consent in August, and the laboratory information system manager has agreed to provide a de-identified extract. I need help with definitions, the analysis plan and a sensible way to handle results where no successful call was ever documented.",
+          "family": "retrospective",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical biochemist who leads the core laboratory"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Critical value notification times from laboratory call logs across a hospital and community network",
+        "subtitle": "Retrospective review of 2024 and 2025 call logs against the 30-minute standard",
+        "family": "retrospective",
+        "statement": "The laboratory policy requires critical values to be telephoned with read-back within 30 minutes of verification, but compliance has never been measured. Staff report longer delays for outpatient and community results after 17:00 and at night, when one technologist covers calling and bench work. A retrospective review of two years of call logs can measure notification times, identify where delays occur and inform a decision on an after-hours escalation route for community results.",
+        "whoAffected": "Patients whose critical results are delayed, especially community clinic patients after hours; laboratory technologists; responsible clinicians in hospitals and clinics; the laboratory director.",
+        "whatHurts": "A dangerous potassium or glucose that reaches nobody for hours can harm a patient at home; repeated failed calls consume technologist time at night; the policy's standard gives false assurance when it is not measured.",
+        "currentPractice": "Telephone notification by the technologist on duty, logged in the laboratory information system; no escalation route when nobody can be reached; no routine reporting of compliance.",
+        "whyNow": "Ethics approval and a data extract are in place, and the laboratory director wants evidence before deciding on an escalation route in early 2027.",
+        "constraints": "No new data collection; the extract covers January 2024 to December 2025; about 60 hours of the laboratory quality officer's time for analysis; results needed by the laboratory director in February 2027.",
+        "patientCenteredGoal": "Every patient with a critical result, wherever and whenever the sample was taken, has it acted on by a responsible clinician within 30 minutes.",
+        "summary": "Problem framed as a retrospective review of call logs to measure compliance and locate delays."
+      },
+      "expect": {
+        "store": {
+          "title": "Critical value notification times from laboratory call logs across a hospital and community network",
+          "subtitle": "Retrospective review of 2024 and 2025 call logs against the 30-minute standard",
+          "family": "retrospective",
+          "problem.statement": {
+            "includes": "30 minutes of verification"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Critical value notification times from laboratory call logs across a hospital and community network"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "critical value notification timeliness laboratory information system call logs outpatient after hours read-back escalation",
+      "response": {
+        "status": 200,
+        "total": 5,
+        "records": [
+          {
+            "title": "Time from verification to notification of critical laboratory values: an eleven-laboratory analysis of 96,400 call-log entries",
+            "authors": "Petrosyan-Hale D, Obi-Lindstrom K, Varga-Ashby M",
+            "year": 2020,
+            "venue": "Caddisford Laboratory Practice Journal",
+            "doi": "10.5555/jlmp.2020.0318",
+            "providerType": "journal-article",
+            "abstract": "We analysed laboratory information system call logs for 96,400 critical values from eleven hospital laboratories over one year. Median time from verification to documented read-back was 7 minutes for inpatients and 24 minutes for outpatients. Notification within 30 minutes was achieved for 94 percent of inpatient results and 71 percent of outpatient results. Outpatient results verified after 17:00 had the longest delays, and 3 percent of outpatient critical values had no successful notification documented. Results requiring three or more call attempts accounted for most delays beyond one hour. Laboratories with a written escalation route for unreachable clinicians had shorter outpatient times."
+          },
+          {
+            "title": "Unsuccessful call attempts and read-back documentation in critical value reporting at a regional laboratory",
+            "authors": "Sandoval-Nkosi T, Ekberg-Fairley A",
+            "year": 2018,
+            "venue": "Clinical Laboratory Operations",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 8,200 critical value notifications from one regional laboratory. Eighteen percent of results needed more than two call attempts before a responsible clinician was reached, most often for outpatient and community results. Read-back was not documented for 9 percent of successful calls, more often at night. Call attempts were logged reliably, but the reason a call failed was recorded as free text in fewer than half of cases. The authors recommend structured fields for failed calls and a defined escalation after the second unsuccessful attempt."
+          },
+          {
+            "title": "Timeliness, read-back and escalation in critical value notification: a systematic review of 31 laboratory studies",
+            "authors": "Halvorsen-Oduya B, Castell-Mbeki R, Tan-Whitaker J",
+            "year": 2022,
+            "venue": "Reviews in Laboratory Service Quality",
+            "doi": "10.5555/lmr.2022.0114",
+            "providerType": "review",
+            "abstract": "We included 31 studies of critical value notification from hospital and reference laboratories. Delays were consistently longer for outpatient and community results and outside working hours. Written escalation pathways were associated with shorter notification times in eight of nine studies that examined them. Studies defined timeliness differently: some measured from specimen collection, some from verification and some from the first call attempt, which made comparison difficult. Read-back documentation ranged from 78 to 99 percent. Only two studies linked notification delay to patient outcomes, both with small numbers of adverse events."
+          },
+          {
+            "title": "Automated secure messaging versus telephone for critical value notification: a before-after comparison",
+            "authors": "Moreau-Adjei L, Kristoffersen-Iqbal S",
+            "year": 2024,
+            "venue": "Clinical Laboratory Operations",
+            "doi": "10.5555/clo.2024.0045",
+            "providerType": "journal-article",
+            "abstract": "One hospital laboratory replaced telephone calls for selected critical values with secure messages requiring acknowledgement in the electronic record. Median time from verification to acknowledgement fell from 14 to 6 minutes. However, 12 percent of messages were not acknowledged within 30 minutes and had to be followed by a telephone call, and acknowledgement did not always mean that the clinician had read the result. The change applied only to inpatients and was accompanied by staff training. The authors caution that messaging needs a fallback call and should not be introduced for community results without an escalation route."
+          },
+          {
+            "title": "Community clinic critical values after hours: who is responsible when the clinic is closed?",
+            "authors": "Regional Laboratory Quality Committee",
+            "year": 2021,
+            "venue": "Regional laboratory quality reports",
+            "providerType": "report",
+            "abstract": "This report describes how six laboratories handled critical values for community clinic patients verified after the clinic had closed. Laboratories could not reach a responsible clinician for 23 percent of such results on the first evening, mainly because on-call lists were out of date or not held by the laboratory. Staff then called the patient directly, contacted an emergency department or waited until the next morning, with no consistent rule. The committee recommends that every community clinic name an after-hours contact and that laboratories hold a current list, with a defined route when nobody can be reached."
+          }
+        ]
+      },
+      "note": "First recorded search: five records with abstracts on notification practice. Ids are stableRecordId values (see notes). Before appraisal the records carry no grade or scores (G1, G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 5,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1v7d48w",
+            "ev-05vqp6b",
+            "ev-0k1rkxu",
+            "ev-0bewzz2",
+            "ev-12c2ip1"
+          ],
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[0].doi": "10.5555/jlmp.2020.0318",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[4].provenance.access": "abstract",
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Time from verification to notification of critical laboratory values: an eleven-laboratory analysis of 96,400 call-log entries"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "critical value notification interval definition time-stamp validity night-shift staffing laboratory",
+      "response": {
+        "status": 200,
+        "total": 2,
+        "records": [
+          {
+            "title": "Defining the start and end of critical value notification intervals: time-stamp validity in laboratory information systems",
+            "authors": "Achterberg-Silva P, Nwosu-Holm E",
+            "year": 2019,
+            "venue": "Ashcombe Laboratory Informatics Letters",
+            "doi": "10.5555/jli.2019.0092",
+            "providerType": "journal-article",
+            "abstract": "We compared laboratory information system time stamps with independent observation for 1,150 critical value notifications. Verification time stamps were accurate to within one minute in 99 percent of cases. The time of successful read-back was missing in 6 percent of logged calls, usually when the technologist completed the call record later. Collection times were unreliable for community specimens. We recommend measuring notification from verification to documented read-back, treating a missing read-back time as an unsuccessful notification in the primary analysis, and reporting how often end times are missing."
+          },
+          {
+            "title": "Night-shift workload and delays in critical value notification in a hospital laboratory network",
+            "authors": "Lindgren-Oyelowo F, Pacheco-Brandt H",
+            "year": 2023,
+            "venue": "Caddisford Laboratory Practice Journal",
+            "doi": "10.5555/jlmp.2023.0207",
+            "providerType": "journal-article",
+            "abstract": "Using two years of call logs from a three-hospital network, we examined whether notification delays were linked to night-shift staffing. When a single technologist covered both bench work and notification, the odds of a delay beyond 30 minutes were 2.1 times higher than when a second staff member was available (95 percent CI 1.7 to 2.6), after adjustment for patient location and analyte. Delays clustered in the first hour after large analyser runs. The authors suggest separating notification from bench work at night or routing night calls through a central clinical desk."
+          }
+        ]
+      },
+      "note": "Second, targeted recorded search on how to define the interval and on night staffing: two further records, added after the first five with their own retrieval event; the first event is unchanged.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 5,
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].performedBy": "app",
+          "scan.retrievalEvents[1].resultCount": 2,
+          "scan.retrievalEvents[1].recordIds": [
+            "ev-0omcvk3",
+            "ev-1u6a1f4"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[5].id": "ev-0omcvk3",
+          "scan.items[5].provenance.origin": "retrieval",
+          "scan.items[5].provenance.retrievalEventIds": {
+            "length": 1
+          },
+          "scan.items[6].id": "ev-1u6a1f4",
+          "scan.items[6].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Defining the start and end of critical value notification intervals: time-stamp validity in laboratory information systems"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1v7d48w",
+            "relevance": 94,
+            "methodQuality": 68,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Notification within 30 minutes for 94 percent of inpatient and 71 percent of outpatient results; after-hours outpatient results slowest; 3 percent of outpatient values never notified.",
+            "limitations": "Hospital laboratories only; one year; escalation routes not described in detail.",
+            "contextTags": [
+              "call logs",
+              "timeliness",
+              "outpatient"
+            ]
+          },
+          {
+            "id": "ev-05vqp6b",
+            "relevance": 80,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Eighteen percent of results needed more than two call attempts; read-back undocumented for 9 percent of successful calls, more at night.",
+            "limitations": "One laboratory; reasons for failed calls poorly recorded.",
+            "contextTags": [
+              "call attempts",
+              "read-back"
+            ]
+          },
+          {
+            "id": "ev-0k1rkxu",
+            "relevance": 86,
+            "methodQuality": 70,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Delays consistently longer for outpatient and after-hours results; escalation pathways associated with shorter times; timeliness defined in different ways.",
+            "limitations": "Heterogeneous definitions; few outcome data.",
+            "contextTags": [
+              "systematic review",
+              "escalation",
+              "definitions"
+            ]
+          },
+          {
+            "id": "ev-0bewzz2",
+            "relevance": 62,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Secure messaging shortened median acknowledgement from 14 to 6 minutes for inpatients, but 12 percent needed a fallback call.",
+            "limitations": "Inpatients only; before-after with training.",
+            "contextTags": [
+              "secure messaging",
+              "inpatients"
+            ]
+          },
+          {
+            "id": "ev-12c2ip1",
+            "relevance": 84,
+            "methodQuality": 42,
+            "kind": "grey",
+            "grade": "very-low",
+            "keyFindings": "A responsible clinician could not be reached for 23 percent of after-hours community results on the first evening, mostly because on-call lists were missing or out of date.",
+            "limitations": "Descriptive committee report from six laboratories.",
+            "contextTags": [
+              "community clinics",
+              "after hours",
+              "escalation"
+            ]
+          },
+          {
+            "id": "ev-0omcvk3",
+            "relevance": 90,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Verification time stamps were accurate; read-back time missing for 6 percent of calls; collection times unreliable for community specimens.",
+            "limitations": "One laboratory information system.",
+            "contextTags": [
+              "time stamps",
+              "operational definition",
+              "measurement"
+            ]
+          },
+          {
+            "id": "ev-1u6a1f4",
+            "relevance": 88,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A single night technologist covering bench and calls was associated with 2.1 times higher odds of delay beyond 30 minutes.",
+            "limitations": "Observational; staffing measured from rosters.",
+            "contextTags": [
+              "night shift",
+              "staffing",
+              "delay"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In eleven hospital laboratories, notification within 30 minutes was achieved for 94 percent of inpatient and 71 percent of outpatient critical values.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1v7d48w"
+            ],
+            "location": "Abstract, results",
+            "passage": "Notification within 30 minutes was achieved for 94 percent of inpatient results and 71 percent of outpatient results.",
+            "interpretation": "Planning values and a benchmark for the network's own results.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c2",
+            "text": "Verification time stamps are accurate, while read-back times are missing for about 6 percent of calls, so the interval should run from verification to documented read-back.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0omcvk3"
+            ],
+            "location": "Abstract",
+            "passage": "We recommend measuring notification from verification to documented read-back, treating a missing read-back time as an unsuccessful notification in the primary analysis",
+            "interpretation": "Fixes the operational definition and the rule for missing end times.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c3",
+            "text": "Written escalation pathways were associated with shorter notification times in eight of nine studies that examined them.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0k1rkxu"
+            ],
+            "location": "Abstract, results",
+            "passage": "Written escalation pathways were associated with shorter notification times in eight of nine studies that examined them.",
+            "interpretation": "Supports the decision the director is considering, if local delays are concentrated in unreachable results.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "A single night technologist covering bench work and calls was associated with 2.1 times higher odds of delay beyond 30 minutes.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1u6a1f4"
+            ],
+            "location": "Abstract, results",
+            "passage": "the odds of a delay beyond 30 minutes were 2.1 times higher than when a second staff member was available",
+            "interpretation": "Night staffing is a factor to measure, not only location.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Eighteen percent of critical values needed more than two call attempts, mostly outpatient and community results.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-05vqp6b"
+            ],
+            "location": "Abstract",
+            "passage": "Eighteen percent of results needed more than two call attempts before a responsible clinician was reached",
+            "interpretation": "Number of attempts is a mediator of delay worth reporting.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven records retrieved in two recorded searches, appraised at abstract level. Call-log studies consistently show slower notification for outpatient and community results, especially after hours (71 against 94 percent within 30 minutes in one multicentre analysis), with repeated call attempts and unreachable clinicians as the main mechanisms. A single night technologist covering bench work is associated with more delay. Verification time stamps are reliable and read-back times are occasionally missing, which supports a verification-to-read-back interval with missing end times treated as unsuccessful. Escalation pathways are associated with shorter times, but links to patient outcomes are sparse.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "Several large call-log analyses and a review agree on where delays occur, with reliable time-stamp data; the evidence is observational but the question is descriptive. Moderate certainty about the pattern of delays; low certainty about effects of escalation routes.",
+        "summary": "Seven records from two recorded searches appraised; five source-derived claims recorded; overall certainty moderate."
+      },
+      "note": "Appraisal of the seven records from both recorded searches on the production scan path (S13); certainty moderate over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[0].methodQuality": 68,
+          "scan.items[4].grade": "very-low",
+          "scan.items[4].kind": "grey",
+          "scan.items[5].keyFindings": {
+            "includes": "6 percent"
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-0omcvk3"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-1u6a1f4"
+          ],
+          "scan.gradeOverall": "moderate",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "core laboratory for three hospitals and 40 community clinics",
+          "about 14,000 critical value calls a year",
+          "policy LAB-POL-012: read-back within 30 minutes",
+          "single technologist on nights"
+        ],
+        "reading": "Delay accumulates where a verified result meets nobody to call: community clinics after closing, outpatients after 17:00 and nights when one technologist also runs the analysers. Call attempts are the visible trace of that search. The data to measure all of this already sit in the call logs, and the definition of the interval matters as much as the analysis.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Verified critical value",
+            "kind": "context",
+            "detail": "Start of the notification interval (claim c2)."
+          },
+          {
+            "id": "n2",
+            "label": "Documented read-back within 30 minutes",
+            "kind": "outcome",
+            "detail": "Policy standard and primary outcome."
+          },
+          {
+            "id": "n3",
+            "label": "Community clinics after hours",
+            "kind": "context",
+            "detail": "No responsible clinician reachable for about a quarter of results."
+          },
+          {
+            "id": "n4",
+            "label": "Repeated call attempts",
+            "kind": "context",
+            "detail": "Main mechanism of delay (claim c5)."
+          },
+          {
+            "id": "n5",
+            "label": "Single night technologist",
+            "kind": "context",
+            "detail": "Associated with more delay (claim c4)."
+          },
+          {
+            "id": "n6",
+            "label": "Multicentre call-log analysis",
+            "kind": "observational",
+            "detail": "71 against 94 percent within 30 minutes (claim c1)."
+          },
+          {
+            "id": "n7",
+            "label": "Escalation route",
+            "kind": "framework",
+            "detail": "Option the director is considering (claim c3)."
+          },
+          {
+            "id": "n8",
+            "label": "Patients at home with a critical result",
+            "kind": "stakeholder",
+            "detail": "Bear the risk of delay."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "starts the interval ending in"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "produces"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "delays"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "delays"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "benchmarks"
+          },
+          {
+            "from": "n7",
+            "to": "n4",
+            "relation": "would shorten"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "are served by"
+          }
+        ],
+        "summary": "Map follows a critical value from verification to read-back and marks where delay accumulates."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[6].kind": "framework",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Compliance with the 30-minute standard has never been measured",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The policy gives assurance without data, and the director's decision on escalation needs to know where delays occur.",
+            "opportunity": "Measure compliance by location, time of day and analyte from two years of call logs."
+          },
+          {
+            "id": "g2",
+            "title": "The interval must be defined before analysis",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Studies measure timeliness from collection, verification or the first call, which gives different answers (claim c2).",
+            "opportunity": "Measure from verification to documented read-back and treat a missing read-back as unsuccessful."
+          },
+          {
+            "id": "g3",
+            "title": "Results never successfully notified",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "A result with no documented read-back is the most dangerous case and disappears if analysis uses only completed calls.",
+            "opportunity": "Report never-notified results as a separate secondary outcome."
+          },
+          {
+            "id": "g4",
+            "title": "Community patients after hours carry the risk",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Patients at home, often in outlying areas, depend on a clinic that is closed.",
+            "opportunity": "Report community after-hours results separately and by clinic area."
+          }
+        ],
+        "errorsFound": [
+          "Staff accounts attribute delays mainly to night staffing; the retrieved evidence suggests unreachable clinicians for community results matter at least as much, so both must be measured."
+        ],
+        "reevaluation": "The gaps confirm a retrospective review with a fixed interval definition, never-notified results reported separately and community results after hours as the key subgroup.",
+        "summary": "Four gaps: unmeasured compliance, interval definition, never-notified results, and risk carried by community patients after hours."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[2].severity": "high",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Results never successfully notified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Community clinic and outpatient critical values verified after 17:00 are notified within 30 minutes much less often than inpatient values (below 70 against above 90 percent).",
+            "novelty": 30,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 95,
+            "parsimony": 90,
+            "rationale": "Consistent with the retrieved call-log studies; directly informs the escalation decision; data already exist.",
+            "risks": "Missing read-back times could exaggerate delays."
+          },
+          {
+            "id": "h2",
+            "statement": "Delay beyond 30 minutes is more likely when a single technologist covers bench work and notification at night, independently of location.",
+            "novelty": 40,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 85,
+            "parsimony": 75,
+            "rationale": "Supported by one network study (claim c4); needs roster data.",
+            "risks": "Night and location overlap."
+          },
+          {
+            "id": "h3",
+            "statement": "Most delays beyond one hour involve three or more call attempts.",
+            "novelty": 30,
+            "need": 60,
+            "practiceChange": 70,
+            "feasibility": 95,
+            "parsimony": 85,
+            "rationale": "Call attempts are logged; identifies where escalation would act.",
+            "risks": "Attempts are a mediator, not a cause."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected, h2 and h3 as pre-specified secondary questions."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].feasibility": 95,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among critical values verified by the network laboratory in 2024 and 2025, what proportion were notified with documented read-back within 30 minutes of verification, and how did this differ by patient location, time of day, analyte, night staffing and number of call attempts?",
+            "framework": "PECO",
+            "population": "Critical values verified by the core laboratory, January 2024 to December 2025",
+            "intervention": "Patient location, time of verification, analyte group, night staffing and call attempts (exposures)",
+            "comparator": "Inpatient results verified in working hours",
+            "outcome": "Documented read-back within 30 minutes of verification",
+            "time": "2024 to 2025",
+            "setting": "Three hospitals and 40 community clinics served by one core laboratory"
+          }
+        ],
+        "finer": "Feasible from an approved extract in 60 hours; interesting to the laboratory director and clinics; novel for this network; ethical with the approved waiver; relevant to an escalation decision in 2027.",
+        "summary": "One PECO question with location and time as the main exposures."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[0].outcome": "Documented read-back within 30 minutes of verification",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "retrospective",
+        "rationale": "The data to answer the question already exist in the call logs, the outcome is defined by time stamps, and the decision needs a description of where delays occur and which factors go with them. A retrospective review of two years of logs, with the interval fixed from verification to documented read-back (c2), benchmarked against published call-log analyses (c1), and with night staffing (c4) and call attempts as named factors, answers it without new data collection. Reporting follows STROBE with the RECORD extension.",
+        "alternatives": [
+          "Prospective observation of notification for three months (refused: slower, smaller and changes behaviour while observed)",
+          "Trial of an escalation route (deferred: the review first shows whether delays are concentrated where an escalation route would act)"
+        ],
+        "guidelines": [
+          "STROBE",
+          "RECORD"
+        ],
+        "whyNotMoreComplex": "Existing time-stamped logs answer a descriptive question directly; a prospective or experimental design would add cost and delay without improving the answer the director needs.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct the retrospective review of the 2024 and 2025 call logs, measuring notification from verification to documented read-back against the 30-minute standard and reporting delays by location, time of day, analyte, night staffing and call attempts.",
+          "question": "Should the laboratory measure critical value notification from its call logs before deciding on an after-hours escalation route?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Call-log analyses can measure notification reliably from verification to read-back.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Delays are plausibly concentrated in outpatient, community and night results where an escalation route or staffing change would act.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c4"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The extract lacks location or read-back fields for a large share of calls.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics board approval with waiver of consent",
+              "status": "met",
+              "evidence": "REB file 26-311 approved 2026-08-27, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Agreement to provide a de-identified call-log extract",
+              "status": "met",
+              "evidence": "Data request LIS-DR-2026-19 agreed 2026-09-02, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Prospective observation for three months",
+            "Introduce an escalation route without measurement"
+          ],
+          "note": "Rests on ledger claims c1, c2 and c4 from retrieved records; both gates are met on investigator-supplied records."
+        },
+        "summary": "Retrospective review of call logs recommended; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "The decision rests on ledger claims c1, c2 and c4 (S13); selectionStatus requires S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "retrospective",
+          "family": "retrospective",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c4"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: the claims rest on retrieved records and both gates are met on investigator-supplied records, so the selection is accepted and the action ready (G7). selectionStatus, actionStatus and basis require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "retrospective"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Retrospective review of laboratory information system call logs for all critical values verified by the core laboratory from January 2024 to December 2025.",
+        "population": "Every critical value on the policy list verified in the period, from inpatient, emergency, outpatient and community clinic specimens; repeat critical values for the same patient and analyte within 24 hours are counted once, with the first notification kept.",
+        "exposure": "Patient location (inpatient, emergency, outpatient, community clinic), time block of verification (08:00 to 16:59, 17:00 to 22:59, 23:00 to 07:59), weekday or weekend, analyte group, night staffing (single or two staff, from rosters) and number of call attempts.",
+        "procedures": "The laboratory information system manager extracts de-identified call logs with verification time, each attempt time, person reached, read-back flag and location; the quality officer links night rosters by date and shift; the interval runs from verification to documented read-back.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Read-back within 30 minutes",
+            "measure": "Documented read-back by a responsible clinician within 30 minutes of verification; a missing read-back time counts as not within 30 minutes",
+            "timing": "Per critical value, 2024 to 2025",
+            "why": "The policy standard, measurable from reliable time stamps (claim c2).",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Never successfully notified",
+            "measure": "Critical values with no documented read-back at any time",
+            "timing": "Per critical value",
+            "why": "The most dangerous failure, hidden if only completed calls are analysed.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Time to read-back",
+            "measure": "Minutes from verification to documented read-back, summarised by median and 90th percentile",
+            "timing": "Per critical value",
+            "why": "Shows the size of delays beyond the threshold.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Read-back documentation",
+            "measure": "Proportion of successful calls with read-back documented",
+            "timing": "Per call",
+            "why": "Documentation quality affects the primary outcome.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 28,000 critical values in two years; extraction by the system manager; analysis within the quality officer's 60 hours.",
+        "biasMitigation": [
+          "Interval and missing-time rule fixed before extraction",
+          "Repeat values within 24 hours counted once",
+          "Roster linkage done before outcomes are examined",
+          "Missing read-back times reported by location and time block"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Missing read-back times",
+            "severity": "watch",
+            "note": "Treated as unsuccessful in the primary analysis; sensitivity analysis excludes them."
+          },
+          {
+            "id": "b2",
+            "label": "Location coding",
+            "severity": "ok",
+            "note": "Location is assigned by the ordering system, not by the technologist."
+          }
+        ],
+        "parsimony": {
+          "score": 85,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 6,
+          "flags": [
+            "Six pre-specified factors; no data-driven selection"
+          ],
+          "simplestPath": "One binary outcome, six factors, one regression model."
+        },
+        "theoreticalFramework": "None needed; the review is descriptive with a pre-specified set of factors.",
+        "summary": "Retrospective review of about 28,000 critical values with one primary outcome, two secondary outcomes and six pre-specified factors."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.outcomes[3].patientCentered": false,
+          "protocol.parsimony.covariateCount": 6,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Retrospective review of call logs; proportions with 95 percent confidence intervals and a multivariable model for delay beyond 30 minutes.",
+        "sampleSize": "All critical values in two years are included, about 28,000. Precision rather than power sets the plan: a subgroup of 2,000 community results verified after 17:00 with about 70 percent notified within 30 minutes gives a 95 percent confidence interval of about plus or minus 2 percentage points. With several thousand delayed results the regression is not limited by events; parsimony comes from fixing six factors in advance.",
+        "primaryAnalysis": "Proportion notified within 30 minutes overall and by location and time block, with 95 percent confidence intervals; mixed-effects logistic regression for delay beyond 30 minutes with location, time block, weekday or weekend, analyte group, night staffing and month as fixed effects and ordering clinic or ward as a random intercept.",
+        "secondaryAnalysis": "Never-notified results by location and time block; median and 90th percentile time to read-back; delays by number of call attempts, reported descriptively because attempts lie on the path between location and delay.",
+        "missingData": "A missing read-back time counts as not within 30 minutes in the primary analysis; a sensitivity analysis excludes such calls; the share of missing times is reported by subgroup.",
+        "multiplicity": "One primary outcome; subgroup estimates are reported with confidence intervals and without significance claims.",
+        "software": "R; extraction query and analysis code archived with the REB file.",
+        "overfittingGuards": [
+          "Six factors fixed before extraction",
+          "Call attempts not entered as a covariate in the primary model",
+          "No stepwise selection"
+        ],
+        "summary": "About 28,000 values; precision within about 2 points for key subgroups; mixed-effects logistic model with six pre-specified factors."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 28,000"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: secondary use of de-identified logs. The main risk is blaming individual technologists for system delays; results are reported by shift and location, never by staff member.",
+        "consent": "Waiver of consent approved by the research ethics board for de-identified secondary use (REB file 26-311).",
+        "data": "The extract contains no names or record numbers, only a study identifier, location type, clinic area and times; it is held on the laboratory's secure server and destroyed five years after publication.",
+        "equity": "PROGRESS-Plus: patients of community clinics, many in outlying and lower-income areas, and patients whose results are verified at night carry most of the delay. Results are reported by clinic area and time block so that an escalation route can be targeted to them.",
+        "effectiveness": "The review shows whether delays are concentrated where an escalation route or night staffing change would act.",
+        "efficiency": "Existing data and 60 hours of analysis.",
+        "costs": "Staff time within existing roles.",
+        "grants": "None needed.",
+        "partnerships": "Laboratory information system manager (extract), community clinic network lead (on-call lists), two technologists who work nights (interpretation), and one patient partner from the hospital's patient council.",
+        "rebPath": "Approved by the research ethics board with a waiver of consent (REB file 26-311, 2026-08-27); data access agreed under LIS-DR-2026-19.",
+        "limitations": "Call logs record documentation, not clinical action; roster data may not show informal help at night; patient outcomes are not measured.",
+        "summary": "Approved secondary use with a waiver, system-level reporting, and equity reporting for community and night results."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "REB file 26-311"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two night technologists and the community clinic network lead review the definitions before extraction; a patient partner reviews the plain-language summary for the laboratory director.",
+        "socialListening": "No social media listening.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Calling while running the analysers",
+            "quote": "Composite paraphrase: At three in the morning I have a blood culture flagging, two potassiums to phone and the chemistry analyser alarming, and I am the only one here.",
+            "implication": "Measure night staffing as a factor and report delays by time block.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Nobody to call",
+            "quote": "Composite paraphrase: The clinic shut at five; the on-call number on our list rings a doctor who left last year.",
+            "implication": "Report never-notified community results separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Hearing the next morning",
+            "quote": "Composite paraphrase: They rang me the next day to say my potassium had been dangerously high the evening before, and I had been at home alone all night.",
+            "implication": "Keep community after-hours results as the key subgroup.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Read-back in a busy department",
+            "quote": "Composite paraphrase: In the emergency department I take the call and repeat it back, but I do not always hear whether they logged it.",
+            "implication": "Report read-back documentation as a process outcome.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on night workload, unreachable clinics, patients at home and read-back."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "patient",
+          "voices.items[0].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Timeliness of critical value notification from laboratory call logs in a hospital and community network: a retrospective review",
+        "abstract": "Objective: to measure how often critical values are notified with read-back within 30 minutes of verification and where delays occur. Design: retrospective review of laboratory information system call logs for about 28,000 critical values in 2024 and 2025. Primary outcome: documented read-back within 30 minutes. Results and conclusions will be written after analysis.",
+        "introduction": "Critical values must reach a responsible clinician quickly, yet compliance with notification standards is rarely measured, and published call-log studies show slower notification for outpatient and community results after hours.",
+        "methods": "All critical values verified in the period were included. The interval ran from verification to documented read-back, with missing read-back times treated as unsuccessful. Night staffing was linked from rosters. A mixed-effects logistic model with six pre-specified factors examined delay beyond 30 minutes.",
+        "results": "No data have been analysed yet. The report will present compliance by location and time block, never-notified results, time to read-back and the adjusted model.",
+        "discussion": "The discussion will compare results with published call-log studies and state where an escalation route or night staffing change would act.",
+        "limitations": "Documentation rather than clinical action; roster data may miss informal help; no patient outcomes.",
+        "conclusion": "To be written after analysis; it will describe compliance and its correlates, not the effect of any change.",
+        "reportingChecklist": "STROBE with the RECORD extension",
+        "summary": "STROBE and RECORD structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE with the RECORD extension",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Confirm with the system manager that location type and read-back flag are present for every logged call before extraction",
+          "Run an identity check on the seven retrieved records before the report cites them",
+          "Agree the wording of the report so that no individual technologist is identifiable"
+        ],
+        "improvementNotes": "Seven records came from two recorded searches and were appraised at abstract level; the decision rests on three ledger claims and both gates are met on the investigator's approval records.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before extraction."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour; at 875fe59 they fail because mergeStage overwrites the audit stage's patch (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.entries": {
+            "min": 13
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Critical value notification times from laboratory call logs across a hospital and community network",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "protocol.outcomes": {
+            "length": 4
+          }
+        },
+        "screen": {
+          "includes": [
+            "Critical value notification times from laboratory call logs across a hospital and community network"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Critical value notification times from laboratory call logs across a hospital and community network",
+          "family": "retrospective",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[1].resultCount": 2,
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "Critical value notification times from laboratory call logs across a hospital and community network"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; scan.claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents": {
+              "length": 2
+            },
+            "scan.gradeOverall": "moderate",
+            "scan.claims": {
+              "length": 5
+            },
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "protocol.outcomes[1].name": "Never successfully notified",
+            "problem.rawNeed": "I am the clinical biochemist who leads the core laboratory for a network of three hospitals and 40 community clinics. Our policy says critical values (for example potassium above 6.2 or below 2.8 mmol/L, sodium below 120 mmol/L, glucose below 2.5 mmol/L, haemoglobin below 60 g/L, INR above 6 and positive blood cultures) must be telephoned to a responsible clinician with read-back within 30 minutes of the result being verified. The laboratory information system logs every call attempt with a time stamp, the person reached, and whether read-back was documented, but nobody has looked at these logs in a structured way. Staff tell me that results for outpatients and community clinics after 17:00 take much longer, that we sometimes cannot find anyone to call, and that at night a single technologist does the calling alongside the bench work.\n\nI want to do a retrospective review of the laboratory information system call logs for 2024 and 2025 to measure how long notification takes from verification to successful read-back, what proportion meet the 30-minute standard, and where the delays are: by patient location (inpatient, emergency, outpatient, community clinic), time of day, analyte and number of call attempts. I would then like to know which factors are associated with delays of more than 30 minutes, so the laboratory director can decide whether to set up an escalation route for community results after hours.\n\nThe research ethics board approved the project with a waiver of consent in August, and the laboratory information system manager has agreed to provide a de-identified extract. I need help with definitions, the analysis plan and a sensible way to handle results where no successful call was ever documented."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

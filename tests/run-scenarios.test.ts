@@ -15,6 +15,7 @@ import {
   sourceContentChanged,
   statusOfCheckpoints,
   studyWithoutEnvelope,
+  screenHas,
 } from "../scripts/run-scenarios.mjs";
 import { treeSha256, sourceManifest } from "../scripts/tree-digest.mjs";
 import { useStudio } from "../src/lib/store";
@@ -154,5 +155,28 @@ test("treeSha256_is_pinned_source_digest", () => {
   assert.ok(files.length > 10);
   assert.equal(files.some((f) => f.path.startsWith("node_modules/")), false);
   assert.equal(files.some((f) => f.path.endsWith(".tar.gz")), false);
+  assert.equal(files.some((f) => f.path.startsWith(".vercel/") || f.path.split("/")[0] === ".vercel"), false);
+});
+
+test("screenHas_is_case_insensitive_and_honours_anyOf", () => {
+  assert.equal(screenHas("selection Proposed · action blocked", "proposed"), true);
+  assert.equal(screenHas("Grade Unrated", "unrated"), true);
+  assert.equal(screenHas("Applied with notes. constraints: replacement was refused", { anyOf: ["kept", "refused", "not applied"] }), true);
+  assert.equal(screenHas("nothing relevant", { anyOf: ["kept", "refused", "not applied"] }), false);
+  assert.equal(screenHas("Certainty not assessed (no GRADE label).", "not assessed"), true);
+});
+
+test("source_digest_ignores_generated_vercel_output", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "meridian-digest-"));
+  fs.mkdirSync(path.join(dir, "src"));
+  fs.writeFileSync(path.join(dir, "src", "a.ts"), "export const a = 1;\n");
+  const d1 = treeSha256(dir);
+  fs.mkdirSync(path.join(dir, ".vercel", "output"), { recursive: true });
+  fs.writeFileSync(path.join(dir, ".vercel", "output", "index.js"), "generated-bundle\n");
+  const d2 = treeSha256(dir);
+  assert.equal(d1, d2, "generated .vercel output must not change the source digest");
+  fs.writeFileSync(path.join(dir, "src", "a.ts"), "export const a = 2;\n");
+  const d3 = treeSha256(dir);
+  assert.notEqual(d1, d3, "a source change must change the digest");
 });
 

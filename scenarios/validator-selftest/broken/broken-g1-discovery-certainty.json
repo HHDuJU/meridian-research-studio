@@ -1,0 +1,1425 @@
+{
+  "id": "sc-941",
+  "version": 2,
+  "supersedes": "bank-samples/original-v1/sc-000-level3.json (version 1, format 1). Version 1 completed the Scan stage and kept the certainty 'low' from model leads with no retrieval, which golden rules G1 and G2 forbid. Version 2 records an empty search, expects the model's certainty to be dropped, keeps the stage incomplete until the investigator confirms the empty search, and keeps every other demanding element of version 1.",
+  "title": "Hospital pharmacy: anticholinergic burden and injurious falls, empty search confirmed, design unresolved until the Design stage",
+  "field": "pharmacy",
+  "level": 3,
+  "family": "cohort",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "D20",
+    "S11"
+  ],
+  "notes": "SELFTEST broken copy (rule 8, G1): the first discovery reply follows a search with no record, yet the step expects certainty low in the store and on screen.",
+  "inputs": {
+    "need": "I lead the clinical pharmacy team at a 450-bed teaching hospital. Our geriatric medicine consultants keep asking whether older patients who go home on several medicines with anticholinergic effects (bladder antimuscarinics, older first-generation antihistamines, tricyclic antidepressants, some antipsychotics) fall more often after discharge. We score anticholinergic burden at discharge for some patients but not consistently, and nobody has looked at what happens to them afterwards.\n\nI am not sure whether to do a cohort study that follows everyone discharged from the medical wards, or a case-control study that starts from patients readmitted with a fall. Falls with injury seem common in this age group, but I do not know our numbers. We can see what was dispensed at discharge in the hospital pharmacy system and admissions across the region's three public hospitals, but not community pharmacy refills, so exposure after the first few weeks is uncertain.\n\nThe question behind all this: if a high burden at discharge is linked to injurious falls within 90 days, we would argue for a pharmacist deprescribing review before discharge for everyone aged 70 or over. If it is not, we should stop spending pharmacist time on scoring it. Some papers say the association disappears once frailty is accounted for and others say it holds, so I also need advice on handling frailty and confounding by indication without collecting a lot of new data. Our informatics analyst has limited hours, and the information governance office has not yet told us whether linking pharmacy and admission records needs a new data access approval.",
+    "constraints": "No new data collection from patients; secondary use of existing hospital records only. Analyst time is capped at about 40 hours. Community pharmacy refill data are not available.",
+    "localFacts": [
+      "Discharge prescriptions for all adult inpatients are dispensed through the hospital pharmacy system, which records drug, dose and date.",
+      "The regional admissions dataset covers the three public hospitals in the region, including emergency department visits coded for falls.",
+      "The information governance office has not decided whether linking pharmacy and admission records needs a new data access approval."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "design.basis 'unresolved' at create requires S11 (routing recorded where classifyFamily is called). The other checks hold at 875fe59.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I lead the clinical pharmacy team at a 450-bed teaching hospital. Our geriatric medicine consultants keep asking whether older patients who go home on several medicines with anticholinergic effects (bladder antimuscarinics, older first-generation antihistamines, tricyclic antidepressants, some antipsychotics) fall more often after discharge. We score anticholinergic burden at discharge for some patients but not consistently, and nobody has looked at what happens to them afterwards.\n\nI am not sure whether to do a cohort study that follows everyone discharged from the medical wards, or a case-control study that starts from patients readmitted with a fall. Falls with injury seem common in this age group, but I do not know our numbers. We can see what was dispensed at discharge in the hospital pharmacy system and admissions across the region's three public hospitals, but not community pharmacy refills, so exposure after the first few weeks is uncertain.\n\nThe question behind all this: if a high burden at discharge is linked to injurious falls within 90 days, we would argue for a pharmacist deprescribing review before discharge for everyone aged 70 or over. If it is not, we should stop spending pharmacist time on scoring it. Some papers say the association disappears once frailty is accounted for and others say it holds, so I also need advice on handling frailty and confounding by indication without collecting a lot of new data. Our informatics analyst has limited hours, and the information governance office has not yet told us whether linking pharmacy and admission records needs a new data access approval.",
+          "completedStages": [],
+          "design.recommended": "",
+          "design.decisions": {
+            "length": 0
+          },
+          "design.basis": "unresolved"
+        },
+        "screen": {
+          "includes": [
+            "I lead the clinical pharmacy team"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over",
+        "subtitle": "Design not yet settled: cohort or case-control",
+        "family": null,
+        "statement": "Older adults are often discharged from the medical wards on several medicines with anticholinergic effects, and the pharmacy team scores this burden inconsistently. It is not known locally whether a high anticholinergic burden at discharge is followed by more injurious falls within 90 days once frailty and the reasons for prescribing are taken into account. The answer decides whether pharmacist deprescribing review before discharge should become routine for everyone aged 70 or over.",
+        "whoAffected": "Adults aged 70 and over discharged from the medical wards, their families and carers, the clinical pharmacy team whose time is at stake, and the geriatric medicine consultants who asked the question.",
+        "whatHurts": "Injurious falls after discharge cause fractures, head injuries, readmission and loss of independence. Pharmacist time spent scoring burden without knowing whether it predicts harm is time not spent on reviews that might prevent it.",
+        "currentPractice": "Anticholinergic burden is scored for some patients at discharge with a drug-weighting score (0 to 3 points per drug), with no threshold that triggers action and no follow-up of outcomes.",
+        "whyNow": "Consultants are asking for routine deprescribing review for all older adults, which would take substantial pharmacist time, and the dispensing and regional admission data needed to answer the question already exist.",
+        "constraints": null,
+        "patientCenteredGoal": "Older adults go home on the fewest medicines that could make them fall, without losing the benefit of the medicines they need.",
+        "summary": "Problem framed; the design family is left unresolved (cohort or case-control) until the evidence and the data are reviewed."
+      },
+      "note": "design.basis 'unresolved' after a null family requires D2 (amendment A1 item A7). The cleared constraints (empty string, issue 'cleared' at 'constraints') follow the null contract of contracts.ts at 875fe59; revisit if a later entry protects investigator-entered constraints from a model null.",
+      "expect": {
+        "store": {
+          "title": "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over",
+          "problem.constraints": "No new data collection from patients; secondary use of existing hospital records only. Analyst time is capped at about 40 hours. Community pharmacy refill data are not available.",
+          "problem.statement": {
+            "includes": "injurious falls within 90 days"
+          },
+          "problem.rawNeed": "I lead the clinical pharmacy team at a 450-bed teaching hospital. Our geriatric medicine consultants keep asking whether older patients who go home on several medicines with anticholinergic effects (bladder antimuscarinics, older first-generation antihistamines, tricyclic antidepressants, some antipsychotics) fall more often after discharge. We score anticholinergic burden at discharge for some patients but not consistently, and nobody has looked at what happens to them afterwards.\n\nI am not sure whether to do a cohort study that follows everyone discharged from the medical wards, or a case-control study that starts from patients readmitted with a fall. Falls with injury seem common in this age group, but I do not know our numbers. We can see what was dispensed at discharge in the hospital pharmacy system and admissions across the region's three public hospitals, but not community pharmacy refills, so exposure after the first few weeks is uncertain.\n\nThe question behind all this: if a high burden at discharge is linked to injurious falls within 90 days, we would argue for a pharmacist deprescribing review before discharge for everyone aged 70 or over. If it is not, we should stop spending pharmacist time on scoring it. Some papers say the association disappears once frailty is accounted for and others say it holds, so I also need advice on handling frailty and confounding by indication without collecting a lot of new data. Our informatics analyst has limited hours, and the information governance office has not yet told us whether linking pharmacy and admission records needs a new data access approval.",
+          "design.basis": "unresolved",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            },
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "anticholinergic burden score at hospital discharge and injurious falls within 90 days in adults aged 70 and over, cohort",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "An empty search is an observable event, never a silent empty list: event status 'ok' with 0 hits. 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "anticholinergic burden score at hospital discharge and injurious falls within 90 days in adults aged 70 and over, cohort",
+        "sourcesConsulted": [
+          "fixture search (0 records)"
+        ],
+        "gradeOverall": "low",
+        "gradeRationale": "Little evidence was found, so certainty is low.",
+        "synthesis": "The recorded search returned no records for the post-discharge window in adults aged 70 and over, so there is nothing to appraise from this search.",
+        "items": [],
+        "summary": "No records to appraise; the model nonetheless proposed a certainty label."
+      },
+      "note": "G1 and G2 over zero records: the model's 'low' is dropped with an issue and the stage stays incomplete; all of this requires D20 (amendment A2 item 11). At 875fe59 the certainty is stored and the stage is marked complete. The sourcesConsulted issue holds at 875fe59.",
+      "expect": {
+        "store": {
+          "scan.gradeOverall": "low",
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "dropped"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 2,
+      "response": {
+        "query": "anticholinergic burden score at hospital discharge and injurious falls within 90 days in adults aged 70 and over, cohort",
+        "sourcesConsulted": [
+          "model knowledge of the pharmacoepidemiology literature"
+        ],
+        "gradeOverall": "very-low",
+        "gradeRationale": "Leads only, with conflicting results after frailty adjustment and two undated sources.",
+        "synthesis": "The recorded search returned nothing, so these seven items are leads recalled by the model, not retrieved records; none has been checked. Among the leads, a regional cohort reports a hazard ratio of about 1.4 for burden score 3 or more and falls requiring hospital care within 90 days, while an undated preprint finds no association once a frailty index is included. A meta-analysis reports a modest association that shrinks with better adjustment, and a nested case-control study places the risk in the first 30 days after a new start. The conflict is about confounding by frailty and by indication.",
+        "items": [
+          {
+            "title": "Anticholinergic burden at discharge and falls requiring hospital care: a regional cohort of 12,400 older adults",
+            "authors": "Ibarra-Kowalczyk M, Thorsen-Adu P, Lemaire-Osei C",
+            "year": 2021,
+            "source": "Wexcombe Journal of Clinical Pharmacy",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 66,
+            "relevance": 90,
+            "verification": "verify",
+            "doi": "10.5555/wjcp.2021.0417",
+            "contextTags": [
+              "cohort",
+              "hospital discharge",
+              "falls",
+              "older adults",
+              "dispensing data"
+            ],
+            "keyFindings": "Among 12,400 adults aged 70 and over discharged from medical wards, a burden score of 3 or more was associated with a higher rate of falls requiring hospital care within 90 days (adjusted hazard ratio 1.38, 95 percent CI 1.12 to 1.70). The association weakened when prior fall admissions were added to the model but stayed above 1.",
+            "limitations": "Frailty was not measured directly; exposure came from discharge prescriptions without refill data; one region.",
+            "notes": "Recalled as a lead; not retrieved by the recorded search and not checked."
+          },
+          {
+            "title": "Frailty explains the association between anticholinergic load and post-discharge falls in older inpatients",
+            "authors": "Achterberg-Nwosu L, Faure-Bakshi R",
+            "year": null,
+            "source": "Medicines in Later Life preprint server",
+            "kind": "preprint",
+            "grade": null,
+            "methodQuality": null,
+            "relevance": 81,
+            "verification": "ai-lead",
+            "contextTags": [
+              "preprint",
+              "frailty",
+              "confounding",
+              "falls"
+            ],
+            "keyFindings": "In 3,050 older inpatients, the crude association between anticholinergic load and falls within three months disappeared after adjustment for a 40-item frailty index (adjusted hazard ratio 1.04, 95 percent CI 0.81 to 1.33). The authors argue that frail patients receive more anticholinergic medicines and fall more for reasons unrelated to them.",
+            "limitations": "Not peer reviewed; the listing gives no publication year; the frailty index may include deficits caused by the medicines themselves, which would over-adjust.",
+            "notes": "Recalled as a lead; conflicts with the regional cohort."
+          },
+          {
+            "title": "Medicines with anticholinergic properties and falls in older adults: a systematic review and meta-analysis of observational studies",
+            "authors": "Rasmussen-Obi K, Delacroix-Mwangi A, Sato-Pereira J, Hughes-Lindqvist E",
+            "year": 2020,
+            "source": "Journal of Geriatric Pharmacotherapy Reviews",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 58,
+            "relevance": 76,
+            "verification": "verify",
+            "contextTags": [
+              "systematic review",
+              "falls",
+              "observational studies"
+            ],
+            "keyFindings": "Pooling 17 observational studies gave an odds ratio of 1.29 (95 percent CI 1.11 to 1.50) for falls with high versus low anticholinergic burden, with substantial heterogeneity. Studies that adjusted for frailty or comorbidity reported smaller associations than those that did not.",
+            "limitations": "Mixed designs and burden scales; most studies at high risk of confounding; no study of the weeks immediately after discharge.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Pharmacist deprescribing of anticholinergic medicines before discharge: effect on burden scores and 90-day readmission",
+            "authors": "Moreau-Adjei S, Kaplan-Whitfield D",
+            "year": "2019",
+            "source": "Hospital Pharmacy Practice Notes",
+            "kind": "qi-report",
+            "grade": "very-low",
+            "methodQuality": 35,
+            "relevance": 64,
+            "verification": "ai-lead",
+            "contextTags": [
+              "deprescribing",
+              "before-after",
+              "readmission"
+            ],
+            "keyFindings": "A pharmacist-led review reduced the mean anticholinergic burden score at discharge from 3.4 to 2.1 over six months. Ninety-day readmission fell from 24 to 21 percent, which the authors describe as not distinguishable from secular change. Falls were not measured separately.",
+            "limitations": "Uncontrolled before-after comparison; readmission is a broad outcome; one hospital.",
+            "notes": "Recalled as a lead; relevant to the action that would follow a positive result."
+          },
+          {
+            "title": "Discharge dispensing records as a measure of medicine exposure after hospital discharge: agreement with community refill claims",
+            "authors": "Petrossian-Blake H, Olawale-Grant T",
+            "year": null,
+            "source": "Regional Medicines Information Service technical report",
+            "kind": "grey",
+            "methodQuality": null,
+            "relevance": 72,
+            "verification": "ai-lead",
+            "contextTags": [
+              "exposure measurement",
+              "dispensing data",
+              "misclassification"
+            ],
+            "keyFindings": "Discharge dispensing agreed with community refill claims at 30 days for 88 percent of anticholinergic medicines and at 90 days for 71 percent. Most disagreement came from medicines stopped in primary care within the first month.",
+            "limitations": "Undated technical report; agreement measured in another region with different refill rules; no check against what patients actually took.",
+            "notes": "Recalled as a lead; supports a 30-day sensitivity window."
+          },
+          {
+            "title": "Recent anticholinergic exposure and hip fracture in older adults: a nested case-control study in primary care records",
+            "authors": "Villanueva-Stroud E, Kimura-Oyelowo B, Haddad-Fenwick J",
+            "year": 2022,
+            "source": "Lowmere Epidemiology Letters",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 61,
+            "relevance": 68,
+            "verification": "verify",
+            "contextTags": [
+              "case-control",
+              "hip fracture",
+              "primary care",
+              "new users"
+            ],
+            "keyFindings": "Among 2,860 hip fracture cases and 11,440 matched controls, current use of medicines with strong anticholinergic activity was associated with hip fracture (adjusted odds ratio 1.22, 95 percent CI 1.05 to 1.42). The association was confined to the first 30 days after a new medicine was started.",
+            "limitations": "Primary care population rather than recently discharged patients; exposure taken from prescriptions issued, not dispensed.",
+            "notes": "Recalled as a lead; argues for a new-user analysis."
+          },
+          {
+            "title": "Medication review for older adults at transitions of care: regional clinical guidance",
+            "authors": "Regional Medicines Optimisation Group",
+            "year": 2023,
+            "source": "Regional clinical guidance series",
+            "kind": "guideline",
+            "grade": "low",
+            "methodQuality": 52,
+            "relevance": 60,
+            "verification": "ai-lead",
+            "contextTags": [
+              "guideline",
+              "care transitions",
+              "deprescribing"
+            ],
+            "keyFindings": "The guidance recommends reviewing anticholinergic medicines at discharge for adults aged 65 and over with a history of falls or cognitive impairment. It does not recommend routine review for all older adults because the evidence of benefit on falls is uncertain.",
+            "limitations": "Consensus-based recommendations; the evidence review methods are described only briefly.",
+            "notes": "Recalled as a lead; sets the current standard."
+          }
+        ],
+        "summary": "Seven unchecked leads with conflicting results; two have no year and no quality rating."
+      },
+      "note": "Model leads after an empty search: stored as leads (origin model, unverified, G3) with unknown values kept unknown (G4, holds at 875fe59). The certainty is dropped and the stage stays incomplete because leads never complete a scan (G1, G2): those checks require D20.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[0].doi": "10.5555/wjcp.2021.0417",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[1].relevance": 81,
+          "scan.items[3].year": 2019,
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[4].grade": "unrated",
+          "scan.items[4].relevance": 72,
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "dropped"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "not assessed",
+            "Frailty explains the association between anticholinergic load and post-discharge falls in older inpatients"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-empty-search",
+      "note": "The investigator confirms on screen that the search was run and returned nothing; only this completes the stage (G2), and certainty stays unassessed (G1). Requires D20 (amendment A2 item 11: explicit investigator confirmation that the search was run and empty).",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 7
+          },
+          "scan.retrievalEvents[0].resultCount": 0
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "450-bed teaching hospital, medical wards",
+          "hospital pharmacy dispensing system",
+          "regional admission data from three public hospitals",
+          "no community refill data",
+          "recorded search returned no records"
+        ],
+        "reading": "The exposure is observable at discharge and the outcome in regional admission data, so the question is answerable from existing records. Frailty sits upstream of both exposure and outcome, and indications such as incontinence and depression carry their own fall risk; the conflicting leads differ on exactly these two paths. Exposure drifts after 30 days. The recorded search found nothing, so every evidence node below is an unchecked lead.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Anticholinergic burden score at discharge",
+            "kind": "context",
+            "detail": "Computed from dispensed regular medicines, 0 to 3 points per drug."
+          },
+          {
+            "id": "n2",
+            "label": "Injurious fall within 90 days",
+            "kind": "outcome",
+            "detail": "Emergency visit or admission coded for a fall with injury."
+          },
+          {
+            "id": "n3",
+            "label": "Frailty",
+            "kind": "context",
+            "detail": "Common cause of prescribing and of falls; measurable from discharge diagnoses."
+          },
+          {
+            "id": "n4",
+            "label": "Indications with their own fall risk",
+            "kind": "context",
+            "detail": "Incontinence, depression, psychosis, sleep problems."
+          },
+          {
+            "id": "n5",
+            "label": "Lead: regional cohort with hazard ratio about 1.4",
+            "kind": "observational",
+            "detail": "Unchecked lead; no direct frailty measure."
+          },
+          {
+            "id": "n6",
+            "label": "Lead: preprint with null result after frailty adjustment",
+            "kind": "preprint",
+            "detail": "Unchecked and undated; possible over-adjustment."
+          },
+          {
+            "id": "n7",
+            "label": "Lead: meta-analysis of 17 observational studies",
+            "kind": "systematic-review",
+            "detail": "Unchecked lead; pooled odds ratio 1.29 that shrinks with adjustment."
+          },
+          {
+            "id": "n8",
+            "label": "Empty recorded search",
+            "kind": "gap",
+            "detail": "The fixture search returned no records."
+          },
+          {
+            "id": "n9",
+            "label": "Clinical pharmacy team",
+            "kind": "stakeholder",
+            "detail": "Time at stake if review becomes routine."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "raises"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "raises"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "drives prescribing that raises"
+          },
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "hypothesised to raise"
+          },
+          {
+            "from": "n5",
+            "to": "n1",
+            "relation": "reports association for"
+          },
+          {
+            "from": "n6",
+            "to": "n5",
+            "relation": "conflicts with"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "shows sensitivity to adjustment for"
+          },
+          {
+            "from": "n8",
+            "to": "n9",
+            "relation": "leaves the decision to local data for"
+          }
+        ],
+        "summary": "Map shows frailty and indication as the confounding paths behind the conflicting leads, over an empty recorded search."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "The recorded search returned no records",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Nothing retrieved means nothing appraised; the leads are unchecked and two are undated, so no certainty can be claimed.",
+            "opportunity": "Retrieve and check the leads by identifier before citing any of them, and answer the local question from local data."
+          },
+          {
+            "id": "g2",
+            "title": "Conflicting leads on frailty adjustment",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "One lead finds an association and one finds none after adjusting for frailty; the local decision depends on which is closer to the truth.",
+            "opportunity": "Measure frailty from discharge diagnoses with a score that excludes medicine-related deficits and report both adjusted and unadjusted estimates."
+          },
+          {
+            "id": "g3",
+            "title": "Confounding by indication",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "The conditions treated with anticholinergic medicines raise fall risk on their own.",
+            "opportunity": "Adjust for indication groups and add an active-comparator sensitivity analysis for bladder antimuscarinics versus beta-3 agonists."
+          },
+          {
+            "id": "g4",
+            "title": "Exposure misclassification after 30 days",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Without refill data, exposure after the first month is uncertain and would bias a 90-day contrast toward the null.",
+            "opportunity": "Pre-specify a 30-day sensitivity analysis and report both windows."
+          },
+          {
+            "id": "g5",
+            "title": "Differences by sex, deprivation and discharge destination",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Women receive bladder antimuscarinics more often, people in deprived areas carry more multimorbidity, and care home residents differ in exposure and in how falls reach hospital.",
+            "opportunity": "Report estimates by sex, area deprivation quintile and discharge destination without basing policy on subgroups."
+          }
+        ],
+        "errorsFound": [
+          "The scan reply assigned a certainty label although the recorded search returned no records.",
+          "Readmission with a fall is not the same outcome as an injurious fall; a case-control design sampled from readmissions would select on hospital contact."
+        ],
+        "reevaluation": "With nothing retrieved, the gaps favour a cohort of all index discharges from existing local data, with frailty and indication handled explicitly and the leads checked before any is cited.",
+        "summary": "Five gaps; the empty search, the conflicting leads and confounding by indication are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].kind": "evidence",
+          "gaps.items[2].severity": "high",
+          "gaps.errorsFound": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "The recorded search returned no records"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Among adults aged 70 and over discharged from medical wards, a burden score of 3 or more at discharge is associated with a higher rate of injurious falls within 90 days than a score of 0 to 2 (hazard ratio 1.3 or more after adjustment for frailty and indication).",
+            "novelty": 40,
+            "need": 80,
+            "practiceChange": 75,
+            "feasibility": 80,
+            "parsimony": 82,
+            "rationale": "The need is high because a pharmacist workload decision rests on it; novelty is moderate because the post-discharge window is not covered by any retrieved record; feasibility and parsimony are high because the data exist and one contrast answers the question.",
+            "risks": "Residual confounding by frailty, exposure drift after 30 days, and falls that never reach hospital."
+          },
+          {
+            "id": "h2",
+            "statement": "Any association is confined to medicines started during the admission (new users) in the first 30 days after discharge.",
+            "novelty": 55,
+            "need": 60,
+            "practiceChange": 65,
+            "feasibility": 70,
+            "parsimony": 60,
+            "rationale": "A recalled case-control lead places risk after new starts, and a new-user contrast also reduces prevalent-user bias.",
+            "risks": "Fewer events in the new-user subset, giving a wide interval."
+          },
+          {
+            "id": "h3",
+            "statement": "After adjustment for frailty and indication there is no association large enough to justify routine deprescribing review for everyone aged 70 or over.",
+            "novelty": 35,
+            "need": 70,
+            "practiceChange": 60,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Framed as the decision-relevant alternative so that a precise null result counts as an answer rather than a failure.",
+            "risks": "An underpowered null could be misread as evidence of no effect."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected, with h2 as a pre-specified sensitivity question and h3 as the decision-relevant alternative."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[1].novelty": 55,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults aged 70 and over discharged alive from the medical wards, is an anticholinergic burden score of 3 or more at discharge, compared with 0 to 2, associated with a first injurious fall within 90 days after adjustment for frailty and indication?",
+            "framework": "PECO",
+            "population": "Adults aged 70 and over discharged alive from the medical wards, first eligible discharge per patient",
+            "intervention": "Anticholinergic burden score of 3 or more at discharge (exposure)",
+            "comparator": "Burden score of 0 to 2",
+            "outcome": "First emergency visit or admission coded for a fall with injury",
+            "time": "90 days after discharge",
+            "setting": "450-bed teaching hospital with regional admission data from three public hospitals"
+          },
+          {
+            "id": "q2",
+            "text": "Is any association concentrated in patients who started an anticholinergic medicine during the admission, within the first 30 days after discharge?",
+            "framework": "PECO",
+            "population": "Same cohort, restricted to new users and to users with no anticholinergic medicine before admission",
+            "intervention": "Anticholinergic medicine started during the admission",
+            "comparator": "No anticholinergic medicine at admission or discharge",
+            "outcome": "First injurious fall",
+            "time": "30 days after discharge",
+            "setting": "Same as q1"
+          }
+        ],
+        "finer": "Feasible from existing dispensing and admission data within about 40 analyst hours; interesting to pharmacy and geriatric medicine; novel for the post-discharge window; ethical as secondary use with a waiver request; relevant because it decides routine pharmacist workload.",
+        "summary": "One primary PECO question and one pre-specified new-user question."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[1].time": "30 days after discharge",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "cohort",
+        "rationale": "The exposure is recorded for every discharge in the pharmacy system, and injurious falls are common enough in adults aged 70 and over (about 6 percent within 90 days) that following all discharges is efficient. A case-control design would add no efficiency and would make exposure timing relative to discharge harder to define. With nothing retrieved, the local cohort is also the only way to answer the question in this population.",
+        "alternatives": [
+          "Case-control study of patients readmitted with a fall (refused: the outcome is not rare and exposure timing is clearer in a cohort)",
+          "Prospective cohort with new frailty assessment (refused: new data collection is outside the constraints)",
+          "Pragmatic trial of pharmacist deprescribing review (deferred: justified only if the cohort shows a meaningful association)"
+        ],
+        "guidelines": [
+          "STROBE",
+          "RECORD"
+        ],
+        "whyNotMoreComplex": "A trial of deprescribing would answer the action question directly but needs funding and a signal worth testing; the cohort uses existing data to decide whether that signal exists.",
+        "decision": {
+          "kind": "narrow",
+          "statement": "Answer a narrowed question with a cohort built from existing data (injurious falls within 90 days after discharge for burden score 3 or more versus 0 to 2 in adults aged 70 and over) before any decision on routine deprescribing review.",
+          "question": "Is a high anticholinergic burden at discharge associated with injurious falls within 90 days after accounting for frailty?",
+          "claimIds": [],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "The linked data contain enough injurious falls (about 300 or more in two years) to estimate a hazard ratio with useful precision.",
+              "role": "justifies",
+              "status": "unknown",
+              "claimIds": []
+            },
+            {
+              "id": "k2",
+              "text": "A regional analysis using the same linked data has already answered the question.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Information governance decision on whether linking pharmacy dispensing and regional admission records needs a new data access approval",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Case-control study of readmitted fallers",
+            "Stop routine scoring until regional guidance changes"
+          ],
+          "note": "No ledger claim exists because the recorded search returned no records; the decision rests on the confirmed empty search and the investigator's local facts. The only gate stays unknown until the information governance office decides."
+        },
+        "summary": "Cohort recommended from existing data; the decision narrows the question and is blocked by one unknown data access gate."
+      },
+      "note": "recommendedFamily, selectionStatus and actionStatus require S11; the unknown gate keeps actionStatus 'blocked' (amendment A2 item 9). The status text in the decision panel requires D5. design.recommended, the gate 'unknown' without evidence and status 'proposed' hold at 875fe59.",
+      "expect": {
+        "store": {
+          "design.recommended": "cohort",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "narrow",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].gates": {
+            "length": 1
+          },
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].evidence": {
+            "absent": true
+          },
+          "design.decisions[-1].recommendedFamily": "cohort",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Conditional acceptance: the decision cites no claim (nothing was retrieved) and none of its text is contradicted, so the selection is acceptable while the unknown gate keeps the action blocked (amendment A2 item 9; G7). basis 'explicit', selectionStatus and actionStatus require S11; the status text requires D5. family 'cohort' and status 'accepted' hold at 875fe59.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "family": "cohort",
+          "design.basis": "explicit",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Cohort of index discharges built from existing hospital pharmacy dispensing records linked to regional admission and emergency department data, following adults aged 70 and over for 90 days after discharge.",
+        "population": "Adults aged 70 and over discharged alive from the medical wards between 1 October 2024 and 30 September 2026, first eligible discharge per patient; excluded are discharges to palliative care, stays under 24 hours and residence outside the regional catchment.",
+        "exposure": "Anticholinergic burden score at discharge from all dispensed regular medicines with the hospital's drug-weighting score (0 to 3 points per drug): exposed 3 or more, comparator 0 to 2; secondary categories 0, 1 to 2, 3 to 4 and 5 or more.",
+        "procedures": "After the information governance decision, the informatics analyst extracts discharge and dispensing records; the data custodian links them to regional admission and emergency records by health number and returns a de-identified analysis file with shifted dates. Frailty comes from discharge diagnoses with a diagnosis-based frailty score that excludes medicine-related codes; indication groups (urinary incontinence, depression, psychosis, allergy, sleep problems) come from diagnoses and medicines. Follow-up runs from discharge to the first injurious fall, death or day 90; days spent in hospital after a readmission are excluded from time at risk.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Injurious fall within 90 days",
+            "measure": "First emergency visit or admission at any of the three regional hospitals coded for a fall with injury",
+            "timing": "0 to 90 days after index discharge",
+            "why": "Falls with injury are what patients and the consultants care about and what deprescribing review would aim to prevent.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Hip fracture within 90 days",
+            "measure": "Admission with a hip fracture code",
+            "timing": "0 to 90 days after index discharge",
+            "why": "The most serious and most reliably coded injury.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Any fall-related hospital contact",
+            "measure": "Emergency visit or admission coded for a fall with or without injury",
+            "timing": "0 to 90 days after index discharge",
+            "why": "Captures falls that reach hospital without a coded injury.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Completeness of burden scoring",
+            "measure": "Proportion of index discharges with every regular medicine mapped to the burden score",
+            "timing": "At extraction",
+            "why": "Unmapped medicines would misclassify exposure.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 40 analyst hours for extraction and linkage preparation, within the stated cap; no new data collection; analysis within six months of data access approval.",
+        "biasMitigation": [
+          "Frailty measured from discharge diagnoses with medicine-related codes removed, adjusted for in all models",
+          "New-user sensitivity analysis limited to medicines started during the admission",
+          "Active-comparator sensitivity analysis for bladder antimuscarinics versus beta-3 agonists",
+          "Negative control outcome (admission for cellulitis) to detect residual confounding",
+          "30-day exposure window as a sensitivity analysis to limit misclassification"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by frailty",
+            "severity": "high",
+            "note": "The central threat and the reason the leads conflict."
+          },
+          {
+            "id": "b2",
+            "label": "Confounding by indication",
+            "severity": "high",
+            "note": "Handled by indication adjustment and the active-comparator analysis."
+          },
+          {
+            "id": "b3",
+            "label": "Exposure misclassification",
+            "severity": "watch",
+            "note": "Grows after 30 days because refills are not visible."
+          },
+          {
+            "id": "b4",
+            "label": "Outcome ascertainment outside the region",
+            "severity": "watch",
+            "note": "Falls treated outside the three hospitals are missed; the residence filter limits this."
+          }
+        ],
+        "parsimony": {
+          "score": 74,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 12,
+          "flags": [
+            "Twelve covariates fixed before data access, about 30 events per variable",
+            "Three named sensitivity analyses and no others"
+          ],
+          "simplestPath": "One exposure contrast, one primary outcome, one pre-specified covariate set, one cause-specific Cox model."
+        },
+        "theoreticalFramework": "Target trial emulation as a planning device to define eligibility, exposure and time zero at discharge; no other framework.",
+        "summary": "Cohort from existing linked data with one primary outcome, two secondary outcomes, a process check and three pre-specified sensitivity analyses."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[3].patientCentered": false,
+          "protocol.parsimony.covariateCount": 12,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cohort of first eligible discharges, time to first injurious fall within 90 days, death as a competing event.",
+        "sampleSize": "About 4,200 discharges per year of adults aged 70 and over leave the medical wards; two years give about 8,400 discharges from about 6,000 distinct patients. If 22 percent have a burden score of 3 or more and 6 percent have an injurious fall within 90 days, about 360 events are expected. With 360 events the study has 80 percent power at two-sided alpha 0.05 to detect a hazard ratio of about 1.43 for score 3 or more versus 0 to 2 (Schoenfeld approximation); a hazard ratio of 1.3 would need about 660 events, roughly four years of discharges. The estimate will be reported with its confidence interval rather than as a significance verdict.",
+        "primaryAnalysis": "Cause-specific Cox model for the first injurious fall with death as a competing event, adjusted for 12 pre-specified covariates: age, sex, frailty score, number of regular medicines, dementia, prior fall admission in the past year, discharge destination, length of stay, area deprivation quintile and three indication groups. Robust standard errors; proportional hazards checked with scaled Schoenfeld residuals.",
+        "secondaryAnalysis": "Fine-Gray subdistribution model as a sensitivity analysis for absolute risk; the same model for hip fracture and any fall-related contact; the new-user, active-comparator, 30-day window and negative control analyses named in the protocol.",
+        "missingData": "Burden score and frailty score are derived for every discharge; discharge destination is missing for about 2 percent and is handled by multiple imputation with 20 imputations; people who move out of the region are censored at the last contact with the regional hospitals.",
+        "multiplicity": "One primary contrast; secondary outcomes and sensitivity analyses are reported with confidence intervals and labelled as secondary, without formal adjustment.",
+        "software": "R with the survival package; analysis code and the covariate list archived before data access.",
+        "overfittingGuards": [
+          "Covariate set fixed before data access",
+          "No stepwise selection",
+          "About 30 events per covariate for the primary model",
+          "Statistical analysis plan registered on the hospital research transparency page before extraction"
+        ],
+        "summary": "Cause-specific Cox model; about 360 expected events give 80 percent power for a hazard ratio of about 1.43; smaller effects would need more years of data."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "hazard ratio of about 1.43"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work (9 of 13 stages). Statuses are checked at the accept step and in the export; the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ],
+          "needsReview": [],
+          "problem.constraints": "No new data collection from patients; secondary use of existing hospital records only. Analyst time is capped at about 40 hours. Community pharmacy refill data are not available.",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "stats.sampleSize": {
+            "includes": "Schoenfeld"
+          },
+          "ethics.rebPath": "",
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "stage": {
+          "stats": "complete",
+          "ethics": "incomplete",
+          "audit": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal physical risk; the main risk is privacy harm from linking identifiable pharmacy and admission records.",
+        "consent": "Individual consent is impracticable for about 6,000 past discharges; the REB will be asked for a waiver of consent for secondary use under minimal risk, with public notice on the hospital's research transparency page.",
+        "data": "Linkage by the data custodian using health numbers; the analysis file holds no names, health numbers or exact dates (dates shifted per patient) and is stored on the hospital research server, then destroyed seven years after publication.",
+        "equity": "PROGRESS-Plus: women receive bladder antimuscarinics more often, people in deprived areas carry more multimorbidity, and people discharged to care homes differ in both exposure and in how falls reach hospital. Results will be reported by sex, area deprivation quintile and discharge destination, and no deprescribing policy will rest on subgroup findings alone.",
+        "effectiveness": "The study informs whether routine deprescribing review is worth pharmacist time; a precise null result is as useful as a positive one.",
+        "efficiency": "Uses existing data and about 40 analyst hours; no participant contact.",
+        "costs": "Analyst and pharmacist time within existing roles; a linkage fee from the data custodian is possible and not yet known.",
+        "grants": "None needed for the cohort; a positive result would support an application for a pragmatic trial of pharmacist deprescribing review.",
+        "partnerships": "Geriatric medicine consultants, the regional data custodian, two older adult patient partners and a community pharmacist representative.",
+        "rebPath": "Full REB review of secondary use of identifiable data with a request for waiver of consent, following ICH-GCP and Declaration of Helsinki principles; the information governance decision on data access is a separate gate, and no extraction starts before both.",
+        "limitations": "Residual confounding by frailty is likely; exposure after discharge is uncertain; falls that do not reach hospital are missed.",
+        "summary": "Secondary use with a consent waiver request, a separate data access gate, and equity reporting by sex, deprivation and discharge destination."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "waiver of consent"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two older adult patient partners review the outcome definitions and the plain-language summary; a community pharmacist representative advises on refill behaviour; the geriatric medicine consultants review the covariate list before data access.",
+        "socialListening": "No social media listening; the hospital's patient advice service summarises anonymised enquiries about medicines stopped at discharge from the last year.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Benefit of the medicines",
+            "quote": "Composite paraphrase: My bladder tablets let me sleep through the night; take them away and I am up four times, and that is when I would fall.",
+            "implication": "Report benefits and harms together and treat night-time toileting as a competing fall risk when interpreting results.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Confusion after discharge",
+            "quote": "Composite paraphrase: Mum came home on a new tablet for her mood and was muddled for a week before anyone connected the two.",
+            "implication": "Keep the new-user analysis in the first 30 days as a pre-specified question.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Pharmacist workload",
+            "quote": "Composite paraphrase: If we review everyone over 70 we will do nothing else on the discharge list, so I need to know it is worth it.",
+            "implication": "Frame a precise null result as a useful answer that frees pharmacist time.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "What happens after the first month",
+            "quote": "Composite paraphrase: Half the medicines on a discharge list have changed by the time the first repeat prescription comes to us.",
+            "implication": "Treat exposure after 30 days as uncertain and report the 30-day window.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on benefit, new starts, workload and exposure drift."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[1].source": "family",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over: a cohort study using linked pharmacy and admission records",
+        "abstract": "Objective: to estimate the association between anticholinergic burden at discharge and injurious falls within 90 days in adults aged 70 and over. Design: cohort of first eligible discharges from medical wards over two years, using hospital dispensing records linked to regional admission data. Exposure: burden score 3 or more versus 0 to 2. Outcome: first emergency visit or admission for a fall with injury. Analysis: cause-specific Cox model adjusted for frailty, indication and ten other pre-specified covariates. Results and conclusions will be written after the analysis.",
+        "introduction": "Medicines with anticholinergic effects are common in older adults and are plausibly linked to falls, but recalled studies conflict once frailty is accounted for, and a recorded search for the weeks after hospital discharge returned no records. The answer decides whether routine pharmacist deprescribing review is worth its cost.",
+        "methods": "Existing dispensing records for discharges between October 2024 and September 2026 are linked to regional admission and emergency records. Frailty is measured from discharge diagnoses with medicine-related codes removed. The primary analysis is a cause-specific Cox model with death as a competing event, with new-user, active-comparator, 30-day window and negative control sensitivity analyses specified in advance.",
+        "results": "No data have been analysed yet. The report will present the cohort flow, exposure distribution, event counts, crude and adjusted hazard ratios with confidence intervals, and the sensitivity and subgroup analyses named in the protocol.",
+        "discussion": "The discussion will weigh the estimate against the published literature once it has been retrieved and checked, examine whether frailty adjustment explains any difference, and state what the result means for routine deprescribing review.",
+        "limitations": "Residual confounding by frailty and indication; exposure after discharge uncertain beyond 30 days; falls that do not reach hospital are not captured.",
+        "conclusion": "To be written after analysis; it will be limited to the association in this population and will not claim that deprescribing prevents falls.",
+        "reportingChecklist": "STROBE with the RECORD extension",
+        "summary": "STROBE and RECORD structured draft with results left empty until analysis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE with the RECORD extension",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The information governance decision on data linkage is still unknown; the decision stays blocked and no extraction starts",
+          "The recorded search returned no records; retrieve and check the seven leads (two undated) before citing any of them",
+          "The problem constraints were cleared by the model's explicit null; re-enter the investigator's constraints if they still apply"
+        ],
+        "improvementNotes": "Routing stayed unresolved until the design stage, where the cohort was chosen on the rarity and timing arguments. The empty search was confirmed by the investigator; no certainty was assigned. The conflicting frailty results among the leads remain the main scientific risk.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the data access gate, the unchecked leads, and the cleared constraints."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour and FAIL at 875fe59 because of a store defect, not a missing entry: store.ts mergeStage (lines 131 to 139) writes 'audit: { ...s.audit, entries }' after '[stage]: { ...current, ...patch }', so the audit stage's patch is overwritten. See the same note in sc-000-level1.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "No new data collection from patients; secondary use of existing hospital records only. Analyst time is capped at about 40 hours. Community pharmacy refill data are not available.",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[3].year": 2019,
+          "scan.retrievalEvents[0].resultCount": 0,
+          "family": "cohort",
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "No new data collection from patients; secondary use of existing hospital records only. Analyst time is capped at about 40 hours. Community pharmacy refill data are not available.",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[3].year": 2019,
+          "scan.retrievalEvents[0].resultCount": 0,
+          "family": "cohort",
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Anticholinergic burden at hospital discharge and injurious falls in adults aged 70 and over"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "scan.gradeOverall '' after the model twice proposed a certainty requires D20; selectionStatus and actionStatus require S11. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.constraints": "No new data collection from patients; secondary use of existing hospital records only. Analyst time is capped at about 40 hours. Community pharmacy refill data are not available.",
+            "scan.gradeOverall": "",
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.items[1].year": {
+              "isNull": true
+            },
+            "scan.items[1].grade": "unrated",
+            "scan.items[3].year": 2019,
+            "scan.items[0].provenance.status": "unverified",
+            "design.decisions[-1].gates[0].status": "unknown",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

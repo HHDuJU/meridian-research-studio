@@ -1,0 +1,1465 @@
+{
+  "id": "sc-057",
+  "version": 1,
+  "title": "Acute hospital nursing: missed care survey linked to shift staffing, two undated records left unrated and a reopen after partial work",
+  "field": "nursing",
+  "level": 3,
+  "family": "cross-sectional",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path on a cross-sectional survey. The fixture search returns seven records; two (a union member report and a conference abstract) have year null. The appraisal annotates all seven but omits relevance, methodQuality and grade for the two undated records, so they stay null and 'unrated' (G4) through reopen, reload and export; the conference abstract also carries a conflicting claim (c2) with high uncertainty that stays in a defeating criterion with status unknown. The investigator stops after the Questions stage and reopens the study from the home list (6 of 13 stages complete, later stages incomplete), then finishes the workflow. The decision rests on c1, c3, c4 and c5; both gates are met on investigator-supplied letters, so acceptance gives selectionStatus accepted and actionStatus ready. The problem reply omits the constraints key (G11). Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: from the normalised DOI for records 1, 3, 4, 6 (ev-1swj1o6, ev-0w8l3yt, ev-07a6h8z, ev-1g8y2b8) and from titleYearKey(title, year) for records 2, 5, 7 (ev-1h6k10v, ev-14lemvt, ev-0o48nxm; year null gives the key suffix '?'). Requires S13 (appraisal applied), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a default year, score or grade filled in for unknowns, an unknown lost or invented on reopen, work lost between sessions, and a conflicting high-uncertainty claim silently dropped. Audit checks fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+  "inputs": {
+    "need": "I am the nursing research lead at a 520-bed acute hospital with 18 adult inpatient units. Our nurses keep telling us that care is left undone on busy shifts: mouth care, turning, walking patients, talking with patients before discharge, and sometimes timed medicines. The chief nursing officer wants numbers before the next budget round, and our nurses' union wants the same numbers for a different argument, so the method has to be something both sides will trust.\n\nWe plan a cross-sectional survey of registered nurses and licensed practical nurses on all 18 units in one four-week window this winter, using a missed-care checklist that asks each nurse about their last shift. We also have the scheduling system, which holds planned and actual nurse hours per unit and shift, and the patient acuity scores that charge nurses enter each morning. I would like to link each response to the staffing of the unit on the shift the nurse describes, so we can see whether missed care goes up when a unit runs below its planned staffing, and whether that holds after acuity is taken into account.\n\nI need help choosing and adapting the checklist, working out how many responses we need and what response rate is realistic, deciding what 'short-staffed' means (patients per nurse, hours per patient day, or planned versus actual hours), and handling the fact that nurses on the same unit and shift are not independent. Two things worry me: some of what I have read says staffing explains most missed care and some says it disappears once acuity is included, and I do not know how to stop the results being used to blame individual nurses.",
+    "constraints": "The survey must close by 2027-02-28. No incentive budget; completion is allowed during 20 minutes of paid time. Results are reported by unit and never by individual nurse.",
+    "localFacts": [
+      "The hospital REB approved the survey protocol as minimal risk on 2026-09-15 (approval REB-26-1182).",
+      "The nurses' union local agreed in writing on 2026-09-08 to 20 minutes of paid time for survey completion (letter UL-114).",
+      "About 1,150 registered and licensed practical nurses work on the 18 adult inpatient units.",
+      "The scheduling system holds planned and actual nursing hours per unit and shift; charge nurses enter a 1 to 4 acuity score for each patient every morning."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the nursing research lead at a 520-bed acute hospital with 18 adult inpatient units. Our nurses keep telling us that care is left undone on busy shifts: mouth care, turning, walking patients, talking with patients before discharge, and sometimes timed medicines. The chief nursing officer wants numbers before the next budget round, and our nurses' union wants the same numbers for a different argument, so the method has to be something both sides will trust.\n\nWe plan a cross-sectional survey of registered nurses and licensed practical nurses on all 18 units in one four-week window this winter, using a missed-care checklist that asks each nurse about their last shift. We also have the scheduling system, which holds planned and actual nurse hours per unit and shift, and the patient acuity scores that charge nurses enter each morning. I would like to link each response to the staffing of the unit on the shift the nurse describes, so we can see whether missed care goes up when a unit runs below its planned staffing, and whether that holds after acuity is taken into account.\n\nI need help choosing and adapting the checklist, working out how many responses we need and what response rate is realistic, deciding what 'short-staffed' means (patients per nurse, hours per patient day, or planned versus actual hours), and handling the fact that nurses on the same unit and shift are not independent. Two things worry me: some of what I have read says staffing explains most missed care and some says it disappears once acuity is included, and I do not know how to stop the results being used to blame individual nurses.",
+          "problem.constraints": "The survey must close by 2027-02-28. No incentive budget; completion is allowed during 20 minutes of paid time. Results are reported by unit and never by individual nurse.",
+          "family": "cross-sectional",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the nursing research lead at a 520-bed acute hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Missed nursing care and shift-level staffing on 18 adult inpatient units",
+        "subtitle": "Cross-sectional last-shift survey linked to unit staffing and acuity",
+        "family": "cross-sectional",
+        "statement": "Nurses report that care is left undone on busy shifts, but the hospital has no measure of how often, of which activities, or whether missed care rises when a unit runs below planned staffing once patient acuity is considered. Management and the union both want figures they can trust. A last-shift survey of nurses linked to the scheduling and acuity records of the shift each nurse describes would answer this at one point in time.",
+        "whoAffected": "Adult inpatients on 18 units, especially dependent older patients who need turning, mouth care and help to walk; about 1,150 registered and licensed practical nurses; unit managers and the budget committee.",
+        "whatHurts": "Missed turning and mobilisation lead to pressure injuries and deconditioning, missed teaching leaves patients unprepared for discharge, and late timed medicines can cause harm. Nurses describe moral distress when they cannot finish care.",
+        "currentPractice": "No routine measure of missed care. Staffing is planned by a core schedule and adjusted daily; acuity scores are entered each morning but not linked to any outcome.",
+        "whyNow": "The next budget round, conflicting claims from management and the union, and an REB approval and union agreement already in place.",
+        "patientCenteredGoal": "Patients on every unit receive essential nursing care on every shift, and staffing decisions rest on evidence that nurses and managers both accept.",
+        "summary": "Problem framed as a cross-sectional survey question on missed care and shift-level staffing, with acuity as the key competing explanation."
+      },
+      "note": "The reply leaves the investigator's constraints alone by omitting the key (G11).",
+      "expect": {
+        "store": {
+          "title": "Missed nursing care and shift-level staffing on 18 adult inpatient units",
+          "family": "cross-sectional",
+          "problem.constraints": "The survey must close by 2027-02-28. No incentive budget; completion is allowed during 20 minutes of paid time. Results are reported by unit and never by individual nurse.",
+          "problem.statement": {
+            "includes": "below planned staffing"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Missed nursing care and shift-level staffing on 18 adult inpatient units"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "missed nursing care last-shift survey staffing shortfall acuity adult inpatient units",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Nurse staffing and missed nursing care in 32 hospitals: a cross-sectional survey of registered nurses",
+            "authors": "Oyelaran-Strand P, Kowalczyk-Ade M, Haddad-Lindgren S",
+            "year": 2019,
+            "venue": "Journal of Hospital Nursing Workforce",
+            "doi": "10.5555/jhnw.2019.0233",
+            "providerType": "journal-article",
+            "abstract": "We surveyed 1,410 registered nurses on medical and surgical units in 32 hospitals using a 22-item missed-care checklist about the last shift worked. At least one activity was left undone on the last shift by 71 percent of nurses, most often comfort talk, mouth care and patient teaching. Each additional patient per registered nurse was associated with higher odds of reporting missed care (odds ratio 1.09, 95 percent CI 1.04 to 1.14). Units with more licensed practical nurses in the skill mix reported more missed teaching and discharge preparation. Staffing was reported by the nurses themselves, and the response rate was 38 percent."
+          },
+          {
+            "title": "Missed care on medical and surgical wards: results of a union-led member survey",
+            "authors": "Western Nurses Association research committee",
+            "year": null,
+            "venue": "Association member report series",
+            "providerType": "report",
+            "abstract": "An online survey of 2,960 members working on medical and surgical wards asked about care left undone on the most recent shift. Sixty-eight percent reported at least one missed activity, and 41 percent reported a missed or late timed medicine. Respondents described short staffing, unplanned admissions and sick calls as the main reasons. The report gives no response rate and no information on how the survey was distributed, and its publication date is not stated anywhere in the document. Free-text comments describe night shifts as the hardest to cover."
+          },
+          {
+            "title": "Shift-level staffing shortfalls and missed care: linking nurse reports to scheduling records",
+            "authors": "Brandt-Achebe L, Morales-Okoro J, Svensson-Iqbal R",
+            "year": 2022,
+            "venue": "Nursing Workforce Analytics",
+            "doi": "10.5555/nwa.2022.0145",
+            "providerType": "journal-article",
+            "abstract": "Nurses on 12 units reported missed care at the end of 2,870 shifts over six months, and each report was linked to planned and actual nursing hours from the scheduling system. Missed care was reported after 44 percent of shifts that ran at least 10 percent below planned hours and after 27 percent of shifts at or above plan. The difference persisted after adjustment for the unit's mean acuity score. Night shifts had fewer reports overall but a steeper increase with shortfall. Linking reports to the actual shift avoided relying on nurses' recall of their staffing."
+          },
+          {
+            "title": "Instruments for measuring missed nursing care: a systematic review of measurement properties",
+            "authors": "Nakamura-Fitch E, Obi-Castellanos R, Petit-Wanjiru D",
+            "year": 2020,
+            "venue": "International Review of Nursing Measurement",
+            "doi": "10.5555/irnm.2020.0077",
+            "providerType": "review",
+            "abstract": "We identified 14 instruments that measure missed or unfinished nursing care. Internal consistency was reported for 12 and test-retest reliability for 5. Construct validity was supported for 6 instruments, mostly by correlations with staffing. Instruments differed in recall period, from the last shift to the last month, and in whether they asked about the reasons for missed care. A last-shift recall period and a separate reasons section were recommended to reduce recall bias and to separate what was missed from why. None of the instruments had been validated for licensed practical nurses."
+          },
+          {
+            "title": "Patient acuity, staffing and missed care: accounting for acuity weakens the association",
+            "authors": "Lindqvist-Oduya A, Ferreira-Nwosu K",
+            "year": null,
+            "venue": "Nursing research meeting abstract book",
+            "providerType": "conference-abstract",
+            "abstract": "In this conference abstract, 640 nurses on 20 units reported missed care for their last shift, and unit staffing was measured as patients per nurse. Unadjusted, each additional patient per nurse was associated with more missed care (odds ratio 1.11). After adjustment for the mean acuity score of the unit on the survey day, the association was no longer clear (odds ratio 1.03, 95 percent CI 0.97 to 1.10). The authors suggest that staffing ratios already reflect acuity in units that staff to acuity. Methods are described briefly and the year of the meeting is not given."
+          },
+          {
+            "title": "Improving response to hospital nurse surveys: protected time versus reminders",
+            "authors": "Halvorsen-Mbeki T, Dubois-Achterberg N",
+            "year": 2017,
+            "venue": "Survey Methods in Health Workforce Research",
+            "doi": "10.5555/smhwr.2017.0019",
+            "providerType": "journal-article",
+            "abstract": "Across 16 units in two hospitals, we compared a web survey with three email reminders against the same survey completed during 20 minutes of protected paid time. Response was 31 percent with reminders and 52 percent with protected time. Responders under reminders were more often day-shift and full-time nurses, whereas protected time narrowed the difference between day and night shifts. Item nonresponse was similar in both arms. Protected time cost about 9 nursing hours per 100 responses, which the hospitals judged affordable for an annual survey."
+          },
+          {
+            "title": "Missed nursing care and patient-reported experience on medical units",
+            "authors": "Achebe-Sorensen F, Varga-Tanaka I, Reid-Mensah O",
+            "year": 2024,
+            "venue": "Patient Experience in Hospital Care",
+            "providerType": "journal-article",
+            "abstract": "We matched unit-level missed care rates from a nurse survey with patient experience scores from 3,400 discharged patients on 26 medical units. Units where nurses more often reported missed comfort talk and teaching had lower patient ratings of being told about new medicines and of help with pain. The association with overall ratings was weak. Patient experience surveys were returned by 29 percent of discharged patients, so the matched units differ in who answered. Unit-level aggregation cannot show which patients received less care."
+          }
+        ]
+      },
+      "note": "Two records (the union member report and the conference abstract) carry no year: they are stored with year null, never a guessed year (G4). Their ids come from titleYearKey with '?' for the missing year.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1swj1o6",
+            "ev-1h6k10v",
+            "ev-0w8l3yt",
+            "ev-07a6h8z",
+            "ev-14lemvt",
+            "ev-1g8y2b8",
+            "ev-0o48nxm"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].id": "ev-1h6k10v",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[4].id": "ev-14lemvt",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].grade": "unrated",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Patient acuity, staffing and missed care: accounting for acuity weakens the association"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1swj1o6",
+            "relevance": 90,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 1,410 nurses in 32 hospitals, 71 percent reported at least one activity left undone on the last shift, and each additional patient per registered nurse was associated with higher odds of missed care (odds ratio 1.09).",
+            "limitations": "Self-reported staffing; 38 percent response; medical and surgical units only.",
+            "contextTags": [
+              "multi-hospital survey",
+              "patients per nurse",
+              "last-shift recall"
+            ]
+          },
+          {
+            "id": "ev-1h6k10v",
+            "kind": "grey",
+            "keyFindings": "Sixty-eight percent of 2,960 union members reported at least one missed activity and 41 percent a missed or late timed medicine.",
+            "limitations": "No response rate, no distribution method, no date; advocacy context.",
+            "contextTags": [
+              "member survey",
+              "timed medicines"
+            ],
+            "notes": "Not rated: undated report with no response rate or sampling description, so relevance and method quality are left unassessed."
+          },
+          {
+            "id": "ev-0w8l3yt",
+            "relevance": 94,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Missed care followed 44 percent of shifts at least 10 percent below planned hours and 27 percent of shifts at or above plan, after linking reports to scheduling records; the difference persisted after adjustment for unit acuity.",
+            "limitations": "Twelve units in one organisation; acuity measured as a unit mean.",
+            "contextTags": [
+              "shift-level linkage",
+              "planned versus actual hours",
+              "acuity"
+            ]
+          },
+          {
+            "id": "ev-07a6h8z",
+            "relevance": 78,
+            "methodQuality": 64,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Of 14 missed-care instruments, few had test-retest data; a last-shift recall and a separate reasons section are recommended; none was validated for licensed practical nurses.",
+            "limitations": "Measurement review only; no pooled estimates.",
+            "contextTags": [
+              "measurement",
+              "recall period",
+              "licensed practical nurses"
+            ]
+          },
+          {
+            "id": "ev-14lemvt",
+            "kind": "grey",
+            "keyFindings": "In 640 nurses on 20 units, the association between patients per nurse and missed care was no longer clear after adjustment for unit acuity (odds ratio 1.03, 95 percent CI 0.97 to 1.10).",
+            "limitations": "Conference abstract with brief methods and no year; unit-level acuity on the survey day only.",
+            "contextTags": [
+              "acuity",
+              "confounding",
+              "conflicting result"
+            ],
+            "notes": "Not rated: an undated conference abstract whose methods cannot be appraised; relevance and method quality are left unassessed rather than guessed."
+          },
+          {
+            "id": "ev-1g8y2b8",
+            "relevance": 72,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Protected paid time raised response from 31 to 52 percent compared with email reminders and narrowed the gap between day and night shifts.",
+            "limitations": "Two hospitals; allocation by unit without randomisation.",
+            "contextTags": [
+              "response rate",
+              "protected time",
+              "night shift"
+            ]
+          },
+          {
+            "id": "ev-0o48nxm",
+            "relevance": 60,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Units with more missed comfort talk and teaching had lower patient ratings of being told about new medicines and of help with pain.",
+            "limitations": "Unit-level matching; 29 percent patient response.",
+            "contextTags": [
+              "patient experience",
+              "ecological"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a survey of 1,410 registered nurses in 32 hospitals, each additional patient per registered nurse was associated with higher odds of reporting missed care on the last shift (odds ratio 1.09).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1swj1o6"
+            ],
+            "location": "Abstract, results",
+            "passage": "Each additional patient per registered nurse was associated with higher odds of reporting missed care (odds ratio 1.09, 95 percent CI 1.04 to 1.14)",
+            "interpretation": "Supports a staffing measure as the exposure; nurse-reported staffing may inflate the association.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "In one undated conference abstract, adjusting for unit acuity on the survey day made the association between patients per nurse and missed care unclear (odds ratio 1.03).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-14lemvt"
+            ],
+            "location": "Abstract",
+            "passage": "After adjustment for the mean acuity score of the unit on the survey day, the association was no longer clear (odds ratio 1.03, 95 percent CI 0.97 to 1.10).",
+            "interpretation": "Conflicts with c1 and c3; acuity must be measured and adjusted for, and the source cannot be appraised.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c3",
+            "text": "When nurse reports were linked to scheduling records, missed care followed 44 percent of shifts at least 10 percent below planned hours and 27 percent of shifts at or above plan.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0w8l3yt"
+            ],
+            "location": "Abstract, results",
+            "passage": "Missed care was reported after 44 percent of shifts that ran at least 10 percent below planned hours and after 27 percent of shifts at or above plan.",
+            "interpretation": "Planned versus actual hours for the described shift is a workable exposure and gives planning values.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Protected paid time raised nurse survey response from 31 to 52 percent compared with email reminders.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1g8y2b8"
+            ],
+            "location": "Abstract",
+            "passage": "Response was 31 percent with reminders and 52 percent with protected time.",
+            "interpretation": "The union's 20 minutes of paid time makes a response near 50 percent realistic.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "None of 14 missed-care instruments reviewed had been validated for licensed practical nurses.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-07a6h8z"
+            ],
+            "location": "Abstract",
+            "passage": "None of the instruments had been validated for licensed practical nurses.",
+            "interpretation": "Pretest the adapted checklist with licensed practical nurses before fielding it.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level; two undated grey records are left unrated. Surveys consistently find that most nurses leave at least one activity undone on the last shift. Two dated studies link higher workload or below-plan shifts to more missed care (odds ratio 1.09 per patient; 44 against 27 percent of shifts), and the shift-level study kept its association after acuity adjustment, while an undated conference abstract found it unclear after adjustment. Protected time roughly doubles response. No instrument is validated for licensed practical nurses. The evidence supports a last-shift survey linked to shift staffing with acuity measured, and does not settle how much acuity explains.",
+        "gradeOverall": "low",
+        "gradeRationale": "Cross-sectional self-report designs with modest response, one conflicting unappraisable abstract, and indirect patient outcomes; consistent direction for the staffing association but serious risk of bias.",
+        "summary": "Seven records appraised; two undated records left unrated; five claims including one conflicting claim with high uncertainty."
+      },
+      "note": "The annotations for the two undated records omit relevance, methodQuality and grade, so they stay null and 'unrated' (G4): an omitted score is never filled with a default. Claim c2 rests on an undated, unrated record and carries high uncertainty. Applying annotations and claims requires S13.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].relevance": 90,
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[1].keyFindings": {
+            "includes": "2,960 union members"
+          },
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].relevance": {
+            "isNull": true
+          },
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[4].grade": "unrated",
+          "scan.items[3].grade": "moderate",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-14lemvt"
+          ],
+          "scan.claims[1].uncertainty": "high",
+          "scan.claims[2].sourceIds": [
+            "ev-0w8l3yt"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "520-bed acute hospital, 18 adult inpatient units",
+          "scheduling system with planned and actual hours",
+          "morning acuity scores by charge nurses",
+          "management and union both commissioning the figures"
+        ],
+        "reading": "Missed care is the end of a chain that starts with planned staffing, is bent by sick calls and unplanned admissions on the day, and is loaded by patient acuity. Acuity is both a cause of missed care and, where units staff to acuity, a cause of staffing, which is why one abstract loses the association after adjustment and a shift-level study keeps it. The survey measures the nurse's own shift, so linking it to the actual hours of that shift avoids recall of staffing. Licensed practical nurses and night staff are the groups most likely to be under-represented or mismeasured.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Planned versus actual nursing hours on the shift",
+            "kind": "context",
+            "detail": "From the scheduling system (claim c3)."
+          },
+          {
+            "id": "n2",
+            "label": "Unit acuity on the day",
+            "kind": "context",
+            "detail": "Morning acuity scores; competing explanation (claim c2)."
+          },
+          {
+            "id": "n3",
+            "label": "Care left undone on the last shift",
+            "kind": "outcome",
+            "detail": "Twenty-two-item last-shift checklist."
+          },
+          {
+            "id": "n4",
+            "label": "Multi-hospital survey, odds ratio 1.09 per patient",
+            "kind": "observational",
+            "detail": "Claim c1."
+          },
+          {
+            "id": "n5",
+            "label": "Undated abstract: association unclear after acuity",
+            "kind": "grey",
+            "detail": "Unrated; claim c2 with high uncertainty."
+          },
+          {
+            "id": "n6",
+            "label": "Licensed practical nurses and night shifts",
+            "kind": "stakeholder",
+            "detail": "No validated instrument; lower response under reminders."
+          },
+          {
+            "id": "n7",
+            "label": "Management and union",
+            "kind": "stakeholder",
+            "detail": "Both commission the figures; both must trust the method."
+          },
+          {
+            "id": "n8",
+            "label": "No local measure of missed care",
+            "kind": "gap",
+            "detail": "Current practice."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "hypothesised to increase when below plan"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "increases"
+          },
+          {
+            "from": "n2",
+            "to": "n1",
+            "relation": "shapes planned staffing where units staff to acuity"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "reports association for"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "conflicts with"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "may be mismeasured in"
+          },
+          {
+            "from": "n7",
+            "to": "n8",
+            "relation": "wants to close"
+          }
+        ],
+        "summary": "Map shows staffing and acuity as entangled causes of missed care and why shift-level linkage matters."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "grey",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local measure of missed care",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Budget decisions and union claims rest on anecdote.",
+            "opportunity": "Measure last-shift missed care on all 18 units in one window."
+          },
+          {
+            "id": "g2",
+            "title": "Staffing and acuity are entangled",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Published results conflict on whether acuity explains the association (claims c1, c2, c3).",
+            "opportunity": "Link each response to the actual hours and the acuity of the shift described and report both unadjusted and acuity-adjusted estimates."
+          },
+          {
+            "id": "g3",
+            "title": "The checklist is not validated for licensed practical nurses",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "No instrument has been validated for this group (claim c5), which is about a third of the workforce.",
+            "opportunity": "Cognitive pretest with eight licensed practical nurses and report the two roles separately."
+          },
+          {
+            "id": "g4",
+            "title": "Night and part-time staff respond less",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Reminder-based surveys over-represent day and full-time nurses (claim c4).",
+            "opportunity": "Use the union's paid time on every shift type and report response by shift and role."
+          },
+          {
+            "id": "g5",
+            "title": "Results could be used to blame individuals",
+            "kind": "implementation",
+            "severity": "watch",
+            "whyItMatters": "Small units at night could make responses identifiable.",
+            "opportunity": "Report only cells with five or more responses and agree a reporting rule with the union and management before fielding."
+          }
+        ],
+        "errorsFound": [
+          "The member report and the conference abstract carry no year and cannot be appraised; they are kept unrated rather than given a quality score."
+        ],
+        "reevaluation": "The gaps confirm a cross-sectional last-shift survey linked to shift-level staffing and acuity, with role-specific reporting and a pre-agreed non-blaming reporting rule.",
+        "summary": "Five gaps; missing local data and the staffing-acuity entanglement are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Nurses describing a shift that ran at least 10 percent below planned hours report at least one missed care activity more often than nurses describing a shift at or above plan, and the difference remains after adjustment for the unit's acuity on that day.",
+            "novelty": 45,
+            "need": 90,
+            "practiceChange": 80,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Need is high because both management and the union want the answer; novelty is moderate because the conflict over acuity (c2 against c3) is unresolved; linkage to scheduling records is already possible.",
+            "risks": "Nonresponse on night shifts; acuity scores entered inconsistently; small cells on some units."
+          },
+          {
+            "id": "h2",
+            "statement": "Licensed practical nurses report different missed activities from registered nurses, with more missed teaching and discharge preparation on units with more licensed practical nurses.",
+            "novelty": 50,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 70,
+            "parsimony": 60,
+            "rationale": "Skill mix was linked to missed teaching and discharge preparation in the retrieved multi-hospital survey.",
+            "risks": "Role-specific item meaning without a validated instrument."
+          },
+          {
+            "id": "h3",
+            "statement": "Most missed care is concentrated on night shifts.",
+            "novelty": 35,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 75,
+            "parsimony": 65,
+            "rationale": "Night shifts showed a steeper increase with shortfall in the linkage study.",
+            "risks": "Different activities are expected at night, so counts are not comparable across shifts."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected because it answers the shared management and union question."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among registered and licensed practical nurses on 18 adult inpatient units responding in a four-week winter window, is a last shift that ran at least 10 percent below planned nursing hours associated with a higher prevalence of at least one missed care activity than a shift at or above plan, after adjustment for unit acuity that day?",
+            "framework": "PECO",
+            "population": "Registered and licensed practical nurses on 18 adult inpatient units",
+            "intervention": "Shift at least 10 percent below planned nursing hours (exposure)",
+            "comparator": "Shift at or above planned hours",
+            "outcome": "At least one of 22 care activities reported missed on the last shift",
+            "time": "Last shift worked, four-week window in winter 2027",
+            "setting": "520-bed acute hospital"
+          },
+          {
+            "id": "q2",
+            "text": "What proportion of nurses report each of the 22 care activities missed on their last shift, by role and shift type?",
+            "framework": "PECO",
+            "population": "Same respondents",
+            "intervention": "Role and shift type (descriptive)",
+            "comparator": "None",
+            "outcome": "Item-level prevalence of missed care",
+            "time": "Last shift worked",
+            "setting": "Same as q1"
+          }
+        ],
+        "finer": "Feasible with paid survey time and existing scheduling data; interesting to management and the union; novel locally; ethical under the REB approval with unit-level reporting; relevant to the budget round.",
+        "summary": "One analytic PECO question and one descriptive question."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work (6 of 13 stages): the investigator leaves after the Questions stage and opens the study again from the home list. Unknown years and unassessed scores stay null after the round trip (G4).",
+      "expect": {
+        "store": {
+          "title": "Missed nursing care and shift-level staffing on 18 adult inpatient units",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ],
+          "needsReview": [],
+          "problem.constraints": "The survey must close by 2027-02-28. No incentive budget; completion is allowed during 20 minutes of paid time. Results are reported by unit and never by individual nurse.",
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].relevance": {
+            "isNull": true
+          },
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "questions.items": {
+            "length": 2
+          },
+          "design.decisions": {
+            "length": 0
+          },
+          "protocol.outcomes": {
+            "length": 0
+          }
+        },
+        "stage": {
+          "questions": "complete",
+          "design": "incomplete",
+          "audit": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Missed nursing care and shift-level staffing on 18 adult inpatient units"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "cross-sectional",
+        "rationale": "The question is the prevalence of missed care and its association with the staffing of the shift described, at one point in time: a cross-sectional survey with linkage to scheduling and acuity records measures exactly that. The conflict between c2 and c3 is addressed by measuring acuity for the same shift rather than as a unit average. Reporting follows STROBE for cross-sectional studies.",
+        "alternatives": [
+          "Repeated monthly survey panel (refused: the budget question needs one snapshot, and repeated surveys fatigue staff)",
+          "Direct observation of care (refused: costly, reactive and impossible across 18 units in four weeks)",
+          "Survey without scheduling linkage (refused: relies on nurses' recall of staffing)"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "A longitudinal design would add little to a budget decision and would need repeated paid time the union has not agreed.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run the last-shift cross-sectional survey on all 18 units in a four-week winter window during paid time, linking each response to the planned and actual hours and the acuity of the shift described, because shift shortfalls have been linked to missed care (c1, c3), protected time makes a usable response rate realistic (c4), and the checklist needs a pretest with licensed practical nurses (c5).",
+          "question": "Should the hospital run a last-shift missed care survey linked to shift staffing and acuity this winter?",
+          "claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Below-plan shifts have been associated with more missed care in linked or multi-hospital data.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Acuity fully explains the staffing association where units staff to acuity.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c2"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "REB approval of the survey protocol",
+              "status": "met",
+              "evidence": "REB approval REB-26-1182 dated 2026-09-15, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Union agreement to paid time for survey completion",
+              "status": "met",
+              "evidence": "Union letter UL-114 dated 2026-09-08 granting 20 minutes of paid time, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Survey without linkage to scheduling records",
+            "Direct observation of care on a sample of shifts"
+          ],
+          "note": "Rests on ledger claims c1, c3, c4 and c5; the conflicting claim c2 is carried in the defeating criterion, whose status stays unknown until the survey is analysed. Both gates are met on investigator-supplied letters."
+        },
+        "summary": "Cross-sectional linked survey recommended; both gates are met on investigator-supplied letters."
+      },
+      "note": "The decision's claims exist only when S13 applied the appraisal; selectionStatus requires S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "cross-sectional",
+          "family": "cross-sectional",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.decisions[-1].criteria[1].claimIds": [
+            "c2"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: the claims rest on retrieved records and both gates are met on investigator-supplied letters, so the selection is accepted and the action ready (G7). The unknown defeating criterion does not block (only a met defeating condition does). selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.basis": "explicit",
+          "family": "cross-sectional"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Cross-sectional last-shift survey of registered and licensed practical nurses on 18 adult inpatient units over four weeks in January and February 2027, completed during 20 minutes of paid time, with each response linked to the planned and actual hours and the acuity of the unit on the shift described.",
+        "population": "All registered and licensed practical nurses who worked at least one shift on one of the 18 units in the survey window; agency staff excluded because they cannot be given paid time.",
+        "exposure": "Shift staffing ratio: actual divided by planned nursing hours for the unit and shift described, from the scheduling system; below plan means at least 10 percent below. Patients per nurse on that shift is a secondary exposure.",
+        "procedures": "The checklist is adapted from a 22-item last-shift instrument and pretested with eight licensed practical nurses and four registered nurses. Nurses complete it on a tablet during paid time on any shift, naming the unit, date and shift type of their last shift. The analyst links each response to the scheduling system and to the mean morning acuity score of that unit on that date, then deletes the date, keeping only the linked variables.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Any missed care on the last shift",
+            "measure": "At least one of 22 activities reported as missed",
+            "timing": "Last shift worked, reported within 72 hours",
+            "why": "The measure both management and the union asked for; directly tied to patient care.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Number of activities missed",
+            "measure": "Count of the 22 activities reported as missed",
+            "timing": "Last shift",
+            "why": "Shows the amount as well as the presence of missed care.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Missed or late timed medicines",
+            "measure": "Yes or no item on the checklist",
+            "timing": "Last shift",
+            "why": "The most safety-critical activity.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Response by unit, role and shift type",
+            "measure": "Responses divided by eligible nurses",
+            "timing": "End of the window",
+            "why": "Differential response by night and part-time staff is the main threat.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 1,150 eligible nurses; 20 minutes of paid time each for about 575 expected responses is about 190 nursing hours, within the union agreement; linkage uses existing extracts.",
+        "biasMitigation": [
+          "Last-shift recall rather than a longer period",
+          "Staffing taken from the scheduling system, not from the nurse",
+          "Acuity measured for the same unit and date",
+          "Reporting cells of five or more responses only"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Nonresponse by shift and role",
+            "severity": "watch",
+            "note": "Paid time on every shift type limits it; response is reported by role and shift."
+          },
+          {
+            "id": "b2",
+            "label": "Acuity measured as a unit mean",
+            "severity": "watch",
+            "note": "May not reflect the nurse's own patients."
+          },
+          {
+            "id": "b3",
+            "label": "Reporting bias from the survey's purpose",
+            "severity": "high",
+            "note": "Both sides have an interest in the result; the checklist wording and reporting rule are agreed with both before fielding."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 5,
+          "flags": [
+            "Five adjustment variables fixed in advance"
+          ],
+          "simplestPath": "One survey window, one primary outcome, one staffing exposure, one acuity adjustment."
+        },
+        "theoreticalFramework": "No framework beyond the survey design; SEIPS is used only to name work-system factors in the reasons section.",
+        "summary": "Four-week linked last-shift survey with one primary outcome and response tracked by role and shift."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.parsimony.covariateCount": 5,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cross-sectional survey with shift-level linkage; prevalence of any missed care and its association with below-plan staffing, adjusted for acuity, with nurses clustered in units.",
+        "sampleSize": "About 1,150 eligible nurses and a planned response near 50 percent with paid time (c4) give about 575 responses. For overall prevalence near 65 percent with a unit-level design effect of about 2.5, the 95 percent confidence interval is about 6 percentage points either side. For the primary association, about 30 percent of described shifts are expected to be below plan; because the exposure varies within units, the design effect is about 1.3, and 575 responses give about 80 percent power at two-sided alpha 0.05 for a 15-point difference (62 against 47 percent). Smaller differences would be estimated with wide intervals.",
+        "primaryAnalysis": "Mixed-effects logistic regression of any missed care on below-plan shift, with a random intercept for unit, adjusted for acuity, shift type, role, unit type and years of experience; the unadjusted estimate is reported alongside.",
+        "secondaryAnalysis": "Negative binomial model for the number of activities missed; the same model for missed timed medicines; item-level prevalence by role and shift type, descriptive only.",
+        "missingData": "Responses without a usable last-shift date cannot be linked and are described separately; item nonresponse above 10 percent is handled by multiple imputation with 20 imputations.",
+        "multiplicity": "One primary association; secondary outcomes and item-level results are labelled as secondary with confidence intervals only.",
+        "software": "R with the lme4 package; the analysis plan is lodged with the steering group before the survey opens.",
+        "overfittingGuards": [
+          "Adjustment set fixed before fielding",
+          "No data-driven cut-off for below plan",
+          "Cells under five responses suppressed, not merged after looking at results"
+        ],
+        "summary": "About 575 responses; about 80 percent power for a 15-point difference after a within-unit design effect of 1.3."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "575 responses"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: a 20-minute survey. The main risks are re-identification of nurses on small units or night shifts and use of the results against individuals.",
+        "consent": "An information sheet on the tablet explains the purpose, the linkage to shift staffing and the reporting rule; completion implies consent, and nurses may skip any item or stop.",
+        "data": "Responses are held by the research office, not by managers; after linkage the shift date is deleted; cells with fewer than five responses are suppressed in every report.",
+        "equity": "PROGRESS-Plus: licensed practical nurses, night and part-time staff and internationally educated nurses may be under-represented or misunderstood by an instrument not validated for them. Paid time is offered on every shift, the checklist is pretested with licensed practical nurses, and response is reported by role and shift. For patients, dependent older adults and people with limited English are most affected by missed talk and teaching.",
+        "effectiveness": "Informs the budget round with a measure both sides accept; a null association after acuity adjustment is equally informative.",
+        "efficiency": "About 190 paid nursing hours and existing extracts.",
+        "costs": "Paid survey time under the union agreement; analyst time within existing roles.",
+        "grants": "None needed.",
+        "partnerships": "A joint steering group of two union representatives, two unit managers and two patient partners agrees the checklist wording and the reporting rule.",
+        "rebPath": "Approved by the hospital REB as minimal risk (REB-26-1182); ICH-GCP and Declaration of Helsinki principles for confidentiality apply.",
+        "limitations": "Self-report of missed care; acuity as a unit mean; one hospital; winter only.",
+        "summary": "Minimal-risk survey under REB approval with a non-blaming reporting rule agreed with the union and management."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "REB-26-1182"
+          },
+          "ethics.equity": {
+            "includes": "licensed practical nurses"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "The joint steering group meets before fielding and after analysis; two patient partners review the plain-language summary.",
+        "socialListening": "No social media listening; the union's anonymised member comments from last winter are read for themes.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Choosing what to leave",
+            "quote": "Composite paraphrase: On a short night I decide who gets turned and who waits, and it is always the quiet ones who wait.",
+            "implication": "Keep turning and mobilisation as separate items and report them by shift type.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "partner",
+            "theme": "Trust in the numbers",
+            "quote": "Composite paraphrase: If managers can see which nurse said what, nobody will answer honestly.",
+            "implication": "Agree the five-response reporting rule in writing before the survey opens.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Being told about new medicines",
+            "quote": "Composite paraphrase: I went home with three new tablets and nobody had time to explain them.",
+            "implication": "Keep discharge teaching as an item and link the findings to the discharge process.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "The licensed practical nurse role",
+            "quote": "Composite paraphrase: Half those questions are about things my scope does not cover, so I would tick not missed.",
+            "implication": "Pretest the checklist with licensed practical nurses and add a not-applicable option.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "family",
+            "theme": "Noticing what is missed",
+            "quote": "Composite paraphrase: My father had not been out of bed for two days; the nurses were kind but there were so few of them.",
+            "implication": "Report missed mobilisation alongside staffing, without blaming individual nurses.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on triage of care, trust, discharge teaching, role scope and family observation."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[1].source": "partner",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Missed nursing care and shift-level staffing shortfalls on adult inpatient units: a cross-sectional survey linked to scheduling records",
+        "abstract": "Objective: to estimate the prevalence of missed nursing care and its association with below-plan staffing of the shift described, adjusted for acuity. Design: cross-sectional last-shift survey of registered and licensed practical nurses on 18 units, linked to scheduling and acuity records. Primary outcome: any of 22 activities missed on the last shift. Results and conclusions will be written after analysis.",
+        "introduction": "Nurses report that care is left undone when shifts are short, but published studies disagree on whether acuity explains the association, and most rely on nurses' recall of their staffing. This study links each report to the recorded hours and acuity of the shift described.",
+        "methods": "All eligible nurses were invited to complete a pretested 22-item checklist during paid time. Each response was linked to actual and planned hours and to unit acuity on the shift described. A mixed-effects logistic model with a unit random intercept estimated the association.",
+        "results": "No data have been collected yet. The report will present response by role and shift, item-level prevalence, and unadjusted and acuity-adjusted associations.",
+        "discussion": "The discussion will compare the findings with the retrieved shift-level and multi-hospital studies and with the undated conflicting abstract. It will set out what the figures mean for the budget round without attributing missed care to individual nurses.",
+        "limitations": "Missed care is self-reported and acuity is a unit mean for the day. The study covers one hospital in one winter, and the instrument is not validated for licensed practical nurses.",
+        "conclusion": "To be written after analysis. It will describe associations and will not attribute missed care to individual nurses.",
+        "reportingChecklist": "STROBE (cross-sectional)",
+        "summary": "STROBE-structured draft; results left empty until the survey closes."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE (cross-sectional)",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Two retrieved records have no year and no ratings; keep them unrated and do not cite their figures as established",
+          "Pretest the adapted checklist with licensed practical nurses before fielding",
+          "Agree the five-response reporting rule in writing with the union and management"
+        ],
+        "improvementNotes": "The study was reopened after the Questions stage and finished without loss: unknown years and unassessed scores stayed null. The accepted decision rests on four ledger claims; the conflicting claim is carried in the defeating criterion with high uncertainty.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: unrated records, the checklist pretest and the reporting rule."
+      },
+      "note": "audit.openFixes and audit.lastReview fail at 875fe59 because of the audit merge defect (A3 L1.6), not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Missed nursing care and shift-level staffing on 18 adult inpatient units",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[4].relevance": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Missed nursing care and shift-level staffing on 18 adult inpatient units"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Second reopen, after the finished workflow.",
+      "expect": {
+        "store": {
+          "title": "Missed nursing care and shift-level staffing on 18 adult inpatient units",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "stats.sampleSize": {
+            "includes": "design effect"
+          }
+        },
+        "screen": {
+          "includes": [
+            "Missed nursing care and shift-level staffing on 18 adult inpatient units"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; the claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items[1].year": {
+              "isNull": true
+            },
+            "scan.items[1].grade": "unrated",
+            "scan.items[1].relevance": {
+              "isNull": true
+            },
+            "scan.items[4].year": {
+              "isNull": true
+            },
+            "scan.items[4].grade": "unrated",
+            "scan.items[4].methodQuality": {
+              "isNull": true
+            },
+            "scan.gradeOverall": "low",
+            "scan.claims[1].uncertainty": "high",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

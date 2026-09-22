@@ -6,9 +6,10 @@ import { SEED_IDS, SEED_STUDIES } from "./seed";
 import { STAGE_IDS, STUDY_SCHEMA_VERSION } from "./types";
 import type { AuditEntry, StageId, Study, StudyFamily, EvidenceItem, RetrievalEvent, SourceDocument } from "./types";
 import { nowIso, uid } from "./utils";
-import { refreshDecisionStatuses, studyRevision } from "./evidence/decision";
+import { refreshDecisionStatuses, studyRevision, decisionIsSupported } from "./evidence/decision";
 import { illuminateDecision } from "./illuminate";
 import { mergeIngested } from "./evidence/records";
+import { sha256Hex } from "./evidence/hash";
 
 export { studioAvailability } from "./studio-availability";
 
@@ -43,6 +44,12 @@ interface StudioState {
   confirmEmptySearch: (id: string) => void;
   acceptDecision: (id: string, which: "latest" | number) => { ok: boolean; reason?: string };
   withdrawDecision: (id: string, which: "latest" | number) => { ok: boolean; reason?: string };
+  changeSource: (
+    id: string,
+    record: { id?: string; title?: string },
+    field: "abstract" | "keyFindings" | "year" | "status" | "limitations",
+    value: unknown,
+  ) => { ok: boolean; reason?: string };
   illuminateApply: (
     id: string,
     stage: StageId,
@@ -241,8 +248,24 @@ export const useStudio = create<StudioState>()(
         const idx = decisionIndex(s, which);
         const list = s.design.decisions ?? [];
         if (idx < 0 || idx >= list.length) return { ok: false, reason: "no decision" };
-        const decisions = list.map((d, i) => (i === idx ? { ...d, status: "accepted" as const } : d));
-        get().mergeStage(id, "design", { decisions });
+        const current = list[idx];
+        const support = decisionIsSupported(current, s);
+        if (!support.ok) {
+          get().log(id, {
+            id: uid("audit"),
+            at: nowIso(),
+            kind: "note",
+            stage: "design",
+            summary: `Accept refused: ${support.reason}`,
+          });
+          return { ok: false, reason: support.reason };
+        }
+        const decisions = list.map((d, i) =>
+          i === idx
+            ? { ...d, status: "accepted" as const, selectionStatus: "accepted" as const, actionStatus: d.actionStatus ?? "blocked" }
+            : d,
+        );
+        get().mergeStage(id, "design", { decisions, basis: "explicit" });
         get().log(id, {
           id: uid("audit"),
           at: nowIso(),
@@ -258,7 +281,11 @@ export const useStudio = create<StudioState>()(
         const idx = decisionIndex(s, which);
         const list = s.design.decisions ?? [];
         if (idx < 0 || idx >= list.length) return { ok: false, reason: "no decision" };
-        const decisions = list.map((d, i) => (i === idx ? { ...d, status: "withdrawn" as const } : d));
+        const decisions = list.map((d, i) =>
+          i === idx
+            ? { ...d, status: "withdrawn" as const, selectionStatus: "withdrawn" as const, actionStatus: "blocked" as const }
+            : d,
+        );
         get().mergeStage(id, "design", { decisions });
         get().log(id, {
           id: uid("audit"),
@@ -266,6 +293,60 @@ export const useStudio = create<StudioState>()(
           kind: "note",
           stage: "design",
           summary: `Investigator withdrew decision ${list[idx].id}.`,
+        });
+        return { ok: true };
+      },
+      changeSource: (id, record, field, value) => {
+        const s = get().studies.find((x) => x.id === id);
+        if (!s) return { ok: false, reason: "study not found" };
+        const item = s.scan.items.find((it) => (record.id && it.id === record.id) || (record.title && it.title === record.title));
+        if (!item) return { ok: false, reason: "record not found" };
+        let extraDoc: SourceDocument | undefined;
+        const items = s.scan.items.map((it) => {
+          if (it.id !== item.id) return it;
+          if (field === "status") {
+            const status = String(value);
+            return { ...it, provenance: { ...it.provenance, status: status as EvidenceItem["provenance"]["status"] } };
+          }
+          if (field === "year") return { ...it, year: typeof value === "number" ? value : Number(value) };
+          if (field === "keyFindings") return { ...it, keyFindings: String(value ?? "") };
+          if (field === "limitations") return { ...it, limitations: String(value ?? "") };
+          if (field === "abstract") {
+            const text = String(value ?? "");
+            const sha = sha256Hex(text);
+            const documentId = `doc-${sha.slice(0, 12)}`;
+            extraDoc = {
+              id: documentId,
+              recordId: it.id,
+              sha256: sha,
+              text,
+              mediaType: "text/plain",
+              sourceScope: "abstract",
+              shortenedAtSource: "unknown",
+              capturedAt: nowIso(),
+            };
+            const prev = it.abstract;
+            const versions = it.contentVersions ? [...it.contentVersions] : prev ? [prev] : [];
+            return { ...it, abstract: { documentId, sha256: sha, text }, contentVersions: versions };
+          }
+          return it;
+        });
+        const after = items.find((it) => it.id === item.id);
+        const beforeVal = field === "status" ? item.provenance.status : item[field === "abstract" ? "abstract" : field];
+        const afterVal = field === "status" ? after?.provenance.status : after?.[field === "abstract" ? "abstract" : field];
+        const changed = JSON.stringify(beforeVal) !== JSON.stringify(afterVal);
+        if (!changed) return { ok: false, reason: "source content did not change" };
+        get().mergeStage(id, "scan", { items });
+        if (extraDoc) {
+          const latest = get().studies.find((x) => x.id === id);
+          get().update(id, { documents: [...(latest?.documents ?? []), extraDoc] });
+        }
+        get().log(id, {
+          id: uid("audit"),
+          at: nowIso(),
+          kind: "edit",
+          stage: "scan",
+          summary: `Source ${item.id} ${field} changed.`,
         });
         return { ok: true };
       },

@@ -1,0 +1,1346 @@
+{
+  "id": "sc-008",
+  "version": 1,
+  "title": "Hip fracture trauma unit: early physiotherapy and prolonged stay, conflicting evidence and a reopen after partial work",
+  "field": "physiotherapy",
+  "level": 3,
+  "family": "case-control",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path on an explicit case-control need: a physiotherapy lead wants to know whether mobilisation within 24 hours of hip fracture surgery goes with shorter stays, with exposure only in paper notes. A fixture search returns seven records that conflict: a randomised trial in selected patients finds stays 2.3 days shorter, a registry analysis finds no difference after adjustment, and a review finds heterogeneous results. The appraisal records the conflict honestly as claim c3, an inference resting on the three records with uncertainty 'high', alongside source-derived claims with exact passages; certainty is low. The decision (kind narrow) rests on c3, c4 and c5; the ethics gate is unknown, so acceptance gives an accepted selection and a blocked action. The study is reopened after the Protocol stage (eight of 13 stages): completed work, the high-uncertainty claim and the decision must be intact and the later stages incomplete. The remaining five stages are then finished, followed by reload and export. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 5, 7 (ev-019gs0m, ev-0bu9ox0, ev-0xo0saw, ev-0go084z, ev-1p5a657); titleYearKey hash for records 2 and 6 (ev-1lrsu2p, ev-005ikon). Requires S13 (appraisal and ledger), S11 (selectionStatus, actionStatus, basis) and D5 (status text). Catches: conflicting evidence flattened into a confident claim, an uncertainty label changed on reload, partial work lost or stages wrongly marked complete on reopen, and an action allowed past an unknown gate.",
+  "inputs": {
+    "need": "I am the clinical lead physiotherapist for the orthopaedic trauma unit of a 700-bed hospital, where we treat about 420 adults with hip fracture a year. The national hip fracture standard says patients should be helped out of bed by a physiotherapist on the day after surgery, but on our unit only about half are mobilised within 24 hours and the rest wait one to three days, mainly because of weekend staffing, low blood pressure after surgery or delirium. Our median length of stay is 19 days and the hospital wants it shorter.\n\nI want to find out whether patients who were mobilised by a physiotherapist within 24 hours of surgery had shorter stays, before I ask for weekend physiotherapy cover. The difficulty is data. Physiotherapy entries before 2025 were handwritten and exist only in the paper notes, which our clerical team can pull, and working out the time of first mobilisation takes about 25 minutes per patient. We cannot read the notes of every patient treated from 2022 to 2024.\n\nMy plan is a case-control study: cases would be patients whose stay was longer than 28 days and controls patients discharged within 28 days, sampled from the unit's hip fracture list, and we would compare how many in each group were mobilised within 24 hours, taking account of age, mobility before the fracture, dementia and the type of operation. I have read papers saying that early mobilisation shortens stays and others saying it makes no difference once you allow for how unwell patients are, so I need help with confounding, how many notes we need to read and how to define the time of first mobilisation.",
+    "constraints": "About 100 hours of clerical and physiotherapy time for reading notes; paper notes for 2022 to 2024 only; no contact with patients; results needed for the service planning round in April 2027.",
+    "localFacts": [
+      "About 420 adults with hip fracture are treated on the unit each year; the median length of stay is 19 days.",
+      "The unit's hip fracture list gives admission, operation and discharge dates and the operation type for every patient since 2022.",
+      "The Head of Therapies approved 100 hours of note reading between November 2026 and March 2027 (memo THR-2026-12).",
+      "The hospital research ethics board has not yet reviewed the proposal."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical lead physiotherapist for the orthopaedic trauma unit of a 700-bed hospital, where we treat about 420 adults with hip fracture a year. The national hip fracture standard says patients should be helped out of bed by a physiotherapist on the day after surgery, but on our unit only about half are mobilised within 24 hours and the rest wait one to three days, mainly because of weekend staffing, low blood pressure after surgery or delirium. Our median length of stay is 19 days and the hospital wants it shorter.\n\nI want to find out whether patients who were mobilised by a physiotherapist within 24 hours of surgery had shorter stays, before I ask for weekend physiotherapy cover. The difficulty is data. Physiotherapy entries before 2025 were handwritten and exist only in the paper notes, which our clerical team can pull, and working out the time of first mobilisation takes about 25 minutes per patient. We cannot read the notes of every patient treated from 2022 to 2024.\n\nMy plan is a case-control study: cases would be patients whose stay was longer than 28 days and controls patients discharged within 28 days, sampled from the unit's hip fracture list, and we would compare how many in each group were mobilised within 24 hours, taking account of age, mobility before the fracture, dementia and the type of operation. I have read papers saying that early mobilisation shortens stays and others saying it makes no difference once you allow for how unwell patients are, so I need help with confounding, how many notes we need to read and how to define the time of first mobilisation.",
+          "family": "case-control",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical lead physiotherapist for the orthopaedic trauma unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Mobilisation within 24 hours of hip fracture surgery and prolonged hospital stay",
+        "subtitle": "Case-control study sampled from the unit's hip fracture list",
+        "family": "case-control",
+        "statement": "About half of the 420 adults treated each year for hip fracture on the trauma unit are mobilised by a physiotherapist within 24 hours of surgery, against a national standard of the day after surgery. The unit wants to know whether early mobilisation is associated with shorter stays before asking for weekend physiotherapy cover. The exposure is recorded only in paper notes that take about 25 minutes each to read, and the published evidence conflicts once confounding by how unwell patients are is taken into account.",
+        "whoAffected": "Adults with hip fracture on the trauma unit, most of them older and many with dementia; their families; physiotherapists and ward staff; the hospital planning weekend cover.",
+        "whatHurts": "Long stays bring deconditioning, delirium and hospital-acquired infection and delay return home; asking for weekend cover without evidence risks spending on staff that may not shorten stays.",
+        "currentPractice": "First mobilisation within 24 hours for about half of patients; no physiotherapy at weekends; delays documented in handwritten notes before 2025.",
+        "whyNow": "The service planning round in April 2027 will consider weekend therapy cover, and 100 hours of note reading are approved this winter.",
+        "constraints": "About 100 hours of clerical and physiotherapy time for reading notes; paper notes for 2022 to 2024 only; no contact with patients; results needed for the service planning round in April 2027.",
+        "patientCenteredGoal": "Patients with hip fracture get up and walking as soon as it is safe and go home without avoidable weeks in hospital.",
+        "summary": "Problem framed as a case-control study of early mobilisation and prolonged stay, with confounding as the central difficulty."
+      },
+      "expect": {
+        "store": {
+          "title": "Mobilisation within 24 hours of hip fracture surgery and prolonged hospital stay",
+          "family": "case-control",
+          "problem.statement": {
+            "includes": "25 minutes each to read"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Mobilisation within 24 hours of hip fracture surgery and prolonged hospital stay"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "early mobilisation within 24 hours hip fracture surgery physiotherapy length of stay confounding",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Physiotherapist-led mobilisation within 24 hours of hip fracture surgery and length of stay: a randomised trial in two trauma units",
+            "authors": "Brennan-Adeyemi C, Solberg-Mwangi T, Okafor-Reyes L",
+            "year": 2019,
+            "venue": "Morrowvale Orthopaedic Rehabilitation Journal",
+            "doi": "10.5555/jor.2019.0336",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomised 260 adults after hip fracture surgery in two trauma units to physiotherapist-led mobilisation within 24 hours or to usual care, in which first mobilisation occurred at a median of 46 hours. Mean length of stay was 13.1 days with early mobilisation and 15.4 days with usual care (difference minus 2.3 days, 95 percent CI minus 4.0 to minus 0.6). Walking ability at 30 days was better in the early group. Patients with severe dementia, postoperative hypotension requiring treatment or delirium at the time of randomisation were excluded, about 30 percent of those screened. Both units provided physiotherapy seven days a week."
+          },
+          {
+            "title": "Early mobilisation and length of stay after hip fracture: a registry analysis adjusting for frailty and delirium",
+            "authors": "Kristiansen-Obi H, Delacroix-Mensah A",
+            "year": 2021,
+            "venue": "Hip Fracture Care Research",
+            "providerType": "journal-article",
+            "abstract": "Using a national hip fracture registry, we studied 6,400 patients from 38 hospitals. Patients first mobilised within 24 hours of surgery had a median stay three days shorter than those mobilised later. After adjustment for mobility before the fracture, dementia, American Society of Anesthesiologists grade, delirium and postoperative hypotension, the hazard ratio for discharge was 1.03 (95 percent CI 0.97 to 1.10), indicating no clear difference. The authors argue that sicker patients are mobilised later and stay longer for reasons unrelated to mobilisation, and caution that adjusting for delirium and hypotension after surgery may remove part of a real effect."
+          },
+          {
+            "title": "Mobilisation within 24 or 48 hours of hip fracture surgery and length of stay: a systematic review of nine studies with meta-analysis of four trials",
+            "authors": "Harrington-Iwu P, Tanaka-Lindholm S, Mbeki-Castro R",
+            "year": 2022,
+            "venue": "Rehabilitation Evidence Reviews",
+            "doi": "10.5555/rer.2022.0121",
+            "providerType": "review",
+            "abstract": "We included nine studies of mobilisation within 24 or 48 hours of hip fracture surgery: four randomised trials and five observational studies. In the trials, early mobilisation shortened length of stay (mean difference minus 1.9 days, 95 percent CI minus 3.5 to minus 0.3) with substantial heterogeneity (I squared 64 percent). Observational studies gave inconsistent results, from large reductions to no difference after adjustment. Trials excluded many patients with dementia or delirium, limiting applicability to routine care. The certainty of evidence was rated low."
+          },
+          {
+            "title": "Why patients are not mobilised on the day after hip fracture surgery: reasons documented in physiotherapy notes",
+            "authors": "Oduya-Farrell K, Lindgren-Pacheco M",
+            "year": 2020,
+            "venue": "Quillsby Physiotherapy Letters",
+            "doi": "10.5555/pprl.2020.0098",
+            "providerType": "journal-article",
+            "abstract": "We read the physiotherapy notes of 310 patients who were not mobilised within 24 hours of hip fracture surgery in three hospitals. Documented reasons were postoperative hypotension in 31 percent, no physiotherapist available at the weekend in 28 percent, delirium or drowsiness in 22 percent, uncontrolled pain in 12 percent and other reasons in 7 percent. Weekend admissions were twice as likely to wait more than 48 hours. The authors note that only the weekend staffing reason is independent of how unwell the patient is."
+          },
+          {
+            "title": "Confounding by indication in studies of early mobilisation: a methodological note",
+            "authors": "Achterberg-Silva J, Ruiz-Okonkwo B",
+            "year": 2023,
+            "venue": "Rehabilitation Methods Notes",
+            "doi": "10.5555/rmn.2023.0017",
+            "providerType": "journal-article",
+            "abstract": "Observational comparisons of early and late mobilisation are distorted because the reasons for delay also predict long stays. Postoperative hypotension and delirium both delay mobilisation and predict longer stays, yet they may also be partly caused by immobility, so adjusting for them can remove a real effect while not adjusting leaves confounding. We recommend adjusting for characteristics measured before surgery, reporting estimates with and without postoperative conditions, and using reasons for delay that are unrelated to the patient, such as weekend staffing, as a check on confounding."
+          },
+          {
+            "title": "Weekend physiotherapy cover and time to first mobilisation after hip fracture: an interrupted time series",
+            "authors": "Hale-Nwosu D, Petrakis-Obi L",
+            "year": 2018,
+            "venue": "Hip Fracture Care Research",
+            "providerType": "journal-article",
+            "abstract": "One trauma unit introduced physiotherapy cover on Saturdays and Sundays and compared 18 months before with 18 months after the change. Median time from surgery to first mobilisation fell from 38 to 22 hours, and the proportion mobilised within 24 hours rose from 48 to 71 percent. Mean length of stay fell by 1.1 days, but the confidence interval included no change and a new discharge coordinator started during the same period. The authors conclude that weekend cover reliably speeds mobilisation while its effect on length of stay remains uncertain."
+          },
+          {
+            "title": "Measuring time to first mobilisation from clinical notes: agreement between physiotherapy and nursing entries",
+            "authors": "Whitaker-Adeyemi S, Borg-Lindqvist E",
+            "year": 2024,
+            "venue": "Quillsby Physiotherapy Letters",
+            "doi": "10.5555/pprl.2024.0042",
+            "providerType": "journal-article",
+            "abstract": "We compared the time of first mobilisation after hip fracture surgery recorded in physiotherapy entries and in nursing entries for 400 patients. The two sources agreed within two hours for 84 percent of patients. Where they disagreed, the physiotherapy entry usually recorded standing with help while the nursing entry recorded sitting out of bed. Reading one set of paper notes took a median of 22 minutes. We recommend defining first mobilisation as standing or walking with a physiotherapist and using the physiotherapy entry, with the nursing entry as a check."
+          }
+        ]
+      },
+      "note": "Seven records with conflicting findings; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-019gs0m",
+            "ev-1lrsu2p",
+            "ev-0bu9ox0",
+            "ev-0xo0saw",
+            "ev-0go084z",
+            "ev-005ikon",
+            "ev-1p5a657"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].kind": "rct",
+          "scan.items[2].kind": "systematic-review",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Early mobilisation and length of stay after hip fracture: a registry analysis adjusting for frailty and delirium"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-019gs0m",
+            "relevance": 90,
+            "methodQuality": 72,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Mobilisation within 24 hours shortened mean stay by 2.3 days (95 percent CI 0.6 to 4.0) in 260 randomised patients with seven-day physiotherapy.",
+            "limitations": "Excluded about 30 percent of screened patients, including those with severe dementia, hypotension or delirium.",
+            "contextTags": [
+              "randomised trial",
+              "length of stay",
+              "selected patients"
+            ]
+          },
+          {
+            "id": "ev-1lrsu2p",
+            "relevance": 92,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A three-day crude difference in stay disappeared after adjustment for frailty, delirium and postoperative hypotension (hazard ratio for discharge 1.03).",
+            "limitations": "Adjustment for postoperative conditions may remove a real effect.",
+            "contextTags": [
+              "registry",
+              "confounding",
+              "adjustment"
+            ]
+          },
+          {
+            "id": "ev-0bu9ox0",
+            "relevance": 88,
+            "methodQuality": 70,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Trials: stay shorter by 1.9 days with high heterogeneity; observational studies inconsistent; trials excluded many patients with dementia or delirium.",
+            "limitations": "Nine studies; low certainty.",
+            "contextTags": [
+              "meta-analysis",
+              "heterogeneity",
+              "applicability"
+            ]
+          },
+          {
+            "id": "ev-0xo0saw",
+            "relevance": 76,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Delays were due to hypotension (31 percent), no weekend physiotherapist (28 percent), delirium (22 percent) and pain (12 percent).",
+            "limitations": "Three hospitals; reasons as documented.",
+            "contextTags": [
+              "reasons for delay",
+              "weekend staffing"
+            ]
+          },
+          {
+            "id": "ev-0go084z",
+            "relevance": 84,
+            "methodQuality": 68,
+            "kind": "expert",
+            "grade": "moderate",
+            "keyFindings": "Hypotension and delirium both delay mobilisation and predict long stays; adjust for pre-surgical characteristics and report estimates with and without postoperative conditions.",
+            "limitations": "Methodological argument without new data.",
+            "contextTags": [
+              "confounding by indication",
+              "mediators",
+              "methods"
+            ]
+          },
+          {
+            "id": "ev-005ikon",
+            "relevance": 74,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Weekend cover raised mobilisation within 24 hours from 48 to 71 percent; stay fell by 1.1 days with an interval including no change.",
+            "limitations": "One unit; a discharge coordinator started in the same period.",
+            "contextTags": [
+              "weekend cover",
+              "interrupted time series"
+            ]
+          },
+          {
+            "id": "ev-1p5a657",
+            "relevance": 82,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Physiotherapy and nursing entries agreed within two hours for 84 percent of patients; reading one set of notes took a median of 22 minutes.",
+            "limitations": "One hospital; electronic and paper notes mixed.",
+            "contextTags": [
+              "measurement",
+              "operational definition"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a randomised trial, physiotherapist-led mobilisation within 24 hours shortened mean length of stay by 2.3 days.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-019gs0m"
+            ],
+            "location": "Abstract, results",
+            "passage": "Mean length of stay was 13.1 days with early mobilisation and 15.4 days with usual care",
+            "interpretation": "Benefit in selected patients with seven-day physiotherapy; applicability to excluded patients unknown.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "In a national registry, the crude difference in stay disappeared after adjustment for frailty, delirium and postoperative hypotension.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1lrsu2p"
+            ],
+            "location": "Abstract, results",
+            "passage": "the hazard ratio for discharge was 1.03 (95 percent CI 0.97 to 1.10), indicating no clear difference",
+            "interpretation": "Either confounding explains the crude difference or adjustment for postoperative conditions removed a real effect.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Whether mobilisation within 24 hours shortens stays in routine care, including patients with dementia or delirium, is uncertain: the trial evidence shows shorter stays in selected patients while adjusted routine-care data show no clear difference.",
+            "kind": "inference",
+            "sourceIds": [
+              "ev-019gs0m",
+              "ev-1lrsu2p",
+              "ev-0bu9ox0"
+            ],
+            "location": "Abstracts of the trial, the registry analysis and the review",
+            "interpretation": "The local study must be designed to show which reading holds in this unit's patients.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c4",
+            "text": "Postoperative hypotension and delirium both delay mobilisation and predict long stays, so adjustment should rest on pre-surgical characteristics with postoperative conditions in a sensitivity analysis.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0go084z"
+            ],
+            "location": "Abstract, recommendations",
+            "passage": "Postoperative hypotension and delirium both delay mobilisation and predict longer stays",
+            "interpretation": "Fixes the adjustment strategy before reading notes.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c5",
+            "text": "Time of first mobilisation can be read from physiotherapy entries, which agree with nursing entries within two hours for 84 percent of patients.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1p5a657"
+            ],
+            "location": "Abstract, results",
+            "passage": "The two sources agreed within two hours for 84 percent of patients.",
+            "interpretation": "The exposure can be measured from paper notes with a written definition.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c6",
+            "text": "No physiotherapist being available at the weekend accounted for 28 percent of documented delays to first mobilisation.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0xo0saw"
+            ],
+            "location": "Abstract, results",
+            "passage": "no physiotherapist available at the weekend in 28 percent",
+            "interpretation": "Weekend staffing is a reason for delay unrelated to how unwell the patient is, usable as a check on confounding.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level, with conflicting evidence. A randomised trial found stays 2.3 days shorter with mobilisation within 24 hours, but it excluded about 30 percent of patients, including those with severe dementia, hypotension or delirium; a national registry found a three-day crude difference that disappeared after adjustment; a review found shorter stays in trials with high heterogeneity and inconsistent observational results. The conflict is about confounding and applicability, recorded as a high-uncertainty inference (c3). Methods guidance favours adjustment for pre-surgical characteristics, with postoperative conditions as a sensitivity analysis and weekend-related delay as a check. Mobilisation time can be read reliably from physiotherapy entries.",
+        "gradeOverall": "low",
+        "gradeRationale": "Trial evidence of benefit in selected patients conflicts with adjusted routine-care data; heterogeneity and indirectness to patients with dementia or delirium lower certainty. Low certainty that early mobilisation shortens stays in routine care.",
+        "summary": "Seven retrieved records; six claims recorded, one an inference with high uncertainty over conflicting records; overall certainty low."
+      },
+      "note": "Conflicting evidence is recorded honestly: claim c3 is an inference resting on three retrieved records (trial, registry analysis and review) with uncertainty 'high'. Appraisal on the production scan path requires S13.",
+      "expect": {
+        "store": {
+          "scan.items[0].grade": "moderate",
+          "scan.items[1].grade": "low",
+          "scan.items[4].kind": "expert",
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.claims[2].id": "c3",
+          "scan.claims[2].kind": "inference",
+          "scan.claims[2].uncertainty": "high",
+          "scan.claims[2].sourceIds": [
+            "ev-019gs0m",
+            "ev-1lrsu2p",
+            "ev-0bu9ox0"
+          ],
+          "scan.claims[0].uncertainty": "moderate",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "700-bed hospital trauma unit, about 420 hip fractures a year",
+          "no weekend physiotherapy",
+          "paper notes 2022 to 2024",
+          "100 hours of note reading"
+        ],
+        "reading": "Early mobilisation sits on a path where the reasons for delay (hypotension, delirium) also lengthen stays, so a crude comparison overstates benefit and heavy adjustment may understate it. Weekend staffing is the one reason for delay that does not depend on the patient, which makes it a useful check. Trial benefit comes from selected patients with seven-day cover; the unit's patients include many the trials left out.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Mobilisation within 24 hours",
+            "kind": "context",
+            "detail": "Exposure, read from physiotherapy entries (claim c5)."
+          },
+          {
+            "id": "n2",
+            "label": "Stay longer than 28 days",
+            "kind": "outcome",
+            "detail": "Defines cases."
+          },
+          {
+            "id": "n3",
+            "label": "Hypotension and delirium after surgery",
+            "kind": "context",
+            "detail": "Delay mobilisation and lengthen stays (claim c4)."
+          },
+          {
+            "id": "n4",
+            "label": "Weekend without physiotherapy",
+            "kind": "context",
+            "detail": "Reason for delay unrelated to the patient (claim c6)."
+          },
+          {
+            "id": "n5",
+            "label": "Randomised trial in selected patients",
+            "kind": "rct",
+            "detail": "Stay 2.3 days shorter (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Adjusted registry analysis",
+            "kind": "observational",
+            "detail": "No clear difference (claim c2)."
+          },
+          {
+            "id": "n7",
+            "label": "Conflict about confounding and applicability",
+            "kind": "gap",
+            "detail": "High-uncertainty inference (claim c3)."
+          },
+          {
+            "id": "n8",
+            "label": "Patients with dementia",
+            "kind": "stakeholder",
+            "detail": "Excluded from trials, common on the unit."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "hypothesised to lower the odds of"
+          },
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "delays"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "raises the odds of"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "delays independently of the patient"
+          },
+          {
+            "from": "n5",
+            "to": "n7",
+            "relation": "supports one side of"
+          },
+          {
+            "from": "n6",
+            "to": "n7",
+            "relation": "supports the other side of"
+          },
+          {
+            "from": "n8",
+            "to": "n5",
+            "relation": "were largely excluded from"
+          }
+        ],
+        "summary": "Map shows the confounding path through postoperative conditions and weekend staffing as the independent reason for delay."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[6].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Conflicting evidence on early mobilisation and stay",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "A trial in selected patients and an adjusted registry analysis disagree (claim c3), so neither answers the question for this unit's patients.",
+            "opportunity": "Estimate the association in the unit's own patients with a pre-specified adjustment strategy."
+          },
+          {
+            "id": "g2",
+            "title": "Confounding by indication",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "The reasons for delay also predict long stays (claim c4).",
+            "opportunity": "Adjust for pre-surgical characteristics, report estimates with and without postoperative conditions, and check the weekend-delay subgroup."
+          },
+          {
+            "id": "g3",
+            "title": "Reading every patient's notes is unaffordable",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "About 1,260 patients over three years at 25 minutes each would take over 500 hours against 100 available.",
+            "opportunity": "Sample cases with long stays and two controls per case."
+          },
+          {
+            "id": "g4",
+            "title": "Patients with dementia are missing from the trial evidence",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Trials excluded many patients with dementia or delirium, who make up a large share of the unit's patients.",
+            "opportunity": "Report the association separately for patients with dementia."
+          }
+        ],
+        "errorsFound": [
+          "Reading the trial result as proof for this unit ignores that it excluded about 30 percent of screened patients."
+        ],
+        "reevaluation": "The gaps confirm the case-control design with a pre-specified adjustment strategy and a dementia subgroup.",
+        "summary": "Four gaps; the conflicting evidence and confounding by indication are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Conflicting evidence on early mobilisation and stay"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Among adults treated for hip fracture on the unit in 2022 to 2024, mobilisation within 24 hours of surgery is associated with lower odds of a stay longer than 28 days (adjusted odds ratio 0.5 or lower) after adjustment for pre-surgical characteristics.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Need is high because weekend cover depends on it; novelty is moderate given conflicting evidence; feasible within 100 hours with case-control sampling.",
+            "risks": "Residual confounding; an effect too small to detect with 240 notes."
+          },
+          {
+            "id": "h2",
+            "statement": "The association is present among patients whose delay was due to weekend staffing, a reason unrelated to how unwell they were.",
+            "novelty": 55,
+            "need": 70,
+            "practiceChange": 75,
+            "feasibility": 65,
+            "parsimony": 70,
+            "rationale": "A check on confounding (claim c6).",
+            "risks": "Small subgroup."
+          },
+          {
+            "id": "h3",
+            "statement": "The association is weaker in patients with dementia.",
+            "novelty": 50,
+            "need": 70,
+            "practiceChange": 60,
+            "feasibility": 65,
+            "parsimony": 60,
+            "rationale": "Trials excluded these patients.",
+            "risks": "Exploratory; low power."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected, h2 as a confounding check, h3 exploratory."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults treated for hip fracture on the trauma unit from 2022 to 2024, is mobilisation by a physiotherapist within 24 hours of surgery associated with the odds of a stay longer than 28 days, after adjustment for age, pre-fracture mobility, dementia, operation type and American Society of Anesthesiologists grade?",
+            "framework": "PECO",
+            "population": "Adults treated for hip fracture on the trauma unit, 2022 to 2024",
+            "intervention": "First mobilisation (standing or walking with a physiotherapist) within 24 hours of surgery (exposure)",
+            "comparator": "First mobilisation after 24 hours",
+            "outcome": "Stay longer than 28 days",
+            "time": "Index admission",
+            "setting": "Orthopaedic trauma unit of a 700-bed hospital"
+          }
+        ],
+        "finer": "Feasible within 100 hours by case-control sampling; interesting to therapy managers and planners; novel for this unit's case mix; ethical as secondary use with a waiver request; relevant to a staffing decision in April 2027.",
+        "summary": "One PECO question with prolonged stay as the outcome."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[0].outcome": "Stay longer than 28 days",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "case-control",
+        "rationale": "The exposure is in paper notes that take about 25 minutes each to read, and 100 hours allow about 240 notes. Sampling patients with stays longer than 28 days as cases and two controls per case from the unit's list answers the question within that budget, while reading every patient would take over 500 hours. The conflicting evidence (c3) and the confounding path through postoperative conditions (c4) make a pre-specified adjustment strategy essential, and the exposure can be measured reliably (c5).",
+        "alternatives": [
+          "Reading the notes of every patient from 2022 to 2024 (refused: over 500 hours)",
+          "Waiting for electronic entries from 2025 onwards (refused: too few patients before April 2027)",
+          "Introducing weekend cover without a study (deferred until the local association is known)"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "A trial of weekend cover would answer the staffing question directly but needs a funded service change; the case-control study tells the planning round whether that is worth trying.",
+        "decision": {
+          "kind": "narrow",
+          "statement": "Narrow the question to prolonged stay and answer it with a case-control study of about 80 patients with stays longer than 28 days and 160 controls, with first mobilisation read from physiotherapy entries and adjustment for pre-surgical characteristics.",
+          "question": "Is early mobilisation associated with shorter stays for this unit's hip fracture patients?",
+          "claimIds": [
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "The published evidence conflicts, so a local estimate with explicit confounding control is needed.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The exposure can be read reliably from physiotherapy entries.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c5"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "Fewer than 60 patients had stays longer than 28 days in 2022 to 2024.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Protected time for reading notes",
+              "status": "met",
+              "evidence": "Memo THR-2026-12: 100 hours from November 2026 to March 2027, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research ethics board approval with a waiver of consent for secondary use of notes",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Read every patient's notes",
+            "Introduce weekend cover without a study"
+          ],
+          "note": "Rests on the high-uncertainty inference c3 and on claims c4 and c5 from retrieved records; the ethics gate is unknown."
+        },
+        "summary": "Case-control study recommended; the decision narrows the question to prolonged stay and waits for the ethics board."
+      },
+      "note": "The decision rests on the high-uncertainty inference c3 and on c4 and c5; resting on an uncertain claim is allowed when the decision is to resolve the uncertainty. selectionStatus and actionStatus require S11; the unknown ethics gate keeps the action blocked (A2 item 9); the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "case-control",
+          "family": "case-control",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "narrow",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: every claim exists in the ledger and rests on retrieved records; the unknown gate keeps the action blocked (G7; A2 item 9). S11 for the statuses and basis, D5 for the status text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.basis": "explicit",
+          "family": "case-control"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Case-control study nested in adults treated for hip fracture on the trauma unit from January 2022 to December 2024.",
+        "population": "Eligible: adults aged 60 and over with surgery for hip fracture who survived to discharge. Cases: 80 patients sampled at random from those with a stay longer than 28 days. Controls: 160 patients with a stay of 28 days or less, frequency matched by year and operation type.",
+        "exposure": "First mobilisation within 24 hours of the end of surgery, defined as standing or walking with a physiotherapist, read from the physiotherapy entry with the nursing entry as a check; reason for delay recorded.",
+        "procedures": "The clerical team pulls the paper notes; two readers (a senior physiotherapist and a trained clerical officer) use a written form; stay length is hidden on the reading sheet; 10 percent of notes are read twice.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Stay longer than 28 days",
+            "measure": "Discharge more than 28 days after admission, from the unit's hip fracture list; defines case status",
+            "timing": "Index admission",
+            "why": "Long stays are what patients, families and planners feel.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Discharge destination",
+            "measure": "Return to the pre-fracture residence against a new care placement",
+            "timing": "At discharge",
+            "why": "Matters to patients as much as stay length.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Exposure readable",
+            "measure": "Proportion of sampled notes with a documented time of first mobilisation",
+            "timing": "During reading",
+            "why": "Unreadable notes would bias the exposure.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "240 notes at about 25 minutes each use the 100 approved hours.",
+        "biasMitigation": [
+          "Adjustment set limited to pre-surgical characteristics, fixed before reading",
+          "Postoperative hypotension and delirium in a sensitivity analysis only",
+          "Stay length hidden from readers",
+          "Weekend-delay subgroup as a check on confounding"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by indication",
+            "severity": "high",
+            "note": "Sicker patients are mobilised later and stay longer."
+          },
+          {
+            "id": "b2",
+            "label": "Over-adjustment",
+            "severity": "watch",
+            "note": "Postoperative conditions may lie on the causal path."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 5,
+          "flags": [
+            "Five pre-surgical covariates plus two matching factors"
+          ],
+          "simplestPath": "One exposure, one outcome, one adjusted logistic model."
+        },
+        "theoreticalFramework": "A directed acyclic graph drawn before reading to separate pre-surgical confounders from postoperative conditions on the causal path.",
+        "summary": "Case-control study of 80 cases and 160 controls with pre-surgical adjustment and a confounding check."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].patientCentered": true,
+          "protocol.parsimony.covariateCount": 5,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work: eight of 13 stages complete. Everything done so far must be intact, the remaining stages incomplete, and nothing flagged for review. Statuses are checked at the accept step and in the export because the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Mobilisation within 24 hours of hip fracture surgery and prolonged hospital stay",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "needsReview": [],
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.claims[2].uncertainty": "high",
+          "design.decisions": {
+            "length": 1
+          },
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "stats.sampleSize": "",
+          "ethics.rebPath": ""
+        },
+        "stage": {
+          "protocol": "complete",
+          "stats": "incomplete",
+          "manuscript": "incomplete",
+          "audit": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Mobilisation within 24 hours of hip fracture surgery and prolonged hospital stay"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Case-control study with frequency matching by year and operation type.",
+        "sampleSize": "About 240 notes fit the 100 approved hours at 25 minutes each: 80 cases and 160 controls. If about 55 percent of controls were mobilised within 24 hours, the study has about 82 percent power at two-sided alpha 0.05 to detect an odds ratio of 0.45 and about 71 percent power for 0.50; smaller associations will be estimated imprecisely and reported with their confidence intervals.",
+        "primaryAnalysis": "Unconditional logistic regression of case status on early mobilisation, adjusted for year and operation type (matching factors) and for age, pre-fracture mobility, dementia and American Society of Anesthesiologists grade; about 11 cases per parameter.",
+        "secondaryAnalysis": "Sensitivity analysis adding postoperative hypotension and delirium; the estimate restricted to patients whose delay was due to weekend staffing; the estimate in patients with dementia reported as exploratory; discharge destination by exposure.",
+        "missingData": "Notes without a documented time of first mobilisation are counted and reported; the primary analysis excludes them, with sensitivity analyses coding them first as early and then as late.",
+        "multiplicity": "One primary estimate; sensitivity and subgroup estimates reported with confidence intervals only.",
+        "software": "R; the reading form, the directed acyclic graph and the analysis code archived before reading starts.",
+        "overfittingGuards": [
+          "Adjustment set fixed from a directed acyclic graph before reading",
+          "No stepwise selection",
+          "Subgroups limited to weekend delay and dementia"
+        ],
+        "summary": "80 cases and 160 controls; about 82 percent power for an odds ratio of 0.45; pre-surgical adjustment with postoperative conditions in sensitivity analysis."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "odds ratio of 0.45"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal physical risk; privacy risk from reading paper notes of older patients, many with dementia.",
+        "consent": "Consent is impracticable for past patients, many of whom lack capacity or have died; a waiver of consent for secondary use will be requested from the research ethics board.",
+        "data": "Readers record coded variables only on the form; forms carry a study number; the linkage list stays with the clerical supervisor and is destroyed after analysis.",
+        "equity": "PROGRESS-Plus: patients with dementia, the oldest patients and those admitted from care homes are least represented in the trial evidence and most affected by long stays; the estimate is reported for patients with dementia, and weekend admissions are examined because they wait longest.",
+        "effectiveness": "The study informs whether weekend physiotherapy cover is worth proposing; a precise null result would redirect effort to other causes of long stays.",
+        "efficiency": "Existing notes and 100 approved hours.",
+        "costs": "Staff time within existing roles.",
+        "grants": "None needed; a positive result would support a proposal to test weekend cover.",
+        "partnerships": "Therapy services management, the orthogeriatric team, the clerical supervisor, and a carer of a former patient with dementia reviewing the plain-language summary.",
+        "rebPath": "Review by the hospital research ethics board with a request for a waiver of consent; not yet submitted, so the gate is unknown.",
+        "limitations": "Residual confounding; notes of variable quality; one unit.",
+        "summary": "Secondary use of paper notes with a waiver request and equity reporting for patients with dementia."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "waiver of consent"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A carer of a former patient with dementia reviews the plain-language summary; the orthogeriatric team reviews the adjustment set.",
+        "socialListening": "No social media listening.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Waiting over the weekend",
+            "quote": "Composite paraphrase: Mum had her operation on Friday and nobody got her up until Monday; by then she was confused and frightened.",
+            "implication": "Examine weekend admissions separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Too unwell to stand",
+            "quote": "Composite paraphrase: Some patients cannot stand on day one because their pressure drops, and no amount of staffing changes that.",
+            "implication": "Record reasons for delay and keep postoperative conditions in a sensitivity analysis.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "What counts as mobilised",
+            "quote": "Composite paraphrase: Sitting out in a chair is not the same as standing with a frame, but the notes do not always say which.",
+            "implication": "Use a written definition of standing or walking with a physiotherapist.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "patient",
+            "theme": "Getting home",
+            "quote": "Composite paraphrase: All I wanted was to get back to my own flat, and every extra week made that less likely.",
+            "implication": "Keep discharge destination as a secondary outcome.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on weekend waits, clinical reasons for delay, the exposure definition and going home."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].source": "family",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Mobilisation within 24 hours of hip fracture surgery and prolonged hospital stay: a case-control study",
+        "abstract": "Objective: to estimate the association between mobilisation within 24 hours of hip fracture surgery and a stay longer than 28 days. Design: case-control study of 80 cases and 160 controls treated on one trauma unit in 2022 to 2024, with exposure read from paper notes. Analysis: logistic regression adjusted for pre-surgical characteristics. Results and conclusions will be written after analysis.",
+        "introduction": "Trials in selected patients show shorter stays with early mobilisation, while adjusted routine-care data do not; the difference turns on confounding and on patients with dementia or delirium.",
+        "methods": "Cases and frequency-matched controls were sampled from the unit's hip fracture list. First mobilisation was read from physiotherapy entries by readers unaware of stay length. The adjustment set came from a directed acyclic graph drawn before reading.",
+        "results": "No data have been analysed yet. The report will present sampling, reader agreement, exposure by case status, adjusted and sensitivity estimates, and the weekend-delay and dementia subgroups.",
+        "discussion": "The discussion will set the estimate against the conflicting trial and registry findings and state what it means for weekend physiotherapy cover.",
+        "limitations": "Residual confounding; notes of variable quality; one unit; modest power.",
+        "conclusion": "To be written after analysis; it will not claim that weekend cover shortens stays.",
+        "reportingChecklist": "STROBE (case-control)",
+        "summary": "STROBE-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE (case-control)",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The research ethics board decision is unknown; the decision stays blocked and no note is read",
+          "Claim c3 carries high uncertainty because the retrieved evidence conflicts; do not present the trial result as the expected local effect",
+          "Draw and archive the directed acyclic graph before reading starts"
+        ],
+        "improvementNotes": "The study was reopened after the Protocol stage and finished without loss. The conflicting evidence is recorded as an inference with high uncertainty resting on three retrieved records.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the ethics gate, the high-uncertainty claim and the directed acyclic graph."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour; at 875fe59 they fail because mergeStage overwrites the audit stage's patch (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Mobilisation within 24 hours of hip fracture surgery and prolonged hospital stay",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.claims[2].kind": "inference",
+          "scan.claims[2].uncertainty": "high",
+          "design.decisions": {
+            "length": 1
+          },
+          "stats.sampleSize": {
+            "includes": "82 percent power"
+          }
+        },
+        "screen": {
+          "includes": [
+            "Mobilisation within 24 hours of hip fracture surgery and prolonged hospital stay"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; the claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "case-control",
+            "scan.gradeOverall": "low",
+            "scan.claims[2].uncertainty": "high",
+            "scan.claims[2].sourceIds": [
+              "ev-019gs0m",
+              "ev-1lrsu2p",
+              "ev-0bu9ox0"
+            ],
+            "design.decisions[-1].kind": "narrow",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].claimIds": [
+              "c3",
+              "c4",
+              "c5"
+            ],
+            "problem.rawNeed": "I am the clinical lead physiotherapist for the orthopaedic trauma unit of a 700-bed hospital, where we treat about 420 adults with hip fracture a year. The national hip fracture standard says patients should be helped out of bed by a physiotherapist on the day after surgery, but on our unit only about half are mobilised within 24 hours and the rest wait one to three days, mainly because of weekend staffing, low blood pressure after surgery or delirium. Our median length of stay is 19 days and the hospital wants it shorter.\n\nI want to find out whether patients who were mobilised by a physiotherapist within 24 hours of surgery had shorter stays, before I ask for weekend physiotherapy cover. The difficulty is data. Physiotherapy entries before 2025 were handwritten and exist only in the paper notes, which our clerical team can pull, and working out the time of first mobilisation takes about 25 minutes per patient. We cannot read the notes of every patient treated from 2022 to 2024.\n\nMy plan is a case-control study: cases would be patients whose stay was longer than 28 days and controls patients discharged within 28 days, sampled from the unit's hip fracture list, and we would compare how many in each group were mobilised within 24 hours, taking account of age, mobility before the fracture, dementia and the type of operation. I have read papers saying that early mobilisation shortens stays and others saying it makes no difference once you allow for how unwell patients are, so I need help with confounding, how many notes we need to read and how to define the time of first mobilisation."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

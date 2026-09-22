@@ -1,0 +1,1458 @@
+{
+  "id": "sc-023",
+  "version": 1,
+  "title": "Primary care network: umbrella review of link worker social prescribing, out-of-range score, boolean year, retracted review after acceptance",
+  "field": "primary-care",
+  "level": 4,
+  "family": "umbrella-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D2",
+    "D5",
+    "S10",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on a clear umbrella review. (1) The problem reply returns a shortened paraphrase of the investigator's constraints (it drops the rule that no new patient data may be collected): by G11 the typed constraints stay unchanged and a 'rejected-change' issue is recorded at 'constraints' (the problem stage is otherwise applied). (2) The appraisal of seven retrieved records sends methodQuality 140 for the economic review: stored null with issue 'out-of-range' (holds at 875fe59 in applyAppraisal), while the rest of that annotation applies. (3) A later discovery reply recalls three leads, one with year true: stored null with 'invalid-type'; the leads are appended after the seven retrieved records and never replace them (D1), stay origin model and unverified, and the reply omits gradeOverall so the appraisal's certainty stands. (4) The design decision rests on ledger claims c1 to c3 and both gates are met, so acceptance is a supported positive (accepted, ready). (5) Then the abstract of the review behind claim c1 is replaced by a retraction notice through the store: the decision must become stale in the store, on screen and after reload (route on Design), and in the export, with the stages after Scan flagged for review. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator: DOI-based for records 1, 2, 3, 5, 6, 7 (ev-1yzpr3n, ev-0ezh23o, ev-1k4gcoi, ev-1qjqfi4, ev-15ni2el, ev-12aqit7) and title and year for record 4 (ev-0t6d9we). Requires D1 (leads appended; EvidenceItem.abstract as the changed field), D2 (the rejected-change checkpoint: the null and overwrite matrix extended by G11 to investigator text; no separate work-order entry is named for G11 yet), S10 (evidence revision covering source text), S11 (selectionStatus, actionStatus), S13 (appraisal dispatch) and D5 (status text). Catches: a model rewriting investigator constraints, an out-of-range score or a boolean year stored as a value, leads overwriting retrieved records, and an accepted decision left current after its source was retracted.",
+  "inputs": {
+    "need": "I am a GP and the clinical director of a primary care network of seven practices. We employ four social prescribing link workers, who took about 1,600 referrals last year for people with loneliness, low mood, debt and housing worries, long-term conditions and frequent attendance. The integrated care board is deciding whether to fund more link workers across the area, and its commissioning board has asked networks for a clear account of what the evidence says, because the published picture is confusing. Some reviews conclude that social prescribing improves wellbeing and reduces GP appointments; others say the studies are too weak to conclude anything, and the same handful of small evaluations seems to be counted again and again.\n\nWe want to do an umbrella review: find the existing reviews of link worker social prescribing, judge their quality, work out how much they overlap, and summarise what they show for wellbeing, loneliness, GP consultation rates and costs, and for whom. I especially want to know whether people with the most complex needs benefit, because those are the people our link workers spend most time with.\n\nI have two protected sessions a week until February, and our network analyst can help with data management. There is no funding. We cannot collect new data from patients for this piece of work; it has to rest on what has already been published. The report goes to the commissioning board at the end of February 2027, and I would rather tell them honestly that the evidence is uncertain than oversell it.",
+    "constraints": "No funding. The work is done by the network's research-active GP (two protected sessions a week) and the network analyst between November 2026 and February 2027. No new data may be collected from patients. The report goes to the ICB commissioning board on 26 February 2027.",
+    "localFacts": [
+      "The network's four link workers received 1,630 referrals in 2025.",
+      "The ICB commissioning board will consider link worker funding on 26 February 2027 (agenda reference ICB-CB-27-02).",
+      "The network board protected two GP sessions a week for this review from November 2026 to February 2027 (minute PCN-2026-10-07)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names an umbrella review; routing explicit (S11).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a GP and the clinical director of a primary care network of seven practices. We employ four social prescribing link workers, who took about 1,600 referrals last year for people with loneliness, low mood, debt and housing worries, long-term conditions and frequent attendance. The integrated care board is deciding whether to fund more link workers across the area, and its commissioning board has asked networks for a clear account of what the evidence says, because the published picture is confusing. Some reviews conclude that social prescribing improves wellbeing and reduces GP appointments; others say the studies are too weak to conclude anything, and the same handful of small evaluations seems to be counted again and again.\n\nWe want to do an umbrella review: find the existing reviews of link worker social prescribing, judge their quality, work out how much they overlap, and summarise what they show for wellbeing, loneliness, GP consultation rates and costs, and for whom. I especially want to know whether people with the most complex needs benefit, because those are the people our link workers spend most time with.\n\nI have two protected sessions a week until February, and our network analyst can help with data management. There is no funding. We cannot collect new data from patients for this piece of work; it has to rest on what has already been published. The report goes to the commissioning board at the end of February 2027, and I would rather tell them honestly that the evidence is uncertain than oversell it.",
+          "problem.constraints": "No funding. The work is done by the network's research-active GP (two protected sessions a week) and the network analyst between November 2026 and February 2027. No new data may be collected from patients. The report goes to the ICB commissioning board on 26 February 2027.",
+          "family": "umbrella-review",
+          "design.basis": "explicit",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a GP and the clinical director of a primary care network"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Link worker social prescribing: an umbrella review of wellbeing, loneliness, consultation and cost outcomes",
+        "subtitle": "Umbrella review for an integrated care board funding decision",
+        "family": "umbrella-review",
+        "statement": "An integrated care board must decide whether to fund more social prescribing link workers, but published reviews disagree: some report better wellbeing and fewer GP consultations, others find the evidence too weak, and the same small evaluations recur across reviews. A primary care network needs an umbrella review that appraises the existing reviews, measures their overlap and summarises effects on wellbeing, loneliness, consultation rates and costs, including for people with complex needs.",
+        "whoAffected": "People referred to link workers for loneliness, low mood, money and housing problems, long-term conditions and frequent attendance; link workers; GPs; and the commissioners deciding on funding.",
+        "whatHurts": "Funding decisions made on overstated evidence divert money from other services, while withdrawing a service that helps people with complex needs would leave them without support.",
+        "currentPractice": "Four link workers take about 1,600 referrals a year; the commissioning board has conflicting review summaries and no appraisal of their overlap or quality.",
+        "whyNow": "The commissioning board decides on link worker funding on 26 February 2027.",
+        "constraints": "No funding; about 12 weeks of part-time work; report to the commissioning board in February 2027.",
+        "patientCenteredGoal": "People with social needs get support that demonstrably helps them, and commissioners know which groups benefit.",
+        "summary": "Problem framed as an umbrella review; the reply shortens the constraints in its own words."
+      },
+      "note": "The reply's constraints differ from the typed text: G11 keeps the investigator's text and records 'rejected-change' at 'constraints'; the other problem fields apply and the stage completes.",
+      "expect": {
+        "store": {
+          "title": "Link worker social prescribing: an umbrella review of wellbeing, loneliness, consultation and cost outcomes",
+          "family": "umbrella-review",
+          "problem.constraints": "No funding. The work is done by the network's research-active GP (two protected sessions a week) and the network analyst between November 2026 and February 2027. No new data may be collected from patients. The report goes to the ICB commissioning board on 26 February 2027.",
+          "problem.statement": {
+            "includes": "the same small evaluations recur across reviews"
+          },
+          "problem.rawNeed": "I am a GP and the clinical director of a primary care network of seven practices. We employ four social prescribing link workers, who took about 1,600 referrals last year for people with loneliness, low mood, debt and housing worries, long-term conditions and frequent attendance. The integrated care board is deciding whether to fund more link workers across the area, and its commissioning board has asked networks for a clear account of what the evidence says, because the published picture is confusing. Some reviews conclude that social prescribing improves wellbeing and reduces GP appointments; others say the studies are too weak to conclude anything, and the same handful of small evaluations seems to be counted again and again.\n\nWe want to do an umbrella review: find the existing reviews of link worker social prescribing, judge their quality, work out how much they overlap, and summarise what they show for wellbeing, loneliness, GP consultation rates and costs, and for whom. I especially want to know whether people with the most complex needs benefit, because those are the people our link workers spend most time with.\n\nI have two protected sessions a week until February, and our network analyst can help with data management. There is no funding. We cannot collect new data from patients for this piece of work; it has to rest on what has already been published. The report goes to the commissioning board at the end of February 2027, and I would rather tell them honestly that the evidence is uncertain than oversell it.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Link worker social prescribing: an umbrella review of wellbeing, loneliness, consultation and cost outcomes",
+            "No new data may be collected from patients"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "link worker social prescribing systematic review wellbeing loneliness primary care consultations costs overlap",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Social prescribing through link workers and patient wellbeing: a systematic review",
+            "authors": "Hargreaves-Obi L, Fontaine-Mbeki R",
+            "year": 2019,
+            "venue": "Community Health and Wellbeing Reviews",
+            "doi": "10.5555/chwr.2019.0118",
+            "providerType": "review",
+            "abstract": "We searched six databases to 2018 for evaluations of social prescribing delivered through a link worker. Fourteen studies were included, most of them uncontrolled before-after evaluations of local schemes. Eleven reported improved wellbeing scores after referral, but only two had a comparison group and neither found a clear difference. Attrition between referral and follow-up exceeded 40 percent in half the studies. We judged the evidence insufficient to show that link worker social prescribing improves wellbeing, and we call for controlled evaluations with complete follow-up."
+          },
+          {
+            "title": "Link worker social prescribing and primary care consultation rates: a systematic review and meta-analysis",
+            "authors": "Achterberg-Nkemelu J, Sorensen-Pike A, Dasgupta-Rowe M",
+            "year": 2021,
+            "venue": "Primary Care Services Research",
+            "doi": "10.5555/pcsr.2021.0240",
+            "providerType": "review",
+            "abstract": "We included nine controlled studies of link worker social prescribing that reported primary care consultations. Pooled across seven studies, consultation rates at 12 months were 15 percent lower after referral than in comparison groups (rate ratio 0.85, 95 percent CI 0.74 to 0.98), with substantial heterogeneity. Comparison groups were usually patients who were not referred, and only one study was randomised. Effects were larger in studies of frequent attenders, where regression to the mean is likely. We rate the certainty of evidence as low."
+          },
+          {
+            "title": "Effects of social prescribing on loneliness: a systematic review of controlled studies",
+            "authors": "Kowalski-Asante B, Lindgren-Oyelaran P, Moreau-Tanaka E",
+            "year": 2022,
+            "venue": "Journal of Loneliness and Social Health",
+            "doi": "10.5555/jlsh.2022.0077",
+            "providerType": "review",
+            "abstract": "We identified seven controlled studies of social prescribing that measured loneliness, including two randomised trials. The pooled effect on loneliness was small and uncertain (standardised mean difference -0.08, 95 percent CI -0.21 to 0.05). Participants valued the relationship with the link worker, but the activities they were referred to were often unavailable or too far away. Studies rarely reported how many referrals led to sustained participation in community activities. Certainty was low because of imprecision and risk of bias, and follow-up rarely extended beyond six months."
+          },
+          {
+            "title": "Economic evaluations of social prescribing: a systematic review",
+            "authors": "Pellegrino-Adjei S, Hartley-Nakashima K",
+            "year": 2020,
+            "venue": "Health Economics and Community Care",
+            "providerType": "review",
+            "abstract": "We reviewed six economic evaluations of social prescribing schemes. Four reported savings from fewer GP and emergency department attendances, but all used before-after comparisons without a control group, and savings disappeared in the one analysis that adjusted for regression to the mean. Costs of the voluntary sector activities that patients were referred to were rarely counted. We conclude that claims of net savings are not supported by robust evidence and that future evaluations should include community sector costs and a comparison group."
+          },
+          {
+            "title": "Who is referred to social prescribing and who benefits? A realist review",
+            "authors": "Oduya-Fairweather C, Brandt-Solis M",
+            "year": 2023,
+            "venue": "Community Health and Wellbeing Reviews",
+            "doi": "10.5555/chwr.2023.0305",
+            "providerType": "review",
+            "abstract": "Drawing on 48 documents, we developed programme theories for how link worker social prescribing works. Benefits depended on link workers having enough time to build trust, on available and affordable community activities, and on the person's readiness to engage. People with complex needs, such as debt, insecure housing and severe mental illness, often needed many more contacts and were more likely to disengage when referred onward too quickly. The review cannot estimate effect sizes but explains why averages may hide very different outcomes for different groups."
+          },
+          {
+            "title": "Overlap of primary studies across systematic reviews of social prescribing: a citation matrix analysis",
+            "authors": "Varga-Lindqvist T, Ebuka-Harrington S",
+            "year": 2024,
+            "venue": "Research Synthesis Methods Notes",
+            "doi": "10.5555/rsmn.2024.0019",
+            "providerType": "journal-article",
+            "abstract": "We built a citation matrix of the primary studies included in 11 systematic reviews of social prescribing published between 2017 and 2023. The reviews included 97 unique primary studies, and the corrected covered area was 18 percent, indicating very high overlap. Six small uncontrolled evaluations were included in eight or more reviews. Reviews reaching positive conclusions leaned more heavily on these evaluations than reviews reaching uncertain conclusions. We recommend that overviews count each primary study once and report conclusions against a citation matrix."
+          },
+          {
+            "title": "Social prescribing: an overview of systematic reviews",
+            "authors": "Nakamura-Blackwood R, Adebayo-Strand J",
+            "year": 2018,
+            "venue": "Primary Care Evidence Summaries",
+            "doi": "10.5555/pces.2018.0044",
+            "providerType": "review",
+            "abstract": "We searched for systematic reviews of social prescribing to March 2017 and found five, all of low or critically low quality. The reviews agreed that participants reported feeling better but disagreed on effects on service use. None of the reviews assessed overlap between their included studies, and none separated link worker models from direct referral by clinicians. We conclude that the evidence was insufficient to support or reject investment and recommend an updated overview once controlled studies are published, with an assessment of overlap."
+          }
+        ]
+      },
+      "note": "Seven records; ids from stableRecordId (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1yzpr3n",
+            "ev-0ezh23o",
+            "ev-1k4gcoi",
+            "ev-0t6d9we",
+            "ev-1qjqfi4",
+            "ev-15ni2el",
+            "ev-12aqit7"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].id": "ev-0ezh23o",
+          "scan.items[3].doi": {
+            "absent": true
+          },
+          "scan.items[5].kind": "grey",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Link worker social prescribing and primary care consultation rates: a systematic review and meta-analysis"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1yzpr3n",
+            "relevance": 80,
+            "methodQuality": 45,
+            "kind": "systematic-review",
+            "grade": "very-low",
+            "keyFindings": "Eleven of 14 mostly uncontrolled evaluations reported better wellbeing; the two controlled studies found no clear difference.",
+            "limitations": "Search ended 2018; high attrition; no pooling.",
+            "contextTags": [
+              "wellbeing",
+              "uncontrolled studies",
+              "older review"
+            ]
+          },
+          {
+            "id": "ev-0ezh23o",
+            "relevance": 92,
+            "methodQuality": 60,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Consultation rates were 15 percent lower after referral than in comparison groups (rate ratio 0.85), with larger effects among frequent attenders.",
+            "limitations": "Non-randomised comparisons; regression to the mean likely; substantial heterogeneity.",
+            "contextTags": [
+              "consultation rates",
+              "meta-analysis",
+              "frequent attenders"
+            ]
+          },
+          {
+            "id": "ev-1k4gcoi",
+            "relevance": 88,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "No clear effect on loneliness (standardised mean difference -0.08); referred activities were often unavailable.",
+            "limitations": "Seven controlled studies; imprecise.",
+            "contextTags": [
+              "loneliness",
+              "controlled studies"
+            ]
+          },
+          {
+            "id": "ev-0t6d9we",
+            "relevance": 76,
+            "methodQuality": 140,
+            "kind": "systematic-review",
+            "grade": "very-low",
+            "keyFindings": "Reported savings came from uncontrolled comparisons and disappeared after adjustment for regression to the mean; community sector costs were rarely counted.",
+            "limitations": "Six evaluations; all before-after designs.",
+            "contextTags": [
+              "costs",
+              "savings claims"
+            ]
+          },
+          {
+            "id": "ev-1qjqfi4",
+            "relevance": 84,
+            "methodQuality": 58,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Benefit depends on link worker time, available community activities and readiness; people with complex needs need more contacts and disengage when referred on too quickly.",
+            "limitations": "Realist synthesis; no effect sizes.",
+            "contextTags": [
+              "complex needs",
+              "mechanisms",
+              "realist"
+            ]
+          },
+          {
+            "id": "ev-15ni2el",
+            "relevance": 90,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Eleven reviews drew on 97 primary studies with very high overlap (corrected covered area 18 percent); positive reviews leaned on six small uncontrolled evaluations.",
+            "limitations": "Reviews to 2023 only.",
+            "contextTags": [
+              "overlap",
+              "citation matrix",
+              "methods"
+            ]
+          },
+          {
+            "id": "ev-12aqit7",
+            "relevance": 70,
+            "methodQuality": 50,
+            "kind": "systematic-review",
+            "grade": "very-low",
+            "keyFindings": "An earlier overview found five low-quality reviews and judged the evidence insufficient for investment decisions.",
+            "limitations": "Search ended March 2017; no overlap assessment.",
+            "contextTags": [
+              "overview",
+              "out of date"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "A meta-analysis of controlled studies reported consultation rates 15 percent lower after link worker referral, mostly from non-randomised comparisons.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0ezh23o"
+            ],
+            "location": "Abstract, results",
+            "passage": "consultation rates at 12 months were 15 percent lower after referral than in comparison groups (rate ratio 0.85, 95 percent CI 0.74 to 0.98)",
+            "interpretation": "The one pooled service-use benefit rests on non-randomised comparisons prone to regression to the mean.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Controlled studies show no clear effect of social prescribing on loneliness.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1k4gcoi"
+            ],
+            "location": "Abstract, results",
+            "passage": "The pooled effect on loneliness was small and uncertain (standardised mean difference -0.08, 95 percent CI -0.21 to 0.05)",
+            "interpretation": "Loneliness, a main reason for referral, may not improve on average.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Reviews of social prescribing overlap heavily, and positive reviews lean on the same few small uncontrolled evaluations.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-15ni2el"
+            ],
+            "location": "Abstract",
+            "passage": "the corrected covered area was 18 percent, indicating very high overlap",
+            "interpretation": "An umbrella review must count primary studies once, or it will repeat the double counting.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "People with complex needs often need more contacts and disengage when referred on too quickly.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1qjqfi4"
+            ],
+            "location": "Abstract",
+            "passage": "were more likely to disengage when referred onward too quickly",
+            "interpretation": "Report outcomes for people with complex needs separately where reviews allow.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Reviews of link worker social prescribing report better wellbeing mainly from uncontrolled evaluations, a 15 percent lower consultation rate from non-randomised comparisons, and no clear effect on loneliness. Claimed savings do not survive adjustment for regression to the mean. Reviews overlap heavily, and positive conclusions lean on the same small evaluations. A realist review explains why people with complex needs may benefit less. The one earlier overview is out of date.",
+        "gradeOverall": "low",
+        "gradeRationale": "Most reviews rest on uncontrolled or non-randomised primary studies with high overlap between reviews; imprecision for loneliness; certainty that link workers change service use or costs is low to very low.",
+        "summary": "Seven retrieved records appraised; four source-derived claims; one method score out of range and stored as unknown."
+      },
+      "note": "methodQuality 140 is outside 0 to 100: stored null with 'out-of-range' (875fe59 applyAppraisal); the record's other annotation fields apply. The appraisal reaches the store through S13.",
+      "expect": {
+        "store": {
+          "scan.items[3].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[3].relevance": 76,
+          "scan.items[3].grade": "very-low",
+          "scan.items[1].grade": "low",
+          "scan.items[5].kind": "observational",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0ezh23o"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-15ni2el"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-0t6d9we].methodQuality",
+              "code": "out-of-range"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 2,
+      "response": {
+        "query": "link worker social prescribing systematic reviews wellbeing loneliness consultation costs",
+        "sourcesConsulted": [
+          "model recall of review literature"
+        ],
+        "gradeRationale": "Leads only; certainty stays with the appraisal of retrieved records.",
+        "synthesis": "Three further reviews recalled as leads, not found by the recorded search and not checked: a review of social prescribing for young people, a review of link worker models in deprived areas, and a review of digital social prescribing. None has been verified.",
+        "items": [
+          {
+            "title": "Social prescribing for children and young people: a systematic review",
+            "authors": "Mensah-Carlisle D, Obi-Rasmussen T",
+            "year": 2023,
+            "source": "Child and Community Health Reviews",
+            "kind": "systematic-review",
+            "grade": "very-low",
+            "methodQuality": 42,
+            "relevance": 55,
+            "verification": "verify",
+            "contextTags": [
+              "young people",
+              "review"
+            ],
+            "keyFindings": "Few evaluations; mostly qualitative; outcomes heterogeneous.",
+            "limitations": "Different population from the network's referrals.",
+            "notes": "Recalled as a lead; not retrieved."
+          },
+          {
+            "title": "Link worker models in areas of high deprivation: a systematic review of implementation",
+            "authors": "Ferreira-Adeleke M, Holmberg-Chen S",
+            "year": true,
+            "source": "Health Inequalities Research",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 74,
+            "verification": "ai-lead",
+            "contextTags": [
+              "deprivation",
+              "implementation"
+            ],
+            "keyFindings": "Link workers in deprived areas had larger caseloads and fewer community activities to refer to.",
+            "limitations": "Implementation focus; effects not pooled.",
+            "notes": "Recalled as a lead; year not known."
+          },
+          {
+            "title": "Digital social prescribing platforms: a scoping review",
+            "authors": "Lindqvist-Oyelowo K, Barros-Whitaker N",
+            "year": 2024,
+            "source": "Digital Health and Society",
+            "kind": "systematic-review",
+            "grade": "very-low",
+            "methodQuality": 35,
+            "relevance": 40,
+            "verification": "ai-lead",
+            "contextTags": [
+              "digital",
+              "platforms"
+            ],
+            "keyFindings": "Platforms mainly used for referral tracking; outcome data sparse.",
+            "limitations": "Scoping review without appraisal.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Three additional review leads; none verified; one has no usable year."
+      },
+      "omitKeys": [
+        "gradeOverall"
+      ],
+      "note": "Leads appended after the seven retrieved records (D1), origin model and unverified (G3). year true is stored null with 'invalid-type' (holds at 875fe59). The reply carries no certainty, so the appraisal's 'low' stands. No stage after Scan is complete yet, so nothing is flagged.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[1].id": "ev-0ezh23o",
+          "scan.items[1].provenance.origin": "retrieval",
+          "scan.items[1].grade": "low",
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[8].title": "Link worker models in areas of high deprivation: a systematic review of implementation",
+          "scan.items[8].year": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "items[1].year",
+              "code": "invalid-type"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": {
+            "min": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "seven-practice primary care network with four link workers",
+          "about 1,600 referrals a year",
+          "ICB funding decision on 26 February 2027",
+          "no funding and no new patient data"
+        ],
+        "reading": "The confusion in the literature has a structure: reviews overlap heavily and positive conclusions rest on a few small uncontrolled evaluations (claim c3). The service-use benefit comes from non-randomised comparisons (claim c1) and loneliness shows no clear effect (claim c2). Mechanisms explain why people with complex needs may benefit less (claim c4). An umbrella review that counts primary studies once and appraises each review is what the commissioning board needs.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Link worker social prescribing",
+            "kind": "context",
+            "detail": "Four link workers in the network."
+          },
+          {
+            "id": "n2",
+            "label": "Wellbeing",
+            "kind": "outcome",
+            "detail": "Improves in uncontrolled evaluations."
+          },
+          {
+            "id": "n3",
+            "label": "Loneliness",
+            "kind": "outcome",
+            "detail": "No clear effect in controlled studies (c2)."
+          },
+          {
+            "id": "n4",
+            "label": "GP consultation rate",
+            "kind": "outcome",
+            "detail": "15 percent lower in non-randomised comparisons (c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Overlap between reviews",
+            "kind": "gap",
+            "detail": "Corrected covered area 18 percent (c3)."
+          },
+          {
+            "id": "n6",
+            "label": "People with complex needs",
+            "kind": "stakeholder",
+            "detail": "Need more contacts; disengage when referred on too quickly (c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Regression to the mean",
+            "kind": "context",
+            "detail": "Explains part of the service-use and cost effects."
+          },
+          {
+            "id": "n8",
+            "label": "Commissioning board",
+            "kind": "stakeholder",
+            "detail": "Decides funding in February 2027."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "associated with better"
+          },
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "has no clear effect on"
+          },
+          {
+            "from": "n1",
+            "to": "n4",
+            "relation": "may lower"
+          },
+          {
+            "from": "n7",
+            "to": "n4",
+            "relation": "inflates apparent effects on"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "double counts evidence for"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "benefit less from brief"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "decides funding for"
+          }
+        ],
+        "summary": "Map shows overlap and regression to the mean as the reasons reviews disagree."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Reviews count the same small evaluations again and again",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Very high overlap (claim c3) makes the literature look stronger and more consistent than it is.",
+            "opportunity": "Build a citation matrix, count each primary study once and report conclusions against it."
+          },
+          {
+            "id": "g2",
+            "title": "Service-use benefits rest on non-randomised comparisons",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Frequent attenders referred at a peak will attend less later anyway (claim c1).",
+            "opportunity": "Grade service-use outcomes separately by comparison type."
+          },
+          {
+            "id": "g3",
+            "title": "People with complex needs",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "They take most link worker time and may benefit least from short programmes (claim c4).",
+            "opportunity": "Extract subgroup and mechanism findings for complex needs."
+          },
+          {
+            "id": "g4",
+            "title": "Community sector costs missing",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Savings claims ignore the cost of the activities people are referred to.",
+            "opportunity": "Report which reviews counted community costs."
+          },
+          {
+            "id": "g5",
+            "title": "The last overview is out of date",
+            "kind": "evidence",
+            "severity": "watch",
+            "whyItMatters": "It searched to 2017, before most controlled studies.",
+            "opportunity": "Search for reviews published from 2017 onward."
+          }
+        ],
+        "errorsFound": [
+          "A lead recalled by the model carried a boolean in place of a year; it was stored with an unknown year.",
+          "One appraisal method score was outside 0 to 100 and was stored as not assessed."
+        ],
+        "reevaluation": "The umbrella review should appraise each review, measure overlap, count primary studies once and grade each outcome separately, with a section on people with complex needs.",
+        "summary": "Five gaps; overlap and non-randomised service-use evidence are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].kind": "method",
+          "gaps.errorsFound": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Reviews count the same small evaluations again and again"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Once overlap and review quality are accounted for, reviews support at most a short-term improvement in self-reported wellbeing from link worker social prescribing, with low or very low certainty for effects on loneliness, consultation rates and costs.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 75,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Matches the pattern in the retrieved reviews; novel in counting primary studies once; feasible with published reviews only.",
+            "risks": "New reviews published during the work; subjective quality judgements."
+          },
+          {
+            "id": "h2",
+            "statement": "Reviews that include more uncontrolled evaluations reach more positive conclusions.",
+            "novelty": 55,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Testable from the citation matrix; explains why reviews disagree.",
+            "risks": "Few reviews to compare."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Two hypotheses; h1 selected."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "What do systematic reviews published from 2017 show about the effects of link worker social prescribing on wellbeing, loneliness, primary care consultations and costs in adults, once review quality and overlap of primary studies are taken into account?",
+            "framework": "PICO",
+            "population": "Adults referred to link worker social prescribing, as included in systematic reviews",
+            "intervention": "Social prescribing delivered through a link worker",
+            "comparator": "Usual care or no referral, as defined in the reviews",
+            "outcome": "Wellbeing, loneliness, primary care consultations and costs, each graded separately",
+            "time": "Reviews published 2017 to 2026",
+            "setting": "Primary care and community settings"
+          }
+        ],
+        "finer": "Feasible from published reviews with two sessions a week; interesting to commissioners and link workers; novel in counting primary studies once; ethical with no patient data; relevant to a funding decision.",
+        "summary": "One overview question with outcomes graded separately."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "umbrella-review",
+        "rationale": "The commissioning board faces conflicting reviews, not a lack of primary studies. An umbrella review that appraises each review, measures overlap and counts each primary study once (claim c3) is the design that resolves why reviews disagree, and it grades service-use (claim c1) and loneliness (claim c2) outcomes separately. It uses published data only, as the constraints require.",
+        "alternatives": [
+          "New systematic review of primary studies (refused: duplicates existing reviews within the time available)",
+          "Local before-after evaluation of the network's link workers (refused: new data cannot be collected and the design repeats the weakness of existing evaluations)",
+          "Summarise the most recent review only (refused: would inherit its overlap and selection)"
+        ],
+        "guidelines": [
+          "PRIOR (reporting overviews of reviews)",
+          "PRISMA 2020 for the search",
+          "GRADE for each outcome"
+        ],
+        "whyNotMoreComplex": "Re-analysing all primary studies would take longer than the board allows and is only needed where overlap cannot be resolved from the reviews.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct an umbrella review of systematic reviews of link worker social prescribing published from 2017, with a citation matrix to count primary studies once and separate certainty ratings for wellbeing, loneliness, consultation rates and costs, reported to the commissioning board on 26 February 2027.",
+          "question": "What review should the network provide to the commissioning board on link worker funding?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Reviews disagree and overlap heavily, so an overview that counts primary studies once could change the board's reading.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A current overview with an overlap analysis already exists.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Protected GP time for the review",
+              "status": "met",
+              "evidence": "Network board minute PCN-2026-10-07 protecting two GP sessions a week from November 2026 to February 2027, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "A decision forum and date for the report",
+              "status": "met",
+              "evidence": "ICB commissioning board agenda reference ICB-CB-27-02 for 26 February 2027, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Summarise the most recent review only",
+            "Local before-after evaluation"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; both gates are met on investigator-supplied records."
+        },
+        "summary": "Umbrella review recommended; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "The decision cites ledger claims c1 to c3 (S13); selectionStatus requires S11; the panel text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "umbrella-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The supported positive predecessor of the source change: claims c1 to c3 exist in the ledger and rest on retrieved records; both gates met (G7). S11 for the status fields; D5 for the panel text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "umbrella-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "change-source",
+      "record": "Link worker social prescribing and primary care consultation rates: a systematic review and meta-analysis",
+      "field": "abstract",
+      "value": "Retraction notice: this review has been retracted by the journal at the authors' request after an error in data extraction was found. The corrected analysis of the seven studies showed no difference in primary care consultation rates between referred patients and comparison groups (rate ratio 0.97, 95 percent CI 0.86 to 1.09).",
+      "note": "The review behind claim c1 is retracted: its stored abstract is replaced through the store's own action while the route is on the Design stage. The accepted decision must become stale (S10: the evidence revision must cover source text, which evidenceRevision at 875fe59 does not) and blocked, and the completed stages after Scan are flagged for review (holds at 875fe59 for a scan merge). The abstract field is added by D1; its stored form is checked through the decision status rather than by reading the field.",
+      "expect": {
+        "store": {
+          "scan.items[1].id": "ev-0ezh23o",
+          "scan.items[1].title": "Link worker social prescribing and primary care consultation rates: a systematic review and meta-analysis",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "scan": "complete",
+          "map": "needs-review",
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: stale must survive in the store and on screen (G7). S10 and S11 for the fields, D5 for the text.",
+      "expect": {
+        "store": {
+          "title": "Link worker social prescribing: an umbrella review of wellbeing, loneliness, consultation and cost outcomes",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "problem.constraints": "No funding. The work is done by the network's research-active GP (two protected sessions a week) and the network analyst between November 2026 and February 2027. No new data may be collected from patients. The report goes to the ICB commissioning board on 26 February 2027."
+        },
+        "stage": {
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Umbrella review of systematic reviews of link worker social prescribing published from 2017, with quality appraisal of each review, a citation matrix of primary studies and separate certainty ratings per outcome.",
+        "population": "Systematic reviews (including realist and economic reviews) of social prescribing delivered through a link worker to adults, published January 2017 to December 2026.",
+        "exposure": "Link worker social prescribing compared with usual care or no referral, as defined by each review; direct clinician referral schemes are excluded unless reported separately.",
+        "procedures": "The GP searches four databases and two review registers with a dated strategy; the analyst manages records. Two readers (the GP and a second clinician for a random 30 percent) screen and appraise reviews with AMSTAR 2. A citation matrix lists every primary study against every review; the corrected covered area is calculated overall and per outcome. For each outcome, conclusions are summarised from the highest-quality, most recent review with the least overlap, and certainty is graded with GRADE.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Self-reported wellbeing",
+            "measure": "Direction, size and certainty of effects reported by reviews, counting each primary study once",
+            "timing": "As reported (usually 3 to 12 months)",
+            "why": "The outcome most reviews report and most patients care about.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Loneliness",
+            "measure": "Pooled or narrative effects from reviews of controlled studies",
+            "timing": "As reported",
+            "why": "A main reason for referral.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Primary care consultation rate",
+            "measure": "Rate ratios reported by reviews, graded by comparison type",
+            "timing": "Up to 12 months",
+            "why": "The service-use argument for funding.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Overlap of primary studies",
+            "measure": "Corrected covered area overall and per outcome",
+            "timing": "At synthesis",
+            "why": "Shows how much double counting drives conclusions.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Two sessions a week for 16 weeks and analyst support fit an overview of about 15 reviews; no patient data are needed.",
+        "biasMitigation": [
+          "Each primary study counted once in the citation matrix",
+          "Second reader for 30 percent of screening and appraisal",
+          "Outcomes graded separately",
+          "Reviews by the umbrella team's own authors excluded from appraisal by that author"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Overlap between reviews",
+            "severity": "high",
+            "note": "Corrected covered area expected to be very high."
+          },
+          {
+            "id": "b2",
+            "label": "Single main reviewer",
+            "severity": "watch",
+            "note": "Partly addressed by the 30 percent second reading."
+          },
+          {
+            "id": "b3",
+            "label": "Publication bias in local evaluations",
+            "severity": "watch",
+            "note": "Positive local reports are more likely to be written up."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "Costs described narratively, not as an outcome"
+          ],
+          "simplestPath": "One overview, one citation matrix, four outcomes graded separately."
+        },
+        "theoreticalFramework": "The realist programme theory from the retrieved realist review is used only to organise findings on who benefits.",
+        "summary": "Umbrella review with overlap measured and outcomes graded separately."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[3].role": "process",
+          "protocol.biasFlags[0].severity": "high",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Overview of reviews with a citation matrix; no new meta-analysis unless overlap within an outcome can be removed.",
+        "sampleSize": "The unit is the review: about 15 reviews are expected from 2017. Precision comes from the underlying primary studies, so for each outcome the overview reports the number of unique primary studies and participants after removing overlap; if fewer than five unique controlled studies report an outcome, no pooled estimate is reported.",
+        "primaryAnalysis": "Narrative synthesis per outcome led by the highest-quality, most recent, least overlapping review, with the corrected covered area and GRADE certainty for each outcome.",
+        "secondaryAnalysis": "Re-pooling of unique controlled studies for consultation rate only if at least five exist after removing duplicates; subgroup findings for people with complex needs extracted narratively.",
+        "missingData": "Reviews not reporting their included studies are listed and excluded from the citation matrix; no author contact.",
+        "multiplicity": "Descriptive outcomes graded separately; no significance testing across outcomes.",
+        "software": "Spreadsheet citation matrix; R for the corrected covered area and any re-pooling.",
+        "overfittingGuards": [
+          "Outcome list fixed before the search",
+          "Rule for choosing the lead review per outcome fixed in advance",
+          "No re-pooling below five unique controlled studies"
+        ],
+        "summary": "About 15 reviews; precision reported as unique primary studies per outcome after removing overlap."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "unique primary studies"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          }
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No participants; the risk is a misleading synthesis that drives or blocks funding.",
+        "consent": "Not applicable: published reviews only; no new data are collected from patients.",
+        "data": "No personal data; the citation matrix and appraisal sheets are archived with the report.",
+        "equity": "PROGRESS-Plus: people with complex needs, in deprived areas, from minority ethnic groups or with severe mental illness may benefit differently. The overview extracts subgroup and mechanism findings for these groups and states where reviews are silent.",
+        "effectiveness": "Useful if the board can see which outcomes have credible evidence and which do not.",
+        "efficiency": "Uses protected GP time and analyst support; no data collection.",
+        "costs": "Staff time within existing roles.",
+        "grants": "None needed.",
+        "partnerships": "Link workers, two people who have used social prescribing, and the voluntary sector forum.",
+        "rebPath": "No research ethics review is required for an overview of published reviews; the report goes to the commissioning board.",
+        "limitations": "Depends on the quality and reporting of existing reviews; mainly one reviewer; published data only.",
+        "summary": "Overview of published reviews with an equity focus on complex needs and deprivation."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "no new data are collected from patients"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          }
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two link workers and two people who have used social prescribing review the outcome list and the plain-language summary; the voluntary sector forum comments on community capacity.",
+        "socialListening": "No social media listening; comments from the network's patient participation groups on link workers are summarised without identifiers.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Someone to talk to",
+            "quote": "Composite paraphrase: It was the first time in years someone had time to sit down and sort out the letters with me.",
+            "implication": "Report wellbeing and engagement outcomes separately from service use.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Nowhere to go",
+            "quote": "Composite paraphrase: They found me a walking group, but it was two buses away and I stopped after a week.",
+            "implication": "Extract what reviews say about availability of activities.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Complex needs",
+            "quote": "Composite paraphrase: The people who need us most take ten appointments, not three; the targets do not fit them.",
+            "implication": "Report findings for people with complex needs separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Community capacity",
+            "quote": "Composite paraphrase: Every referral lands on a volunteer group that has lost its funding twice this year.",
+            "implication": "Note whether reviews counted voluntary sector costs.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on time, access, complex needs and community capacity."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "partner"
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Link worker social prescribing: an umbrella review of wellbeing, loneliness, consultation and cost outcomes with an overlap analysis",
+        "abstract": "Objective: to summarise what systematic reviews show about link worker social prescribing once review quality and overlap are taken into account. Design: umbrella review of reviews published from 2017, with AMSTAR 2 appraisal, a citation matrix and GRADE per outcome. Results and conclusions will be written after the synthesis.",
+        "introduction": "Reviews of social prescribing reach conflicting conclusions and draw heavily on the same small evaluations. Commissioners need an account that counts each primary study once.",
+        "methods": "Four databases and two registers were searched for reviews from January 2017. Reviews were appraised with AMSTAR 2; a citation matrix and the corrected covered area measured overlap; each outcome was graded separately.",
+        "results": "No reviews have been screened yet. The report will present the review flow, appraisal, the citation matrix, and outcome-level findings with certainty.",
+        "discussion": "The discussion will explain disagreements between reviews through overlap and study design and set out what the evidence supports for funding decisions.",
+        "limitations": "Dependence on existing reviews, a single main reviewer, and published data only.",
+        "conclusion": "To be written after the synthesis.",
+        "reportingChecklist": "PRIOR with PRISMA 2020 for the search",
+        "summary": "PRIOR-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRIOR with PRISMA 2020 for the search",
+          "manuscript.results": {
+            "includes": "No reviews have been screened yet"
+          }
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The accepted decision is stale since the consultation rate review was retracted; re-appraise the evidence and decide again before reporting to the board",
+          "Keep the investigator's constraints as entered; the problem reply's rewritten version was rejected",
+          "Check the recalled leads, including the one with an unusable year, before citing any of them",
+          "Re-rate the economic review's method quality, which was out of range and is stored as not assessed"
+        ],
+        "improvementNotes": "The problem reply tried to replace the investigator's constraints with a shorter paraphrase and was refused; an appraisal score of 140 and a boolean year were stored as unknown. After acceptance, the retraction of the review behind claim c1 made the decision stale and flagged the stages after Scan for review.",
+        "lastReview": "2026-09-22",
+        "summary": "Four open fixes: the stale decision, the kept constraints, unchecked leads and one unrated score."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 mergeStage overwrites the audit patch (deliverable 1b item L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "After reopen the route is not necessarily the Design stage; the status text checked on screen is the stage list's 'review required' (G8, D5).",
+      "expect": {
+        "store": {
+          "title": "Link worker social prescribing: an umbrella review of wellbeing, loneliness, consultation and cost outcomes",
+          "design.decisions[-1].selectionStatus": "stale",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "problem.constraints": "No funding. The work is done by the network's research-active GP (two protected sessions a week) and the network analyst between November 2026 and February 2027. No new data may be collected from patients. The report goes to the ICB commissioning board on 26 February 2027.",
+          "scan.items": {
+            "length": 10
+          }
+        },
+        "stage": {
+          "design": "needs-review",
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "stale requires S10 (and S11 for selectionStatus); leads appended D1; kept constraints D2 with G11. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "design.decisions[-1].status": "stale",
+            "design.decisions[-1].selectionStatus": "stale",
+            "design.decisions[-1].actionStatus": "blocked",
+            "needsReview": [
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design"
+            ],
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.constraints": "No funding. The work is done by the network's research-active GP (two protected sessions a week) and the network analyst between November 2026 and February 2027. No new data may be collected from patients. The report goes to the ICB commissioning board on 26 February 2027.",
+            "scan.items[3].methodQuality": {
+              "isNull": true
+            },
+            "scan.items[8].year": {
+              "isNull": true
+            },
+            "scan.items[8].provenance.status": "unverified",
+            "scan.claims": {
+              "length": 4
+            }
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

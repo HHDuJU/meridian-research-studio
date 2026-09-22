@@ -131,6 +131,11 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
     alternatives: stringArray(raw.alternatives, "decision.alternatives", issues) ?? [],
     inputRevision: evidenceRevision(study),
     status: "proposed",
+    selectionStatus: "proposed",
+    actionStatus: "blocked",
+    recommendedFamily: (typeof raw.recommendedFamily === "string" && raw.recommendedFamily
+      ? raw.recommendedFamily
+      : study.design.recommended || study.family || "") as DecisionRecord["recommendedFamily"],
     ...(stringOrUndefined(raw.note, "decision.note", issues)?.trim() ? { note: raw.note as string } : {}),
   };
   return { decision, issues: issues.list };
@@ -138,6 +143,8 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
 
 export interface DecisionEvaluation {
   status: DecisionRecord["status"];
+  selectionStatus: DecisionRecord["selectionStatus"];
+  actionStatus: DecisionRecord["actionStatus"];
   /** Conditions that must change before anyone acts on the decision. */
   blockers: string[];
   warnings: string[];
@@ -193,16 +200,54 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
   };
   warnings.push(`source counts: ${sourceCounts.items} items, ${sourceCounts.verified} verified, ${sourceCounts.mismatch} mismatch, ${sourceCounts.retrieved} retrieved`);
   const status: DecisionRecord["status"] = d.status === "withdrawn" ? "withdrawn" : stale ? "stale" : d.status === "accepted" ? "accepted" : "proposed";
-  return { status, blockers, warnings, canAct: blockers.length === 0 && status === "accepted", sourceCounts };
+  const selectionStatus: DecisionRecord["selectionStatus"] = status;
+  const actionStatus: DecisionRecord["actionStatus"] = blockers.length === 0 && status === "accepted" ? "ready" : "blocked";
+  return { status, selectionStatus, actionStatus, blockers, warnings, canAct: actionStatus === "ready", sourceCounts };
 }
 
 /** Re-derive the stored status of every decision after the evidence changes. Never deletes. */
 export function refreshDecisionStatuses(study: Study): Study {
   const decisions = (study.design.decisions ?? []).map((d) => {
     const e = evaluateDecision(d, study);
-    return d.status === e.status ? d : { ...d, status: e.status };
+    const next: DecisionRecord = {
+      ...d,
+      status: e.status,
+      selectionStatus: e.selectionStatus,
+      actionStatus: e.actionStatus,
+    };
+    return d.status === next.status && d.selectionStatus === next.selectionStatus && d.actionStatus === next.actionStatus ? d : next;
   });
   return { ...study, design: { ...study.design, decisions } };
+}
+
+/** S11 / A2: refuse only an unsupported or contradictory selection. Unresolved gates leave the selection acceptable and the action blocked. A pursue/implementation/replicate with no retrieved-backed ledger claims is unsupported; a narrow/defer/refer/no-new-study with empty claims is not. */
+export function decisionIsSupported(d: DecisionRecord, study: Study): { ok: boolean; reason: string } {
+  if (d.criteria.some((c) => c.role === "defeats" && c.status === "met")) {
+    return { ok: false, reason: "contradictory selection: a defeating condition holds" };
+  }
+  const claimsById = new Map((study.scan.claims ?? []).map((c) => [c.id, c]));
+  const itemsById = new Map(study.scan.items.map((i) => [i.id, i]));
+  let restsOnRetrieved = false;
+  for (const id of d.claimIds) {
+    const c = claimsById.get(id);
+    if (!c) return { ok: false, reason: `unsupported selection: claim ${id} is not in the ledger` };
+    const sources = c.sourceIds.map((s) => itemsById.get(s)).filter((s): s is NonNullable<typeof s> => !!s);
+    if (!sources.length) return { ok: false, reason: `unsupported selection: claim ${id} has no bound sources` };
+    if (sources.some((s) => s.provenance.status === "mismatch")) {
+      return { ok: false, reason: `contradictory selection: claim ${id} rests on a source whose identifier resolved to a different work` };
+    }
+    if (sources.some((s) => isWithdrawnResult(s))) {
+      return { ok: false, reason: `contradictory selection: claim ${id} rests on a withdrawn or retracted result` };
+    }
+    const retrieved = sources.some((s) => s.provenance.status === "retrieved" || s.provenance.status === "verified");
+    if (!retrieved) return { ok: false, reason: `unsupported selection: claim ${id} does not rest on a retrieved record` };
+    restsOnRetrieved = true;
+  }
+  const commitsToAct = d.kind === "pursue" || d.kind === "implementation" || d.kind === "replicate";
+  if (commitsToAct && !restsOnRetrieved) {
+    return { ok: false, reason: "unsupported selection: no ledger claims on retrieved records" };
+  }
+  return { ok: true, reason: "" };
 }
 
 export const DECISION_SCHEMA = `"decision": {

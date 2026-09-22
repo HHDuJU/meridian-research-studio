@@ -1,0 +1,84 @@
+{
+  "overview": "Cohort of first asthma discharges per child from 2022 to 2025 at the children's hospital, with plan completeness scored from the scanned template and asthma emergency revisits or readmissions within 90 days taken from the linked provincial emergency visits dataset.",
+  "population": "Children aged 2 to 17 discharged alive after an admission with a primary asthma diagnosis, first eligible discharge per child; excluded are transfers to another hospital, discharges to intensive care follow-up programmes and children living outside the province.",
+  "exposure": "Complete plan: five of five sections filled on the scanned template (daily medicines, signs of worsening, yellow-zone actions with legible doses, emergency criteria, booked follow-up). Incomplete: four or fewer. An illegible dose counts as missing. Item-level completeness is recorded for description.",
+  "procedures": "Two respiratory educators score plans using the five-item score after a calibration set of 30 plans; 10 percent are double-scored. The analyst extracts age, sex, previous asthma admissions in 12 months, intensive care during the admission, length of stay, controller at discharge, language preference, interpreter use and postal code for neighbourhood income. After the data sharing agreement is signed, the provincial custodian links the cohort by health number and returns revisits and readmissions within 90 days as a de-identified file.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Asthma emergency revisit or readmission within 90 days",
+      "measure": "First emergency department visit or admission with an asthma diagnosis at any hospital in the province",
+      "timing": "0 to 90 days after discharge",
+      "why": "What families experience and what the plan is meant to prevent; counted across hospitals because a fifth of revisits happen elsewhere.",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Asthma readmission within 90 days",
+      "measure": "Admission with an asthma diagnosis at any provincial hospital",
+      "timing": "0 to 90 days after discharge",
+      "why": "The most serious form of the outcome.",
+      "patientCentered": true
+    },
+    {
+      "id": "o3",
+      "role": "secondary",
+      "name": "Asthma emergency revisit within 30 days",
+      "measure": "First asthma emergency visit at any provincial hospital",
+      "timing": "0 to 30 days after discharge",
+      "why": "The window in which the plan's yellow-zone steps matter most.",
+      "patientCentered": true
+    },
+    {
+      "id": "o4",
+      "role": "process",
+      "name": "Plan completeness by section",
+      "measure": "Proportion of plans with each of the five sections complete, by year",
+      "timing": "At scoring",
+      "why": "Shows which sections an electronic plan would need to force.",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "About 1,900 first discharges over four years; scoring at about two minutes per plan is roughly 65 educator hours; the analyst's 0.2 FTE over six months covers extraction and analysis once the linked file arrives.",
+  "biasMitigation": [
+    "Adjustment set fixed before linkage: age, previous admissions in 12 months, intensive care during the admission, controller at discharge, neighbourhood income quintile",
+    "Negative control outcome: injury-related emergency visits within 90 days",
+    "Scorers blind to revisit status because scoring is completed before the linked file is received",
+    "Outcome counted at every provincial hospital through linkage"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Confounding by family engagement",
+      "severity": "high",
+      "note": "Not measured directly; the negative control outcome and previous admissions partly address it."
+    },
+    {
+      "id": "b2",
+      "label": "Exposure misclassification",
+      "severity": "watch",
+      "note": "Illegible or partly filled sections; double-scoring limits drift."
+    },
+    {
+      "id": "b3",
+      "label": "Outcome ascertainment",
+      "severity": "ok",
+      "note": "Provincial linkage counts revisits at other hospitals."
+    }
+  ],
+  "parsimony": {
+    "score": 82,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 2,
+    "covariateCount": 7,
+    "flags": [
+      "Seven covariates fixed before linkage",
+      "One process measure, no additional outcomes"
+    ],
+    "simplestPath": "One exposure contrast, one primary outcome counted across hospitals, one pre-specified adjustment set."
+  },
+  "theoreticalFramework": "Target trial emulation as a planning device to fix eligibility, exposure definition and time zero at discharge; no other framework.",
+  "summary": "Linked cohort of about 1,900 first discharges with one primary outcome, two secondary outcomes and a negative control outcome."
+}

@@ -1,0 +1,1242 @@
+{
+  "id": "sc-091",
+  "version": 1,
+  "title": "Hospital pain clinic: group self-management programme completion, empty search confirmed, staffing gate unknown",
+  "field": "pain-medicine",
+  "level": 3,
+  "family": "implementation",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D20",
+    "S11"
+  ],
+  "notes": "Demanding path on an explicit implementation need (RE-AIM and CFIR named). The recorded fixture search returns HTTP 200 with zero records. A discovery reply then brings four model leads and proposes no certainty (gradeOverall omitted, listed in omitKeys); the second lead has no year, grade or method quality, which stay null and 'unrated' (G4). The leads are stored as leads (origin model, unverified, G3) and the stage stays incomplete ('leads only', G2), also after a reload on the Scan route. Only the investigator's on-screen confirmation that the search was run and empty completes the stage, recorded as an investigator action (A3.2), with certainty still unassessed through the export (G1). The design decision (kind implementation) cites no claims because nothing was retrieved; its two gates (evening staff hours, the ethics board's determination) have no evidence and stay unknown, so the accepted selection keeps a blocked action. No record is retrieved, so no record id is cited anywhere. The typed constraints are restated unchanged (G11). Requires D20 (no certainty and no completion over an empty scan or leads only, the investigator's confirmation, 'not assessed' and 'leads only' on screen), S11 (selectionStatus, actionStatus, basis) and D5 (status text). Catches: a leads-only scan counted as complete, a certainty or a default year or score invented over nothing, the confirmation taken from a model field, an unknown gate treated as met, and work lost on reload or reopen.",
+  "inputs": {
+    "need": "I am the nurse practitioner who coordinates the group pain self-management programme at a hospital outpatient pain clinic. The programme runs eight weekly two-hour sessions led by a physiotherapist and a psychologist, for groups of ten to twelve adults with chronic back pain, fibromyalgia or widespread pain, and covers pacing, graded activity, sleep, flare-up plans and medication goals. Referrals are steady but attendance is not: in the last 18 months only 41 percent of people who started completed six or more sessions, and most dropouts happened after the second or third session. People who work, people who rely on public transport and people who speak Portuguese or Tagalog at home seem to drop out most, although we have never checked this properly. The waiting list is now seven months.\n\nThe clinic manager wants to try three changes in 2027: an evening group, a hybrid option where people can join sessions by video, and a 20-minute orientation call before the first session. I would like to set this up as an implementation study, using RE-AIM or CFIR, so that we learn why attendance is low and whether the changes improve reach and completion without losing the benefit people get from the group. I also need help deciding what to measure, because our outcome questionnaires are collected only at the first and last session, so we know nothing about the people who leave. The clinic manager has not yet confirmed whether staff hours can move to evenings.",
+    "constraints": "No research funding; staff time within the clinic's existing budget; outcome questionnaires are collected only at the first and last session; any change to staff hours needs the clinic manager's approval.",
+    "localFacts": [
+      "In the last 18 months, 184 people started the programme and 75 (41 percent) completed six or more of the eight sessions.",
+      "The waiting list for the programme was seven months in September 2026.",
+      "The clinic manager has not confirmed whether physiotherapist and psychologist hours can move to one evening a week in 2027.",
+      "The clinic has not yet asked the hospital research ethics board whether the evaluation needs full review."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the nurse practitioner who coordinates the group pain self-management programme at a hospital outpatient pain clinic. The programme runs eight weekly two-hour sessions led by a physiotherapist and a psychologist, for groups of ten to twelve adults with chronic back pain, fibromyalgia or widespread pain, and covers pacing, graded activity, sleep, flare-up plans and medication goals. Referrals are steady but attendance is not: in the last 18 months only 41 percent of people who started completed six or more sessions, and most dropouts happened after the second or third session. People who work, people who rely on public transport and people who speak Portuguese or Tagalog at home seem to drop out most, although we have never checked this properly. The waiting list is now seven months.\n\nThe clinic manager wants to try three changes in 2027: an evening group, a hybrid option where people can join sessions by video, and a 20-minute orientation call before the first session. I would like to set this up as an implementation study, using RE-AIM or CFIR, so that we learn why attendance is low and whether the changes improve reach and completion without losing the benefit people get from the group. I also need help deciding what to measure, because our outcome questionnaires are collected only at the first and last session, so we know nothing about the people who leave. The clinic manager has not yet confirmed whether staff hours can move to evenings.",
+          "family": "implementation",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the nurse practitioner who coordinates the group pain self-management programme"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Attendance and completion in a hospital group pain self-management programme: an implementation study of three adaptations",
+        "subtitle": "RE-AIM and CFIR guided evaluation of an evening group, a hybrid option and an orientation call",
+        "family": "implementation",
+        "statement": "A hospital pain clinic runs an eight-week group self-management programme, but only 41 percent of people who start complete six or more sessions, most dropouts happen early, and the waiting list is seven months. Working people, people who depend on public transport and people who speak Portuguese or Tagalog at home appear to leave most often. The clinic plans three adaptations in 2027 and needs to learn why attendance is low and whether the adaptations improve reach and completion without weakening the programme's benefit.",
+        "whoAffected": "Adults with chronic back pain, fibromyalgia or widespread pain referred to the programme, the physiotherapist, psychologist and nurse practitioner who run it, and people on the waiting list.",
+        "whatHurts": "People who leave early lose the programme's benefit and their places are lost to others waiting seven months; the clinic cannot see who leaves or why because outcomes are collected only at the first and last session.",
+        "currentPractice": "Daytime groups of ten to twelve, eight weekly sessions, questionnaires at the first and last session only, and no follow-up of people who stop attending.",
+        "whyNow": "Planned adaptations in 2027, a seven-month waiting list and a completion rate the clinic considers too low.",
+        "constraints": "No research funding; staff time within the clinic's existing budget; outcome questionnaires are collected only at the first and last session; any change to staff hours needs the clinic manager's approval.",
+        "patientCenteredGoal": "People referred to the programme can attend at a time and in a way that fits their lives and finish it with the skills to manage their pain.",
+        "summary": "Problem framed as an implementation study of three adaptations to improve reach and completion."
+      },
+      "note": "The typed constraints are restated unchanged (G11).",
+      "expect": {
+        "store": {
+          "title": "Attendance and completion in a hospital group pain self-management programme: an implementation study of three adaptations",
+          "family": "implementation",
+          "problem.constraints": "No research funding; staff time within the clinic's existing budget; outcome questionnaires are collected only at the first and last session; any change to staff hours needs the clinic manager's approval.",
+          "problem.rawNeed": "I am the nurse practitioner who coordinates the group pain self-management programme at a hospital outpatient pain clinic. The programme runs eight weekly two-hour sessions led by a physiotherapist and a psychologist, for groups of ten to twelve adults with chronic back pain, fibromyalgia or widespread pain, and covers pacing, graded activity, sleep, flare-up plans and medication goals. Referrals are steady but attendance is not: in the last 18 months only 41 percent of people who started completed six or more sessions, and most dropouts happened after the second or third session. People who work, people who rely on public transport and people who speak Portuguese or Tagalog at home seem to drop out most, although we have never checked this properly. The waiting list is now seven months.\n\nThe clinic manager wants to try three changes in 2027: an evening group, a hybrid option where people can join sessions by video, and a 20-minute orientation call before the first session. I would like to set this up as an implementation study, using RE-AIM or CFIR, so that we learn why attendance is low and whether the changes improve reach and completion without losing the benefit people get from the group. I also need help deciding what to measure, because our outcome questionnaires are collected only at the first and last session, so we know nothing about the people who leave. The clinic manager has not yet confirmed whether staff hours can move to evenings.",
+          "problem.statement": {
+            "includes": "41 percent"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Attendance and completion in a hospital group pain self-management programme: an implementation study of three adaptations"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "group chronic pain self-management programme attendance completion evening video orientation call adaptations hospital clinic",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "The recorded search returns HTTP 200 with zero records: an observable event with status 'ok' and 0 hits, never a silent empty list. 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "group chronic pain self-management programme attendance completion evening video orientation call adaptations hospital clinic",
+        "sourcesConsulted": [
+          "recorded search of the fixture provider (0 records)",
+          "model recall of the pain self-management literature"
+        ],
+        "synthesis": "The recorded search returned no records, so nothing has been retrieved or inspected. Four leads recalled from memory are listed for checking: a review of predictors of non-completion, an undated service report on video groups, a before-after evaluation of orientation calls, and a study of people who left group rehabilitation early. None of them has been retrieved, and no certainty can be stated until records are inspected.",
+        "gradeRationale": "Not assessed: no retrieved records.",
+        "items": [
+          {
+            "title": "Attendance and completion in group pain management programmes: a systematic review of predictors",
+            "authors": "Marchetti-Oyelaran S, Hagen-Ruiz T, Kobayashi-Fenn L",
+            "year": 2021,
+            "source": "Journal of Pain Self-Management",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 58,
+            "relevance": 80,
+            "verification": "verify",
+            "contextTags": [
+              "attendance",
+              "predictors",
+              "group programmes"
+            ],
+            "keyFindings": "Across studies of group pain programmes, younger age, employment, longer travel and lower expectations of benefit predicted non-completion; most dropout occurred in the first three sessions.",
+            "limitations": "Recalled lead; mixed programme formats; predictors measured at referral, not during the programme.",
+            "notes": "Recalled as a lead after an empty search; not retrieved and not checked."
+          },
+          {
+            "title": "Video-delivered versus in-person group pain programmes: attendance and outcomes in a regional service",
+            "authors": "Delgado-Whitfield R, Ansah-Lindberg P",
+            "source": "Regional pain services report series",
+            "kind": "observational",
+            "relevance": 72,
+            "verification": "ai-lead",
+            "contextTags": [
+              "video delivery",
+              "attendance",
+              "grey literature"
+            ],
+            "keyFindings": "In a regional service, video groups reached more working-age adults and had similar completion to in-person groups, but participants reported weaker group connection.",
+            "limitations": "Recalled lead with no year, quality rating or grade; service report without a comparison of like groups.",
+            "notes": "Recalled as a lead; year not known."
+          },
+          {
+            "title": "Pre-programme orientation calls and dropout from group pain management: a before-after service evaluation",
+            "authors": "Okonjo-Brask H, Villeneuve-Tan A",
+            "year": 2019,
+            "source": "Pain Service Improvement Notes",
+            "kind": "qi-report",
+            "grade": "very-low",
+            "methodQuality": 35,
+            "relevance": 68,
+            "verification": "ai-lead",
+            "contextTags": [
+              "orientation call",
+              "dropout",
+              "before-after"
+            ],
+            "keyFindings": "A short call before the first session was followed by fewer people leaving after the first two sessions, in one clinic over one year.",
+            "limitations": "Recalled lead; uncontrolled; waiting list and staffing changed at the same time.",
+            "notes": "Recalled as a lead; relevant to one of the three planned adaptations."
+          },
+          {
+            "title": "Language, transport and work as barriers to completing group rehabilitation programmes: a study of people who left early",
+            "authors": "Ferreira-Nkemelu D, Castillo-Harwood J",
+            "year": 2022,
+            "source": "Rehabilitation Access Review",
+            "kind": "qualitative",
+            "grade": "low",
+            "methodQuality": 52,
+            "relevance": 76,
+            "verification": "ai-lead",
+            "contextTags": [
+              "equity",
+              "language",
+              "transport",
+              "early leavers"
+            ],
+            "keyFindings": "People who left group rehabilitation early described inflexible session times, long bus journeys, and sessions in a language they followed only partly.",
+            "limitations": "Recalled lead; cardiac and pulmonary rehabilitation groups rather than pain programmes.",
+            "notes": "Recalled as a lead; supports interviewing people who leave."
+          }
+        ],
+        "summary": "Four unchecked leads after an empty search; no certainty proposed."
+      },
+      "omitKeys": [
+        "gradeOverall"
+      ],
+      "note": "A leads-only discovery reply after an empty search, with no certainty proposed (gradeOverall omitted). The four leads are stored as leads (origin model, unverified, G3); the second lead omits year, grade and method quality, which stay null and 'unrated' (G4). Leads never complete the stage (G2; A3.2 'leads only, evidence not inspected'), which requires D20; at 875fe59 any applied reply marks the stage complete. The sourcesConsulted issue holds at 875fe59.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[1].relevance": 72,
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Scan route before the investigator confirms anything: the stage must still be incomplete, the leads still unverified and no certainty shown (G1, G2, G3; D20).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-empty-search",
+      "note": "The investigator confirms on screen that the recorded search was run and returned nothing; only this completes the stage (G2), the confirmation is an investigator record, never a model field (A3.2), and certainty stays unassessed (G1). Requires D20.",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.emptySearchConfirmation.by": "investigator",
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[0].provenance.status": "unverified",
+          "scan.retrievalEvents[0].resultCount": 0
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "hospital outpatient pain clinic",
+          "eight-week daytime groups of ten to twelve",
+          "seven-month waiting list",
+          "recorded search returned no records"
+        ],
+        "reading": "Completion depends on whether the programme fits people's lives (session times, travel, language) and on what happens in the first two or three sessions, when most people leave. The three planned adaptations each target one barrier: the evening group targets work, the hybrid option targets travel, and the orientation call targets expectations before the first session. Nothing was retrieved, so the evidence nodes are unchecked leads; the clinic's own data are the main source, and they miss everyone who leaves.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Daytime in-person sessions",
+            "kind": "context",
+            "detail": "Eight weekly two-hour sessions."
+          },
+          {
+            "id": "n2",
+            "label": "Work, transport and language barriers",
+            "kind": "context",
+            "detail": "Suspected, never measured locally."
+          },
+          {
+            "id": "n3",
+            "label": "Dropout after sessions 2 and 3",
+            "kind": "outcome",
+            "detail": "Most dropouts happen early."
+          },
+          {
+            "id": "n4",
+            "label": "Evening group",
+            "kind": "framework",
+            "detail": "Adaptation targeting work."
+          },
+          {
+            "id": "n5",
+            "label": "Hybrid video option",
+            "kind": "framework",
+            "detail": "Adaptation targeting travel."
+          },
+          {
+            "id": "n6",
+            "label": "Orientation call before session 1",
+            "kind": "framework",
+            "detail": "Adaptation targeting expectations."
+          },
+          {
+            "id": "n7",
+            "label": "No outcome data on people who leave",
+            "kind": "gap",
+            "detail": "Questionnaires only at the first and last session."
+          },
+          {
+            "id": "n8",
+            "label": "Empty recorded search",
+            "kind": "gap",
+            "detail": "Four unchecked leads only."
+          },
+          {
+            "id": "n9",
+            "label": "Clinic manager",
+            "kind": "stakeholder",
+            "detail": "Controls staff hours for evening sessions."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "is suspected to drive"
+          },
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "interacts with"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "targets"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "targets"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "targets early"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "hides the reasons for"
+          },
+          {
+            "from": "n9",
+            "to": "n4",
+            "relation": "must approve"
+          }
+        ],
+        "summary": "Map ties the three adaptations to the barriers they target and marks the missing data on people who leave."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No retrieved evidence on programme adaptations",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The recorded search returned nothing and the four leads are unchecked, so no adaptation can be called evidence-based.",
+            "opportunity": "Check the leads by identifier before citing them and treat the local study as the main source of evidence."
+          },
+          {
+            "id": "g2",
+            "title": "Nothing is known about people who leave",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "Outcomes are collected only at the first and last session, so the benefit of the programme is measured only in those who stay.",
+            "opportunity": "Add a brief outcome check and a short conversation at the point of leaving and at three months."
+          },
+          {
+            "id": "g3",
+            "title": "Barriers by work, transport and language are assumed",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "The adaptations target barriers that have never been measured; if the assumptions are wrong the changes will not help the people most affected.",
+            "opportunity": "Record employment, travel mode and language at referral and report completion by each."
+          },
+          {
+            "id": "g4",
+            "title": "Adaptations may dilute the group",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Video participants may lose group connection, which may be part of the benefit.",
+            "opportunity": "Measure group connection and fidelity to the core content in adapted and standard groups."
+          },
+          {
+            "id": "g5",
+            "title": "Staff hours for evening groups are not approved",
+            "kind": "implementation",
+            "severity": "watch",
+            "whyItMatters": "The evening group cannot run without the clinic manager's approval.",
+            "opportunity": "Sequence the adaptations so the orientation call and hybrid option can start first."
+          }
+        ],
+        "errorsFound": [
+          "The need implies the three changes will raise completion; there is no retrieved evidence for any of them."
+        ],
+        "reevaluation": "With nothing retrieved, the gaps favour an implementation study that measures the barriers, follows people who leave and introduces the adaptations in sequence.",
+        "summary": "Five gaps; the empty search and the missing data on people who leave are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[2].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Nothing is known about people who leave"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Offering an orientation call and a hybrid video option will raise the proportion of starters who complete six or more sessions from 41 percent to at least 55 percent, with the largest gains among working people and those who rely on public transport.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 70,
+            "parsimony": 75,
+            "rationale": "Targets the early dropout and the suspected barriers; both adaptations can start without new evening hours.",
+            "risks": "Barriers may differ from those assumed; video may reduce group connection."
+          },
+          {
+            "id": "h2",
+            "statement": "An evening group will raise completion among working people more than the other adaptations.",
+            "novelty": 40,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 45,
+            "parsimony": 65,
+            "rationale": "Work is a suspected barrier, but the evening group depends on unapproved staff hours.",
+            "risks": "May not run in 2027."
+          },
+          {
+            "id": "h3",
+            "statement": "People who leave early have benefits at three months similar to those who complete, so completion alone understates the programme's reach.",
+            "novelty": 50,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 60,
+            "parsimony": 60,
+            "rationale": "No data exist on leavers; the finding would change how the clinic defines success.",
+            "risks": "Low response from people who have left."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected because it does not depend on the unapproved evening hours."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[1].feasibility": 45,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults starting the group pain self-management programme in 2027, does introducing an orientation call and a hybrid video option, then an evening group if approved, increase reach and the proportion completing six or more sessions compared with the 2025 to 2026 baseline, and for whom?",
+            "framework": "PICO",
+            "population": "Adults starting the programme in 2027",
+            "intervention": "Orientation call, hybrid video option and, if approved, an evening group, introduced in sequence",
+            "comparator": "Baseline cohorts from the previous 18 months",
+            "outcome": "Completion of six or more sessions; reach among referred people",
+            "time": "Each eight-week group and three months after",
+            "setting": "Hospital outpatient pain clinic"
+          },
+          {
+            "id": "q2",
+            "text": "Why do people leave the programme early, and how do the adaptations change their experience?",
+            "framework": "SPIDER",
+            "population": "People who leave early and people who complete",
+            "intervention": "Experience of attending the standard and adapted programme",
+            "outcome": "Reasons for leaving and experience of adaptations, mapped to CFIR constructs",
+            "setting": "Hospital outpatient pain clinic"
+          }
+        ],
+        "finer": "Feasible within existing staff time for the orientation call and hybrid option; interesting to the clinic and people on the waiting list; novel locally; ethical with consent for follow-up contact; relevant because the waiting list depends on completion.",
+        "summary": "One implementation outcome question and one question about reasons for leaving."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "implementation",
+        "rationale": "The question is how well three adaptations are delivered, whom they reach and whether completion improves in routine care, which is an implementation question. RE-AIM structures the measures (reach, effectiveness, adoption, implementation, maintenance) and CFIR structures conversations with people who leave. The adaptations are introduced in sequence so that each can be observed. Nothing was retrieved, so the decision rests on the confirmed empty search and the investigator's local facts, not on ledger claims.",
+        "alternatives": [
+          "Cluster randomised comparison of adapted and standard groups (refused: about ten groups a year cannot give a useful comparison, and the question is about routine delivery)",
+          "Study of people who leave early without adaptations (refused: the clinic plans the changes anyway and needs to learn from them)",
+          "Before-after comparison of completion only (refused: misses reach, fidelity and reasons for leaving)"
+        ],
+        "guidelines": [
+          "StaRI",
+          "RE-AIM",
+          "CFIR"
+        ],
+        "whyNotMoreComplex": "A randomised or stepped wedge comparison would need several clinics; one clinic's cohorts can show whether reach and completion move and why, which is what the clinic has to decide.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Introduce the orientation call and the hybrid video option in the first 2027 groups, and the evening group once staff hours are approved, as a RE-AIM guided implementation study with follow-up of people who leave.",
+          "question": "How should the clinic introduce and evaluate the three adaptations to the group programme?",
+          "claimIds": [],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Completion of six or more sessions stays at or below 41 percent in the first two adapted groups.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            },
+            {
+              "id": "k2",
+              "text": "People who leave can be reached for a brief outcome check at three months.",
+              "role": "justifies",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Clinic manager approval to move physiotherapist and psychologist hours to one evening a week in 2027",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research ethics board determination of whether the evaluation needs full review",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Study of people who leave early without adaptations",
+            "Before-after comparison of completion only"
+          ],
+          "note": "No ledger claim exists because the recorded search returned no records; the decision rests on the confirmed empty search and the investigator's local facts. Both gates are unknown."
+        },
+        "summary": "Implementation study recommended; the decision cites no claims and is blocked by two unknown gates."
+      },
+      "note": "recommendedFamily, selectionStatus and actionStatus require S11; the unknown gates keep actionStatus 'blocked' (A2 item 9); the status text requires D5. A decision with no claims is not 'pursue', so no unsupported-pursue blocker applies.",
+      "expect": {
+        "store": {
+          "design.recommended": "implementation",
+          "family": "implementation",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Conditional acceptance: the decision cites no claim (nothing was retrieved) and none of its text is contradicted, so the selection is acceptable, while the two unknown gates keep the action blocked (G7; A2 item 9). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.basis": "explicit",
+          "family": "implementation"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Single-clinic implementation study during 2027, guided by RE-AIM, in which three adaptations are introduced in sequence: an orientation call and a hybrid video option from the first 2027 group, and an evening group once staff hours are approved. People who leave early are followed up briefly, and conversations with leavers and completers are organised by CFIR constructs.",
+        "population": "All adults referred to and starting the group programme in 2027, and the programme staff; baseline cohorts are the 184 starters of the previous 18 months.",
+        "exposure": "Orientation call (20 minutes, by the nurse practitioner, before session 1); hybrid option (join any session by video); evening group (if approved).",
+        "procedures": "At referral the clinic records employment, main travel mode, language spoken at home and interpreter need. Attendance is recorded at every session. People who miss two consecutive sessions receive a call offering a brief outcome check and a 20-minute conversation. All starters receive the pain interference questionnaire at the first session, the last session or the point of leaving, and at three months. Fidelity to the eight core session topics is checked by a session checklist.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Completion of six or more sessions",
+            "measure": "Proportion of starters attending six or more of eight sessions, by group and adaptation",
+            "timing": "End of each group",
+            "why": "The implementation outcome the clinic is failing on.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Reach",
+            "measure": "Proportion of referred people who start, overall and by employment, travel mode and language",
+            "timing": "Each quarter",
+            "why": "Shows whether the adaptations bring in people who used to decline.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Pain interference",
+            "measure": "Three-item pain, enjoyment and activity scale at start, end or leaving, and three months",
+            "timing": "Start, end or leaving, three months",
+            "why": "Checks the benefit is kept for completers and measured for leavers.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Group connection",
+            "measure": "Two-item rating of connection with the group at the last attended session",
+            "timing": "Last attended session",
+            "why": "Video participation may weaken what makes the group work.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Fidelity to core content",
+            "measure": "Proportion of the eight core topics delivered per group",
+            "timing": "Each session",
+            "why": "Separates a failed adaptation from a diluted programme.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "The orientation call and hybrid option use existing staff and the hospital video platform; the evening group needs the unapproved hours. Follow-up calls take about two hours a week of nurse practitioner time.",
+        "biasMitigation": [
+          "Barriers recorded at referral before anyone leaves",
+          "Leavers contacted by someone who does not run their group",
+          "Fidelity checklist for adapted and standard groups",
+          "Adaptation start dates recorded and marked on the completion chart"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Secular change in referrals",
+            "severity": "watch",
+            "note": "The waiting list and referral mix may change during 2027; compare characteristics of starters by period."
+          },
+          {
+            "id": "b2",
+            "label": "Low response from people who leave",
+            "severity": "high",
+            "note": "The main threat to the effectiveness measure; report response by group."
+          },
+          {
+            "id": "b3",
+            "label": "Overlapping adaptations",
+            "severity": "watch",
+            "note": "Sequential introduction limits but does not remove overlap."
+          }
+        ],
+        "parsimony": {
+          "score": 74,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 3,
+          "flags": [
+            "One balancing and one process measure",
+            "Three recorded barrier variables used for stratified reporting"
+          ],
+          "simplestPath": "One clinic, one primary implementation outcome, adaptations in sequence, brief follow-up of leavers."
+        },
+        "theoreticalFramework": "RE-AIM for outcomes and CFIR for conversations with leavers and staff; no other framework.",
+        "summary": "Sequenced adaptations with completion as the primary implementation outcome and follow-up of people who leave."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[2].patientCentered": true,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Single-clinic implementation study with baseline and adapted group cohorts; completion plotted by group on a run chart, with descriptive comparison of reach and outcomes.",
+        "sampleSize": "About 120 people start the programme each year (184 in the last 18 months), in about ten groups. Detecting a rise in completion from 41 to 55 percent with 80 percent power at two-sided alpha 0.05 would need about 200 starters per period before allowing for clustering by group; with an intraclass correlation of about 0.05 and groups of eleven, about 300 per period would be needed, which the clinic will not reach in 2027. The study is therefore not powered for a confirmatory comparison. Completion is tracked group by group on a run chart against the baseline median, and reach and outcomes are reported descriptively with confidence intervals.",
+        "primaryAnalysis": "Run chart of completion by group against the baseline median, with pre-specified rules for a shift and adaptation start dates marked; completion by employment, travel mode and language reported with 95 percent confidence intervals.",
+        "secondaryAnalysis": "Reach by quarter; pain interference change for completers and leavers; group connection and fidelity by adaptation; framework analysis of conversations with leavers mapped to CFIR constructs.",
+        "missingData": "Missing follow-up is reported by group and by whether the person completed; no imputation for the implementation outcomes, which are recorded for everyone.",
+        "multiplicity": "One primary implementation outcome; all other measures are descriptive.",
+        "software": "Spreadsheet run chart and R for confidence intervals.",
+        "overfittingGuards": [
+          "Run chart rules fixed before the first 2027 group",
+          "Barrier variables fixed at referral",
+          "No subgroup testing beyond the three recorded barriers"
+        ],
+        "summary": "Not powered for a confirmatory comparison; completion tracked on a run chart with descriptive reach and outcomes."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "not powered for a confirmatory comparison"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: the adaptations change how the programme is offered, not its content. Risks are intrusion when contacting people who have left and loss of group connection in video sessions.",
+        "consent": "People are told at referral that the clinic is evaluating changes to the programme; consent is asked for follow-up contact after leaving and for conversations, which are optional and do not affect care.",
+        "data": "Attendance and questionnaires stay in the clinic record; the evaluation file holds study codes only and is kept on the hospital drive for five years.",
+        "equity": "PROGRESS-Plus: employment, reliance on public transport and language spoken at home are the suspected barriers. Interpreters are offered for the orientation call and conversations, video help is offered before the first hybrid session, and completion is reported by each barrier so the adaptations are judged by whom they reach.",
+        "effectiveness": "Success is higher completion and reach without loss of pain interference benefit or group connection.",
+        "efficiency": "The orientation call costs about 20 minutes per starter; follow-up of leavers about two hours a week.",
+        "costs": "Within existing staff time except the evening group, which depends on approval.",
+        "grants": "None needed; a positive result could support a regional application to spread the adaptations.",
+        "partnerships": "Clinic manager, the physiotherapist and psychologist, two former participants (one who left early), and the hospital interpreter service.",
+        "rebPath": "The clinic will ask the research ethics board whether the evaluation is quality improvement or research needing full review; the decision is unknown, and no follow-up contact of leavers starts until it is made. Principles follow the TCPS 2 when the board applies it and ICH-GCP otherwise.",
+        "limitations": "Single clinic, sequential adaptations that overlap in time, and likely low response from people who leave.",
+        "summary": "Low-risk evaluation with consent for follow-up contact, equity reporting by barrier, and an ethics determination still unknown."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "ethics.rebPath": {
+            "includes": "unknown"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two former participants, one who completed and one who left after the third session, review the orientation call script and the follow-up questions; the interpreter service reviews the Portuguese and Tagalog materials.",
+        "socialListening": "No social media listening; anonymised comments from the clinic's feedback forms over the last year are read for mentions of session times and travel.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Work and session times",
+            "quote": "Composite paraphrase: I used up my leave on the first three Tuesdays and then there was nothing left.",
+            "implication": "Record employment at referral and prioritise the evening group if hours are approved.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Travel",
+            "quote": "Composite paraphrase: Two buses each way with my back is a whole morning, for a class about pacing.",
+            "implication": "Offer the hybrid option from the first 2027 group.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Language",
+            "quote": "Composite paraphrase: My mother understood the exercises but not the talking parts, so she stopped going.",
+            "implication": "Offer interpreters for the orientation call and translated summaries of each session.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "What makes the group work",
+            "quote": "Composite paraphrase: The moment people realise someone else has the same pain is often week three, which is when they leave.",
+            "implication": "Measure group connection and check it is not lost in video sessions.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on work, travel, language and group connection."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "family",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Adapting a hospital group pain self-management programme to improve reach and completion: an implementation study",
+        "abstract": "Objective: to evaluate the reach, completion and outcomes of three adaptations to a group pain self-management programme. Design: single-clinic implementation study guided by RE-AIM, with adaptations introduced in sequence during 2027 and follow-up of people who leave. Primary outcome: completion of six or more of eight sessions. Results and conclusions will be written after the 2027 groups.",
+        "introduction": "Group pain self-management programmes lose many participants early. The clinic's completion is 41 percent and its waiting list seven months. A recorded search returned no records on the planned adaptations, so the clinic's own study is the main source of evidence.",
+        "methods": "Barriers recorded at referral; orientation call and hybrid option from the first 2027 group and an evening group if approved; attendance at every session; brief outcome checks and conversations with people who leave; run chart of completion by group against the baseline median; StaRI reporting.",
+        "results": "No data have been collected yet. The report will present reach, completion by group and adaptation, completion by barrier, pain interference for completers and leavers, group connection, fidelity and themes from conversations with leavers.",
+        "discussion": "The discussion will interpret changes in completion against the run chart rules and the sequence of adaptations, and state which adaptations the clinic will keep.",
+        "limitations": "Single clinic; overlapping adaptations; not powered for a confirmatory comparison; low response from leavers is likely.",
+        "conclusion": "To be written after the 2027 groups; it will not claim that any adaptation causes higher completion.",
+        "reportingChecklist": "StaRI",
+        "summary": "StaRI-structured draft with results left empty until data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "StaRI",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Both decision gates are unknown: the evening staff hours and the ethics board's determination; the action stays blocked",
+          "The recorded search returned no records; check the four leads by identifier before any is cited",
+          "Add employment, travel mode and language fields to the referral form before the first 2027 group"
+        ],
+        "improvementNotes": "The empty search was confirmed by the investigator on screen; no certainty was assigned. The accepted selection cites no claims and rests on local facts; the leads stay unverified.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the unknown gates, the unchecked leads and the referral form fields."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 the store defect of A3 L1.6 drops it (not a missing work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list; statuses are checked in the export.",
+      "expect": {
+        "store": {
+          "title": "Attendance and completion in a hospital group pain self-management programme: an implementation study of three adaptations",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "No research funding; staff time within the clinic's existing budget; outcome questionnaires are collected only at the first and last session; any change to staff hours needs the clinic manager's approval.",
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Attendance and completion in a hospital group pain self-management programme: an implementation study of three adaptations"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "scan.gradeOverall '' and the investigator's confirmation require D20; selectionStatus and actionStatus require S11. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.gradeOverall": "",
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.emptySearchConfirmation.by": "investigator",
+            "scan.items[0].provenance.status": "unverified",
+            "scan.items[1].year": {
+              "isNull": true
+            },
+            "scan.items[1].grade": "unrated",
+            "design.decisions[-1].claimIds": [],
+            "design.decisions[-1].gates[0].status": "unknown",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

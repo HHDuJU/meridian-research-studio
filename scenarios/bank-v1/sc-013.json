@@ -1,0 +1,1248 @@
+{
+  "id": "sc-013",
+  "version": 1,
+  "title": "Health board atrial fibrillation gap register: umbrella review scoped after an empty search, certainty over zero records dropped",
+  "field": "cardiology",
+  "level": 3,
+  "family": "umbrella-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D20",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path over an empty search. A health board pharmacist wants an umbrella review before choosing an intervention for an atrial fibrillation gap register; routing at create is umbrella-review (explicit under the 875fe59 classifier and the A1-B rule). The problem reply sends constraints null: under G11 the investigator's constraints stay exactly as typed and the refusal is recorded as rejected-change at 'constraints' (at 875fe59 the null clears the field, which G11 forbids); rejected-change is not an 875fe59 code and is counted under S11, the closest listed entry. The recorded fixture search returns HTTP 200 with zero records. The discovery reply over zero records carries four model leads (one undated with null quality, one with a null grade), a certainty 'moderate' that must be dropped with an issue (G1), and a model key claiming the empty search was confirmed, which must be dropped (A3 D20 correction; A3.2 section 1); the stage stays incomplete (G2). The investigator then confirms the empty search on screen, which completes the stage with certainty still unassessed and writes scan.emptySearchConfirmation.by 'investigator' (A3.2); a reload keeps it. The design decision narrows the next step to the umbrella review, rests on no ledger claim, and has one gate met on the investigator's library record and one unmet (protocol registration), so acceptance gives an accepted selection with a blocked action. No record is retrieved, so no record id is computed; the leads' ids are model ids. Requires D20 (certainty dropped over zero records, confirm-empty-search, not assessed, the confirmation record), S13 (a model confirmation key refused on the production path), S11 (rejected-change, recommendedFamily, selectionStatus, actionStatus, basis) and D5 (status text). Catches: certainty or completion over an empty search, a model field confirming a search, investigator text erased by a model null, invented defaults for unknown values, and an unmet gate turned into an actionable decision.",
+  "inputs": {
+    "need": "I am the lead pharmacist for cardiovascular prevention in a health board that serves about 410,000 people across 58 general practices. Two years ago we built an atrial fibrillation gap register: a monthly list, drawn from practice systems, of patients with atrial fibrillation and a stroke risk score of 2 or more who have no current anticoagulant prescription. In August the register held 3,960 such patients, about 21 percent of everyone on the practice atrial fibrillation lists, and the proportion has barely moved despite two rounds of letters to practices.\n\nThe board wants to fund an intervention next year, and every group has a favourite: pharmacist-led review clinics, practice visits with feedback on each practice's gap, prompts in the prescribing system, or decision aids for patients who declined anticoagulants before. Before we choose, I would like to do an umbrella review of the published reviews on interventions to increase appropriate anticoagulation in atrial fibrillation, so that we know which approaches have been compared, what effect sizes are plausible, and where bleeding and patient choice were measured.\n\nI need help with the scope (which interventions and settings count, and whether hospital-based programmes belong), how to judge overlapping reviews that include the same trials, how to handle reviews that report only prescribing and not strokes or bleeding, and how to present the result so the board does not read a pooled number as a promise. The register team can give me four hours a week of an information analyst, and the health board library has offered search support. I also want to know whether the gap is concentrated in particular groups, for example older people in care homes, people with dementia or people who declined treatment in the past.",
+    "constraints": "Four hours a week of an information analyst until June 2027; no funds for translation or paid database access beyond what the health board library already holds; the board needs a written summary by May 2027.",
+    "localFacts": [
+      "The atrial fibrillation gap register listed 3,960 patients with a stroke risk score of 2 or more and no current anticoagulant prescription in August 2026.",
+      "The health board library agreed on 2026-09-08 to provide 30 hours of search support for the review (request LIB-2026-112).",
+      "The review protocol has not yet been submitted to a public register of review protocols.",
+      "The board's prevention committee will choose next year's intervention at its June 2027 meeting."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the lead pharmacist for cardiovascular prevention in a health board that serves about 410,000 people across 58 general practices. Two years ago we built an atrial fibrillation gap register: a monthly list, drawn from practice systems, of patients with atrial fibrillation and a stroke risk score of 2 or more who have no current anticoagulant prescription. In August the register held 3,960 such patients, about 21 percent of everyone on the practice atrial fibrillation lists, and the proportion has barely moved despite two rounds of letters to practices.\n\nThe board wants to fund an intervention next year, and every group has a favourite: pharmacist-led review clinics, practice visits with feedback on each practice's gap, prompts in the prescribing system, or decision aids for patients who declined anticoagulants before. Before we choose, I would like to do an umbrella review of the published reviews on interventions to increase appropriate anticoagulation in atrial fibrillation, so that we know which approaches have been compared, what effect sizes are plausible, and where bleeding and patient choice were measured.\n\nI need help with the scope (which interventions and settings count, and whether hospital-based programmes belong), how to judge overlapping reviews that include the same trials, how to handle reviews that report only prescribing and not strokes or bleeding, and how to present the result so the board does not read a pooled number as a promise. The register team can give me four hours a week of an information analyst, and the health board library has offered search support. I also want to know whether the gap is concentrated in particular groups, for example older people in care homes, people with dementia or people who declined treatment in the past.",
+          "problem.constraints": "Four hours a week of an information analyst until June 2027; no funds for translation or paid database access beyond what the health board library already holds; the board needs a written summary by May 2027.",
+          "family": "umbrella-review",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the lead pharmacist for cardiovascular prevention"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Interventions to close the anticoagulation gap in atrial fibrillation: an umbrella review for a health board register",
+        "subtitle": "Umbrella review to inform the board's choice of intervention",
+        "family": "umbrella-review",
+        "statement": "About 21 percent of patients on practice atrial fibrillation lists in the health board (3,960 people in August 2026) have a stroke risk score of 2 or more and no current anticoagulant prescription, and two rounds of letters have not changed the proportion. Before the board funds one of several competing interventions, it needs a synthesis of the published reviews: which interventions have been compared, what effects on prescribing, stroke and bleeding are plausible, and for whom.",
+        "whoAffected": "People with atrial fibrillation who are eligible for anticoagulation but not receiving it, including older people in care homes, people with dementia and people who declined treatment before; general practices; the board's prevention committee.",
+        "whatHurts": "Preventable strokes in people who remain untreated, and money spent on an intervention chosen by preference rather than evidence.",
+        "currentPractice": "A monthly gap register and letters to practices; no structured intervention and no agreed way to judge the competing proposals.",
+        "whyNow": "The prevention committee chooses next year's intervention in June 2027, and the register shows no improvement.",
+        "constraints": null,
+        "patientCenteredGoal": "Every person with atrial fibrillation who would benefit from anticoagulation is offered it in a way that respects an informed choice to decline.",
+        "summary": "Problem framed as an evidence synthesis question to inform the board's choice."
+      },
+      "note": "G11: the reply's constraints is null, but the investigator entered constraints at create. The stored text stays exactly as typed and the refusal is recorded as rejected-change at 'constraints' (at 875fe59 the null clears the field with issue 'cleared', which G11 forbids). rejected-change is not an 875fe59 issue code; it is counted here under S11 (investigator text kept separate from model proposals), the closest listed entry.",
+      "expect": {
+        "store": {
+          "title": "Interventions to close the anticoagulation gap in atrial fibrillation: an umbrella review for a health board register",
+          "family": "umbrella-review",
+          "problem.constraints": "Four hours a week of an information analyst until June 2027; no funds for translation or paid database access beyond what the health board library already holds; the board needs a written summary by May 2027.",
+          "problem.statement": {
+            "includes": "3,960 people"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "Interventions to close the anticoagulation gap in atrial fibrillation: an umbrella review for a health board register",
+            "Four hours a week of an information analyst"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "atrial fibrillation anticoagulation gap register interventions umbrella primary care practices prescribing",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "The recorded search, run with the register's own terms, returns HTTP 200 and no records: an observable event with 0 hits, never a silent empty list. 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "atrial fibrillation anticoagulation gap register interventions umbrella primary care practices prescribing",
+        "sourcesConsulted": [
+          "fixture search (0 records)",
+          "model recall of the anticoagulation literature"
+        ],
+        "gradeOverall": "moderate",
+        "gradeRationale": "Several reviews point in the same direction, so certainty that multifaceted interventions raise prescribing is moderate.",
+        "synthesis": "The recorded search returned no records. Four reviews are recalled as leads: controlled studies of multifaceted interventions, a pooled analysis of pharmacist-led review with no listed year, an overview of decision support prompts, and a review of decision aids. None has been retrieved or checked.",
+        "items": [
+          {
+            "title": "Interventions to improve oral anticoagulant prescribing for stroke prevention in atrial fibrillation: a systematic review of controlled studies",
+            "authors": "Pellegrini-Obuya R, Strand-Mahmoud K, Iversen-Tan L",
+            "year": 2019,
+            "source": "Journal of Thrombosis Care Reviews",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 60,
+            "relevance": 88,
+            "verification": "verify",
+            "doi": "10.5555/jtcr.2019.0217",
+            "contextTags": [
+              "controlled studies",
+              "multifaceted interventions",
+              "prescribing"
+            ],
+            "keyFindings": "Across 21 controlled studies, multifaceted interventions raised the proportion of eligible patients prescribed an anticoagulant by a median of 7 percentage points, while single educational interventions showed little change.",
+            "limitations": "Mixed settings; few studies measured stroke or bleeding.",
+            "notes": "Recalled as a lead; not retrieved by the recorded search and not checked."
+          },
+          {
+            "title": "Pharmacist-led anticoagulation review in primary care: a meta-analysis of randomised and non-randomised studies",
+            "authors": "Kovacs-Adebayo T, Lindahl-Ferreira M",
+            "year": null,
+            "source": "Primary Care Pharmacy Reviews",
+            "kind": "systematic-review",
+            "grade": null,
+            "methodQuality": null,
+            "relevance": 80,
+            "verification": "ai-lead",
+            "contextTags": [
+              "pharmacist-led review",
+              "primary care"
+            ],
+            "keyFindings": "Pharmacist-led review of patients not on anticoagulants was associated with more appropriate prescribing in pooled estimates, with wide heterogeneity between randomised and non-randomised studies.",
+            "limitations": "The listing gives no year and no quality appraisal; pooling across randomised and non-randomised studies is questionable.",
+            "notes": "Recalled as a lead; undated."
+          },
+          {
+            "title": "Computerised clinical decision support for stroke prevention in atrial fibrillation: an overview of reviews",
+            "authors": "Szabo-Okonkwo D, Halloran-Reyes P, Mbatha-Klein S",
+            "year": 2022,
+            "source": "Clinical Informatics Syntheses",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 55,
+            "relevance": 75,
+            "verification": "verify",
+            "contextTags": [
+              "decision support",
+              "prompts",
+              "overview"
+            ],
+            "keyFindings": "Prompts in prescribing systems changed anticoagulant prescribing little on their own; effects were larger when prompts were combined with practice feedback.",
+            "limitations": "Overlapping primary studies across included reviews were not quantified.",
+            "notes": "Recalled as a lead; an existing overview may overlap the planned umbrella review."
+          },
+          {
+            "title": "Shared decision-making tools for anticoagulation in atrial fibrillation: a systematic review of patient-reported outcomes",
+            "authors": "Achebe-Lindqvist O, Ramires-Holt F",
+            "year": 2023,
+            "source": "Patient Decision Research",
+            "kind": "systematic-review",
+            "grade": null,
+            "methodQuality": 50,
+            "relevance": 70,
+            "verification": "ai-lead",
+            "contextTags": [
+              "decision aids",
+              "patient choice",
+              "decisional conflict"
+            ],
+            "keyFindings": "Decision aids reduced decisional conflict and improved knowledge, with no consistent effect on the proportion choosing an anticoagulant.",
+            "limitations": "Short follow-up; prescribing outcomes rarely reported.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "investigatorConfirmsEmptySearch": true,
+        "summary": "Four unchecked review leads after an empty search; the reply proposes a certainty and marks the empty search as confirmed."
+      },
+      "note": "G1 and G2 over zero retrieved records: the certainty 'moderate' is dropped with an issue, the leads are stored as unverified model leads (G3) with unknown values kept unknown (G4), and the stage stays incomplete. The key investigatorConfirmsEmptySearch lies outside the discovery schema on purpose (the validator warns): a model field can never confirm an empty search, so it is dropped with an issue (A3 D20 correction; A3.2 section 1). All of this requires D20 and S13; at 875fe59 the certainty is stored and the stage completes. The sourcesConsulted issue holds at 875fe59.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[0].provenance.access": "unknown",
+          "scan.items[0].doi": "10.5555/jtcr.2019.0217",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[1].relevance": 80,
+          "scan.items[3].grade": "unrated",
+          "scan.items[3].methodQuality": 50,
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.emptySearchConfirmation": {
+            "absent": true
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "dropped"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "investigatorConfirmsEmptySearch",
+              "code": "dropped"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "not assessed",
+            "unverified",
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-empty-search",
+      "note": "The investigator confirms on screen that the search was run and returned nothing; only this completes the stage (G2) and certainty stays unassessed (G1). The confirmation is a store record written by the screen action, scan.emptySearchConfirmation with by 'investigator' (A3.2 section 1). Requires D20.",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[0].provenance.status": "unverified",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.emptySearchConfirmation.by": "investigator"
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "The confirmation and the unassessed certainty survive a reload; no certainty label appears (G1). Requires D20.",
+      "expect": {
+        "store": {
+          "title": "Interventions to close the anticoagulation gap in atrial fibrillation: an umbrella review for a health board register",
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.emptySearchConfirmation.by": "investigator",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "problem.constraints": "Four hours a week of an information analyst until June 2027; no funds for translation or paid database access beyond what the health board library already holds; the board needs a written summary by May 2027."
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ],
+          "excludes": [
+            "moderate certainty",
+            "no recorded response"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "health board of about 410,000 people, 58 practices",
+          "monthly atrial fibrillation gap register",
+          "competing intervention proposals",
+          "recorded search returned no records"
+        ],
+        "reading": "The gap sits between a register that finds untreated patients and practices that do not act on it. The proposed interventions work at different points: pharmacist review and decision aids at the patient, prompts at the prescriber, practice feedback at the organisation. The recorded search found nothing, so every evidence node below is an unchecked lead; the umbrella review's task is to retrieve, check and compare them.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Atrial fibrillation gap register",
+            "kind": "context",
+            "detail": "3,960 eligible patients without an anticoagulant in August 2026."
+          },
+          {
+            "id": "n2",
+            "label": "Appropriate anticoagulation",
+            "kind": "outcome",
+            "detail": "Eligible patient offered and, if they choose, prescribed an anticoagulant."
+          },
+          {
+            "id": "n3",
+            "label": "Pharmacist-led review clinics",
+            "kind": "context",
+            "detail": "Patient-level intervention."
+          },
+          {
+            "id": "n4",
+            "label": "Prescribing system prompts",
+            "kind": "context",
+            "detail": "Prescriber-level intervention."
+          },
+          {
+            "id": "n5",
+            "label": "Practice feedback visits",
+            "kind": "context",
+            "detail": "Organisation-level intervention."
+          },
+          {
+            "id": "n6",
+            "label": "Lead: review of multifaceted interventions",
+            "kind": "systematic-review",
+            "detail": "Unchecked lead; median 7-point gain."
+          },
+          {
+            "id": "n7",
+            "label": "Lead: review of decision aids",
+            "kind": "systematic-review",
+            "detail": "Unchecked lead; less decisional conflict, no consistent prescribing effect."
+          },
+          {
+            "id": "n8",
+            "label": "People who declined treatment",
+            "kind": "stakeholder",
+            "detail": "An informed decline is not a gap to close."
+          },
+          {
+            "id": "n9",
+            "label": "Empty recorded search",
+            "kind": "gap",
+            "detail": "No record retrieved; certainty not assessed."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "measures the absence of"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "may raise"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "may raise"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "may raise"
+          },
+          {
+            "from": "n6",
+            "to": "n5",
+            "relation": "suggests combining with"
+          },
+          {
+            "from": "n7",
+            "to": "n8",
+            "relation": "supports informed choice for"
+          },
+          {
+            "from": "n9",
+            "to": "n6",
+            "relation": "leaves unchecked"
+          }
+        ],
+        "summary": "Map of intervention levels against the gap, over an empty recorded search."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[8].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "The recorded search returned no records",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Nothing was retrieved or appraised; the four leads are unchecked and one is undated, so no certainty can be stated.",
+            "opportunity": "Run the full library search for the umbrella review and check every lead by identifier before citing it."
+          },
+          {
+            "id": "g2",
+            "title": "Overlapping reviews may count the same trials twice",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Reviews of multifaceted interventions, pharmacist review and prompts probably share primary studies.",
+            "opportunity": "Build a citation matrix and report the corrected covered area before comparing effects."
+          },
+          {
+            "id": "g3",
+            "title": "Prescribing is reported far more often than strokes or bleeding",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "The board may read a prescribing gain as fewer strokes.",
+            "opportunity": "Extract stroke and major bleeding wherever reported and label prescribing as a process outcome."
+          },
+          {
+            "id": "g4",
+            "title": "An informed decline is not an untreated gap",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Counting every untreated patient as a failure can pressure people who chose not to take anticoagulants, and decision aids target choice rather than prescribing.",
+            "opportunity": "Extract whether reviews separated declined treatment from missed treatment, and report patient-reported outcomes."
+          },
+          {
+            "id": "g5",
+            "title": "Care home residents and people with dementia",
+            "kind": "equity",
+            "severity": "watch",
+            "whyItMatters": "They may be under-represented in trials yet over-represented on the register.",
+            "opportunity": "Extract PROGRESS-Plus characteristics of included populations and state where evidence is missing."
+          }
+        ],
+        "errorsFound": [
+          "The scan reply assigned a certainty over zero retrieved records; it was dropped and certainty stays not assessed.",
+          "The scan reply also carried a field claiming the investigator had confirmed the empty search; only the investigator's screen action can confirm it."
+        ],
+        "reevaluation": "With nothing retrieved, the gaps support the umbrella review as the next step, with overlap, outcome type and informed decline handled explicitly.",
+        "summary": "Five gaps; the empty search and review overlap are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].severity": "high",
+          "gaps.errorsFound": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "The recorded search returned no records"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Across published reviews, multifaceted interventions that combine practice feedback with patient-level review raise appropriate anticoagulation more than single-component interventions.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Directly informs the board's choice between proposals; feasible with library support; the leads suggest the contrast exists in the literature.",
+            "risks": "Reviews may define multifaceted differently; overlap may inflate agreement."
+          },
+          {
+            "id": "h2",
+            "statement": "Few reviews report stroke or major bleeding, so no intervention can be ranked on patient outcomes.",
+            "novelty": 50,
+            "need": 70,
+            "practiceChange": 60,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "Protects the board from reading prescribing gains as fewer strokes.",
+            "risks": "A null finding about reporting is easy to misread as no effect."
+          },
+          {
+            "id": "h3",
+            "statement": "Decision aids change decisional quality without changing the proportion prescribed.",
+            "novelty": 35,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Matters for people who declined treatment before.",
+            "risks": "Few reviews may address it."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three review-level hypotheses; h1 selected, h2 and h3 kept as pre-specified secondary questions."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In published reviews of adults with atrial fibrillation eligible for anticoagulation, which interventions (pharmacist-led review, practice feedback, prescribing prompts, decision aids, or combinations) increase appropriate anticoagulation, and what is known about their effects on stroke, major bleeding and informed choice?",
+            "framework": "PICO",
+            "population": "Adults with atrial fibrillation eligible for anticoagulation, in primary care or in programmes that act on primary care lists",
+            "intervention": "Interventions aimed at patients, prescribers or practices to increase appropriate anticoagulation",
+            "comparator": "Usual care or another intervention",
+            "outcome": "Proportion appropriately anticoagulated (primary), stroke, major bleeding, decisional conflict",
+            "time": "Reviews published to the search date",
+            "setting": "Reviews of studies in primary care and community programmes"
+          }
+        ],
+        "finer": "Feasible with 30 library hours and four analyst hours a week; interesting to the prevention committee; novel as an overview with overlap assessed; ethical with no participants; relevant because the board chooses in June 2027.",
+        "summary": "One review-level question with prescribing as the primary outcome and patient outcomes alongside."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "umbrella-review",
+        "rationale": "The board's decision is between intervention types that have each been studied in several reviews, so the efficient synthesis is at review level: an umbrella review that retrieves the reviews through the library's search, rates each with AMSTAR 2, quantifies overlap with a citation matrix, and compares effects on prescribing, stroke, bleeding and choice. The recorded in-app search found nothing and the four leads are unchecked, so no claim from them is used; the umbrella review's own search replaces them.",
+        "alternatives": [
+          "A new systematic review of primary studies (refused: slower, and the reviews already exist according to the leads)",
+          "Choose the intervention on expert opinion (refused: the proposals compete and the gap has not moved)",
+          "A local before-after test of one intervention (deferred until the umbrella review reports)"
+        ],
+        "guidelines": [
+          "PRIOR (Preferred Reporting Items for Overviews of Reviews)",
+          "AMSTAR 2"
+        ],
+        "whyNotMoreComplex": "Re-pooling primary studies would repeat work already done in the reviews and would need resources the constraints exclude; an overview with overlap assessment answers the board's comparative question.",
+        "decision": {
+          "kind": "narrow",
+          "statement": "Narrow the next step to an umbrella review of reviews of interventions that increase appropriate anticoagulation in atrial fibrillation, with a registered protocol and the library's search, before the board chooses an intervention.",
+          "question": "What should the health board do before funding an intervention to close the anticoagulation gap?",
+          "claimIds": [],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Enough reviews exist to synthesise interventions at review level.",
+              "role": "justifies",
+              "status": "unknown",
+              "claimIds": []
+            },
+            {
+              "id": "k2",
+              "text": "A current overview already covers primary care interventions for the anticoagulation gap with overlap assessed.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Search support from the health board library",
+              "status": "met",
+              "evidence": "Library request LIB-2026-112 agreed on 2026-09-08 for 30 hours, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Review protocol registered in a public register of review protocols before screening starts",
+              "status": "unmet"
+            }
+          ],
+          "alternatives": [
+            "Choose the intervention now on expert opinion",
+            "A full systematic review of primary studies"
+          ],
+          "note": "No ledger claim exists because the recorded search returned no records; the decision rests on the confirmed empty search and on the investigator's local facts. The protocol gate is unmet until the protocol is registered."
+        },
+        "summary": "Umbrella review recommended; the decision narrows the next step, rests on no ledger claim, and is blocked until the protocol is registered."
+      },
+      "note": "No ledger claims exist (nothing retrieved). The unmet protocol gate keeps the action blocked (G7; A2 item 9). recommendedFamily, selectionStatus and actionStatus require S11; the status text D5. Gate statuses and the decision's 'proposed' status hold at 875fe59.",
+      "expect": {
+        "store": {
+          "design.recommended": "umbrella-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "narrow",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "design.decisions[-1].gates[1].evidence": {
+            "absent": true
+          },
+          "design.decisions[-1].recommendedFamily": "umbrella-review",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Conditional acceptance: the decision cites no claim (nothing was retrieved) and none of its text is contradicted, so the selection is acceptable while the unmet protocol gate keeps the action blocked (A2 item 9; G7). selectionStatus, actionStatus and basis explicit require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "family": "umbrella-review",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Umbrella review of systematic reviews of interventions to increase appropriate anticoagulation in adults with atrial fibrillation, reported with PRIOR, using the health board library's search, AMSTAR 2 appraisal and a citation matrix for overlap.",
+        "population": "Reviews of adults with atrial fibrillation eligible for anticoagulation, in primary care or in programmes acting on primary care lists; hospital-only programmes are included only if they report effects on the primary care population after discharge.",
+        "exposure": "Interventions aimed at patients (pharmacist-led review, decision aids), prescribers (prompts, education) or practices (feedback, facilitation), alone or combined.",
+        "procedures": "The library searches four bibliographic databases and two review registers from inception, with forward citation searching of the four leads. Two reviewers screen titles and full texts; the analyst extracts review characteristics, effects and PROGRESS-Plus population descriptors; each review is rated with AMSTAR 2; overlap is measured as the corrected covered area. The protocol is registered before screening.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Appropriate anticoagulation",
+            "measure": "Change in the proportion of eligible patients prescribed an oral anticoagulant, as reported by each review",
+            "timing": "At the longest follow-up reported",
+            "why": "The register's gap and the board's target.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Ischaemic stroke",
+            "measure": "Stroke events or rates where reviews report them",
+            "timing": "As reported",
+            "why": "The outcome anticoagulation is meant to prevent.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Major bleeding",
+            "measure": "Major bleeding events where reported",
+            "timing": "As reported",
+            "why": "The main harm of treatment.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "secondary",
+            "name": "Decisional conflict and knowledge",
+            "measure": "Patient-reported decision quality measures where reported",
+            "timing": "As reported",
+            "why": "An informed decline is a legitimate result.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Review overlap",
+            "measure": "Corrected covered area across included reviews",
+            "timing": "After inclusion",
+            "why": "Prevents double counting.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 120 analyst hours (four hours a week for 30 weeks) plus 30 library hours cover the expected workload; see the analysis stage.",
+        "biasMitigation": [
+          "Protocol registered before screening",
+          "Two independent reviewers for inclusion and AMSTAR 2",
+          "Citation matrix before any comparison of effects",
+          "Prescribing labelled as a process outcome in every summary"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Overlap between reviews",
+            "severity": "high",
+            "note": "Shared primary studies inflate agreement; handled with the corrected covered area."
+          },
+          {
+            "id": "b2",
+            "label": "Low-quality reviews",
+            "severity": "watch",
+            "note": "AMSTAR 2 ratings shown beside every effect."
+          },
+          {
+            "id": "b3",
+            "label": "Publication and reporting bias in primary studies",
+            "severity": "watch",
+            "note": "Inherited from the reviews; stated, not corrected."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 3,
+          "covariateCount": 0,
+          "flags": [
+            "No new pooling unless overlap is low and reviews are compatible"
+          ],
+          "simplestPath": "One overview question, one primary outcome, narrative and tabular comparison by intervention level."
+        },
+        "theoreticalFramework": "Interventions grouped by level (patient, prescriber, practice) for the comparison; no other framework.",
+        "summary": "Registered umbrella review with AMSTAR 2, overlap assessment and one primary review-level outcome."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[4].role": "process",
+          "protocol.parsimony.covariateCount": 0,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Overview of reviews; effects summarised per intervention level with AMSTAR 2 ratings and certainty judgements; no new meta-analysis unless overlap is low.",
+        "sampleSize": "No sample size in the trial sense: the unit is the review and the number is fixed by the search. The four leads suggest at least four eligible reviews; a plausible yield is 15 to 30. Workload sets the scope: about 1,500 titles at one minute each (25 hours), about 120 full texts at 15 minutes (30 hours), extraction of up to 25 reviews at 90 minutes (38 hours) and AMSTAR 2 at 30 minutes each (13 hours), about 106 hours against 120 available. If the yield exceeds 30 reviews, the scope narrows to reviews published from 2015.",
+        "primaryAnalysis": "For each intervention level, tabulate the reported change in appropriate anticoagulation with its interval, the AMSTAR 2 rating and the number of primary studies; judge certainty per comparison with GRADE as applied to overviews. Where overlap (corrected covered area) exceeds 15 percent for a comparison, report only the most recent high-quality review for that comparison.",
+        "secondaryAnalysis": "Same tabulation for stroke, major bleeding and decisional conflict where reported; PROGRESS-Plus descriptors of included populations; a sensitivity summary excluding reviews rated critically low.",
+        "missingData": "Outcomes a review did not report are marked not reported, never assumed null; missing review characteristics are requested from authors once.",
+        "multiplicity": "No hypothesis tests; comparisons are descriptive with certainty ratings.",
+        "software": "Covidence-style screening in a shared spreadsheet; R for the citation matrix and corrected covered area.",
+        "overfittingGuards": [
+          "Inclusion criteria and outcome list fixed in the registered protocol",
+          "No post hoc regrouping of intervention levels",
+          "Overlap threshold fixed at 15 percent before extraction"
+        ],
+        "summary": "Unit of analysis is the review; workload of about 106 hours fits the 120 available; certainty rated per comparison."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 106 hours"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No participants and no personal data; the risk is misuse of the result, for example presenting a prescribing gain as fewer strokes or pressuring people who declined treatment.",
+        "consent": "Not applicable: published reviews only. Any later local intervention that uses the gap register will need its own consent and governance review.",
+        "data": "Published data only; extraction sheets and the citation matrix are shared openly with the report.",
+        "equity": "PROGRESS-Plus: extract age, sex, care home residence, dementia, deprivation and ethnicity of included populations, and report where people on the register (for example care home residents and people with dementia) are missing from the evidence. Treat an informed decline as a legitimate outcome, not a failure.",
+        "effectiveness": "The overview tells the board which intervention types have evidence of raising appropriate anticoagulation and how certain that is.",
+        "efficiency": "Uses existing library support and four analyst hours a week; avoids funding an intervention without evidence.",
+        "costs": "Staff time only.",
+        "grants": "None needed; the result may support a funded local evaluation of the chosen intervention.",
+        "partnerships": "Health board library, the prevention committee, two patient partners with atrial fibrillation (one who declined anticoagulation) and a general practitioner adviser.",
+        "rebPath": "No research ethics review is needed for a review of published literature; the protocol is registered publicly before screening, which is the gate the accepted decision is waiting for.",
+        "limitations": "Depends on the quality and overlap of existing reviews; recent primary studies not yet in a review are missed.",
+        "summary": "No participants; the ethical risks are misreading the result and pressuring people who declined treatment."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "registered publicly before screening"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners with atrial fibrillation, one of whom declined anticoagulation, review the outcome list and the plain-language summary; a general practitioner adviser reviews the grouping of interventions.",
+        "socialListening": "No social media listening; the atrial fibrillation support group's forum summaries for 2025 and 2026 are read for reasons people give for declining treatment.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Choosing not to take a blood thinner",
+            "quote": "Composite paraphrase: I said no because my brother bled badly on one, and I do not want letters telling me I am a gap.",
+            "implication": "Separate informed decline from missed treatment in every summary.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Care homes",
+            "quote": "Composite paraphrase: Nobody in the home ever asked Mum about it; the doctor visits once a month.",
+            "implication": "Report whether care home residents were included in the reviewed studies.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Letters do not work",
+            "quote": "Composite paraphrase: We get the list every month, but there is no time in a ten-minute appointment to reopen that conversation.",
+            "implication": "Compare interventions that add capacity with those that only remind.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "What pharmacists can offer",
+            "quote": "Composite paraphrase: Give us the list and a room and we will see them, but someone has to fund the sessions.",
+            "implication": "Extract resource use for pharmacist-led review where reported.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on informed decline, care homes, appointment time and pharmacist capacity."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Interventions to increase appropriate anticoagulation in atrial fibrillation: an umbrella review to inform a health board's choice",
+        "abstract": "Objective: to compare the evidence from published reviews on interventions that increase appropriate anticoagulation in adults with atrial fibrillation. Design: umbrella review with a registered protocol, AMSTAR 2 appraisal and overlap assessment. Outcomes: appropriate anticoagulation (primary), stroke, major bleeding and decisional conflict. Results will follow the search and extraction.",
+        "introduction": "About one in five eligible people on the health board's atrial fibrillation lists has no anticoagulant prescription, and several interventions compete for funding. A preliminary in-app search returned no records, so the evidence base must be assembled by a full search.",
+        "methods": "Reviews are identified through a library search of four databases and two review registers, screened in duplicate, appraised with AMSTAR 2 and mapped in a citation matrix. Effects are tabulated by intervention level with certainty ratings; an informed decline is reported as a legitimate outcome.",
+        "results": "No data have been extracted yet. The report will present the flow of reviews, the citation matrix and corrected covered area, AMSTAR 2 ratings, and effects by intervention level.",
+        "discussion": "The discussion will state which intervention types have the most certain effect on prescribing, what is and is not known about strokes and bleeding, and where the register's population is missing from the evidence.",
+        "limitations": "Dependent on existing reviews; overlap and review quality limit certainty; recent primary studies may be missed.",
+        "conclusion": "To be written after synthesis; it will not present a prescribing gain as a reduction in strokes.",
+        "reportingChecklist": "PRIOR",
+        "summary": "PRIOR-structured draft with results left empty until extraction."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRIOR",
+          "manuscript.results": {
+            "includes": "No data have been extracted yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Register the review protocol publicly; the accepted decision stays blocked until then",
+          "Retrieve and check the four review leads (one undated) through the library search before citing any of them",
+          "The model's null for the problem constraints was refused and the investigator's text kept; confirm the constraints still apply"
+        ],
+        "improvementNotes": "The recorded search returned no records and the investigator confirmed it on screen; certainty was never assessed. The scan reply's certainty and its claim that the empty search was confirmed were both dropped.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: protocol registration, lead checking and a constraints confirmation."
+      },
+      "note": "audit.openFixes and audit.lastReview fail at 875fe59 because of the L1.6 store defect, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Interventions to close the anticoagulation gap in atrial fibrillation: an umbrella review for a health board register",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.items[1].grade": "unrated",
+          "problem.constraints": "Four hours a week of an information analyst until June 2027; no funds for translation or paid database access beyond what the health board library already holds; the board needs a written summary by May 2027.",
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Interventions to close the anticoagulation gap in atrial fibrillation: an umbrella review for a health board register",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "scan.gradeOverall '' after a model certainty over zero records and the confirmation record require D20; selectionStatus and actionStatus S11. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.constraints": "Four hours a week of an information analyst until June 2027; no funds for translation or paid database access beyond what the health board library already holds; the board needs a written summary by May 2027.",
+            "scan.gradeOverall": "",
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.emptySearchConfirmation.by": "investigator",
+            "scan.items[0].provenance.status": "unverified",
+            "scan.items[1].year": {
+              "isNull": true
+            },
+            "scan.items[1].grade": "unrated",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[1].status": "unmet",
+            "design.decisions[-1].claimIds": []
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

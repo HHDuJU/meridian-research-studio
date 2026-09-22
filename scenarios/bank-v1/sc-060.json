@@ -1,0 +1,1282 @@
+{
+  "id": "sc-060",
+  "version": 1,
+  "title": "Regional laboratory: feasibility pilot of an HbA1c retesting interval rule, accepted with the laboratory gate met and the network gate unmet",
+  "field": "laboratory-medicine",
+  "level": 2,
+  "family": "feasibility",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path on an explicitly named feasibility pilot. A narrow fixture search returns five records (few hits); the appraisal annotates all five and records five source-derived claims with passages copied exactly from the abstracts; a reload on the Scan route right after the appraisal checks that certainty, claims and retrieval provenance survive. The decision rests on c1 to c4; the laboratory director's approval makes one gate met, and the network committee's deferral makes the other unmet, so the selection is accepted and the action blocked (G7; A2 item 9) in the store, on screen and in the export. The protocol uses progression criteria and process and balancing measures with one primary feasibility outcome (A1 G6). The problem reply omits the constraints key (G11). Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 3, 4 (ev-1jv841p, ev-1h4ekf9, ev-0oj7at7) and titleYearKey-based for records 2 and 5 (ev-0josl2k, ev-19zkvgv). Requires S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: an unmet gate ignored at acceptance, acceptance refused for an unresolved gate, certainty or claims lost on reload, and an export that shows a ready action while a gate is unmet.",
+  "inputs": {
+    "need": "I am the clinical biochemist responsible for the diabetes tests at a regional laboratory that serves 64 primary care practices and two hospitals. About 18 percent of haemoglobin A1c requests from primary care arrive less than 80 days after the patient's previous result, and in most of those the earlier result was already stable. Repeating the test before the red cell population has turned over tells the clinician almost nothing new, costs reagent and phlebotomy time, and occasionally leads to a treatment change based on a difference within the analytical variation.\n\nWe would like to add a minimum retesting interval rule to the laboratory information system: a request for an HbA1c within 80 days of the previous result would be held rather than run, and the requesting clinician would get a comment explaining why, with a simple way to override for pregnancy, a new diagnosis, a recent transfusion or a treatment change. Before we switch it on for everyone, we want a feasibility study (a pilot at six practices for four months) to find out how often the rule fires, how often clinicians override it and why, whether the override route is quick enough, whether any held test delays a decision that matters, and whether practices find the comment acceptable.\n\nI need help defining progression criteria for a wider rollout, deciding what to measure and how, choosing the six practices, and planning a safety review of held requests. The laboratory director has approved the rule in our test system; the primary care network's clinical governance committee has not yet agreed to it.",
+    "constraints": "The pilot runs within existing laboratory and practice staff time. It must finish by 2027-05-31 so that a decision can be made before the next reagent contract. The rule can be switched on for named practices only, not for individual clinicians.",
+    "localFacts": [
+      "The laboratory director approved configuration of the interval rule in the test system and for six named practices on 2026-09-03 (change request LAB-CR-2026-31).",
+      "The primary care network's clinical governance committee deferred its decision on 2026-09-10 and asked for a patient safety review of the override categories first.",
+      "Over the last 12 months the laboratory processed about 96,000 HbA1c requests from primary care; 18 percent arrived less than 80 days after the previous result.",
+      "The laboratory information system can hold a request, send a coded comment and record every override with the reason entered by the requester."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical biochemist responsible for the diabetes tests at a regional laboratory that serves 64 primary care practices and two hospitals. About 18 percent of haemoglobin A1c requests from primary care arrive less than 80 days after the patient's previous result, and in most of those the earlier result was already stable. Repeating the test before the red cell population has turned over tells the clinician almost nothing new, costs reagent and phlebotomy time, and occasionally leads to a treatment change based on a difference within the analytical variation.\n\nWe would like to add a minimum retesting interval rule to the laboratory information system: a request for an HbA1c within 80 days of the previous result would be held rather than run, and the requesting clinician would get a comment explaining why, with a simple way to override for pregnancy, a new diagnosis, a recent transfusion or a treatment change. Before we switch it on for everyone, we want a feasibility study (a pilot at six practices for four months) to find out how often the rule fires, how often clinicians override it and why, whether the override route is quick enough, whether any held test delays a decision that matters, and whether practices find the comment acceptable.\n\nI need help defining progression criteria for a wider rollout, deciding what to measure and how, choosing the six practices, and planning a safety review of held requests. The laboratory director has approved the rule in our test system; the primary care network's clinical governance committee has not yet agreed to it.",
+          "problem.constraints": "The pilot runs within existing laboratory and practice staff time. It must finish by 2027-05-31 so that a decision can be made before the next reagent contract. The rule can be switched on for named practices only, not for individual clinicians.",
+          "family": "feasibility",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical biochemist responsible for the diabetes tests"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Feasibility of a minimum retesting interval rule for HbA1c in six primary care practices",
+        "subtitle": "Four-month pilot with progression criteria before a network-wide rollout",
+        "family": "feasibility",
+        "statement": "About 18 percent of primary care HbA1c requests arrive less than 80 days after the previous result, when a repeat adds little information and can prompt treatment changes within analytical variation. A laboratory rule that holds early requests, explains why and allows override is ready in the test system. It is not known how often the rule would fire in these practices, how often and why clinicians would override it, whether overrides would be fast enough, whether any hold would delay an important decision, or whether practices would accept it.",
+        "whoAffected": "Adults with diabetes in 64 practices, the clinicians and practice pharmacists who request HbA1c, phlebotomy and laboratory staff, and the primary care network that must approve the rule.",
+        "whatHurts": "Early repeats cost patients extra blood draws and time, use reagent and staff time, and can lead to treatment changes based on noise. A badly designed hold could delay testing in pregnancy or after a treatment change.",
+        "currentPractice": "All HbA1c requests are run whatever the interval; no comment explains retesting intervals.",
+        "whyNow": "The rule is configured, the reagent contract decision is due in mid 2027, and the network committee wants safety evidence before agreeing.",
+        "patientCenteredGoal": "People with diabetes have HbA1c measured when the result can change their care, and never have a needed test delayed.",
+        "summary": "Problem framed as a feasibility question for an interval rule, with safety and acceptability as the decisive uncertainties."
+      },
+      "note": "Constraints key omitted by the reply; the investigator's text stays (G11).",
+      "expect": {
+        "store": {
+          "title": "Feasibility of a minimum retesting interval rule for HbA1c in six primary care practices",
+          "family": "feasibility",
+          "problem.constraints": "The pilot runs within existing laboratory and practice staff time. It must finish by 2027-05-31 so that a decision can be made before the next reagent contract. The rule can be switched on for named practices only, not for individual clinicians.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Feasibility of a minimum retesting interval rule for HbA1c in six primary care practices"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "HbA1c minimum retesting interval laboratory rule held requests override primary care",
+      "response": {
+        "status": 200,
+        "total": 5,
+        "records": [
+          {
+            "title": "A laboratory rule to hold early repeat HbA1c requests: before-and-after evaluation in primary care",
+            "authors": "Mensah-Rydberg K, Oyelowo-Pratt D, Castaneda-Holm L",
+            "year": 2018,
+            "venue": "Journal of Laboratory Demand Management",
+            "doi": "10.5555/jldm.2018.0064",
+            "providerType": "journal-article",
+            "abstract": "In one regional laboratory, a rule that held HbA1c requests made within 80 days of a previous result was introduced for all 48 primary care practices. Early repeat requests fell from 17 percent to 6 percent of HbA1c requests over 12 months. Clinicians overrode 4.3 percent of held requests, most often for pregnancy or a recent change in treatment. A review of 200 held requests found no case in which the hold delayed a treatment decision judged important by two diabetologists. Requesters complained mainly about the wording of the comment in the first two months after the rule started."
+          },
+          {
+            "title": "Minimum retesting intervals in clinical biochemistry: a consensus statement",
+            "authors": "Laboratory Test Utilisation Working Group",
+            "year": 2016,
+            "venue": "Clinical Biochemistry Practice Statements",
+            "providerType": "guideline",
+            "abstract": "A working group of laboratory professionals and clinicians agreed minimum retesting intervals for 24 common tests. For HbA1c, three months was agreed for monitoring established diabetes, with exceptions for pregnancy, suspected rapid change, new diagnosis and conditions affecting red cell turnover. The group advised that any hold rule must offer a simple override and that laboratories should review held requests for harm. Evidence for most intervals was indirect, and the statement relied on expert agreement for 19 of the 24 tests."
+          },
+          {
+            "title": "Why clinicians repeat HbA1c early: an analysis of override reasons under an interval rule",
+            "authors": "Tanaka-Obi R, Halvorsen-Adeyemi S",
+            "year": 2022,
+            "venue": "Primary Care Laboratory Medicine",
+            "doi": "10.5555/pclm.2022.0110",
+            "providerType": "journal-article",
+            "abstract": "Across 18 practices using an interval rule, 1,905 held HbA1c requests were followed. Requesters overrode 212 (11.1 percent); the reason matched an accepted exception in 58 percent of overrides, and in the rest the most common reason was a patient appointment already booked. The median time from hold to override was 1 working day. Practices with a named diabetes nurse overrode less often. Overrides without an accepted reason clustered among a few clinicians, which suggests that feedback could be targeted."
+          },
+          {
+            "title": "Acceptability of laboratory demand management rules among primary care clinicians",
+            "authors": "Ferreira-Lindgren M, Achebe-Nakamura J, Brandt-Oduya P",
+            "year": 2024,
+            "venue": "Primary Care Laboratory Medicine",
+            "doi": "10.5555/pclm.2024.0037",
+            "providerType": "journal-article",
+            "abstract": "We surveyed 312 primary care clinicians and held group discussions with 26 in practices that had used laboratory hold rules for at least a year. Most accepted hold rules for tests they saw as low risk, but 39 percent felt that rules on diabetes monitoring interfered with their clinical judgement. Acceptance was higher when the comment explained the reason in one sentence and gave the override route. Clinicians wanted the rule to recognise pregnancy and recent treatment changes automatically where the record allowed it."
+          },
+          {
+            "title": "Concentration of early repeat HbA1c testing among primary care practices: implications for targeting",
+            "authors": "Quist-Mbeki A, Sorensen-Reid T",
+            "year": 2020,
+            "venue": "Laboratory Utilisation Reports",
+            "providerType": "journal-article",
+            "abstract": "Using two years of laboratory data from 70 practices, we found that the 10 percent of practices with the most early repeat HbA1c requests accounted for 38 percent of all early repeats. Early repeats were more common where results were requested by practice-based pharmacists and in practices with high locum use. Practices whose recall systems booked diabetes reviews at fixed three-month intervals also had more early repeats. Targeting feedback to high-repeat practices reduced early repeats by a third in a small follow-up. The analysis could not examine individual clinical reasons for repeat requests."
+          }
+        ]
+      },
+      "note": "A narrow search with five hits (ordinary ambiguity for level 2); record 2's provider label 'guideline' maps to kind guideline at ingestion (holds at 875fe59).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 5,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1jv841p",
+            "ev-0josl2k",
+            "ev-1h4ekf9",
+            "ev-0oj7at7",
+            "ev-19zkvgv"
+          ],
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[1].kind": "guideline",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Why clinicians repeat HbA1c early: an analysis of override reasons under an interval rule"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1jv841p",
+            "relevance": 95,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Holding HbA1c requests within 80 days cut early repeats from 17 to 6 percent over 12 months; 4.3 percent of holds were overridden; no important delay was found in 200 reviewed holds.",
+            "limitations": "Uncontrolled before-and-after in one laboratory; safety review of 200 holds cannot exclude rare harm.",
+            "contextTags": [
+              "hold rule",
+              "before-and-after",
+              "safety review"
+            ]
+          },
+          {
+            "id": "ev-0josl2k",
+            "relevance": 80,
+            "methodQuality": 45,
+            "kind": "guideline",
+            "grade": "low",
+            "keyFindings": "Three months was agreed as the HbA1c monitoring interval, with exceptions for pregnancy, suspected rapid change, new diagnosis and red cell turnover conditions; hold rules need a simple override and a harm review.",
+            "limitations": "Consensus based; indirect evidence for most intervals.",
+            "contextTags": [
+              "consensus",
+              "exceptions",
+              "override"
+            ]
+          },
+          {
+            "id": "ev-1h4ekf9",
+            "relevance": 90,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Of 1,905 held requests, 11.1 percent were overridden, 58 percent of overrides for accepted exceptions; median time to override 1 working day.",
+            "limitations": "Practices self-selected into the rule.",
+            "contextTags": [
+              "override reasons",
+              "timeliness",
+              "targeting"
+            ]
+          },
+          {
+            "id": "ev-0oj7at7",
+            "relevance": 78,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "39 percent of clinicians felt diabetes monitoring rules interfered with judgement; a one-sentence reason and a clear override route improved acceptance.",
+            "limitations": "Survey response not reported; practices already using rules.",
+            "contextTags": [
+              "acceptability",
+              "comment wording"
+            ]
+          },
+          {
+            "id": "ev-19zkvgv",
+            "relevance": 72,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "The 10 percent of practices with the most early repeats produced 38 percent of them, more often with pharmacist requesting and high locum use.",
+            "limitations": "No individual clinical reasons; small follow-up for feedback.",
+            "contextTags": [
+              "practice variation",
+              "sampling"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a regional laboratory, a rule holding HbA1c requests made within 80 days reduced early repeat requests from 17 percent to 6 percent over 12 months.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1jv841p"
+            ],
+            "location": "Abstract, results",
+            "passage": "Early repeat requests fell from 17 percent to 6 percent of HbA1c requests over 12 months.",
+            "interpretation": "A hold rule can work at scale; the size of change is a planning value only.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "A review of 200 held requests found no case in which the hold delayed a treatment decision judged important by two diabetologists.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1jv841p"
+            ],
+            "location": "Abstract",
+            "passage": "A review of 200 held requests found no case in which the hold delayed a treatment decision judged important by two diabetologists.",
+            "interpretation": "Reassuring but too small to exclude rare harm; the pilot needs its own safety review.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Under an interval rule in 18 practices, requesters overrode 11.1 percent of 1,905 held requests, 58 percent of overrides matched an accepted exception, and the median time from hold to override was 1 working day.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1h4ekf9"
+            ],
+            "location": "Abstract, results",
+            "passage": "Requesters overrode 212 (11.1 percent); the reason matched an accepted exception in 58 percent of overrides",
+            "interpretation": "Gives planning values for override frequency and timeliness.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "In practices using hold rules, 39 percent of primary care clinicians felt that rules on diabetes monitoring interfered with their clinical judgement.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0oj7at7"
+            ],
+            "location": "Abstract",
+            "passage": "39 percent felt that rules on diabetes monitoring interfered with their clinical judgement",
+            "interpretation": "Acceptability is a real risk and must be measured, with comment wording tested.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "A consensus statement agreed three months as the HbA1c monitoring interval with exceptions for pregnancy, suspected rapid change, new diagnosis and conditions affecting red cell turnover.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0josl2k"
+            ],
+            "location": "Abstract",
+            "passage": "For HbA1c, three months was agreed for monitoring established diabetes, with exceptions for pregnancy, suspected rapid change, new diagnosis and conditions affecting red cell turnover.",
+            "interpretation": "Defines the override categories the safety review should test.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Five retrieved records, appraised at abstract level. A hold rule cut early repeat HbA1c requests from 17 to 6 percent in one laboratory without important delays in 200 reviewed holds, and override analyses elsewhere give planning values (about 11 percent overridden, median 1 working day). A consensus statement defines exceptions and asks for harm review. Acceptability is uncertain: 39 percent of clinicians felt diabetes monitoring rules interfered with judgement. Early repeats concentrate in a minority of practices. The evidence supports a small pilot with explicit progression criteria and a safety review, not immediate rollout.",
+        "gradeOverall": "low",
+        "gradeRationale": "Uncontrolled evaluations, a consensus statement and a survey; consistent but indirect for these practices, and too small to exclude rare harm.",
+        "summary": "Five records appraised; five claims; overall certainty low."
+      },
+      "note": "Appraisal of the five retrieved records (S13).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[1].kind": "guideline",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-1jv841p"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-1jv841p"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-1h4ekf9"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Scan route straight after the appraisal: the certainty over inspected records, the ledger and the retrieval provenance survive a browser reload (S13 for the claims; the status text D5).",
+      "expect": {
+        "store": {
+          "title": "Feasibility of a minimum retesting interval rule for HbA1c in six primary care practices",
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.items": {
+            "length": 5
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.gradeOverall": "low",
+          "scan.items[0].provenance.status": "retrieved"
+        },
+        "stage": {
+          "scan": "complete",
+          "map": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ],
+          "excludes": [
+            "no recorded response"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional laboratory serving 64 practices",
+          "laboratory information system hold and comment",
+          "primary care network governance",
+          "reagent contract decision in mid 2027"
+        ],
+        "reading": "An early repeat request is the product of practice routines (booked reviews, pharmacist requesting, locum cover) meeting a laboratory that runs every request. The hold rule moves the decision to the moment of request and adds an override, so its feasibility depends on how quickly clinicians can override for real exceptions and on whether they accept the comment. Safety depends on the exception categories. Practice variation means the pilot must include both high-repeat and typical practices.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Early repeat HbA1c request",
+            "kind": "context",
+            "detail": "18 percent of primary care requests."
+          },
+          {
+            "id": "n2",
+            "label": "Hold rule with explanatory comment",
+            "kind": "framework",
+            "detail": "Configured in the test system."
+          },
+          {
+            "id": "n3",
+            "label": "Override for accepted exceptions",
+            "kind": "context",
+            "detail": "Pregnancy, new diagnosis, transfusion, treatment change (claim c5)."
+          },
+          {
+            "id": "n4",
+            "label": "Override time and reasons",
+            "kind": "outcome",
+            "detail": "About 11 percent overridden, median 1 day elsewhere (claim c3)."
+          },
+          {
+            "id": "n5",
+            "label": "Delayed important decision",
+            "kind": "outcome",
+            "detail": "Safety review of held requests (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Clinician acceptance",
+            "kind": "stakeholder",
+            "detail": "Resistance on diabetes monitoring (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "High-repeat practices",
+            "kind": "context",
+            "detail": "Concentrate early repeats."
+          },
+          {
+            "id": "n8",
+            "label": "Network clinical governance committee",
+            "kind": "stakeholder",
+            "detail": "Decision deferred pending a safety review."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "to": "n1",
+            "relation": "holds"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "drives"
+          },
+          {
+            "from": "n2",
+            "to": "n5",
+            "relation": "could cause"
+          },
+          {
+            "from": "n6",
+            "to": "n4",
+            "relation": "shapes"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "produce most of"
+          },
+          {
+            "from": "n8",
+            "to": "n2",
+            "relation": "must approve"
+          }
+        ],
+        "summary": "Map shows the rule's feasibility resting on overrides, safety and acceptance, with network approval as a condition."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "map.nodes[1].kind": "framework",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local data on how often the rule would fire and be overridden",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Workload for requesters and the laboratory depends on firing and override rates in these practices.",
+            "opportunity": "Run the rule in six practices for four months and record every hold and override."
+          },
+          {
+            "id": "g2",
+            "title": "Safety of held requests is unproven locally",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "The network committee asked for a safety review; 200 reviewed holds elsewhere cannot exclude rare harm (claim c2).",
+            "opportunity": "Review every held request followed by a treatment change or an override without an accepted reason."
+          },
+          {
+            "id": "g3",
+            "title": "Acceptability is uncertain",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Many clinicians see diabetes rules as interference (claim c4).",
+            "opportunity": "Test the one-sentence comment and survey requesters at the end of the pilot."
+          },
+          {
+            "id": "g4",
+            "title": "Patients with barriers to repeat blood draws",
+            "kind": "equity",
+            "severity": "watch",
+            "whyItMatters": "For people who travel far or need interpreters, a held test that is later overridden means another visit.",
+            "opportunity": "Record how many overridden holds needed a second draw and report by practice rurality."
+          }
+        ],
+        "errorsFound": [],
+        "reevaluation": "The gaps confirm a feasibility pilot with explicit progression criteria and a safety review, not a comparison of effectiveness.",
+        "summary": "Four gaps; local firing and override data and safety are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[1].kind": "outcome",
+          "gaps.errorsFound": {
+            "length": 0
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "In six pilot practices over four months, at least 90 percent of overrides for accepted exceptions are completed within one working day, and the safety review finds no held request that delayed a clinically important decision.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "These are the two conditions the network committee and the laboratory need before rollout; planning values come from c2 and c3.",
+            "risks": "Too few overrides to estimate timeliness precisely; rare harm undetectable in four months."
+          },
+          {
+            "id": "h2",
+            "statement": "At least 60 percent of requesters rate the comment as clear and acceptable.",
+            "novelty": 40,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Acceptability is the main risk (c4).",
+            "risks": "Low survey response among locums."
+          },
+          {
+            "id": "h3",
+            "statement": "The rule fires more often in high-repeat practices without a higher override rate.",
+            "novelty": 45,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 75,
+            "parsimony": 60,
+            "rationale": "Practice variation is large.",
+            "risks": "Six practices are too few for comparison; descriptive only."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three feasibility propositions; h1 carries the progression decision."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In six primary care practices over four months, is a laboratory hold rule for HbA1c requests within 80 days of the previous result feasible, judged by override timeliness, safety of held requests, firing rate and requester acceptability against pre-specified progression criteria?",
+            "framework": "PICO",
+            "population": "HbA1c requests from six pilot practices, January to April 2027",
+            "intervention": "Hold rule with explanatory comment and override",
+            "comparator": "Pre-specified progression thresholds",
+            "outcome": "Overrides for accepted exceptions completed within one working day",
+            "time": "Four months",
+            "setting": "Regional laboratory and six primary care practices"
+          }
+        ],
+        "finer": "Feasible within staff time and the laboratory information system; interesting to the laboratory and network; novel locally; ethical with a safety review and override; relevant to the reagent contract decision.",
+        "summary": "One feasibility question with progression thresholds."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "feasibility",
+        "rationale": "The uncertainties are operational and safety-related (firing, override speed, harm, acceptance), not the effect on repeat testing, which has been shown elsewhere (c1). A feasibility pilot with progression criteria answers them at the scale the laboratory information system allows (named practices). Reporting follows the CONSORT extension for pilot and feasibility studies in structure, without randomisation.",
+        "alternatives": [
+          "Randomised comparison of practices with and without the rule (deferred: justified only after the pilot shows the rule is safe and workable)",
+          "Immediate network-wide rollout (refused: the committee requires safety evidence first)",
+          "Comment-only intervention (retained as a fallback if the hold is not accepted)"
+        ],
+        "guidelines": [
+          "CONSORT extension for pilot and feasibility studies"
+        ],
+        "whyNotMoreComplex": "A controlled comparison would need network approval for many practices and would answer an effectiveness question the pilot does not need to ask.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Pursue a four-month feasibility pilot of the HbA1c hold rule in six practices with pre-specified progression criteria and a safety review of held requests, because a hold rule reduced early repeats elsewhere without important delays in reviewed holds (c1, c2), override frequency and timeliness can be planned (c3), and acceptability is a real risk that must be measured (c4).",
+          "question": "Should the laboratory pilot the HbA1c hold rule before network-wide rollout?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A hold rule has reduced early repeats without important delays in reviewed holds, and override behaviour is known well enough to plan.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Held requests delay clinically important decisions in the pilot practices.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Laboratory director approval to configure the rule for six named practices",
+              "status": "met",
+              "evidence": "Change request LAB-CR-2026-31 approved on 2026-09-03, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Primary care network clinical governance committee agreement to hold HbA1c requests in the pilot practices",
+              "status": "unmet",
+              "evidence": "Decision deferred on 2026-09-10 pending a patient safety review of the override categories (investigator local fact)"
+            }
+          ],
+          "alternatives": [
+            "Educational comment on early repeats without holding the request",
+            "Targeted feedback to high-repeat practices only"
+          ],
+          "note": "Rests on ledger claims c1 to c4. The laboratory gate is met on the director's change approval; the network gate is unmet, so the pilot cannot start until the committee agrees."
+        },
+        "summary": "Feasibility pilot recommended; the laboratory gate is met and the network gate is unmet."
+      },
+      "note": "Claims require S13; selectionStatus and actionStatus S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "feasibility",
+          "family": "feasibility",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive with one gate met and one unmet: the selection is accepted and the action blocked until the network committee agrees (G7; A2 item 9). S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "design.basis": "explicit",
+          "family": "feasibility"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Four-month feasibility pilot (January to April 2027) of a laboratory hold rule for HbA1c requests within 80 days of the previous result in six primary care practices, with progression criteria for network rollout and a safety review of held requests.",
+        "population": "All HbA1c requests from six practices: three from the highest decile of early repeat requesting and three typical practices, of mixed size and rurality; requests from hospitals are excluded.",
+        "exposure": "Hold rule: a request within 80 days is held and a one-sentence comment explains the retesting interval and gives the override route (reply code with a reason: pregnancy, new diagnosis, recent transfusion or blood loss, treatment change in the last 8 weeks, other).",
+        "procedures": "The rule is switched on for the six practices only after network committee agreement. Every hold and override is logged by the laboratory information system. A diabetologist and a practice pharmacist review every held request followed by a treatment change within 30 days, every override without an accepted reason, and a random 10 percent of other holds. Requesters complete a five-question acceptability survey in month four. Progression criteria are fixed before the rule starts.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Timely overrides for accepted exceptions",
+            "measure": "Proportion of overrides for accepted exceptions completed within one working day of the hold",
+            "timing": "Four months",
+            "why": "Decides whether patients who need a test get it without delay; progression threshold 90 percent.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "balancing",
+            "name": "Held requests that delayed an important decision",
+            "measure": "Number judged by the two reviewers to have delayed a clinically important decision",
+            "timing": "Reviewed monthly",
+            "why": "The committee's safety condition; progression threshold zero.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Rule firing and override rates",
+            "measure": "Holds per 100 HbA1c requests and overrides per 100 holds, with reasons",
+            "timing": "Monthly",
+            "why": "Workload and plausibility of the rule settings.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Requester acceptability",
+            "measure": "Proportion rating the comment clear and acceptable on the five-question survey; progression threshold 60 percent",
+            "timing": "Month four",
+            "why": "Acceptability was the main risk in the retrieved evidence.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Second blood draws after an override",
+            "measure": "Overridden holds that required the patient to attend again",
+            "timing": "Monthly",
+            "why": "Burden on patients who travel far or need interpreters.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 3,000 HbA1c requests are expected from the six practices in four months, with about 540 holds and 60 overrides; the safety review is about 8 hours a month of reviewer time within existing roles.",
+        "biasMitigation": [
+          "Progression criteria fixed before the rule starts",
+          "Reviewers use a written definition of an important delay",
+          "Practices chosen by pre-specified rules, not volunteering alone"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Small numbers for overrides",
+            "severity": "watch",
+            "note": "About 60 overrides give an interval of roughly 8 points around 90 percent."
+          },
+          {
+            "id": "b2",
+            "label": "Hawthorne effect in pilot practices",
+            "severity": "watch",
+            "note": "Practices may change requesting because they know they are observed."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 0,
+          "covariateCount": 0,
+          "flags": [
+            "Progression thresholds rather than hypothesis tests",
+            "Two process and two balancing measures"
+          ],
+          "simplestPath": "One rule, six practices, four months, four progression thresholds."
+        },
+        "theoreticalFramework": "No framework beyond feasibility progression criteria; acceptability questions follow a simple five-item structure.",
+        "summary": "Four-month pilot in six practices with four progression criteria and a safety review."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].role": "balancing",
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Single-arm feasibility pilot judged against pre-specified progression criteria; no hypothesis tests.",
+        "sampleSize": "Six practices produce about 3,000 HbA1c requests in four months (about 96,000 a year across 64 practices). With 18 percent early requests, about 540 holds are expected; with about 11 percent overridden (c3), about 60 overrides. If 90 percent are completed within one working day, 60 overrides give a 95 percent confidence interval of about 82 to 98 percent, enough to tell whether the threshold is plausibly met. Zero important delays among about 540 holds would put the upper 95 percent bound for the delay rate near 0.6 percent (rule of three).",
+        "primaryAnalysis": "Proportion of overrides for accepted exceptions completed within one working day with a Wilson 95 percent confidence interval, compared descriptively with the 90 percent threshold.",
+        "secondaryAnalysis": "Firing and override rates by practice and month; override reasons; safety review counts with the rule-of-three bound; acceptability proportion; second draws.",
+        "missingData": "Overrides without a recorded time are reported as not timely in a sensitivity count; unreturned surveys are reported by practice and role.",
+        "multiplicity": "Progression criteria are judged together as pre-specified; no significance testing.",
+        "software": "Laboratory information system extracts summarised in R.",
+        "overfittingGuards": [
+          "Thresholds fixed before the pilot",
+          "No post hoc change of the 80-day interval during the pilot",
+          "Practice comparisons descriptive only"
+        ],
+        "summary": "About 60 overrides and 540 holds; interval estimates against fixed thresholds."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "60 overrides"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: a held test could delay a needed result; mitigated by the override route, exception categories and monthly safety review.",
+        "consent": "The rule changes a laboratory process for practices, not individual care decisions; practices opt in through their lead clinician and patients are informed through practice notices. Requesters take part in the survey voluntarily.",
+        "data": "Hold and override logs contain request identifiers; the review team sees only what is needed to judge delay; reports are aggregated by practice.",
+        "equity": "PROGRESS-Plus: people in rural practices, people who need interpreters and people with limited time off work bear the cost of any extra blood draw. Second draws are counted and reported by practice rurality, and the exception list includes conditions such as haemoglobinopathies and pregnancy that affect some ethnic groups more.",
+        "effectiveness": "The pilot informs a rollout decision; failing a progression criterion leads to revising the rule or dropping the hold in favour of a comment.",
+        "efficiency": "Saves reagent and phlebotomy time if it proceeds; the pilot uses existing staff.",
+        "costs": "Reviewer and analyst time within existing roles; no new software.",
+        "grants": "None needed.",
+        "partnerships": "Primary care network clinical governance committee, two practice pharmacists, a diabetologist and two patient partners from the diabetes patient group.",
+        "rebPath": "Screened as service evaluation by the laboratory's governance office; the network committee's agreement is required before the rule starts, following ICH-GCP and Declaration of Helsinki principles for confidentiality.",
+        "limitations": "Six practices and four months; rare harms undetectable; practices know they are observed.",
+        "summary": "Low-risk service pilot conditional on network agreement, with a safety review and attention to extra blood draws."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "network committee"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners and two practice pharmacists review the comment wording and the override route before the pilot.",
+        "socialListening": "No social media listening; the laboratory's user feedback inbox for the last year is read for comments on repeat testing.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Booked reviews",
+            "quote": "Composite paraphrase: The review is booked every three months, so the blood test goes in two weeks before, whatever the last result was.",
+            "implication": "Align recall systems with the interval and report booked-review overrides separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Another trip for blood",
+            "quote": "Composite paraphrase: I took the morning off for that test; if it gets held and then run anyway, I have to come back.",
+            "implication": "Count second draws and make overrides possible before the patient is bled.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Pregnancy and treatment changes",
+            "quote": "Composite paraphrase: If I have just started insulin I need to see where she is, and I do not want to argue with a computer.",
+            "implication": "Keep treatment change and pregnancy as one-click override reasons.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Laboratory workload",
+            "quote": "Composite paraphrase: One in six of our HbA1c runs changes nothing for anyone.",
+            "implication": "Report reagent and staff time saved alongside safety.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on recall systems, patient burden, override needs and laboratory workload."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Feasibility of a laboratory hold rule for early repeat HbA1c requests in primary care: a four-month pilot",
+        "abstract": "Objective: to test the feasibility and safety of holding HbA1c requests made within 80 days of the previous result. Design: single-arm pilot in six practices with pre-specified progression criteria. Measures: timely overrides, safety review of held requests, firing and override rates, acceptability and second blood draws. Results will be written after the pilot.",
+        "introduction": "Early repeat HbA1c testing adds little information and can prompt treatment changes within analytical variation. Hold rules reduce it elsewhere, but their safety and acceptance in primary care are uncertain.",
+        "methods": "The rule held requests within 80 days and offered a coded override. Every hold and override was logged; two reviewers judged delays; requesters were surveyed at four months.",
+        "results": "No data have been collected yet. The report will present each progression criterion with its interval estimate.",
+        "discussion": "The discussion will state whether each progression criterion was met and what changes to the rule, the comment or the override route are needed. It will compare override behaviour with the retrieved reports.",
+        "limitations": "Six practices over four months cannot detect rare harms, and there is no control group. Practices knew they were observed.",
+        "conclusion": "To be written after the pilot. It will recommend rollout, revision or a comment-only approach against the pre-specified criteria.",
+        "reportingChecklist": "CONSORT extension for pilot and feasibility studies (non-randomised adaptation)",
+        "summary": "Pilot report draft; results empty until the pilot ends."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "pilot and feasibility"
+          },
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The network committee's agreement is outstanding; the decision's action stays blocked and the rule stays off",
+          "Prepare the safety review of override categories the committee asked for",
+          "Run an identity check on the five retrieved records"
+        ],
+        "improvementNotes": "The search returned five records, appraised at abstract level; the accepted decision rests on four claims. One gate is met on the laboratory approval and one is unmet pending the network committee.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes; the network gate is the blocker."
+      },
+      "note": "Audit fields fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Feasibility of a minimum retesting interval rule for HbA1c in six primary care practices",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "The pilot runs within existing laboratory and practice staff time. It must finish by 2027-05-31 so that a decision can be made before the next reagent contract. The rule can be switched on for named practices only, not for individual clinicians.",
+          "scan.items": {
+            "length": 5
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Feasibility of a minimum retesting interval rule for HbA1c in six primary care practices"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "S11 for the decision fields; one click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.gradeOverall": "low",
+            "scan.retrievalEvents[0].resultCount": 5,
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[0].status": "met",
+            "design.decisions[-1].gates[1].status": "unmet",
+            "problem.constraints": "The pilot runs within existing laboratory and practice staff time. It must finish by 2027-05-31 so that a decision can be made before the next reagent contract. The rule can be switched on for named practices only, not for individual clinicians."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

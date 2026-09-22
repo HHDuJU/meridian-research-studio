@@ -1,0 +1,1440 @@
+{
+  "id": "sc-033",
+  "version": 1,
+  "title": "Chest pain unit: rapid review of a one-hour troponin rule-out pathway, with a grade withdrawn on re-appraisal",
+  "field": "cardiology",
+  "level": 2,
+  "family": "rapid-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path with one explicit null on a model-owned field. The need names a rapid review; a fixture search with few hits returns five records (years 2019 to 2025). The first appraisal grades a conference abstract 'moderate'. The investigator asks for a re-appraisal and the second appraisal call sends the same annotations and claims except that the conference abstract's grade is null (and its limitations explain why): the explicit null must clear that record's grade to 'unrated' with one 'cleared' issue, leave every other grade, the four claims and the overall certainty 'moderate' unchanged, and must not be read as omission (D2, work-order test clear_explicit_null_grade; at 875fe59 the null is logged 'cleared' but the old grade stays, a false cleared log). The null is on a model-owned grade, never on investigator text (G11); the problem reply omits constraints (omitKeys), so the typed constraints stay as entered. The decision (kind narrow) rests on claims c1, c3 and c4 from fully reported records and both gates are met, so acceptance gives accepted and ready. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator: DOI-based for records 1, 3, 4 (ev-0vzr5m5, ev-1iswvrr, ev-0fba4if); title and year for records 2 and 5 (ev-1yix4sd, ev-0joc6ty). Requires D2 (null clears the grade), S13 (appraisal dispatch), S11 (routing basis, selectionStatus, actionStatus) and D5 (decision status text). Catches: an explicit null ignored or treated as omission, a false 'cleared' log, a re-appraisal that wipes other annotations or the ledger, and certainty changed by an ungraded record.",
+  "inputs": {
+    "need": "I am the clinical lead for the chest pain unit at a 550-bed district general hospital. We see about 9,000 patients a year with suspected acute coronary syndrome, and at present we rule out myocardial infarction with high-sensitivity troponin I at presentation and again at three hours. Patients who are ruled out spend a median of seven hours in the department, and the unit is full most afternoons. The cardiology and emergency medicine consultants want to move to a one-hour rule-out pathway (samples at presentation and at one hour, with early discharge if both are below the assay's thresholds), and the hospital quality committee has asked for a rapid review of the evidence before it approves the change at its meeting on 2 December 2026.\n\nThe questions the committee cares about are: how many ruled-out patients have a heart attack or die within 30 days, how many patients can be ruled out at one hour, how much time it saves, and what goes wrong in practice, for example second samples drawn at the wrong time or laboratory delays. I am particularly worried about older patients and people with kidney disease, who make up a large share of our attendances and in whom troponin is often raised for other reasons.\n\nWe have six weeks and the clinical librarian can give us about ten hours. There is no funding and we cannot add laboratory staff. I would like a short, honest summary that the committee can act on, not a literature list.",
+    "constraints": "Six weeks to the quality committee meeting on 2 December 2026. About ten hours of clinical librarian time; no funding; no additional laboratory staff.",
+    "localFacts": [
+      "The quality committee has scheduled the one-hour pathway proposal for its meeting on 2 December 2026 (item QC-2026-51).",
+      "The clinical librarian has agreed to ten hours of searching between 20 October and 13 November 2026 (request CL-26-087).",
+      "In 2025 the chest pain unit saw 9,140 patients with suspected acute coronary syndrome; 38 percent were aged 75 or over."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names a rapid review and no other design: routing explicit (S11).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical lead for the chest pain unit at a 550-bed district general hospital. We see about 9,000 patients a year with suspected acute coronary syndrome, and at present we rule out myocardial infarction with high-sensitivity troponin I at presentation and again at three hours. Patients who are ruled out spend a median of seven hours in the department, and the unit is full most afternoons. The cardiology and emergency medicine consultants want to move to a one-hour rule-out pathway (samples at presentation and at one hour, with early discharge if both are below the assay's thresholds), and the hospital quality committee has asked for a rapid review of the evidence before it approves the change at its meeting on 2 December 2026.\n\nThe questions the committee cares about are: how many ruled-out patients have a heart attack or die within 30 days, how many patients can be ruled out at one hour, how much time it saves, and what goes wrong in practice, for example second samples drawn at the wrong time or laboratory delays. I am particularly worried about older patients and people with kidney disease, who make up a large share of our attendances and in whom troponin is often raised for other reasons.\n\nWe have six weeks and the clinical librarian can give us about ten hours. There is no funding and we cannot add laboratory staff. I would like a short, honest summary that the committee can act on, not a literature list.",
+          "problem.constraints": "Six weeks to the quality committee meeting on 2 December 2026. About ten hours of clinical librarian time; no funding; no additional laboratory staff.",
+          "family": "rapid-review",
+          "design.basis": "explicit",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical lead for the chest pain unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "One-hour high-sensitivity troponin rule-out in a district hospital chest pain unit: a rapid review",
+        "subtitle": "Rapid review for the hospital quality committee, 2 December 2026",
+        "family": "rapid-review",
+        "statement": "The chest pain unit rules out myocardial infarction with troponin samples at presentation and three hours, and ruled-out patients spend a median of seven hours in the department. Consultants propose a one-hour rule-out pathway. The quality committee needs a rapid review of how safe one-hour rule-out is at 30 days, how many patients it rules out, how much time it saves, and what fails in practice, with particular attention to older patients and people with kidney disease.",
+        "whoAffected": "About 9,000 adults a year with suspected acute coronary syndrome at a 550-bed district general hospital, 38 percent of them aged 75 or over; emergency and cardiology staff; the laboratory; and the quality committee that must approve the change.",
+        "whatHurts": "Long waits for a second sample crowd the unit and delay care for other patients; a faster pathway that missed myocardial infarctions, or that ruled out few of the older patients who make up much of the workload, would add risk without the promised relief.",
+        "currentPractice": "High-sensitivity troponin I at presentation and at three hours; discharge after two results below the threshold; median seven hours in the department for ruled-out patients.",
+        "whyNow": "The unit is full most afternoons, consultants have proposed the change, and the committee meets on 2 December 2026.",
+        "patientCenteredGoal": "Patients without a heart attack go home sooner and safely, and patients who have one are not sent home.",
+        "summary": "Problem framed as a rapid review of safety, rule-out yield, time saved and practical failure points of a one-hour pathway."
+      },
+      "omitKeys": [
+        "constraints"
+      ],
+      "note": "The reply omits constraints, so the investigator's typed text stays as entered (omission preserves; G11 is not engaged).",
+      "expect": {
+        "store": {
+          "title": "One-hour high-sensitivity troponin rule-out in a district hospital chest pain unit: a rapid review",
+          "family": "rapid-review",
+          "problem.constraints": "Six weeks to the quality committee meeting on 2 December 2026. About ten hours of clinical librarian time; no funding; no additional laboratory staff.",
+          "problem.statement": {
+            "includes": "how safe one-hour rule-out is at 30 days"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "One-hour high-sensitivity troponin rule-out in a district hospital chest pain unit: a rapid review"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "one-hour high-sensitivity troponin rule-out pathway emergency department safety 30-day older adults kidney disease",
+      "response": {
+        "status": 200,
+        "total": 5,
+        "records": [
+          {
+            "title": "One-hour high-sensitivity troponin rule-out pathways in the emergency department: a systematic review and meta-analysis of safety",
+            "authors": "Achebe-Lindgren O, Marchetti-Soyinka P, Hallam-Oduya R",
+            "year": 2022,
+            "venue": "Emergency Cardiac Care Reviews",
+            "doi": "10.5555/eccr.2022.0133",
+            "providerType": "review",
+            "abstract": "We searched four databases to June 2021 for studies applying a 0/1-hour high-sensitivity troponin algorithm to adults presenting with suspected myocardial infarction. Twenty-two studies with 31,400 patients were included. Among patients ruled out at one hour (pooled 57 percent of those tested), the 30-day rate of death or myocardial infarction was 0.3 percent (95 percent CI 0.2 to 0.5). Sensitivity for index myocardial infarction was 98.8 percent. Most studies were prospective validation studies in specialist centres; eight had a high risk of bias in patient selection, and few reported results by age or kidney function."
+          },
+          {
+            "title": "Moving from a three-hour to a one-hour troponin pathway in a district hospital chest pain unit: a before-after evaluation",
+            "authors": "Kowalczyk-Ames B, Ferreira-Olatunji D",
+            "year": 2019,
+            "venue": "District Hospital Medicine",
+            "providerType": "journal-article",
+            "abstract": "We compared 12 months before and 12 months after a switch from a 0/3-hour to a 0/1-hour high-sensitivity troponin pathway in a 480-bed district hospital. Median time in the department for ruled-out patients fell from 7.2 to 4.1 hours, and the proportion discharged directly from the unit rose from 41 to 55 percent. Among patients discharged after rule-out, the 30-day rate of death or myocardial infarction was 0.4 percent before and 0.3 percent after. In the first three months the second sample was drawn outside the 45 to 75 minute window in 22 percent of patients, falling to 9 percent after a phlebotomy prompt was added."
+          },
+          {
+            "title": "Timing of the second troponin sample and laboratory turnaround under rapid rule-out algorithms: an observational study",
+            "authors": "Srinivasan-Holt M, Eriksen-Obi A, Tulloch-Mensah J",
+            "year": 2021,
+            "venue": "Laboratory Medicine in Practice",
+            "doi": "10.5555/lmp.2021.0217",
+            "providerType": "journal-article",
+            "abstract": "Across three emergency departments using a 0/1-hour algorithm, we recorded sample collection and result times for 5,812 patients. The second sample was collected outside the 45 to 75 minute window in 18 percent of patients, most often during the afternoon peak. Median laboratory turnaround was 52 minutes and exceeded 90 minutes for 11 percent of samples. When the second sample was late, the algorithm placed more patients in the observe zone, and 3 of 1,040 late-sampled patients who were ruled out had a myocardial infarction within 30 days. The authors recommend timed prompts and escalation when turnaround exceeds one hour."
+          },
+          {
+            "title": "Performance of a one-hour troponin rule-out algorithm in patients aged 75 or over and in chronic kidney disease",
+            "authors": "Beaumont-Adeyinka C, Yamada-Rourke L, Pereira-Strand K, Owusu-Fairley E",
+            "year": 2023,
+            "venue": "Emergency Cardiac Care Reviews",
+            "doi": "10.5555/eccr.2023.0271",
+            "providerType": "journal-article",
+            "abstract": "In a multicentre prospective study of 9,760 patients, we examined the 0/1-hour algorithm in patients aged 75 or over (n=2,310) and in those with an estimated glomerular filtration rate below 60 (n=1,480). Sensitivity for myocardial infarction remained above 97 percent in both groups, but only 29 percent of older patients and 21 percent of patients with kidney disease were ruled out at one hour, compared with 62 percent of younger patients with normal kidney function. More than half of both groups fell into the observe zone and needed a third sample. Age-adjusted thresholds increased rule-out but lowered sensitivity."
+          },
+          {
+            "title": "Early discharge after one-hour troponin rule-out and 30-day outcomes in a regional network: conference abstract",
+            "authors": "Oyewole-Brandt S, Kilbride-Nakamura T",
+            "year": 2025,
+            "venue": "Regional Cardiac Society annual meeting abstract book",
+            "providerType": "conference-abstract",
+            "abstract": "This abstract reports early discharge after a 0/1-hour rule-out across five hospitals in one region. Of 14,200 patients tested, 7,950 were ruled out and discharged within four hours. The 30-day rate of death or myocardial infarction among them was reported as 0.2 percent. Methods for follow-up were not described, it is unclear whether patients who attended hospitals outside the region were captured, and no full report has been published. Results by age and kidney function were not given, and the abstract does not say how many patients left before the second sample was taken."
+          }
+        ]
+      },
+      "note": "A search with few hits: five records, ids from stableRecordId (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 5,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0vzr5m5",
+            "ev-1yix4sd",
+            "ev-1iswvrr",
+            "ev-0fba4if",
+            "ev-0joc6ty"
+          ],
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[4].id": "ev-0joc6ty",
+          "scan.items[4].kind": "grey",
+          "scan.items[4].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Early discharge after one-hour troponin rule-out and 30-day outcomes in a regional network: conference abstract"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0vzr5m5",
+            "relevance": 95,
+            "methodQuality": 70,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Among patients ruled out at one hour (57 percent of those tested), 30-day death or myocardial infarction was 0.3 percent across 22 studies; sensitivity for index infarction 98.8 percent.",
+            "limitations": "Search ended June 2021; mostly specialist centres; eight studies at high risk of selection bias; few results by age or kidney function.",
+            "contextTags": [
+              "safety",
+              "meta-analysis",
+              "one-hour algorithm"
+            ]
+          },
+          {
+            "id": "ev-1yix4sd",
+            "relevance": 88,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In a district hospital, time in the department for ruled-out patients fell from 7.2 to 4.1 hours with unchanged 30-day events; early sample timing errors fell after a phlebotomy prompt.",
+            "limitations": "Uncontrolled before-after comparison in one hospital; secular changes not addressed.",
+            "contextTags": [
+              "district hospital",
+              "length of stay",
+              "before-after"
+            ]
+          },
+          {
+            "id": "ev-1iswvrr",
+            "relevance": 80,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Second samples fell outside the 45 to 75 minute window in 18 percent of patients; late samples placed more patients in the observe zone.",
+            "limitations": "Three departments; outcome follow-up for late-sampled patients only partly reported.",
+            "contextTags": [
+              "sample timing",
+              "laboratory turnaround",
+              "implementation"
+            ]
+          },
+          {
+            "id": "ev-0fba4if",
+            "relevance": 90,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Sensitivity stayed above 97 percent in older and kidney patients, but only 29 and 21 percent were ruled out at one hour against 62 percent of younger patients.",
+            "limitations": "Specialist centres; kidney function from a single measurement.",
+            "contextTags": [
+              "older adults",
+              "kidney disease",
+              "rule-out yield"
+            ]
+          },
+          {
+            "id": "ev-0joc6ty",
+            "relevance": 70,
+            "methodQuality": 40,
+            "kind": "grey",
+            "grade": "moderate",
+            "keyFindings": "Reported 0.2 percent 30-day death or myocardial infarction among 7,950 patients discharged within four hours after one-hour rule-out.",
+            "limitations": "Conference abstract; follow-up methods not described.",
+            "contextTags": [
+              "regional network",
+              "early discharge",
+              "conference abstract"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Among patients ruled out at one hour, the 30-day rate of death or myocardial infarction was 0.3 percent across 22 studies.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0vzr5m5"
+            ],
+            "location": "Abstract, results",
+            "passage": "the 30-day rate of death or myocardial infarction was 0.3 percent (95 percent CI 0.2 to 0.5)",
+            "interpretation": "Safety at 30 days is well estimated for the populations studied, mostly younger patients in specialist centres.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "After a district hospital switched to a one-hour pathway, median time in the department for ruled-out patients fell from 7.2 to 4.1 hours.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1yix4sd"
+            ],
+            "location": "Abstract, results",
+            "passage": "Median time in the department for ruled-out patients fell from 7.2 to 4.1 hours",
+            "interpretation": "A planning value for time saved in a comparable hospital; uncontrolled.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Under a one-hour algorithm, the second sample was collected outside the 45 to 75 minute window in 18 percent of patients.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1iswvrr"
+            ],
+            "location": "Abstract, results",
+            "passage": "The second sample was collected outside the 45 to 75 minute window in 18 percent of patients",
+            "interpretation": "Sample timing is the main practical failure point; the review should report it and what reduced it.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Only 29 percent of patients aged 75 or over and 21 percent of patients with kidney disease were ruled out at one hour.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0fba4if"
+            ],
+            "location": "Abstract, results",
+            "passage": "only 29 percent of older patients and 21 percent of patients with kidney disease were ruled out at one hour",
+            "interpretation": "The time saving will be much smaller for the older patients who make up 38 percent of attendances.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Five retrieved records, appraised at abstract level. A meta-analysis of 22 studies found 0.3 percent 30-day death or myocardial infarction among patients ruled out at one hour, and a district hospital halved time in the department after switching pathways. Second samples drawn outside the timing window are common and push patients into the observe zone. Rule-out at one hour is far less frequent in patients aged 75 or over and in kidney disease, so local time savings depend on the case mix. A regional conference abstract reports similar safety.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "Consistent safety estimates from many studies with a narrow interval; downgraded one level because most studies come from specialist centres with younger patients than this unit's, and the local time saving rests on one uncontrolled evaluation.",
+        "summary": "Five retrieved records appraised; four source-derived claims with passages; overall certainty moderate."
+      },
+      "note": "First appraisal over the five retrieved records (S13); the conference abstract receives 'moderate'.",
+      "expect": {
+        "store": {
+          "scan.items[0].grade": "moderate",
+          "scan.items[3].grade": "moderate",
+          "scan.items[4].grade": "moderate",
+          "scan.items[4].methodQuality": 40,
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[3].sourceIds": [
+            "ev-0fba4if"
+          ],
+          "scan.gradeOverall": "moderate",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0vzr5m5",
+            "relevance": 95,
+            "methodQuality": 70,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Among patients ruled out at one hour (57 percent of those tested), 30-day death or myocardial infarction was 0.3 percent across 22 studies; sensitivity for index infarction 98.8 percent.",
+            "limitations": "Search ended June 2021; mostly specialist centres; eight studies at high risk of selection bias; few results by age or kidney function.",
+            "contextTags": [
+              "safety",
+              "meta-analysis",
+              "one-hour algorithm"
+            ]
+          },
+          {
+            "id": "ev-1yix4sd",
+            "relevance": 88,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In a district hospital, time in the department for ruled-out patients fell from 7.2 to 4.1 hours with unchanged 30-day events; early sample timing errors fell after a phlebotomy prompt.",
+            "limitations": "Uncontrolled before-after comparison in one hospital; secular changes not addressed.",
+            "contextTags": [
+              "district hospital",
+              "length of stay",
+              "before-after"
+            ]
+          },
+          {
+            "id": "ev-1iswvrr",
+            "relevance": 80,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Second samples fell outside the 45 to 75 minute window in 18 percent of patients; late samples placed more patients in the observe zone.",
+            "limitations": "Three departments; outcome follow-up for late-sampled patients only partly reported.",
+            "contextTags": [
+              "sample timing",
+              "laboratory turnaround",
+              "implementation"
+            ]
+          },
+          {
+            "id": "ev-0fba4if",
+            "relevance": 90,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Sensitivity stayed above 97 percent in older and kidney patients, but only 29 and 21 percent were ruled out at one hour against 62 percent of younger patients.",
+            "limitations": "Specialist centres; kidney function from a single measurement.",
+            "contextTags": [
+              "older adults",
+              "kidney disease",
+              "rule-out yield"
+            ]
+          },
+          {
+            "id": "ev-0joc6ty",
+            "relevance": 70,
+            "methodQuality": 40,
+            "kind": "grey",
+            "grade": null,
+            "keyFindings": "Reported 0.2 percent 30-day death or myocardial infarction among 7,950 patients discharged within four hours after one-hour rule-out.",
+            "limitations": "Conference abstract only: follow-up methods not described, capture outside the region unclear and no full report; grade withheld until a full report is available.",
+            "contextTags": [
+              "regional network",
+              "early discharge",
+              "conference abstract"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Among patients ruled out at one hour, the 30-day rate of death or myocardial infarction was 0.3 percent across 22 studies.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0vzr5m5"
+            ],
+            "location": "Abstract, results",
+            "passage": "the 30-day rate of death or myocardial infarction was 0.3 percent (95 percent CI 0.2 to 0.5)",
+            "interpretation": "Safety at 30 days is well estimated for the populations studied, mostly younger patients in specialist centres.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "After a district hospital switched to a one-hour pathway, median time in the department for ruled-out patients fell from 7.2 to 4.1 hours.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1yix4sd"
+            ],
+            "location": "Abstract, results",
+            "passage": "Median time in the department for ruled-out patients fell from 7.2 to 4.1 hours",
+            "interpretation": "A planning value for time saved in a comparable hospital; uncontrolled.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Under a one-hour algorithm, the second sample was collected outside the 45 to 75 minute window in 18 percent of patients.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1iswvrr"
+            ],
+            "location": "Abstract, results",
+            "passage": "The second sample was collected outside the 45 to 75 minute window in 18 percent of patients",
+            "interpretation": "Sample timing is the main practical failure point; the review should report it and what reduced it.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Only 29 percent of patients aged 75 or over and 21 percent of patients with kidney disease were ruled out at one hour.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0fba4if"
+            ],
+            "location": "Abstract, results",
+            "passage": "only 29 percent of older patients and 21 percent of patients with kidney disease were ruled out at one hour",
+            "interpretation": "The time saving will be much smaller for the older patients who make up 38 percent of attendances.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Five retrieved records, appraised at abstract level; the regional conference abstract is kept as context but not graded, because its follow-up methods are not described. A meta-analysis of 22 studies found 0.3 percent 30-day death or myocardial infarction among patients ruled out at one hour, and a district hospital halved time in the department after switching pathways. Second samples drawn outside the timing window are common, and rule-out at one hour is far less frequent in older patients and in kidney disease.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "Unchanged: consistent safety estimates from many studies, downgraded once for indirectness to an older district hospital population; the ungraded conference abstract does not contribute to certainty.",
+        "summary": "Re-appraisal on the investigator's request: the conference abstract's grade is withdrawn (explicit null); other annotations, the four claims and the overall certainty are unchanged."
+      },
+      "note": "Re-appraisal: the only null is the conference abstract's grade. Explicit null clears a model-owned field to its documented unresolved value ('unrated') with an accurate 'cleared' issue (D2). No later stage is complete, so nothing is flagged for review.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[4].id": "ev-0joc6ty",
+          "scan.items[4].grade": "unrated",
+          "scan.items[4].limitations": {
+            "includes": "grade withheld"
+          },
+          "scan.items[4].methodQuality": 40,
+          "scan.items[0].grade": "moderate",
+          "scan.items[1].grade": "low",
+          "scan.items[3].grade": "moderate",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].id": "c1",
+          "scan.gradeOverall": "moderate",
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-0joc6ty].grade",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "550-bed district general hospital",
+          "chest pain unit full most afternoons",
+          "high-sensitivity troponin I at 0 and 3 hours today",
+          "38 percent of attendances aged 75 or over"
+        ],
+        "reading": "Safety of one-hour rule-out is well estimated where it was studied (claim c1), and a comparable district hospital cut time in the department by about three hours (claim c2). The benefit runs through the proportion ruled out, which is much lower in older patients and kidney disease (claim c4), and through reliable sample timing, which fails often at peak times (claim c3). The laboratory's turnaround and the phlebotomy workflow are therefore as important as the thresholds.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "One-hour rule-out pathway",
+            "kind": "context",
+            "detail": "Samples at presentation and one hour."
+          },
+          {
+            "id": "n2",
+            "label": "30-day death or myocardial infarction after rule-out",
+            "kind": "outcome",
+            "detail": "Safety outcome for the committee."
+          },
+          {
+            "id": "n3",
+            "label": "Proportion ruled out at one hour",
+            "kind": "outcome",
+            "detail": "Drives time saved."
+          },
+          {
+            "id": "n4",
+            "label": "Meta-analysis of 22 studies",
+            "kind": "systematic-review",
+            "detail": "0.3 percent 30-day events among ruled-out patients (c1)."
+          },
+          {
+            "id": "n5",
+            "label": "District hospital before-after evaluation",
+            "kind": "observational",
+            "detail": "7.2 to 4.1 hours in the department (c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Second sample outside the timing window",
+            "kind": "gap",
+            "detail": "18 percent of patients in one study (c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Patients aged 75 or over and with kidney disease",
+            "kind": "stakeholder",
+            "detail": "Ruled out far less often (c4)."
+          },
+          {
+            "id": "n8",
+            "label": "Laboratory and phlebotomy",
+            "kind": "stakeholder",
+            "detail": "Turnaround and timed sampling."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "must keep low"
+          },
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "determines"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "estimates"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "shows time saved through"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "reduces"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "have a lower"
+          },
+          {
+            "from": "n8",
+            "to": "n6",
+            "relation": "can prevent"
+          }
+        ],
+        "summary": "Map shows that safety is established where studied, while time saved depends on case mix, sampling and laboratory turnaround."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[5].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Rule-out yield in older and kidney patients",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Most studies report pooled results, and the one study of older and kidney patients found low rule-out rates (claim c4); the unit's time saving depends on it.",
+            "opportunity": "Extract rule-out yield and safety by age and kidney function wherever reported and estimate the local yield from the unit's case mix."
+          },
+          {
+            "id": "g2",
+            "title": "Sampling time failures at peak hours",
+            "kind": "implementation",
+            "severity": "high",
+            "whyItMatters": "Late second samples were common (claim c3) and change how patients are classified.",
+            "opportunity": "Include studies reporting timing failures and the fixes that reduced them."
+          },
+          {
+            "id": "g3",
+            "title": "Specialist centre evidence applied to a district hospital",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Safety estimates come mostly from specialist centres with younger patients.",
+            "opportunity": "Tabulate setting and age for every included study and grade indirectness explicitly."
+          },
+          {
+            "id": "g4",
+            "title": "Older patients waiting longest",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "If the pathway mainly speeds up younger patients, older patients may wait as long as now while the unit reports improvement.",
+            "opportunity": "Report time saved separately for patients aged 75 or over."
+          }
+        ],
+        "errorsFound": [
+          "The proposal assumes the published rule-out rate of about 57 percent will apply locally; the unit's older case mix makes that unlikely."
+        ],
+        "reevaluation": "The rapid review should report safety, rule-out yield and time saved by age and kidney function, and treat sampling-time failures as a core question rather than a footnote.",
+        "summary": "Four gaps; rule-out yield in older and kidney patients and sampling failures are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[1].kind": "implementation",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Rule-out yield in older and kidney patients"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "In published evaluations, one-hour rule-out keeps 30-day death or myocardial infarction among ruled-out patients below 0.5 percent, but rules out fewer than a third of patients aged 75 or over.",
+            "novelty": 30,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 80,
+            "parsimony": 84,
+            "rationale": "The committee needs both halves: safety and the realistic yield for this unit's older case mix; both can be extracted within six weeks.",
+            "risks": "Few studies report age-specific yield; kidney function definitions differ."
+          },
+          {
+            "id": "h2",
+            "statement": "Timed phlebotomy prompts reduce second-sample timing failures to below 10 percent.",
+            "novelty": 45,
+            "need": 65,
+            "practiceChange": 70,
+            "feasibility": 55,
+            "parsimony": 60,
+            "rationale": "One evaluation reported a fall from 22 to 9 percent after a prompt; the review can check whether others agree.",
+            "risks": "Before-after comparisons only."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Two hypotheses; h1 selected as the committee's central question."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In adults presenting to an emergency department with suspected myocardial infarction, what is the 30-day rate of death or myocardial infarction among patients ruled out by a one-hour high-sensitivity troponin pathway, and what proportion are ruled out, overall and in patients aged 75 or over or with kidney disease?",
+            "framework": "PICO",
+            "population": "Adults with suspected myocardial infarction in emergency departments",
+            "intervention": "One-hour high-sensitivity troponin rule-out pathway",
+            "comparator": "Three-hour pathway where reported",
+            "outcome": "30-day death or myocardial infarction among ruled-out patients; proportion ruled out",
+            "time": "30 days",
+            "setting": "Emergency departments and chest pain units, with district hospitals reported separately"
+          }
+        ],
+        "finer": "Feasible in six weeks with ten librarian hours; interesting to the committee and both specialties; novel only in its focus on older and kidney patients in a district setting; ethical as a review of published data; relevant because a pathway change is scheduled for decision.",
+        "summary": "One PICO question covering safety and yield, with age and kidney subgroups."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "questions.items[0].time": "30 days",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "rapid-review",
+        "rationale": "The committee decides on 2 December 2026 and the team has six weeks and ten librarian hours. A rapid review updating the 2021 search can combine the safety estimate (claim c1) with the evidence on rule-out yield in older and kidney patients (claim c4) and on sampling failures (claim c3), which are what determine whether the change helps this unit. A local before-after evaluation would come after approval, not instead of the review.",
+        "alternatives": [
+          "Full systematic review (refused: cannot finish before the committee meets)",
+          "Approve the change on the 2022 meta-analysis alone (refused: it does not answer the yield question for older patients)",
+          "Local before-after evaluation after a trial period (deferred: follows approval and needs the review's planning values)"
+        ],
+        "guidelines": [
+          "PRISMA 2020, with rapid review shortcuts stated"
+        ],
+        "whyNotMoreComplex": "Duplicate screening and author contact would not fit six weeks and are unlikely to change the direction of the safety estimate; the open questions are yield and implementation, which a focused rapid review can answer.",
+        "decision": {
+          "kind": "narrow",
+          "statement": "Narrow the rapid review to three questions the committee needs (30-day safety after one-hour rule-out, rule-out yield in older and kidney patients, and second-sample timing failures), leaving cost and staffing to the implementation plan, and report on 2 December 2026.",
+          "question": "What should the rapid review for the one-hour pathway decision cover?",
+          "claimIds": [
+            "c1",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Safety is well estimated where studied, but yield and sampling failures decide the local benefit.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A current review already reports yield by age and kidney function for district hospitals.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": [
+                "c4"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Clinical librarian time for the update search",
+              "status": "met",
+              "evidence": "Request CL-26-087 confirming ten hours between 20 October and 13 November 2026, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "A decision forum and date for the report",
+              "status": "met",
+              "evidence": "Quality committee item QC-2026-51 for 2 December 2026, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Approve on the 2022 meta-analysis alone",
+            "Full systematic review after the decision"
+          ],
+          "note": "Rests on ledger claims c1, c3 and c4 from retrieved records; the ungraded conference abstract carries no claim."
+        },
+        "summary": "Rapid review recommended and narrowed to safety, yield and sampling failures; both gates met."
+      },
+      "note": "The decision cites ledger claims c1, c3 and c4 (S13); selectionStatus requires S11 and the panel text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "rapid-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "narrow",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: claims from retrieved, fully reported records, both gates met (G7). S11 for the status fields and basis, D5 for the panel text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "rapid-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Rapid review with stated shortcuts: an update search from June 2021 building on the 2022 meta-analysis, focused on 30-day safety, rule-out yield overall and in older and kidney patients, time in the department, and second-sample timing failures.",
+        "population": "Adults with suspected myocardial infarction assessed with a one-hour high-sensitivity troponin pathway in emergency departments or chest pain units; studies from 2015 in English.",
+        "exposure": "One-hour rule-out pathway (samples at presentation and at about one hour, rule-out below assay-specific thresholds). Comparator where reported: three-hour pathway.",
+        "procedures": "The librarian runs a dated search of three databases from June 2021 and checks the 2022 meta-analysis's included studies. One reviewer screens and a second checks a random 20 percent; one reviewer extracts and a second checks all safety and yield values. Risk of bias is judged with a short tool for accuracy and before-after studies. Conference abstracts are listed but not graded or pooled unless a full report exists.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "30-day death or myocardial infarction after rule-out",
+            "measure": "Proportion of ruled-out patients with death or myocardial infarction within 30 days",
+            "timing": "30 days after presentation",
+            "why": "The safety outcome the committee must be sure of.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Rule-out yield",
+            "measure": "Proportion of tested patients ruled out at one hour, overall and by age 75 or over and kidney function",
+            "timing": "At one hour",
+            "why": "Determines the time saved for this unit's case mix.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Time in the department",
+            "measure": "Median hours from arrival to discharge for ruled-out patients",
+            "timing": "Index visit",
+            "why": "The benefit patients feel.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Second-sample timing failures",
+            "measure": "Proportion of second samples outside the 45 to 75 minute window",
+            "timing": "Index visit",
+            "why": "The main practical failure point.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Ten librarian hours and about 12 reviewer days over six weeks; the 2022 meta-analysis supplies most studies before June 2021.",
+        "biasMitigation": [
+          "Dated search and every shortcut reported",
+          "Second reviewer checks all safety and yield extractions",
+          "Conference abstracts listed but not graded or pooled",
+          "Setting and age tabulated for each study to judge indirectness"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Indirectness of specialist centre data",
+            "severity": "watch",
+            "note": "Younger populations than this unit's."
+          },
+          {
+            "id": "b2",
+            "label": "Selective outcome follow-up",
+            "severity": "watch",
+            "note": "30-day capture outside the study region is often unclear."
+          }
+        ],
+        "parsimony": {
+          "score": 84,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "Subgroups limited to age 75 or over and kidney function"
+          ],
+          "simplestPath": "One safety outcome, two yield and time outcomes and one process measure from an update of an existing review."
+        },
+        "theoreticalFramework": "None; the review answers a safety and yield question for a pathway decision.",
+        "summary": "Update rapid review with one primary safety outcome, two secondary outcomes and one process measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[3].role": "process",
+          "protocol.parsimony.secondaryOutcomeCount": 2,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Rapid review with random-effects meta-analysis of proportions for safety and yield when at least five studies report them.",
+        "sampleSize": "The unit of analysis is the study. The 2022 meta-analysis pooled about 18,000 ruled-out patients, so a pooled 30-day event rate near 0.3 percent is estimated to within about 0.15 percentage points; the update matters for the age and kidney subgroups, where one study of 2,310 older patients gives a yield estimate within about 2 percentage points. Pooling within subgroups needs at least three studies reporting them.",
+        "primaryAnalysis": "Random-effects meta-analysis of the proportion of ruled-out patients with 30-day death or myocardial infarction on the logit scale, with 95 percent confidence and prediction intervals; certainty rated with GRADE.",
+        "secondaryAnalysis": "Meta-analysis of rule-out yield overall and by age 75 or over and kidney function where reported; time in the department and timing failures summarised as medians and ranges.",
+        "missingData": "No author contact; studies without 30-day follow-up for all ruled-out patients are flagged and removed in a sensitivity analysis.",
+        "multiplicity": "One primary safety outcome; subgroup estimates presented descriptively with intervals.",
+        "software": "R with the metafor package.",
+        "overfittingGuards": [
+          "Subgroups fixed before the search",
+          "No threshold comparisons beyond those reported",
+          "Conference abstracts excluded from pooling"
+        ],
+        "summary": "Proportion meta-analysis for safety and yield; the update adds precision where it matters, in older and kidney patients."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "0.15 percentage points"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No participants; the risk is an overconfident summary that leads to unsafe early discharge, or an overcautious one that keeps the unit crowded.",
+        "consent": "Not applicable: published data only.",
+        "data": "No personal data; search strategy, screening log and extraction sheet archived with the report.",
+        "equity": "PROGRESS-Plus: age over 75, kidney disease, sex (atypical presentations in women) and language barriers can affect both rule-out yield and safety. The review reports results by age and kidney function where available, notes studies that excluded these groups, and asks the committee to monitor time saved for older patients.",
+        "effectiveness": "The review is useful if the committee can see safety, the likely local yield and the practical failure points before approving the change.",
+        "efficiency": "Existing librarian and clinician time only.",
+        "costs": "About ten librarian hours and 12 reviewer days within existing roles.",
+        "grants": "None needed.",
+        "partnerships": "Laboratory director, emergency nursing lead, a cardiology registrar and two patient partners from the cardiac patient group.",
+        "rebPath": "No research ethics review is required for a review of published data; any later local evaluation of the pathway would be screened as quality improvement.",
+        "limitations": "Single screening with a 20 percent check, English only, and no author contact.",
+        "summary": "Review of published data with an equity focus on age, kidney disease and sex."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "ethics.consent": "Not applicable: published data only.",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners from the cardiac patient group review the plain-language summary; the laboratory director and the emergency nursing lead comment on sampling and turnaround findings before the committee meets.",
+        "socialListening": "No social media listening; complaints about waiting times in the chest pain unit over the past year are summarised without identifiers.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Waiting",
+            "quote": "Composite paraphrase: I sat on a trolley for seven hours to be told it was not my heart; nobody could tell me why the second test took so long.",
+            "implication": "Report time saved and explain the pathway to patients at arrival.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Older relatives",
+            "quote": "Composite paraphrase: My mother always ends up waiting for a third test; I want to know the quicker pathway works for people like her.",
+            "implication": "Report yield and safety for patients aged 75 or over.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Sample timing",
+            "quote": "Composite paraphrase: At three in the afternoon nobody is free at the one-hour mark; the sample goes at ninety minutes.",
+            "implication": "Treat timing failures as a core outcome and look for fixes that worked.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Laboratory turnaround",
+            "quote": "Composite paraphrase: We can run the assay in under an hour, but not if every chest pain sample arrives at once.",
+            "implication": "Include turnaround data and plan escalation when results exceed one hour.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on waiting, older relatives, sample timing and laboratory load."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "partner",
+          "voices.items[3].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "One-hour high-sensitivity troponin rule-out for a district hospital chest pain unit: a rapid review of safety, yield and sampling failures",
+        "abstract": "Objective: to summarise the 30-day safety of one-hour troponin rule-out, the proportion of patients ruled out overall and in older and kidney patients, time saved, and second-sample timing failures. Design: rapid review updating a 2022 meta-analysis with a dated search from June 2021 and stated shortcuts. Results and conclusions will be written after the synthesis.",
+        "introduction": "One-hour rule-out pathways promise shorter stays, but most evidence comes from specialist centres with younger patients. A district hospital where 38 percent of attendances are aged 75 or over needs to know the likely yield and failure points before adopting one.",
+        "methods": "Three databases were searched from June 2021 and the 2022 meta-analysis's studies were included. One reviewer screened with a 20 percent check; safety and yield values were double-checked. Proportions were pooled on the logit scale with random effects; conference abstracts were listed but not graded or pooled.",
+        "results": "No studies have been screened yet. The report will present the search flow, pooled 30-day safety, yield overall and by age and kidney function, time in the department and timing failures.",
+        "discussion": "The discussion will set the likely local yield against the safety estimate, describe the sampling and laboratory conditions under which the pathway worked, and state what the unit should monitor after any change.",
+        "limitations": "Rapid review shortcuts; English only; subgroup data sparse; one ungraded conference abstract.",
+        "conclusion": "To be written after the synthesis; it will not extrapolate safety to groups the studies did not include.",
+        "reportingChecklist": "PRISMA 2020, with the rapid review shortcuts listed",
+        "summary": "PRISMA-structured draft with results left empty until the synthesis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRISMA 2020, with the rapid review shortcuts listed",
+          "manuscript.results": {
+            "includes": "No studies have been screened yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Manuscript route before the audit: the cleared grade must stay 'unrated' and the other grades must stay as appraised.",
+      "expect": {
+        "store": {
+          "title": "One-hour high-sensitivity troponin rule-out in a district hospital chest pain unit: a rapid review",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ],
+          "needsReview": [],
+          "scan.items[4].grade": "unrated",
+          "scan.items[0].grade": "moderate",
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "unrated"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Seek a full report of the regional conference abstract before the committee meets, and keep it ungraded until then",
+          "Record the search date and shortcuts in the protocol",
+          "Run identity checks on the five retrieved records before the report cites them"
+        ],
+        "improvementNotes": "The first appraisal graded a conference abstract 'moderate'; the re-appraisal withdrew that grade with an explicit null, which cleared it to unrated without touching the other annotations, the four claims or the overall certainty. The accepted decision rests on claims from fully reported records only.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the conference abstract, the protocol record and identity checks."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 mergeStage overwrites the audit patch (deliverable 1b item L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "explicit null"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "One-hour high-sensitivity troponin rule-out in a district hospital chest pain unit: a rapid review",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "Six weeks to the quality committee meeting on 2 December 2026. About ten hours of clinical librarian time; no funding; no additional laboratory staff.",
+          "scan.items[4].grade": "unrated",
+          "scan.items[4].limitations": {
+            "includes": "grade withheld"
+          },
+          "scan.gradeOverall": "moderate",
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "One-hour high-sensitivity troponin rule-out in a district hospital chest pain unit: a rapid review",
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The cleared grade requires D2; selectionStatus and actionStatus S11; scan.claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items[4].grade": "unrated",
+            "scan.items[4].provenance.status": "retrieved",
+            "scan.items[0].grade": "moderate",
+            "scan.gradeOverall": "moderate",
+            "scan.claims": {
+              "length": 4
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "problem.constraints": "Six weeks to the quality committee meeting on 2 December 2026. About ten hours of clinical librarian time; no funding; no additional laboratory staff."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

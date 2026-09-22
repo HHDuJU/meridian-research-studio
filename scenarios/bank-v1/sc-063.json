@@ -1,0 +1,1125 @@
+{
+  "id": "sc-063",
+  "version": 1,
+  "title": "Regional health authority: a requested cost-utility analysis of a nurse-led heart failure clinic becomes an implementation study after an empty search",
+  "field": "health-economics",
+  "level": 3,
+  "family": "implementation",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D20",
+    "S11"
+  ],
+  "notes": "Demanding path. The investigator explicitly asks for a cost-utility analysis, so the study is routed to economic at create. The recorded fixture search returns HTTP 200 with zero records; the discovery reply brings no leads and no certainty keys, so the Scan stage stays incomplete and certainty unassessed until the investigator confirms the empty search on screen, which completes the stage with certainty still unassessed ('not assessed' on screen and '' in the store and export). With no ledger claims, the Design stage recommends a hybrid implementation study that measures reach, fidelity, costs and utilities so that a credible economic evaluation is possible later; the proposal leaves the family 'economic' until the investigator accepts, which sets it to implementation with basis 'explicit'. The only gate (regional data office approval for linkage) stays unknown, so the accepted decision's action stays blocked through reload, reopen and export. The problem reply omits the constraints key (G11). No records were retrieved, so there are no record ids to compute. Requires D20 (no completion or certainty over an empty scan; confirm-empty-search as an investigator action; 'not assessed' on screen), S11 (proposal does not change the family; acceptance does; recommendedFamily, selectionStatus, actionStatus) and D5 (status text). Catches: completion or certainty over zero records, leads or a model field standing in for the confirmation, a proposal that silently changes the investigator's design, and an unknown gate treated as met.",
+  "inputs": {
+    "need": "I am the health economist for a regional health authority. Eighteen months ago Hospital A opened a nurse-led heart failure clinic: two heart failure nurse specialists see patients within two weeks of discharge, titrate medicines under a protocol signed off by the cardiologists, teach self-care and follow patients by phone. The finance committee now wants a cost-utility analysis, with cost per QALY, before it decides whether to fund the same clinic at Hospitals B and C.\n\nMy problem is the evidence behind any model. We have the clinic's appointment spreadsheet (238 patients since March 2025) and hospital admission data, but no comparison group, no quality-of-life measurements, and the clinic has changed how it works twice. Published models I have seen come from specialist centres with cardiologists running the clinics, and I do not know whether their effect estimates apply to a nurse-led clinic in a regional hospital. Our search of the published literature for economic studies of nurse-led heart failure clinics in regional settings found nothing we could use.\n\nWhat I need: advice on whether a credible cost-utility analysis is possible now; if not, what we should do instead over the next 12 months so that a defensible economic evaluation is possible later; how to measure costs and utilities going forward; how to describe what the clinic actually delivers compared with what was planned; and what to tell the finance committee in March 2027. I would rather give them an honest answer than a model built on borrowed numbers. The regional data office has not yet answered our request for linked admission and cost data for clinic patients.",
+    "constraints": "The finance committee meets in March 2027. The health economist has 0.3 FTE for this work. No new staff; the clinic nurses cannot take on data collection beyond five minutes per visit.",
+    "localFacts": [
+      "The nurse-led heart failure clinic at Hospital A has seen 238 patients since it opened in March 2025.",
+      "Hospital A had 410 heart failure admissions in 2024; Hospitals B and C had 290 and 260.",
+      "The regional data office has not answered our request of 2026-09-01 for linked admission and cost data for clinic patients.",
+      "The region holds a licence for a five-dimension generic utility questionnaire used in its chronic disease programs.",
+      "The clinic changed its titration protocol in October 2025 and moved phone follow-up from weekly to fortnightly in April 2026."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The request names a cost-utility analysis, so classifyFamily routes it to economic with basis explicit (holds at 875fe59).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the health economist for a regional health authority. Eighteen months ago Hospital A opened a nurse-led heart failure clinic: two heart failure nurse specialists see patients within two weeks of discharge, titrate medicines under a protocol signed off by the cardiologists, teach self-care and follow patients by phone. The finance committee now wants a cost-utility analysis, with cost per QALY, before it decides whether to fund the same clinic at Hospitals B and C.\n\nMy problem is the evidence behind any model. We have the clinic's appointment spreadsheet (238 patients since March 2025) and hospital admission data, but no comparison group, no quality-of-life measurements, and the clinic has changed how it works twice. Published models I have seen come from specialist centres with cardiologists running the clinics, and I do not know whether their effect estimates apply to a nurse-led clinic in a regional hospital. Our search of the published literature for economic studies of nurse-led heart failure clinics in regional settings found nothing we could use.\n\nWhat I need: advice on whether a credible cost-utility analysis is possible now; if not, what we should do instead over the next 12 months so that a defensible economic evaluation is possible later; how to measure costs and utilities going forward; how to describe what the clinic actually delivers compared with what was planned; and what to tell the finance committee in March 2027. I would rather give them an honest answer than a model built on borrowed numbers. The regional data office has not yet answered our request for linked admission and cost data for clinic patients.",
+          "problem.constraints": "The finance committee meets in March 2027. The health economist has 0.3 FTE for this work. No new staff; the clinic nurses cannot take on data collection beyond five minutes per visit.",
+          "family": "economic",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the health economist for a regional health authority"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Nurse-led heart failure clinic: what can be said about value before extending it to two more hospitals",
+        "subtitle": "An economic question that the available evidence cannot yet answer",
+        "family": "economic",
+        "statement": "The finance committee wants a cost-utility analysis of Hospital A's nurse-led heart failure clinic before funding it at Hospitals B and C. There is no comparison group, no utility data, a clinic model that has changed twice, and no usable published effect estimate for a nurse-led clinic in a regional hospital. The question is what can honestly be said about value now and what must be done so that a defensible economic evaluation is possible later.",
+        "whoAffected": "Adults discharged with heart failure from Hospitals A, B and C (about 960 admissions a year), their families, the two nurse specialists, the cardiologists who sign off the titration protocol, and the finance committee.",
+        "whatHurts": "Heart failure readmissions are frequent and distressing, and patients at Hospitals B and C have no nurse-led follow-up. A funding decision based on borrowed numbers could either waste money or withhold a useful service.",
+        "currentPractice": "Hospital A runs the clinic; B and C discharge patients to general practice follow-up. Clinic activity is recorded in a spreadsheet; no utilities or costs per patient are measured.",
+        "whyNow": "The finance committee meets in March 2027 and has asked for a cost per QALY.",
+        "patientCenteredGoal": "People leaving hospital with heart failure get follow-up that keeps them well at home, funded on evidence that fits this region.",
+        "summary": "Problem framed as a value question the current evidence cannot answer, with the design left to the Design stage."
+      },
+      "note": "The reply repeats the investigator's family and omits the constraints key (G11).",
+      "expect": {
+        "store": {
+          "title": "Nurse-led heart failure clinic: what can be said about value before extending it to two more hospitals",
+          "family": "economic",
+          "problem.constraints": "The finance committee meets in March 2027. The health economist has 0.3 FTE for this work. No new staff; the clinic nurses cannot take on data collection beyond five minutes per visit.",
+          "problem.rawNeed": "I am the health economist for a regional health authority. Eighteen months ago Hospital A opened a nurse-led heart failure clinic: two heart failure nurse specialists see patients within two weeks of discharge, titrate medicines under a protocol signed off by the cardiologists, teach self-care and follow patients by phone. The finance committee now wants a cost-utility analysis, with cost per QALY, before it decides whether to fund the same clinic at Hospitals B and C.\n\nMy problem is the evidence behind any model. We have the clinic's appointment spreadsheet (238 patients since March 2025) and hospital admission data, but no comparison group, no quality-of-life measurements, and the clinic has changed how it works twice. Published models I have seen come from specialist centres with cardiologists running the clinics, and I do not know whether their effect estimates apply to a nurse-led clinic in a regional hospital. Our search of the published literature for economic studies of nurse-led heart failure clinics in regional settings found nothing we could use.\n\nWhat I need: advice on whether a credible cost-utility analysis is possible now; if not, what we should do instead over the next 12 months so that a defensible economic evaluation is possible later; how to measure costs and utilities going forward; how to describe what the clinic actually delivers compared with what was planned; and what to tell the finance committee in March 2027. I would rather give them an honest answer than a model built on borrowed numbers. The regional data office has not yet answered our request for linked admission and cost data for clinic patients.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Nurse-led heart failure clinic: what can be said about value before extending it to two more hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "nurse-led heart failure clinic cost-utility regional hospital cost per QALY",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "An empty search is an observable event (status ok, 0 hits), never a silent empty list. 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "omitKeys": [
+        "gradeOverall",
+        "gradeRationale"
+      ],
+      "response": {
+        "query": "nurse-led heart failure clinic cost-utility regional hospital cost per QALY",
+        "sourcesConsulted": [
+          "recorded search (0 records)"
+        ],
+        "synthesis": "The recorded search returned no records for economic evaluations of nurse-led heart failure clinics in regional settings, so there is nothing to appraise and no certainty can be assigned. No studies are suggested as leads here: naming remembered models from specialist centres would invite the borrowed effect estimates the investigator wants to avoid. Any value statement must come from data the region collects itself.",
+        "items": [],
+        "summary": "No records and no leads; certainty not assessed."
+      },
+      "note": "A discovery reply over an empty search with no leads and no certainty keys. Nothing was retrieved, so the stage stays incomplete and certainty stays unassessed (G1, G2); this requires D20 (at 875fe59 any applied reply marks the stage complete). The model's description of what it consulted is dropped (holds at 875fe59).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.synthesis": {
+            "includes": "nothing to appraise"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-empty-search",
+      "note": "The investigator confirms on screen that the search was run and returned nothing; only this completes the Scan stage, and certainty stays unassessed (G1, G2). Requires D20 (the confirmation is an investigator action recorded in the store, never a model field).",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents[0].resultCount": 0
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional health authority, Hospitals A, B and C",
+          "nurse-led clinic at Hospital A since March 2025",
+          "no comparison group and no utility data",
+          "recorded search returned no records"
+        ],
+        "reading": "The value of the clinic depends on a chain that is not yet observed: whether eligible patients actually reach the clinic, whether the nurses deliver titration and self-care as planned, whether that changes readmissions and quality of life, and what the clinic costs per patient. The clinic changed its model twice, so even its own history mixes three versions. With no retrieved evidence, every link must be measured locally before a cost per QALY can mean anything.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Eligible heart failure discharges",
+            "kind": "context",
+            "detail": "About 960 a year across three hospitals."
+          },
+          {
+            "id": "n2",
+            "label": "Reach: seen in clinic within 14 days",
+            "kind": "outcome",
+            "detail": "Not measured."
+          },
+          {
+            "id": "n3",
+            "label": "Fidelity to titration and self-care protocol",
+            "kind": "outcome",
+            "detail": "Protocol changed twice."
+          },
+          {
+            "id": "n4",
+            "label": "Readmission and death within 90 days",
+            "kind": "outcome",
+            "detail": "Needs linked data."
+          },
+          {
+            "id": "n5",
+            "label": "Utilities and costs per patient",
+            "kind": "outcome",
+            "detail": "Not collected."
+          },
+          {
+            "id": "n6",
+            "label": "Empty recorded search",
+            "kind": "gap",
+            "detail": "No usable external effect estimate."
+          },
+          {
+            "id": "n7",
+            "label": "Finance committee",
+            "kind": "stakeholder",
+            "detail": "Decision in March 2027."
+          },
+          {
+            "id": "n8",
+            "label": "Nurse specialists",
+            "kind": "stakeholder",
+            "detail": "Five minutes per visit for data."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "must reach"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "enables"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "hypothesised to reduce"
+          },
+          {
+            "from": "n4",
+            "to": "n5",
+            "relation": "drives"
+          },
+          {
+            "from": "n6",
+            "to": "n7",
+            "relation": "leaves without an evidence base"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "deliver"
+          }
+        ],
+        "summary": "Map shows a value chain whose every link must be measured locally because nothing was retrieved."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.nodes[5].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No usable effect estimate for a nurse-led regional clinic",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The recorded search returned nothing; a cost-utility model would rest on borrowed estimates from different services.",
+            "opportunity": "Measure effects locally with a concurrent comparison before modelling."
+          },
+          {
+            "id": "g2",
+            "title": "What the clinic delivers is unknown",
+            "kind": "implementation",
+            "severity": "high",
+            "whyItMatters": "Reach and fidelity are not measured and the model changed twice.",
+            "opportunity": "Measure reach, fidelity and adoption prospectively with a RE-AIM structure."
+          },
+          {
+            "id": "g3",
+            "title": "No utilities or patient-level costs",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "A cost per QALY needs both.",
+            "opportunity": "Collect the licensed utility questionnaire at the first visit and at three months, and cost clinic time by activity."
+          },
+          {
+            "id": "g4",
+            "title": "Patients who never reach the clinic",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Rural patients, people without a phone and people with limited English may be missed.",
+            "opportunity": "Report reach by distance, language and deprivation."
+          }
+        ],
+        "errorsFound": [
+          "A cost per QALY built now would present borrowed effect estimates as local evidence."
+        ],
+        "reevaluation": "The gaps favour an implementation study that measures delivery, collects costs and utilities and compares readmissions with the hospitals without a clinic, so that an economic evaluation becomes possible later.",
+        "summary": "Four gaps; the missing effect estimate, delivery and utility data are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Over 12 months, at least 60 percent of eligible heart failure discharges from Hospital A are seen in the clinic within 14 days, with titration delivered as the protocol specifies in at least 80 percent of visits, and utilities and clinic costs can be collected within five minutes per visit.",
+            "novelty": 50,
+            "need": 85,
+            "practiceChange": 75,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "Delivery must be known before value can be; the thresholds are what the finance committee would need to trust any later model.",
+            "risks": "Spreadsheet data quality; the nurses' time limit."
+          },
+          {
+            "id": "h2",
+            "statement": "Ninety-day readmission or death is lower after Hospital A discharges than after Hospitals B and C discharges, after adjustment for age, severity and comorbidity.",
+            "novelty": 45,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 55,
+            "parsimony": 60,
+            "rationale": "A concurrent comparison is possible if the linked data arrive.",
+            "risks": "Hospital differences unrelated to the clinic; the data office has not answered."
+          },
+          {
+            "id": "h3",
+            "statement": "A cost-utility model using published specialist-centre estimates gives a cost per QALY under the region's threshold.",
+            "novelty": 20,
+            "need": 40,
+            "practiceChange": 30,
+            "feasibility": 90,
+            "parsimony": 70,
+            "rationale": "Easy to compute but not credible for this service.",
+            "risks": "Borrowed estimates presented as local evidence."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected because delivery must be established first."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Over 12 months, what proportion of eligible heart failure discharges from Hospital A reach the nurse-led clinic within 14 days, how faithfully is the titration and self-care protocol delivered, and what does each clinic episode cost?",
+            "framework": "PICO",
+            "population": "Adults discharged from Hospital A with heart failure who meet clinic criteria",
+            "intervention": "Nurse-led heart failure clinic",
+            "comparator": "The clinic protocol as planned",
+            "outcome": "Reach within 14 days, fidelity and cost per episode",
+            "time": "October 2026 to September 2027",
+            "setting": "Hospital A, regional health authority"
+          },
+          {
+            "id": "q2",
+            "text": "Is 90-day readmission or death lower after Hospital A discharges than after Hospitals B and C discharges, and what utility change is observed in clinic patients at three months?",
+            "framework": "PICO",
+            "population": "Adults discharged with heart failure from Hospitals A, B and C",
+            "intervention": "Discharge from Hospital A with clinic follow-up",
+            "comparator": "Discharge from Hospitals B and C with usual follow-up",
+            "outcome": "Readmission or death within 90 days; utility at baseline and three months in clinic patients",
+            "time": "90 days after discharge",
+            "setting": "Three regional hospitals"
+          }
+        ],
+        "finer": "Feasible within 0.3 FTE and five minutes per visit if linked data arrive; interesting to the finance committee; novel for the region; ethical with consent for questionnaires; relevant to a March 2027 decision.",
+        "summary": "An implementation question and a concurrent effectiveness question."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "implementation",
+        "rationale": "A cost-utility analysis needs an effect estimate and utilities that do not exist for this service, and the recorded search found nothing to borrow credibly. What the region can measure now is how the clinic is delivered and what it costs, together with utilities and a concurrent readmission comparison. A hybrid implementation-effectiveness design does both and creates the inputs for an economic evaluation later. Reporting follows StaRI, with CHEERS for the later economic evaluation.",
+        "alternatives": [
+          "Cost-utility model now with borrowed estimates (refused: the effect estimates do not apply to a nurse-led regional clinic)",
+          "Randomised trial of the clinic at B and C (deferred: not possible before March 2027 and not yet funded)",
+          "Descriptive activity report only (refused: would not create the inputs for valuation)"
+        ],
+        "guidelines": [
+          "StaRI",
+          "CHEERS (for the later economic evaluation)"
+        ],
+        "whyNotMoreComplex": "A trial or a full model would promise precision the region cannot deliver by March 2027; the implementation study gives an honest interim answer and the data for a later valuation.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Run a 12-month hybrid implementation study of the Hospital A clinic that measures reach, fidelity and cost per episode, collects utilities, and compares 90-day readmission or death with Hospitals B and C, and tell the finance committee in March 2027 that a credible cost per QALY is not yet possible and will follow these data.",
+          "question": "What should the region do instead of a cost-utility analysis that the evidence cannot yet support?",
+          "claimIds": [],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Reach, fidelity, costs and utilities can be collected within five minutes per visit.",
+              "role": "justifies",
+              "status": "unknown",
+              "claimIds": []
+            },
+            {
+              "id": "k2",
+              "text": "A published effect estimate applicable to a nurse-led regional clinic is found before the committee meets.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Regional data office approval for linked admission and cost data for clinic and comparison patients",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Cost-utility model using published specialist-centre estimates",
+            "Fund the clinics at B and C now without evaluation"
+          ],
+          "note": "No ledger claim exists because the recorded search returned no records and the investigator confirmed it; the decision rests on the confirmed empty search and the investigator's local facts. The data gate stays unknown until the office replies."
+        },
+        "summary": "Implementation study recommended instead of an immediate cost-utility analysis; the data gate is unknown."
+      },
+      "note": "The recommendation differs from the investigator's stated design; as a proposal it must not change study.family, which stays 'economic' until the investigator accepts (S11, D3; at 875fe59 applyAiResult writes the family immediately). recommendedFamily, selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "implementation",
+          "family": "economic",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].recommendedFamily": "implementation",
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].evidence": {
+            "absent": true
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Conditional acceptance: the decision cites no claim (nothing was retrieved) and no text of it is contradicted, so the selection is acceptable; the investigator's acceptance changes the family from economic to implementation with basis 'explicit', and the unknown data gate keeps the action blocked (G7; A2 item 9). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "family": "implementation",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Twelve-month hybrid implementation-effectiveness study (October 2026 to September 2027) of the nurse-led heart failure clinic at Hospital A, with a concurrent comparison of 90-day outcomes against Hospitals B and C, and prospective collection of utilities and activity-based costs.",
+        "population": "Adults discharged alive with a primary diagnosis of heart failure from Hospital A (clinic) and Hospitals B and C (comparison); clinic eligibility as in the current referral criteria; patients discharged to palliative care are excluded from the effectiveness comparison.",
+        "exposure": "Nurse-led clinic: first visit within 14 days, protocol titration of heart failure medicines, self-care teaching and fortnightly phone follow-up (the April 2026 version, frozen for the study).",
+        "procedures": "The nurses record visit date, titration steps and self-care topics on a short form (under five minutes). The licensed five-dimension utility questionnaire is completed at the first visit and at three months by consenting patients. The health economist costs clinic time by activity from two weeks of time logs per quarter. After data office approval, linked admission and death data for all three hospitals are extracted for 90-day outcomes.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Reach within 14 days",
+            "measure": "Proportion of eligible heart failure discharges from Hospital A seen in the clinic within 14 days",
+            "timing": "Monthly over 12 months",
+            "why": "Without reach, no effect and no value can follow.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Readmission or death within 90 days",
+            "measure": "Linked admission and death data, Hospital A against B and C, adjusted",
+            "timing": "90 days after discharge",
+            "why": "The effectiveness input for a later model.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Utility change at three months",
+            "measure": "Five-dimension utility questionnaire at first visit and three months",
+            "timing": "Baseline and three months",
+            "why": "The quality-of-life input for a later model.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Fidelity to the titration protocol",
+            "measure": "Proportion of visits with protocol titration steps done or a documented reason not to",
+            "timing": "Monthly",
+            "why": "Distinguishes a weak clinic from a clinic not delivered as planned.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Cost per clinic episode",
+            "measure": "Activity-based cost from time logs and salaries",
+            "timing": "Quarterly",
+            "why": "The cost input for a later model.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 300 eligible discharges a year at Hospital A; the form takes under five minutes; the utility questionnaire is completed by the patient in the waiting room; the economist's 0.3 FTE covers costing and analysis.",
+        "biasMitigation": [
+          "Clinic protocol frozen for the study period",
+          "Concurrent comparison hospitals rather than a before-and-after comparison",
+          "Adjustment for age, severity and comorbidity in the effectiveness comparison",
+          "Reach reported by distance, language and deprivation"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by hospital",
+            "severity": "high",
+            "note": "Hospitals differ in more than the clinic; the comparison is descriptive support, not a causal estimate."
+          },
+          {
+            "id": "b2",
+            "label": "Missing utility data",
+            "severity": "watch",
+            "note": "Patients who miss visits also miss questionnaires."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 6,
+          "flags": [
+            "Implementation outcome as primary; effectiveness and utility as secondary inputs"
+          ],
+          "simplestPath": "Reach and fidelity at one clinic, with the minimum data a later economic model needs."
+        },
+        "theoreticalFramework": "RE-AIM to structure reach, adoption, implementation and maintenance; no other framework.",
+        "summary": "Hybrid study of reach, fidelity, costs and utilities, with a concurrent readmission comparison pending linked data."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].name": "Reach within 14 days",
+          "protocol.theoreticalFramework": {
+            "includes": "RE-AIM"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Hybrid implementation-effectiveness study: descriptive implementation outcomes with confidence intervals, a concurrent adjusted comparison of 90-day outcomes, and paired utility change.",
+        "sampleSize": "About 300 eligible discharges from Hospital A in 12 months give a 95 percent confidence interval of about 5.5 percentage points either side for reach near 60 percent. For 90-day readmission or death near 30 percent, about 300 Hospital A and 400 comparison discharges give about 85 percent power at two-sided alpha 0.05 to detect a 10-point difference (30 against 20 percent); smaller differences would be estimated imprecisely, which is why no cost-effectiveness claim will be made from this study. About 200 consenting clinic patients with paired questionnaires give a utility change estimate with a 95 percent confidence interval of about 0.03 either side, assuming a standard deviation of change of 0.2.",
+        "primaryAnalysis": "Reach as a proportion with a Wilson 95 percent confidence interval, monthly on a run chart; fidelity likewise.",
+        "secondaryAnalysis": "Logistic regression of 90-day readmission or death on hospital group, adjusted for age, sex, ejection fraction category, comorbidity score, prior admissions and length of stay; paired utility change with 95 percent confidence interval; cost per episode with bootstrap intervals.",
+        "missingData": "Missing utilities are described by visit attendance and analysed with multiple imputation as a sensitivity analysis; missing linked outcomes are not imputed.",
+        "multiplicity": "One primary implementation outcome; the rest are inputs to a later model and are reported with intervals only.",
+        "software": "R; the costing spreadsheet is archived with the analysis code.",
+        "overfittingGuards": [
+          "Six adjustment variables fixed in advance",
+          "No cost per QALY computed from this study's effectiveness estimate alone",
+          "Clinic protocol frozen during the study"
+        ],
+        "summary": "Precise reach estimates; readmission comparison powered only for a large difference; utilities and costs collected for a later model."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "no cost-effectiveness claim"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: a short questionnaire for patients and a short form for nurses; privacy risk from linking admission data across three hospitals.",
+        "consent": "Written consent for the utility questionnaires; implementation data from the clinic form are service data; linked outcomes for all three hospitals are requested under a waiver of consent for secondary use.",
+        "data": "Linked data are extracted by the regional data office after approval and returned de-identified; no linkage happens before the office decides.",
+        "equity": "PROGRESS-Plus: rural patients, people without a phone, people with limited English and people with cognitive impairment may be least likely to reach the clinic or complete questionnaires. Reach and completion are reported by distance, language and deprivation, interpreters are used for visits, and proxy completion by a family member is allowed and recorded.",
+        "effectiveness": "The study replaces a speculative cost per QALY with measured delivery, costs and utilities that a later model can use.",
+        "efficiency": "Uses existing clinic staff with a five-minute form and the economist's 0.3 FTE.",
+        "costs": "No new costs beyond staff time; the utility questionnaire licence is already held.",
+        "grants": "None needed now; a regional evaluation grant could fund the later economic model.",
+        "partnerships": "The two nurse specialists, cardiologists at all three hospitals, the finance committee's analyst and two patient partners from the regional heart failure support group.",
+        "rebPath": "REB review under ICH-GCP and Declaration of Helsinki principles for the questionnaires and the waiver; the data office's approval of linkage is a separate gate and is still unknown.",
+        "limitations": "Non-randomised comparison between hospitals; 12 months; utilities only in clinic patients.",
+        "summary": "Minimal-risk study with consented questionnaires, a waiver request for linkage and an unknown data office decision."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "still unknown"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners review the questionnaire process and the plain-language summary for the finance committee; the nurse specialists review the five-minute form.",
+        "socialListening": "No social media listening; the heart failure support group's newsletter comments are read for themes about follow-up after discharge.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Someone to call",
+            "quote": "Composite paraphrase: Knowing the nurse would ring every other week kept me from panicking about my ankles swelling.",
+            "implication": "Record phone contacts as part of fidelity and cost.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Data burden",
+            "quote": "Composite paraphrase: If the form takes longer than the visit, we will stop filling it in by March.",
+            "implication": "Keep the form under five minutes and review completion monthly.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "What the committee needs",
+            "quote": "Composite paraphrase: I can defend a clear statement of what we do not know yet; I cannot defend a number nobody believes.",
+            "implication": "Present the March 2027 answer as measured delivery and cost, not a cost per QALY.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Distance to the clinic",
+            "quote": "Composite paraphrase: It is an hour each way for Dad, so he only went once.",
+            "implication": "Report reach by distance and consider phone-first visits for remote patients.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on phone follow-up, data burden, the committee's needs and distance."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Reach, fidelity, costs and utilities of a nurse-led heart failure clinic in a regional hospital: a hybrid implementation study",
+        "abstract": "Aim: to measure the delivery and cost of a nurse-led heart failure clinic and collect the inputs a later economic evaluation needs. Design: 12-month hybrid implementation-effectiveness study with a concurrent comparison of 90-day outcomes against two hospitals without a clinic. Results will be written after the study.",
+        "introduction": "The finance committee asked for a cost per QALY, but no usable effect estimate exists for a nurse-led regional clinic, and a recorded search returned no records. The region needs measured delivery, costs and utilities before any credible valuation.",
+        "methods": "A RE-AIM structure guides measurement of reach and fidelity from a short visit form. Utilities are collected at the first visit and at three months, clinic time is costed by activity, and 90-day outcomes are compared with two hospitals without a clinic after data office approval.",
+        "results": "No data have been collected yet. The report will present reach and fidelity by month, cost per episode, paired utility change and, if linkage is approved, the adjusted 90-day comparison.",
+        "discussion": "The discussion will state what the measured delivery and costs imply for extending the clinic. It will list what a later economic evaluation still needs.",
+        "limitations": "The comparison between hospitals is non-randomised, and utilities are measured only in clinic patients. The study covers one clinic for 12 months.",
+        "conclusion": "To be written after the study. It will not report a cost per QALY.",
+        "reportingChecklist": "StaRI",
+        "summary": "StaRI draft; results empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "StaRI",
+          "manuscript.conclusion": {
+            "includes": "will not report a cost per QALY"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The regional data office has not decided on linkage; the decision's action stays blocked and the readmission comparison cannot start",
+          "The recorded search returned no records and the investigator confirmed it; no certainty was assigned and none should be quoted to the committee",
+          "Freeze the clinic protocol for the study period in writing"
+        ],
+        "improvementNotes": "The request named a cost-utility analysis; the accepted decision replaced it with an implementation study because nothing could be retrieved and no local effect or utility data exist.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the data gate, the empty evidence base and the protocol freeze."
+      },
+      "note": "Audit fields fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Nurse-led heart failure clinic: what can be said about value before extending it to two more hospitals",
+          "family": "implementation",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "design.decisions[-1].claimIds": [],
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Nurse-led heart failure clinic: what can be said about value before extending it to two more hospitals"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Nurse-led heart failure clinic: what can be said about value before extending it to two more hospitals",
+          "family": "implementation",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "protocol.outcomes": {
+            "length": 5
+          }
+        },
+        "screen": {
+          "includes": [
+            "Nurse-led heart failure clinic: what can be said about value before extending it to two more hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "Certainty stays unassessed in the export after the confirmed empty search (G1, D20); S11 for the decision fields; one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "implementation",
+            "design.basis": "explicit",
+            "scan.gradeOverall": "",
+            "scan.items": {
+              "length": 0
+            },
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents[0].resultCount": 0,
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[0].status": "unknown"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

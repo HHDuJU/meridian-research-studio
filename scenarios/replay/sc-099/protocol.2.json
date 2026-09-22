@@ -1,0 +1,84 @@
+{
+  "overview": "Retrospective development of a booking-time prediction model for failed same-day discharge after elective laparoscopic cholecystectomy, using 2019 to 2023 records for development and 2024 to 2025 records for temporal validation.",
+  "population": "All adults booked for elective day-case laparoscopic cholecystectomy from January 2019 to December 2025 (about 3,690 procedures); first procedure per patient.",
+  "exposure": "Pre-specified booking-time predictors: age, anaesthetic risk class, body mass index, previous nausea with anaesthesia, diabetes, living alone, travel distance and planned list position (first half or second half, and start after 13:00).",
+  "procedures": "The analyst extracts booking, theatre, medication and discharge data under approval DAC-2026-51. Nausea needing treatment is taken from rescue antiemetic doses in the medication record, checked first against 100 randomly sampled charts. Time of first walking, available from mid-2021, is used only in a sensitivity analysis. Surgeon is recorded for clustering.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Failed same-day discharge",
+      "measure": "Overnight stay after a day-case booking, from the discharge record",
+      "timing": "Day of surgery",
+      "why": "The event the booking model predicts.",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Model calibration on validation data",
+      "measure": "Calibration intercept and slope in 2024 to 2025",
+      "timing": "Validation period",
+      "why": "A booking tool must be calibrated to be usable.",
+      "patientCentered": false
+    },
+    {
+      "id": "o3",
+      "role": "secondary",
+      "name": "Discrimination on validation data",
+      "measure": "c statistic in 2024 to 2025",
+      "timing": "Validation period",
+      "why": "Shows the fall from development seen elsewhere (claim c4).",
+      "patientCentered": false
+    },
+    {
+      "id": "o4",
+      "role": "balancing",
+      "name": "Unplanned readmission within 7 days after same-day discharge",
+      "measure": "Readmission from hospital records",
+      "timing": "7 days",
+      "why": "Guards against a model that sends home patients who should stay.",
+      "patientCentered": true
+    }
+  ],
+  "feasibility": "About 20 analyst days: 8 for extraction and cleaning, 2 for the proxy check support, 7 for modelling and validation, 3 for reporting.",
+  "biasMitigation": [
+    "Predictors fixed before extraction",
+    "Temporal validation on a later period",
+    "Proxy checked against sampled charts",
+    "Surgeon clustering handled",
+    "List position modelled explicitly and interpreted as partly chosen by risk"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Measurement of nausea by proxy",
+      "severity": "watch",
+      "note": "Misses nausea managed without medication."
+    },
+    {
+      "id": "b2",
+      "label": "Changes in practice over 2019 to 2025",
+      "severity": "watch",
+      "note": "Temporal validation shows the effect of drift."
+    },
+    {
+      "id": "b3",
+      "label": "List position chosen by risk",
+      "severity": "high",
+      "note": "Predictions by list position are not causal effects."
+    }
+  ],
+  "parsimony": {
+    "score": 78,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 2,
+    "covariateCount": 8,
+    "flags": [
+      "Eight pre-specified predictors; no selection by significance"
+    ],
+    "simplestPath": "One penalised model, one temporal validation, one calibration plot."
+  },
+  "theoreticalFramework": "None; TRIPOD for development and validation reporting.",
+  "summary": "Retrospective development and temporal validation protocol aligned with the accepted second decision."
+}

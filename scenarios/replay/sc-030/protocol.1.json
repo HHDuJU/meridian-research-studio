@@ -1,0 +1,83 @@
+{
+  "overview": "Retrospective segmented time series of recognition of known airway difficulty before later airway management, January 2019 to August 2026, using the difficult airway database linked to anaesthetic records and incident reports.",
+  "population": "Patients registered in the difficult airway database who had a later airway management episode (anaesthetic or emergency intubation) in the hospital; the first later episode per patient per quarter is counted.",
+  "exposure": "Airway management after 1 March 2023, when the wristband, electronic alert and letter were in place, compared with the pre-existing trend.",
+  "procedures": "Two trainees review the anaesthetic record of each later episode using a tested form: whether the alert was present, whether known difficulty was documented as recognised before airway management, the airway plan, and whether difficulty was unanticipated. A random 15 percent are reviewed by both trainees. Database capture is checked against a manual review of one year's anaesthetic records. Co-interventions (training, equipment, guidelines) are listed with dates.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Known difficulty recognised before airway management",
+      "measure": "Proportion of later airway management episodes with documented recognition of known difficulty beforehand, per quarter",
+      "timing": "Each later episode",
+      "why": "The mechanism the alert system exists to deliver.",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Unanticipated difficulty",
+      "measure": "Proportion of later episodes with difficulty not anticipated in the plan",
+      "timing": "Each later episode",
+      "why": "The patient-relevant consequence.",
+      "patientCentered": true
+    },
+    {
+      "id": "o3",
+      "role": "process",
+      "name": "Alert present in the record",
+      "measure": "Proportion of later episodes with the electronic alert displayed",
+      "timing": "Each later episode",
+      "why": "Separates missing alerts from unread ones.",
+      "patientCentered": false
+    },
+    {
+      "id": "o4",
+      "role": "balancing",
+      "name": "Alert burden",
+      "measure": "Number of other electronic warnings displayed to the anaesthetist",
+      "timing": "Each later episode",
+      "why": "Alert fatigue may reduce recognition.",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "About 400 later episodes over the period; two trainees at two sessions a week can review them in about five months.",
+  "biasMitigation": [
+    "Segmented regression with the pre-existing trend",
+    "Co-interventions listed with dates and modelled where possible",
+    "Double review of 15 percent of records",
+    "Database capture reported"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Co-interventions",
+      "severity": "high",
+      "note": "Other airway initiatives started around the change."
+    },
+    {
+      "id": "b2",
+      "label": "Documentation of recognition",
+      "severity": "watch",
+      "note": "Recognition may happen without being written down."
+    },
+    {
+      "id": "b3",
+      "label": "Episodes in other hospitals",
+      "severity": "watch",
+      "note": "Invisible to the database."
+    }
+  ],
+  "parsimony": {
+    "score": 76,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 1,
+    "covariateCount": 3,
+    "flags": [
+      "Three co-intervention terms at most"
+    ],
+    "simplestPath": "One series, one primary outcome, one change point."
+  },
+  "theoreticalFramework": "None beyond the segmented time series structure.",
+  "summary": "Segmented series with recognition as the primary outcome and database capture reported."
+}

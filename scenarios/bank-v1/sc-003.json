@@ -1,0 +1,1603 @@
+{
+  "id": "sc-003",
+  "version": 1,
+  "title": "Hospital infection prevention: real-time hand hygiene feedback trial, out-of-range score, boolean year, cited trial corrected after acceptance",
+  "field": "infectious-disease",
+  "level": 4,
+  "family": "rct",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S10",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on a clear ward-randomised question (routing explicit rct from 'cluster randomised trial'). A fixture search returns eight records. The first scan reply (shape discovery) adds four model leads, which must be appended after the retrieved records (D1): one is labelled 'landmark' with a DOI and must stay unverified (G3), one gives its year as the boolean true and must be stored with year null and issue invalid-type (G4), and its explicit null certainty stays unassessed. The second scan reply (shape appraisal, S13) annotates the eight records; one annotation gives methodQuality 140, which must be stored null with issue out-of-range, never clamped. The first design reply rests on claims c1 to c3, both gates are met, and its acceptance is a supported positive (accepted, ready). Then, with the route still on the Design stage, the abstract of the trial cited by c1 is replaced by the authors' correction notice through the store's own action: the decision must become stale with its action blocked (S10), in the store, on screen, after reload, after reopen (as 'review required' in the stage list) and in the export, and Map to Design are flagged for review (G8). Protocol to Audit are drafted afterwards with the planning basis flagged. Record ids are stableRecordId values computed as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 6, 7 (ev-0kih00p, ev-03bep8c, ev-00v1xdk, ev-1ej54gc, ev-0nj3ms6); titleYearKey hash for records 2, 5, 8 (ev-1jmjmnm, ev-08smxep, ev-1u98koa). Requires D1 (leads appended, abstract field), D5 (status text), S10 (source text in the evidence revision), S11 (selectionStatus, actionStatus) and S13 (appraisal on the production scan path). Catches: leads replacing retrieved records, a model label turned into verification, a boolean year or an out-of-range score stored as a value, and an accepted decision that stays current after its cited source changes meaning.",
+  "inputs": {
+    "need": "I am the infection prevention lead at a 620-bed teaching hospital. Last year we installed an electronic hand hygiene monitoring system on 16 adult medical and surgical wards: staff wear badges that log each alcohol rub or soap dispenser use and each entry into a patient zone. So far the system only collects data and nobody sees it. The vendor says that switching on real-time feedback (the badge vibrates if there is no hand hygiene within ten seconds of entering a patient zone) together with weekly ward dashboards raises compliance, and the hospital board wants to buy the feedback licence for every ward. I am not convinced. Our own observation rounds by trained observers show 62 percent compliance, but the observers are visible and staff know when they are there.\n\nI want to run a cluster randomised trial across the 16 wards: eight wards switch on real-time feedback and dashboards and eight continue silent monitoring, for six months. The difficulty is the outcome. If we use the system's own compliance figure, feedback wards may learn to satisfy the badge without cleaning their hands, and the silent wards' figures would not be comparable. Direct observation is expensive and staff behave differently when watched. Infection rates such as MRSA acquisition or hospital-onset C. difficile are too rare on 16 wards to show a difference in six months.\n\nI need help with the primary outcome, how to limit contamination (float nurses and junior doctors work across wards), the sample size given clustering, whether individual staff consent is needed when the badges already collect data under an agreement with the staff council, and how to present all this to the board, who want an answer by June 2027. The unions agreed to the monitoring only on condition that badge data are never used for individual performance management.",
+    "constraints": "Six-month trial window from January to June 2027; 16 wards only; 400 hours of independent observer time; badge data may be used at ward level only, never for individual performance management.",
+    "localFacts": [
+      "The infection prevention committee endorsed a ward-randomised comparison of badge feedback on 2026-09-15 (minute IPC-2026-22).",
+      "Joint staff council agreement JSC-2026-07 permits ward-level use of badge data for evaluation and forbids individual performance management.",
+      "About 20 percent of nursing shifts on the 16 wards are worked by float staff who move between wards.",
+      "Trained observers from the regional infection prevention network can provide 400 observer-hours between January and June 2027."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the infection prevention lead at a 620-bed teaching hospital. Last year we installed an electronic hand hygiene monitoring system on 16 adult medical and surgical wards: staff wear badges that log each alcohol rub or soap dispenser use and each entry into a patient zone. So far the system only collects data and nobody sees it. The vendor says that switching on real-time feedback (the badge vibrates if there is no hand hygiene within ten seconds of entering a patient zone) together with weekly ward dashboards raises compliance, and the hospital board wants to buy the feedback licence for every ward. I am not convinced. Our own observation rounds by trained observers show 62 percent compliance, but the observers are visible and staff know when they are there.\n\nI want to run a cluster randomised trial across the 16 wards: eight wards switch on real-time feedback and dashboards and eight continue silent monitoring, for six months. The difficulty is the outcome. If we use the system's own compliance figure, feedback wards may learn to satisfy the badge without cleaning their hands, and the silent wards' figures would not be comparable. Direct observation is expensive and staff behave differently when watched. Infection rates such as MRSA acquisition or hospital-onset C. difficile are too rare on 16 wards to show a difference in six months.\n\nI need help with the primary outcome, how to limit contamination (float nurses and junior doctors work across wards), the sample size given clustering, whether individual staff consent is needed when the badges already collect data under an agreement with the staff council, and how to present all this to the board, who want an answer by June 2027. The unions agreed to the monitoring only on condition that badge data are never used for individual performance management.",
+          "family": "rct",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the infection prevention lead at a 620-bed teaching hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Real-time electronic hand hygiene feedback on 16 hospital wards",
+        "subtitle": "Cluster randomised trial with an outcome measured independently of the feedback system",
+        "family": "rct",
+        "statement": "The hospital board intends to buy a real-time feedback licence for badge-based hand hygiene monitoring on all 16 wards on the strength of vendor claims. Whether feedback improves actual hand hygiene, rather than the badge system's own compliance figure, is unknown locally, and the obvious outcomes are biased: the system's figure can be gamed on feedback wards, visible observers change behaviour, and infections are too rare to compare in six months. A ward-randomised comparison with an outcome measured independently of the feedback system would answer the board's question.",
+        "whoAffected": "Patients on 16 adult medical and surgical wards, the nurses, doctors and float staff who wear the badges, the infection prevention team, and the board deciding on the licence.",
+        "whatHurts": "Poor hand hygiene spreads resistant organisms and C. difficile between patients. Buying feedback that changes the badge figure but not hand hygiene would cost money and staff goodwill, and alerts that feel like surveillance could damage trust in the monitoring agreement.",
+        "currentPractice": "Silent badge monitoring on 16 wards with no feedback to staff; periodic visible observation rounds reporting 62 percent compliance; infection rates reported monthly.",
+        "whyNow": "A board decision on the licence is due by June 2027, the badge system is already installed on all 16 wards, and 400 hours of independent observer time are available from January.",
+        "constraints": "Six months from January to June 2027; 16 wards; 400 observer-hours; badge data at ward level only under agreement JSC-2026-07; no individual performance management.",
+        "patientCenteredGoal": "Patients on every ward are cared for by staff who clean their hands at the moments that prevent transmission, whether or not anyone is watching.",
+        "summary": "Problem framed as a ward-randomised comparison of real-time feedback with an outcome independent of the badge system."
+      },
+      "note": "G11: the reply rewrites the typed constraints (shortened, with agreement JSC-2026-07 merged in from the local facts). The stored constraints stay exactly as typed, the application records the issue 'dropped' at 'constraints' and shows a partial-apply warning naming constraints and saying the entered text was kept; the rest of the reply applies.",
+      "expect": {
+        "store": {
+          "title": "Real-time electronic hand hygiene feedback on 16 hospital wards",
+          "family": "rct",
+          "problem.statement": {
+            "includes": "independently of the feedback system"
+          },
+          "problem.constraints": "Six-month trial window from January to June 2027; 16 wards only; 400 hours of independent observer time; badge data may be used at ward level only, never for individual performance management.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Real-time electronic hand hygiene feedback on 16 hospital wards",
+            "constraints",
+            {"anyOf": ["kept", "refused", "not applied"]}
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "electronic hand hygiene monitoring real-time feedback cluster randomised trial wards compliance outcome",
+      "response": {
+        "status": 200,
+        "total": 8,
+        "records": [
+          {
+            "title": "Real-time feedback from electronic hand hygiene monitoring on medical wards: a cluster randomised trial",
+            "authors": "Okafor-Lindahl S, Brennan-Tshabalala M, Iwata-Moreau J",
+            "year": 2022,
+            "venue": "Wrenmouth Hospital Infection Research",
+            "doi": "10.5555/hicr.2022.0187",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "Methods: twelve medical wards with badge-based hand hygiene monitoring were randomised to real-time vibration feedback with weekly ward dashboards or to silent monitoring for six months. The primary outcome was compliance recorded by the electronic system at patient-zone entry. Results: electronic compliance rose from 48 to 71 percent on feedback wards and from 50 to 54 percent on control wards (difference in change 19 percentage points, 95 percent CI 11 to 27). Directly observed compliance, a secondary outcome measured on a random sample of shifts, was 64 against 57 percent. Healthcare-associated infections were too few for comparison. Conclusions: real-time feedback increased hand hygiene compliance."
+          },
+          {
+            "title": "Visible observers and dispenser activity on four wards: observed hand hygiene compared with concurrent covert counts",
+            "authors": "Stavros-Mbeki A, Lund-Oyeyemi T",
+            "year": 2019,
+            "venue": "Infection Prevention Methods",
+            "providerType": "journal-article",
+            "abstract": "On four wards we compared hand hygiene events counted covertly by dispenser sensors during hours when a trained observer was visibly present with the same hours on days without an observer. Dispenser events per hour were about three times higher when an observer was present, and the increase was confined to the area within the observer's line of sight. Compliance recorded by the observer was 78 percent, whereas covert counts implied a much lower rate. The effect did not fade over eight weeks of observation. Observer-based compliance therefore measures behaviour under observation rather than usual behaviour, and comparisons between groups are fair only if observation is equally visible in both."
+          },
+          {
+            "title": "Badge and dispenser-based hand hygiene monitoring: a review of 31 evaluations of detection accuracy and feedback",
+            "authors": "Harrow-Delacroix P, Nwosu-Ekberg L, Tanaka-Fitzgerald R",
+            "year": 2020,
+            "venue": "Infection Prevention Reviews and Methods",
+            "doi": "10.5555/iprm.2020.0342",
+            "providerType": "review",
+            "abstract": "We included 31 studies of electronic or automated hand hygiene monitoring systems. Accuracy against direct observation varied widely: badge systems detected between 53 and 91 percent of observed hand hygiene opportunities, and most missed opportunities during continuous care within a patient zone. Fourteen studies reported compliance after feedback was introduced; twelve reported improvement, but only two were randomised and most used the monitoring system's own measure as the outcome. No study showed a reduction in infections with adequate power. We recommend an outcome measured independently of the feedback system in any comparative evaluation."
+          },
+          {
+            "title": "Badge-based hand hygiene monitoring and nurse acceptability on two surgical wards",
+            "authors": "Quinlan-Asante M, Borg-Adeyemi K",
+            "year": 2017,
+            "venue": "Nursing Workplace Perspectives",
+            "doi": "10.5555/nwp.2017.0091",
+            "providerType": "journal-article",
+            "abstract": "We asked nurses on two surgical wards about badge-based monitoring six months after it was introduced, using group discussions with 22 nurses and a short questionnaire returned by 61 of 94 nursing staff. Most accepted ward-level feedback but objected strongly to managers seeing individual data. Several nurses described touching a dispenser near the door to stop the badge vibrating during busy periods, without cleaning their hands. Night staff said vibration alerts woke patients in shared bays. Nurses asked for the rules on data use to be written down and agreed with staff representatives before any expansion of the system."
+          },
+          {
+            "title": "Healthcare-associated infection rates after hand hygiene feedback dashboards: an interrupted time series in a regional hospital",
+            "authors": "Castellano-Obi R, Fenwick-Adjei D",
+            "year": 2023,
+            "venue": "Wrenmouth Hospital Infection Research",
+            "providerType": "journal-article",
+            "abstract": "We examined monthly counts of MRSA acquisition and hospital-onset C. difficile infection over 24 months before and 18 months after ward hand hygiene dashboards were introduced in a 480-bed hospital. Events averaged 3.1 per month across the hospital. There was no clear change in level or slope after the dashboards, and the confidence intervals were compatible with anything from a 30 percent reduction to a 20 percent increase. Hand rub consumption rose by 12 percent. The authors conclude that infection outcomes are too infrequent in a single hospital to evaluate hand hygiene interventions over short periods."
+          },
+          {
+            "title": "Intracluster correlation coefficients for hand hygiene compliance in ward-randomised studies",
+            "authors": "Mbatha-Ruiz K, Holmberg-Chukwu O",
+            "year": 2021,
+            "venue": "Tamsford Trials Methodology Notes",
+            "doi": "10.5555/ctmn.2021.0064",
+            "providerType": "journal-article",
+            "abstract": "We estimated intracluster correlation coefficients from the individual observation data of six ward-randomised and cluster-level studies of hand hygiene. For compliance measured by direct observation, the intracluster correlation ranged from 0.04 to 0.09, with a median of 0.06. Coefficients were larger for physicians than for nurses and larger when observation sessions were short. Baseline ward compliance explained a substantial share of between-ward variation, so adjusting for it reduced the required number of wards. We provide the coefficients and their confidence intervals for use in planning future trials."
+          },
+          {
+            "title": "Contamination between wards in cluster trials of hand hygiene interventions: staff movement and shared equipment",
+            "authors": "Ferrante-Osei L, Kaur-Lindstrom B",
+            "year": 2024,
+            "venue": "Wrenmouth Hospital Infection Research",
+            "doi": "10.5555/hicr.2024.0012",
+            "providerType": "journal-article",
+            "abstract": "In a completed trial of ward-level hand hygiene feedback, 22 percent of nursing shifts on control wards were worked by staff who also worked on intervention wards during the trial. Compliance among these float staff on control wards rose during the trial, and the difference between arms was about a third smaller than among staff who worked on one ward only. Shared portable equipment and joint handovers also carried feedback messages between wards. The authors recommend randomising pairs of wards that share staff as one cluster and recording float status for every observed opportunity."
+          },
+          {
+            "title": "Alcohol-based hand rub consumption as a proxy for hand hygiene compliance: agreement with direct observation on 30 wards",
+            "authors": "Delgado-Nkemelu J, Sato-Birkeland E",
+            "year": 2016,
+            "venue": "Infection Prevention Methods",
+            "providerType": "journal-article",
+            "abstract": "We compared monthly alcohol-based hand rub consumption per 1,000 patient-days with directly observed compliance on 30 wards over one year. The correlation between consumption and observed compliance was weak (r equal to 0.31), and consumption rose with patient acuity and with the number of visitors independently of observed staff behaviour. Consumption was cheap to collect and complete for every ward-month, but pump dispensers refilled from bulk stock were recorded inconsistently on six wards. The authors suggest consumption as a context measure rather than as a substitute for observed compliance."
+          }
+        ]
+      },
+      "note": "Eight records with abstracts; record 1 carries the provider type 'Randomized Controlled Trial', which kindFromProviderType maps to rct, and record 3 'review', mapped to systematic-review; the others map to grey until appraised. Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 8,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0kih00p",
+            "ev-1jmjmnm",
+            "ev-03bep8c",
+            "ev-00v1xdk",
+            "ev-08smxep",
+            "ev-1ej54gc",
+            "ev-0nj3ms6",
+            "ev-1u98koa"
+          ],
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[0].id": "ev-0kih00p",
+          "scan.items[0].kind": "rct",
+          "scan.items[2].kind": "systematic-review",
+          "scan.items[1].kind": "grey",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Real-time feedback from electronic hand hygiene monitoring on medical wards: a cluster randomised trial"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "electronic hand hygiene monitoring real-time feedback cluster randomised trial wards compliance outcome",
+        "sourcesConsulted": [
+          "model knowledge of the hand hygiene literature",
+          "vendor white papers (described, not searched)"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "Certainty is left to the appraisal of the retrieved records.",
+        "synthesis": "Four further leads are suggested alongside the retrieved records: a landmark multicentre study linking compliance to infection, a study of gaming of electronic monitoring, a report on blinded video review as an outcome, and a synthesis of staff views on surveillance. None has been retrieved or checked.",
+        "items": [
+          {
+            "title": "Hand hygiene compliance and hospital-onset infection across 40 hospitals: the landmark multicentre evidence",
+            "authors": "Global Hand Hygiene Collaborative",
+            "year": 2015,
+            "source": "Global Hand Hygiene Bulletin",
+            "kind": "observational",
+            "grade": "moderate",
+            "methodQuality": 72,
+            "relevance": 60,
+            "verification": "landmark",
+            "doi": "10.5555/ghhb.2015.0001",
+            "contextTags": [
+              "infection outcomes",
+              "multicentre"
+            ],
+            "keyFindings": "Hospitals with higher observed compliance had lower hospital-onset infection rates.",
+            "limitations": "Ecological comparison between hospitals.",
+            "notes": "Presented as a landmark study; not retrieved."
+          },
+          {
+            "title": "Gaming of electronic hand hygiene monitoring: dispenser activation without patient contact",
+            "authors": "Rasku-Adeyemi P, Moyo-Gallagher T",
+            "year": true,
+            "source": "Quillsby Infection Prevention Technology Notes",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 55,
+            "relevance": 82,
+            "verification": "ai-lead",
+            "contextTags": [
+              "gaming",
+              "measurement validity"
+            ],
+            "keyFindings": "Video review found that a fifth of dispenser activations logged at patient-zone entry were not followed by hand rubbing.",
+            "limitations": "Two wards; video only in corridors.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Observer-blinded video review as an outcome in hand hygiene trials",
+            "authors": "Achterberg-Liu S, Nkosi-Farrell B",
+            "year": 2021,
+            "source": "Tamsford Trials Methodology Notes",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 58,
+            "relevance": 75,
+            "verification": "verify",
+            "contextTags": [
+              "outcome measurement",
+              "blinding"
+            ],
+            "keyFindings": "Video review by assessors unaware of allocation agreed well with live observation and removed observer visibility.",
+            "limitations": "Privacy approval was difficult and cameras covered only doorways.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Staff perceptions of surveillance in electronic hand hygiene monitoring: a synthesis",
+            "authors": "Oyelaran-Petersen K",
+            "year": 2022,
+            "source": "Nursing Workplace Perspectives",
+            "kind": "qualitative",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 58,
+            "verification": "ai-lead",
+            "contextTags": [
+              "staff acceptability",
+              "surveillance"
+            ],
+            "keyFindings": "Acceptance depended on written limits on individual data use.",
+            "limitations": "Mostly nursing staff in high-income settings.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Four unchecked leads suggested; one is presented as a landmark and one carries a year that is not a number."
+      },
+      "note": "Four model leads arrive after retrieval. They are appended after the eight retrieved records, never replacing them (D1; at 875fe59 the leads replace the records). The lead labelled 'landmark' stays origin model, status unverified, access unknown (G3). The lead whose year is the boolean true is stored with year null and issue invalid-type (G4; holds at 875fe59). The explicit null certainty stays unassessed with issue 'cleared' (holds at 875fe59). The retrieved records keep the stage completable (G2), but no certainty is assigned by a discovery reply (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 12
+          },
+          "scan.items[0].id": "ev-0kih00p",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[7].id": "ev-1u98koa",
+          "scan.items[8].title": "Hand hygiene compliance and hospital-onset infection across 40 hospitals: the landmark multicentre evidence",
+          "scan.items[8].provenance.origin": "model",
+          "scan.items[8].provenance.status": "unverified",
+          "scan.items[8].provenance.access": "unknown",
+          "scan.items[9].title": "Gaming of electronic hand hygiene monitoring: dispenser activation without patient contact",
+          "scan.items[9].year": {
+            "isNull": true
+          },
+          "scan.items[9].provenance.origin": "model",
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "items[1].year",
+              "code": "invalid-type"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": {
+            "min": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0kih00p",
+            "relevance": 95,
+            "methodQuality": 66,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "On twelve wards, electronic compliance rose from 48 to 71 percent with real-time feedback against 50 to 54 percent with silent monitoring; directly observed compliance was 64 against 57 percent.",
+            "limitations": "Primary outcome measured by the feedback system itself; observers knew allocation; twelve wards.",
+            "contextTags": [
+              "cluster randomised trial",
+              "real-time feedback",
+              "electronic compliance"
+            ]
+          },
+          {
+            "id": "ev-1jmjmnm",
+            "relevance": 84,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Dispenser events were about three times higher while a visible observer was present, and the effect did not fade over eight weeks.",
+            "limitations": "Four wards; covert counts do not measure compliance directly.",
+            "contextTags": [
+              "Hawthorne effect",
+              "direct observation"
+            ]
+          },
+          {
+            "id": "ev-03bep8c",
+            "relevance": 88,
+            "methodQuality": 67,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Badge systems detected 53 to 91 percent of observed opportunities; most feedback studies used the system's own measure as the outcome and only two were randomised.",
+            "limitations": "Heterogeneous systems and outcomes; no pooled effect.",
+            "contextTags": [
+              "systematic review",
+              "measurement accuracy",
+              "outcome independence"
+            ]
+          },
+          {
+            "id": "ev-00v1xdk",
+            "relevance": 72,
+            "methodQuality": 48,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Nurses accepted ward-level feedback, objected to individual data use, and described touching dispensers to stop the badge vibrating without cleaning their hands.",
+            "limitations": "Two surgical wards; questionnaire response 65 percent.",
+            "contextTags": [
+              "gaming",
+              "acceptability",
+              "data use"
+            ]
+          },
+          {
+            "id": "ev-08smxep",
+            "relevance": 62,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "No clear change in MRSA acquisition or hospital-onset C. difficile after dashboards, with about 3 events a month and wide intervals.",
+            "limitations": "Single hospital; underpowered for infection outcomes.",
+            "contextTags": [
+              "infection outcomes",
+              "interrupted time series"
+            ]
+          },
+          {
+            "id": "ev-1ej54gc",
+            "relevance": 80,
+            "methodQuality": 70,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Intracluster correlation for observed compliance ranged from 0.04 to 0.09 (median 0.06); baseline compliance explained much between-ward variation.",
+            "limitations": "Six source studies, mostly on medical wards.",
+            "contextTags": [
+              "sample size",
+              "intracluster correlation"
+            ]
+          },
+          {
+            "id": "ev-0nj3ms6",
+            "relevance": 83,
+            "methodQuality": 61,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Float staff carried feedback to control wards, shrinking the between-arm difference by about a third; pairing wards that share staff was recommended.",
+            "limitations": "One trial; float status recorded retrospectively.",
+            "contextTags": [
+              "contamination",
+              "float staff",
+              "cluster design"
+            ]
+          },
+          {
+            "id": "ev-1u98koa",
+            "relevance": 55,
+            "methodQuality": 140,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Hand rub consumption correlated weakly with observed compliance (r 0.31) and rose with acuity and visitors.",
+            "limitations": "Ward-month aggregates; one year.",
+            "contextTags": [
+              "hand rub consumption",
+              "proxy measure"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a ward-randomised trial, electronic compliance rose from 48 to 71 percent with real-time feedback against 50 to 54 percent with silent monitoring.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0kih00p"
+            ],
+            "location": "Abstract, results",
+            "passage": "electronic compliance rose from 48 to 71 percent on feedback wards and from 50 to 54 percent on control wards",
+            "interpretation": "Feedback may change behaviour enough to justify a local trial; the outcome was the system's own measure.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Hand hygiene events were about three times more frequent while a visible observer was present.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1jmjmnm"
+            ],
+            "location": "Abstract",
+            "passage": "Dispenser events per hour were about three times higher when an observer was present",
+            "interpretation": "Direct observation must be equally visible in both arms, and absolute compliance will be overstated.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "A review of electronic monitoring recommends an outcome measured independently of the feedback system.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-03bep8c"
+            ],
+            "location": "Abstract, conclusions",
+            "passage": "We recommend an outcome measured independently of the feedback system in any comparative evaluation.",
+            "interpretation": "The badge figure cannot be the primary outcome.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c4",
+            "text": "Intracluster correlation for directly observed compliance ranged from 0.04 to 0.09 with a median of 0.06.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1ej54gc"
+            ],
+            "location": "Abstract",
+            "passage": "the intracluster correlation ranged from 0.04 to 0.09, with a median of 0.06",
+            "interpretation": "Planning values for the sample size, with baseline adjustment.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c5",
+            "text": "Float staff reduced the between-arm difference by about a third in a ward-level feedback trial.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0nj3ms6"
+            ],
+            "location": "Abstract",
+            "passage": "the difference between arms was about a third smaller than among staff who worked on one ward only",
+            "interpretation": "Randomise pairs of wards that share staff and record float status.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c6",
+            "text": "Nurses described touching a dispenser to stop the badge vibrating without cleaning their hands.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-00v1xdk"
+            ],
+            "location": "Abstract",
+            "passage": "Several nurses described touching a dispenser near the door to stop the badge vibrating during busy periods, without cleaning their hands.",
+            "interpretation": "Gaming makes the system's figure unreliable on feedback wards.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Eight retrieved records, appraised at abstract level. One ward-randomised trial reported a large rise in electronic compliance with real-time feedback (48 to 71 against 50 to 54 percent), measured by the feedback system itself, with a smaller difference in observed compliance. A review of 31 studies and a staff study show why the system's own figure is a weak outcome: detection is incomplete and staff can satisfy the badge without cleaning their hands. Visible observers roughly triple hand hygiene events. Planning values for clustering are available (median intracluster correlation 0.06), float staff carry feedback between wards, and infections are too rare to compare in one hospital. Hand rub consumption is a weak proxy.",
+        "gradeOverall": "low",
+        "gradeRationale": "One randomised trial with a system-measured primary outcome and several observational and methods records; direction consistent for electronic compliance but serious risk of measurement bias and indirectness for real hand hygiene. Certainty that feedback improves actual hand hygiene is low.",
+        "summary": "Eight retrieved records appraised; six source-derived claims recorded with passages; overall certainty low."
+      },
+      "note": "Appraisal of the eight retrieved records (S13). The consumption study's methodQuality of 140 is out of range: stored null with issue out-of-range, never clamped to 100 (G4; scoreOrNull at 875fe59). The leads are not annotated and keep their state. Certainty 'low' is assigned over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 12
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[0].kind": "rct",
+          "scan.items[0].relevance": 95,
+          "scan.items[7].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[7].relevance": 55,
+          "scan.items[7].grade": "low",
+          "scan.items[5].grade": "moderate",
+          "scan.items[9].year": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0kih00p"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-1ej54gc"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-1u98koa].methodQuality",
+              "code": "out-of-range"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "620-bed teaching hospital, 16 adult wards with badges",
+          "silent monitoring under staff council agreement JSC-2026-07",
+          "board decision on the feedback licence by June 2027",
+          "400 independent observer-hours"
+        ],
+        "reading": "Real-time feedback acts on the badge figure directly and on hand hygiene only through staff behaviour, so the system's own compliance figure can rise without cleaner hands. Visible observation changes behaviour, float staff carry feedback between wards, and infections are too rare to be the outcome. The design problem is therefore measurement and contamination, not the intervention.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Real-time badge feedback and ward dashboards",
+            "kind": "context",
+            "detail": "The intervention the board wants to buy."
+          },
+          {
+            "id": "n2",
+            "label": "Actual hand hygiene at patient-zone entry",
+            "kind": "outcome",
+            "detail": "What protects patients."
+          },
+          {
+            "id": "n3",
+            "label": "Badge system compliance figure",
+            "kind": "outcome",
+            "detail": "Can be satisfied without hand hygiene (claim c6)."
+          },
+          {
+            "id": "n4",
+            "label": "Ward-randomised trial of feedback",
+            "kind": "rct",
+            "detail": "48 to 71 against 50 to 54 percent on the system's measure (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Visible observers",
+            "kind": "context",
+            "detail": "Roughly triple hand hygiene events (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Float staff",
+            "kind": "stakeholder",
+            "detail": "Carry feedback between wards (claim c5)."
+          },
+          {
+            "id": "n7",
+            "label": "Staff council agreement",
+            "kind": "stakeholder",
+            "detail": "Ward-level use only."
+          },
+          {
+            "id": "n8",
+            "label": "Independent outcome measure",
+            "kind": "framework",
+            "detail": "Recommended by the review (claim c3)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "raises directly"
+          },
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "may raise"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "reports effect on"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "inflates observed"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "spreads to control wards"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "limits data use in"
+          },
+          {
+            "from": "n8",
+            "to": "n2",
+            "relation": "measures"
+          }
+        ],
+        "summary": "Map separates the badge figure from actual hand hygiene and shows observation and float staff as the threats to a fair comparison."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[3].kind": "rct",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No outcome independent of the feedback system",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "The retrieved trial measured its primary outcome with the feedback system itself, and staff can satisfy the badge without cleaning their hands (claims c1, c6).",
+            "opportunity": "Use direct observation by external observers, equally visible on both arms, as the primary outcome."
+          },
+          {
+            "id": "g2",
+            "title": "Contamination through float staff",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "One in five nursing shifts is worked by float staff, who shrank a between-arm difference by a third in a similar trial (claim c5).",
+            "opportunity": "Randomise pairs of wards that share staff and record float status at every observed opportunity."
+          },
+          {
+            "id": "g3",
+            "title": "Infection outcomes cannot be compared in six months",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "About three events a month in a whole hospital cannot show a ward-level difference.",
+            "opportunity": "Report infections descriptively as context, not as an effect estimate."
+          },
+          {
+            "id": "g4",
+            "title": "Staff trust in the monitoring agreement",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Feedback that feels like surveillance may fall hardest on float staff, agency staff and junior doctors, who have least control over their workload.",
+            "opportunity": "Keep data at ward level, involve staff representatives, and report acceptability by staff group."
+          },
+          {
+            "id": "g5",
+            "title": "Local effect size is uncertain",
+            "kind": "evidence",
+            "severity": "watch",
+            "whyItMatters": "The only trial reports a large effect on a system-measured outcome and a smaller one on observation.",
+            "opportunity": "State the smallest difference the board would pay for before sample size is fixed."
+          }
+        ],
+        "errorsFound": [
+          "The vendor's claim rests on the feedback system's own compliance figure, which the feedback itself can move without changing hand hygiene."
+        ],
+        "reevaluation": "The gaps point to a cluster randomised trial of paired wards with an independent observed primary outcome, and to honesty about what infection counts can show.",
+        "summary": "Five gaps; outcome independence and contamination are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No outcome independent of the feedback system"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Real-time badge feedback with weekly ward dashboards raises directly observed hand hygiene compliance at patient-zone entry by at least 15 percentage points compared with silent monitoring over six months.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 85,
+            "feasibility": 70,
+            "parsimony": 80,
+            "rationale": "Need and practice change are high because a hospital-wide purchase depends on it; novelty is moderate because one trial exists but used a system-measured outcome; feasibility depends on observer time.",
+            "risks": "Effect smaller than the trial can detect; observer visibility differing between arms."
+          },
+          {
+            "id": "h2",
+            "statement": "Feedback raises the badge system's compliance figure more than it raises observed compliance.",
+            "novelty": 55,
+            "need": 60,
+            "practiceChange": 60,
+            "feasibility": 85,
+            "parsimony": 70,
+            "rationale": "Gaming and incomplete detection would show as a gap between the two measures.",
+            "risks": "Badge detection differs between wards for reasons unrelated to feedback."
+          },
+          {
+            "id": "h3",
+            "statement": "Hospital-onset infections fall on feedback wards.",
+            "novelty": 30,
+            "need": 80,
+            "practiceChange": 70,
+            "feasibility": 20,
+            "parsimony": 40,
+            "rationale": "Patient-important but far too rare to test on 16 wards in six months.",
+            "risks": "Any difference would be noise."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected with an independent observed outcome, h2 kept as a secondary contrast, h3 not testable here."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[2].feasibility": 20,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "On 16 adult wards randomised in pairs, does real-time badge feedback with weekly ward dashboards, compared with silent monitoring, increase directly observed hand hygiene compliance at patient-zone entry over six months?",
+            "framework": "PICOT",
+            "population": "Staff hand hygiene opportunities at patient-zone entry on 16 adult medical and surgical wards",
+            "intervention": "Real-time badge vibration feedback and weekly ward dashboards",
+            "comparator": "Silent badge monitoring without feedback",
+            "outcome": "Compliance observed by external observers equally visible on both arms",
+            "time": "January to June 2027",
+            "setting": "620-bed teaching hospital"
+          }
+        ],
+        "finer": "Feasible with 400 observer-hours and existing badges; interesting to the board and staff; novel because the retrieved trial used a system-measured outcome; ethical under a cluster-trial waiver with staff council agreement; relevant to a licence decision.",
+        "summary": "One PICOT question with an outcome independent of the feedback system."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICOT",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "rct",
+        "rationale": "The board's question is whether switching on feedback causes better hand hygiene, and the 16 wards can be randomised because the intervention is a software switch. A cluster randomised trial with pairs of wards that share float staff randomised together limits contamination (c5); the primary outcome is direct observation by external observers, equally visible on both arms, because the system's own figure can be gamed (c3) and visible observation inflates compliance (c2). The retrieved trial (c1) suggests an effect large enough to be worth testing. Reporting follows the CONSORT extension for cluster trials.",
+        "alternatives": [
+          "Before-after comparison on all wards (refused: cannot separate feedback from observation effects and secular change)",
+          "Stepped-wedge rollout (refused: six months is too short for several steps and the board needs a parallel comparison)",
+          "Decision based on the badge figure alone (refused: the measure the intervention acts on)"
+        ],
+        "guidelines": [
+          "CONSORT extension for cluster randomised trials",
+          "SPIRIT",
+          "TIDieR"
+        ],
+        "whyNotMoreComplex": "A trial with infection outcomes would need many hospitals and years; the observed-compliance trial answers the purchasing question within the window.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Prepare a cluster randomised trial of real-time badge feedback on 16 wards randomised in pairs that share float staff, with directly observed compliance by external observers as the primary outcome, for submission to the ethics board before January 2027.",
+          "question": "Should the hospital test real-time badge feedback in a ward-randomised trial before buying the licence for all wards?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A randomised comparison has reported an effect of feedback large enough to be worth testing locally.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "An outcome independent of the feedback system is available and can be made equally visible in both arms.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The board buys the licence for all wards before the trial reports.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Infection prevention committee endorsement of a ward-randomised comparison",
+              "status": "met",
+              "evidence": "Minute IPC-2026-22 dated 2026-09-15, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Staff council agreement allowing ward-level evaluation use of badge data",
+              "status": "met",
+              "evidence": "Agreement JSC-2026-07, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Before-after comparison on all wards",
+            "Buy the licence and monitor the badge figure"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; both gates are met on investigator-supplied records, so trial preparation can start."
+        },
+        "summary": "Cluster randomised trial of paired wards recommended; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "Decision resting on ledger claims c1 to c3 (S13); selectionStatus requires S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "rct",
+          "family": "rct",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The supported positive predecessor of the source change: every claim exists in the ledger and rests on retrieved records, both gates are met, so the selection is accepted and the action ready (G7). selectionStatus and actionStatus require S11, the claims S13, the status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "rct"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "change-source",
+      "record": "Real-time feedback from electronic hand hygiene monitoring on medical wards: a cluster randomised trial",
+      "field": "abstract",
+      "value": "Correction notice from the authors: an error in the dispenser-to-zone mapping on the feedback wards counted dispenser activations in corridors as hand hygiene at patient-zone entry. After re-analysis with corrected mapping, electronic compliance rose from 48 to 55 percent on feedback wards and from 50 to 54 percent on control wards (difference in change 3 percentage points, 95 percent CI -4 to 10). Directly observed compliance, measured on a random sample of shifts by observers who knew ward allocation, was 64 against 57 percent. The conclusion that real-time feedback increased compliance is withdrawn; the authors now report no clear difference in electronic compliance.",
+      "note": "The stored abstract of the trial cited by claim c1 is replaced by the authors' correction notice through the store's own action, after the accepted supported decision and while the route is still on the Design stage. The decision must become stale and its action blocked (G7): status and selectionStatus 'stale' require S10 (the evidence revision must cover source text; at 875fe59 it hashes only id, status, DOI, PMID and title) and D1 (the abstract field), with S11 for the field names; the status text requires D5. The record's identity and provenance do not change; completed stages after Scan are flagged for review (G8, holds at 875fe59 when the change goes through mergeStage).",
+      "expect": {
+        "store": {
+          "scan.items[0].title": "Real-time feedback from electronic hand hygiene monitoring on medical wards: a cluster randomised trial",
+          "scan.items[0].id": "ev-0kih00p",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.claims[0].sourceIds": [
+            "ev-0kih00p"
+          ],
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "scan": "complete",
+          "map": "needs-review",
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: the stale status and the review flags must survive in the store and on screen (G7, G8). status 'stale' requires S10; selectionStatus S10 and S11; the status text D5.",
+      "expect": {
+        "store": {
+          "title": "Real-time electronic hand hygiene feedback on 16 hospital wards",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "scan.items[7].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[9].year": {
+            "isNull": true
+          }
+        },
+        "stage": {
+          "design": "needs-review",
+          "gaps": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Two-arm cluster randomised trial on 16 adult wards randomised in eight pairs of wards that share float staff: four pairs switch on real-time badge feedback with weekly dashboards and four continue silent monitoring, from January to June 2027. The planning basis is under review because the retrieved trial's record has changed.",
+        "population": "Hand hygiene opportunities at patient-zone entry by all staff groups on the 16 wards; float and agency staff included and flagged.",
+        "exposure": "Real-time vibration feedback within ten seconds of patient-zone entry without hand hygiene, and weekly ward dashboards shown at the safety huddle.",
+        "procedures": "Pairs are allocated by computer-generated sequence stratified by medical or surgical specialty. External observers from the regional network observe 25 hours per ward in sessions at random times, wearing the same visible identification on both arms; they record opportunity type, staff group, float status and hand hygiene. Badge data are extracted at ward level for the secondary outcome.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Directly observed compliance",
+            "measure": "Proportion of observed opportunities at patient-zone entry with hand rub or hand washing, recorded by external observers",
+            "timing": "Months 1 to 6",
+            "why": "Independent of the feedback system (claim c3).",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Badge system compliance",
+            "measure": "Ward-level compliance recorded by the badge system",
+            "timing": "Weekly, months 1 to 6",
+            "why": "Shows how far the system's figure departs from observed behaviour.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Hand rub consumption",
+            "measure": "Litres per 1,000 patient-days by ward",
+            "timing": "Monthly",
+            "why": "Cheap context measure; weak proxy.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Patient sleep disturbance by alerts",
+            "measure": "Nurse-recorded night alerts in shared bays and patient complaints",
+            "timing": "Monthly",
+            "why": "Vibration alerts can wake patients.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Staff acceptability",
+            "measure": "Short anonymous questionnaire by staff group at month 5",
+            "timing": "Month 5",
+            "why": "Trust in the monitoring agreement must not be lost.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "400 observer-hours give about 300 observed opportunities per ward; the feedback switch needs no new hardware.",
+        "biasMitigation": [
+          "Pairs of wards sharing float staff randomised together",
+          "External observers with identical visibility on both arms",
+          "Observation sessions at random times scheduled centrally",
+          "Primary analysis fixed before the first observation session"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Observer visibility",
+            "severity": "watch",
+            "note": "Equal on both arms; absolute compliance still overstated."
+          },
+          {
+            "id": "b2",
+            "label": "Contamination by float staff",
+            "severity": "watch",
+            "note": "Paired randomisation and float status recorded."
+          },
+          {
+            "id": "b3",
+            "label": "Planning effect size under correction",
+            "severity": "high",
+            "note": "The record behind the planning effect has changed; the decision is stale until re-reviewed."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 2,
+          "flags": [
+            "Adjustment for baseline ward compliance and specialty only"
+          ],
+          "simplestPath": "One observed outcome, eight randomised pairs, one adjusted comparison."
+        },
+        "theoreticalFramework": "No framework beyond the trial design; TIDieR for describing the feedback intervention.",
+        "summary": "Paired cluster randomised trial with an independent observed primary outcome; planning basis flagged as under review."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[3].patientCentered": true,
+          "protocol.biasFlags[2].severity": "high",
+          "protocol.parsimony.secondaryOutcomeCount": 2,
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cluster randomised trial, 16 wards in 8 pairs, analysed at the opportunity level with ward as the cluster.",
+        "sampleSize": "With 8 wards per arm, about 300 observed opportunities per ward, an intracluster correlation of 0.06 (median of the retrieved estimates, range 0.04 to 0.09) and compliance near 60 percent, the design effect is about 19. Using a t distribution with 14 degrees of freedom, the trial has 80 percent power at two-sided alpha 0.05 to detect a difference of about 18 percentage points, or about 15 points after adjustment for ward baseline compliance. The corrected report of the retrieved trial now gives a 3-point difference on the system's measure, far below what 16 wards can detect, so the planning basis must be re-reviewed before the decision is acted on.",
+        "primaryAnalysis": "Mixed-effects logistic regression of observed hand hygiene on arm with a random intercept for ward, adjusted for ward baseline compliance and specialty, with small-sample degrees-of-freedom correction; the difference is reported as a risk difference with its confidence interval.",
+        "secondaryAnalysis": "The same model for badge-system compliance; the difference between badge and observed compliance by arm; hand rub consumption per 1,000 patient-days; float and non-float staff reported separately.",
+        "missingData": "Unobserved sessions are rescheduled within the same month; wards that lose more than 20 percent of sessions are reported, and no opportunity is imputed.",
+        "multiplicity": "One primary comparison; secondary outcomes reported with confidence intervals and no significance claims.",
+        "software": "R with lme4; allocation sequence and analysis code held by the trial statistician.",
+        "overfittingGuards": [
+          "Two adjustment variables fixed in advance",
+          "No subgroup testing beyond the float staff split",
+          "Allocation concealed from ward managers until switch-on"
+        ],
+        "summary": "About 15 points detectable with baseline adjustment; the corrected planning value is far smaller, so the design needs re-review."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "design effect is about 19"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          }
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal for patients; for staff, the risk is that feedback feels like surveillance and that ward data are misused. Night alerts may disturb patients in shared bays.",
+        "consent": "Wards are the unit of randomisation and staff are the participants whose behaviour is observed. Individual consent for observation is impracticable without distorting behaviour; the ethics board will be asked for a waiver of individual consent under the Ottawa Statement for cluster trials, with staff informed through the staff council, posters and huddles and able to raise concerns.",
+        "data": "Observers record staff group and float status, never names; badge data are used at ward level only under agreement JSC-2026-07; data are kept on the infection prevention team's restricted drive.",
+        "equity": "PROGRESS-Plus: float, agency and junior staff have least control over workload and may experience feedback as surveillance most. Acceptability and compliance are reported by staff group, and no individual or staff-group data are shared with managers.",
+        "effectiveness": "The trial decides whether a hospital-wide licence is worth buying; a precise null result on the observed outcome is as useful to the board as a positive one.",
+        "efficiency": "Uses installed badges and 400 donated observer-hours.",
+        "costs": "Feedback licence for eight wards for six months, provided by the vendor at no charge for the trial, and observer travel.",
+        "grants": "None needed; an infection prevention research award could fund video-based outcome assessment in a follow-on trial.",
+        "partnerships": "Staff council and unions, the regional infection prevention network (observers), ward managers, and two patient representatives from the infection prevention patient panel.",
+        "rebPath": "Full review by the hospital research ethics board as a cluster randomised trial with a waiver of individual staff consent, following ICH-GCP and the Ottawa Statement; registration in a public trial registry before randomisation.",
+        "limitations": "Observer visibility remains; six months may be too short for durable change; infections are not an evaluable outcome.",
+        "summary": "Cluster trial with a staff consent waiver request, ward-level data use only, and equity reporting by staff group."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "Ottawa Statement"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          }
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Staff council representatives review the information sheet and data rules; two patient representatives review the alert policy for shared bays; ward managers join the steering group without access to individual data.",
+        "socialListening": "No social media listening; comments on the staff intranet thread about the badge system are summarised without names.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Surveillance",
+            "quote": "Composite paraphrase: If my badge buzzes in front of a patient, it feels like being told off in public.",
+            "implication": "Keep alerts discreet and report only ward-level data.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Float staff",
+            "quote": "Composite paraphrase: I work on four wards a week; nobody tells me which ones are in the study.",
+            "implication": "Record float status and brief float staff separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Sleep in shared bays",
+            "quote": "Composite paraphrase: Something kept buzzing near my bed every time the nurse came in at night.",
+            "implication": "Track night alerts as a balancing measure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "The agreement",
+            "quote": "Composite paraphrase: We signed up to ward numbers, not to anyone being named.",
+            "implication": "Restate JSC-2026-07 in the protocol and information sheet.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on surveillance, float staff, patient sleep and the data agreement."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "patient",
+          "voices.items[3].source": "partner"
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Real-time electronic feedback and directly observed hand hygiene compliance on hospital wards: a paired cluster randomised trial",
+        "abstract": "Objective: to test whether real-time badge feedback with weekly ward dashboards increases directly observed hand hygiene compliance compared with silent monitoring. Design: cluster randomised trial of 16 adult wards randomised in eight pairs sharing float staff, January to June 2027. Primary outcome: compliance at patient-zone entry observed by external observers equally visible on both arms. Results and conclusions will be written after the trial.",
+        "introduction": "Electronic monitoring vendors report large gains in compliance, but most evaluations measure the outcome with the feedback system itself. The only retrieved randomised trial has since corrected its main result.",
+        "methods": "Pairs of wards sharing float staff are allocated by a stratified sequence. External observers record opportunities in random sessions. The primary analysis is a mixed-effects logistic model adjusted for ward baseline compliance and specialty.",
+        "results": "No data have been collected yet. The report will present the flow of wards and observation sessions, observed and badge compliance by arm, and results for float staff separately.",
+        "discussion": "The discussion will compare observed and badge-measured effects, consider observer visibility and contamination, and state what the result means for the licence.",
+        "limitations": "Observer visibility; 16 wards; infections not evaluable; the planning effect size rests on a corrected record.",
+        "conclusion": "To be written after the trial; it will be limited to observed compliance and will not claim effects on infection.",
+        "reportingChecklist": "CONSORT extension for cluster randomised trials",
+        "summary": "CONSORT-structured draft with results left empty until the trial ends."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "CONSORT extension for cluster randomised trials",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          }
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The accepted decision is stale since the correction notice to the retrieved trial; re-appraise that record and decide again before trial preparation continues",
+          "A methodQuality of 140 in the appraisal was stored as unknown; rate the consumption study again if it is cited",
+          "A lead with a non-numeric year was stored with the year unknown, and the landmark lead remains unverified; neither may be cited without an identity check"
+        ],
+        "improvementNotes": "The scan stored four model leads after the eight retrieved records without replacing any; the appraisal assigned low certainty over inspected records only. After acceptance, the cited trial's abstract changed to a correction notice and the decision became stale; protocol and analysis were drafted with the planning basis flagged.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the stale decision, the unknown score, and the unchecked leads."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour; at 875fe59 they fail because mergeStage overwrites the audit stage's patch (A3 L1.6, a store defect).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "After reopen the route is not the Design stage, so the status text on screen is the stage list's 'review required' (G8, D5); selectionStatus 'stale' requires S10 and S11.",
+      "expect": {
+        "store": {
+          "title": "Real-time electronic hand hygiene feedback on 16 hospital wards",
+          "design.decisions[-1].selectionStatus": "stale",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "scan.items": {
+            "length": 12
+          }
+        },
+        "stage": {
+          "design": "needs-review",
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "status and selectionStatus 'stale' require S10 (with S11 for the field); actionStatus S11; the appended leads D1. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "design.decisions[-1].status": "stale",
+            "design.decisions[-1].selectionStatus": "stale",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c2",
+              "c3"
+            ],
+            "scan.items[0].title": "Real-time feedback from electronic hand hygiene monitoring on medical wards: a cluster randomised trial",
+            "scan.items[7].methodQuality": {
+              "isNull": true
+            },
+            "scan.items[8].provenance.status": "unverified",
+            "scan.items[9].year": {
+              "isNull": true
+            },
+            "scan.gradeOverall": "low",
+            "needsReview": [
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design"
+            ],
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ]
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

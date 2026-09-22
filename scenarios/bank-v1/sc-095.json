@@ -1,0 +1,1518 @@
+{
+  "id": "sc-095",
+  "version": 1,
+  "title": "Intensive care unit: nurse-driven sedation interruption adherence, a two-hit search and leads only before a second search",
+  "field": "critical-care",
+  "level": 2,
+  "family": "qi-lean",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "D20",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path with one ambiguity on an explicit lean need (value stream mapping, gemba walks and A3 named). The first, narrow search reports only two hits and returns no record bodies (HTTP 200, total 2, records empty), so the event is 'partial' with no records. A leads-only discovery reply follows: three unchecked leads (origin model, unverified, G3), one with no method quality (null, G4), and an explicit null on the model-owned gradeOverall (issue 'cleared', certainty stays ''); the stage stays incomplete ('leads only', G2). A broader second search then returns seven records, added after the leads in arrival order with both events kept (assumption: the application appends retrieved records after earlier items; D1 forbids replacement). The appraisal (scan call 2) annotates only the seven records and completes the stage with certainty 'low' over inspected records (G1); the leads stay unverified to the export. The decision rests on four claims from the second search, both gates are met on investigator-supplied records, and the acceptance is a supported positive. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 4, 5, 6, 7 (ev-1a3m7y5, ev-1f8vau2, ev-0ldcp6o, ev-18u2m3r, ev-1cpc924, ev-1sbthgq); the titleYearKey(title, year) hash for record 3 (ev-0woopen). Requires D20 (no certainty and no completion from leads or an empty ingest, 'not assessed', 'leads only'), D1 (leads and records kept side by side), S13 (appraisal payload), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a scan completed by leads or by a hit count without records, a certainty kept from a leads-only reply, leads erased or merged when records arrive, and a partial event rewritten as ok.",
+  "inputs": {
+    "need": "I am the clinical nurse educator in a 16-bed medical and surgical intensive care unit. Two years ago we adopted a nurse-driven daily sedation interruption protocol: every morning the bedside nurse screens ventilated patients on continuous sedation for safety criteria and, if they pass, stops the infusion and assesses the patient, then calls the respiratory therapist for a breathing trial. Our last three months of documentation show the safety screen was done on 71 percent of eligible patient-days, the interruption itself on only 38 percent, and the paired breathing trial on 29 percent. The reasons written in the chart are things like agitated overnight, family at the bedside, physician preference and no time before rounds.\n\nWe want to use lean methods (value stream mapping, gemba walks at 07:00 and A3 thinking with the bedside nurses and respiratory therapists) to see where the morning process breaks down and to raise completed interruptions to 70 percent of eligible patient-days within six months. I would like help finding what has been published on why these protocols are not followed and on changes that worked, choosing measures that show whether we improve without more self-extubations or distress, and setting up a simple weekly data display the charge nurses can keep up. We have no extra staff, and anything we change has to fit the morning before 09:00 rounds.",
+    "constraints": "No additional staff; changes must fit the existing morning workflow before 09:00 rounds; the hospital lean facilitator is available four hours a week from November 2026 to April 2027.",
+    "localFacts": [
+      "In the last three months the safety screen was documented on 71 percent of eligible ventilated patient-days, the sedation interruption on 38 percent and the paired breathing trial on 29 percent.",
+      "The unit averages about nine ventilated patients on continuous sedation per day.",
+      "The hospital lean office assigned a facilitator to the unit for four hours a week from November 2026 to April 2027 (assignment LEAN-ICU-11).",
+      "The ICU medical director and nurse manager agreed on 2026-09-15 to sponsor an A3 on adherence to the sedation interruption protocol."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical nurse educator in a 16-bed medical and surgical intensive care unit. Two years ago we adopted a nurse-driven daily sedation interruption protocol: every morning the bedside nurse screens ventilated patients on continuous sedation for safety criteria and, if they pass, stops the infusion and assesses the patient, then calls the respiratory therapist for a breathing trial. Our last three months of documentation show the safety screen was done on 71 percent of eligible patient-days, the interruption itself on only 38 percent, and the paired breathing trial on 29 percent. The reasons written in the chart are things like agitated overnight, family at the bedside, physician preference and no time before rounds.\n\nWe want to use lean methods (value stream mapping, gemba walks at 07:00 and A3 thinking with the bedside nurses and respiratory therapists) to see where the morning process breaks down and to raise completed interruptions to 70 percent of eligible patient-days within six months. I would like help finding what has been published on why these protocols are not followed and on changes that worked, choosing measures that show whether we improve without more self-extubations or distress, and setting up a simple weekly data display the charge nurses can keep up. We have no extra staff, and anything we change has to fit the morning before 09:00 rounds.",
+          "family": "qi-lean",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical nurse educator in a 16-bed medical and surgical intensive care unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Nurse-driven daily sedation interruption: a lean redesign of the morning process to raise completed interruptions",
+        "subtitle": "Value stream mapping, gemba walks and A3 cycles in a 16-bed intensive care unit",
+        "family": "qi-lean",
+        "statement": "A 16-bed intensive care unit uses a nurse-driven daily sedation interruption protocol, but in the last three months the safety screen was documented on 71 percent of eligible patient-days, the interruption on 38 percent and the paired breathing trial on 29 percent. The gap lies after the screen. The unit wants to use lean methods to find where the morning process breaks down and to raise completed interruptions to 70 percent of eligible patient-days within six months, without more self-extubations or distress.",
+        "whoAffected": "Ventilated adults on continuous sedation, their families, bedside nurses, respiratory therapists and the physicians who lead morning rounds.",
+        "whatHurts": "Missed interruptions prolong sedation and ventilation; nurses feel the decision to stop sedation as a personal risk; families at the bedside may be distressed by awakening.",
+        "currentPractice": "A written protocol with a safety screen at the start of the day shift; interruptions and breathing trials scheduled separately; reasons for not proceeding recorded as free text.",
+        "whyNow": "A two-year-old protocol with low adherence, a sponsor agreement from the medical director and nurse manager, and a lean facilitator from November 2026.",
+        "constraints": "No additional staff; changes must fit the existing morning workflow before 09:00 rounds; the hospital lean facilitator is available four hours a week from November 2026 to April 2027.",
+        "patientCenteredGoal": "Every eligible patient has sedation stopped safely each morning so that they wake, breathe on their own and leave the ventilator as early as they can.",
+        "summary": "Problem framed as a lean redesign of the morning sedation interruption process."
+      },
+      "note": "The typed constraints are restated unchanged (G11).",
+      "expect": {
+        "store": {
+          "title": "Nurse-driven daily sedation interruption: a lean redesign of the morning process to raise completed interruptions",
+          "family": "qi-lean",
+          "problem.constraints": "No additional staff; changes must fit the existing morning workflow before 09:00 rounds; the hospital lean facilitator is available four hours a week from November 2026 to April 2027.",
+          "problem.rawNeed": "I am the clinical nurse educator in a 16-bed medical and surgical intensive care unit. Two years ago we adopted a nurse-driven daily sedation interruption protocol: every morning the bedside nurse screens ventilated patients on continuous sedation for safety criteria and, if they pass, stops the infusion and assesses the patient, then calls the respiratory therapist for a breathing trial. Our last three months of documentation show the safety screen was done on 71 percent of eligible patient-days, the interruption itself on only 38 percent, and the paired breathing trial on 29 percent. The reasons written in the chart are things like agitated overnight, family at the bedside, physician preference and no time before rounds.\n\nWe want to use lean methods (value stream mapping, gemba walks at 07:00 and A3 thinking with the bedside nurses and respiratory therapists) to see where the morning process breaks down and to raise completed interruptions to 70 percent of eligible patient-days within six months. I would like help finding what has been published on why these protocols are not followed and on changes that worked, choosing measures that show whether we improve without more self-extubations or distress, and setting up a simple weekly data display the charge nurses can keep up. We have no extra staff, and anything we change has to fit the morning before 09:00 rounds.",
+          "problem.statement": {
+            "includes": "The gap lies after the screen"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Nurse-driven daily sedation interruption: a lean redesign of the morning process to raise completed interruptions"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "nurse-driven sedation interruption protocol adherence lean value stream intensive care",
+      "response": {
+        "status": 200,
+        "total": 2,
+        "records": [],
+        "note": "The provider reported two hits for this narrow query but returned no record bodies: both hits are conference posters listed without metadata."
+      },
+      "note": "A search with only two hits, neither of which is returned as a record: the event reports two hits and ingests none, so its status is 'partial' (runSearch at 875fe59 marks a total above the ingested count as partial). Nothing is retrieved, so no certainty and no completion follow (G1, G2); 'not assessed' requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "partial",
+          "scan.retrievalEvents[0].resultCount": 2,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "nurse-driven sedation interruption protocol adherence lean value stream intensive care",
+        "sourcesConsulted": [
+          "fixture provider (2 hits, no records returned)",
+          "model recall of critical care nursing literature"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "Not assessed: the recorded search returned no records to inspect.",
+        "synthesis": "The narrow search reported two hits but returned no records, so nothing has been inspected. Three leads recalled from memory are listed for checking: an A3 report from a surgical unit, a questionnaire study of nurses' barriers, and a practice guide on pairing awakening and breathing trials. A broader search is needed before any certainty can be stated.",
+        "items": [
+          {
+            "title": "A3 problem solving to improve spontaneous awakening trial completion in a surgical intensive care unit",
+            "authors": "Holloway-Adeyemi C, Strand-Nakamura P",
+            "year": 2021,
+            "source": "Critical Care Improvement Reports",
+            "kind": "qi-report",
+            "grade": "low",
+            "methodQuality": 40,
+            "relevance": 82,
+            "verification": "ai-lead",
+            "contextTags": [
+              "A3",
+              "awakening trials",
+              "lean"
+            ],
+            "keyFindings": "An A3 led by bedside nurses was followed by a rise in completed awakening trials over six months in one surgical unit.",
+            "limitations": "Recalled lead; single unit; uncontrolled.",
+            "notes": "Recalled as a lead; one of the two hits the provider did not serve may be this report."
+          },
+          {
+            "title": "Barriers to daily sedation interruption reported by critical care nurses: a multicentre questionnaire study",
+            "authors": "Mistry-Oduya L, Kaplan-Reyes D, Sorensen-Iwu T",
+            "year": 2019,
+            "source": "Journal of Critical Care Nursing Practice",
+            "kind": "observational",
+            "grade": "low",
+            "relevance": 76,
+            "verification": "verify",
+            "contextTags": [
+              "barriers",
+              "nurses",
+              "questionnaire"
+            ],
+            "keyFindings": "Nurses most often cited fear of agitation and self-extubation, workload before rounds and unclear authority to stop sedation.",
+            "limitations": "Recalled lead; self-report; method quality not stated.",
+            "notes": "Recalled as a lead; not retrieved."
+          },
+          {
+            "title": "Paired awakening and breathing trials in routine practice: a practice guide",
+            "authors": "Regional Critical Care Practice Group",
+            "year": 2023,
+            "source": "Regional critical care practice guides",
+            "kind": "guideline",
+            "grade": "very-low",
+            "methodQuality": 30,
+            "relevance": 70,
+            "verification": "ai-lead",
+            "contextTags": [
+              "practice guide",
+              "breathing trials",
+              "coordination"
+            ],
+            "keyFindings": "Recommends a fixed morning time for paired awakening and breathing trials agreed between nursing and respiratory therapy.",
+            "limitations": "Recalled lead; consensus guide; evidence base not described.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Three unchecked leads; certainty left unassessed; a broader search is needed."
+      },
+      "note": "A leads-only discovery call. The leads are stored as leads (origin model, unverified, G3); the second lead's method quality is omitted and stays null (G4). The explicit null on the model-owned gradeOverall gives issue 'cleared' and the certainty stays ''. Leads never complete the stage (G2; A3.2 'leads only'), which requires D20; at 875fe59 the stage is marked complete after any applied call.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 3
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": 2
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "daily sedation interruption spontaneous awakening trial adherence barriers nurse-led protocol breathing trial coordination",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Adherence to daily spontaneous awakening trials under a nurse-driven protocol: a two-year observational study in three intensive care units",
+            "authors": "Brandvold-Mensah K, Iwasaki-Oyelaran T, Carvalho-Dunn R",
+            "year": 2020,
+            "venue": "Journal of Critical Care Nursing Practice",
+            "doi": "10.5555/jccnp.2020.0187",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 5,940 eligible ventilated patient-days in three intensive care units using a nurse-driven sedation interruption protocol. An awakening trial was performed on 44 percent of eligible days. The most common documented reasons for not performing it were overnight agitation (31 percent of missed days) and planned procedures (18 percent), and 22 percent of missed days had no documented reason. Units that kept a paper checklist at the bedside performed trials on 58 percent of eligible days against 37 percent in the unit without one. Adherence did not change over the two years."
+          },
+          {
+            "title": "Pairing awakening and breathing trials: coordination between nurses and respiratory therapists",
+            "authors": "Okafor-Lindqvist A, Ruiz-Hallberg M",
+            "year": 2018,
+            "venue": "Ventilation Practice Review",
+            "doi": "10.5555/rcci.2018.0049",
+            "providerType": "journal-article",
+            "abstract": "In one medical intensive care unit, awakening trials by nurses and breathing trials by respiratory therapists were scheduled separately and rarely paired. The unit agreed a shared 08:00 time for both trials and a bedside card that the nurse handed to the therapist when the awakening trial passed. Over nine months the proportion of eligible patient-days with a paired trial rose from 22 percent to 49 percent, and median ventilator days fell from 6.1 to 5.2. The comparison was before and after, and the unit's case mix changed during the period."
+          },
+          {
+            "title": "Value stream mapping of the morning sedation interruption process in an intensive care unit",
+            "authors": "Grieve-Achebe S, Varadi-Lund H",
+            "year": 2022,
+            "venue": "Lean Health Operations",
+            "providerType": "journal-article",
+            "abstract": "Nurses, respiratory therapists and physicians mapped the morning sedation interruption process in a 20-bed intensive care unit. The map showed 11 steps and four waits, the longest being physician approval before a nurse could stop sedation (median 47 minutes), which often ran into rounds. The team removed the approval step for patients who passed the safety screen and moved the screen to 06:30. Over 16 weeks, completed interruptions on eligible days rose from 35 percent to 63 percent. The evaluation was an uncontrolled before-after comparison without follow-up beyond 16 weeks."
+          },
+          {
+            "title": "Why nurses do not interrupt sedation: a qualitative study of decision making at the bedside",
+            "authors": "Lemaire-Osei N, Harcourt-Tanaka J",
+            "year": 2019,
+            "venue": "Bedside Critical Care Nursing Studies",
+            "doi": "10.5555/nccr.2019.0133",
+            "providerType": "journal-article",
+            "abstract": "We spoke with 21 critical care nurses in two units about mornings when they did not interrupt sedation for an eligible patient. Nurses described fear of self-extubation and of an agitated patient harming themselves, reluctance when family members were present, pressure to have patients ready for rounds, and uncertainty about whether they could stop sedation without a physician's agreement. Several said the protocol's safety screen was clear but that the decision to act on it felt like a personal risk. Nurses with more than five years of experience interrupted sedation more readily."
+          },
+          {
+            "title": "Safety of nurse-driven sedation interruption: self-extubation and agitation events across 4,200 interruptions",
+            "authors": "Petrov-Nwosu D, Castellanos-Whitby E, Sato-Mbeki L",
+            "year": 2016,
+            "venue": "Critical Care Safety Review",
+            "doi": "10.5555/ccsr.2016.0071",
+            "providerType": "journal-article",
+            "abstract": "We recorded adverse events during 4,200 nurse-driven sedation interruptions in four intensive care units over three years. Self-extubation occurred in 0.6 percent of interruptions and was not more frequent than on days without interruption in the same patients. Agitation requiring a bolus dose occurred in 9 percent of interruptions and usually settled within 30 minutes. No self-extubation led to reintubation after more than one hour. Events were recorded by the bedside nurse, and events on days without interruption may have been under-reported."
+          },
+          {
+            "title": "Sedation interruption protocols, adherence and ventilator days: a systematic review",
+            "authors": "Rahman-Ellis T, Lindgren-Obi F, Moreau-Kamara S",
+            "year": 2021,
+            "venue": "Critical Care Evidence Syntheses",
+            "doi": "10.5555/cces.2021.0215",
+            "providerType": "journal-article",
+            "abstract": "We included 17 trials and 12 observational studies of daily sedation interruption or nurse-driven sedation protocols. In trials, daily interruption was associated with fewer ventilator days (mean difference -1.2 days), but adherence in trials was about 80 percent of eligible days, while routine practice studies reported adherence between 30 and 55 percent. Implementation strategies were described in only nine studies and were too varied to compare. The authors conclude that the gap between trial and routine adherence limits the benefit patients receive in practice."
+          },
+          {
+            "title": "Electronic reminders for daily sedation interruption: an interrupted time series",
+            "authors": "Ferreira-Holt J, Nakashima-Oduya R",
+            "year": 2024,
+            "venue": "Journal of Critical Care Nursing Practice",
+            "doi": "10.5555/jccnp.2024.0058",
+            "providerType": "journal-article",
+            "abstract": "An intensive care unit added an electronic reminder that prompted the bedside nurse at 06:00 to complete the sedation safety screen. In an interrupted time series over 18 months, documented screening rose from 62 percent to 88 percent of eligible days, but completed interruptions changed little, from 36 percent to 39 percent. Chart review showed that nurses documented the screen and then deferred the interruption until after rounds. The authors conclude that reminders improved documentation rather than practice and that the barriers lay later in the morning process."
+          }
+        ]
+      },
+      "note": "The broader second search returns seven records. The first event stays in the history and the three leads stay as unverified leads; the records are added after them in arrival order and never merged with them (G3, D1). Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].status": "partial",
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 7,
+          "scan.retrievalEvents[1].recordIds": [
+            "ev-1a3m7y5",
+            "ev-1f8vau2",
+            "ev-0woopen",
+            "ev-0ldcp6o",
+            "ev-18u2m3r",
+            "ev-1cpc924",
+            "ev-1sbthgq"
+          ],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[3].id": "ev-1a3m7y5",
+          "scan.items[3].provenance.origin": "retrieval",
+          "scan.items[3].provenance.status": "retrieved",
+          "scan.items[3].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Adherence to daily spontaneous awakening trials under a nurse-driven protocol: a two-year observational study in three intensive care units"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1a3m7y5",
+            "relevance": 86,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Awakening trials were performed on 44 percent of 5,940 eligible days; overnight agitation and procedures were the commonest reasons, and a bedside checklist unit reached 58 percent against 37 percent.",
+            "limitations": "Documentation-based; three units; no causal comparison of the checklist.",
+            "contextTags": [
+              "adherence",
+              "reasons",
+              "checklist"
+            ]
+          },
+          {
+            "id": "ev-1f8vau2",
+            "relevance": 80,
+            "methodQuality": 45,
+            "kind": "qi-report",
+            "grade": "very-low",
+            "keyFindings": "A shared 08:00 time and a bedside hand-off card raised paired trials from 22 to 49 percent of eligible days, with median ventilator days from 6.1 to 5.2.",
+            "limitations": "Before-after comparison; case mix changed.",
+            "contextTags": [
+              "breathing trials",
+              "coordination",
+              "respiratory therapy"
+            ]
+          },
+          {
+            "id": "ev-0woopen",
+            "relevance": 92,
+            "methodQuality": 44,
+            "kind": "qi-report",
+            "grade": "very-low",
+            "keyFindings": "The longest wait was physician approval (median 47 minutes); removing it for patients passing the screen raised completed interruptions from 35 to 63 percent over 16 weeks.",
+            "limitations": "Uncontrolled; 16 weeks only; one unit.",
+            "contextTags": [
+              "value stream mapping",
+              "waits",
+              "lean"
+            ]
+          },
+          {
+            "id": "ev-0ldcp6o",
+            "relevance": 84,
+            "methodQuality": 60,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Nurses described fear of self-extubation, family presence, pressure before rounds and unclear authority as reasons not to interrupt sedation.",
+            "limitations": "21 nurses in two units.",
+            "contextTags": [
+              "barriers",
+              "authority",
+              "rounds"
+            ]
+          },
+          {
+            "id": "ev-18u2m3r",
+            "relevance": 78,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Self-extubation occurred in 0.6 percent of 4,200 interruptions, no more often than on non-interruption days; agitation needing a bolus occurred in 9 percent.",
+            "limitations": "Nurse-recorded events; possible under-reporting on non-interruption days.",
+            "contextTags": [
+              "safety",
+              "balancing measure",
+              "self-extubation"
+            ]
+          },
+          {
+            "id": "ev-1cpc924",
+            "relevance": 74,
+            "methodQuality": 68,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Daily interruption was associated with fewer ventilator days in trials (mean difference -1.2 days), where adherence was about 80 percent, against 30 to 55 percent in routine practice.",
+            "limitations": "Implementation strategies rarely described; mixed designs.",
+            "contextTags": [
+              "systematic review",
+              "ventilator days",
+              "adherence gap"
+            ]
+          },
+          {
+            "id": "ev-1sbthgq",
+            "relevance": 82,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "An electronic reminder raised documented screening from 62 to 88 percent but completed interruptions only from 36 to 39 percent.",
+            "limitations": "One unit; interrupted time series without a control series.",
+            "contextTags": [
+              "reminder",
+              "documentation",
+              "interrupted time series"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In one unit's value stream, the longest wait was physician approval (median 47 minutes), and removing it for patients who passed the safety screen raised completed interruptions from 35 to 63 percent over 16 weeks.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0woopen"
+            ],
+            "location": "Abstract",
+            "passage": "the longest being physician approval before a nurse could stop sedation (median 47 minutes)",
+            "interpretation": "Waits for authority, not the screen itself, may be where the morning process breaks down.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "An electronic reminder raised documented screening from 62 to 88 percent while completed interruptions moved only from 36 to 39 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1sbthgq"
+            ],
+            "location": "Abstract",
+            "passage": "documented screening rose from 62 percent to 88 percent of eligible days, but completed interruptions changed little, from 36 percent to 39 percent",
+            "interpretation": "A reminder is unlikely to help this unit, whose screen rate is already 71 percent.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Self-extubation occurred in 0.6 percent of 4,200 nurse-driven interruptions and was not more frequent than on days without interruption.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-18u2m3r"
+            ],
+            "location": "Abstract",
+            "passage": "Self-extubation occurred in 0.6 percent of interruptions",
+            "interpretation": "Self-extubation is the right balancing measure and is rare enough to need a days-between-events chart.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "A shared 08:00 time for awakening and breathing trials raised paired trials from 22 to 49 percent of eligible patient-days.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1f8vau2"
+            ],
+            "location": "Abstract",
+            "passage": "the proportion of eligible patient-days with a paired trial rose from 22 percent to 49 percent",
+            "interpretation": "Coordination with respiratory therapy is a countermeasure worth testing for the paired trial rate of 29 percent.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records from the second search, appraised at abstract level; the first search reported two hits but returned no records, and three model leads remain unchecked. Routine adherence to sedation interruption is far below trial adherence, and the benefit on ventilator days seen in trials depends on it. In the records, the process breaks down after the screen: a reminder improved documentation but not interruptions, and a value stream map found the longest wait at physician approval, whose removal was followed by a large rise in completed interruptions. Nurses describe fear of self-extubation, family presence, pressure before rounds and unclear authority. Self-extubation during interruptions is rare. Coordination of awakening and breathing trials by a shared time raised paired trials in one unit. The evidence supports a local lean redesign aimed at the waits after the screen, with self-extubation and agitation as balancing measures.",
+        "gradeOverall": "low",
+        "gradeRationale": "Single-unit before-after reports and observational studies with a consistent direction, a review of trials that is indirect for implementation, and one interrupted time series; certainty that a redesign of the morning process raises completed interruptions is low.",
+        "summary": "Seven retrieved records appraised; four source-derived claims recorded; overall certainty low; three leads remain unverified."
+      },
+      "note": "Appraisal of the seven retrieved records (S13); the leads are not annotated and stay unverified. Records retrieved by a recorded event now exist, so the stage completes, and the certainty is the appraisal's own value over inspected records (G1, G2).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[3].grade": "low",
+          "scan.items[3].relevance": 86,
+          "scan.items[5].kind": "qi-report",
+          "scan.items[8].grade": "moderate",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0woopen"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-1sbthgq"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "16-bed medical and surgical intensive care unit",
+          "morning before 09:00 rounds",
+          "nurses, respiratory therapists and physicians",
+          "lean facilitator four hours a week"
+        ],
+        "reading": "The morning process has three hand-offs: the screen, the decision to stop sedation, and the breathing trial. Local data show the loss after the screen (71 to 38 percent) and after the interruption (38 to 29 percent). The retrieved records point to waits for authority and to poor coordination with respiratory therapy rather than to forgotten screens, and a reminder that improved documentation left practice unchanged. Fear of self-extubation drives nurse decisions, although self-extubation is rare.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Safety screen at the start of the shift",
+            "kind": "context",
+            "detail": "Documented on 71 percent of eligible days."
+          },
+          {
+            "id": "n2",
+            "label": "Decision to stop sedation",
+            "kind": "context",
+            "detail": "Waits for physician agreement in practice."
+          },
+          {
+            "id": "n3",
+            "label": "Breathing trial by respiratory therapy",
+            "kind": "context",
+            "detail": "Scheduled separately."
+          },
+          {
+            "id": "n4",
+            "label": "Completed interruption on eligible days",
+            "kind": "outcome",
+            "detail": "38 percent now; aim 70 percent."
+          },
+          {
+            "id": "n5",
+            "label": "Value stream map with approval wait",
+            "kind": "qi-report",
+            "detail": "Median 47-minute wait (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Reminder that changed documentation only",
+            "kind": "observational",
+            "detail": "Claim c2."
+          },
+          {
+            "id": "n7",
+            "label": "Self-extubation during interruption",
+            "kind": "outcome",
+            "detail": "0.6 percent (claim c3)."
+          },
+          {
+            "id": "n8",
+            "label": "Bedside nurses",
+            "kind": "stakeholder",
+            "detail": "Feel the decision as a personal risk."
+          },
+          {
+            "id": "n9",
+            "label": "Respiratory therapists",
+            "kind": "stakeholder",
+            "detail": "Shared time raised paired trials (claim c4)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "feeds"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "determines"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "enables"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "locates the wait in"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "improves documentation of"
+          },
+          {
+            "from": "n7",
+            "to": "n8",
+            "relation": "is feared by"
+          },
+          {
+            "from": "n9",
+            "to": "n3",
+            "relation": "delivers"
+          }
+        ],
+        "summary": "Map places the breakdown after the screen, at the decision to stop sedation and the hand-off to respiratory therapy."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "qi-report",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Where the local process waits is unknown",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Another unit found the longest wait at physician approval (claim c1), but this unit has never mapped its morning.",
+            "opportunity": "Map the value stream with gemba walks at 07:00 on five mornings before choosing countermeasures."
+          },
+          {
+            "id": "g2",
+            "title": "Reminders improve paperwork, not practice",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "The screen is already documented on 71 percent of days, and a reminder elsewhere changed documentation only (claim c2).",
+            "opportunity": "Measure completed interruptions, not documented screens, as the primary measure."
+          },
+          {
+            "id": "g3",
+            "title": "Fear of self-extubation",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Nurses fear harm although self-extubation is rare (claim c3); without a visible safety measure the fear will persist.",
+            "opportunity": "Track self-extubation and agitation needing a bolus as balancing measures and share them at huddles."
+          },
+          {
+            "id": "g4",
+            "title": "Families at the bedside",
+            "kind": "equity",
+            "severity": "watch",
+            "whyItMatters": "Interruptions are skipped when families are present, and families who speak another language may not be told what awakening involves.",
+            "opportunity": "Add a short explanation for families, with interpreter access, to the morning routine."
+          },
+          {
+            "id": "g5",
+            "title": "Paired breathing trials lag behind",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Only 29 percent of eligible days have a paired breathing trial.",
+            "opportunity": "Test a shared morning time with respiratory therapy (claim c4)."
+          }
+        ],
+        "errorsFound": [
+          "The documented reason 'physician preference' hides an approval step that the protocol does not require."
+        ],
+        "reevaluation": "The gaps favour mapping the morning before changing it, with countermeasures aimed at the waits after the screen and safety measures kept visible.",
+        "summary": "Five gaps; the unknown location of the local wait is high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Where the local process waits is unknown"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Removing the informal physician approval step for patients who pass the safety screen and agreeing a shared 08:00 time with respiratory therapy will raise completed interruptions from 38 to 70 percent of eligible patient-days within six months, without more self-extubations.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 85,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "Targets the waits after the screen found elsewhere (c1, c4) and keeps safety visible (c3).",
+            "risks": "The local wait may lie elsewhere; physicians may resist losing the approval step."
+          },
+          {
+            "id": "h2",
+            "statement": "Moving the safety screen to 06:30 will reduce interruptions deferred until after rounds.",
+            "novelty": 40,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Deferral until after rounds is a documented reason for missed interruptions.",
+            "risks": "Night staff workload at 06:30."
+          },
+          {
+            "id": "h3",
+            "statement": "Sharing self-extubation data at the daily huddle will reduce the proportion of missed interruptions attributed to agitation.",
+            "novelty": 45,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 85,
+            "parsimony": 70,
+            "rationale": "Fear is a main barrier and the events are rare.",
+            "risks": "Attribution in the chart may simply change wording."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the aim of the A3."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In the 16-bed intensive care unit, will a lean redesign of the morning sedation interruption process raise completed interruptions from 38 to 70 percent of eligible patient-days between November 2026 and April 2027, without an increase in self-extubation?",
+            "framework": "QI-aim",
+            "population": "Eligible ventilated patient-days on continuous sedation",
+            "intervention": "Countermeasures from value stream mapping and A3 cycles (approval step removed for patients passing the screen, shared 08:00 time with respiratory therapy)",
+            "comparator": "Eight-week baseline of the current process",
+            "outcome": "Weekly proportion of eligible patient-days with a completed interruption",
+            "time": "Eight baseline weeks, then November 2026 to April 2027",
+            "setting": "16-bed medical and surgical intensive care unit"
+          }
+        ],
+        "finer": "Feasible within the facilitator's hours and existing charting; interesting to nurses, therapists and physicians; novel only locally; ethical as service improvement with safety monitoring; relevant because trial benefits depend on adherence.",
+        "summary": "One time-bound improvement aim with a safety limit."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-lean",
+        "rationale": "The problem is a morning process with hand-offs and waits, which lean methods address directly: value stream mapping and gemba walks locate the waits, and A3 cycles test countermeasures with the people who do the work. The retrieved records place the breakdown after the screen (c1, c2), support testing coordination with respiratory therapy (c4), and show that self-extubation is rare enough to monitor as a balancing measure (c3). Weekly run charts show whether completed interruptions rise.",
+        "alternatives": [
+          "Electronic reminder for the safety screen (refused: the screen is already documented on 71 percent of days and reminders changed documentation, not practice, elsewhere)",
+          "Model for Improvement with PDSA cycles (considered: similar measurement, but the unit's problem is waits and hand-offs, which value stream mapping addresses directly)",
+          "Education sessions on the protocol alone (refused: nurses know the protocol; the barriers are authority and timing)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0"
+        ],
+        "whyNotMoreComplex": "A controlled comparison with other units would not tell this unit where its own morning breaks down; weekly run charts with safety measures answer the local question.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Run a six-month lean A3 on the morning sedation interruption process from November 2026: map the value stream with gemba walks, then test removal of the informal approval step for patients who pass the safety screen and a shared 08:00 time with respiratory therapy, measuring completed interruptions weekly with self-extubation and agitation as balancing measures.",
+          "question": "How should the unit raise completed sedation interruptions?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "The breakdown lies after the screen, where waits and hand-offs can be redesigned.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Self-extubation rises during the redesign.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Lean facilitator assigned to the unit",
+              "status": "met",
+              "evidence": "Lean office assignment LEAN-ICU-11 for November 2026 to April 2027, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Medical and nursing sponsorship for changing the approval step",
+              "status": "met",
+              "evidence": "Sponsor agreement of the ICU medical director and nurse manager on 2026-09-15, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Electronic reminder for the safety screen",
+            "Education sessions on the protocol alone"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records and on two investigator-supplied records for the gates; the three model leads are not cited."
+        },
+        "summary": "Lean redesign recommended; the decision rests on four ledger claims and both gates are met."
+      },
+      "note": "selectionStatus requires S11; the claims S13; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-lean",
+          "family": "qi-lean",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: the claims rest on records retrieved by the second search, not on leads, and both gates are met, so the selection is accepted and the action ready (G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.basis": "explicit",
+          "family": "qi-lean"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Six-month lean A3 in a 16-bed intensive care unit: an eight-week baseline, value stream mapping with five gemba walks at 07:00, then A3 cycles testing two countermeasures in sequence (removal of the informal approval step for patients who pass the screen, then a shared 08:00 time and hand-off card with respiratory therapy).",
+        "population": "All eligible ventilated patient-days on continuous sedation from September 2026 to April 2027, about 60 a week.",
+        "exposure": "Countermeasure 1 from week 3 of the A3: nurses stop sedation after a passed screen without waiting for physician agreement, with a physician informed at rounds. Countermeasure 2 from week 9: shared 08:00 time and a bedside hand-off card for the breathing trial.",
+        "procedures": "The charge nurse records for each eligible patient-day whether the screen, interruption and breathing trial were completed and the reason if not, on a one-line tally sheet. The facilitator runs the A3 with two bedside nurses, one respiratory therapist and one physician. Self-extubations and agitation needing a bolus during interruptions are recorded from the incident system and the chart. Weekly results are posted on the unit board.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Completed interruptions",
+            "measure": "Weekly proportion of eligible patient-days with a completed sedation interruption",
+            "timing": "Weekly, baseline and A3",
+            "why": "The step where the local process fails.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "process",
+            "name": "Paired breathing trials",
+            "measure": "Weekly proportion of eligible patient-days with a breathing trial after a passed interruption",
+            "timing": "Weekly",
+            "why": "Shows whether the benefit carries through to breathing trials.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Self-extubation during interruption",
+            "measure": "Count of self-extubations, plotted as days between events",
+            "timing": "Continuous",
+            "why": "The harm nurses fear most (claim c3).",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Agitation needing a bolus",
+            "measure": "Weekly proportion of interruptions with a rescue bolus",
+            "timing": "Weekly",
+            "why": "Distress for patients and families.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "secondary",
+            "name": "Ventilator days",
+            "measure": "Monthly median ventilator days for patients ventilated more than 48 hours",
+            "timing": "Monthly",
+            "why": "The patient benefit that adherence is meant to deliver; descriptive only.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "The tally sheet takes the charge nurse about five minutes a day; the facilitator's four hours a week cover the A3 meetings; no extra staff.",
+        "biasMitigation": [
+          "Eight-week baseline before any change",
+          "Tally sheet completed by the charge nurse from the chart, not by the bedside nurse",
+          "Countermeasure dates marked on the charts before the following weeks are viewed",
+          "Safety events taken from the incident system as well as the chart"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Documentation drift",
+            "severity": "watch",
+            "note": "Charting of interruptions may improve without practice; spot checks at the bedside twice a week."
+          },
+          {
+            "id": "b2",
+            "label": "Case mix change",
+            "severity": "watch",
+            "note": "More unstable patients reduce eligibility; eligibility is measured every day."
+          },
+          {
+            "id": "b3",
+            "label": "Under-reporting of agitation",
+            "severity": "watch",
+            "note": "Rescue boluses are taken from the medication record."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "Two balancing measures and one process measure",
+            "Ventilator days described, not tested"
+          ],
+          "simplestPath": "One unit, one primary measure on a run chart, two countermeasures in sequence."
+        },
+        "theoreticalFramework": "Lean thinking (value stream mapping, gemba walks, A3); no additional framework.",
+        "summary": "Eight-week baseline then two countermeasures in sequence; completed interruptions as the primary measure with two safety measures."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[2].role": "balancing",
+          "protocol.outcomes[2].patientCentered": true,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Weekly run chart of completed interruptions with a p-chart for context, and a days-between-events chart for self-extubation.",
+        "sampleSize": "About nine eligible patients a day give about 60 eligible patient-days a week. At a baseline of 38 percent, a weekly p-chart has three-sigma limits about 19 percentage points either side of the centre line, so single weeks show little; the run chart shift rule (six consecutive weeks above the baseline median) will detect a sustained rise to about 55 percent or more within the six months. Self-extubation during interruptions is expected about once every one to two months (0.6 percent of about 40 interruptions a week), so it is plotted as days between events rather than as a weekly rate.",
+        "primaryAnalysis": "Run chart of the weekly proportion of completed interruptions with the eight-week baseline median, judged by pre-specified shift, trend and runs rules, with countermeasure dates marked.",
+        "secondaryAnalysis": "Run chart of paired breathing trials; weekly proportion of interruptions with a rescue bolus; days-between-events chart for self-extubation; monthly median ventilator days described.",
+        "missingData": "Days without a completed tally are counted and reported; charts show the number of eligible patient-days each week; no imputation.",
+        "multiplicity": "One primary measure; balancing and secondary measures described without testing.",
+        "software": "Spreadsheet run chart template maintained by the charge nurses with the facilitator.",
+        "overfittingGuards": [
+          "Run chart rules fixed before the A3",
+          "Baseline median frozen",
+          "Countermeasures introduced one at a time",
+          "No subgroup charts beyond the planned breathing-trial chart"
+        ],
+        "summary": "About 60 eligible patient-days a week; run chart rules detect a sustained rise; self-extubation on a days-between-events chart."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "60 eligible patient-days a week"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "The protocol is already approved practice; the main risk is harm during interruption (self-extubation, agitation), which is monitored and reviewed at every huddle, and blame on individual nurses, which is avoided by reporting unit-level data only.",
+        "consent": "No individual consent: the redesign supports an approved protocol; families are given a short explanation of morning awakening, with an interpreter when needed.",
+        "data": "The tally sheet holds bed number, date and completion only; unit-level weekly data are posted; no patient identifiers leave the unit.",
+        "equity": "PROGRESS-Plus: families who do not speak the unit's main language may not understand why their relative is woken, and patients with limited English may be judged agitated when they are frightened. Interpreter access is part of the morning routine and missed interruptions attributed to agitation are reviewed for these patients.",
+        "effectiveness": "Success means a sustained shift in completed interruptions with no rise in self-extubation or rescue boluses.",
+        "efficiency": "About five minutes a day of charge nurse time and the facilitator's four hours a week.",
+        "costs": "No new costs.",
+        "grants": "None needed.",
+        "partnerships": "Bedside nurses, respiratory therapists, the ICU medical director and nurse manager as sponsors, and a family partner from the ICU family advisory group.",
+        "rebPath": "Service improvement of an approved protocol; the hospital's quality office will be asked to confirm that no research ethics review is needed before any publication, following the TCPS 2 guidance on quality improvement.",
+        "limitations": "One unit; before-after design with run charts; documentation may change faster than practice.",
+        "summary": "Low-risk improvement of an approved protocol with safety monitoring and interpreter access."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A family partner from the ICU family advisory group reviews the explanation given to families; two bedside nurses and one respiratory therapist sit on the A3 team.",
+        "socialListening": "No social media listening; comments from the unit's family feedback cards are read for mentions of patients being woken.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Personal risk",
+            "quote": "Composite paraphrase: If he pulls his tube out on my watch it is my name on the incident form, protocol or not.",
+            "implication": "Show unit-level self-extubation data and make the decision a unit rule, not a personal gamble.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Waiting for a doctor",
+            "quote": "Composite paraphrase: The screen is done by seven; then I wait for someone to say yes, and by then it is rounds.",
+            "implication": "Test removal of the informal approval step for patients who pass the screen.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Seeing someone wake",
+            "quote": "Composite paraphrase: Nobody told us they would stop the sedation; we thought he was getting worse.",
+            "implication": "Explain morning awakening to families, with an interpreter when needed.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Coordination",
+            "quote": "Composite paraphrase: By the time I hear the patient passed, the sedation is back on.",
+            "implication": "Test a shared 08:00 time and a hand-off card with respiratory therapy.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on personal risk, waits, family understanding and coordination."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "partner",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A lean redesign of the morning sedation interruption process in an intensive care unit: an improvement report",
+        "abstract": "Problem: in a 16-bed intensive care unit, sedation was interrupted on 38 percent of eligible patient-days although the safety screen was documented on 71 percent. Intervention: value stream mapping and A3 cycles testing removal of an informal approval step and a shared time with respiratory therapy. Measures: weekly completed interruptions, paired breathing trials, self-extubation and rescue boluses. Results and conclusions will be written after April 2027.",
+        "introduction": "The benefits of daily sedation interruption depend on adherence, which is much lower in routine practice than in trials. In the retrieved records, the process fails after the screen, at waits for authority and hand-offs.",
+        "methods": "Eight-week baseline, value stream mapping with gemba walks, A3 cycles with two countermeasures in sequence, daily tally by the charge nurse, run charts with pre-specified rules and a days-between-events chart for self-extubation; SQUIRE 2.0 reporting.",
+        "results": "No data have been collected yet. The report will present the value stream map, the run charts with countermeasure dates and the safety charts.",
+        "discussion": "The discussion will interpret any shift against the run chart rules, compare the countermeasures with those in the retrieved reports and state what the unit keeps.",
+        "limitations": "One unit; before-after design; possible documentation drift.",
+        "conclusion": "To be written after April 2027; it will be limited to this unit's process measures and will not claim an effect on ventilator days.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE-structured draft with results left empty until data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The first search reported two hits that were never returned; note them as unresolved in the report's search description",
+          "Three model leads remain unverified; check them by identifier before any is cited",
+          "Run identity checks on the seven retrieved records before the report cites them"
+        ],
+        "improvementNotes": "The narrow first search returned no records and the leads-only reply left the stage incomplete; the broader second search returned seven records, whose appraisal completed the stage with low certainty. The accepted decision rests on four ledger claims from those records.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the unreturned hits, the unverified leads and identity checks."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 the store defect of A3 L1.6 drops it (not a missing work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Nurse-driven daily sedation interruption: a lean redesign of the morning process to raise completed interruptions",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 2,
+          "scan.items": {
+            "length": 10
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Nurse-driven daily sedation interruption: a lean redesign of the morning process to raise completed interruptions"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Nurse-driven daily sedation interruption: a lean redesign of the morning process to raise completed interruptions",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "No additional staff; changes must fit the existing morning workflow before 09:00 rounds; the hospital lean facilitator is available four hours a week from November 2026 to April 2027.",
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].provenance.origin": "model",
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Nurse-driven daily sedation interruption: a lean redesign of the morning process to raise completed interruptions"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The partial first event, the unverified leads and the appraisal's certainty are exported exactly as stored (G10); selectionStatus and actionStatus require S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].status": "partial",
+            "scan.retrievalEvents[0].resultCount": 2,
+            "scan.retrievalEvents[0].recordIds": [],
+            "scan.retrievalEvents[1].resultCount": 7,
+            "scan.items[0].provenance.status": "unverified",
+            "scan.items[3].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

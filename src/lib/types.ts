@@ -440,6 +440,12 @@ export interface DecisionRecord {
   /** `evidenceRevision(study)` when the decision was made; a different current revision makes it stale. */
   inputRevision: string;
   status: "proposed" | "accepted" | "stale" | "withdrawn";
+  /** Investigator selection. Independent of whether action is allowed (S11). */
+  selectionStatus: "proposed" | "accepted" | "withdrawn" | "stale";
+  /** Whether the investigator may act. Blocked when gates or other blockers remain (S11). */
+  actionStatus: "blocked" | "ready";
+  /** Family this decision would pursue, when stated. */
+  recommendedFamily?: StudyFamily | "";
   note?: string;
 }
 

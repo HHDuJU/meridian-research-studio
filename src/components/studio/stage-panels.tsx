@@ -11,9 +11,11 @@ import {
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { chart } from "@/lib/chart-tokens";
 import { familyOf } from "@/lib/stages";
 import { emptySearchConfirmationValid, scanHasRetrievedRecord, scanMayComplete } from "@/lib/defaults";
+import { evaluateDecision, decisionIsSupported } from "@/lib/evidence/decision";
 import { useStudio } from "@/lib/store";
 import type { GradeLevel, StageId, Study } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
@@ -111,7 +113,7 @@ function ScanPanel({ study }: { study: Study }) {
         <div className="flex flex-wrap items-center gap-3">
           <GradeBadge grade={s.gradeOverall as GradeLevel | ""} />
           {!s.gradeOverall ? (
-            <p className="text-sm text-muted-foreground">Certainty unassessed (no GRADE label).</p>
+            <p className="text-sm text-muted-foreground">Certainty not assessed (no GRADE label).</p>
           ) : null}
           {leadsOnly ? (
             <p className="text-sm text-muted-foreground">leads only, evidence not inspected</p>
@@ -122,6 +124,11 @@ function ScanPanel({ study }: { study: Study }) {
           <Field label="Search query" value={s.query} onChange={(v) => merge(study.id, "scan", { query: v })} />
           <p className="mt-2 text-sm text-muted-foreground">{s.query || "No query stored yet."}</p>
         </div>
+        {(study.design.decisions ?? []).some((d) => (d.selectionStatus ?? d.status) === "stale") ? (
+          <p data-meridian-decision-stale="" className="mt-3 text-sm text-amber-700">
+            An accepted decision is now stale; review required on Design.
+          </p>
+        ) : null}
         {SCENARIO_MODE ? (
           <div className="mt-3">
             <Button
@@ -219,7 +226,7 @@ function ScanPanel({ study }: { study: Study }) {
       </Panel>
       <div className="grid gap-3">
         {s.items.map((item) => (
-          <article key={item.id} className="rounded-xl bg-card p-5 shadow-[var(--shadow-border)]">
+          <article key={item.id} data-meridian-record={item.id} className="rounded-xl bg-card p-5 shadow-[var(--shadow-border)]">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <p className="font-display text-lg font-medium leading-snug">{item.title}</p>
@@ -234,6 +241,73 @@ function ScanPanel({ study }: { study: Study }) {
             </div>
             <p className="mt-3 text-sm leading-relaxed">{item.keyFindings}</p>
             <p className="mt-2 text-sm text-muted-foreground">{item.limitations}</p>
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              <label className="block text-xs">
+                <span className="mb-1 block text-muted-foreground">Change key findings</span>
+                <textarea
+                  data-meridian-change-source="keyFindings"
+                  data-record-id={item.id}
+                  className="w-full rounded-md border border-border bg-background p-2 text-sm"
+                  defaultValue={item.keyFindings}
+                  onBlur={(e) => {
+                    if (e.target.value !== item.keyFindings) {
+                      useStudio.getState().changeSource(study.id, { id: item.id }, "keyFindings", e.target.value);
+                    }
+                  }}
+                />
+              </label>
+              <label className="block text-xs">
+                <span className="mb-1 block text-muted-foreground">Change year</span>
+                <input
+                  data-meridian-change-source="year"
+                  data-record-id={item.id}
+                  type="number"
+                  className="w-full rounded-md border border-border bg-background p-2 text-sm"
+                  defaultValue={item.year ?? ""}
+                  onBlur={(e) => {
+                    const n = Number(e.target.value);
+                    if (Number.isFinite(n) && n !== item.year) {
+                      useStudio.getState().changeSource(study.id, { id: item.id }, "year", n);
+                    }
+                  }}
+                />
+              </label>
+              <label className="block text-xs">
+                <span className="mb-1 block text-muted-foreground">Change status</span>
+                <select
+                  data-meridian-change-source="status"
+                  data-record-id={item.id}
+                  className="w-full rounded-md border border-border bg-background p-2 text-sm"
+                  defaultValue={item.provenance?.status}
+                  onChange={(e) => {
+                    if (e.target.value !== item.provenance?.status) {
+                      useStudio.getState().changeSource(study.id, { id: item.id }, "status", e.target.value);
+                    }
+                  }}
+                >
+                  <option value="unverified">unverified</option>
+                  <option value="retrieved">retrieved</option>
+                  <option value="verified">verified</option>
+                  <option value="mismatch">mismatch</option>
+                  <option value="check-failed">check-failed</option>
+                  <option value="access-blocked">access-blocked</option>
+                </select>
+              </label>
+              <label className="block text-xs sm:col-span-2">
+                <span className="mb-1 block text-muted-foreground">Change abstract</span>
+                <textarea
+                  data-meridian-change-source="abstract"
+                  data-record-id={item.id}
+                  className="w-full rounded-md border border-border bg-background p-2 text-sm"
+                  defaultValue={item.abstract?.text ?? ""}
+                  onBlur={(e) => {
+                    if (e.target.value !== (item.abstract?.text ?? "")) {
+                      useStudio.getState().changeSource(study.id, { id: item.id }, "abstract", e.target.value);
+                    }
+                  }}
+                />
+              </label>
+            </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <ScoreBar label="Method quality" value={item.methodQuality} />
               <ScoreBar label="Relevance" value={item.relevance} />
@@ -427,15 +501,33 @@ function DesignPanel({ study }: { study: Study }) {
       {d.decisions.length ? (
         <Panel title="Decisions">
           <ul className="space-y-3">
-            {d.decisions.map((dec, idx) => (
-              <li key={dec.id} className="rounded-lg border border-border p-3">
+            {d.decisions.map((dec, idx) => {
+                const support = decisionIsSupported(dec, study);
+                const ev = evaluateDecision(dec, study);
+                return (
+              <li key={dec.id} data-meridian-decision={dec.id} className="rounded-lg border border-border p-3">
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  {dec.kind} · {dec.status} · {dec.actor}
+                  {dec.kind} · selection {dec.selectionStatus ?? dec.status} · action {dec.actionStatus ?? ev.actionStatus} · {dec.actor}
                 </p>
                 <p className="mt-1 text-sm leading-relaxed">{dec.statement}</p>
-                {dec.status === "proposed" ? (
+                {!support.ok ? (
+                  <p data-meridian-decision-refusal="" className="mt-2 text-sm text-amber-700">
+                    {support.reason}
+                  </p>
+                ) : null}
+                {ev.blockers.length ? (
+                  <p className="mt-1 text-xs text-muted-foreground">{ev.blockers.join("; ")}</p>
+                ) : null}
+                {(dec.selectionStatus ?? dec.status) === "proposed" ? (
                   <div className="mt-2 flex gap-2">
-                    <Button type="button" size="sm" onClick={() => acceptDecision(study.id, idx)}>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => {
+                        const r = acceptDecision(study.id, idx);
+                        if (!r.ok) toast.warning(r.reason ?? "Accept refused");
+                      }}
+                    >
                       Accept
                     </Button>
                     <Button type="button" size="sm" variant="outline" onClick={() => withdrawDecision(study.id, idx)}>
@@ -444,7 +536,8 @@ function DesignPanel({ study }: { study: Study }) {
                   </div>
                 ) : null}
               </li>
-            ))}
+                );
+              })}
           </ul>
         </Panel>
       ) : null}

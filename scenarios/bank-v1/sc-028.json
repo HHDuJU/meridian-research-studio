@@ -1,0 +1,1335 @@
+{
+  "id": "sc-028",
+  "version": 1,
+  "title": "Rural emergency network: pre-hospital tranexamic acid pathway, design left unresolved while a data-sharing gate is unmet",
+  "field": "emergency-medicine",
+  "level": 2,
+  "family": "unresolved",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary ambiguity on a pathway audit whose correct end state is an unresolved family. The need names no design, and its cues (audit, database, patient care record) point to several families, so routing is unresolved at create; the problem reply omits family (omission keeps it unset) and restates the typed constraints verbatim (G11 not engaged). The fixture search gives few hits (five records); a second channel (PubMed format) fails with HTTP 429 and must be recorded as an error event with no records and resultCount null, never as a silent empty list. The Design reply sends recommended null: the recommendation stays empty and basis unresolved with a 'cleared' issue (D2, work-order test design_null_recommended_is_unresolved), and no family is set. Its decision (kind defer) rests on ledger claims c1 and c3 and has one gate met (audit approval) and one unmet (a lapsed data-sharing agreement): acceptance succeeds (selectionStatus accepted) while the action stays blocked, and because recommendedFamily is null the family stays unset and the basis stays unresolved after acceptance. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator; all five records carry DOIs (ev-0y4jnhx, ev-1fupxjq, ev-0bs3opc, ev-0pzlfxo, ev-1rpml4d). Requires D2 (null recommendation leaves basis unresolved), S13 (appraisal dispatch), S11 (routing, recommendedFamily, selectionStatus, actionStatus; family changed only by a non-null accepted recommendation) and D5 (decision status text). Catches: a guessed family, an unmet gate ignored after acceptance, a failed channel hidden, and acceptance that invents an explicit basis.",
+  "inputs": {
+    "need": "I am an emergency physician and the trauma lead for a rural emergency care network: three small hospitals and one regional ambulance service covering a large, sparsely populated area. Since 2023 our paramedics have carried tranexamic acid for adults with suspected major bleeding after injury, to be given within three hours of the injury. Nobody has checked how the pathway is working. Anecdotally, crews working alone or facing long drives give it less often, and some patients arrive at hospital more than three hours after injury without having received it, or receive it late, when it may do more harm than good.\n\nI want to audit the pre-hospital tranexamic acid pathway: how many eligible patients receive it, how quickly, and whether the right patients get it. The ambulance service keeps every electronic patient care record in its database, and the three hospitals hold the outcomes. Ideally I would like to know whether patients who got the drug early did better, but the data-sharing agreement between the ambulance service and the hospitals lapsed this summer and I do not know when it will be renewed. I am not sure what kind of study this should be: a check against the pathway standard, a look at outcomes, or both. We have no funding, the ambulance service's audit team can pull the records, and our clinical governance meetings are the natural place to report. I would like a design that is honest about what we can and cannot conclude with the data we are allowed to use.",
+    "constraints": "No funding; the work fits existing clinical governance time. Ambulance records can be reviewed only by the ambulance service's audit team. Hospital outcome data cannot be linked until a data-sharing agreement is in place.",
+    "localFacts": [
+      "The ambulance service's clinical audit committee approved an audit of the pre-hospital tranexamic acid pathway on 14 August 2026 (reference CA-EMS-2026-22).",
+      "The data-sharing agreement between the ambulance service and the network's three hospitals (DSA-2023-04) expired on 30 June 2026 and has not been renewed.",
+      "The network's three emergency departments received 1,480 trauma patients by ambulance in 2025."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "No design named; cues point to several families, so routing is unresolved (S11) and no family is substituted.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am an emergency physician and the trauma lead for a rural emergency care network: three small hospitals and one regional ambulance service covering a large, sparsely populated area. Since 2023 our paramedics have carried tranexamic acid for adults with suspected major bleeding after injury, to be given within three hours of the injury. Nobody has checked how the pathway is working. Anecdotally, crews working alone or facing long drives give it less often, and some patients arrive at hospital more than three hours after injury without having received it, or receive it late, when it may do more harm than good.\n\nI want to audit the pre-hospital tranexamic acid pathway: how many eligible patients receive it, how quickly, and whether the right patients get it. The ambulance service keeps every electronic patient care record in its database, and the three hospitals hold the outcomes. Ideally I would like to know whether patients who got the drug early did better, but the data-sharing agreement between the ambulance service and the hospitals lapsed this summer and I do not know when it will be renewed. I am not sure what kind of study this should be: a check against the pathway standard, a look at outcomes, or both. We have no funding, the ambulance service's audit team can pull the records, and our clinical governance meetings are the natural place to report. I would like a design that is honest about what we can and cannot conclude with the data we are allowed to use.",
+          "problem.constraints": "No funding; the work fits existing clinical governance time. Ambulance records can be reviewed only by the ambulance service's audit team. Hospital outcome data cannot be linked until a data-sharing agreement is in place.",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am an emergency physician and the trauma lead for a rural emergency care network"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Pre-hospital tranexamic acid pathway in a rural emergency network: compliance, timing and the limits of unlinked data",
+        "subtitle": "Design undecided: pathway compliance audit, linked outcome analysis, or both",
+        "statement": "Paramedics in a rural network have carried tranexamic acid for adults with suspected major bleeding after injury since 2023, to be given within three hours of injury, but nobody knows how many eligible patients receive it, how quickly, or whether treated patients do better. Ambulance records can be reviewed now; hospital outcomes cannot be linked while the data-sharing agreement is lapsed.",
+        "whoAffected": "Injured adults with suspected major bleeding in a large rural area, especially patients attended by single paramedics or facing long transport times; paramedics; the three hospitals' emergency and trauma teams.",
+        "whatHurts": "A patient who bleeds without timely tranexamic acid loses a treatment that works best early; a patient given it after three hours may gain nothing and risk harm. Without data the network cannot tell where the pathway fails.",
+        "currentPractice": "Paramedics decide on tranexamic acid from protocol criteria; no audit of eligibility, timing or outcomes has been done since the drug was introduced.",
+        "whyNow": "The pathway has run for three years, crews report missed and late doses, and the audit committee has approved a review of ambulance records.",
+        "constraints": "No funding; the work fits existing clinical governance time. Ambulance records can be reviewed only by the ambulance service's audit team. Hospital outcome data cannot be linked until a data-sharing agreement is in place.",
+        "patientCenteredGoal": "Every injured patient who is bleeding receives tranexamic acid early when it can help, and nobody receives it late when it cannot.",
+        "summary": "Problem framed around compliance and timing, with outcome questions dependent on data linkage that is not currently allowed."
+      },
+      "omitKeys": [
+        "family"
+      ],
+      "note": "The reply omits family, so the family stays unset and the basis unresolved; the constraints equal the typed text (G11 not engaged).",
+      "expect": {
+        "store": {
+          "title": "Pre-hospital tranexamic acid pathway in a rural emergency network: compliance, timing and the limits of unlinked data",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "problem.constraints": "No funding; the work fits existing clinical governance time. Ambulance records can be reviewed only by the ambulance service's audit team. Hospital outcome data cannot be linked until a data-sharing agreement is in place.",
+          "problem.statement": {
+            "includes": "cannot be linked while the data-sharing agreement is lapsed"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Pre-hospital tranexamic acid pathway in a rural emergency network: compliance, timing and the limits of unlinked data"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "pre-hospital tranexamic acid rural ambulance compliance timing linkage outcomes",
+      "response": {
+        "status": 200,
+        "total": 5,
+        "records": [
+          {
+            "title": "Pre-hospital tranexamic acid in a rural ambulance service: eligibility, administration and delays in a retrospective records review",
+            "authors": "MacAlister-Oyebanji R, Thorsby-Nwankwo E",
+            "year": 2020,
+            "venue": "Rural Emergency Care Journal",
+            "doi": "10.5555/recj.2020.0271",
+            "providerType": "journal-article",
+            "abstract": "We reviewed electronic patient care records for 612 adults who met a rural ambulance service's criteria for tranexamic acid after injury over three years. Fifty-eight percent received tranexamic acid before hospital arrival, at a median of 52 minutes after injury. Administration was less common when a single paramedic attended (41 percent) and for patients aged over 65 (49 percent). Eleven percent of those treated received the drug more than three hours after injury, against the protocol. Records did not always state the time of injury, which was estimated for 18 percent of patients. Hospital outcomes were not available."
+          },
+          {
+            "title": "Timing of tranexamic acid after injury and death from bleeding: a systematic review of individual patient data",
+            "authors": "Oduya-Brennan K, Lefevre-Mahlangu T, Ishikawa-Doherty P",
+            "year": 2018,
+            "venue": "Trauma and Resuscitation Reviews",
+            "doi": "10.5555/trr.2018.0114",
+            "providerType": "review",
+            "abstract": "We pooled individual data on 38,900 bleeding patients from randomised trials of tranexamic acid. Immediate treatment reduced the odds of death from bleeding by about 70 percent, and the benefit fell by about 10 percent for every 15 minutes of delay, with no benefit seen after three hours. There was no increase in vascular occlusive events overall. Most participants were treated in hospital, and few trials recorded the time of pre-hospital administration, so the effect of delays before arrival is inferred from in-hospital timing."
+          },
+          {
+            "title": "Linking ambulance and hospital records for trauma outcome audit: matching rates and pitfalls",
+            "authors": "Venter-Gallagher S, Okonkwo-Laine J",
+            "year": 2022,
+            "venue": "Emergency Services Informatics",
+            "doi": "10.5555/esi.2022.0053",
+            "providerType": "journal-article",
+            "abstract": "We linked ambulance patient care records to emergency department and inpatient records in one region using date of birth, sex, postcode and arrival time. Linkage matched 91 percent of trauma patients conveyed directly but only 78 percent of those transferred between hospitals, and matching was lower for patients with missing identifiers at the scene. Unmatched patients were more often older, more severely injured and transferred. The authors warn that outcome audits based on linked data will overrepresent less severely injured patients unless unmatched records are followed up by hand, which requires a data-sharing agreement covering all sites."
+          },
+          {
+            "title": "Thromboembolic events after pre-hospital tranexamic acid in older trauma patients: a registry analysis",
+            "authors": "Pellegrini-Achterberg M, Sato-Okafor L, Dunmore-Reyes A",
+            "year": 2024,
+            "venue": "Geriatric Trauma Research",
+            "doi": "10.5555/gtr.2024.0190",
+            "providerType": "journal-article",
+            "abstract": "Using a regional trauma registry, we compared 1,020 patients aged 65 or over who received pre-hospital tranexamic acid with 1,540 who did not. Venous thromboembolism within 30 days was recorded in 3.1 and 2.4 percent respectively (adjusted odds ratio 1.21, 95 percent CI 0.78 to 1.88). Mortality did not differ after adjustment for injury severity and anticoagulant use. Treated patients were more severely injured, and the registry captured only patients admitted to trauma units, so the analysis may miss events after discharge or among patients managed in smaller hospitals."
+          },
+          {
+            "title": "Why paramedics withhold tranexamic acid in rural trauma: a qualitative study of decision-making",
+            "authors": "Hollis-Adebayo K, Strand-Mwangi P",
+            "year": 2023,
+            "venue": "Prehospital Care Research",
+            "doi": "10.5555/pcr.2023.0158",
+            "providerType": "qualitative research",
+            "abstract": "We interviewed 24 paramedics from two rural ambulance services about recent trauma calls in which tranexamic acid was or was not given. Paramedics described three main reasons for withholding it: uncertainty about the time of injury, the workload of a single-crew response while managing the airway and bleeding, and worry about giving it to older patients taking anticoagulants. Several said they would give it more readily with a checklist prompt on the electronic patient care record. Paramedics rarely learned what happened to their patients after handover, which they felt made it hard to judge whether their decisions were right."
+          }
+        ]
+      },
+      "note": "A search with few hits: five records, ids from stableRecordId (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 5,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0y4jnhx",
+            "ev-1fupxjq",
+            "ev-0bs3opc",
+            "ev-0pzlfxo",
+            "ev-1rpml4d"
+          ],
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[1].kind": "systematic-review",
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Pre-hospital tranexamic acid in a rural ambulance service: eligibility, administration and delays in a retrospective records review"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "pubmed",
+      "query": "tranexamic acid prehospital rural trauma",
+      "response": {
+        "status": 429,
+        "body": "",
+        "note": "rate limited by the provider"
+      },
+      "note": "A failed channel is recorded, not hidden: event status 'error', resultCount null, no records (retrieve.ts at 875fe59 maps a non-2xx status other than 0, 403, 407 and 451 to 'error'). The five fixture records are untouched.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[1].provider": "pubmed",
+          "scan.retrievalEvents[1].status": "error",
+          "scan.retrievalEvents[1].resultCount": {
+            "isNull": true
+          },
+          "scan.retrievalEvents[1].recordIds": [],
+          "scan.items": {
+            "length": 5
+          }
+        },
+        "screen": {
+          "includes": [
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0y4jnhx",
+            "relevance": 92,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In a rural service, 58 percent of eligible patients received pre-hospital tranexamic acid; single-paramedic attendance and age over 65 were linked to lower administration, and 11 percent of doses were given after three hours.",
+            "limitations": "One service; injury time estimated for 18 percent; no hospital outcomes.",
+            "contextTags": [
+              "rural",
+              "compliance",
+              "timing"
+            ]
+          },
+          {
+            "id": "ev-1fupxjq",
+            "relevance": 80,
+            "methodQuality": 82,
+            "kind": "systematic-review",
+            "grade": "high",
+            "keyFindings": "Benefit on death from bleeding falls with every 15 minutes of delay and is not seen after three hours; no overall increase in vascular occlusive events.",
+            "limitations": "Mostly in-hospital administration; pre-hospital timing inferred.",
+            "contextTags": [
+              "timing",
+              "mortality",
+              "individual patient data"
+            ]
+          },
+          {
+            "id": "ev-0bs3opc",
+            "relevance": 85,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Ambulance-hospital linkage matched 91 percent of directly conveyed trauma patients but 78 percent of transfers; unmatched patients were older and more severely injured.",
+            "limitations": "One region; linkage variables may differ here.",
+            "contextTags": [
+              "data linkage",
+              "selection bias",
+              "transfers"
+            ]
+          },
+          {
+            "id": "ev-1rpml4d",
+            "relevance": 78,
+            "methodQuality": 56,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Paramedics withheld tranexamic acid because of uncertain injury time, single-crew workload and concern about older patients taking anticoagulants; they rarely learned patient outcomes.",
+            "limitations": "Two services; recall of recent calls.",
+            "contextTags": [
+              "paramedic decisions",
+              "rural",
+              "qualitative"
+            ]
+          },
+          {
+            "id": "ev-0pzlfxo",
+            "relevance": 62,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Among patients aged 65 or over, 30-day venous thromboembolism was 3.1 percent after pre-hospital tranexamic acid against 2.4 percent without, with a wide interval.",
+            "limitations": "Registry of trauma-unit admissions only; confounding by severity.",
+            "contextTags": [
+              "older adults",
+              "thromboembolism",
+              "safety"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a rural ambulance service, 58 percent of eligible injured adults received tranexamic acid before hospital arrival.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0y4jnhx"
+            ],
+            "location": "Abstract",
+            "passage": "Fifty-eight percent received tranexamic acid before hospital arrival, at a median of 52 minutes after injury.",
+            "interpretation": "A planning value for compliance and a sign that a compliance audit may find missed doses.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "The benefit of tranexamic acid on death from bleeding falls with delay and is not seen after three hours.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1fupxjq"
+            ],
+            "location": "Abstract",
+            "passage": "the benefit fell by about 10 percent for every 15 minutes of delay, with no benefit seen after three hours",
+            "interpretation": "Timing is part of the audit standard, not only whether the drug was given.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Ambulance to hospital linkage matched 91 percent of directly conveyed trauma patients but only 78 percent of transfers.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0bs3opc"
+            ],
+            "location": "Abstract",
+            "passage": "Linkage matched 91 percent of trauma patients conveyed directly but only 78 percent of those transferred between hospitals",
+            "interpretation": "An outcome analysis needs an agreement covering all sites and hand follow-up of unmatched records.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "In older trauma patients, 30-day venous thromboembolism was 3.1 percent after pre-hospital tranexamic acid and 2.4 percent without.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0pzlfxo"
+            ],
+            "location": "Abstract",
+            "passage": "Venous thromboembolism within 30 days was recorded in 3.1 and 2.4 percent respectively",
+            "interpretation": "A safety question an outcome analysis would have to address, with confounding by severity.",
+            "uncertainty": "high"
+          }
+        ],
+        "synthesis": "Five retrieved records from the fixture search, appraised at abstract level; a second search channel failed and returned nothing. Paramedics describe uncertain injury times, single-crew workload and concern about anticoagulated older patients as reasons for withholding the drug. In one rural service, a little over half of eligible patients received pre-hospital tranexamic acid and one in nine doses was late. Pooled trial data show the benefit falls with every 15 minutes of delay and is absent after three hours. Linking ambulance to hospital records misses more of the older, more severely injured and transferred patients, and a registry of older patients shows a small, imprecise excess of thromboembolism.",
+        "gradeOverall": "low",
+        "gradeRationale": "High certainty about the timing effect from pooled trials, but low certainty for the questions this network would answer: compliance and outcomes in rural pre-hospital care rest on single observational studies with missing data and selection by linkage.",
+        "summary": "Five retrieved records appraised; four source-derived claims; overall certainty low for the local questions."
+      },
+      "note": "Appraisal of the five retrieved records (S13); certainty is assigned over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items[1].grade": "high",
+          "scan.items[0].grade": "low",
+          "scan.items[3].keyFindings": {
+            "includes": "3.1 percent"
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0y4jnhx"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0bs3opc"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "three small hospitals and one regional ambulance service",
+          "sparsely populated area with long transport times",
+          "tranexamic acid carried since 2023",
+          "data-sharing agreement lapsed on 30 June 2026"
+        ],
+        "reading": "Compliance and timing can be measured now from ambulance records (claim c1), and timing is part of the standard because benefit falls with delay (claim c2). Whether early treatment changes outcomes here needs hospital data, and linkage misses the patients who matter most unless an agreement covers all sites (claim c3). Safety in older patients is uncertain (claim c4). The design therefore depends on a fact the investigator does not control: whether the data-sharing agreement is renewed.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Eligible injured adult with suspected major bleeding",
+            "kind": "context",
+            "detail": "Protocol criteria within three hours of injury."
+          },
+          {
+            "id": "n2",
+            "label": "Tranexamic acid given and time from injury",
+            "kind": "outcome",
+            "detail": "Measurable from ambulance records now."
+          },
+          {
+            "id": "n3",
+            "label": "Death from bleeding and thromboembolism",
+            "kind": "outcome",
+            "detail": "Needs hospital records."
+          },
+          {
+            "id": "n4",
+            "label": "Rural records review",
+            "kind": "observational",
+            "detail": "58 percent treated (c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Pooled trial data on timing",
+            "kind": "systematic-review",
+            "detail": "No benefit after three hours (c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Linkage study",
+            "kind": "observational",
+            "detail": "Transfers matched less often (c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Lapsed data-sharing agreement",
+            "kind": "gap",
+            "detail": "Blocks outcome linkage."
+          },
+          {
+            "id": "n8",
+            "label": "Paramedics working alone",
+            "kind": "stakeholder",
+            "detail": "Lower administration in the retrieved review."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "should receive"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "may change"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "measured"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "sets the time standard for"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "limits what can be learned about"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "prevents access to"
+          },
+          {
+            "from": "n8",
+            "to": "n2",
+            "relation": "associated with fewer doses"
+          }
+        ],
+        "summary": "Map shows what the ambulance records can answer now and what depends on the lapsed data-sharing agreement."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[6].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local measure of compliance or timing",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The network relies on anecdote; the retrieved rural service treated only 58 percent of eligible patients (claim c1).",
+            "opportunity": "Measure eligibility, administration and time from injury in ambulance records against the pathway standard."
+          },
+          {
+            "id": "g2",
+            "title": "Outcomes cannot be linked while the agreement is lapsed",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Without hospital data, nothing can be said about whether early treatment helps here, and partial linkage would miss the sickest patients (claim c3).",
+            "opportunity": "Seek renewal of the agreement for all three hospitals before planning any outcome analysis."
+          },
+          {
+            "id": "g3",
+            "title": "Injury time is often estimated",
+            "kind": "error",
+            "severity": "moderate",
+            "whyItMatters": "Timing standards depend on the injury time, which was estimated for almost one in five patients in the retrieved review.",
+            "opportunity": "Record whether injury time was known or estimated and report timing for both groups."
+          },
+          {
+            "id": "g4",
+            "title": "Older patients and single-crew attendance",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Older patients and those attended by one paramedic received the drug less often.",
+            "opportunity": "Report compliance by age group and crew configuration."
+          }
+        ],
+        "errorsFound": [
+          "The need hopes to show that early treatment improves outcomes; without linked hospital data the network can describe compliance and timing but not effects."
+        ],
+        "reevaluation": "Compliance and timing can be audited now; whether the network should also study outcomes cannot be settled until the data-sharing agreement is renewed.",
+        "summary": "Four gaps; the missing local measure and the lapsed linkage are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[2].kind": "error",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Outcomes cannot be linked while the agreement is lapsed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Fewer than 70 percent of eligible patients receive pre-hospital tranexamic acid within three hours of injury, with lower administration for single-paramedic attendance and patients over 65.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "Directly measurable from ambulance records under the approved audit; the retrieved rural service found 58 percent.",
+            "risks": "Estimated injury times; eligibility judged from records."
+          },
+          {
+            "id": "h2",
+            "statement": "Among patients linked to hospital records, treatment within one hour is associated with lower 30-day mortality than later or no treatment.",
+            "novelty": 45,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": null,
+            "parsimony": 50,
+            "rationale": "Only testable if the agreement is renewed; feasibility is not rated because it depends on a decision outside the team.",
+            "risks": "Confounding by severity and selective linkage."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Two hypotheses; h1 selected because it can be answered with the data the network may use now."
+      },
+      "note": "h2's feasibility is sent as null (not rated): stored null, never a default 50 (G4; holds at 875fe59).",
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[1].feasibility": {
+            "isNull": true
+          },
+          "hypotheses.items[0].feasibility": 85,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults meeting the ambulance service's tranexamic acid criteria after injury between 2023 and 2026, what proportion received tranexamic acid within three hours of injury, and how does this differ by crew configuration, age and transport time?",
+            "framework": "QI-aim",
+            "population": "Adults meeting the pre-hospital tranexamic acid criteria",
+            "intervention": "Pre-hospital tranexamic acid pathway",
+            "comparator": "Pathway standard: all eligible patients treated within three hours",
+            "outcome": "Proportion treated within three hours; median time from injury to dose",
+            "time": "January 2023 to June 2026",
+            "setting": "Regional ambulance service in a rural network"
+          }
+        ],
+        "finer": "Feasible with the audit team's access; interesting to paramedics and trauma teams; novel locally; ethical as an approved clinical audit; relevant because the pathway has never been checked. The outcome question is not included until linkage is allowed.",
+        "summary": "One audit question answerable from ambulance records."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Questions route before the Design stage: the failed channel, the ledger and the unset family must persist.",
+      "expect": {
+        "store": {
+          "title": "Pre-hospital tranexamic acid pathway in a rural emergency network: compliance, timing and the limits of unlinked data",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ],
+          "needsReview": [],
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "questions.items": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Pre-hospital tranexamic acid pathway in a rural emergency network: compliance, timing and the limits of unlinked data"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": null,
+        "rationale": "Two designs fit the need and the choice between them depends on a fact outside the team's control. A pathway compliance audit against the standard can run now on ambulance records (claim c1), with timing as part of the standard (claim c2). A linked retrospective outcome analysis would answer whether early treatment helps here, but only with a renewed agreement covering all three hospitals, because partial linkage misses older, sicker and transferred patients (claim c3). Recommending either family now would be a guess.",
+        "alternatives": [
+          "Pathway compliance audit from ambulance records only",
+          "Retrospective linked outcome analysis once the agreement is renewed",
+          "Compliance audit now, outcome analysis later as a separate study"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0 for an audit report",
+          "RECORD if linked data are later used"
+        ],
+        "whyNotMoreComplex": "A prospective registry or a trial of pathway changes would need resources and approvals the network does not have; the first question is whether the pathway is followed.",
+        "decision": {
+          "kind": "defer",
+          "statement": "Defer the choice between a compliance audit alone and a linked outcome analysis until the data-sharing agreement is renewed; meanwhile, agree the audit standard and data dictionary with the ambulance service's audit team.",
+          "question": "Which design should the network use to examine its pre-hospital tranexamic acid pathway?",
+          "claimIds": [
+            "c1",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Compliance in comparable rural services is incomplete, so an audit is likely to find missed or late doses worth acting on.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Linkage would capture enough transferred and older patients to make an outcome analysis credible.",
+              "role": "justifies",
+              "status": "unknown",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Ambulance service clinical audit committee approval for the pathway audit",
+              "status": "met",
+              "evidence": "Audit committee approval CA-EMS-2026-22 dated 14 August 2026, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "A data-sharing agreement between the ambulance service and all three hospitals covering linkage of patient care records to hospital outcomes",
+              "status": "unmet",
+              "evidence": "Agreement DSA-2023-04 expired on 30 June 2026 and has not been renewed, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Compliance audit only, with no outcome question",
+            "Wait for the agreement before doing anything"
+          ],
+          "note": "The family is left unresolved on purpose; the unmet agreement blocks action on the decision."
+        },
+        "summary": "No family recommended until the data-sharing agreement is renewed; one gate met, one unmet."
+      },
+      "note": "recommended null: recommendation empty and basis unresolved with a 'cleared' issue (D2); no family is set. The decision's gates: one met on an investigator-supplied approval, one unmet on an investigator-supplied fact. recommendedFamily, selectionStatus and actionStatus require S11; the panel text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "family": {
+            "isNull": true
+          },
+          "design.alternatives": {
+            "length": 3
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "defer",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3"
+          ],
+          "design.decisions[-1].recommendedFamily": {
+            "isNull": true
+          },
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "recommended",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported selection with one gate met and one unmet: accepted, action blocked (G7; amendment A2 item 9). With recommendedFamily null the family stays unset and the basis stays unresolved; acceptance cannot invent an explicit family (S11). Panel text D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "design.recommended": ""
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Draft covering the part common to both candidate designs: a review of ambulance patient care records against the pre-hospital tranexamic acid standard. The linked outcome component is described but not started unless the data-sharing agreement is renewed and the design is decided.",
+        "population": "Adults attended by the regional ambulance service between January 2023 and June 2026 who met the tranexamic acid criteria (suspected major bleeding after injury within three hours), identified by the audit team from records.",
+        "exposure": "Pathway delivery: tranexamic acid given or not, and time from injury to dose; crew configuration, patient age and transport time as descriptive factors.",
+        "procedures": "The audit team searches the records database for injury incidents with the criteria recorded, a second reviewer checks eligibility for a random 10 percent, and each record is coded for administration, dose time, injury time (known or estimated) and reasons documented for not giving the drug. Results are presented at clinical governance meetings. If the agreement is renewed, a separate protocol amendment will set out linkage and outcome analysis.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Eligible patients treated within three hours",
+            "measure": "Proportion of eligible patients given tranexamic acid within three hours of injury",
+            "timing": "Pre-hospital phase of each incident",
+            "why": "The pathway standard, and the timing that trial data say matters.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Time from injury to dose",
+            "measure": "Median minutes from known or estimated injury time to administration",
+            "timing": "Pre-hospital phase",
+            "why": "Benefit falls with delay.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Injury time documentation",
+            "measure": "Proportion of eligible records with a known rather than estimated injury time",
+            "timing": "At record review",
+            "why": "Timing results depend on it.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Doses given outside protocol",
+            "measure": "Proportion of doses given after three hours or to patients not meeting criteria",
+            "timing": "Pre-hospital phase",
+            "why": "Late or unnecessary doses carry risk without benefit.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "The audit team estimates about 450 eligible incidents over three and a half years and two days of review per 100 records within existing governance time.",
+        "biasMitigation": [
+          "Eligibility checked by a second reviewer on a random 10 percent",
+          "Known and estimated injury times reported separately",
+          "No outcome claims without linked data"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Eligibility from records",
+            "severity": "watch",
+            "note": "Crews may not record criteria when they decide not to give the drug."
+          },
+          {
+            "id": "b2",
+            "label": "Estimated injury time",
+            "severity": "watch",
+            "note": "Timing results are less certain for estimated times."
+          },
+          {
+            "id": "b3",
+            "label": "Selective linkage if outcomes are later added",
+            "severity": "high",
+            "note": "Transfers and older patients match less often."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 3,
+          "flags": [
+            "Outcome component deferred rather than added"
+          ],
+          "simplestPath": "One records review against one standard, reported descriptively."
+        },
+        "theoreticalFramework": "None; a standard-based audit needs no framework.",
+        "summary": "Draft audit of ambulance records against the tranexamic acid standard; outcome component deferred."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[3].role": "balancing",
+          "protocol.biasFlags[2].severity": "high",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Descriptive audit of all eligible incidents against the standard; no comparative inference unless outcome data become available.",
+        "sampleSize": "All eligible incidents are included: about 450 over three and a half years. If 60 percent are treated within three hours, the 95 percent confidence interval is about 4.5 percentage points either side; for single-paramedic incidents (perhaps 90) it widens to about 10 points, enough to see a gap of 20 points or more.",
+        "primaryAnalysis": "Proportion treated within three hours with a Wilson 95 percent confidence interval, overall and by crew configuration, age band and transport time band, plotted by quarter.",
+        "secondaryAnalysis": "Median time from injury to dose with interquartile range, separately for known and estimated injury times; reasons for not treating.",
+        "missingData": "Records without an injury time are counted and reported; they enter the primary outcome only if the dose was clearly within or outside three hours of the call time.",
+        "multiplicity": "Descriptive estimates only; no significance tests.",
+        "software": "Spreadsheet and R for intervals and charts, kept by the audit team.",
+        "overfittingGuards": [
+          "Breakdown factors fixed before review",
+          "No outcome modelling without linked data"
+        ],
+        "summary": "About 450 incidents give a compliance estimate within about 4.5 percentage points."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 450"
+          },
+          "stats.overfittingGuards": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: review of existing records by the ambulance service's own audit team. The risk is blame of individual crews, avoided by reporting at service level.",
+        "consent": "Not sought: clinical audit of routine records by the service's own team under its governance approval.",
+        "data": "Records stay within the ambulance service; the audit spreadsheet holds incident numbers, not names; no hospital data are accessed.",
+        "equity": "PROGRESS-Plus: rural residence, age over 65 and sex may affect whether the drug is given. Results are reported by age band, sex and transport time band, and remote areas are shown separately.",
+        "effectiveness": "Useful if it shows where the pathway fails so that training or crew support can be targeted.",
+        "efficiency": "Uses existing records and governance time.",
+        "costs": "Audit team time within existing roles.",
+        "grants": "None needed; a linked outcome analysis might seek regional funding later.",
+        "partnerships": "Ambulance service audit team, paramedic educators, the three hospitals' trauma leads, and a patient representative from the network's trauma survivors group.",
+        "rebPath": "Approved as clinical audit by the ambulance service's audit committee (CA-EMS-2026-22). Any linked outcome analysis would need a renewed data-sharing agreement and research ethics review of secondary use before it starts.",
+        "limitations": "No outcomes; eligibility and injury time depend on record quality.",
+        "summary": "Approved clinical audit of ambulance records; outcome work waits for the data-sharing agreement and ethics review."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "CA-EMS-2026-22"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Paramedic educators and two crew representatives review the audit standard; a trauma survivor from the network's patient group reviews the plain-language summary.",
+        "socialListening": "No social media listening.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Working alone",
+            "quote": "Composite paraphrase: On my own with a bleeding patient on a farm track, drawing up the drug is the last thing I get to.",
+            "implication": "Report compliance by crew configuration and look at single-crew support.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Knowing the injury time",
+            "quote": "Composite paraphrase: Half the time nobody knows when the tractor rolled; we write our best guess.",
+            "implication": "Separate known and estimated injury times.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Distance",
+            "quote": "Composite paraphrase: It took them an hour to reach me and another hour to get me to hospital; I just wanted something to stop the bleeding.",
+            "implication": "Report timing by transport time band.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Data sharing",
+            "quote": "Composite paraphrase: We would love to know what happened to them in hospital, but without the agreement we cannot look.",
+            "implication": "Keep outcome claims out of the audit report until linkage is permitted.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on single crews, injury time, distance and data sharing."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].source": "clinician",
+          "voices.items[3].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Pre-hospital tranexamic acid in a rural emergency network: an audit of eligibility, administration and timing",
+        "abstract": "Aim: to measure how many eligible injured adults receive pre-hospital tranexamic acid within three hours of injury in a rural ambulance service. Methods: audit of ambulance patient care records from January 2023 to June 2026 against the pathway standard, with second-reviewer checks of eligibility. Results and conclusions will be written after the audit; no outcome analysis is included.",
+        "introduction": "Tranexamic acid reduces death from bleeding when given early, and the benefit falls with delay. Rural crews face long transport times and often work alone, and the network has never audited its pathway.",
+        "methods": "Eligible incidents were identified from the ambulance records database; administration, dose time and injury time (known or estimated) were coded, with a second reviewer checking 10 percent of eligibility decisions. Results are proportions with confidence intervals by crew configuration, age and transport time.",
+        "results": "No records have been reviewed yet. The report will present eligible incidents, the proportion treated within three hours, time to dose, doses outside protocol and documentation of injury time.",
+        "discussion": "The discussion will describe where the pathway fails and what support might help, and will state that effects on survival cannot be judged without linked hospital data.",
+        "limitations": "Record quality, estimated injury times and the absence of outcomes.",
+        "conclusion": "To be written after the audit; it will be limited to compliance and timing.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "Audit-structured draft with results left empty; outcome analysis excluded until data sharing is renewed."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.results": {
+            "includes": "No records have been reviewed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The data-sharing agreement is unmet; the accepted decision stays blocked and the design family stays unresolved until it is renewed",
+          "Agree the audit standard and data dictionary with the ambulance service audit team",
+          "Record the failed second search channel and repeat it when available"
+        ],
+        "improvementNotes": "The Design stage deliberately recommended no family: the choice between a compliance audit and a linked outcome analysis depends on the data-sharing agreement. The accepted deferral rests on claims c1 and c3; one gate is met and one is unmet, so action is blocked.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes; the unmet data-sharing gate keeps the decision blocked."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 mergeStage overwrites the audit patch (deliverable 1b item L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Pre-hospital tranexamic acid pathway in a rural emergency network: compliance, timing and the limits of unlinked data",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Pre-hospital tranexamic acid pathway in a rural emergency network: compliance, timing and the limits of unlinked data"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The family stays unset and the basis unresolved (D2, S11); the failed channel stays visible. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": {
+              "isNull": true
+            },
+            "design.recommended": "",
+            "design.basis": "unresolved",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[0].status": "met",
+            "design.decisions[-1].gates[1].status": "unmet",
+            "scan.retrievalEvents[1].status": "error",
+            "scan.retrievalEvents[1].resultCount": {
+              "isNull": true
+            },
+            "scan.gradeOverall": "low",
+            "hypotheses.items[1].feasibility": {
+              "isNull": true
+            }
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

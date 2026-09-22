@@ -1,0 +1,1459 @@
+{
+  "id": "sc-089",
+  "version": 1,
+  "title": "OPAT service: line complications at home, design unresolved until the Design stage, data-sharing gate unknown",
+  "field": "infectious-disease",
+  "level": 3,
+  "family": "mixed-methods",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path. The need names a retrospective chart review and interviews and asks which to do, so classifyFamily returns unresolved at create and the problem reply returns family null (issue 'cleared' at 'family'); design.basis stays 'unresolved' through a reopen before the Design stage, and the Design stage resolves the family to mixed-methods, applied on the investigator's acceptance with basis 'explicit' (the scenario's family is the design the correct path arrives at). The fixture search returns eight records; record 6 is an undated grey report whose year stays null and whose method quality the appraisal leaves null (shown as not assessed, never 50 or 2020; G4). Five source-derived claims rest on retrieved records, one of them on two records. The decision's agency data-sharing gate has no evidence and stays unknown through every later stage (a second gate waits for the ethics board), so the accepted selection keeps a blocked action to the export. The problem reply restates the typed constraints unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 4, 5, 7, 8 (ev-0r2vavm, ev-0g9p5be, ev-0gpwwjv, ev-0p54me9, ev-0sqhuft, ev-075ju2t); the titleYearKey(title, year) hash for records 3, 6 (ev-1u7u4ti, ev-1uu1oza). Requires D2 (null problem family keeps basis 'unresolved'), S11 (routing at create, recommendedFamily, selectionStatus, actionStatus, basis 'explicit' on acceptance), S13 (appraisal payload) and D5 (status text). Catches: a default family substituted for an unresolved need, a routing state lost on reopen, invented year or score, a gate treated as met without evidence, and a blocked action shown as ready.",
+  "inputs": {
+    "need": "I am an infectious diseases physician and I run our hospital's outpatient parenteral antibiotic therapy (OPAT) service. We send about 380 patients a year home on intravenous antibiotics through a PICC or a midline, mostly for bone and joint infections, endocarditis and complicated skin infections, and a home infusion agency's nurses visit daily or three times a week. Line problems are our most common reason for an unplanned return: blocked lines, arm swelling from thrombosis, line infections, and lines that fall out. Last year 41 patients came back to the emergency department with a line problem and three had a line-related bloodstream infection. Nobody has looked at which patients, lines or care arrangements sit behind these numbers.\n\nI am not sure how to approach it. One option is a retrospective chart review of all OPAT episodes from 2021 to 2025, linking our OPAT database with emergency department visits and the vascular access team's line records. The other is to interview patients, family carers and the agency's nurses about what goes wrong with lines at home, because I suspect some of it is flushing and dressing practice that never reaches our records. Possibly both. The agency keeps its own visit notes and we do not yet know whether they will share them. I want a design that tells us where to act first: line choice, patient teaching, or the agency's care.",
+    "constraints": "No research funding beyond the OPAT service budget of 6,000 for this work; about 60 hours of an infectious diseases fellow's time over six months; the home infusion agency is an external contractor with its own records.",
+    "localFacts": [
+      "The OPAT database holds 1,870 episodes from January 2021 to December 2025 with line type, insertion date, antibiotic and outcome at the end of therapy.",
+      "The vascular access team has recorded every PICC and midline inserted since 2020, with tip position and removal reason.",
+      "The home infusion agency has not answered a request sent on 2026-09-01 to share its nursing visit notes for OPAT patients.",
+      "The hospital research ethics board meets monthly; its next meeting is on 2026-10-14."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names a retrospective chart review and interviews and asks which to do, so routing is unresolved; design.basis 'unresolved' at create requires S11 (routing recorded where classifyFamily is called).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am an infectious diseases physician and I run our hospital's outpatient parenteral antibiotic therapy (OPAT) service. We send about 380 patients a year home on intravenous antibiotics through a PICC or a midline, mostly for bone and joint infections, endocarditis and complicated skin infections, and a home infusion agency's nurses visit daily or three times a week. Line problems are our most common reason for an unplanned return: blocked lines, arm swelling from thrombosis, line infections, and lines that fall out. Last year 41 patients came back to the emergency department with a line problem and three had a line-related bloodstream infection. Nobody has looked at which patients, lines or care arrangements sit behind these numbers.\n\nI am not sure how to approach it. One option is a retrospective chart review of all OPAT episodes from 2021 to 2025, linking our OPAT database with emergency department visits and the vascular access team's line records. The other is to interview patients, family carers and the agency's nurses about what goes wrong with lines at home, because I suspect some of it is flushing and dressing practice that never reaches our records. Possibly both. The agency keeps its own visit notes and we do not yet know whether they will share them. I want a design that tells us where to act first: line choice, patient teaching, or the agency's care.",
+          "completedStages": [],
+          "needsReview": [],
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions": {
+            "length": 0
+          },
+          "scan.items": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am an infectious diseases physician and I run our hospital's outpatient parenteral antibiotic therapy"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Line complications during outpatient parenteral antibiotic therapy: patients, lines and home care arrangements",
+        "subtitle": "Design not yet settled: record review, interviews or both",
+        "family": null,
+        "statement": "An OPAT service sends about 380 patients a year home with a PICC or midline, and line problems are its most common reason for unplanned returns: 41 emergency visits for line problems last year and three line-related bloodstream infections. It is not known which patients, line types or home care arrangements account for these problems, and some problems may be handled at home without reaching hospital records. The service needs to know where to act first: line choice, patient teaching or the agency's care.",
+        "whoAffected": "Adults receiving intravenous antibiotics at home, their family carers, the home infusion agency's nurses, the vascular access team and the OPAT physicians.",
+        "whatHurts": "Blocked, infected, thrombosed or dislodged lines interrupt treatment, bring patients back to the emergency department and can cause bloodstream infection; patients describe the line as a constant worry.",
+        "currentPractice": "PICCs and midlines are chosen by the referring team and the vascular access nurse; the agency visits daily or three times a week under its own line care orders; problems are escalated case by case, and no one reviews complications across patients.",
+        "whyNow": "A year with 41 emergency visits for line problems, three bloodstream infections, and linked hospital records that already cover five years.",
+        "constraints": "No research funding beyond the OPAT service budget of 6,000 for this work; about 60 hours of an infectious diseases fellow's time over six months; the home infusion agency is an external contractor with its own records.",
+        "patientCenteredGoal": "Patients finish their home antibiotic course without a line problem that sends them back to hospital, and know what to do when a line starts to fail.",
+        "summary": "Problem framed; the design is left unresolved between a record review and interviews until the evidence and the data are reviewed."
+      },
+      "note": "A null family from the model leaves the family unresolved: issue 'cleared' at 'family' holds at 875fe59, and design.basis stays 'unresolved' (A1 item A7, D2). The constraints are restated unchanged (G11).",
+      "expect": {
+        "store": {
+          "title": "Line complications during outpatient parenteral antibiotic therapy: patients, lines and home care arrangements",
+          "problem.statement": {
+            "includes": "where to act first"
+          },
+          "problem.constraints": "No research funding beyond the OPAT service budget of 6,000 for this work; about 60 hours of an infectious diseases fellow's time over six months; the home infusion agency is an external contractor with its own records.",
+          "problem.rawNeed": "I am an infectious diseases physician and I run our hospital's outpatient parenteral antibiotic therapy (OPAT) service. We send about 380 patients a year home on intravenous antibiotics through a PICC or a midline, mostly for bone and joint infections, endocarditis and complicated skin infections, and a home infusion agency's nurses visit daily or three times a week. Line problems are our most common reason for an unplanned return: blocked lines, arm swelling from thrombosis, line infections, and lines that fall out. Last year 41 patients came back to the emergency department with a line problem and three had a line-related bloodstream infection. Nobody has looked at which patients, lines or care arrangements sit behind these numbers.\n\nI am not sure how to approach it. One option is a retrospective chart review of all OPAT episodes from 2021 to 2025, linking our OPAT database with emergency department visits and the vascular access team's line records. The other is to interview patients, family carers and the agency's nurses about what goes wrong with lines at home, because I suspect some of it is flushing and dressing practice that never reaches our records. Possibly both. The agency keeps its own visit notes and we do not yet know whether they will share them. I want a design that tells us where to act first: line choice, patient teaching, or the agency's care.",
+          "design.basis": "unresolved",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Line complications during outpatient parenteral antibiotic therapy: patients, lines and home care arrangements"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "outpatient parenteral antibiotic therapy PICC midline complications occlusion thrombosis home infusion nursing patient experience",
+      "response": {
+        "status": 200,
+        "total": 8,
+        "records": [
+          {
+            "title": "Peripherally inserted central catheter complications during outpatient parenteral antibiotic therapy: a retrospective review of 2,114 courses",
+            "authors": "Brennan-Adewale T, Kowalczyk-Huang M, Oyelowo-Strand P",
+            "year": 2019,
+            "venue": "Journal of Outpatient Antimicrobial Care",
+            "doi": "10.5555/joac.2019.0118",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 2,114 courses of outpatient parenteral antibiotic therapy delivered through peripherally inserted central catheters at three centres. A line complication occurred in 14.6 percent of courses: occlusion in 6.1 percent, upper-limb venous thrombosis in 3.0 percent, line-associated bloodstream infection in 1.2 percent and dislodgement in 4.3 percent. Complications were more frequent with vancomycin infusions, double-lumen lines and courses longer than four weeks, and most occurred in the first three weeks. Data came from hospital records only, so events managed by community nurses without a hospital visit were not captured. The authors call for community data in future studies."
+          },
+          {
+            "title": "Midline catheters versus peripherally inserted central catheters for outpatient intravenous antibiotics: a propensity-matched comparison",
+            "authors": "Vasquez-Lindahl R, Osei-Brandt K",
+            "year": 2022,
+            "venue": "Journal of Outpatient Antimicrobial Care",
+            "doi": "10.5555/joac.2022.0310",
+            "providerType": "journal-article",
+            "abstract": "Among 1,340 outpatient antibiotic courses, 512 midline courses were matched to 512 courses using peripherally inserted central catheters on antibiotic, planned duration and kidney function. Midlines had fewer line-associated bloodstream infections (0.4 versus 1.4 percent) but more premature removals for occlusion or dislodgement (11.9 versus 7.2 percent). For courses planned to last more than 14 days, the difference in infections was smaller and premature removal was twice as common with midlines. Vesicant antibiotics were excluded from midline use by local policy. Residual confounding by the clinician's choice of line is likely."
+          },
+          {
+            "title": "Living with a line: patients' and carers' experiences of home intravenous antibiotic therapy",
+            "authors": "Thornbury-Mensah A, Laurent-Okoye F",
+            "year": 2021,
+            "venue": "Home Infusion Practice Review",
+            "providerType": "journal-article",
+            "abstract": "We spoke at length with 22 patients and 9 family carers receiving intravenous antibiotics at home through a long line. Participants described the line as both a lifeline and a constant worry. Many were unsure how to protect the dressing when washing, and some avoided using the arm altogether. Several patients delayed reporting swelling or a sluggish line because they did not want to seem difficult or feared readmission. Carers who flushed lines themselves wanted hands-on teaching rather than a leaflet. Conversations took place at one service and participants were chosen by the nursing team, which may have excluded the most dissatisfied."
+          },
+          {
+            "title": "Variation in flushing and dressing practice between home infusion nursing teams and its association with catheter occlusion",
+            "authors": "Hallberg-Nwachukwu E, Pereira-Dunmore S, Ito-Castellano J",
+            "year": 2016,
+            "venue": "Home Infusion Practice Review",
+            "doi": "10.5555/cin.2016.0056",
+            "providerType": "journal-article",
+            "abstract": "Across four home infusion nursing teams serving 610 outpatient antibiotic courses, we recorded the flushing method, locking solution and dressing change interval at each visit. Occlusion rates ranged from 3.1 percent to 11.8 percent between teams. Teams using a pulsatile flushing technique had fewer occlusions after adjustment for line type and antibiotic. Dressing changes were late in 18 percent of visits, and late changes were more common at weekends. Documentation of flushing was missing from 23 percent of visit notes, which limited the analysis and may have hidden differences between individual nurses."
+          },
+          {
+            "title": "Vascular access complications in outpatient parenteral antimicrobial therapy: a systematic review and meta-analysis",
+            "authors": "Rahman-Oduya S, Lindqvist-Barros H, Nakashima-Ellis C, Ferreira-Kamau D",
+            "year": 2023,
+            "venue": "Outpatient Infection Therapy Syntheses",
+            "doi": "10.5555/ida.2023.0412",
+            "providerType": "journal-article",
+            "abstract": "We included 38 observational studies of adults receiving outpatient parenteral antimicrobial therapy. The pooled incidence of any line complication was 9.8 per 1,000 catheter days, with wide variation between studies. Thrombosis was reported more often in studies that screened with ultrasound. Only six studies reported complications managed in the community, and none measured patient-reported outcomes. Definitions of occlusion and dislodgement differed across studies, most studies were single-centre and retrospective, and small studies reporting low complication rates were under-represented, suggesting reporting bias."
+          },
+          {
+            "title": "Line care teaching for patients discharged on home intravenous therapy: a regional service evaluation",
+            "authors": "Regional Infection Services Network",
+            "year": null,
+            "venue": "Regional infection services evaluation series",
+            "providerType": "report",
+            "abstract": "A regional network evaluated the teaching given to patients discharged with a long line for home intravenous therapy. Of 140 patients asked at their first community visit, 61 could describe how to keep the dressing dry and 48 knew which symptoms to report the same day. Patients taught with a demonstration and a return demonstration answered more questions correctly than those given a leaflet alone. The report does not state when the data were collected, gives no detail of how patients were selected, and contains no information on line complications or unplanned hospital visits."
+          },
+          {
+            "title": "Home infusion nurses' views on line problems during outpatient antibiotic therapy: a focus group study",
+            "authors": "Achebe-Lorimer N, Sorensen-Iwu P",
+            "year": 2024,
+            "venue": "Home Infusion Practice Review",
+            "doi": "10.5555/cin.2024.0091",
+            "providerType": "journal-article",
+            "abstract": "We held six focus groups with 31 nurses from two home infusion agencies. Nurses described line problems as often starting between visits and being noticed late. They reported unclear responsibility for escalating a sluggish line, difficulty reaching the hospital team out of hours, and inconsistent orders for flushing and locking. Nurses felt that hospital records rarely showed the problems they solved at home, such as replacing a lifted dressing or restoring flow. They asked for a shared escalation pathway and one set of line care orders agreed between the hospital and the agencies."
+          },
+          {
+            "title": "Explaining variation in unplanned hospital returns during outpatient parenteral antibiotic therapy: an explanatory sequential study",
+            "authors": "Mwangi-Holloway D, Castellanos-Reiter B, Oduya-Pham L",
+            "year": 2025,
+            "venue": "Journal of Outpatient Antimicrobial Care",
+            "doi": "10.5555/joac.2025.0044",
+            "providerType": "journal-article",
+            "abstract": "We first analysed 902 outpatient antibiotic courses and found that line problems caused 38 percent of unplanned returns to hospital, concentrated in patients living alone and in courses managed by one of two agencies. We then spoke with 17 patients and 12 nurses selected from the extremes of the quantitative results. The conversations explained the agency difference by differences in weekend staffing and in how nurses escalated sluggish lines. Patients living alone described difficulty noticing arm swelling and reaching help. Integrating both strands changed the service's priority from line choice to escalation and teaching."
+          }
+        ]
+      },
+      "note": "Eight records; record 6 is an undated grey report (year null, never a guessed year, G4). Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 8,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0r2vavm",
+            "ev-0g9p5be",
+            "ev-1u7u4ti",
+            "ev-0gpwwjv",
+            "ev-0p54me9",
+            "ev-1uu1oza",
+            "ev-0sqhuft",
+            "ev-075ju2t"
+          ],
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[0].id": "ev-0r2vavm",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[5].id": "ev-1uu1oza",
+          "scan.items[5].year": {
+            "isNull": true
+          },
+          "scan.items[5].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Line care teaching for patients discharged on home intravenous therapy: a regional service evaluation"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0r2vavm",
+            "relevance": 90,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A line complication occurred in 14.6 percent of 2,114 courses through peripherally inserted central catheters, more often with vancomycin, double-lumen lines and courses longer than four weeks, mostly in the first three weeks.",
+            "limitations": "Hospital records only; community-managed events missed; three centres with different line policies.",
+            "contextTags": [
+              "retrospective",
+              "PICC",
+              "complication incidence"
+            ]
+          },
+          {
+            "id": "ev-0g9p5be",
+            "relevance": 82,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Midlines had fewer bloodstream infections (0.4 versus 1.4 percent) but more premature removals (11.9 versus 7.2 percent); for courses over 14 days the infection advantage shrank.",
+            "limitations": "Propensity matching cannot remove confounding by the clinician's line choice; vesicants excluded from midlines.",
+            "contextTags": [
+              "midline",
+              "line choice",
+              "matched comparison"
+            ]
+          },
+          {
+            "id": "ev-1u7u4ti",
+            "relevance": 80,
+            "methodQuality": 55,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Patients and carers were unsure about dressing care, delayed reporting problems for fear of seeming difficult or of readmission, and carers wanted hands-on teaching.",
+            "limitations": "One service; participants chosen by the nursing team.",
+            "contextTags": [
+              "patient experience",
+              "carers",
+              "escalation delay"
+            ]
+          },
+          {
+            "id": "ev-0gpwwjv",
+            "relevance": 78,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Occlusion varied from 3.1 to 11.8 percent between four nursing teams; pulsatile flushing was associated with fewer occlusions and flushing documentation was missing from 23 percent of visit notes.",
+            "limitations": "Older study; incomplete documentation; team-level comparison.",
+            "contextTags": [
+              "home infusion nursing",
+              "flushing",
+              "occlusion"
+            ]
+          },
+          {
+            "id": "ev-0p54me9",
+            "relevance": 84,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Pooled incidence of any line complication was 9.8 per 1,000 catheter days across 38 studies; only six reported community-managed complications.",
+            "limitations": "Heterogeneous definitions; mostly single-centre retrospective studies; possible reporting bias.",
+            "contextTags": [
+              "systematic review",
+              "incidence",
+              "community events"
+            ]
+          },
+          {
+            "id": "ev-1uu1oza",
+            "relevance": 60,
+            "methodQuality": null,
+            "kind": "grey",
+            "grade": "very-low",
+            "keyFindings": "Of 140 patients asked at their first community visit, 61 could describe keeping the dressing dry and 48 knew which symptoms to report the same day; demonstration teaching did better than a leaflet.",
+            "limitations": "Undated regional evaluation with no stated sampling or methods; no complication data. Method quality not assessed because no methods are reported.",
+            "contextTags": [
+              "patient teaching",
+              "grey literature",
+              "undated"
+            ]
+          },
+          {
+            "id": "ev-0sqhuft",
+            "relevance": 81,
+            "methodQuality": 57,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Nurses from two agencies described late recognition between visits, unclear escalation of sluggish lines, poor out-of-hours access and inconsistent line care orders.",
+            "limitations": "Two agencies; group setting may suppress dissent.",
+            "contextTags": [
+              "agency nurses",
+              "escalation",
+              "line care orders"
+            ]
+          },
+          {
+            "id": "ev-075ju2t",
+            "relevance": 92,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Line problems caused 38 percent of unplanned returns in 902 courses, concentrated in patients living alone and one agency; interviews linked the agency difference to weekend staffing and escalation.",
+            "limitations": "One service; the qualitative sample was drawn from extremes, which explains variation but not typical experience.",
+            "contextTags": [
+              "explanatory sequential",
+              "unplanned returns",
+              "integration"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In 2,114 outpatient antibiotic courses through peripherally inserted central catheters, a line complication occurred in 14.6 percent of courses.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0r2vavm"
+            ],
+            "location": "Abstract",
+            "passage": "A line complication occurred in 14.6 percent of courses",
+            "interpretation": "Line problems are common enough for a local cohort of 1,870 episodes to yield a useful number of events.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Occlusion rates ranged from 3.1 to 11.8 percent between home infusion nursing teams, and flushing documentation was missing from 23 percent of visit notes.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0gpwwjv"
+            ],
+            "location": "Abstract",
+            "passage": "Occlusion rates ranged from 3.1 percent to 11.8 percent between teams.",
+            "interpretation": "Care arrangements may matter as much as line type, and agency records are needed to see them.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "In an explanatory sequential study, line problems caused 38 percent of unplanned returns, and the conversations with patients and nurses explained an agency difference by weekend staffing and escalation practice.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-075ju2t"
+            ],
+            "location": "Abstract",
+            "passage": "The conversations explained the agency difference by differences in weekend staffing and in how nurses escalated sluggish lines.",
+            "interpretation": "A quantitative strand followed by interviews sampled from its extremes has already changed priorities in a similar service.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Hospital records miss complications managed at home: the three-centre review captured hospital events only, and only six of 38 studies in a review reported community-managed complications.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0r2vavm",
+              "ev-0p54me9"
+            ],
+            "location": "Abstracts of both records",
+            "passage": "Only six studies reported complications managed in the community",
+            "interpretation": "Without the agency's visit notes the cohort will undercount complications and bias comparisons between agencies.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Patients delayed reporting swelling or a sluggish line because they did not want to seem difficult or feared readmission.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1u7u4ti"
+            ],
+            "location": "Abstract",
+            "passage": "Several patients delayed reporting swelling or a sluggish line because they did not want to seem difficult or feared readmission.",
+            "interpretation": "Delayed reporting is a mechanism the records cannot show; interviews are needed.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Eight retrieved records, appraised at abstract level; one is an undated grey report with no stated methods (method quality not assessed). Line complications affect roughly one course in seven through peripherally inserted central catheters, with occlusion and dislodgement the most common, and line choice trades infections against premature removal. Complication rates vary several-fold between home infusion nursing teams, and hospital records miss problems handled at home. Patients delay reporting problems and nurses describe unclear escalation. One explanatory sequential study in a similar service found that interviews sampled from the extremes of a quantitative analysis explained agency differences that records alone could not. The evidence supports combining a local record-based analysis with interviews, and warns that without agency notes the quantitative strand will undercount home-managed events.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational and qualitative evidence from single services, heterogeneous definitions and missing community data; consistent in direction on the role of care arrangements but imprecise. Certainty that any single factor drives local complications is low.",
+        "summary": "Eight retrieved records appraised; five source-derived claims recorded; overall certainty low; one undated record with method quality not assessed."
+      },
+      "note": "Appraisal of the eight retrieved records (S13). Record 6's method quality is null because the report states no methods: stored null and shown as not assessed, never 50 (G4); its year stays null. The certainty is the appraisal's own value over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].relevance": 90,
+          "scan.items[4].kind": "systematic-review",
+          "scan.items[5].year": {
+            "isNull": true
+          },
+          "scan.items[5].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[5].relevance": 60,
+          "scan.items[5].grade": "very-low",
+          "scan.items[7].keyFindings": {
+            "includes": "38 percent of unplanned returns"
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[3].sourceIds": [
+            "ev-0r2vavm",
+            "ev-0p54me9"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-1u7u4ti"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "hospital OPAT service, about 380 patients a year",
+          "external home infusion agency",
+          "vascular access team records since 2020",
+          "agency visit notes not yet shared"
+        ],
+        "reading": "Line complications arise where three systems meet: the hospital's line choice, the agency's line care at home, and the patient's own handling and reporting. The hospital sees only the problems that come back to it; the agency sees problems it solves at home; patients see early warning signs they may not report. The retrieved evidence points to care arrangements and escalation, not only line type, and shows that records alone miss the home side. The design question is therefore how to see both sides.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Line choice (PICC or midline, lumens)",
+            "kind": "context",
+            "detail": "Made by the referring team and vascular access nurse."
+          },
+          {
+            "id": "n2",
+            "label": "Agency line care (flushing, dressings, escalation)",
+            "kind": "context",
+            "detail": "Varies between teams (claim c2)."
+          },
+          {
+            "id": "n3",
+            "label": "Patient and carer handling and reporting",
+            "kind": "context",
+            "detail": "Delayed reporting (claim c5)."
+          },
+          {
+            "id": "n4",
+            "label": "Line complication with unplanned hospital contact",
+            "kind": "outcome",
+            "detail": "Visible in hospital records."
+          },
+          {
+            "id": "n5",
+            "label": "Complications managed at home",
+            "kind": "gap",
+            "detail": "Invisible without agency notes (claim c4)."
+          },
+          {
+            "id": "n6",
+            "label": "Three-centre record review",
+            "kind": "observational",
+            "detail": "14.6 percent of courses (claim c1)."
+          },
+          {
+            "id": "n7",
+            "label": "Explanatory sequential study of unplanned returns",
+            "kind": "observational",
+            "detail": "Interviews explained agency differences (claim c3)."
+          },
+          {
+            "id": "n8",
+            "label": "Home infusion agency",
+            "kind": "stakeholder",
+            "detail": "Holds visit notes; has not yet agreed to share them."
+          },
+          {
+            "id": "n9",
+            "label": "Patients living alone",
+            "kind": "stakeholder",
+            "detail": "More unplanned returns in one study."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n4",
+            "relation": "changes the type of"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "influences"
+          },
+          {
+            "from": "n2",
+            "to": "n5",
+            "relation": "resolves some problems as"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "delays recognition of"
+          },
+          {
+            "from": "n6",
+            "to": "n4",
+            "relation": "estimates"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "explains variation in"
+          },
+          {
+            "from": "n8",
+            "to": "n5",
+            "relation": "is the only source for"
+          },
+          {
+            "from": "n9",
+            "to": "n3",
+            "relation": "has least support for"
+          }
+        ],
+        "summary": "Map shows hospital, agency and patient contributions to line complications and the blind spot of home-managed events."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Home-managed complications are invisible in hospital data",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Only six of 38 studies counted community-managed events (claim c4); a hospital-only cohort would undercount and bias comparisons between agencies.",
+            "opportunity": "Seek the agency's visit notes for the cohort years, and state the undercount if they are not shared."
+          },
+          {
+            "id": "g2",
+            "title": "No local incidence by line type and care arrangement",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The service knows the 41 emergency visits but not the denominator or who is affected.",
+            "opportunity": "Link the 1,870 OPAT episodes to emergency visits and line records to estimate rates per 1,000 catheter days."
+          },
+          {
+            "id": "g3",
+            "title": "Why patients delay reporting",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Delayed reporting (claim c5) cannot be seen in records and may drive late presentations.",
+            "opportunity": "Interview patients and carers sampled from high- and low-complication groups."
+          },
+          {
+            "id": "g4",
+            "title": "Patients living alone and those with limited English",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Patients living alone had more unplanned returns in a similar service, and teaching by leaflet fails those who cannot read it easily.",
+            "opportunity": "Record living arrangement and interpreter need in the cohort and include these patients in the interview sample."
+          },
+          {
+            "id": "g5",
+            "title": "Confounding by line choice",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Clinicians choose midlines for shorter, simpler courses, so crude comparisons of line types mislead.",
+            "opportunity": "Adjust for antibiotic, planned duration and indication, and interpret line type as a secondary contrast."
+          }
+        ],
+        "errorsFound": [
+          "The need counts 41 emergency visits as the size of the problem; without agency notes the true number of complications is higher and unknown."
+        ],
+        "reevaluation": "The gaps favour a record-based quantitative strand followed by interviews, with the agency's notes as the missing piece that decides how complete the count can be.",
+        "summary": "Five gaps; home-managed complications and the missing local denominator are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Home-managed complications are invisible in hospital data"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Line complications requiring hospital contact vary more between home care arrangements (agency team, visit frequency, living alone) than between PICC and midline once antibiotic and duration are accounted for.",
+            "novelty": 55,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 75,
+            "rationale": "Variation between nursing teams (c2) and the agency difference in the explanatory study (c3) suggest care arrangements matter; the local cohort can test it.",
+            "risks": "Undercounting home-managed events if agency notes are not shared; confounding by line choice."
+          },
+          {
+            "id": "h2",
+            "statement": "Patients and carers who receive demonstration teaching report line problems earlier than those who receive a leaflet.",
+            "novelty": 45,
+            "need": 70,
+            "practiceChange": 70,
+            "feasibility": 60,
+            "parsimony": 65,
+            "rationale": "Teaching method was linked to knowledge in an undated evaluation, and delayed reporting appears in patient accounts.",
+            "risks": "Teaching method is not recorded in the OPAT database."
+          },
+          {
+            "id": "h3",
+            "statement": "Most complications occur in the first three weeks, so a week-two review would catch most failing lines.",
+            "novelty": 35,
+            "need": 60,
+            "practiceChange": 65,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Timing reported in the three-centre review (c1).",
+            "risks": "Timing depends on when problems reach hospital records."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 frames the quantitative strand and the interview sampling."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults treated through the OPAT service from 2021 to 2025, what is the rate of line complications requiring unplanned hospital contact or premature removal per 1,000 catheter days, and how does it vary by line type, antibiotic, course length, agency team and living alone?",
+            "framework": "PECO",
+            "population": "Adults with an OPAT episode through a PICC or midline, January 2021 to December 2025",
+            "intervention": "Line type, antibiotic, course length, agency team and living arrangement (exposures)",
+            "comparator": "Reference categories within each exposure",
+            "outcome": "Line complication requiring unplanned hospital contact or premature removal",
+            "time": "From line insertion to end of therapy",
+            "setting": "Hospital OPAT service and its home infusion agency"
+          },
+          {
+            "id": "q2",
+            "text": "How do patients, carers and agency nurses from high- and low-complication groups explain how line problems start, are noticed and are escalated at home?",
+            "framework": "SPIDER",
+            "population": "Patients, family carers and agency nurses sampled from the extremes of the cohort results",
+            "intervention": "Experience of line care and escalation at home",
+            "outcome": "Explanations of how problems start, are noticed and are escalated",
+            "setting": "Patients' homes and the agency"
+          }
+        ],
+        "finer": "Feasible with existing records and about 60 fellow hours if the interviews are limited to about 30; interesting to infectious diseases, vascular access and the agency; novel locally; ethical with REB approval and consent for interviews; relevant because it decides the service's first action.",
+        "summary": "One quantitative question and one qualitative question, linked by the sampling plan."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[1].framework": "SPIDER",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work, before the Design stage: the unresolved routing must survive (never replaced by a default family), and the unknown year and score must still be null (G4). design.basis requires S11 and D2.",
+      "expect": {
+        "store": {
+          "title": "Line complications during outpatient parenteral antibiotic therapy: patients, lines and home care arrangements",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ],
+          "needsReview": [],
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "problem.constraints": "No research funding beyond the OPAT service budget of 6,000 for this work; about 60 hours of an infectious diseases fellow's time over six months; the home infusion agency is an external contractor with its own records.",
+          "scan.items[5].year": {
+            "isNull": true
+          },
+          "scan.items[5].methodQuality": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "stage": {
+          "questions": "complete",
+          "design": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Line complications during outpatient parenteral antibiotic therapy: patients, lines and home care arrangements"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "mixed-methods",
+        "rationale": "The question has two parts that no single design answers: how often and in whom line complications occur (a record-based quantitative strand over 1,870 existing episodes), and why they occur at home in ways the records do not show (interviews with patients, carers and agency nurses). An explanatory sequential mixed methods design runs the cohort first and samples interviews from its extremes, as in the retrieved study that changed a similar service's priorities (c3). Complications are common enough for the cohort (c1), vary by nursing team (c2), and are partly invisible in hospital records (c4), and patients delay reporting (c5), which only interviews can explain.",
+        "alternatives": [
+          "Retrospective record review alone (refused: it cannot see home-managed problems or explain delays in reporting)",
+          "Interviews alone (refused: without the cohort there is no way to choose whom to interview or to size the problem)",
+          "Prospective cohort with standardised line assessments at every visit (refused: needs agency cooperation and funding not yet available)"
+        ],
+        "guidelines": [
+          "GRAMMS",
+          "STROBE",
+          "COREQ"
+        ],
+        "whyNotMoreComplex": "A prospective multi-agency cohort or a trial of line types would answer narrower questions at far higher cost; the service first needs to know where to act, which the existing records plus targeted interviews can show.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run an explanatory sequential mixed methods study: a record-based cohort of OPAT episodes from 2021 to 2025 linked to emergency visits and vascular access records, followed by interviews with patients, carers and agency nurses sampled from the extremes of the cohort results.",
+          "question": "Which design will show where the OPAT service should act first to reduce line complications?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Line complications are common and vary by care arrangement, so explaining them can direct the first intervention.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Home-managed complications cannot be counted without the agency's visit notes.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c4"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Home infusion agency agreement to share nursing visit notes for OPAT patients",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research ethics board approval for linked record review and interviews",
+              "status": "unknown"
+            },
+            {
+              "id": "g3",
+              "requirement": "Protected fellow time for data extraction and interviews",
+              "status": "met",
+              "evidence": "Investigator constraint: about 60 hours of an infectious diseases fellow's time over six months"
+            }
+          ],
+          "alternatives": [
+            "Retrospective record review alone",
+            "Interviews alone"
+          ],
+          "note": "Rests on ledger claims c1 to c5 from retrieved records. The agency data-sharing gate has no evidence and stays unknown; the ethics gate waits for the board meeting of 2026-10-14."
+        },
+        "summary": "Explanatory sequential mixed methods recommended; the decision rests on five ledger claims and is blocked by two unknown gates, one of them the agency's data sharing."
+      },
+      "note": "The recommendation resolves the family to mixed-methods as a proposal; recommendedFamily, selectionStatus and actionStatus require S11, the ledger claims S13 and the status text D5. Two gates have no evidence and stay unknown, so the action is blocked.",
+      "expect": {
+        "store": {
+          "design.recommended": "mixed-methods",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].recommendedFamily": "mixed-methods",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.decisions[-1].gates": {
+            "length": 3
+          },
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].evidence": {
+            "absent": true
+          },
+          "design.decisions[-1].gates[2].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The selection is supported (five ledger claims from retrieved records, no contradiction), so it is accepted and the family resolves to mixed-methods with basis 'explicit'; the unknown gates keep the action blocked (G7; A2 item 9). selectionStatus, actionStatus and basis require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "family": "mixed-methods",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Explanatory sequential mixed methods study. Strand 1: a record-based cohort of OPAT episodes from 2021 to 2025 linked to emergency visits and vascular access records, and to agency visit notes if the agency agrees. Strand 2: semi-structured interviews with patients, carers and agency nurses sampled from the high- and low-complication groups found in strand 1. Integration by a joint display that sets each quantitative finding beside the explanations from the interviews.",
+        "population": "Strand 1: all adults with an OPAT episode through a PICC or midline between January 2021 and December 2025 (about 1,870 episodes). Strand 2: about 16 patients or carers and 12 agency nurses.",
+        "exposure": "Line type and lumens, antibiotic (vancomycin and vesicants flagged), planned course length, agency team, visit frequency, living alone and interpreter need.",
+        "procedures": "The fellow links the OPAT database, emergency visit records and vascular access records by hospital number and codes complications with a written definition (occlusion, thrombosis, line-associated bloodstream infection, dislodgement, other). If the agency shares visit notes, home-managed complications are added and reported separately. Interview participants are sampled from agency teams and patient groups with the highest and lowest complication rates, with living alone and limited English deliberately included; interviews use a topic guide on line care, warning signs and escalation.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Line complication with unplanned hospital contact or premature removal",
+            "measure": "Rate per 1,000 catheter days, coded from linked records with a written definition",
+            "timing": "Insertion to end of therapy",
+            "why": "The event that interrupts treatment and brings patients back.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Line-associated bloodstream infection",
+            "measure": "Positive blood culture attributed to the line by the infectious diseases team",
+            "timing": "Insertion to 48 hours after removal",
+            "why": "The most serious complication.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Explanations of how problems start, are noticed and are escalated",
+            "measure": "Themes from framework analysis of interviews",
+            "timing": "Interviews after strand 1",
+            "why": "Explains what the records cannot show.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Completeness of complication capture",
+            "measure": "Proportion of complications found only in agency notes, if shared",
+            "timing": "At linkage",
+            "why": "Shows how much a hospital-only count misses.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Linkage and coding take about 35 fellow hours; about 28 interviews of 45 minutes take the remaining 25 hours with transcription paid from the service budget.",
+        "biasMitigation": [
+          "Written complication definition applied before looking at exposures",
+          "Second coder for a random 10 percent of episodes",
+          "Adjustment for antibiotic, duration and indication when comparing line types",
+          "Interview sampling from both extremes, including patients living alone and with limited English",
+          "Home-managed events reported separately so the hospital-only count is not hidden"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Missing home-managed complications",
+            "severity": "high",
+            "note": "Depends on the agency gate; the undercount is stated if notes are not shared."
+          },
+          {
+            "id": "b2",
+            "label": "Confounding by line choice",
+            "severity": "watch",
+            "note": "Line type treated as a secondary contrast with adjustment."
+          },
+          {
+            "id": "b3",
+            "label": "Selection of interview participants",
+            "severity": "watch",
+            "note": "Extreme-case sampling explains variation, not typical experience."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 8,
+          "flags": [
+            "One quantitative primary outcome and one qualitative strand outcome",
+            "Eight pre-specified covariates"
+          ],
+          "simplestPath": "One linked cohort, one primary rate, about 28 interviews and one joint display."
+        },
+        "theoreticalFramework": "Explanatory sequential mixed methods with a joint display for integration; SEIPS used only to organise interview findings into person, task, tool and organisation factors.",
+        "summary": "Linked cohort followed by targeted interviews; one primary outcome; the agency notes decide how complete the count is."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[3].patientCentered": false,
+          "protocol.parsimony.covariateCount": 8,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Strand 1: cohort of OPAT episodes with complication rates per 1,000 catheter days; strand 2: framework analysis of about 28 interviews; integration by joint display.",
+        "sampleSize": "The 1,870 episodes are fixed. If about 12 percent have a complication requiring hospital contact, about 220 events are expected. With 220 events and a third of catheter days on midlines, a rate ratio of 1.5 between line types can be detected with about 80 percent power at two-sided alpha 0.05, and the model can carry about 11 parameters at 20 events per parameter. For strand 2, about 16 patients or carers and 12 nurses are planned by information power: a focused aim, a specific sample from the extremes and an established analysis framework; sampling stops early if no new explanations appear in three consecutive interviews.",
+        "primaryAnalysis": "Poisson regression with robust standard errors for complication counts per episode, with the log of catheter days as offset, adjusted for eight pre-specified covariates (line type, lumens, vancomycin or vesicant, planned duration, indication, agency team, living alone, interpreter need); rates reported with 95 percent confidence intervals.",
+        "secondaryAnalysis": "The same model for line-associated bloodstream infection if at least 20 events occur, otherwise descriptive counts; a sensitivity analysis adding home-managed complications if the agency notes are shared; framework analysis of interviews with two coders and a joint display.",
+        "missingData": "Episodes with missing line type or dates are counted and described; line type missing in more than 5 percent of episodes triggers multiple imputation with 20 imputations; missing agency notes are reported as a limitation, never imputed.",
+        "multiplicity": "One primary rate model; secondary outcomes are descriptive with confidence intervals.",
+        "software": "R with the sandwich package for strand 1; NVivo for strand 2.",
+        "overfittingGuards": [
+          "Covariates fixed before linkage",
+          "At least 20 events per parameter",
+          "No stepwise selection",
+          "Interview sampling frame fixed from strand 1 results before any interview"
+        ],
+        "summary": "About 220 expected events support a rate ratio of 1.5 with about 80 percent power; about 28 interviews planned by information power."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 220 events"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: record review and interviews. The main risks are privacy harm from linking records and discomfort for nurses discussing errors; findings are reported by team without naming nurses.",
+        "consent": "Waiver of consent requested for the record-based strand (secondary use, about 1,870 episodes, impracticable to consent); written informed consent for every interview, with the option to stop at any time.",
+        "data": "Linked data held on the hospital research server with hospital numbers replaced by study codes; interview recordings deleted after transcription and checking; agency notes, if shared, received under a data-sharing agreement.",
+        "equity": "PROGRESS-Plus: patients living alone, with limited English or with lower health literacy may be least able to notice or report line problems. The interview sample includes them deliberately, interpreters are booked, and results are reported by living arrangement and interpreter need.",
+        "effectiveness": "The study succeeds if it shows where the service should act first; a finding that care arrangements matter more than line type is as useful as the reverse.",
+        "efficiency": "Uses existing records and about 60 fellow hours; transcription is the main cost.",
+        "costs": "About 2,400 for transcription and 600 for interpreter time within the service budget of 6,000.",
+        "grants": "None for this phase; the results could support an application for a trial of a shared escalation pathway.",
+        "partnerships": "Vascular access team, the home infusion agency (if it agrees), two patient partners who have had home antibiotics, and the hospital's patient experience office.",
+        "rebPath": "Full REB review of the linked record study with a waiver request and of the interview strand, submitted for the board meeting of 2026-10-14 under ICH-GCP and Declaration of Helsinki principles; no extraction or interviews start before approval, and agency notes are used only under a signed data-sharing agreement.",
+        "limitations": "Hospital-only complication counts if the agency declines; one service; interview findings explain variation rather than estimate frequency.",
+        "summary": "Record strand under a consent waiver request, consented interviews, equity sampling and two gates still unknown."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "Waiver of consent"
+          },
+          "ethics.rebPath": {
+            "includes": "2026-10-14"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners who have had home antibiotics review the interview guide and the plain-language summary; an agency nurse lead comments on the complication definitions; results are discussed with the agency before publication.",
+        "socialListening": "No social media listening; anonymised complaints and compliments about the OPAT service from the last two years are read for mentions of lines.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Not wanting to be a nuisance",
+            "quote": "Composite paraphrase: The arm had been tight for two days but I did not ring because I thought they would take me back in.",
+            "implication": "Explore delayed reporting in interviews and make same-day advice easy to reach.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Learning from a leaflet",
+            "quote": "Composite paraphrase: They gave us a sheet about flushing, and I was frightened every time I pushed the syringe.",
+            "implication": "Test demonstration teaching for carers who flush lines.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Problems the hospital never sees",
+            "quote": "Composite paraphrase: Half my week is fixing lines that would have come back to you if we had not been there.",
+            "implication": "Seek agency notes so home-managed problems are counted.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Who to call at night",
+            "quote": "Composite paraphrase: When a line stops at nine at night there is nobody at the hospital who knows the patient.",
+            "implication": "Include out-of-hours escalation in the interview guide and the joint display.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "partner",
+            "theme": "Choosing the line",
+            "quote": "Composite paraphrase: We choose midlines to avoid infections and then replace them twice in a six-week course.",
+            "implication": "Report premature removal alongside infection when comparing line types.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on delayed reporting, teaching, hidden work, escalation and line choice."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[4].source": "partner",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Line complications during outpatient parenteral antibiotic therapy: an explanatory sequential mixed methods study of patients, lines and home care",
+        "abstract": "Objective: to estimate line complication rates during outpatient parenteral antibiotic therapy and explain their variation. Design: explanatory sequential mixed methods; a linked record cohort of OPAT episodes from 2021 to 2025, then interviews with patients, carers and agency nurses sampled from the cohort's extremes. Primary outcome: line complication with unplanned hospital contact or premature removal per 1,000 catheter days. Results and conclusions will be written after both strands.",
+        "introduction": "Line complications are the main reason for unplanned returns during home intravenous antibiotic therapy. Retrieved studies show rates vary between nursing teams and that hospital records miss problems managed at home, but no local data exist.",
+        "methods": "Records of about 1,870 episodes are linked and complications coded with a written definition; Poisson regression with a catheter-day offset estimates rates by line type and care arrangement. About 28 interviews sampled from high- and low-complication groups are analysed with the framework method, and a joint display integrates the strands.",
+        "results": "No data have been collected yet. The report will present the cohort flow, complication rates by exposure, the proportion of complications found only in agency notes if shared, interview themes, and the joint display.",
+        "discussion": "The discussion will set the local rates beside the retrieved studies, explain agency and patient differences with the interview findings, and state where the service should act first.",
+        "limitations": "Complications managed at home may be missed if the agency notes are not shared; confounding by line choice; one service.",
+        "conclusion": "To be written after integration; it will not claim that any change reduces complications, which would need a separate evaluation.",
+        "reportingChecklist": "GRAMMS for the mixed methods report, with STROBE for strand 1 and COREQ for strand 2",
+        "summary": "GRAMMS-structured draft with results left empty until both strands are complete."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "GRAMMS"
+          },
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The agency data-sharing gate is still unknown; the decision stays blocked and the undercount must be stated if the agency declines",
+          "Submit to the research ethics board for the 2026-10-14 meeting; no extraction before approval",
+          "Record 6 is undated and reports no methods; do not cite its figures as current",
+          "Run identity checks on the eight retrieved records before the protocol cites them"
+        ],
+        "improvementNotes": "Routing stayed unresolved from create until the design stage, where the evidence and the two-part question settled mixed methods. The accepted selection rests on five ledger claims from retrieved records; two gates have no evidence and keep the action blocked.",
+        "lastReview": "2026-09-22",
+        "summary": "Four open fixes: the agency gate, the ethics submission, an undated record and identity checks."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 the store defect of A3 L1.6 drops it (not a missing work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Audit route; the decision's statuses are checked in the export because the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Line complications during outpatient parenteral antibiotic therapy: patients, lines and home care arrangements",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "mixed-methods",
+          "design.basis": "explicit",
+          "scan.items[5].year": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 4
+          }
+        },
+        "screen": {
+          "includes": [
+            "Line complications during outpatient parenteral antibiotic therapy: patients, lines and home care arrangements"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The unknown gate and the blocked action must be in the exported file exactly as stored (G10, D5). selectionStatus, actionStatus and recommendedFamily require S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "mixed-methods",
+            "design.basis": "explicit",
+            "problem.constraints": "No research funding beyond the OPAT service budget of 6,000 for this work; about 60 hours of an infectious diseases fellow's time over six months; the home infusion agency is an external contractor with its own records.",
+            "scan.gradeOverall": "low",
+            "scan.items[5].year": {
+              "isNull": true
+            },
+            "scan.items[5].methodQuality": {
+              "isNull": true
+            },
+            "design.decisions[-1].recommendedFamily": "mixed-methods",
+            "design.decisions[-1].gates[0].status": "unknown",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

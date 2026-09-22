@@ -1,0 +1,1407 @@
+{
+  "id": "sc-065",
+  "version": 1,
+  "title": "Colorectal surgical site infection bundle: out-of-range score and boolean year refused, cited record fails its identity check after acceptance",
+  "field": "surgery",
+  "level": 4,
+  "family": "prospective",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on an explicitly named prospective observational study. Seven fixture records are retrieved. A discovery reply appends three model leads after them (D1); the first lead gives its year as the boolean true, which is refused (stored null, invalid-type at items[0].year). The appraisal gives one record a methodQuality of 140, which is refused (stored null, out-of-range), while the rest of that annotation applies; certainty 'low' comes only from the appraisal (G1). The decision rests on claims c1 to c4 from retrieved records with both gates met, so the investigator's acceptance is a supported positive (accepted, ready). Then an identity check of the cited multicentre study resolves its DOI to a different work: the record's provenance status becomes 'mismatch' through the store's own action, and the decision must become stale with its action blocked in the store, on screen (Design route) and after reload, and in the export, with the completed stages after Scan flagged for review (G7, G8). This variant uses the status field: at 875fe59 evidenceRevision already includes provenance status, so the stored status 'stale' holds there when the change goes through mergeStage (checked with the library in the author's generator), while selectionStatus and actionStatus need S11. The problem reply omits the constraints key (G11). Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 3, 4, 6 (ev-1028sd0, ev-1jzz52x, ev-0v3s6ze, ev-159pd3s), titleYearKey-based for records 2, 5, 7 (ev-0ctljzc, ev-1cc6ja2, ev-0a7r05t). Requires D1, S13, S11 and D5. Catches: a boolean year or an out-of-range score stored as a value, leads replacing retrieved records, and an accepted decision that stays current or actionable after its key source fails identity.",
+  "inputs": {
+    "need": "I am a colorectal surgeon and co-chair of the surgical site infection working group at a 600-bed teaching hospital. We do about 380 colorectal resections a year, elective and emergency. Our infection prevention team's active 30-day surveillance found a surgical site infection after 14 percent of resections last year, which is higher than the regional average. Two years ago we adopted a seven-element bundle: oral antibiotics with mechanical bowel preparation for elective cases, chlorhexidine-alcohol skin preparation, antibiotic prophylaxis within 60 minutes before incision, normothermia, glucose below 11 mmol/L, a wound protector, and a glove and instrument change before closure. Nobody knows how reliably each element is delivered, and the working group keeps arguing about which elements matter.\n\nWe plan a prospective observational study: for every colorectal resection, theatre staff would record each bundle element on a short form, and the surveillance nurses would follow patients for 30 days, including after discharge by phone. We want to know how often each element and the full bundle are delivered, and whether full bundle compliance is associated with fewer infections after accounting for emergency surgery, stoma formation, diabetes, obesity and operation length.\n\nI need help with the compliance form, how to define full compliance when some elements do not apply (bowel preparation in emergency cases), the sample size and whether one year is enough, the analysis of the association without overclaiming causation, and how to keep post-discharge follow-up complete. Our infection prevention team already does surveillance, and the hospital's quality council has approved the data collection.",
+    "constraints": "No new funding. The compliance form must take under two minutes in theatre. Surveillance nurses can make one follow-up call per patient at day 30.",
+    "localFacts": [
+      "About 380 colorectal resections are done each year; 30-day surveillance found surgical site infection after 14 percent of them in 2025.",
+      "The hospital quality council approved prospective bundle data collection for all colorectal resections on 2026-08-18 (approval QC-SSI-2026-4).",
+      "The hospital REB granted an exemption as quality assurance with publication permitted on 2026-09-10 (reference REB-EX-26-311).",
+      "The infection prevention team already performs active 30-day surveillance, including one phone call after discharge."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a colorectal surgeon and co-chair of the surgical site infection working group at a 600-bed teaching hospital. We do about 380 colorectal resections a year, elective and emergency. Our infection prevention team's active 30-day surveillance found a surgical site infection after 14 percent of resections last year, which is higher than the regional average. Two years ago we adopted a seven-element bundle: oral antibiotics with mechanical bowel preparation for elective cases, chlorhexidine-alcohol skin preparation, antibiotic prophylaxis within 60 minutes before incision, normothermia, glucose below 11 mmol/L, a wound protector, and a glove and instrument change before closure. Nobody knows how reliably each element is delivered, and the working group keeps arguing about which elements matter.\n\nWe plan a prospective observational study: for every colorectal resection, theatre staff would record each bundle element on a short form, and the surveillance nurses would follow patients for 30 days, including after discharge by phone. We want to know how often each element and the full bundle are delivered, and whether full bundle compliance is associated with fewer infections after accounting for emergency surgery, stoma formation, diabetes, obesity and operation length.\n\nI need help with the compliance form, how to define full compliance when some elements do not apply (bowel preparation in emergency cases), the sample size and whether one year is enough, the analysis of the association without overclaiming causation, and how to keep post-discharge follow-up complete. Our infection prevention team already does surveillance, and the hospital's quality council has approved the data collection.",
+          "problem.constraints": "No new funding. The compliance form must take under two minutes in theatre. Surveillance nurses can make one follow-up call per patient at day 30.",
+          "family": "prospective",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a colorectal surgeon and co-chair of the surgical site infection working group"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Surgical site infection bundle compliance after colorectal resection: a prospective observational study",
+        "subtitle": "Element-level compliance and 30-day infection with post-discharge follow-up",
+        "family": "prospective",
+        "statement": "Surgical site infection followed 14 percent of about 380 colorectal resections in 2025, above the regional average, two years after a seven-element bundle was adopted. How reliably each element is delivered is unknown, and the working group disagrees about which elements matter. A prospective observational study would record each element at the time of surgery and follow every patient for 30 days, including after discharge.",
+        "whoAffected": "Adults having elective and emergency colorectal resections, theatre and anaesthesia teams, surveillance nurses and the working group.",
+        "whatHurts": "Wound infections cause pain, readmission, reoperation, delayed recovery and delayed adjuvant treatment; almost half appear after discharge.",
+        "currentPractice": "The bundle is taught and expected but not recorded; surveillance counts infections without knowing which elements were given.",
+        "whyNow": "An infection rate above the regional average, an unresolved argument about elements, and quality council approval for data collection.",
+        "patientCenteredGoal": "Every patient having colorectal surgery receives every bundle element that applies to them, and fewer patients develop a wound infection.",
+        "summary": "Problem framed as a prospective observational study of bundle compliance and 30-day infection."
+      },
+      "note": "Constraints key omitted; the investigator's text stays (G11).",
+      "expect": {
+        "store": {
+          "title": "Surgical site infection bundle compliance after colorectal resection: a prospective observational study",
+          "family": "prospective",
+          "problem.constraints": "No new funding. The compliance form must take under two minutes in theatre. Surveillance nurses can make one follow-up call per patient at day 30.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Surgical site infection bundle compliance after colorectal resection: a prospective observational study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "colorectal surgery surgical site infection care bundle compliance individual elements prospective",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Care bundle compliance and surgical site infection after colorectal resection: a prospective multicentre study",
+            "authors": "Achebe-Sandoval R, Lindqvist-Mwangi P, Okonkwo-Hartley J",
+            "year": 2020,
+            "venue": "Journal of Colorectal Surgical Quality",
+            "doi": "10.5555/jcsq.2020.0211",
+            "providerType": "journal-article",
+            "abstract": "In 2,140 colorectal resections across 11 hospitals, full compliance with a six-element bundle was recorded in 38 percent. Surgical site infection occurred in 9.8 percent of fully compliant cases and 16.1 percent of others (adjusted odds ratio 0.61, 95 percent CI 0.46 to 0.81). Oral antibiotic bowel preparation and wound protectors showed the strongest individual associations. Infection was ascertained by active surveillance until day 30, including a telephone review after discharge. Compliance was recorded by theatre staff who knew the study aim, and emergency cases were fewer than a fifth of the sample."
+          },
+          {
+            "title": "Which bundle elements matter? An element-level analysis in elective colorectal surgery",
+            "authors": "Petrov-Halvorsen M, Nakashima-Obi T",
+            "year": 2018,
+            "venue": "Surgical Infection Practice",
+            "providerType": "journal-article",
+            "abstract": "Using data on 860 elective colorectal resections, we examined each of seven bundle elements. Oral antibiotic prophylaxis with bowel preparation was associated with lower infection (odds ratio 0.52), while glove change before closure showed no clear association. Elements were strongly correlated with each other, so individual estimates are unstable and should not be used to drop elements. Emergency cases were excluded, and compliance was taken from the operation note rather than recorded at the time. The authors call for prospective recording of each element at the time of surgery."
+          },
+          {
+            "title": "Surgical site infection bundles in colorectal surgery: a systematic review and meta-analysis",
+            "authors": "Castellanos-Fairweather L, Oyelowo-Brandt E, Sato-Nilsen K, Reid-Achterberg D",
+            "year": 2023,
+            "venue": "Surgical Evidence Reviews",
+            "doi": "10.5555/ser.2023.0119",
+            "providerType": "review",
+            "abstract": "Across 24 studies, most of them before-and-after comparisons, bundles were associated with lower surgical site infection after colorectal surgery (risk ratio 0.56, 95 percent CI 0.46 to 0.68). Studies with higher compliance reported larger reductions. Heterogeneity was high and bundle contents varied from 4 to 12 elements. Only 5 studies included post-discharge surveillance, so infections diagnosed after discharge were probably missed in most studies. Bundles that included oral antibiotic preparation reported the largest reductions, and publication bias was likely because small studies without an effect were rarely reported."
+          },
+          {
+            "title": "Post-discharge surveillance and missed surgical site infections after colorectal surgery",
+            "authors": "Mensah-Kowalski A, Dubois-Tanaka H",
+            "year": 2021,
+            "venue": "Infection Surveillance Methods",
+            "doi": "10.5555/ism.2021.0087",
+            "providerType": "journal-article",
+            "abstract": "Of 412 surgical site infections detected after colorectal resection in three hospitals, 47 percent were diagnosed after discharge. A telephone call at day 30 by a surveillance nurse detected 83 percent of the post-discharge infections found by a combined clinic and telephone approach. Patients who could not be reached by phone were older and more often lived alone. Without post-discharge surveillance, infection rates would have been underestimated by almost half. Infections found after discharge were more often superficial but still led to unplanned clinic visits and readmissions."
+          },
+          {
+            "title": "Defining compliance when bundle elements do not apply: all-or-none measurement with applicability rules",
+            "authors": "Ferreira-Oduya S, Holm-Adeyemi C",
+            "year": 2016,
+            "venue": "Quality Measurement in Surgery",
+            "providerType": "journal-article",
+            "abstract": "We compared ways of scoring full bundle compliance when some elements do not apply. Counting non-applicable elements as delivered inflated full compliance in emergency cases from 31 to 44 percent, while excluding cases with any non-applicable element removed most emergency cases. An all-or-none score over applicable elements, with written applicability rules agreed in advance, gave stable estimates and could be completed in under two minutes on a paper form. Agreement between two independent scorers was high when the applicability rules were written down in advance."
+          },
+          {
+            "title": "Emergency colorectal surgery and surgical site infection: contamination, stoma formation and bundle delivery",
+            "authors": "Varga-Nwosu B, Kimura-Lindgren A, Brennan-Mbeki O",
+            "year": 2024,
+            "venue": "Journal of Colorectal Surgical Quality",
+            "doi": "10.5555/jcsq.2024.0048",
+            "providerType": "journal-article",
+            "abstract": "In 1,030 emergency colorectal resections, surgical site infection occurred in 21 percent. Faecal contamination (odds ratio 2.4) and stoma formation were the strongest predictors. Full bundle compliance was recorded in only 19 percent of emergency cases, mainly because normothermia and glucose control were not documented. The authors warn that comparing compliant and non-compliant cases without adjusting for emergency status and contamination will exaggerate any bundle effect. Wound protectors were used in only half of emergency cases, and infection rates were similar across surgeons once contamination and stoma formation were taken into account."
+          },
+          {
+            "title": "Normothermia and glucose control during colorectal surgery: measurement from anaesthesia records",
+            "authors": "Tanaka-Achebe F, Laurent-Sorensen G",
+            "year": 2019,
+            "venue": "Anaesthesia Quality Reports",
+            "providerType": "journal-article",
+            "abstract": "Reviewing 600 anaesthesia records for colorectal resections, we found an end-of-surgery temperature below 36.0 degrees in 18 percent of patients and no glucose measurement in 41 percent of patients without diabetes. Electronic anaesthesia records captured temperature reliably, but glucose values were often recorded only on paper charts. The authors recommend recording both elements at the end of surgery on the bundle form rather than extracting them later from anaesthesia records. Hypothermia was more common in operations lasting more than three hours and in patients over 80."
+          }
+        ]
+      },
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1028sd0",
+            "ev-0ctljzc",
+            "ev-1jzz52x",
+            "ev-0v3s6ze",
+            "ev-1cc6ja2",
+            "ev-159pd3s",
+            "ev-0a7r05t"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-1028sd0",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Care bundle compliance and surgical site infection after colorectal resection: a prospective multicentre study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "omitKeys": [
+        "gradeOverall",
+        "gradeRationale"
+      ],
+      "response": {
+        "query": "colorectal surgery surgical site infection care bundle compliance individual elements prospective",
+        "sourcesConsulted": [
+          "model knowledge of surgical infection literature"
+        ],
+        "synthesis": "Three further reports are suggested as leads to search for alongside the seven retrieved records: a regional bundle collaborative, a report on triclosan-coated sutures and a study of wound dressings after stoma formation. None has been retrieved or checked.",
+        "items": [
+          {
+            "title": "A regional collaborative to raise colorectal bundle compliance across nine hospitals",
+            "authors": "Olsen-Achterberg M, Quist-Nakamura E",
+            "year": true,
+            "source": "Regional Surgical Quality Reports",
+            "kind": "qi-report",
+            "grade": "low",
+            "methodQuality": 45,
+            "relevance": 70,
+            "verification": "ai-lead",
+            "contextTags": [
+              "collaborative",
+              "compliance"
+            ],
+            "keyFindings": "Monthly feedback of element-level compliance raised full compliance from about a third to over half.",
+            "limitations": "Uncontrolled; infection outcomes not reported.",
+            "notes": "Lead; the year was not given as a number."
+          },
+          {
+            "title": "Antibacterial-coated sutures for abdominal wall closure after colorectal surgery",
+            "authors": "Hughes-Oduya P, Svensson-Mensah T",
+            "year": 2022,
+            "source": "Surgical Materials Review",
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "methodQuality": 65,
+            "relevance": 45,
+            "verification": "verify",
+            "contextTags": [
+              "sutures",
+              "closure"
+            ],
+            "keyFindings": "Coated sutures were associated with fewer superficial infections.",
+            "limitations": "Not a bundle element here.",
+            "notes": "Lead; outside the bundle."
+          },
+          {
+            "title": "Wound dressings after stoma formation and infection of the midline wound",
+            "authors": "Rasmussen-Adu L, Petit-Castellanos J",
+            "year": 2020,
+            "source": "Stoma Care Research",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 40,
+            "relevance": 50,
+            "verification": "ai-lead",
+            "contextTags": [
+              "stoma",
+              "dressings"
+            ],
+            "keyFindings": "Midline infections were more frequent when the stoma was sited close to the wound.",
+            "limitations": "Single centre.",
+            "notes": "Lead."
+          }
+        ],
+        "summary": "Three leads added; one lead's year was not a number."
+      },
+      "note": "Refusal of a malformed value: the first lead gives its year as the boolean true, which is stored as null with issue invalid-type at items[0].year, never coerced to a year (G4; holds at 875fe59). The leads are appended after the seven retrieved records (D1) and stay unverified (G3). No certainty is assessed before the appraisal (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].id": "ev-1028sd0",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[6].id": "ev-0a7r05t",
+          "scan.items[7].title": "A regional collaborative to raise colorectal bundle compliance across nine hospitals",
+          "scan.items[7].year": {
+            "isNull": true
+          },
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "items[0].year",
+              "code": "invalid-type"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": 2
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1028sd0",
+            "relevance": 95,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 2,140 resections in 11 hospitals, full compliance (38 percent) was associated with fewer infections (9.8 against 16.1 percent; adjusted odds ratio 0.61).",
+            "limitations": "Unblinded compliance recording; few emergency cases.",
+            "contextTags": [
+              "multicentre",
+              "full compliance",
+              "prospective"
+            ]
+          },
+          {
+            "id": "ev-0ctljzc",
+            "relevance": 80,
+            "methodQuality": 140,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Oral antibiotic bowel preparation was associated with lower infection (odds ratio 0.52); glove change showed no clear association; elements were strongly correlated.",
+            "limitations": "Elective cases only; compliance from operation notes.",
+            "contextTags": [
+              "element-level",
+              "correlated elements"
+            ]
+          },
+          {
+            "id": "ev-1jzz52x",
+            "relevance": 85,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 24 studies, bundles were associated with lower infection (risk ratio 0.56); only 5 studies included post-discharge surveillance.",
+            "limitations": "Mostly before-and-after; heterogeneous bundles.",
+            "contextTags": [
+              "meta-analysis",
+              "bundles"
+            ]
+          },
+          {
+            "id": "ev-0v3s6ze",
+            "relevance": 90,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Forty-seven percent of infections were diagnosed after discharge; a day-30 phone call found 83 percent of post-discharge infections.",
+            "limitations": "Three hospitals; unreachable patients older and living alone.",
+            "contextTags": [
+              "post-discharge surveillance",
+              "phone follow-up"
+            ]
+          },
+          {
+            "id": "ev-1cc6ja2",
+            "relevance": 88,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Counting non-applicable elements as delivered inflated emergency-case compliance from 31 to 44 percent; an all-or-none score over applicable elements was stable and quick.",
+            "limitations": "Methods comparison in one hospital.",
+            "contextTags": [
+              "compliance definition",
+              "applicability rules"
+            ]
+          },
+          {
+            "id": "ev-159pd3s",
+            "relevance": 86,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 1,030 emergency resections, infection was 21 percent; contamination and stoma formation were the strongest predictors; full compliance only 19 percent.",
+            "limitations": "Emergency cases only; documentation gaps.",
+            "contextTags": [
+              "emergency surgery",
+              "confounding"
+            ]
+          },
+          {
+            "id": "ev-0a7r05t",
+            "relevance": 72,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "End-of-surgery temperature below 36.0 degrees in 18 percent; no glucose measurement in 41 percent of patients without diabetes.",
+            "limitations": "Record review; one hospital.",
+            "contextTags": [
+              "normothermia",
+              "glucose",
+              "measurement"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In 2,140 colorectal resections across 11 hospitals, full bundle compliance was associated with fewer surgical site infections (9.8 against 16.1 percent; adjusted odds ratio 0.61).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1028sd0"
+            ],
+            "location": "Abstract, results",
+            "passage": "Surgical site infection occurred in 9.8 percent of fully compliant cases and 16.1 percent of others (adjusted odds ratio 0.61, 95 percent CI 0.46 to 0.81).",
+            "interpretation": "An association worth estimating locally; the planning value for the sample size.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Of 412 surgical site infections after colorectal resection, 47 percent were diagnosed after discharge, and a day-30 phone call detected 83 percent of post-discharge infections.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0v3s6ze"
+            ],
+            "location": "Abstract",
+            "passage": "Of 412 surgical site infections detected after colorectal resection in three hospitals, 47 percent were diagnosed after discharge.",
+            "interpretation": "The existing day-30 call is essential and must reach patients who live alone.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Counting non-applicable elements as delivered inflated full compliance in emergency cases from 31 to 44 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1cc6ja2"
+            ],
+            "location": "Abstract",
+            "passage": "Counting non-applicable elements as delivered inflated full compliance in emergency cases from 31 to 44 percent",
+            "interpretation": "Use an all-or-none score over applicable elements with written applicability rules.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "In 1,030 emergency colorectal resections, infection occurred in 21 percent and full bundle compliance was recorded in only 19 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-159pd3s"
+            ],
+            "location": "Abstract",
+            "passage": "Full bundle compliance was recorded in only 19 percent of emergency cases",
+            "interpretation": "Emergency status confounds the compliance-infection association and must be adjusted for.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. A multicentre prospective study associated full bundle compliance with fewer infections (adjusted odds ratio 0.61), and a meta-analysis of mostly before-and-after studies agrees, while element-level estimates are unstable because elements are correlated. Almost half of infections appear after discharge, and a day-30 call finds most of them. Compliance must be scored over applicable elements, and emergency surgery, with low compliance and high infection, confounds the comparison. Three model leads remain unverified.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational and before-and-after evidence with confounding by emergency status and unblinded compliance recording; consistent direction, low certainty for a causal effect.",
+        "summary": "Seven records appraised; four claims; one out-of-range score refused."
+      },
+      "note": "Refusal of an out-of-range score: the element-level study's methodQuality of 140 is outside 0 to 100 and is stored as null with issue out-of-range, never clipped to 100 (G4; holds at 875fe59 through applyAppraisal). The rest of the annotation is applied. Applying the appraisal on the production scan path requires S13.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].methodQuality": 64,
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].relevance": 80,
+          "scan.items[1].grade": "low",
+          "scan.items[2].kind": "systematic-review",
+          "scan.items[7].year": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-1028sd0"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-0v3s6ze"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-0ctljzc].methodQuality",
+              "code": "out-of-range"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "600-bed teaching hospital, about 380 colorectal resections a year",
+          "seven-element bundle adopted two years ago",
+          "active 30-day surveillance with a day-30 phone call",
+          "elective and emergency cases"
+        ],
+        "reading": "Infection follows from patient risk (emergency surgery, contamination, stoma, diabetes, obesity), from operation length and from which bundle elements were actually delivered. Emergency cases have both more infection and less compliance, so an unadjusted comparison would credit the bundle with the difference between emergency and elective surgery. Elements travel together, so element-level estimates are unstable. Half of the outcome happens after discharge, and patients living alone are the hardest to reach.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Full compliance over applicable elements",
+            "kind": "context",
+            "detail": "All-or-none score with applicability rules (claim c3)."
+          },
+          {
+            "id": "n2",
+            "label": "Surgical site infection within 30 days",
+            "kind": "outcome",
+            "detail": "Including post-discharge (claim c2)."
+          },
+          {
+            "id": "n3",
+            "label": "Emergency surgery and contamination",
+            "kind": "context",
+            "detail": "Lower compliance and more infection (claim c4)."
+          },
+          {
+            "id": "n4",
+            "label": "Multicentre association, odds ratio 0.61",
+            "kind": "observational",
+            "detail": "Claim c1."
+          },
+          {
+            "id": "n5",
+            "label": "Correlated elements",
+            "kind": "gap",
+            "detail": "Element estimates unstable."
+          },
+          {
+            "id": "n6",
+            "label": "Day-30 phone call",
+            "kind": "context",
+            "detail": "Finds most post-discharge infections."
+          },
+          {
+            "id": "n7",
+            "label": "Patients living alone",
+            "kind": "stakeholder",
+            "detail": "Hardest to reach after discharge."
+          },
+          {
+            "id": "n8",
+            "label": "Theatre and anaesthesia teams",
+            "kind": "stakeholder",
+            "detail": "Record the elements."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "hypothesised to reduce"
+          },
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "lowers"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "raises"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "reports association for"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "detects"
+          },
+          {
+            "from": "n7",
+            "to": "n6",
+            "relation": "missed by"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "record"
+          }
+        ],
+        "summary": "Map shows emergency status as the main confounder and post-discharge follow-up as the main measurement risk."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Element delivery is not recorded",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The working group argues without data.",
+            "opportunity": "Record each element on a two-minute form in theatre for every resection."
+          },
+          {
+            "id": "g2",
+            "title": "Compliance definition for non-applicable elements",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Counting non-applicable elements as delivered inflates compliance (claim c3).",
+            "opportunity": "All-or-none over applicable elements with written applicability rules."
+          },
+          {
+            "id": "g3",
+            "title": "Confounding by emergency surgery",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Emergency cases have less compliance and more infection (claim c4).",
+            "opportunity": "Adjust for emergency status and contamination and report elective and emergency results separately."
+          },
+          {
+            "id": "g4",
+            "title": "Post-discharge infections missed for patients who live alone",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Almost half of infections appear after discharge (claim c2) and unreachable patients are older and live alone.",
+            "opportunity": "Up to three call attempts and a clinic check for patients not reached."
+          }
+        ],
+        "errorsFound": [
+          "One appraisal score (140) was outside 0 to 100 and one lead gave its year as a boolean; both are stored as unknown."
+        ],
+        "reevaluation": "The gaps confirm a prospective observational study with applicability-based compliance, adjustment for emergency status and complete post-discharge follow-up.",
+        "summary": "Four gaps; missing element data, the compliance definition and confounding are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[2].severity": "high",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Among adults having colorectal resection, full compliance with all applicable bundle elements is associated with lower 30-day surgical site infection after adjustment for emergency status, contamination, stoma formation, diabetes, obesity and operation length (adjusted odds ratio 0.7 or lower).",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 75,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "A multicentre study found an association of this size (c1); the local question is whether it holds with complete post-discharge surveillance and emergency cases included.",
+            "risks": "Residual confounding; about 50 infections a year limits precision."
+          },
+          {
+            "id": "h2",
+            "statement": "Full compliance is below 25 percent in emergency resections because normothermia and glucose are not recorded.",
+            "novelty": 40,
+            "need": 70,
+            "practiceChange": 70,
+            "feasibility": 85,
+            "parsimony": 75,
+            "rationale": "Emergency compliance was 19 percent elsewhere (c4).",
+            "risks": "Recording itself may change behaviour."
+          },
+          {
+            "id": "h3",
+            "statement": "Oral antibiotic bowel preparation is the element most strongly associated with lower infection in elective cases.",
+            "novelty": 30,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 70,
+            "parsimony": 50,
+            "rationale": "Reported elsewhere, but elements are correlated.",
+            "risks": "Unstable element-level estimates."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the primary association."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults having elective or emergency colorectal resection over 24 months, is full compliance with all applicable elements of the seven-element bundle, compared with incomplete compliance, associated with lower surgical site infection within 30 days including after discharge, after adjustment for emergency status, contamination, stoma, diabetes, obesity and operation length?",
+            "framework": "PECO",
+            "population": "Adults having colorectal resection at the hospital, January 2027 to December 2028",
+            "intervention": "Full compliance over applicable bundle elements (exposure)",
+            "comparator": "Incomplete compliance",
+            "outcome": "Surgical site infection within 30 days by the surveillance definition",
+            "time": "30 days after surgery",
+            "setting": "600-bed teaching hospital"
+          }
+        ],
+        "finer": "Feasible with a two-minute form and existing surveillance; interesting to the working group; novel locally with post-discharge surveillance and emergency cases; ethical under the REB exemption; relevant to an infection rate above the regional average.",
+        "summary": "One PECO question over 24 months."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "prospective",
+        "rationale": "Compliance must be recorded at the time of surgery and infections followed for 30 days, which is a prospective observational design. A trial of the bundle is not possible because it is already standard care; the question is how reliably it is delivered and whether full delivery goes with fewer infections. The multicentre planning value (c1) shows that one year gives too few infections, so data collection runs for 24 months with a descriptive report at 12 months. Reporting follows STROBE.",
+        "alternatives": [
+          "Retrospective extraction from operation notes (refused: normothermia and glucose are poorly recorded, and applicability cannot be judged later)",
+          "Cluster trial of bundle feedback (refused: one hospital)",
+          "Twelve-month study (refused: about 50 infections are too few for the adjusted association)"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "Element-level causal claims would need far more events and would still be confounded by correlated elements; the design estimates full-bundle compliance and one adjusted association.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Pursue a 24-month prospective observational study of bundle compliance and 30-day surgical site infection in all colorectal resections, with compliance scored all-or-none over applicable elements (c3), day-30 post-discharge follow-up (c2), adjustment for emergency status and contamination (c4), and the multicentre association (c1) as the planning value.",
+          "question": "Should the working group measure bundle compliance prospectively and estimate its association with infection?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Full compliance has been associated with fewer infections, and compliance and infection can both be measured completely.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Recording compliance at the time of surgery cannot be done within two minutes.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Quality council approval of prospective bundle data collection",
+              "status": "met",
+              "evidence": "Approval QC-SSI-2026-4 dated 2026-08-18, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "REB determination for the study with publication permitted",
+              "status": "met",
+              "evidence": "Exemption REB-EX-26-311 dated 2026-09-10, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Twelve-month descriptive audit of compliance without the infection association",
+            "Element-level feedback without formal analysis"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records; both gates are met on investigator-supplied records."
+        },
+        "summary": "Prospective observational study over 24 months recommended; both gates met."
+      },
+      "note": "Claims exist only when S13 applied the appraisal; selectionStatus S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "prospective",
+          "family": "prospective",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The supported positive predecessor of the source change: every claim exists in the ledger and rests on a retrieved record, and both gates are met, so the selection is accepted and the action ready (G7). S11 for the fields, S13 for the claims, D5 for the text.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.basis": "explicit",
+          "family": "prospective"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "change-source",
+      "record": "Care bundle compliance and surgical site infection after colorectal resection: a prospective multicentre study",
+      "field": "status",
+      "value": "mismatch",
+      "note": "An identity check of the multicentre study's DOI, recorded through the store's own action, resolves to a different work (a hernia repair audit), so the cited record's provenance status becomes 'mismatch' after the accepted decision. The decision rests on c1, which rests on that record: it becomes stale and its action blocked (G7), completed stages after Scan are flagged for review (G8), and the route is still the Design stage, so the decision panel shows 'stale'. At 875fe59 evidenceRevision already covers provenance status, so the stored status 'stale' and needsReview hold when the change goes through mergeStage; selectionStatus and actionStatus require S11, the status text D5.",
+      "expect": {
+        "store": {
+          "scan.items[0].title": "Care bundle compliance and surgical site infection after colorectal resection: a prospective multicentre study",
+          "scan.items[0].provenance.status": "mismatch",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "scan": "complete",
+          "map": "needs-review",
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: the stale selection, the blocked action and the review flags survive in the store and on screen (G7, G8). S11 and D5.",
+      "expect": {
+        "store": {
+          "title": "Surgical site infection bundle compliance after colorectal resection: a prospective observational study",
+          "scan.items[0].provenance.status": "mismatch",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Prospective observational study of all colorectal resections from January 2027 to December 2028, recording bundle elements on a two-minute form in theatre and surgical site infection by active 30-day surveillance with a day-30 phone call.",
+        "population": "All adults having elective or emergency colorectal resection at the hospital; no exclusions except patients who die within 48 hours.",
+        "exposure": "Full compliance: every applicable bundle element delivered, scored all-or-none over applicable elements using written applicability rules (for example, bowel preparation does not apply to emergency cases). Element-level delivery is recorded for description.",
+        "procedures": "The circulating nurse and anaesthetist complete the form at the end of surgery, including end-of-surgery temperature and the latest glucose. Surveillance nurses review inpatients and call every patient at day 30, with up to three attempts and a clinic check for those not reached. Covariates (emergency status, contamination class, stoma, diabetes, body mass index 35 or more, operation over 180 minutes) come from the operation note.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Surgical site infection within 30 days",
+            "measure": "Surveillance definition, inpatient and post-discharge",
+            "timing": "30 days after surgery",
+            "why": "What patients experience and the working group wants to reduce.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Deep or organ-space infection",
+            "measure": "Surveillance definition subtype",
+            "timing": "30 days",
+            "why": "The most serious infections.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Full and element-level compliance",
+            "measure": "Proportion of cases with each element and with all applicable elements delivered",
+            "timing": "Monthly",
+            "why": "The first question the working group asked.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Completeness of post-discharge follow-up",
+            "measure": "Proportion of patients reached at day 30",
+            "timing": "Monthly",
+            "why": "Almost half of infections appear after discharge.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 760 resections over 24 months; the form takes under two minutes; the day-30 call is existing practice.",
+        "biasMitigation": [
+          "Compliance recorded at the time of surgery",
+          "Applicability rules written before data collection",
+          "Adjustment for emergency status and contamination",
+          "Outcome assessors not told compliance status"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by emergency status",
+            "severity": "high",
+            "note": "Adjusted and stratified."
+          },
+          {
+            "id": "b2",
+            "label": "Loss to post-discharge follow-up",
+            "severity": "watch",
+            "note": "Three call attempts and a clinic check."
+          },
+          {
+            "id": "b3",
+            "label": "Recording changes behaviour",
+            "severity": "watch",
+            "note": "Compliance may rise because it is recorded; described in the 12-month report."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 6,
+          "flags": [
+            "Six covariates fixed before data collection"
+          ],
+          "simplestPath": "One exposure, one primary outcome, six covariates."
+        },
+        "theoreticalFramework": "No framework beyond the observational design.",
+        "summary": "Twenty-four-month prospective study with a two-minute form and complete 30-day surveillance."
+      },
+      "note": "Later stages run as drafts while the decision is stale; the stale status is not cleared by them.",
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.parsimony.covariateCount": 6
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Prospective observational study; logistic regression of 30-day infection on full compliance with six covariates.",
+        "sampleSize": "About 380 resections a year with 14 percent infection give about 53 infections a year. If 40 percent of cases are fully compliant and the true adjusted odds ratio is near 0.6, one year gives about 50 percent power at two-sided alpha 0.05; 24 months (about 760 resections and 106 infections) gives about 77 percent power and about 18 events per covariate. The 12-month report is descriptive only.",
+        "primaryAnalysis": "Logistic regression of infection within 30 days on full compliance, adjusted for emergency status, contamination class, stoma formation, diabetes, body mass index 35 or more and operation over 180 minutes; results also shown separately for elective and emergency cases.",
+        "secondaryAnalysis": "Element-level compliance described without element-level effect estimates; deep or organ-space infection; sensitivity analysis counting unreached patients as infected and as not infected.",
+        "missingData": "Missing covariates handled by multiple imputation with 20 imputations; patients not reached after three attempts and a clinic check are reported and bounded in the sensitivity analysis.",
+        "multiplicity": "One primary association; secondary outcomes with confidence intervals only.",
+        "software": "R; analysis plan fixed before the first form is completed.",
+        "overfittingGuards": [
+          "Six covariates fixed in advance",
+          "No element-level effect testing",
+          "Interim 12-month report descriptive only"
+        ],
+        "summary": "Twenty-four months give about 77 percent power for an odds ratio near 0.6; one year would give about 50 percent."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "77 percent power"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          }
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: recording care already given and an existing follow-up call.",
+        "consent": "Exempt as quality assurance with publication permitted (REB-EX-26-311); patients are informed through the pre-operative leaflet and may decline the use of their data for publication.",
+        "data": "Forms hold a study number; linkage to surveillance is by the infection prevention team; reports never identify individual surgeons or theatre staff.",
+        "equity": "PROGRESS-Plus: older patients, people living alone, people with limited English and people without a phone are most likely to be missed by the day-30 call, and emergency patients receive fewer elements. Interpreters are used for calls, a clinic check replaces unanswered calls, and results are reported for emergency and elective cases and by age.",
+        "effectiveness": "Shows where the bundle fails and whether full delivery goes with fewer infections.",
+        "efficiency": "Existing surveillance plus two minutes per operation.",
+        "costs": "Printing and staff time only.",
+        "grants": "None needed.",
+        "partnerships": "Infection prevention, theatre nursing, anaesthesia, two patient partners who had wound infections, and the regional surgical quality network.",
+        "rebPath": "REB exemption as quality assurance with publication permitted (REB-EX-26-311); ICH-GCP and Declaration of Helsinki principles for confidentiality.",
+        "limitations": "Observational; residual confounding; recording may change practice.",
+        "summary": "Minimal-risk study under an REB exemption with attention to patients hard to reach after discharge."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "REB-EX-26-311"
+          }
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners who had wound infections review the day-30 call script and the results summary.",
+        "socialListening": "No social media listening; complaints mentioning wound problems from the last two years are read for themes.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Infection after going home",
+            "quote": "Composite paraphrase: The wound opened on day twelve at home and I did not know whether to ring the ward or my doctor.",
+            "implication": "Keep the day-30 call and give a clear contact number at discharge.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "The form in theatre",
+            "quote": "Composite paraphrase: If the form is one side of paper at the end of the case, we will do it; if it is two pages, we will not.",
+            "implication": "Keep the form to one side and two minutes.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Emergency cases",
+            "quote": "Composite paraphrase: At three in the morning with a perforation, nobody is checking the glucose.",
+            "implication": "Report emergency compliance separately and look at which elements fail at night.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Living alone",
+            "quote": "Composite paraphrase: My father lives alone and never answers unknown numbers.",
+            "implication": "Up to three call attempts and a clinic check for patients not reached.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on post-discharge infection, the theatre form, emergency cases and hard-to-reach patients."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          }
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Bundle compliance and surgical site infection after colorectal resection: a prospective observational study with post-discharge surveillance",
+        "abstract": "Objective: to measure element-level and full bundle compliance and estimate the association of full compliance with 30-day surgical site infection. Design: prospective observational study of all colorectal resections over 24 months. Results will be written after data collection.",
+        "introduction": "Bundles are associated with fewer infections after colorectal surgery in mostly uncontrolled studies. Local delivery of each element and its association with infection, including infections after discharge, are unknown.",
+        "methods": "Theatre staff recorded each element on a two-minute form, and full compliance was scored all-or-none over applicable elements. Surveillance nurses followed every patient for 30 days with a day-30 call, and logistic regression adjusted for six pre-specified covariates.",
+        "results": "No data have been collected yet. The report will present element-level and full compliance for elective and emergency cases, infection rates and the adjusted association.",
+        "discussion": "The discussion will interpret the association as an association and note that the cited multicentre record failed an identity check and must be re-appraised. It will consider recording effects and confounding by emergency status.",
+        "limitations": "The design is observational and confounded by emergency status. Recording may itself change practice.",
+        "conclusion": "To be written after analysis. It will describe compliance and an adjusted association, not the effect of individual elements.",
+        "reportingChecklist": "STROBE",
+        "summary": "STROBE draft; results empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE",
+          "manuscript.discussion": {
+            "includes": "failed an identity check"
+          }
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The accepted decision is stale because the multicentre record's DOI resolved to a different work; find the correct record, re-appraise it and decide again before acting",
+          "One appraisal score (140) was stored as unknown; re-rate that record's method quality",
+          "One lead's year was a boolean and is stored as unknown; the three leads stay unverified",
+          "Map, Gaps, Hypotheses, Questions and Design are flagged for review after the source change"
+        ],
+        "improvementNotes": "The discovery reply carried a boolean year and the appraisal an out-of-range score; both were refused and stored as unknown. After acceptance, the identity check of the key cited record failed, and the decision went stale with its action blocked.",
+        "lastReview": "2026-09-22",
+        "summary": "Four open fixes, led by the stale decision."
+      },
+      "note": "Audit fields fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "After reopen the route is not the Design stage, so the status text checked on screen is the stage list's 'review required' (G8, D5); selectionStatus 'stale' requires S11.",
+      "expect": {
+        "store": {
+          "title": "Surgical site infection bundle compliance after colorectal resection: a prospective observational study",
+          "design.decisions[-1].selectionStatus": "stale",
+          "scan.items[0].provenance.status": "mismatch",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[7].year": {
+            "isNull": true
+          }
+        },
+        "stage": {
+          "design": "needs-review",
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The export shows the same stale selection and blocked action as the store and screen (G7, G10); S11 for the field names.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "design.decisions[-1].status": "stale",
+            "design.decisions[-1].selectionStatus": "stale",
+            "design.decisions[-1].actionStatus": "blocked",
+            "scan.items[0].provenance.status": "mismatch",
+            "scan.items[1].methodQuality": {
+              "isNull": true
+            },
+            "scan.items[7].year": {
+              "isNull": true
+            },
+            "scan.items[7].provenance.status": "unverified",
+            "scan.claims": {
+              "length": 4
+            },
+            "needsReview": [
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design"
+            ]
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

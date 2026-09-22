@@ -1,0 +1,1680 @@
+{
+  "id": "sc-097",
+  "version": 1,
+  "title": "Orthopaedic pre-assessment: scoping review of preoperative anaemia pathways, invalid lead values and a revised Gaps stage",
+  "field": "anesthesia",
+  "level": 4,
+  "family": "scoping-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on an explicit scoping review need. A fixture search returns six records. A discovery reply after retrieval then carries four leads with two refused values: a guideline lead with method quality 140 (stored null, issue 'out-of-range') and a nurse-led report with year true (stored null, issue 'invalid-type'), never coerced (G4); the explicit null certainty gives 'cleared'. The leads are appended after the six records, which keep their ids and provenance (D1), and stay unverified to the export (G3). The appraisal (scan call 2) annotates the records and assigns 'low' certainty over inspected records. After the design is accepted (a supported positive), the investigator re-runs Gaps because the first reply missed distant patients' access to intravenous iron: the revised reply flags the completed Hypotheses, Questions and Design stages for review ('review required', not counted as complete, G8), which survives a reload; the accepted decision stays accepted because no cited record or claim changed (G7). Re-running Questions clears its flag, and the investigator's re-review marks Hypotheses and Design complete, after which no flag remains. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 3, 5, 6 (ev-0lhfg4i, ev-0m40pvi, ev-1p29o7o, ev-0blm1k0, ev-1lu58nb); the titleYearKey(title, year) hash for record 4 (ev-11856sq). Requires D1 (leads appended, never replacing records), S13 (appraisal payload), S11 (selectionStatus, actionStatus) and D5 (status text including 'review required'). Catches: out-of-range or wrongly typed values stored, leads that overwrite retrieved records, a revision that leaves downstream stages counted as complete, flags lost on reload, and a decision made stale by a change that touched no evidence.",
+  "inputs": {
+    "need": "I am an anaesthesiologist and lead the preoperative assessment clinic at a regional orthopaedic centre that performs about 1,900 elective hip and knee replacements a year. Anaemia is found at pre-assessment in roughly one patient in six, usually three to four weeks before surgery, which is too late for oral iron and often too late to arrange intravenous iron, so surgery goes ahead with a low haemoglobin or is postponed at short notice. The hospital has agreed in principle to fund a preoperative anaemia clinic with a referral pathway from the orthopaedic outpatient clinic, but nobody agrees on its design: where screening should happen (at the surgical listing visit, in primary care, or at pre-assessment), what haemoglobin and ferritin values should trigger referral, who should run the clinic, and how patients who live two hours away would get intravenous iron.\n\nBefore we design the pathway I want a scoping review of how preoperative anaemia pathways for elective joint replacement are organised elsewhere: referral triggers, timing, who leads them, treatments offered, waiting times, postponements, and what patients say about them. I am less interested in whether iron works, which has been studied many times, than in how services are set up and what goes wrong. Two anaesthesia residents can help, and our librarian has offered to design the search.",
+    "constraints": "No research funding; two anaesthesia residents for about 60 hours each between November 2026 and April 2027; the pathway design must be ready for the hospital's planning committee in May 2027.",
+    "localFacts": [
+      "The centre performed 1,912 elective hip and knee replacements in the last 12 months.",
+      "At pre-assessment in the last 12 months, 312 patients (16 percent) had a haemoglobin below 130 g/L and 41 operations were postponed for anaemia.",
+      "The hospital librarian agreed on 2026-09-08 to design and run the search (request LIB-ORTHO-2026-12).",
+      "The department of anaesthesia approved 60 hours for each of two residents between November 2026 and April 2027 (memo ANES-EDU-2026-19)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am an anaesthesiologist and lead the preoperative assessment clinic at a regional orthopaedic centre that performs about 1,900 elective hip and knee replacements a year. Anaemia is found at pre-assessment in roughly one patient in six, usually three to four weeks before surgery, which is too late for oral iron and often too late to arrange intravenous iron, so surgery goes ahead with a low haemoglobin or is postponed at short notice. The hospital has agreed in principle to fund a preoperative anaemia clinic with a referral pathway from the orthopaedic outpatient clinic, but nobody agrees on its design: where screening should happen (at the surgical listing visit, in primary care, or at pre-assessment), what haemoglobin and ferritin values should trigger referral, who should run the clinic, and how patients who live two hours away would get intravenous iron.\n\nBefore we design the pathway I want a scoping review of how preoperative anaemia pathways for elective joint replacement are organised elsewhere: referral triggers, timing, who leads them, treatments offered, waiting times, postponements, and what patients say about them. I am less interested in whether iron works, which has been studied many times, than in how services are set up and what goes wrong. Two anaesthesia residents can help, and our librarian has offered to design the search.",
+          "family": "scoping-review",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am an anaesthesiologist and lead the preoperative assessment clinic"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Preoperative anaemia pathways for elective hip and knee replacement: a scoping review to design a referral pathway",
+        "subtitle": "Mapping referral triggers, screening points, leadership, treatment access and waiting times",
+        "family": "scoping-review",
+        "statement": "A regional orthopaedic centre performing about 1,900 elective hip and knee replacements a year finds anaemia in about one patient in six at pre-assessment, too late for treatment, and postponed 41 operations for anaemia last year. It plans a preoperative anaemia clinic with a referral pathway but lacks agreement on where to screen, which values trigger referral, who runs the clinic and how distant patients get intravenous iron. A scoping review of how such pathways are organised elsewhere will inform the design.",
+        "whoAffected": "Adults awaiting elective hip or knee replacement, especially those with anaemia and those living far from the centre; surgeons, anaesthetists, pre-assessment nurses and primary care.",
+        "whatHurts": "Late detection leaves no time for treatment, so patients have surgery with anaemia or face short-notice postponement, with more pain and worry while they wait.",
+        "currentPractice": "Screening at pre-assessment three to four weeks before surgery; no anaemia clinic; ad hoc arrangements for intravenous iron.",
+        "whyNow": "Funding agreed in principle and a planning committee decision due in May 2027.",
+        "constraints": "No research funding; two anaesthesia residents for about 60 hours each between November 2026 and April 2027; the pathway design must be ready for the hospital's planning committee in May 2027.",
+        "patientCenteredGoal": "Patients arrive for joint replacement with anaemia treated in time, without avoidable postponement or long journeys.",
+        "summary": "Problem framed as a scoping review of preoperative anaemia pathways to design a local referral pathway."
+      },
+      "note": "The typed constraints are restated unchanged (G11).",
+      "expect": {
+        "store": {
+          "title": "Preoperative anaemia pathways for elective hip and knee replacement: a scoping review to design a referral pathway",
+          "family": "scoping-review",
+          "problem.constraints": "No research funding; two anaesthesia residents for about 60 hours each between November 2026 and April 2027; the pathway design must be ready for the hospital's planning committee in May 2027.",
+          "problem.rawNeed": "I am an anaesthesiologist and lead the preoperative assessment clinic at a regional orthopaedic centre that performs about 1,900 elective hip and knee replacements a year. Anaemia is found at pre-assessment in roughly one patient in six, usually three to four weeks before surgery, which is too late for oral iron and often too late to arrange intravenous iron, so surgery goes ahead with a low haemoglobin or is postponed at short notice. The hospital has agreed in principle to fund a preoperative anaemia clinic with a referral pathway from the orthopaedic outpatient clinic, but nobody agrees on its design: where screening should happen (at the surgical listing visit, in primary care, or at pre-assessment), what haemoglobin and ferritin values should trigger referral, who should run the clinic, and how patients who live two hours away would get intravenous iron.\n\nBefore we design the pathway I want a scoping review of how preoperative anaemia pathways for elective joint replacement are organised elsewhere: referral triggers, timing, who leads them, treatments offered, waiting times, postponements, and what patients say about them. I am less interested in whether iron works, which has been studied many times, than in how services are set up and what goes wrong. Two anaesthesia residents can help, and our librarian has offered to design the search.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Preoperative anaemia pathways for elective hip and knee replacement: a scoping review to design a referral pathway"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "preoperative anaemia clinic referral pathway elective hip knee arthroplasty screening timing intravenous iron service organisation",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Preoperative anaemia clinics before elective hip and knee replacement: an evaluation of referral-to-surgery pathways in four hospitals",
+            "authors": "Hallorann-Obi P, Castellanos-Weir J, Nakamura-Dube S",
+            "year": 2019,
+            "venue": "Perioperative Service Reports",
+            "doi": "10.5555/jpms.2019.0162",
+            "providerType": "journal-article",
+            "abstract": "We evaluated preoperative anaemia pathways in four hospitals performing elective hip and knee replacement. Of 2,310 patients screened, 17 percent were anaemic. A referral to the anaemia clinic was made for 61 percent of anaemic patients, and the median time from referral to intravenous iron was 19 days. Surgery was postponed for 14 percent of referred patients. Hospitals that screened at the surgical listing visit referred more patients in time than those that screened at pre-assessment. Referral criteria, clinic leadership and data recording differed between the four hospitals, which limited comparison."
+          },
+          {
+            "title": "Screening timing and the window for iron therapy before arthroplasty",
+            "authors": "Lindqvist-Amadi R, Pereira-Holt K",
+            "year": 2021,
+            "venue": "Preoperative Pathway Reports",
+            "doi": "10.5555/apcr.2021.0093",
+            "providerType": "journal-article",
+            "abstract": "We compared two screening points for anaemia before elective hip and knee arthroplasty in one health region. Screening at the surgical listing visit took place a median of 84 days before surgery, and screening at pre-assessment a median of 23 days before. Among anaemic patients, 78 percent of those screened at listing received treatment before surgery, against 41 percent of those screened at pre-assessment. Earlier screening identified more patients whose anaemia resolved without treatment, which increased repeat testing. The comparison was observational and the two screening points were used in different hospitals."
+          },
+          {
+            "title": "Referral triggers for preoperative anaemia management: haemoglobin and ferritin thresholds used across orthopaedic centres",
+            "authors": "Mbatha-Kowalski E, Ruiz-Ferreira A",
+            "year": 2016,
+            "venue": "Orthopaedic Service Organisation",
+            "doi": "10.5555/oso.2016.0021",
+            "providerType": "journal-article",
+            "abstract": "We asked 64 orthopaedic centres which laboratory values triggered referral for preoperative anaemia management. Haemoglobin thresholds ranged from 120 to 130 g/L, and 22 centres used the same threshold for women and men. Ferritin thresholds for iron deficiency ranged from 30 to 100 micrograms per litre, and 18 centres did not test ferritin routinely. Only 11 centres had a written pathway naming who would act on an abnormal result. The response rate was 58 percent, and centres with an established pathway may have been more likely to reply."
+          },
+          {
+            "title": "Patients' experiences of a preoperative anaemia pathway: travel, infusions and postponed surgery",
+            "authors": "Okafor-Brennan T, Sato-Lindgren H",
+            "year": 2023,
+            "venue": "Perioperative Patient Experience",
+            "providerType": "journal-article",
+            "abstract": "We spoke with 22 patients referred to a preoperative anaemia clinic before joint replacement. Many did not understand why a blood result could delay their operation and felt they had been sent back to the end of the queue. Patients living far from the hospital described long journeys for a short infusion and asked for treatment closer to home. Several valued a named nurse who explained the plan. Patients whose surgery was postponed reported more pain and worry during the wait. Participants came from one hospital and were invited by the clinic nurse."
+          },
+          {
+            "title": "Organisational models of perioperative anaemia services: a scoping review",
+            "authors": "Achterberg-Nkemelu D, Harcourt-Ito M, Vasquez-Salo B",
+            "year": 2022,
+            "venue": "Perioperative Service Design Review",
+            "doi": "10.5555/psdr.2022.0118",
+            "providerType": "journal-article",
+            "abstract": "We charted 41 reports of perioperative anaemia services across surgical specialties. Services were led by anaesthetists in 19 reports, haematologists in 9, specialist nurses in 8 and general practitioners in 5. Only 14 reports described the referral pathway in enough detail to reproduce it, and 9 reported waiting times from referral to treatment. Orthopaedic services were the most common setting. Few reports described how patients living far from the hospital received intravenous iron. The authors call for standard reporting of pathway steps and times."
+          },
+          {
+            "title": "Intravenous iron before elective joint replacement and perioperative transfusion: an observational comparison",
+            "authors": "Grieve-Adeyemi L, Moreau-Nakashima R",
+            "year": 2018,
+            "venue": "Preoperative Pathway Reports",
+            "doi": "10.5555/apcr.2018.0047",
+            "providerType": "journal-article",
+            "abstract": "In 1,140 anaemic patients undergoing elective hip or knee replacement, perioperative transfusion was required in 9.8 percent of those who received intravenous iron before surgery and 15.2 percent of those who did not. Patients who received iron had surgery a median of 12 days later. Treatment was not allocated at random, and patients treated with iron had lower haemoglobin at screening but were younger and had fewer comorbidities. The authors note that the time needed for treatment was the main operational barrier."
+          }
+        ]
+      },
+      "note": "Six records with abstracts; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0lhfg4i",
+            "ev-0m40pvi",
+            "ev-1p29o7o",
+            "ev-11856sq",
+            "ev-0blm1k0",
+            "ev-1lu58nb"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].id": "ev-0lhfg4i",
+          "scan.items[3].doi": {
+            "absent": true
+          },
+          "scan.items[3].provenance.status": "retrieved",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Preoperative anaemia clinics before elective hip and knee replacement: an evaluation of referral-to-surgery pathways in four hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "preoperative anaemia clinic referral pathway elective hip knee arthroplasty screening timing intravenous iron service organisation",
+        "sourcesConsulted": [
+          "recorded fixture search (6 records)",
+          "model recall of transfusion guidance"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "Certainty is left to the appraisal of the retrieved records.",
+        "synthesis": "Four further items are suggested as leads to check alongside the six retrieved records: a regional blood management guideline, a nurse-led pathway report, a primary care screening study and a note on outreach infusion clinics.",
+        "items": [
+          {
+            "title": "Patient blood management for elective orthopaedic surgery: a practice guideline",
+            "authors": "Regional Transfusion Practice Committee",
+            "year": 2020,
+            "source": "Regional transfusion guidance series",
+            "kind": "guideline",
+            "grade": "moderate",
+            "methodQuality": 140,
+            "relevance": 80,
+            "verification": "verify",
+            "contextTags": [
+              "guideline",
+              "patient blood management",
+              "orthopaedics"
+            ],
+            "keyFindings": "Recommends screening for anaemia at least four weeks before elective orthopaedic surgery and treating iron deficiency with intravenous iron when time is short.",
+            "limitations": "Recalled lead; the guideline's evidence review is not described.",
+            "notes": "Recalled as a lead; method quality given as 140."
+          },
+          {
+            "title": "A nurse-led anaemia pathway and short-notice postponements before arthroplasty: a before-after report",
+            "authors": "Varadi-Osei N, Brandt-Kamau L",
+            "year": true,
+            "source": "Perioperative Nursing Practice",
+            "kind": "qi-report",
+            "grade": "low",
+            "methodQuality": 38,
+            "relevance": 78,
+            "verification": "ai-lead",
+            "contextTags": [
+              "nurse-led",
+              "postponements",
+              "before-after"
+            ],
+            "keyFindings": "A nurse-led pathway with screening at listing was followed by fewer short-notice postponements for anaemia.",
+            "limitations": "Recalled lead; uncontrolled report.",
+            "notes": "Recalled as a lead; year given as a boolean."
+          },
+          {
+            "title": "Anaemia screening at the point of referral from primary care for joint replacement",
+            "authors": "Kaur-Whitcombe S, Oduya-Lemaire F",
+            "year": 2020,
+            "source": "Primary Care and Surgery",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 70,
+            "verification": "ai-lead",
+            "contextTags": [
+              "primary care",
+              "referral",
+              "screening"
+            ],
+            "keyFindings": "Adding a haemoglobin result to the referral letter identified anaemia months before listing, but few practices acted on it.",
+            "limitations": "Recalled lead; one region.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Outreach intravenous iron clinics for rural surgical patients",
+            "authors": "Petrossian-Blake H, Mwangi-Rourke C",
+            "year": 2022,
+            "source": "Rural Health Services Notes",
+            "kind": "grey",
+            "relevance": 66,
+            "verification": "ai-lead",
+            "contextTags": [
+              "rural",
+              "access",
+              "outreach"
+            ],
+            "keyFindings": "Describes a monthly outreach infusion clinic in a community hospital for patients awaiting surgery at a distant centre.",
+            "limitations": "Recalled lead; descriptive note without outcomes; grade and method quality not given.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Four leads suggested; certainty left to the appraisal."
+      },
+      "note": "Adversarial values in a discovery reply after retrieval. The guideline lead's method quality 140 is outside 0 to 100 and is stored null with issue 'out-of-range'; the nurse-led report's year true is stored null with 'invalid-type' (both hold at 875fe59; G4). The explicit null certainty gives 'cleared' and leaves ''. The leads are appended after the six retrieved records, which keep their ids and provenance (D1; at 875fe59 the leads replace the records). The records keep the stage completable (G2).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].id": "ev-0lhfg4i",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[5].id": "ev-1lu58nb",
+          "scan.items[6].title": "Patient blood management for elective orthopaedic surgery: a practice guideline",
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[6].provenance.origin": "model",
+          "scan.items[6].provenance.status": "unverified",
+          "scan.items[7].title": "A nurse-led anaemia pathway and short-notice postponements before arthroplasty: a before-after report",
+          "scan.items[7].year": {
+            "isNull": true
+          },
+          "scan.items[9].grade": "unrated",
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "items[0].methodQuality",
+              "code": "out-of-range"
+            },
+            {
+              "path": "items[1].year",
+              "code": "invalid-type"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": 4
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0lhfg4i",
+            "relevance": 92,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across four hospitals, 17 percent of 2,310 screened patients were anaemic; 61 percent of them were referred, median 19 days from referral to intravenous iron, and 14 percent of referred patients had surgery postponed.",
+            "limitations": "Pathways differed between hospitals; recording varied.",
+            "contextTags": [
+              "pathway evaluation",
+              "waiting times",
+              "postponement"
+            ]
+          },
+          {
+            "id": "ev-0m40pvi",
+            "relevance": 90,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Screening at listing (median 84 days before surgery) led to treatment before surgery for 78 percent of anaemic patients, against 41 percent when screening was at pre-assessment (median 23 days).",
+            "limitations": "Screening points used in different hospitals; observational.",
+            "contextTags": [
+              "screening timing",
+              "treatment window"
+            ]
+          },
+          {
+            "id": "ev-1p29o7o",
+            "relevance": 80,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Across 64 centres, haemoglobin thresholds ranged from 120 to 130 g/L, ferritin thresholds from 30 to 100 micrograms per litre, and only 11 centres had a written pathway.",
+            "limitations": "58 percent response; likely response bias.",
+            "contextTags": [
+              "referral triggers",
+              "thresholds",
+              "variation"
+            ]
+          },
+          {
+            "id": "ev-11856sq",
+            "relevance": 84,
+            "methodQuality": 56,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Patients did not understand postponements, described long journeys for short infusions and valued a named nurse.",
+            "limitations": "22 patients from one hospital, invited by the clinic nurse.",
+            "contextTags": [
+              "patient experience",
+              "travel",
+              "postponement"
+            ]
+          },
+          {
+            "id": "ev-0blm1k0",
+            "relevance": 94,
+            "methodQuality": 64,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 41 reports, services were led by anaesthetists in 19, haematologists in 9, nurses in 8 and general practitioners in 5; only 14 described a reproducible pathway and 9 reported waiting times.",
+            "limitations": "Mixed surgical specialties; reports rather than studies.",
+            "contextTags": [
+              "scoping review",
+              "service models",
+              "reporting gaps"
+            ]
+          },
+          {
+            "id": "ev-1lu58nb",
+            "relevance": 62,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Transfusion was 9.8 percent with preoperative intravenous iron and 15.2 percent without, with surgery a median of 12 days later in treated patients.",
+            "limitations": "Not randomised; treated patients younger and healthier.",
+            "contextTags": [
+              "effectiveness",
+              "transfusion",
+              "delay"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Screening at the surgical listing visit, a median of 84 days before surgery, was followed by treatment before surgery for 78 percent of anaemic patients, against 41 percent when screening was at pre-assessment.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0m40pvi"
+            ],
+            "location": "Abstract",
+            "passage": "78 percent of those screened at listing received treatment before surgery, against 41 percent of those screened at pre-assessment",
+            "interpretation": "Where screening happens is a central pathway feature to chart.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Haemoglobin referral thresholds ranged from 120 to 130 g/L across 64 orthopaedic centres, and only 11 had a written pathway naming who acts on an abnormal result.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1p29o7o"
+            ],
+            "location": "Abstract",
+            "passage": "Only 11 centres had a written pathway naming who would act on an abnormal result.",
+            "interpretation": "Referral triggers and ownership vary widely and must be charted.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Across 41 reports of perioperative anaemia services, only 14 described the referral pathway in enough detail to reproduce it and 9 reported waiting times.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0blm1k0"
+            ],
+            "location": "Abstract",
+            "passage": "Only 14 reports described the referral pathway in enough detail to reproduce it",
+            "interpretation": "A new scoping review focused on joint replacement pathways must chart pathway steps and times explicitly, because existing reports rarely do.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Patients living far from the hospital described long journeys for a short infusion and asked for treatment closer to home.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-11856sq"
+            ],
+            "location": "Abstract",
+            "passage": "Patients living far from the hospital described long journeys for a short infusion and asked for treatment closer to home.",
+            "interpretation": "Access for distant patients is a pathway question in its own right.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level; four model leads remain unverified. Pathways differ in where screening happens, which values trigger referral, who leads the clinic and how quickly treatment follows. Earlier screening at the listing visit gave far more patients time for treatment than screening at pre-assessment, while referral thresholds varied widely and few centres had a written pathway. A scoping review of service models found that most reports did not describe their pathway in reproducible detail or report waiting times. Patients describe confusion about postponements and long journeys for short infusions. Effectiveness of iron is outside the review's focus; one observational comparison reports less transfusion with treatment but a later operation. The evidence supports a scoping review charting pathway steps, timing, leadership and access.",
+        "gradeOverall": "low",
+        "gradeRationale": "Descriptive and observational service evaluations, one survey with response bias and one prior scoping review across specialties; certainty about how pathway features relate to timely treatment is low. Certainty ratings are secondary in a scoping review, whose aim is to map rather than to estimate effects.",
+        "summary": "Six retrieved records appraised; four source-derived claims; certainty low; four leads unverified."
+      },
+      "note": "Appraisal of the six retrieved records (S13) after the leads were appended; annotations and claims reach the records only if D1 kept them. The certainty is the appraisal's own value over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[1].grade": "low",
+          "scan.items[1].relevance": 90,
+          "scan.items[4].kind": "systematic-review",
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0m40pvi"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-11856sq"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional orthopaedic centre, about 1,900 joint replacements a year",
+          "screening at pre-assessment three to four weeks before surgery",
+          "patients up to two hours away",
+          "planning committee in May 2027"
+        ],
+        "reading": "A pathway has five parts that the retrieved records show vary: the screening point, the referral trigger, the clinic lead, the treatment and its location, and communication with the patient. The screening point sets the time available for treatment; triggers and ownership decide who is referred and who acts. Existing reports describe these parts poorly. Distance to treatment shapes whether distant patients can complete it.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Screening point (listing, primary care, pre-assessment)",
+            "kind": "context",
+            "detail": "Sets the treatment window (claim c1)."
+          },
+          {
+            "id": "n2",
+            "label": "Referral trigger (haemoglobin, ferritin)",
+            "kind": "context",
+            "detail": "Varies across centres (claim c2)."
+          },
+          {
+            "id": "n3",
+            "label": "Clinic lead",
+            "kind": "context",
+            "detail": "Anaesthetist, haematologist, nurse or GP."
+          },
+          {
+            "id": "n4",
+            "label": "Treatment in time for surgery",
+            "kind": "outcome",
+            "detail": "Main pathway outcome."
+          },
+          {
+            "id": "n5",
+            "label": "Short-notice postponement",
+            "kind": "outcome",
+            "detail": "Harm to patients and theatre lists."
+          },
+          {
+            "id": "n6",
+            "label": "Scoping review of service models",
+            "kind": "systematic-review",
+            "detail": "Pathways rarely reproducible (claim c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Patients' experiences",
+            "kind": "qualitative",
+            "detail": "Travel and confusion (claim c4)."
+          },
+          {
+            "id": "n8",
+            "label": "Poorly reported pathway steps and times",
+            "kind": "gap",
+            "detail": "Limits copying designs."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n4",
+            "relation": "sets the window for"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "decides who reaches"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "owns"
+          },
+          {
+            "from": "n4",
+            "to": "n5",
+            "relation": "prevents"
+          },
+          {
+            "from": "n6",
+            "to": "n8",
+            "relation": "documents"
+          },
+          {
+            "from": "n7",
+            "to": "n5",
+            "relation": "describes the burden of"
+          }
+        ],
+        "summary": "Map of pathway parts and their links to timely treatment and postponement."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Pathway steps and times are rarely reported",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Only 14 of 41 service reports described a reproducible pathway (claim c3), so the centre cannot copy a proven design.",
+            "opportunity": "Chart each pathway's steps, owners and times in a fixed form."
+          },
+          {
+            "id": "g2",
+            "title": "Screening point determines the treatment window",
+            "kind": "implementation",
+            "severity": "high",
+            "whyItMatters": "Screening at listing gave treatment before surgery to far more patients (claim c1).",
+            "opportunity": "Chart where each pathway screens and how many days before surgery."
+          },
+          {
+            "id": "g3",
+            "title": "Referral thresholds vary",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Thresholds from 120 to 130 g/L and different ferritin cut-offs change who is referred (claim c2).",
+            "opportunity": "Chart haemoglobin and ferritin triggers, including sex-specific thresholds."
+          },
+          {
+            "id": "g4",
+            "title": "Patients who do not speak English",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Patients who do not understand postponements are less likely to complete treatment.",
+            "opportunity": "Chart whether pathways provide interpreters and translated information."
+          },
+          {
+            "id": "g5",
+            "title": "Postponement is an outcome and a harm",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Postponed patients report more pain and worry.",
+            "opportunity": "Chart postponement rates and how pathways communicate them."
+          }
+        ],
+        "errorsFound": [
+          "The need treats iron effectiveness as settled; the review should state that it is outside scope rather than settled by the retrieved records."
+        ],
+        "reevaluation": "The gaps confirm a scoping review charting pathway steps, timing, triggers and communication.",
+        "summary": "Five gaps; pathway reporting and screening point are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Pathway steps and times are rarely reported"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Published pathways that screen at the surgical listing visit and name an owner for abnormal results report more patients treated before surgery and fewer short-notice postponements than pathways that screen at pre-assessment.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Supported by the timing comparison (c1) and the survey of written pathways (c2); a scoping review can chart it without estimating an effect.",
+            "risks": "Reports rarely give times (c3)."
+          },
+          {
+            "id": "h2",
+            "statement": "Few published pathways describe how patients living far from the centre receive intravenous iron.",
+            "novelty": 50,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Suggested by patients' accounts (c4) and a prior scoping review.",
+            "risks": "Grey literature may hold most of these descriptions."
+          },
+          {
+            "id": "h3",
+            "statement": "Nurse-led clinics are as common as anaesthetist-led clinics in orthopaedic pathways.",
+            "novelty": 35,
+            "need": 50,
+            "practiceChange": 45,
+            "feasibility": 85,
+            "parsimony": 70,
+            "rationale": "Informs staffing of the local clinic.",
+            "risks": "Leadership poorly reported."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three propositions for the review to chart; h1 organises the charting form."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "How are preoperative anaemia pathways for elective hip and knee replacement organised, in terms of screening point, referral triggers, clinic leadership, treatments offered and times from screening to treatment and surgery?",
+            "framework": "PCC",
+            "population": "Adults awaiting elective hip or knee replacement",
+            "concept": "Organisation of preoperative anaemia pathways: screening point, triggers, leadership, treatments and times",
+            "context": "Hospitals and health systems offering elective joint replacement",
+            "outcome": ""
+          }
+        ],
+        "finer": "Feasible with two residents and a librarian; interesting to the planning committee; novel in its focus on pathway organisation; ethical as a review; relevant because the pathway will be funded in 2027.",
+        "summary": "One PCC question for the scoping review."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PCC",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "scoping-review",
+        "rationale": "The question is how pathways are organised, not whether iron works, which calls for mapping rather than pooling. A scoping review following JBI methods and reported with PRISMA-ScR can chart screening points (c1), triggers and ownership (c2), and the pathway details that existing reports rarely give (c3), including patient access (c4), across journal and grey literature.",
+        "alternatives": [
+          "Systematic review of iron effectiveness (refused: outside the need and already studied)",
+          "Survey of regional hospitals' pathways (refused: slower and limited to one region; may follow the review)",
+          "Design the pathway from the regional guideline alone (refused: the guideline is an unverified lead and does not describe pathway organisation)"
+        ],
+        "guidelines": [
+          "PRISMA-ScR",
+          "JBI scoping review methods"
+        ],
+        "whyNotMoreComplex": "A systematic review with meta-analysis would answer an effectiveness question the centre is not asking; a scoping review maps the organisational options the planning committee must choose between.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct a scoping review of how preoperative anaemia pathways for elective hip and knee replacement are organised, charting screening point, referral triggers, clinic leadership, treatments and their location, waiting times and postponements, to inform the local pathway design by May 2027.",
+          "question": "What evidence should inform the design of the centre's preoperative anaemia pathway?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Pathway organisation varies and is poorly reported, so mapping it is useful.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A current review already charts orthopaedic pathways in enough detail to copy.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Librarian-designed search",
+              "status": "met",
+              "evidence": "Librarian request LIB-ORTHO-2026-12 agreed on 2026-09-08, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Reviewer time for dual screening and charting",
+              "status": "met",
+              "evidence": "Department memo ANES-EDU-2026-19 approving 60 hours for each of two residents, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Survey of regional hospitals' pathways",
+            "Design from the regional guideline alone"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records; none of the four leads, including the guideline with the out-of-range score, is cited."
+        },
+        "summary": "Scoping review recommended; decision rests on four ledger claims; both gates met."
+      },
+      "note": "selectionStatus requires S11; claims S13; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "scoping-review",
+          "family": "scoping-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: four ledger claims from retrieved records, both gates met; selection accepted and action ready (G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "scoping-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 2,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Pathway steps and times are rarely reported",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Only 14 of 41 service reports described a reproducible pathway (claim c3), so the centre cannot copy a proven design.",
+            "opportunity": "Chart each pathway's steps, owners and times in a fixed form."
+          },
+          {
+            "id": "g2",
+            "title": "Screening point determines the treatment window",
+            "kind": "implementation",
+            "severity": "high",
+            "whyItMatters": "Screening at listing gave treatment before surgery to far more patients (claim c1).",
+            "opportunity": "Chart where each pathway screens and how many days before surgery."
+          },
+          {
+            "id": "g3",
+            "title": "Referral thresholds vary",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Thresholds from 120 to 130 g/L and different ferritin cut-offs change who is referred (claim c2).",
+            "opportunity": "Chart haemoglobin and ferritin triggers, including sex-specific thresholds."
+          },
+          {
+            "id": "g4",
+            "title": "Patients who do not speak English",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Patients who do not understand postponements are less likely to complete treatment.",
+            "opportunity": "Chart whether pathways provide interpreters and translated information."
+          },
+          {
+            "id": "g6",
+            "title": "Access to intravenous iron for patients who live far away",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "The centre's own patients may live two hours away, patients describe long journeys for short infusions (claim c4), and few service reports describe how distant patients are treated.",
+            "opportunity": "Chart outreach, community infusion and single-visit iron options, and the distance or travel time of the patients each pathway serves."
+          },
+          {
+            "id": "g5",
+            "title": "Postponement is an outcome and a harm",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Postponed patients report more pain and worry.",
+            "opportunity": "Chart postponement rates and how pathways communicate them."
+          }
+        ],
+        "errorsFound": [
+          "The need treats iron effectiveness as settled; the review should state that it is outside scope rather than settled by the retrieved records.",
+          "The first gaps reply omitted access for patients living far from the centre, which the need names explicitly."
+        ],
+        "reevaluation": "Access for distant patients becomes a charted concept of the review and a design question for the pathway, alongside screening point, triggers and communication.",
+        "summary": "Six gaps after revision; distant patients' access to intravenous iron added as a high-severity equity gap."
+      },
+      "note": "The investigator re-runs Gaps because the first reply missed distant patients' access, which the need names. The revised reply is consequential, so the completed downstream stages (hypotheses, questions, design) are flagged for review, shown as 'review required' and not counted as complete (G8; mergeStage at 875fe59 sets needsReview; the status text requires D5). The accepted decision does not become stale: no cited record or claim changed (G7).",
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 6
+          },
+          "gaps.items[4].title": "Access to intravenous iron for patients who live far away",
+          "gaps.items[4].kind": "equity",
+          "gaps.items[4].severity": "high",
+          "gaps.errorsFound": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "needsReview": [
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "design.decisions[-1].selectionStatus": "accepted"
+        },
+        "stage": {
+          "gaps": "complete",
+          "hypotheses": "needs-review",
+          "questions": "needs-review",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required",
+            "Access to intravenous iron for patients who live far away"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "The review flags survive a reload (G8).",
+      "expect": {
+        "store": {
+          "needsReview": [
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "gaps.items": {
+            "length": 6
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 2,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "How are preoperative anaemia pathways for elective hip and knee replacement organised, in terms of screening point, referral triggers, clinic leadership, treatments offered and their location, and times from screening to treatment and surgery?",
+            "framework": "PCC",
+            "population": "Adults awaiting elective hip or knee replacement",
+            "concept": "Organisation of preoperative anaemia pathways, including where treatment is given",
+            "context": "Hospitals and health systems offering elective joint replacement",
+            "outcome": ""
+          },
+          {
+            "id": "q2",
+            "text": "How do pathways reach patients who live far from the treating centre, and what do patients report about travel, communication and postponement?",
+            "framework": "PCC",
+            "population": "Patients referred to preoperative anaemia pathways, especially those living far from the centre",
+            "concept": "Access to treatment and patient-reported burdens",
+            "context": "Pathways serving rural or dispersed populations",
+            "outcome": ""
+          }
+        ],
+        "finer": "Still feasible within 120 resident hours; the access question uses the same search and charting form.",
+        "summary": "Revised: the access concept added to q1 and a second PCC question on distant patients."
+      },
+      "note": "Re-running Questions after the revised gaps clears its own flag (the stage is re-reviewed) and leaves hypotheses and design flagged (G8).",
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[1].framework": "PCC",
+          "needsReview": [
+            "hypotheses",
+            "design"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "questions": "complete",
+          "hypotheses": "needs-review",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "mark-complete",
+      "stage": "hypotheses",
+      "note": "The investigator re-reviews the hypotheses, keeps them (h2 already covers distant patients) and marks the stage complete; its flag clears and design stays flagged.",
+      "expect": {
+        "store": {
+          "needsReview": [
+            "design"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete",
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "mark-complete",
+      "stage": "design",
+      "note": "The investigator re-reviews the design: the scoping review and its accepted decision still fit the revised question, so the stage is marked complete and no flag remains. The decision's statuses are checked in the export.",
+      "expect": {
+        "store": {
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "screen": {
+          "excludes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Scoping review following JBI methods, reported with PRISMA-ScR, charting how preoperative anaemia pathways for elective hip and knee replacement are organised and how they reach distant patients.",
+        "population": "Reports of pathways for adults awaiting elective hip or knee replacement, 2010 to 2026, including journal articles, service evaluations, guidelines and hospital reports.",
+        "exposure": "Any organised pathway for detecting and treating anaemia before elective joint replacement.",
+        "procedures": "Librarian-designed search of three databases, two guideline repositories and hospital and health system websites; two residents screen independently and chart with a piloted form (screening point, triggers, lead, treatments and location, times, postponements, communication, provisions for distant patients); disagreements resolved with the anaesthesiologist lead; results presented in tables and a pathway diagram.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Screening point and time before surgery",
+            "measure": "Charted screening point and reported days from screening to surgery",
+            "timing": "As reported",
+            "why": "The pathway feature that sets the treatment window (claim c1).",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Referral triggers and ownership",
+            "measure": "Charted haemoglobin and ferritin thresholds and named owner",
+            "timing": "As reported",
+            "why": "Decides who is referred (claim c2).",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Access for distant patients",
+            "measure": "Charted outreach, community infusion or single-visit options and reported travel",
+            "timing": "As reported",
+            "why": "Added after the revised gaps (claim c4).",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Reporting completeness",
+            "measure": "Proportion of reports describing a reproducible pathway",
+            "timing": "As reported",
+            "why": "Existing reports are often incomplete (claim c3).",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 120 resident hours: 20 for screening pilots, 60 for dual screening, 30 for charting and 10 for tables.",
+        "biasMitigation": [
+          "Dual independent screening",
+          "Charting form piloted on five reports",
+          "Grey literature searched",
+          "Leads from the discovery reply checked by identifier before inclusion"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Publication bias toward successful pathways",
+            "severity": "watch",
+            "note": "Grey literature and hospital reports searched."
+          },
+          {
+            "id": "b2",
+            "label": "Incomplete reporting",
+            "severity": "watch",
+            "note": "Missing items charted as not reported, never inferred."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "Charting items fixed before screening"
+          ],
+          "simplestPath": "One search, one charting form, descriptive tables."
+        },
+        "theoreticalFramework": "JBI scoping review methodology; no additional framework.",
+        "summary": "JBI scoping review with a fixed charting form including access for distant patients."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[2].patientCentered": true,
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Descriptive charting with frequencies and narrative summary; no pooling or significance testing.",
+        "sampleSize": "No sample size applies; the prior scoping review charted 41 reports across specialties, so about 30 to 50 orthopaedic pathway reports are expected. With fewer than ten reports reporting times, times are summarised as ranges and medians of reported medians, not pooled.",
+        "primaryAnalysis": "Frequency tables of screening points, triggers, leads and treatment locations; a figure of reported days from screening to surgery by screening point.",
+        "secondaryAnalysis": "Narrative summary of provisions for distant patients and of patient-reported burdens; a table of reporting completeness.",
+        "missingData": "Items not reported are charted as not reported and counted, never inferred.",
+        "multiplicity": "Not applicable: no hypothesis tests.",
+        "software": "Spreadsheet charting form and a reference manager.",
+        "overfittingGuards": [
+          "Charting form fixed before screening",
+          "No pooling of heterogeneous times",
+          "No ranking of pathways by effectiveness"
+        ],
+        "summary": "Descriptive charting of about 30 to 50 reports; no pooling."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "No sample size applies"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No participants. The risk is a pathway designed around reports from well-resourced urban centres that fails distant or disadvantaged patients.",
+        "consent": "Not applicable to the review.",
+        "data": "Published and publicly available material; local figures quoted in aggregate.",
+        "equity": "PROGRESS-Plus: place of residence (distance to infusion), language and socioeconomic position affect whether patients complete treatment before surgery. The review charts provisions for distant patients and interpreters, and the design discussion will weigh them explicitly.",
+        "effectiveness": "Success is a pathway design the planning committee can adopt, with options for distant patients.",
+        "efficiency": "Existing resident time and library support.",
+        "costs": "No direct costs.",
+        "grants": "None needed; an evaluation of the local pathway after launch could seek regional quality funding.",
+        "partnerships": "Orthopaedic surgeons, pre-assessment nurses, a primary care representative and a patient partner who travelled for surgery.",
+        "rebPath": "No research ethics review is needed for a scoping review of published and public material; a later evaluation of the local pathway would be screened by the research ethics board.",
+        "limitations": "Reports may describe intended rather than actual pathways; limited reporting of times.",
+        "summary": "No participants; equity centred on distance and language."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A patient partner who travelled two hours for a knee replacement and a pre-assessment nurse review the charting form and the pathway options.",
+        "socialListening": "No social media listening; anonymised patient comments about postponed joint replacement operations are read from the centre's feedback system.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Postponement",
+            "quote": "Composite paraphrase: I had arranged my daughter to stay for the week, and three days before they said my blood was too low.",
+            "implication": "Screen early enough that postponement is rare and explained.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Travel",
+            "quote": "Composite paraphrase: Four hours in the car for a twenty-minute drip.",
+            "implication": "Chart outreach and single-visit iron options.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Ownership",
+            "quote": "Composite paraphrase: The surgeon sees the result, the GP gets a copy, and nobody treats it.",
+            "implication": "Name one owner for an abnormal result.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Primary care",
+            "quote": "Composite paraphrase: If you tell us at referral, we can start iron months before you ever see them.",
+            "implication": "Chart primary care screening at referral.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on postponement, travel, ownership and primary care."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Organisation of preoperative anaemia pathways for elective hip and knee replacement: a scoping review",
+        "abstract": "Objective: to map how preoperative anaemia pathways for elective hip and knee replacement are organised and how they reach patients who live far from the treating centre. Design: scoping review following JBI methods with PRISMA-ScR reporting. Results and conclusions will be written after charting.",
+        "introduction": "Anaemia is common before joint replacement and often detected too late for treatment. Pathways differ in screening point, triggers and leadership, and reports rarely describe them in reproducible detail.",
+        "methods": "Librarian-designed search including grey literature; dual screening; piloted charting form covering screening point, triggers, leadership, treatments and location, times, postponements, communication and access for distant patients; descriptive synthesis.",
+        "results": "Not yet written. The section will present the flow of reports, frequency tables, a figure of times by screening point and a summary of provisions for distant patients.",
+        "discussion": "The discussion will translate the charted options into design choices for the centre's pathway and state where evidence on organisation is missing.",
+        "limitations": "Reliance on reports that may describe intended pathways; incomplete reporting of times.",
+        "conclusion": "To be written after charting; it will not rank pathways by effectiveness.",
+        "reportingChecklist": "PRISMA-ScR",
+        "summary": "PRISMA-ScR structured draft with results left empty until charting."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRISMA-ScR",
+          "manuscript.results": {
+            "includes": "Not yet written"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Two leads carried invalid values (method quality 140, year true); both are stored as unknown and must be checked by identifier before any use",
+          "The Gaps stage was revised to add access for distant patients; hypotheses and design were re-reviewed and questions re-run",
+          "Run identity checks on the six retrieved records before the review cites them"
+        ],
+        "improvementNotes": "The discovery reply's leads were appended after the retrieved records and stayed unverified; the appraisal applied to the records only. A revised Gaps reply flagged three downstream stages for review, which were cleared by re-running Questions and by the investigator's re-review of Hypotheses and Design.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: invalid lead values, the revision trail and identity checks."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 the store defect of A3 L1.6 drops it (not a missing work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Preoperative anaemia pathways for elective hip and knee replacement: a scoping review to design a referral pathway",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "gaps.items": {
+            "length": 6
+          },
+          "questions.items": {
+            "length": 2
+          },
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[7].year": {
+            "isNull": true
+          }
+        },
+        "screen": {
+          "includes": [
+            "Preoperative anaemia pathways for elective hip and knee replacement: a scoping review to design a referral pathway"
+          ],
+          "excludes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The appended leads with unknown values, the revised gaps and the cleared review flags are exported exactly as stored (G10). selectionStatus and actionStatus require S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "needsReview": [],
+            "scan.items[0].provenance.origin": "retrieval",
+            "scan.items[6].provenance.status": "unverified",
+            "scan.items[6].methodQuality": {
+              "isNull": true
+            },
+            "scan.items[7].year": {
+              "isNull": true
+            },
+            "scan.gradeOverall": "low",
+            "gaps.items[4].kind": "equity",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

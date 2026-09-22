@@ -476,9 +476,16 @@ function applyStage(
           const r = applyDecision(raw.decision, study);
           issues.list.push(...r.issues);
           if (r.decision) {
+            if (recommended && !r.decision.recommendedFamily) {
+              r.decision.recommendedFamily = recommended;
+            }
             // Earlier proposed decisions are superseded, not erased.
             decisions = [
-              ...(study.design.decisions ?? []).map((d) => (d.status === "proposed" ? { ...d, status: "withdrawn" as const, note: `${d.note ? d.note + " " : ""}superseded by ${r.decision!.id}` } : d)),
+              ...(study.design.decisions ?? []).map((d) =>
+                d.status === "proposed" || d.selectionStatus === "proposed"
+                  ? { ...d, status: "withdrawn" as const, selectionStatus: "withdrawn" as const, actionStatus: "blocked" as const, note: `${d.note ? d.note + " " : ""}superseded by ${r.decision!.id}` }
+                  : d,
+              ),
               r.decision,
             ];
           }
@@ -492,7 +499,7 @@ function applyStage(
         studyPatch: compactPatch({ family: recommended }),
         stagePatch: compactPatch({
           recommended,
-          basis: recommended ? ("inferred" as const) : undefined,
+          basis: recommended ? (study?.family && recommended === study.family ? ("explicit" as const) : ("inferred" as const)) : ("unresolved" as const),
           decisions,
           rationale: str(raw, "rationale", issues),
           alternatives: strs(raw, "alternatives", issues),

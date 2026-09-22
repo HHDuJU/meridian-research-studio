@@ -1,0 +1,1465 @@
+{
+  "id": "sc-002",
+  "version": 1,
+  "title": "Hospital social work: family discharge meetings and 30-day readmission, design unresolved until the Design stage, two undated records left unrated",
+  "field": "social-work",
+  "level": 3,
+  "family": "case-control",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path. The social work lead's need names no design and carries no design cue, so routing is unresolved at create (no candidates), and the problem response returns family null (issue 'cleared'; basis stays unresolved, D2). The Design stage resolves to case-control because the exposure worth measuring (a meeting the family attended that ended with a written plan) is visible only in notes and 120 hours of reading are available; the scenario's family is the design the correct path arrives at. A fixture search returns seven records, two of them undated grey records (year null). The appraisal gives those two explicit null relevance, methodQuality and grade: they must stay null and 'unrated' (G4), never 50, 2020 or 'low', with a 'cleared' issue for each grade. The decision rests on claims c1 to c3; the ethics gate stays unknown, so after acceptance the selection is accepted and the action blocked (A2 item 9). A reload on the Design route follows the acceptance; reopen after the last stage. Record ids are stableRecordId values computed as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 6 (ev-13ydacs, ev-19rgi2l, ev-0r86bm4, ev-1ipl5xa); titleYearKey hash for records 2, 5, 7 (ev-122ixkx, ev-1uxw1dv, ev-0h4kmms), where the undated records use the year token '?'. Requires S11 (routing at create, recommendedFamily, selectionStatus, actionStatus, basis explicit on acceptance), D2 (null family keeps basis unresolved), S13 (appraisal on the production scan path) and D5 (status text). Catches: a substituted default family, unknown scores or years filled with defaults, a cleared log that clears nothing, an action allowed past an unknown gate, and work lost on reload or reopen.",
+  "inputs": {
+    "need": "I lead the hospital social work team at a 560-bed general hospital. For older patients with complicated discharges, our social workers sometimes hold a family discharge planning meeting on the ward before the patient goes home: the patient, family members or carers, the nurse in charge, often a therapist and the social worker go through the plan for care at home, equipment, help with medicines and who to call. Whether a meeting happens depends on which social worker has the case, whether the family can come in, and how rushed the discharge is.\n\nOur medical director has asked whether these meetings reduce readmissions within 30 days, because the hospital pays a penalty for early readmissions of patients over 75 and is thinking of making family meetings standard for everyone over 75 with a complicated discharge. My worry is that we tend to hold meetings for the most complicated families, who are also the ones most likely to come back, so a simple comparison could make the meetings look useless or even harmful.\n\nWhat we have: the hospital's monthly readmission report lists every patient readmitted within 30 days since January 2023, and our social work activity log shows when a family meeting was booked. The log does not say whether the family actually came, who attended or whether a written plan was given; that is only in the social work notes, and reading them takes about fifteen minutes per patient. Two of my senior social workers can give about 120 hours between them to reading notes this winter.\n\nI do not know what kind of study this should be. Can you help me work out a fair way to answer the question with what we have, and what we would need to ask permission for?",
+    "constraints": "About 120 hours of senior social worker time for reading notes between November 2026 and February 2027; no contact with patients or families; an answer is needed before the hospital's budget round in May 2027.",
+    "localFacts": [
+      "The hospital readmission report lists every patient readmitted within 30 days since January 2023, with age, ward and discharge date.",
+      "The social work activity log has listed booked family discharge planning meetings since January 2023, without attendance or outcome.",
+      "The Head of Social Work approved 120 hours of note reading by two senior social workers from November 2026 to February 2027 (memo SW-2026-17).",
+      "The hospital research ethics board has not yet been asked about secondary use of social work notes."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names no design and contains no design cue, so classifyFamily returns unresolved with no candidates. design.basis 'unresolved' at create requires S11 (routing recorded where classifyFamily is called).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I lead the hospital social work team at a 560-bed general hospital. For older patients with complicated discharges, our social workers sometimes hold a family discharge planning meeting on the ward before the patient goes home: the patient, family members or carers, the nurse in charge, often a therapist and the social worker go through the plan for care at home, equipment, help with medicines and who to call. Whether a meeting happens depends on which social worker has the case, whether the family can come in, and how rushed the discharge is.\n\nOur medical director has asked whether these meetings reduce readmissions within 30 days, because the hospital pays a penalty for early readmissions of patients over 75 and is thinking of making family meetings standard for everyone over 75 with a complicated discharge. My worry is that we tend to hold meetings for the most complicated families, who are also the ones most likely to come back, so a simple comparison could make the meetings look useless or even harmful.\n\nWhat we have: the hospital's monthly readmission report lists every patient readmitted within 30 days since January 2023, and our social work activity log shows when a family meeting was booked. The log does not say whether the family actually came, who attended or whether a written plan was given; that is only in the social work notes, and reading them takes about fifteen minutes per patient. Two of my senior social workers can give about 120 hours between them to reading notes this winter.\n\nI do not know what kind of study this should be. Can you help me work out a fair way to answer the question with what we have, and what we would need to ask permission for?",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions": {
+            "length": 0
+          },
+          "scan.items": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I lead the hospital social work team at a 560-bed general hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Family discharge planning meetings and 30-day readmission in adults aged 75 and over",
+        "subtitle": "Design not yet settled: exposure is recorded in notes, and meetings are chosen for complex families",
+        "family": null,
+        "statement": "Hospital social workers hold family discharge planning meetings for some patients aged 75 and over with complicated discharges, and the hospital is considering making them standard to avoid readmission penalties. It is not known locally whether a meeting that the family attends and that ends with a written plan is associated with fewer readmissions within 30 days once the greater complexity of patients chosen for meetings is taken into account. Whether the family attended is recorded only in the social work notes.",
+        "whoAffected": "Patients aged 75 and over with complicated discharges, their families and carers, the social work team whose time is at stake, and the ward teams who organise discharge.",
+        "whatHurts": "Early readmission is distressing for older patients and carers, costs the hospital a penalty, and may reflect a plan that did not work at home. Making meetings standard without evidence would take social work time from other patients, while dropping them could remove support that matters to families.",
+        "currentPractice": "Meetings are booked at the discretion of the social worker, more often for complicated families; attendance and plans are written in free-text notes; readmissions are counted monthly without any link to social work activity.",
+        "whyNow": "The medical director wants a recommendation before the budget round in May 2027, and senior social worker time for reading notes is available this winter.",
+        "constraints": "About 120 hours of senior social worker time for reading notes between November 2026 and February 2027; no contact with patients or families; an answer is needed before the hospital's budget round in May 2027.",
+        "patientCenteredGoal": "Older patients go home with a plan their family understands and can carry out, and avoid readmissions that a better plan could prevent.",
+        "summary": "Problem framed; the design family is left unresolved because the fair comparison depends on how exposure can be measured and how complexity drives selection."
+      },
+      "note": "The model leaves the family null because the design depends on how exposure can be measured; design.basis 'unresolved' after a null family requires D2. The issue 'cleared' at 'family' holds at 875fe59.",
+      "expect": {
+        "store": {
+          "title": "Family discharge planning meetings and 30-day readmission in adults aged 75 and over",
+          "problem.statement": {
+            "includes": "attends and that ends with a written plan"
+          },
+          "problem.constraints": {
+            "includes": "120 hours"
+          },
+          "problem.rawNeed": "I lead the hospital social work team at a 560-bed general hospital. For older patients with complicated discharges, our social workers sometimes hold a family discharge planning meeting on the ward before the patient goes home: the patient, family members or carers, the nurse in charge, often a therapist and the social worker go through the plan for care at home, equipment, help with medicines and who to call. Whether a meeting happens depends on which social worker has the case, whether the family can come in, and how rushed the discharge is.\n\nOur medical director has asked whether these meetings reduce readmissions within 30 days, because the hospital pays a penalty for early readmissions of patients over 75 and is thinking of making family meetings standard for everyone over 75 with a complicated discharge. My worry is that we tend to hold meetings for the most complicated families, who are also the ones most likely to come back, so a simple comparison could make the meetings look useless or even harmful.\n\nWhat we have: the hospital's monthly readmission report lists every patient readmitted within 30 days since January 2023, and our social work activity log shows when a family meeting was booked. The log does not say whether the family actually came, who attended or whether a written plan was given; that is only in the social work notes, and reading them takes about fifteen minutes per patient. Two of my senior social workers can give about 120 hours between them to reading notes this winter.\n\nI do not know what kind of study this should be. Can you help me work out a fair way to answer the question with what we have, and what we would need to ask permission for?",
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Family discharge planning meetings and 30-day readmission in adults aged 75 and over"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "family discharge planning meeting older adults 30-day readmission social work confounding",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Family meetings before hospital discharge and 30-day readmission in adults aged 75 and over: a matched comparison in two hospitals",
+            "authors": "Adebayo-Stroud K, Lindgren-Mwale P, Hartigan-Oyelowo S",
+            "year": 2021,
+            "venue": "Journal of Hospital Social Work Practice",
+            "doi": "10.5555/jhswp.2021.0233",
+            "providerType": "journal-article",
+            "abstract": "We compared 612 patients aged 75 and over who had a documented family discharge meeting with 1,224 patients without a meeting, matched on age, ward and discharge month, in two general hospitals. Thirty-day readmission was 17.8 percent with a meeting and 18.4 percent without. When the analysis was restricted to meetings that a family member attended and that produced a written plan, readmission was 13.1 percent against 18.4 percent. Meetings were more often held for patients with previous admissions and for patients living alone. The authors note that booked meetings and attended meetings are different exposures and that residual confounding by case complexity is likely."
+          },
+          {
+            "title": "Confounding by case complexity in evaluations of discharge planning: a methods commentary with a worked example",
+            "authors": "Pellegrini-Achterberg D, Osei-Wakefield R",
+            "year": 2018,
+            "venue": "Care Transitions Methods Notes",
+            "providerType": "journal-article",
+            "abstract": "Patients chosen for enhanced discharge planning usually carry a higher baseline risk of readmission than those who are not, so crude comparisons can make an effective service look harmful. In a worked example from one hospital, the crude odds ratio of 1.35 became 0.82 after adjustment for prior admissions, frailty and living alone. We recommend defining the exposure precisely, measuring the complexity that drives selection before discharge, matching or adjusting on it, and reporting how estimates change as each confounder is added. Unmeasured complexity, such as family conflict, cannot be removed by adjustment and should be discussed openly."
+          },
+          {
+            "title": "Structured family involvement in discharge planning for older inpatients: a systematic review of sixteen studies",
+            "authors": "Moreno-Blackwood T, Uchenna-Falk L, Sorensen-Iqbal A",
+            "year": 2023,
+            "venue": "Transitions of Care Review",
+            "doi": "10.5555/tcr.2023.0118",
+            "providerType": "journal-article",
+            "abstract": "We searched five databases to 2022 for studies of structured family involvement in hospital discharge planning for adults aged 65 and over. Sixteen studies met the inclusion criteria: five randomised trials and eleven observational studies. In the trials, structured family involvement reduced 30-day readmission (pooled risk ratio 0.84, 95 percent CI 0.71 to 0.99). Observational studies were inconsistent, and those that did not adjust for complexity tended to show higher readmission with family involvement. Definitions of family involvement ranged from a single telephone call to a structured meeting with a written plan, and no study reported carers' own outcomes."
+          },
+          {
+            "title": "Sampling controls from the discharge population and reading exposure from clinical notes in readmission studies",
+            "authors": "Kagame-Whitfield B, Lorenzen-Abara M",
+            "year": 2020,
+            "venue": "Morrowvale Health Services Epidemiology",
+            "doi": "10.5555/jhse.2020.0047",
+            "providerType": "journal-article",
+            "abstract": "Readmission studies often need exposure details that exist only in free-text notes. Using a completed study in one hospital, we compared reading notes for every discharge with reading notes only for readmitted patients and a random sample of patients who were not readmitted. Sampling controls at a ratio of two per case reduced note reading by about 80 percent compared with reviewing every discharge, and the odds ratio for the exposure changed by less than 5 percent. Agreement between two readers on whether a family member attended a discharge meeting was good (kappa 0.81). Readers who knew the patient's readmission status coded borderline notes differently."
+          },
+          {
+            "title": "Family conferences on medical wards: regional service evaluation summary",
+            "authors": "Regional Health Authority Older People's Services Team",
+            "year": null,
+            "venue": "Regional Health Authority service evaluation series",
+            "providerType": "report",
+            "abstract": "This summary describes family conferences held on the medical wards of three hospitals in the region. Conferences brought together the patient, family members, ward staff and a social worker before discharge. Across the three hospitals, 1,140 conferences were held during the evaluation period, and staff surveyed afterwards said conferences improved communication with families. Families were not asked for their views. The summary lists the number of conferences by hospital and month and gives examples of plans agreed. It does not describe how patients were chosen for a conference, what happened after discharge, or when the evaluation period began and ended."
+          },
+          {
+            "title": "Carers' experience of discharge planning meetings for older relatives: a qualitative study",
+            "authors": "Fairweather-Nnamdi C, Holm-Estrada J",
+            "year": 2022,
+            "venue": "Brackenmoor Journal of Family Caregiving",
+            "doi": "10.5555/jfcr.2022.0309",
+            "providerType": "journal-article",
+            "abstract": "We interviewed 28 carers of older relatives discharged from two hospitals about discharge planning meetings. Carers valued meetings that were booked with notice and that ended with a written plan naming who to call. Many working carers could not attend weekday daytime meetings, and carers without a car found the hospital hard to reach; several said they only heard about a meeting after it had happened. Joining by telephone helped some carers but made it harder to ask questions. Carers described being expected to take on care they had not agreed to. The authors conclude that access to meetings is unequal among families."
+          },
+          {
+            "title": "Pre-discharge family meetings and early readmission among frail older adults: conference abstract",
+            "authors": "Varga-Oduya E, Chen-Macallister R",
+            "year": null,
+            "venue": "Society for Transitional Care annual meeting abstract book",
+            "providerType": "conference-abstract",
+            "abstract": "Background: family meetings before discharge are thought to prevent early readmission. Methods: adults discharged from a teaching hospital were grouped by whether a family meeting was held before discharge. Results: of 140 patients, those with a meeting were readmitted within 30 days less often than those without (12 against 21 percent, p equal to 0.09). Conclusions: family meetings may reduce early readmission and a larger study is planned. The abstract does not state how patients were selected for meetings, the age range, whether the groups were comparable, or whether any adjustment was made, and the listing gives no year of presentation."
+          }
+        ]
+      },
+      "note": "Seven records; records 5 and 7 are grey records whose listings carry no year (year null, G4). Ids are stableRecordId values (see notes); for the two undated records the title key ends in '|?'.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-13ydacs",
+            "ev-122ixkx",
+            "ev-19rgi2l",
+            "ev-0r86bm4",
+            "ev-1uxw1dv",
+            "ev-1ipl5xa",
+            "ev-0h4kmms"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].doi": "10.5555/jhswp.2021.0233",
+          "scan.items[4].id": "ev-1uxw1dv",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].grade": "unrated",
+          "scan.items[4].provenance.origin": "retrieval",
+          "scan.items[6].id": "ev-0h4kmms",
+          "scan.items[6].year": {
+            "isNull": true
+          },
+          "scan.items[6].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Family conferences on medical wards: regional service evaluation summary"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-13ydacs",
+            "relevance": 92,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Booked or documented meetings showed no difference in 30-day readmission (17.8 against 18.4 percent), but meetings attended by family with a written plan were followed by 13.1 percent readmission.",
+            "limitations": "Matching on age, ward and month only; complexity drove selection; the attended subgroup was defined after the fact.",
+            "contextTags": [
+              "family meeting",
+              "readmission",
+              "exposure definition",
+              "matched comparison"
+            ]
+          },
+          {
+            "id": "ev-122ixkx",
+            "relevance": 80,
+            "methodQuality": 60,
+            "kind": "expert",
+            "grade": "low",
+            "keyFindings": "In a worked example the crude odds ratio of 1.35 for enhanced discharge planning became 0.82 after adjustment for prior admissions, frailty and living alone.",
+            "limitations": "One worked example; a methods commentary rather than an evaluation.",
+            "contextTags": [
+              "confounding by indication",
+              "case complexity",
+              "methods"
+            ]
+          },
+          {
+            "id": "ev-19rgi2l",
+            "relevance": 78,
+            "methodQuality": 68,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "In five trials, structured family involvement reduced 30-day readmission (pooled risk ratio 0.84); unadjusted observational studies tended to show the opposite.",
+            "limitations": "Interventions ranged from a phone call to a structured meeting; search ended in 2022.",
+            "contextTags": [
+              "systematic review",
+              "family involvement",
+              "trials"
+            ]
+          },
+          {
+            "id": "ev-0r86bm4",
+            "relevance": 88,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Sampling two controls per case cut note reading by about 80 percent with the odds ratio changing by less than 5 percent; two readers agreed well on family attendance (kappa 0.81).",
+            "limitations": "One hospital and one exposure; readers aware of readmission status coded borderline notes differently.",
+            "contextTags": [
+              "case-control sampling",
+              "note abstraction",
+              "measurement"
+            ]
+          },
+          {
+            "id": "ev-1uxw1dv",
+            "relevance": null,
+            "methodQuality": null,
+            "kind": "grey",
+            "grade": null,
+            "keyFindings": "Counts of family conferences in three hospitals and staff views; no outcome after discharge.",
+            "limitations": "No selection criteria, no outcomes, no dates, staff views only.",
+            "contextTags": [
+              "service evaluation",
+              "undated"
+            ],
+            "notes": "Not rated: the summary reports no methods, outcomes or dates, so neither relevance to readmission nor method quality can be judged."
+          },
+          {
+            "id": "ev-1ipl5xa",
+            "relevance": 74,
+            "methodQuality": 64,
+            "kind": "qualitative",
+            "grade": "moderate",
+            "keyFindings": "Carers valued meetings booked with notice and ending with a written plan; working carers and carers without transport often could not attend.",
+            "limitations": "Two hospitals; carers recruited through ward staff.",
+            "contextTags": [
+              "carers",
+              "access",
+              "equity"
+            ]
+          },
+          {
+            "id": "ev-0h4kmms",
+            "relevance": null,
+            "methodQuality": null,
+            "kind": "grey",
+            "grade": null,
+            "keyFindings": "In 140 patients, readmission within 30 days was 12 percent with a meeting and 21 percent without (p equal to 0.09).",
+            "limitations": "Selection, age range, comparability and adjustment not reported; no year.",
+            "contextTags": [
+              "conference abstract",
+              "undated"
+            ],
+            "notes": "Not rated: the abstract does not report the population, how patients were selected or any adjustment, so relevance and quality cannot be judged."
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In two hospitals, readmission within 30 days was 13.1 percent after meetings that the family attended and that produced a written plan, against 18.4 percent in matched patients without a meeting.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-13ydacs"
+            ],
+            "location": "Abstract, results",
+            "passage": "When the analysis was restricted to meetings that a family member attended and that produced a written plan, readmission was 13.1 percent against 18.4 percent.",
+            "interpretation": "The exposure worth measuring is an attended meeting with a written plan, not a booked meeting.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Adjusting for prior admissions, frailty and living alone reversed a crude harmful-looking association of enhanced discharge planning with readmission.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-122ixkx"
+            ],
+            "location": "Worked example",
+            "passage": "the crude odds ratio of 1.35 became 0.82 after adjustment for prior admissions, frailty and living alone",
+            "interpretation": "Complexity must be measured and adjusted for, or the meetings will look harmful.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Sampling two controls per readmitted case cut note reading by about 80 percent with little change in the estimate, and family attendance could be read reliably from notes.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0r86bm4"
+            ],
+            "location": "Abstract",
+            "passage": "Sampling controls at a ratio of two per case reduced note reading by about 80 percent compared with reviewing every discharge, and the odds ratio for the exposure changed by less than 5 percent.",
+            "interpretation": "Case-control sampling fits the 120 hours available for reading notes.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c4",
+            "text": "In randomised trials, structured family involvement in discharge planning reduced 30-day readmission.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-19rgi2l"
+            ],
+            "location": "Abstract, results",
+            "passage": "In the trials, structured family involvement reduced 30-day readmission (pooled risk ratio 0.84, 95 percent CI 0.71 to 0.99).",
+            "interpretation": "A modest benefit is plausible; the trial interventions were more structured than local practice.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Working carers and carers without transport often could not attend daytime discharge meetings.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1ipl5xa"
+            ],
+            "location": "Abstract",
+            "passage": "Many working carers could not attend weekday daytime meetings, and carers without a car found the hospital hard to reach",
+            "interpretation": "Attendance partly reflects carers' circumstances, which matters for both confounding and equity.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, five appraised at abstract level and two left unrated. Trials show a modest reduction in readmission with structured family involvement, while observational comparisons of booked meetings show no difference, probably because meetings are chosen for complex patients; adjustment for complexity reversed a harmful-looking crude estimate in a worked example. Meetings attended by the family and ending with a written plan were followed by lower readmission in one matched comparison. Note reading can identify attendance reliably, and sampling two controls per case keeps reading affordable. Two undated grey records report no usable methods and are not rated.",
+        "gradeOverall": "low",
+        "gradeRationale": "Trials support a modest benefit of structured family involvement, but local-type evidence on meetings is observational with serious confounding by complexity, and two records could not be rated. Certainty that an attended meeting with a written plan reduces readmission is low.",
+        "summary": "Seven retrieved records; five appraised, two undated records left unrated with no scores; five claims recorded with passages; overall certainty low."
+      },
+      "note": "The two undated records are annotated with explicit nulls for relevance, methodQuality and grade: the scores stay null and the grade stays 'unrated' (G4), and each null grade is logged as 'cleared' (contracts.ts; D2 requires the cleared log to match the unresolved value). Their year stays null because appraisal cannot change identity fields. Applying the appraisal on the production scan path requires S13; 'not assessed' for null scores follows A3 L1.5.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].relevance": 92,
+          "scan.items[2].grade": "moderate",
+          "scan.items[3].methodQuality": 62,
+          "scan.items[4].grade": "unrated",
+          "scan.items[4].relevance": {
+            "isNull": true
+          },
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[6].grade": "unrated",
+          "scan.items[6].relevance": {
+            "isNull": true
+          },
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[6].year": {
+            "isNull": true
+          },
+          "scan.items[6].notes": {
+            "includes": "Not rated"
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-13ydacs"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0r86bm4"
+          ],
+          "scan.claims[2].uncertainty": "low",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-1uxw1dv].grade",
+              "code": "cleared"
+            },
+            {
+              "path": "annotations[ev-0h4kmms].grade",
+              "code": "cleared"
+            }
+          ],
+          "count": 2
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unrated",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "560-bed general hospital, medical wards",
+          "readmission penalty for patients over 75",
+          "activity log records booked meetings only",
+          "120 hours of note reading this winter"
+        ],
+        "reading": "Case complexity sits upstream of both the decision to hold a meeting and the risk of readmission, so booked meetings look ineffective or harmful in crude data. The exposure that plausibly protects is a meeting the family attends that ends with a written plan, and it is visible only in notes. Carers' circumstances shape attendance, linking the exposure to deprivation and work. Trials support a modest benefit, the local question is whether it holds in routine practice.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Attended family meeting with a written plan",
+            "kind": "context",
+            "detail": "Exposure, read from social work notes."
+          },
+          {
+            "id": "n2",
+            "label": "Unplanned readmission within 30 days",
+            "kind": "outcome",
+            "detail": "From the monthly readmission report."
+          },
+          {
+            "id": "n3",
+            "label": "Case complexity",
+            "kind": "context",
+            "detail": "Prior admissions, frailty, living alone; drives selection for meetings."
+          },
+          {
+            "id": "n4",
+            "label": "Carer availability and transport",
+            "kind": "context",
+            "detail": "Shapes whether a booked meeting is attended (claim c5)."
+          },
+          {
+            "id": "n5",
+            "label": "Matched comparison in two hospitals",
+            "kind": "observational",
+            "detail": "13.1 against 18.4 percent for attended meetings (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Review of trials of family involvement",
+            "kind": "systematic-review",
+            "detail": "Pooled risk ratio 0.84 (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Undated grey records",
+            "kind": "gap",
+            "detail": "Two records with no methods or dates, unrated."
+          },
+          {
+            "id": "n8",
+            "label": "Social work team",
+            "kind": "stakeholder",
+            "detail": "Time at stake if meetings become standard."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "raises the chance of"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "raises"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "determines attendance at"
+          },
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "hypothesised to lower"
+          },
+          {
+            "from": "n5",
+            "to": "n1",
+            "relation": "reports association for"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "supports a modest effect of"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "adds no usable estimate of"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "delivers"
+          }
+        ],
+        "summary": "Map shows complexity and carer availability as the paths that confound a crude comparison of meetings and readmission."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[6].kind": "gap",
+          "map.nodes[2].label": "Case complexity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Booked meetings are not the exposure that matters",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "The activity log shows bookings, while the retrieved evidence suggests only attended meetings with a written plan are linked to lower readmission (claim c1).",
+            "opportunity": "Read attendance and the written plan from the notes with a fixed abstraction form."
+          },
+          {
+            "id": "g2",
+            "title": "Confounding by case complexity",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Complex patients are chosen for meetings and are readmitted more, which reversed a crude estimate in a worked example (claim c2).",
+            "opportunity": "Measure prior admissions, frailty, living alone and dementia from the discharge summary and adjust for them."
+          },
+          {
+            "id": "g3",
+            "title": "Reading every note is unaffordable",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Reading notes for all eligible discharges since 2023 would take several hundred hours against 120 available.",
+            "opportunity": "Sample readmitted cases and two non-readmitted controls per case (claim c3)."
+          },
+          {
+            "id": "g4",
+            "title": "Unequal access to meetings for working and carless carers",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Attendance depends on carers' work and transport (claim c5), so a policy of daytime meetings could widen gaps between families.",
+            "opportunity": "Record whether the carer joined in person or by telephone and report results by area deprivation."
+          },
+          {
+            "id": "g5",
+            "title": "Two undated records with no usable methods",
+            "kind": "evidence",
+            "severity": "watch",
+            "whyItMatters": "A service evaluation and a conference abstract report favourable figures without methods or dates and cannot be rated.",
+            "opportunity": "Do not cite them as support; contact the authors only if the local result is ambiguous."
+          }
+        ],
+        "errorsFound": [
+          "The medical director's question treats a booked meeting as the intervention; the evidence points to the attended meeting with a written plan as the exposure to study."
+        ],
+        "reevaluation": "The gaps favour sampling from outcomes: readmitted cases and non-readmitted controls with note-based exposure and measured complexity, rather than reading every discharge.",
+        "summary": "Five gaps: exposure definition, confounding by complexity, reading workload, unequal carer access, and two unrated undated records."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].kind": "method",
+          "gaps.items[1].severity": "high",
+          "gaps.items[4].severity": "watch",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Booked meetings are not the exposure that matters"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Among patients aged 75 and over with complicated discharges, an attended family meeting with a written plan is associated with lower odds of unplanned readmission within 30 days (adjusted odds ratio 0.6 or lower) after adjustment for case complexity.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "Need is high because a hospital-wide policy and social work time depend on the answer; novelty is moderate because trials exist but local routine meetings are untested; feasibility depends on note reading.",
+            "risks": "Residual confounding by family conflict or engagement; readmissions to other hospitals are missed."
+          },
+          {
+            "id": "h2",
+            "statement": "Booked meetings that the family did not attend are not associated with readmission once complexity is adjusted for.",
+            "novelty": 40,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "A contrast between attended and unattended bookings helps separate the effect of the meeting from the selection of complex families.",
+            "risks": "Few unattended bookings may give a wide interval."
+          },
+          {
+            "id": "h3",
+            "statement": "Any association is concentrated in patients who live alone.",
+            "novelty": 50,
+            "need": 55,
+            "practiceChange": 60,
+            "feasibility": 65,
+            "parsimony": 55,
+            "rationale": "Patients living alone depend most on a plan that family members understand.",
+            "risks": "Subgroup finding with little power; reported only as exploratory."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected, h2 kept as a pre-specified contrast, h3 exploratory."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[2].parsimony": 55,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among patients aged 75 and over discharged alive from the medical wards with a social work referral between January 2023 and December 2025, is an attended family meeting with a written plan associated with unplanned readmission within 30 days, after adjustment for case complexity?",
+            "framework": "PECO",
+            "population": "Patients aged 75 and over discharged alive from the medical wards with a social work referral, 2023 to 2025",
+            "intervention": "Family discharge planning meeting attended by a family member and ending with a written plan (exposure, read from notes)",
+            "comparator": "No family meeting, or a booked meeting that the family did not attend",
+            "outcome": "Unplanned readmission to this hospital within 30 days of discharge",
+            "time": "30 days after discharge",
+            "setting": "560-bed general hospital"
+          }
+        ],
+        "finer": "Feasible with 120 hours of note reading if cases and sampled controls are read; interesting to the medical director and social work; novel for routine meetings in this hospital; ethical as secondary use of notes with a waiver request; relevant to a hospital-wide policy decision.",
+        "summary": "One PECO question with the exposure defined as an attended meeting with a written plan."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[0].time": "30 days after discharge",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "case-control",
+        "rationale": "The exposure worth studying is visible only in social work notes, which take about fifteen minutes each to read, and 120 hours are available. Reading notes for every eligible discharge since 2023 would take several times that, whereas sampling all readmitted cases (or a random sample of them) with two non-readmitted controls per case keeps reading within budget with little loss of precision (c3). Complexity drives both meetings and readmission (c2), so the design measures it from discharge summaries and adjusts for it. The retrieved evidence suggests the attended meeting with a written plan is the exposure to measure (c1).",
+        "alternatives": [
+          "Cohort of all eligible discharges with note reading for everyone (refused: several hundred hours of reading)",
+          "Cohort using booked meetings from the activity log only (refused: measures the wrong exposure)",
+          "Randomised trial of standard family meetings (deferred: justified only if the local association is meaningful and the hospital is willing to randomise)"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "A trial would answer the policy question directly but needs a signal and a willingness to withhold meetings; the case-control study uses existing notes to test whether the signal exists.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Answer the question with a case-control study: readmitted patients aged 75 and over and two frequency-matched non-readmitted controls per case, with an attended family meeting and written plan read from social work notes and case complexity measured from discharge summaries.",
+          "question": "Is an attended family discharge meeting with a written plan associated with fewer readmissions within 30 days in patients aged 75 and over?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "An attended meeting with a written plan has been associated with lower readmission elsewhere, and complexity can be measured and adjusted for.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Family attendance can be read reliably from notes within the available hours using case-control sampling.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "Meetings are booked almost only for the most complex patients, leaving too few comparable unexposed patients.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Protected senior social worker time for reading notes",
+              "status": "met",
+              "evidence": "Memo SW-2026-17: 120 hours from November 2026 to February 2027, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research ethics board approval for secondary use of social work notes with a waiver of consent",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Cohort using booked meetings from the activity log only",
+            "Make meetings standard without a study"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; the ethics gate is unknown, so no note is read until the board decides."
+        },
+        "summary": "Case-control study recommended; the decision rests on three ledger claims and waits for the research ethics board."
+      },
+      "note": "Routing resolves at the Design stage to case-control. recommendedFamily, selectionStatus and actionStatus require S11; the unknown ethics gate keeps the action blocked (A2 item 9); the claims exist only if S13 applied the appraisal; the status text requires D5. design.recommended and the gate statuses hold at 875fe59.",
+      "expect": {
+        "store": {
+          "design.recommended": "case-control",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].recommendedFamily": "case-control",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].evidence": {
+            "absent": true
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive with an unknown gate: the claims rest on retrieved records, so the selection is accepted, while the ethics gate keeps the action blocked (G7; A2 item 9). The family becomes case-control only on acceptance and the basis becomes explicit (S11); the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "family": "case-control",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route straight after acceptance: the accepted selection, the blocked action and the resolved family must survive. selectionStatus and actionStatus require S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "title": "Family discharge planning meetings and 30-day readmission in adults aged 75 and over",
+          "family": "case-control",
+          "design.basis": "explicit",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[6].relevance": {
+            "isNull": true
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "design": "complete",
+          "protocol": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked",
+            "Family discharge planning meetings and 30-day readmission in adults aged 75 and over"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Case-control study nested in discharges of patients aged 75 and over from the medical wards between January 2023 and December 2025, with exposure read from social work notes using a fixed abstraction form.",
+        "population": "Eligible discharges: patients aged 75 and over discharged alive from the medical wards with a social work referral during the admission. Cases: 160 randomly sampled eligible discharges followed by an unplanned readmission within 30 days. Controls: 320 eligible discharges without readmission, frequency matched to cases by discharge quarter and ward group.",
+        "exposure": "Primary: a family discharge planning meeting attended in person or by telephone by at least one family member or carer and ending with a written plan given to the family. Secondary: any booked meeting in the activity log. Unattended bookings form a separate category.",
+        "procedures": "The informatics team draws cases from the readmission report and controls from the discharge list, and removes the readmission date from the reading packet. Two senior social workers read notes with the abstraction form, blind to case status where possible; 10 percent are read by both. Complexity (prior admissions in 12 months, frailty score, living alone, dementia, number of regular medicines, discharge destination) comes from the discharge summary.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Unplanned readmission within 30 days",
+            "measure": "Emergency readmission to this hospital within 30 days of discharge, from the readmission report; defines case status",
+            "timing": "0 to 30 days after discharge",
+            "why": "The outcome the medical director asked about and the one patients and carers notice.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Readmission within 7 days",
+            "measure": "Emergency readmission within 7 days, among cases",
+            "timing": "0 to 7 days after discharge",
+            "why": "Very early readmission is most plausibly linked to the discharge plan.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Readable exposure",
+            "measure": "Proportion of sampled notes in which attendance and a written plan can be determined",
+            "timing": "During reading",
+            "why": "Unreadable notes would bias the exposure.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Reader agreement",
+            "measure": "Kappa for the primary exposure on the 10 percent read twice",
+            "timing": "After the first 100 notes and at the end",
+            "why": "Checks that the exposure is read consistently.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "480 notes at about fifteen minutes each is 120 hours, matching the approved time; sampling and linkage take about 10 hours of informatics time.",
+        "biasMitigation": [
+          "Exposure defined in a written abstraction form before reading starts",
+          "Readmission status hidden from readers where the notes allow",
+          "Complexity measured from discharge summaries and adjusted for",
+          "Unattended bookings analysed as a separate category to expose selection"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by case complexity",
+            "severity": "high",
+            "note": "The central threat; measured confounders cannot remove family conflict or engagement."
+          },
+          {
+            "id": "b2",
+            "label": "Reader knowledge of case status",
+            "severity": "watch",
+            "note": "Some notes mention readmission; hidden where possible and checked by double reading."
+          },
+          {
+            "id": "b3",
+            "label": "Readmissions to other hospitals",
+            "severity": "watch",
+            "note": "Missed by the local report; biases toward the null if non-differential."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 8,
+          "flags": [
+            "Eight pre-specified covariates, two matching factors and six complexity measures",
+            "One pre-specified secondary contrast (unattended bookings)"
+          ],
+          "simplestPath": "One exposure contrast, one outcome, one adjusted logistic model."
+        },
+        "theoreticalFramework": "No framework beyond the case-control sampling design; the exposure definition follows the retrieved evidence on attended meetings.",
+        "summary": "Case-control study of 160 cases and 320 frequency-matched controls with note-based exposure and complexity adjustment."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.outcomes[3].role": "process",
+          "protocol.parsimony.covariateCount": 8,
+          "protocol.biasFlags[0].severity": "high",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Case-control study with frequency matching by discharge quarter and ward group; exposure is an attended meeting with a written plan.",
+        "sampleSize": "With 160 cases and 320 controls and an exposure prevalence of about 25 percent among controls, the study has about 80 percent power at two-sided alpha 0.05 to detect an odds ratio of 0.50, and about 67 percent power for 0.55; smaller effects would be estimated imprecisely. 480 notes at fifteen minutes each use the 120 approved hours. The estimate will be reported with its confidence interval rather than as a significance verdict.",
+        "primaryAnalysis": "Unconditional logistic regression of case status on the exposure, adjusted for the two matching factors and six complexity measures fixed in advance (prior admissions in 12 months, frailty score, living alone, dementia, number of regular medicines, discharge destination); about 16 cases per parameter.",
+        "secondaryAnalysis": "The same model with the three-level exposure (attended with plan, booked but not attended, none); 7-day readmission among cases; an exploratory interaction with living alone reported without a significance claim.",
+        "missingData": "Notes in which attendance cannot be determined are counted and reported; the primary analysis treats them as a separate category, with sensitivity analyses coding them first as exposed and then as unexposed; complexity measures missing for more than 5 percent are handled by multiple imputation.",
+        "multiplicity": "One primary contrast; secondary and exploratory estimates are reported with confidence intervals and labelled as such.",
+        "software": "R; the abstraction form, covariate list and analysis code archived before reading starts.",
+        "overfittingGuards": [
+          "Covariates fixed before reading starts",
+          "No stepwise selection",
+          "About 16 cases per model parameter",
+          "One exploratory interaction only"
+        ],
+        "summary": "160 cases and 320 controls give about 80 percent power for an odds ratio of 0.50; adjusted logistic regression with complexity covariates fixed in advance."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "odds ratio of 0.50"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal physical risk; the risk is privacy harm from reading identifiable social work notes, which contain sensitive family information.",
+        "consent": "Consent is impracticable for 480 past discharges, some of whom have died; the research ethics board will be asked for a waiver of consent for secondary use under minimal risk, with notice on the hospital's research transparency page.",
+        "data": "Readers work in the hospital's secure environment; the analysis file holds no names, hospital numbers or free text, only coded variables; the linkage key is held by the informatics team and destroyed after analysis.",
+        "equity": "PROGRESS-Plus: attendance depends on carers' work, transport and language, so families in deprived areas, working carers and families needing interpreters may be under-represented among attended meetings. Results will be reported by area deprivation quintile and by in-person versus telephone attendance, and any recommendation will address access to meetings, not only whether they are held.",
+        "effectiveness": "The study informs whether standard meetings for everyone over 75 are worth social work time; a precise null result is as useful as a positive one.",
+        "efficiency": "Uses existing notes and 120 approved hours; no patient contact.",
+        "costs": "Social worker and informatics time within existing roles.",
+        "grants": "None needed; a positive result would support an application for a trial of structured family meetings.",
+        "partnerships": "Medical director's office (policy question), informatics team (sampling and linkage), two carer representatives from the hospital's carers' forum (exposure definition and interpretation), and the ward discharge coordinators.",
+        "rebPath": "Full review by the hospital research ethics board for secondary use of identifiable social work notes with a waiver of consent, following ICH-GCP and Declaration of Helsinki principles; the board has not yet been asked, so the gate is unknown and no note is read before approval.",
+        "limitations": "Residual confounding by family engagement; readmissions to other hospitals missed; notes may not record telephone attendance consistently.",
+        "summary": "Secondary use of sensitive notes with a waiver request, equity reporting by deprivation and mode of attendance, and an ethics gate still unknown."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "waiver of consent"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "ethics.rebPath": {
+            "includes": "gate is unknown"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two carer representatives from the carers' forum review the exposure definition and the plain-language summary; ward discharge coordinators advise on how meetings are recorded; the medical director's office receives interim reports only on progress, not results.",
+        "socialListening": "No social media listening; anonymised compliments and complaints about discharge from the patient advice service in the last year are read for mentions of family meetings.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Hearing about the meeting too late",
+            "quote": "Composite paraphrase: They rang on the Tuesday morning to say the meeting was at eleven; I was at work two towns away.",
+            "implication": "Record how much notice families were given and whether telephone joining was offered.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "A plan on paper",
+            "quote": "Composite paraphrase: The meeting only helped because we left with a sheet saying who was coming each morning and who to ring.",
+            "implication": "Keep the written plan in the exposure definition.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Being talked about",
+            "quote": "Composite paraphrase: Everyone decided what would happen to me and nobody asked what I could still do myself.",
+            "implication": "Note whether the patient took part in the meeting as a descriptive variable.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Choosing who gets a meeting",
+            "quote": "Composite paraphrase: I book meetings for the families I am worried about; the easy ones go home without one.",
+            "implication": "Treat complexity as the main confounder and analyse unattended bookings separately.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on notice, written plans, patient participation and how meetings are chosen."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "patient",
+          "voices.items[3].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Attended family discharge planning meetings and 30-day readmission in adults aged 75 and over: a case-control study",
+        "abstract": "Objective: to estimate the association between an attended family discharge meeting with a written plan and unplanned readmission within 30 days in adults aged 75 and over. Design: case-control study of 160 readmitted cases and 320 frequency-matched controls discharged from medical wards in 2023 to 2025, with exposure read from social work notes. Analysis: logistic regression adjusted for six measures of case complexity. Results and conclusions will be written after analysis.",
+        "introduction": "Family involvement in discharge planning reduced readmission in trials, but routine meetings are chosen for complex patients, which makes crude comparisons misleading. The hospital is considering making meetings standard for patients over 75.",
+        "methods": "Cases are unplanned readmissions within 30 days; controls are frequency matched by discharge quarter and ward group. Two senior social workers read notes with a fixed abstraction form, blind to case status where possible, with 10 percent read twice. Complexity is measured from discharge summaries. The analysis plan and covariates were fixed before reading.",
+        "results": "No data have been analysed yet. The report will present sampling, reader agreement, the exposure distribution, crude and adjusted odds ratios, and the three-level exposure analysis.",
+        "discussion": "The discussion will weigh the estimate against the retrieved trials and matched comparison, examine residual confounding by family engagement, and state what the result means for making meetings standard.",
+        "limitations": "Residual confounding; readmissions elsewhere missed; exposure read from notes of variable quality.",
+        "conclusion": "To be written after analysis; it will be limited to the association in this hospital and will not claim that meetings prevent readmission.",
+        "reportingChecklist": "STROBE (case-control)",
+        "summary": "STROBE-structured draft with results left empty until analysis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE (case-control)",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The research ethics board decision is unknown; the decision stays blocked and no note is read",
+          "Two retrieved records have no year and no scores; keep them unrated and do not cite them as support",
+          "Pilot the abstraction form on ten notes outside the sample before reading starts"
+        ],
+        "improvementNotes": "Routing stayed unresolved until the Design stage, where the case-control design was chosen because exposure is visible only in notes. Two undated grey records were left unrated with no scores rather than given defaults.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the ethics gate, the two unrated records, and the abstraction form."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour; at 875fe59 they fail because store.ts mergeStage overwrites the audit stage's patch with 'audit: { ...s.audit, entries }' (A3 L1.6), a store defect rather than a work-order entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen from the home list after all 13 stages; the decision statuses are checked at the reload and in the export because the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Family discharge planning meetings and 30-day readmission in adults aged 75 and over",
+          "family": "case-control",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "Family discharge planning meetings and 30-day readmission in adults aged 75 and over"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "recommendedFamily, selectionStatus and actionStatus require S11; scan.claims requires S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "case-control",
+            "design.basis": "explicit",
+            "scan.gradeOverall": "low",
+            "scan.items[4].year": {
+              "isNull": true
+            },
+            "scan.items[4].grade": "unrated",
+            "scan.items[4].relevance": {
+              "isNull": true
+            },
+            "scan.items[6].year": {
+              "isNull": true
+            },
+            "scan.items[6].grade": "unrated",
+            "scan.items[6].methodQuality": {
+              "isNull": true
+            },
+            "design.decisions[-1].recommendedFamily": "case-control",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[1].status": "unknown",
+            "problem.rawNeed": "I lead the hospital social work team at a 560-bed general hospital. For older patients with complicated discharges, our social workers sometimes hold a family discharge planning meeting on the ward before the patient goes home: the patient, family members or carers, the nurse in charge, often a therapist and the social worker go through the plan for care at home, equipment, help with medicines and who to call. Whether a meeting happens depends on which social worker has the case, whether the family can come in, and how rushed the discharge is.\n\nOur medical director has asked whether these meetings reduce readmissions within 30 days, because the hospital pays a penalty for early readmissions of patients over 75 and is thinking of making family meetings standard for everyone over 75 with a complicated discharge. My worry is that we tend to hold meetings for the most complicated families, who are also the ones most likely to come back, so a simple comparison could make the meetings look useless or even harmful.\n\nWhat we have: the hospital's monthly readmission report lists every patient readmitted within 30 days since January 2023, and our social work activity log shows when a family meeting was booked. The log does not say whether the family actually came, who attended or whether a written plan was given; that is only in the social work notes, and reading them takes about fifteen minutes per patient. Two of my senior social workers can give about 120 hours between them to reading notes this winter.\n\nI do not know what kind of study this should be. Can you help me work out a fair way to answer the question with what we have, and what we would need to ask permission for?"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "overview": "Implementation study of a service-wide triage and queue protocol on a regional crisis text line, using platform logs for an interrupted time series (52 weeks before and 26 weeks after go-live) and RE-AIM delivery and acceptance measures.",
+  "population": "All conversations opened on the line from 12 January 2026 to 11 July 2027; evening shifts (18:00 to 24:00) for the primary outcome; all volunteer responders active after go-live for acceptance measures.",
+  "exposure": "The protocol from 11 January 2027: automated acknowledgement within 30 seconds, keyword flag moving high-risk messages to the front of the queue, and a surge roster triggered when more than 10 texters are waiting.",
+  "procedures": "Once the agreement is signed, the vendor exports de-identified conversation records (open time, first automated reply, first human reply, close or abandonment time, flag time, queue length, counsellor log-in times) without message text. The agency's data lead builds weekly series. Volunteers complete a four-item acceptability scale at weeks 8 and 24 (under 5 minutes each). Fidelity is computed from queue order and log-in times.",
+  "outcomes": [
+    {
+      "id": "o1",
+      "role": "primary",
+      "name": "Time to first human reply in evening shifts",
+      "measure": "Weekly median minutes from conversation open to first human reply, 18:00 to 24:00",
+      "timing": "Weekly, 52 weeks before and 26 weeks after go-live",
+      "why": "The wait texters experience at the worst moment.",
+      "patientCentered": true
+    },
+    {
+      "id": "o2",
+      "role": "secondary",
+      "name": "Abandoned conversations",
+      "measure": "Weekly proportion of conversations closed by the texter before a human reply",
+      "timing": "Weekly",
+      "why": "People who give up waiting receive no help.",
+      "patientCentered": true
+    },
+    {
+      "id": "o3",
+      "role": "process",
+      "name": "Flag fidelity",
+      "measure": "Proportion of queue episodes in which flagged messages were answered before earlier unflagged messages",
+      "timing": "Weekly after go-live",
+      "why": "The protocol's main mechanism.",
+      "patientCentered": false
+    },
+    {
+      "id": "o4",
+      "role": "process",
+      "name": "Surge roster response",
+      "measure": "Proportion of surge triggers with a counsellor logged in within 10 minutes",
+      "timing": "Weekly after go-live",
+      "why": "Capacity arrives only if counsellors log in.",
+      "patientCentered": false
+    },
+    {
+      "id": "o5",
+      "role": "balancing",
+      "name": "Counsellor overtime",
+      "measure": "Hours of on-call time per week beyond rostered hours",
+      "timing": "Weekly after go-live",
+      "why": "The surge roster must not burn out paid staff.",
+      "patientCentered": false
+    }
+  ],
+  "feasibility": "Uses existing logs and staff time; volunteer time is under 10 minutes over six months; the whole analysis waits on the vendor agreement.",
+  "biasMitigation": [
+    "Fifty-two pre-implementation weeks to model trend and season",
+    "Weekly demand (conversations opened) as a covariate",
+    "Outcome definitions fixed before the vendor export",
+    "Fidelity computed from system timestamps, not self-report"
+  ],
+  "biasFlags": [
+    {
+      "id": "b1",
+      "label": "Co-interventions and demand shifts",
+      "severity": "high",
+      "note": "Media events or school terms change demand; annotated and modelled."
+    },
+    {
+      "id": "b2",
+      "label": "Timestamp definitions",
+      "severity": "watch",
+      "note": "Automated and human replies must be separated in the export."
+    },
+    {
+      "id": "b3",
+      "label": "Volunteer response bias",
+      "severity": "watch",
+      "note": "Acceptability may be rated by the most engaged volunteers."
+    }
+  ],
+  "parsimony": {
+    "score": 78,
+    "primaryOutcomeCount": 1,
+    "secondaryOutcomeCount": 1,
+    "covariateCount": 3,
+    "flags": [
+      "Covariates limited to demand, season and holiday weeks"
+    ],
+    "simplestPath": "One weekly service outcome in a time series plus two fidelity proportions."
+  },
+  "theoreticalFramework": "RE-AIM for reach, adoption, implementation and maintenance; no additional determinant framework until fidelity data show where delivery fails.",
+  "summary": "Interrupted time series with one primary outcome, one secondary, two fidelity measures and one balancing measure, gated on the vendor agreement."
+}

@@ -1,0 +1,1360 @@
+{
+  "id": "sc-070",
+  "version": 1,
+  "title": "Geriatric medicine ward: delirium screening completion by shift and patient group, prospective observational study",
+  "field": "geriatrics",
+  "level": 1,
+  "family": "prospective",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Routine level 1 path with one clear design: a 12-week prospective observational study that measures where delirium screening fails on one geriatric medicine ward before anything is changed. The need names a prospective observational study and no other design, so classifyFamily routes it to \"prospective\" at create. The problem reply repeats the typed constraints exactly (G11 has nothing to reject). A fixture search returns six records; the appraisal annotates all six and records four source-derived claims with exact passages; certainty \"moderate\" is the appraisal's own value over six inspected records (G1), shown as \"moderate certainty\". The decision rests on claims c1 to c3 and both gates are met on investigator-supplied approvals, so acceptance is a supported positive with actionStatus ready (G7). Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3 and 5; titleYearKey for records 2, 4 and 6): ev-13g0qeg, ev-1lmisr7, ev-0ts0rvh, ev-1qdw2cg, ev-1atrf18, ev-1mw48rq. Requires S13 (appraisal on the production scan path), S11 (selectionStatus, actionStatus, basis) and D5 (status text). Catches: certainty or completion without retrieval, claims lost between appraisal and ledger, a decision accepted without ledger support, typed constraints overwritten, work lost on reload or reopen, and an export that differs from the store.",
+  "inputs": {
+    "need": "I am the nurse lead for a 28-bed geriatric medicine ward in a 500-bed district hospital. Our delirium policy says every patient aged 65 or over is screened with the ward's 4-item rapid delirium screen (RDS-4) within 12 hours of arriving on the ward and then once every shift. When our practice development nurse spot-checked the nursing notes for one week in June, only about half of the expected screens were documented, and very few on night shifts. We also suspect that some documented screens are ticked without the patient being assessed.\n\nBefore we choose how to fix screening, we want to know exactly where and when it fails. I would like to run a 12-week prospective observational study on the ward: every day a research nurse would reconcile each patient's screening entries with the list of patients present on each shift, and on a sample of shifts she would watch whether the screen is actually done at the bedside. We want to describe the proportion of eligible patient-shifts with a completed screen, how this differs between day, evening and night shifts and between weekdays and weekends, and whether patients with dementia, hearing or vision loss, or in side rooms are screened less often. We also want to know how long it takes from a positive screen to a medical review, because a screen that nobody acts on is not much use.\n\nWe will not change ward practice during the observation period. The geriatricians are supportive, but the ward is busy, the research nurse has 0.4 FTE for 12 weeks, and we cannot add any paperwork for ward nurses. Many of our patients cannot consent for themselves, so we need a sensible approach to consent for observation.",
+    "constraints": "The research nurse is funded at 0.4 FTE for 12 weeks only. No additional documentation or forms for ward nurses. Ward practice must not change during the observation period. Night observation is limited to two shifts a week.",
+    "localFacts": [
+      "The geriatric medicine research ethics committee approved the observation protocol on 2026-08-26 (REB-GM-2026-058), with a waiver of consent for record reconciliation and verbal agreement or consultee advice for bedside observation.",
+      "The geriatric medicine division funded a research nurse at 0.4 FTE for 12 weeks from 5 October 2026 (letter GM-DIV-2026-11).",
+      "A one-week check of the nursing notes in June 2026 found 281 of 546 expected screens documented, including 31 of 182 on night shifts.",
+      "The ward admits about 14 patients a week, with a median length of stay of 11 days and average occupancy of 26 beds."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "problem.constraints holds the typed text from the create form (A3 receipt of the delivered application); family from classifyFamily at 875fe59.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the nurse lead for a 28-bed geriatric medicine ward in a 500-bed district hospital. Our delirium policy says every patient aged 65 or over is screened with the ward's 4-item rapid delirium screen (RDS-4) within 12 hours of arriving on the ward and then once every shift. When our practice development nurse spot-checked the nursing notes for one week in June, only about half of the expected screens were documented, and very few on night shifts. We also suspect that some documented screens are ticked without the patient being assessed.\n\nBefore we choose how to fix screening, we want to know exactly where and when it fails. I would like to run a 12-week prospective observational study on the ward: every day a research nurse would reconcile each patient's screening entries with the list of patients present on each shift, and on a sample of shifts she would watch whether the screen is actually done at the bedside. We want to describe the proportion of eligible patient-shifts with a completed screen, how this differs between day, evening and night shifts and between weekdays and weekends, and whether patients with dementia, hearing or vision loss, or in side rooms are screened less often. We also want to know how long it takes from a positive screen to a medical review, because a screen that nobody acts on is not much use.\n\nWe will not change ward practice during the observation period. The geriatricians are supportive, but the ward is busy, the research nurse has 0.4 FTE for 12 weeks, and we cannot add any paperwork for ward nurses. Many of our patients cannot consent for themselves, so we need a sensible approach to consent for observation.",
+          "problem.constraints": "The research nurse is funded at 0.4 FTE for 12 weeks only. No additional documentation or forms for ward nurses. Ward practice must not change during the observation period. Night observation is limited to two shifts a week.",
+          "family": "prospective",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the nurse lead for a 28-bed geriatric medicine ward"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Where delirium screening fails on a geriatric medicine ward: a 12-week prospective observational study",
+        "subtitle": "Screening completion by shift, weekday and patient group before any change to practice",
+        "family": "prospective",
+        "statement": "Ward policy requires a 4-item rapid delirium screen within 12 hours of arrival and every shift for patients aged 65 or over, but a one-week check found about half of expected screens documented and very few at night. It is not known where screening fails, for which patients, or whether documented screens were actually performed. A 12-week prospective observational study will measure completion per eligible patient-shift and the time from a positive screen to medical review, without changing practice.",
+        "whoAffected": "Older inpatients on a 28-bed geriatric medicine ward, especially people with dementia or sensory loss who are at the highest risk of delirium; their families; ward nurses on all shifts; and the geriatricians who act on positive screens.",
+        "whatHurts": "Undetected delirium leads to falls, longer stays, distress for families and discharge to care homes. Screens that are ticked without being done give false reassurance, and positive screens that are not acted on waste the effort of screening.",
+        "currentPractice": "Nurses record the screen in the nursing notes each shift; there is no routine measurement of completion, no check that recorded screens were performed, and no fixed route for escalating a positive screen.",
+        "whyNow": "The June check showed about half of expected screens documented, the geriatricians want a basis for choosing an improvement, and a research nurse is funded for 12 weeks from October.",
+        "constraints": "The research nurse is funded at 0.4 FTE for 12 weeks only. No additional documentation or forms for ward nurses. Ward practice must not change during the observation period. Night observation is limited to two shifts a week.",
+        "patientCenteredGoal": "Every older patient on the ward, including people with dementia or sensory loss, has delirium recognised early and reviewed by a doctor the same day.",
+        "summary": "Problem framed as a descriptive prospective observational question about where and for whom delirium screening fails."
+      },
+      "note": "The typed constraints come back word for word, so no rejected-change issue is expected (G11).",
+      "expect": {
+        "store": {
+          "title": "Where delirium screening fails on a geriatric medicine ward: a 12-week prospective observational study",
+          "family": "prospective",
+          "problem.statement": {
+            "includes": "per eligible patient-shift"
+          },
+          "problem.constraints": "The research nurse is funded at 0.4 FTE for 12 weeks only. No additional documentation or forms for ward nurses. Ward practice must not change during the observation period. Night observation is limited to two shifts a week.",
+          "problem.rawNeed": {
+            "includes": "prospective observational study"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Where delirium screening fails on a geriatric medicine ward: a 12-week prospective observational study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "delirium screening completion geriatric ward night shift dementia documented versus observed",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Completion of routine delirium screening on acute geriatric wards: a prospective observational study of 9,800 patient-shifts",
+            "authors": "Moyo-Hartley P, Dahl-Onwuachi R, Quintero-Walsh E",
+            "year": 2021,
+            "venue": "Journal of Geriatric Nursing Practice",
+            "doi": "10.5555/jgnp.2021.0319",
+            "providerType": "journal-article",
+            "abstract": "Background: delirium screening is widely required but rarely measured as it happens. Methods: on four acute geriatric wards, research nurses reconciled nursing records with ward lists for every patient-shift over 10 weeks. Results: of 9,800 eligible patient-shifts, 58 percent had a completed screen. Completion was 71 percent on day shifts, 62 percent on evening shifts and 39 percent on night shifts, and it was 11 percentage points lower at weekends. Screens were completed within 12 hours of ward arrival for 64 percent of admissions. Conclusions: screening failed mainly at night and at weekends, and efforts to improve it should start from the points where the process fails."
+          },
+          {
+            "title": "Documented versus observed delirium screening: agreement between the nursing record and direct observation",
+            "authors": "Sandoval-Keane T, Obi-Marchetti L",
+            "year": 2018,
+            "venue": "Older Person Care Research",
+            "providerType": "journal-article",
+            "abstract": "We compared the nursing record with direct observation for 640 shifts on two geriatric wards. An observer shadowed the nurse responsible for each sampled patient and recorded whether the screening questions were asked. Screens documented in the record were observed in 83 percent of cases; in 17 percent a screen was documented but the questions were not asked, most often on night shifts and for patients who were asleep. Agreement was lowest for patients with severe hearing loss. The authors conclude that record review alone overestimates screening and recommend adding a sample of direct observation."
+          },
+          {
+            "title": "Electronic prompts and delirium screening completion in older inpatients: an interrupted time series",
+            "authors": "Varga-Osei N, Lindqvist-Amadi J, Rourke-Tanaka S",
+            "year": 2023,
+            "venue": "Clinical Gerontology Services",
+            "doi": "10.5555/cgs.2023.0044",
+            "providerType": "journal-article",
+            "abstract": "We added a shift-start electronic prompt for delirium screening on three medical wards for older people and analysed weekly completion for 26 weeks before and 26 weeks after. Completion rose from 52 to 74 percent, with an immediate level change and no further trend. The increase was smallest on night shifts, from 31 to 45 percent. Time from a positive screen to medical review did not change. A concurrent staffing increase on one ward limits attribution, and nurses reported that the prompt often appeared while patients were asleep and was dismissed."
+          },
+          {
+            "title": "Missed delirium screening in patients with dementia or sensory impairment on geriatric wards",
+            "authors": "Achebe-Lindgren O, Fontaine-Mbatha K",
+            "year": 2020,
+            "venue": "Older Person Care Research",
+            "providerType": "journal-article",
+            "abstract": "Using ward lists and nursing records for 1,450 admissions to three geriatric wards, we compared the proportion of patient-shifts with a completed delirium screen by dementia diagnosis and sensory impairment. Patients with a recorded dementia diagnosis had screens on 41 percent of shifts, compared with 66 percent for patients without dementia. Patients with severe hearing or vision loss had screens on 48 percent of shifts. Nurses' notes most often gave known confusion as the reason for not screening. Because delirium is more common in people with dementia, the groups least often screened are those at highest risk."
+          },
+          {
+            "title": "Nurse-reported barriers to delirium screening: time, perceived futility and uncertainty with dementia",
+            "authors": "Harrow-Nkemelu B, Ostrowski-Fadipe A, Liang-Carvalho M",
+            "year": 2016,
+            "venue": "Nursing Education Letters",
+            "doi": "10.5555/nel.2016.0102",
+            "providerType": "journal-article",
+            "abstract": "We asked 214 nurses on geriatric and general medical wards to rate barriers to routine delirium screening. The barriers rated most important were lack of time at the start of a shift (68 percent), the belief that screening changes nothing if doctors do not act (54 percent), uncertainty about screening patients with dementia (49 percent) and reluctance to wake sleeping patients at night (47 percent). Nurses who had received bedside training in the screen reported fewer barriers. The findings suggest that screening completion depends on what happens after a positive screen as well as on nurse workload."
+          },
+          {
+            "title": "Positive delirium screens and time to medical review on geriatric wards",
+            "authors": "Kimura-Obasi D, Wetherell-Diallo C",
+            "year": 2025,
+            "venue": "Journal of Geriatric Nursing Practice",
+            "providerType": "journal-article",
+            "abstract": "We followed 386 positive delirium screens on two geriatric wards to the first documented medical review of the patient's mental state. Thirty-eight percent were reviewed within 24 hours, 29 percent between 24 and 72 hours, and 33 percent had no documented review before discharge or a later negative screen. Positive screens at night or at weekends waited longest. Review within 24 hours was more likely when the nurse escalated the result by phone rather than only recording it. The authors suggest measuring the step from screen to action alongside screening completion."
+          }
+        ]
+      },
+      "note": "Six records with abstracts; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-13g0qeg",
+            "ev-1lmisr7",
+            "ev-0ts0rvh",
+            "ev-1qdw2cg",
+            "ev-1atrf18",
+            "ev-1mw48rq"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].id": "ev-13g0qeg",
+          "scan.items[0].doi": "10.5555/jgnp.2021.0319",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].id": "ev-1lmisr7",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[5].id": "ev-1mw48rq",
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Documented versus observed delirium screening: agreement between the nursing record and direct observation"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-13g0qeg",
+            "relevance": 95,
+            "methodQuality": 70,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Across 9,800 patient-shifts on four geriatric wards, 58 percent had a completed screen: 71 percent on days, 62 percent on evenings and 39 percent on nights, and 11 points lower at weekends.",
+            "limitations": "Record reconciliation without direct observation; four wards in one region.",
+            "contextTags": [
+              "screening completion",
+              "night shift",
+              "weekends",
+              "prospective observation"
+            ]
+          },
+          {
+            "id": "ev-1lmisr7",
+            "relevance": 90,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Of screens documented in the record, 17 percent had not been performed when observed, mostly at night and for sleeping patients.",
+            "limitations": "Two wards; observers may have changed behaviour on sampled shifts.",
+            "contextTags": [
+              "documentation accuracy",
+              "direct observation"
+            ]
+          },
+          {
+            "id": "ev-0ts0rvh",
+            "relevance": 62,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A shift-start prompt was followed by completion rising from 52 to 74 percent, least at night; time to medical review did not change.",
+            "limitations": "Concurrent staffing change on one ward; single system.",
+            "contextTags": [
+              "electronic prompt",
+              "interrupted time series"
+            ]
+          },
+          {
+            "id": "ev-1qdw2cg",
+            "relevance": 88,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Patients with dementia were screened on 41 percent of shifts against 66 percent without dementia; severe sensory loss 48 percent.",
+            "limitations": "Record-based; dementia diagnosis taken from the notes.",
+            "contextTags": [
+              "dementia",
+              "sensory impairment",
+              "equity"
+            ]
+          },
+          {
+            "id": "ev-1atrf18",
+            "relevance": 55,
+            "methodQuality": 42,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Nurses rated time at shift start, perceived futility and uncertainty with dementia as the main barriers.",
+            "limitations": "Self-rated barriers; response rate not reported.",
+            "contextTags": [
+              "barriers",
+              "nurse workload"
+            ]
+          },
+          {
+            "id": "ev-1mw48rq",
+            "relevance": 80,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Only 38 percent of positive screens were reviewed by a doctor within 24 hours; night and weekend screens waited longest.",
+            "limitations": "Two wards; review taken from documentation.",
+            "contextTags": [
+              "escalation",
+              "medical review"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "On four acute geriatric wards, delirium screening was completed on 71 percent of day shifts, 62 percent of evening shifts and 39 percent of night shifts.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-13g0qeg"
+            ],
+            "location": "Abstract, results",
+            "passage": "Completion was 71 percent on day shifts, 62 percent on evening shifts and 39 percent on night shifts",
+            "interpretation": "Shift type is the first stratifier to measure; the local June check points the same way.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c2",
+            "text": "In 17 percent of documented delirium screens the screening questions had not been asked.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1lmisr7"
+            ],
+            "location": "Abstract",
+            "passage": "in 17 percent a screen was documented but the questions were not asked",
+            "interpretation": "Record reconciliation alone overestimates completion; a sample of direct observation is needed.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Patients with dementia were screened on 41 percent of shifts compared with 66 percent of shifts for patients without dementia.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1qdw2cg"
+            ],
+            "location": "Abstract",
+            "passage": "Patients with a recorded dementia diagnosis had screens on 41 percent of shifts, compared with 66 percent for patients without dementia.",
+            "interpretation": "Dementia is a pre-specified patient group for the local study.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Only 38 percent of positive delirium screens led to a documented medical review within 24 hours.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1mw48rq"
+            ],
+            "location": "Abstract",
+            "passage": "Thirty-eight percent were reviewed within 24 hours",
+            "interpretation": "Measure the step from a positive screen to review alongside completion.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level. Studies on geriatric wards consistently report that screening completion is lowest at night and at weekends, and lowest for people with dementia or sensory loss, who are at the highest risk of delirium. Record review overstates screening because some documented screens were never performed. Positive screens often wait more than a day for medical review. A prompt raised completion in one time series but not at night and not the step to review. The pattern supports measuring completion per patient-shift with a sample of direct observation before choosing a fix.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "Consistent observational findings across several wards and methods for where screening fails; moderate certainty for the pattern, low for the effect of any single fix.",
+        "summary": "Six retrieved records appraised; four source-derived claims with passages; overall certainty moderate."
+      },
+      "note": "Applied through the appraisal mapper on the production scan path (S13); certainty over six inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[0].methodQuality": 70,
+          "scan.items[0].relevance": 95,
+          "scan.items[0].keyFindings": {
+            "includes": "39 percent on nights"
+          },
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[4].grade": "very-low",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-13g0qeg"
+          ],
+          "scan.claims[0].uncertainty": "low",
+          "scan.claims[1].sourceIds": [
+            "ev-1lmisr7"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-1qdw2cg"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-1mw48rq"
+          ],
+          "scan.gradeOverall": "moderate",
+          "scan.synthesis": {
+            "includes": "Six retrieved records"
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "28-bed geriatric medicine ward, district hospital",
+          "three nursing shifts, night staffing thinner",
+          "screening recorded in nursing notes",
+          "no fixed escalation route for positive screens"
+        ],
+        "reading": "Screening sits between two pressures: the start of a shift, when nurses have least time, and the night, when waking a patient to screen feels wrong. The retrieved evidence places the failures at night, at weekends and in patients with dementia or sensory loss (claims c1 and c3), and shows that documentation overstates what was done (claim c2). Even a completed positive screen often waits a day for review (claim c4), which feeds the belief that screening is futile. Measuring each step, from list to screen to review, is the basis for any later change.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Eligible patient-shift",
+            "kind": "context",
+            "detail": "Patient aged 65 or over present on the ward during a shift."
+          },
+          {
+            "id": "n2",
+            "label": "Screen actually performed",
+            "kind": "outcome",
+            "detail": "Documented and, on observed shifts, witnessed."
+          },
+          {
+            "id": "n3",
+            "label": "Night and weekend shifts",
+            "kind": "context",
+            "detail": "Lowest completion elsewhere (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "People with dementia or sensory loss",
+            "kind": "stakeholder",
+            "detail": "Screened least, at highest risk (claim c3)."
+          },
+          {
+            "id": "n5",
+            "label": "Documented but not performed",
+            "kind": "gap",
+            "detail": "17 percent elsewhere (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Positive screen to medical review",
+            "kind": "outcome",
+            "detail": "38 percent within 24 hours elsewhere (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Ward nurses",
+            "kind": "stakeholder",
+            "detail": "Time at shift start; reluctance to wake patients."
+          },
+          {
+            "id": "n8",
+            "label": "Geriatricians",
+            "kind": "stakeholder",
+            "detail": "Act on positive screens."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "should produce"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "lowers"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "less often receive"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "inflates the recorded rate of"
+          },
+          {
+            "from": "n2",
+            "to": "n6",
+            "relation": "should trigger"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "perform"
+          },
+          {
+            "from": "n8",
+            "to": "n6",
+            "relation": "complete"
+          }
+        ],
+        "summary": "Map traces the screening pathway from eligible patient-shift to medical review and marks where the retrieved evidence says it fails."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No shift-level measurement of screening on this ward",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "One week of notes cannot show where screening fails across shifts, weekdays and patient groups.",
+            "opportunity": "Reconcile screening entries with ward lists for every patient-shift for 12 weeks."
+          },
+          {
+            "id": "g2",
+            "title": "Documentation overstates screening",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "About one documented screen in six was not performed elsewhere (claim c2).",
+            "opportunity": "Observe a sample of shifts, including two night shifts a week, to estimate how many recorded screens were done."
+          },
+          {
+            "id": "g3",
+            "title": "People with dementia or sensory loss screened least",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "The groups at highest risk are screened least often (claim c3).",
+            "opportunity": "Pre-specify dementia, sensory loss and side rooms as patient groups for the analysis."
+          },
+          {
+            "id": "g4",
+            "title": "The step from positive screen to review is unmeasured",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "A positive screen that waits a day changes little for the patient (claim c4).",
+            "opportunity": "Record the time from each positive screen to documented medical review."
+          },
+          {
+            "id": "g5",
+            "title": "Observation could change what it measures",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Nurses who know they are observed may screen more on sampled shifts.",
+            "opportunity": "Compare record-based completion on observed and unobserved shifts."
+          }
+        ],
+        "errorsFound": [
+          "The spot check counted documented screens as performed; the retrieved evidence shows that assumption overestimates screening."
+        ],
+        "reevaluation": "The gaps support a descriptive prospective observational design with full record reconciliation, a sample of direct observation and the review step measured, before any improvement is chosen.",
+        "summary": "Five gaps: no shift-level data, inflated documentation, inequity by patient group, the unmeasured review step and observer effect."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[2].kind": "equity",
+          "gaps.items[1].severity": "high",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Documentation overstates screening"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Over 12 weeks, fewer than 60 percent of eligible patient-shifts on the ward will have a screen that was performed, with completion on night shifts at least 20 percentage points below day shifts.",
+            "novelty": 30,
+            "need": 88,
+            "practiceChange": 80,
+            "feasibility": 90,
+            "parsimony": 88,
+            "rationale": "Need is high because the ward must choose where to intervene; novelty is low because the pattern is known elsewhere; feasibility is high because the research nurse and approvals are in place.",
+            "risks": "Observer effect on sampled shifts; low occupancy weeks."
+          },
+          {
+            "id": "h2",
+            "statement": "Patients with dementia will be screened on at least 15 percentage points fewer shifts than patients without dementia.",
+            "novelty": 35,
+            "need": 80,
+            "practiceChange": 70,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "The highest-risk group is screened least elsewhere (claim c3).",
+            "risks": "Dementia under-recorded in the notes."
+          },
+          {
+            "id": "h3",
+            "statement": "Fewer than half of positive screens will be followed by a medical review within 24 hours.",
+            "novelty": 40,
+            "need": 75,
+            "practiceChange": 75,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "Screening only helps if positive results are acted on (claim c4).",
+            "risks": "Few positive screens in a 12-week window."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three descriptive hypotheses; h1 selected as the main estimate, h2 and h3 as pre-specified secondary estimates."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[1].need": 80,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among patients aged 65 or over on a 28-bed geriatric medicine ward from October to December 2026, what proportion of eligible patient-shifts have a delirium screen that was performed, and how does this differ by shift, weekday or weekend, dementia, sensory loss and side-room care?",
+            "framework": "PECO",
+            "population": "Patients aged 65 or over present on the ward during a nursing shift",
+            "intervention": "Shift type, weekday or weekend, dementia, sensory loss and side-room care (exposures)",
+            "comparator": "Day shifts on weekdays; patients without dementia or sensory loss in open bays",
+            "outcome": "Screen performed on the patient-shift (documented and, on observed shifts, witnessed)",
+            "time": "12 weeks from 5 October 2026",
+            "setting": "28-bed geriatric medicine ward, 500-bed district hospital"
+          }
+        ],
+        "finer": "Feasible with 0.4 FTE for 12 weeks and no extra ward paperwork; interesting to nursing and geriatrics; novel locally; ethical under the approved consent model; relevant because it decides where improvement starts.",
+        "summary": "One descriptive PECO question with pre-specified strata."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "prospective",
+        "rationale": "The question is descriptive and time-bound: where and for whom does screening fail when practice is left unchanged? A prospective observational design records every eligible patient-shift as it happens, which record review after the fact cannot do reliably because documentation overstates screening (c2). The retrieved evidence sets the expected pattern by shift (c1) and patient group (c3). Reporting follows STROBE.",
+        "alternatives": [
+          "Record review of past nursing notes only (refused: overestimates screening, claim c2)",
+          "One-day point prevalence of screening (refused: misses night and weekend variation)",
+          "Start improvement cycles immediately (deferred until the failure points are known)"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "A comparison of interventions would need to know where screening fails first; 12 weeks of observation on one ward answers that with the resources funded.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a 12-week prospective observational study of delirium screening on the ward from 5 October 2026, reconciling screening entries with ward lists for every patient-shift and observing a sample of shifts, before any change to practice.",
+          "question": "Where, when and for whom does delirium screening fail on the geriatric medicine ward?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Screening elsewhere fails by shift and patient group and documentation overstates it, so a local prospective measurement with observation is needed.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A ward reconfiguration or new delirium policy takes effect during the observation period.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics committee approval of the observation protocol and consent model",
+              "status": "met",
+              "evidence": "Approval REB-GM-2026-058 dated 2026-08-26, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Funded research nurse time for 12 weeks",
+              "status": "met",
+              "evidence": "Division letter GM-DIV-2026-11: 0.4 FTE from 5 October 2026, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Record review of past nursing notes only",
+            "Start improvement cycles immediately"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records and on the investigator's approval and funding records for the gates."
+        },
+        "summary": "Prospective observational design recommended; the decision rests on three ledger claims and both gates are met on investigator-supplied records."
+      },
+      "note": "Claims c1 to c3 exist only when S13 applied the appraisal; selectionStatus requires S11; status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "prospective",
+          "family": "prospective",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: ledger claims from retrieved records and both gates met, so accepted and ready (G7). Requires S11 for the fields and D5 for the text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "prospective"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Single-ward prospective observational study over 12 weeks from 5 October 2026: daily reconciliation of screening entries against ward lists for every eligible patient-shift, direct observation on a sample of shifts, and follow-up of every positive screen to medical review. Practice is not changed.",
+        "population": "All patients aged 65 or over present on the ward during a nursing shift; patients receiving end-of-life care are excluded from the denominator as the policy exempts them.",
+        "exposure": "Shift type (day, evening, night), weekday or weekend, dementia diagnosis, severe hearing or vision loss, and side-room care, recorded by the research nurse from the ward list and the notes.",
+        "procedures": "Each weekday morning the research nurse reconciles the previous 24 hours (and weekends on Mondays) against the ward's shift lists. Each week she observes four day or evening shifts and two night shifts, following eight patients chosen by a fixed bed rota and recording whether the screening questions were asked. For every positive screen she records the time of the first documented medical review. If she sees an unrecognised delirium she informs the nurse in charge, and the event is recorded.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Screen completion per eligible patient-shift",
+            "measure": "Proportion of eligible patient-shifts with a documented RDS-4 screen, reconciled against the shift list",
+            "timing": "Every shift for 12 weeks",
+            "why": "Directly measures adherence to the ward policy.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Documented screens confirmed by observation",
+            "measure": "Proportion of documented screens on observed shifts at which the screening questions were asked",
+            "timing": "Six observed shifts a week",
+            "why": "Corrects for screens recorded but not done (claim c2).",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Positive screens reviewed within 24 hours",
+            "measure": "Proportion of positive screens with a documented medical review of mental state within 24 hours",
+            "timing": "Each positive screen, followed to review or discharge",
+            "why": "Screening helps the patient only if a positive result leads to review.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Time from ward arrival to first screen",
+            "measure": "Hours from ward arrival to the first documented screen",
+            "timing": "Each admission",
+            "why": "The policy requires a first screen within 12 hours.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Patients woken for a screen at night",
+            "measure": "Observed night screens performed on a patient who was asleep",
+            "timing": "Observed night shifts",
+            "why": "Screening should not add to sleep disruption, itself a delirium risk.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 6,500 eligible patient-shifts and 72 observed shifts in 12 weeks fit the research nurse's 0.4 FTE; no forms are added for ward nurses.",
+        "biasMitigation": [
+          "Fixed bed rota for choosing observed patients",
+          "Observed and unobserved shifts compared for record-based completion to estimate observer effect",
+          "Written operational definition of a completed screen fixed before the first shift",
+          "Dementia and sensory loss taken from admission documentation before observation starts"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Observer effect",
+            "severity": "watch",
+            "note": "Nurses may screen more on observed shifts; compared with unobserved shifts."
+          },
+          {
+            "id": "b2",
+            "label": "Misclassified dementia status",
+            "severity": "watch",
+            "note": "Dementia may be under-recorded; the research nurse checks admission notes."
+          },
+          {
+            "id": "b3",
+            "label": "Selection of observed patients",
+            "severity": "ok",
+            "note": "Bed rota rather than observer choice."
+          }
+        ],
+        "parsimony": {
+          "score": 85,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 6,
+          "flags": [
+            "Six pre-specified factors; no data-driven additions"
+          ],
+          "simplestPath": "One ward, one completion measure per patient-shift, a fixed observation sample and the review step."
+        },
+        "theoreticalFramework": "None beyond describing the screening pathway step by step; a behavioural framework can be chosen once failure points are known.",
+        "summary": "12-week prospective observation with one primary completion outcome, two secondary, one process and one balancing measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[2].patientCentered": true,
+          "protocol.parsimony.covariateCount": 6,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Descriptive prospective observational study; patient-shift is the unit of analysis, with repeated shifts clustered within patients.",
+        "sampleSize": "At an average occupancy of 26 patients, 12 weeks give about 6,550 eligible patient-shifts, about 2,180 of them at night. With completion near 55 percent and a design effect of about 3 for repeated shifts within patients, the overall estimate has a 95 percent confidence interval of about plus or minus 2 percentage points and the night-shift estimate about plus or minus 3.6. Seventy-two observed shifts with eight patients each give about 576 observed screening opportunities; if 83 percent of documented screens are confirmed, the confirmation proportion is estimated to about plus or minus 3 points. The sample is fixed by the funded 12 weeks, and these precisions are adequate for choosing where to intervene.",
+        "primaryAnalysis": "Proportion of eligible patient-shifts with a completed screen, with 95 percent confidence intervals from a logistic model with generalised estimating equations and an exchangeable correlation within patients; completion reported by shift, weekday or weekend, dementia, sensory loss and side room.",
+        "secondaryAnalysis": "Adjusted odds of completion for the six pre-specified factors in one GEE model; proportion of documented screens confirmed on observed shifts; time from positive screen to medical review with a cumulative incidence curve, treating discharge before review as a competing event.",
+        "missingData": "Patient-shifts that cannot be reconciled because the list is missing are counted and reported; observed shifts that are cancelled are replaced on the next week's rota. No imputation.",
+        "multiplicity": "One primary proportion; the six factors are pre-specified and reported with intervals as descriptive associations, not tested for significance.",
+        "software": "R with the geepack package; analysis plan archived before the first shift.",
+        "overfittingGuards": [
+          "Six factors fixed before data collection",
+          "About 3,000 missed screens support the six-factor model",
+          "No stepwise selection",
+          "Analysis plan archived before the first shift"
+        ],
+        "summary": "About 6,550 patient-shifts give the overall completion to about plus or minus 2 points and night shifts to about 3.6 points."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "6,550 eligible patient-shifts"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: the study observes usual care. Risks are discomfort for nurses being observed, disturbance for patients during observation, and the observer seeing an unrecognised delirium; in that case she informs the nurse in charge and the event is recorded.",
+        "consent": "Record reconciliation proceeds under the committee's waiver. Before bedside observation, patients with capacity give verbal agreement; for patients who lack capacity a family member or other consultee is asked for advice, and any sign of objection stops observation. Nurses are told which weeks include observation and may ask the observer to step away.",
+        "data": "Data are recorded by bed, shift and study number; no names leave the ward; nurses are not identified in the dataset; files are kept on the hospital research drive for five years.",
+        "equity": "PROGRESS-Plus: people with dementia, sensory loss, limited English or in side rooms because of infection may be screened least. These groups are pre-specified in the analysis, interpreters are used for the verbal agreement, and results are reported separately so that improvement reaches them first.",
+        "effectiveness": "Success is a clear map of where screening fails and whether positive screens lead to review, precise enough to choose the first change.",
+        "efficiency": "Uses existing notes and one part-time research nurse; no paperwork for ward nurses.",
+        "costs": "Research nurse time funded by the division for 12 weeks; no other costs.",
+        "grants": "None needed; the findings could support a hospital improvement award for the chosen change.",
+        "partnerships": "Ward nurses on each shift, the geriatricians, the practice development nurse and two carers of former patients with dementia from the hospital's carers' group.",
+        "rebPath": "Approved by the geriatric medicine research ethics committee on 2026-08-26 (REB-GM-2026-058) with the consent model above; reporting follows STROBE.",
+        "limitations": "One ward; observer effect; dementia status from documentation.",
+        "summary": "Minimal-risk observation with a waiver for records, consultee advice for bedside observation, and equity groups pre-specified."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "consultee"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two carers from the carers' group review the information sheet and the consultee process; a night nurse and a day nurse join the monthly study meeting; the geriatricians review the escalation findings.",
+        "socialListening": "No social media listening; the ward's compliments and complaints log from the last year is read for mentions of confusion or being woken.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Confusion noticed by families first",
+            "quote": "Composite paraphrase: I knew something was wrong with Dad on the second evening, but nobody asked me.",
+            "implication": "Record whether a family concern preceded a positive screen.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Waking people at night",
+            "quote": "Composite paraphrase: At three in the morning I will not wake an old lady to ask her the months backwards.",
+            "implication": "Measure how often night screens wake patients and report it as a balancing measure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Screening that leads nowhere",
+            "quote": "Composite paraphrase: I flag it, it sits in the notes, and the doctor sees it the next afternoon.",
+            "implication": "Follow every positive screen to medical review.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "patient",
+            "theme": "Being asked the same questions",
+            "quote": "Composite paraphrase: They keep asking me what year it is, as if I am daft.",
+            "implication": "Note patient reactions on observed shifts; they may explain skipped screens.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on family knowledge, night screening, escalation and the patient's view."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].source": "family",
+          "voices.items[3].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Where delirium screening fails on a geriatric medicine ward: a 12-week prospective observational study",
+        "abstract": "Objective: to measure delirium screening completion per eligible patient-shift and the time from positive screen to medical review. Design: prospective observational study over 12 weeks on a 28-bed geriatric medicine ward, with daily record reconciliation and direct observation of six shifts a week. Results and conclusions will be written after data collection.",
+        "introduction": "Delirium screening is required for older inpatients, but completion is rarely measured as it happens, documentation overstates it, and people with dementia are screened least. This study measures where screening fails before any change is made.",
+        "methods": "All patients aged 65 or over present during a shift were eligible. A research nurse reconciled screening entries with shift lists daily and observed a fixed bed rota on six shifts a week. Completion was estimated with GEE models clustered by patient and reported by six pre-specified factors.",
+        "results": "No data have been collected yet. The report will present completion by shift and patient group, the proportion of documented screens confirmed by observation, and time from positive screen to review.",
+        "discussion": "The discussion will set local completion against the retrieved ward studies and state which failure point the first change should target.",
+        "limitations": "One ward, observer effect, and dementia status taken from documentation.",
+        "conclusion": "To be written after the analysis; it will describe where screening fails and will not claim effects of any intervention.",
+        "reportingChecklist": "STROBE",
+        "summary": "STROBE-structured draft with results left empty until data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Write the operational definition of a completed screen with the practice development nurse before 5 October",
+          "Agree with the nurse in charge how the observer reports an unrecognised delirium",
+          "Run an identity check on the six retrieved records before the report cites them"
+        ],
+        "improvementNotes": "Six records came from a recorded search and were appraised at abstract level; the decision rests on three ledger claims whose passages come from those abstracts. Practice stays unchanged during observation.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before observation starts."
+      },
+      "note": "The audit stage's own fields fail at 875fe59 because mergeStage overwrites the audit patch (A3 L1.6); they state the correct behaviour.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.entries": {
+            "min": 13
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Statuses are checked in the export; the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Where delirium screening fails on a geriatric medicine ward: a 12-week prospective observational study",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "The research nurse is funded at 0.4 FTE for 12 weeks only. No additional documentation or forms for ward nurses. Ward practice must not change during the observation period. Night observation is limited to two shifts a week.",
+          "scan.items": {
+            "length": 6
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Where delirium screening fails on a geriatric medicine ward: a 12-week prospective observational study"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Where delirium screening fails on a geriatric medicine ward: a 12-week prospective observational study",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.rawNeed": "I am the nurse lead for a 28-bed geriatric medicine ward in a 500-bed district hospital. Our delirium policy says every patient aged 65 or over is screened with the ward's 4-item rapid delirium screen (RDS-4) within 12 hours of arriving on the ward and then once every shift. When our practice development nurse spot-checked the nursing notes for one week in June, only about half of the expected screens were documented, and very few on night shifts. We also suspect that some documented screens are ticked without the patient being assessed.\n\nBefore we choose how to fix screening, we want to know exactly where and when it fails. I would like to run a 12-week prospective observational study on the ward: every day a research nurse would reconcile each patient's screening entries with the list of patients present on each shift, and on a sample of shifts she would watch whether the screen is actually done at the bedside. We want to describe the proportion of eligible patient-shifts with a completed screen, how this differs between day, evening and night shifts and between weekdays and weekends, and whether patients with dementia, hearing or vision loss, or in side rooms are screened less often. We also want to know how long it takes from a positive screen to a medical review, because a screen that nobody acts on is not much use.\n\nWe will not change ward practice during the observation period. The geriatricians are supportive, but the ward is busy, the research nurse has 0.4 FTE for 12 weeks, and we cannot add any paperwork for ward nurses. Many of our patients cannot consent for themselves, so we need a sensible approach to consent for observation.",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "stats.sampleSize": {
+            "includes": "design effect"
+          }
+        },
+        "screen": {
+          "includes": [
+            "Where delirium screening fails on a geriatric medicine ward: a 12-week prospective observational study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; scan.claims requires S13. One click, one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.constraints": "The research nurse is funded at 0.4 FTE for 12 weeks only. No additional documentation or forms for ward nurses. Ward practice must not change during the observation period. Night observation is limited to two shifts a week.",
+            "scan.gradeOverall": "moderate",
+            "scan.items[1].provenance.status": "retrieved",
+            "scan.claims": {
+              "length": 4
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c2",
+              "c3"
+            ],
+            "family": "prospective"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

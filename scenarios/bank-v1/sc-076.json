@@ -1,0 +1,1368 @@
+{
+  "id": "sc-076",
+  "version": 1,
+  "title": "Internal medicine residency: PDSA cycles to raise actionable written feedback on workplace-based assessments",
+  "field": "medical-education",
+  "level": 1,
+  "family": "qi-pdsa",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Routine level 1 path with one clear design: a residency quality improvement project in PDSA cycles that tracks the weekly proportion of workplace-based assessment comments meeting three criteria on a run chart. The need names quality improvement, PDSA cycles and a run chart and no other design, so classifyFamily routes it to \"qi-pdsa\" at create; the typed constraints come back unchanged in the problem reply (G11). A fixture search returns seven records; the appraisal annotates all seven and records five source-derived claims with exact passages; certainty \"low\" is its own value over inspected records (G1). The decision (kind implementation) rests on claims c1, c2, c3 and c5 from retrieved records and both gates are met on investigator-supplied approvals, so acceptance gives selectionStatus accepted and actionStatus ready (G7). Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3, 5 and 7; titleYearKey for records 2, 4 and 6): ev-01e10t1, ev-0njv9i0, ev-0riy2iu, ev-0um3qeu, ev-1xzrgyf, ev-0neejwx, ev-13byohh. Requires S13 (appraisal path), S11 (selection and action status, basis) and D5 (status text). Catches: certainty without inspected records, claims lost before the ledger, an unsupported acceptance, the gender equity measure dropped, constraints overwritten, and export or reload drift.",
+  "inputs": {
+    "need": "I am the associate program director for assessment in a 90-resident internal medicine residency. Residents receive workplace-based assessments (mini clinical evaluation exercises and case-based discussions) on a web form, and each form has one free-text feedback box. When our competence committee reviewed 200 forms from last year, most comments were generic, such as \"good job\" or \"keep reading\", and only about one in four said what the resident did, what to change and how. Residents tell us the comments are not useful, and the committee struggles to make progress decisions from them.\n\nWe want to run a quality improvement project using PDSA cycles to raise the proportion of forms with actionable written feedback. Change ideas we are considering: relabelling and then splitting the free-text box into two prompts (\"one thing to keep doing\" and \"one thing to do differently next time\"), a 20-minute micro-teaching session at faculty meetings, and a monthly report to each faculty member showing their own comments rated against a short checklist. We would rate a weekly sample of comments against three criteria (specific behaviour, clear gap, concrete next step) and show the results on a run chart.\n\nI need help with the aim statement, the operational definition of an actionable comment, the balancing measures (for example fewer forms completed, or forms completed later), and how to avoid bias when we rate the comments. We also worry that comment quality differs by resident gender, so we want to look at that. We have no funding; the chief residents can rate forms, and faculty meetings happen monthly. We would like to start in October and run until March.",
+    "constraints": "No funding. Rating is done by the two chief residents in two hours of protected time a week. The software administrator can relabel the existing feedback field now but cannot add a second field before January 2027. Faculty meetings are monthly and can give 20 minutes to the project.",
+    "localFacts": [
+      "The education research office determined on 2026-08-05 that the project is quality improvement not requiring REB review (determination EDU-QI-2026-19).",
+      "The program director approved 20 minutes at each monthly faculty meeting from October 2026 to March 2027 (approval PD-2026-08, dated 2026-08-18).",
+      "Last year 2,340 workplace-based assessment forms were completed, about 45 a week; the committee found actionable comments on 52 of 200 sampled forms.",
+      "The two chief residents have two hours a week of protected time for education projects."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "problem.constraints holds the typed text from the create form (A3 receipt); family from classifyFamily at 875fe59.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the associate program director for assessment in a 90-resident internal medicine residency. Residents receive workplace-based assessments (mini clinical evaluation exercises and case-based discussions) on a web form, and each form has one free-text feedback box. When our competence committee reviewed 200 forms from last year, most comments were generic, such as \"good job\" or \"keep reading\", and only about one in four said what the resident did, what to change and how. Residents tell us the comments are not useful, and the committee struggles to make progress decisions from them.\n\nWe want to run a quality improvement project using PDSA cycles to raise the proportion of forms with actionable written feedback. Change ideas we are considering: relabelling and then splitting the free-text box into two prompts (\"one thing to keep doing\" and \"one thing to do differently next time\"), a 20-minute micro-teaching session at faculty meetings, and a monthly report to each faculty member showing their own comments rated against a short checklist. We would rate a weekly sample of comments against three criteria (specific behaviour, clear gap, concrete next step) and show the results on a run chart.\n\nI need help with the aim statement, the operational definition of an actionable comment, the balancing measures (for example fewer forms completed, or forms completed later), and how to avoid bias when we rate the comments. We also worry that comment quality differs by resident gender, so we want to look at that. We have no funding; the chief residents can rate forms, and faculty meetings happen monthly. We would like to start in October and run until March.",
+          "problem.constraints": "No funding. Rating is done by the two chief residents in two hours of protected time a week. The software administrator can relabel the existing feedback field now but cannot add a second field before January 2027. Faculty meetings are monthly and can give 20 minutes to the project.",
+          "family": "qi-pdsa",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the associate program director for assessment"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Actionable written feedback on workplace-based assessments in an internal medicine residency",
+        "subtitle": "Quality improvement with PDSA cycles and a weekly run chart, October 2026 to March 2027",
+        "family": "qi-pdsa",
+        "statement": "Only about one in four written comments on the residency's workplace-based assessment forms names a specific behaviour, a gap and a next step, so residents learn little from them and the competence committee cannot rely on them. The project will test a change package in PDSA cycles to raise the weekly proportion of actionable comments, tracked on a run chart with balancing measures for form completion and timeliness and a check by resident gender.",
+        "whoAffected": "Ninety internal medicine residents, the faculty who assess them, the competence committee that makes progress decisions, and indirectly the patients whose care depends on residents' skills improving.",
+        "whatHurts": "Generic praise gives residents nothing to act on, weak comments make progress decisions harder to defend, and feedback of different quality for women and men residents would be unfair.",
+        "currentPractice": "One free-text box per form, no guidance on what a useful comment contains, and no monitoring of comment quality.",
+        "whyNow": "The committee's review of 200 forms showed the problem, faculty meeting time has been approved, and the administrator can relabel the field now and add a second one in January.",
+        "constraints": "No funding. Rating is done by the two chief residents in two hours of protected time a week. The software administrator can relabel the existing feedback field now but cannot add a second field before January 2027. Faculty meetings are monthly and can give 20 minutes to the project.",
+        "patientCenteredGoal": "Residents receive specific, usable feedback that helps them become safer physicians, whatever their gender.",
+        "summary": "Problem framed as a program-level QI project to raise actionable written feedback on workplace-based assessments."
+      },
+      "note": "The typed constraints are returned unchanged, so G11 records nothing.",
+      "expect": {
+        "store": {
+          "title": "Actionable written feedback on workplace-based assessments in an internal medicine residency",
+          "family": "qi-pdsa",
+          "problem.statement": {
+            "includes": "run chart"
+          },
+          "problem.constraints": "No funding. Rating is done by the two chief residents in two hours of protected time a week. The software administrator can relabel the existing feedback field now but cannot add a second field before January 2027. Faculty meetings are monthly and can give 20 minutes to the project.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Actionable written feedback on workplace-based assessments in an internal medicine residency"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "workplace-based assessment narrative comments quality actionable feedback faculty prompts residency",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Rating the quality of narrative comments on workplace-based assessment forms: development of a three-criterion checklist",
+            "authors": "Lindahl-Osei M, Fairbanks-Ruiz T, Chaudhry-Welsh A",
+            "year": 2019,
+            "venue": "Journal of Medical Education Research",
+            "doi": "10.5555/jmer.2019.0233",
+            "providerType": "journal-article",
+            "abstract": "We developed a checklist for rating written comments on workplace-based assessment forms. Three criteria were retained after two rounds of expert review: the comment names a specific observed behaviour, identifies a gap between performance and the expected standard, and proposes a concrete next step. Two trained raters applied the checklist to 600 comments from three internal medicine programmes. Agreement was substantial (kappa 0.74), and rating took about 40 seconds per comment. Only 35 percent of comments met all three criteria, and generic praise was the most common comment type. The checklist is intended for monitoring feedback quality, not for judging individual faculty."
+          },
+          {
+            "title": "Prompted feedback fields on assessment forms and the specificity of written comments: a before-after study",
+            "authors": "Obuya-Hendricks S, Marchand-Iwata K",
+            "year": 2022,
+            "venue": "Assessment in Clinical Training",
+            "providerType": "journal-article",
+            "abstract": "One residency programme replaced a single free-text box on its workplace-based assessment form with two prompts: one thing to keep doing and one thing to do differently. We rated 400 comments from the six months before and 400 from the six months after the change with a three-criterion checklist. The proportion of comments meeting all three criteria rose from 31 to 52 percent. Median comment length rose from 14 to 29 words, and the number of forms completed per month did not change. Raters were not blinded to the period, which may have inflated the difference."
+          },
+          {
+            "title": "Brief faculty workshops on feedback and the quality of written comments: a controlled before-after study across two programmes",
+            "authors": "Kaczmarek-Bello J, Thorne-Adeyemi C, Vasquez-Lund R",
+            "year": 2020,
+            "venue": "Academic Medicine Teaching Reports",
+            "doi": "10.5555/amtr.2020.0418",
+            "providerType": "journal-article",
+            "abstract": "Faculty in one internal medicine programme attended two 20-minute workshops on written feedback, while a second programme continued as usual. Comments were rated blind to programme and period. At three months, the proportion of actionable comments rose by 14 percentage points in the workshop programme compared with 2 points in the comparison programme. By six months, without reminders, the difference had narrowed to 5 points. Attendance was 68 percent, and faculty who attended both sessions improved most. The authors conclude that brief teaching helps but fades without reinforcement."
+          },
+          {
+            "title": "Resident perceptions of useful written feedback: a multi-site study of 540 trainees",
+            "authors": "Nakagawa-Pryce E, Oduro-Lambert F",
+            "year": 2017,
+            "venue": "Medical Education Quarterly",
+            "providerType": "journal-article",
+            "abstract": "We asked 540 residents in eight programmes to rate 30 real comments, stripped of identifiers, for usefulness. Comments that named a next step were rated most useful, and generic praise was rated least useful even when residents said they valued encouragement. Residents rated a comment's usefulness similarly whether it came from a senior or a junior faculty member. More than half said they rarely read the free-text comments on their forms because they expected them to be generic. The authors recommend that programmes monitor the specificity of comments rather than their number."
+          },
+          {
+            "title": "Gendered language in narrative assessment comments for internal medicine residents",
+            "authors": "Abernathy-Mensah L, Rios-Kowalczyk D, Sorensen-Uba P",
+            "year": 2021,
+            "venue": "Medical Education Quarterly",
+            "doi": "10.5555/meq.2021.0907",
+            "providerType": "journal-article",
+            "abstract": "We analysed 3,100 narrative comments written for internal medicine residents in three programmes. Comments about women residents were more likely to describe personal attributes such as being pleasant or hardworking, and comments about men were more likely to describe clinical reasoning. After adjustment for postgraduate year and rotation, women were 1.4 times as likely as men to receive a comment with no actionable content. Differences were largest in comments written by faculty who completed the fewest forms. The authors recommend reporting feedback quality by resident gender whenever it is monitored."
+          },
+          {
+            "title": "Monthly individual feedback reports to faculty on their assessment comments: a run-chart evaluation",
+            "authors": "Delacroix-Amoah B, Hughes-Nakamura T",
+            "year": 2024,
+            "venue": "Assessment in Clinical Training",
+            "providerType": "journal-article",
+            "abstract": "A programme sent each faculty member a monthly one-page report showing a sample of their own written comments rated against a three-criterion checklist, with the programme median for comparison. Over 14 months, the monthly median proportion of actionable comments rose from 28 to 47 percent, with a shift on the run chart from month five. Faculty who opened the report email more than half the time improved most. The number of forms completed per resident did not fall. There was no comparison group, and a new assessment policy was introduced during month nine."
+          },
+          {
+            "title": "Time from encounter to form completion and the specificity of written feedback",
+            "authors": "Wojcik-Addo H, Brennan-Sato M",
+            "year": 2015,
+            "venue": "Clinical Teacher Exchange",
+            "doi": "10.5555/cte.2015.0055",
+            "providerType": "journal-article",
+            "abstract": "We examined 1,800 workplace-based assessment forms and the delay between the observed encounter and the completion of the form. Comments on forms completed within 24 hours were more specific than those completed after 48 hours: 41 percent against 19 percent met all three quality criteria. Forms completed late were more often completed in batches at the end of a rotation. Programme size and rotation type did not explain the difference. The authors suggest that prompting completion soon after the encounter may improve comment quality more than lengthening the form."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-01e10t1",
+            "ev-0njv9i0",
+            "ev-0riy2iu",
+            "ev-0um3qeu",
+            "ev-1xzrgyf",
+            "ev-0neejwx",
+            "ev-13byohh"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-01e10t1",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[6].doi": "10.5555/cte.2015.0055",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Prompted feedback fields on assessment forms and the specificity of written comments: a before-after study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-01e10t1",
+            "relevance": 92,
+            "methodQuality": 68,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "A three-criterion checklist (specific behaviour, gap, next step) had kappa 0.74 between raters and took about 40 seconds per comment; 35 percent of 600 comments met all three.",
+            "limitations": "Three programmes; raters trained by the developers.",
+            "contextTags": [
+              "measurement",
+              "operational definition",
+              "comment quality"
+            ]
+          },
+          {
+            "id": "ev-0njv9i0",
+            "relevance": 90,
+            "methodQuality": 50,
+            "kind": "qi-report",
+            "grade": "low",
+            "keyFindings": "Two prompts in place of one free-text box were followed by comments meeting all criteria rising from 31 to 52 percent, with no fall in forms completed.",
+            "limitations": "Uncontrolled before-after comparison; raters not blinded to period.",
+            "contextTags": [
+              "form redesign",
+              "prompts",
+              "before-after"
+            ]
+          },
+          {
+            "id": "ev-0riy2iu",
+            "relevance": 80,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Brief workshops raised actionable comments by 14 points at three months against 2 points in a comparison programme, narrowing to 5 points by six months without reminders.",
+            "limitations": "Two programmes; allocation not random; attendance 68 percent.",
+            "contextTags": [
+              "faculty development",
+              "fading effect"
+            ]
+          },
+          {
+            "id": "ev-0um3qeu",
+            "relevance": 70,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Residents rated comments with a next step most useful and generic praise least useful; over half rarely read free-text comments.",
+            "limitations": "Rating of sample comments, not of their own feedback.",
+            "contextTags": [
+              "resident perspective",
+              "usefulness"
+            ]
+          },
+          {
+            "id": "ev-1xzrgyf",
+            "relevance": 85,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Women residents were 1.4 times as likely as men to receive comments with no actionable content, after adjustment for year and rotation.",
+            "limitations": "Three programmes; gender taken from programme records.",
+            "contextTags": [
+              "equity",
+              "gender",
+              "language"
+            ]
+          },
+          {
+            "id": "ev-0neejwx",
+            "relevance": 86,
+            "methodQuality": 45,
+            "kind": "qi-report",
+            "grade": "very-low",
+            "keyFindings": "Monthly individual reports were followed by the median proportion of actionable comments rising from 28 to 47 percent, with a run-chart shift from month five.",
+            "limitations": "No comparison group; policy change in month nine.",
+            "contextTags": [
+              "audit and feedback",
+              "run chart",
+              "faculty reports"
+            ]
+          },
+          {
+            "id": "ev-13byohh",
+            "relevance": 68,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Comments on forms completed within 24 hours met all criteria more often than those completed after 48 hours (41 against 19 percent).",
+            "limitations": "Association only; batch completion may mark busier rotations.",
+            "contextTags": [
+              "timeliness",
+              "balancing measure"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Replacing one free-text box with two feedback prompts was followed by comments meeting all three criteria rising from 31 to 52 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0njv9i0"
+            ],
+            "location": "Abstract, results",
+            "passage": "The proportion of comments meeting all three criteria rose from 31 to 52 percent.",
+            "interpretation": "Supports the form change as a first change idea; the design is uncontrolled.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "A three-criterion checklist for written comments had substantial agreement between raters and took about 40 seconds per comment.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-01e10t1"
+            ],
+            "location": "Abstract",
+            "passage": "Agreement was substantial (kappa 0.74), and rating took about 40 seconds per comment.",
+            "interpretation": "The weekly rating fits the chief residents' protected time.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c3",
+            "text": "The effect of brief faculty workshops on actionable comments faded by six months without reminders.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0riy2iu"
+            ],
+            "location": "Abstract",
+            "passage": "By six months, without reminders, the difference had narrowed to 5 points.",
+            "interpretation": "Micro-teaching needs a reinforcing loop such as individual reports.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Women residents were more likely than men to receive written comments with no actionable content.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1xzrgyf"
+            ],
+            "location": "Abstract",
+            "passage": "women were 1.4 times as likely as men to receive a comment with no actionable content",
+            "interpretation": "Report the outcome by resident gender.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Monthly individual reports to faculty were followed by a rise in the median proportion of actionable comments from 28 to 47 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0neejwx"
+            ],
+            "location": "Abstract",
+            "passage": "the monthly median proportion of actionable comments rose from 28 to 47 percent",
+            "interpretation": "Supports individual reports as the reinforcing change; no comparison group.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. A three-criterion checklist rates comments reliably and quickly. Prompted fields, brief faculty teaching and monthly individual reports were each followed by more actionable comments, but only the teaching study had a comparison group and its effect faded without reminders. Forms completed late carry less specific comments, residents value comments with a next step, and women residents receive non-actionable comments more often. The evidence supports testing a combined package locally with a run chart, balancing measures and a gender breakdown rather than assuming an effect size.",
+        "gradeOverall": "low",
+        "gradeRationale": "Mostly uncontrolled single-programme reports with one controlled before-after study; consistent direction but serious risk of bias and fading effects.",
+        "summary": "Seven retrieved records appraised; five source-derived claims with passages; overall certainty low."
+      },
+      "note": "Applied through the appraisal mapper on the production scan path (S13); certainty over seven inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].grade": "low",
+          "scan.items[1].kind": "qi-report",
+          "scan.items[5].grade": "very-low",
+          "scan.items[4].contextTags": [
+            "equity",
+            "gender",
+            "language"
+          ],
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0njv9i0"
+          ],
+          "scan.claims[1].uncertainty": "low",
+          "scan.claims[3].sourceIds": [
+            "ev-1xzrgyf"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-0neejwx"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "90-resident internal medicine residency",
+          "web assessment form with one free-text field",
+          "monthly faculty meetings",
+          "competence committee progress decisions"
+        ],
+        "reading": "Comment quality is shaped at three points: the form (what it asks for), the assessor (what they know and whether anyone shows them their own comments) and the moment of writing (soon after the encounter or in an end-of-rotation batch). The retrieved evidence supports changes at each point, with the strongest caution that teaching alone fades (claim c3) and that equity must be watched because women residents receive vaguer comments (claim c4). The committee and the residents are the users of the comments; the chief residents are the measurement system.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Single free-text feedback field",
+            "kind": "context",
+            "detail": "Current form; no prompt."
+          },
+          {
+            "id": "n2",
+            "label": "Two feedback prompts",
+            "kind": "framework",
+            "detail": "Change idea: relabel now, split in January (claim c1)."
+          },
+          {
+            "id": "n3",
+            "label": "Micro-teaching at faculty meetings",
+            "kind": "framework",
+            "detail": "Change idea; fades without reminders (claim c3)."
+          },
+          {
+            "id": "n4",
+            "label": "Monthly individual reports",
+            "kind": "framework",
+            "detail": "Reinforcing change idea (claim c5)."
+          },
+          {
+            "id": "n5",
+            "label": "Actionable comment",
+            "kind": "outcome",
+            "detail": "Specific behaviour, gap and next step (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Women residents",
+            "kind": "stakeholder",
+            "detail": "More non-actionable comments elsewhere (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Competence committee",
+            "kind": "stakeholder",
+            "detail": "Uses comments for progress decisions."
+          },
+          {
+            "id": "n8",
+            "label": "Late batch completion",
+            "kind": "context",
+            "detail": "Less specific comments; balancing measure."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n5",
+            "relation": "rarely produces"
+          },
+          {
+            "from": "n2",
+            "to": "n5",
+            "relation": "prompts"
+          },
+          {
+            "from": "n3",
+            "to": "n5",
+            "relation": "teaches"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "reinforces"
+          },
+          {
+            "from": "n8",
+            "to": "n5",
+            "relation": "lowers"
+          },
+          {
+            "from": "n5",
+            "to": "n7",
+            "relation": "informs"
+          },
+          {
+            "from": "n6",
+            "to": "n5",
+            "relation": "receive fewer of"
+          }
+        ],
+        "summary": "Map joins the form, the assessor and the timing of writing to the actionable comment, with an equity check by gender."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "outcome",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No weekly baseline of comment quality",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "One review of 200 forms cannot separate a later rise from ordinary variation.",
+            "opportunity": "Rate 25 comments a week from August and September forms to give eight baseline points before cycle 1."
+          },
+          {
+            "id": "g2",
+            "title": "Effects fade without reinforcement",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Teaching alone lost most of its effect by six months (claim c3).",
+            "opportunity": "Add monthly individual reports in cycle 3 and track whether faculty open them."
+          },
+          {
+            "id": "g3",
+            "title": "Raters can see which period a comment comes from",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Chief residents who expect improvement may rate borderline comments leniently.",
+            "opportunity": "Rate comment text only, pasted without dates or form layout, in mixed batches, with 20 percent double-rated."
+          },
+          {
+            "id": "g4",
+            "title": "Comment quality may differ by resident gender",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Women residents received non-actionable comments more often elsewhere (claim c4).",
+            "opportunity": "Plot the outcome separately by resident gender each month."
+          },
+          {
+            "id": "g5",
+            "title": "Longer prompts could reduce or delay forms",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Fewer or later forms would trade quantity and timeliness for quality.",
+            "opportunity": "Track forms completed per week and days from encounter to completion as balancing measures."
+          }
+        ],
+        "errorsFound": [
+          "The need counts forms with any comment as feedback given; the retrieved evidence shows most such comments are generic and unused by residents."
+        ],
+        "reevaluation": "The gaps support a measurement-first QI project with a blinded-as-possible weekly rating, a three-part change package with reinforcement, balancing measures and a gender breakdown.",
+        "summary": "Five gaps: no baseline, fading effects, rater bias, possible gender inequity and quantity or timeliness trade-offs."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[3].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No weekly baseline of comment quality"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "A three-part change package (relabelled then split feedback prompts, micro-teaching and monthly individual reports) will raise the weekly proportion of sampled comments meeting all three criteria from about 26 percent to at least 45 percent by March 2027, without reducing forms completed.",
+            "novelty": 30,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "Need is high for residents and the committee; each change has some retrieved support; feasibility rests on approved meeting time and chief resident rating.",
+            "risks": "Fading after teaching, rater drift and fewer forms."
+          },
+          {
+            "id": "h2",
+            "statement": "The gap in actionable comments between women and men residents will narrow as overall quality rises.",
+            "novelty": 45,
+            "need": 70,
+            "practiceChange": 55,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Structured prompts may reduce vague, attribute-focused comments (claim c4).",
+            "risks": "Too few comments per month for a precise comparison."
+          },
+          {
+            "id": "h3",
+            "statement": "Forms completed within 24 hours of the encounter will carry more actionable comments throughout the project.",
+            "novelty": 30,
+            "need": 50,
+            "practiceChange": 45,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Timeliness predicted specificity elsewhere.",
+            "risks": "Timeliness may mark less busy rotations rather than cause better comments."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the aim, with h2 as the equity check."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In the internal medicine residency, will a three-part change package tested in PDSA cycles from October 2026 to March 2027 raise the weekly proportion of sampled workplace-based assessment comments meeting all three quality criteria from about 26 percent to at least 45 percent, without reducing the number of forms completed?",
+            "framework": "QI-aim",
+            "population": "Written comments on mini clinical evaluation exercise and case-based discussion forms for 90 residents",
+            "intervention": "Relabelled then split feedback prompts, micro-teaching at faculty meetings, and monthly individual reports",
+            "comparator": "Eight weekly baseline points from August and September 2026 forms",
+            "outcome": "Weekly proportion of 25 sampled comments meeting all three criteria",
+            "time": "Eight baseline weeks, then about 24 weeks of PDSA cycles",
+            "setting": "Internal medicine residency, one teaching hospital"
+          }
+        ],
+        "finer": "Feasible within approved time; interesting to residents, faculty and the committee; novel locally; ethical as QI with faculty reports kept private; relevant to progress decisions.",
+        "summary": "One SMART QI aim with a baseline, a target and a balancing condition."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-pdsa",
+        "rationale": "The aim is local improvement of an education process, with change ideas that need adapting between cycles. PDSA cycles with a weekly run chart fit the volume (about 45 forms a week), use a rating method that is reliable and quick (c2), and test changes with retrieved support (c1, c5) while building in the reinforcement that teaching alone lacks (c3). Reporting follows SQUIRE 2.0.",
+        "alternatives": [
+          "Controlled comparison with another residency (refused: no partner programme and the question is local improvement)",
+          "Faculty teaching alone (refused: fades without reinforcement, claim c3)",
+          "Monitoring comment quality without any change (kept as the baseline period only)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0",
+          "Model for Improvement"
+        ],
+        "whyNotMoreComplex": "A controlled or cluster design would need several programmes and a fixed intervention; the run chart shows whether this residency improved and keeps the package adaptable.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Test the three-part change package in PDSA cycles from October 2026 to March 2027, with a weekly run chart of the proportion of 25 sampled comments meeting all three criteria, balancing measures for forms completed and timeliness, and a monthly breakdown by resident gender.",
+          "question": "Should the residency test prompts, micro-teaching and individual reports to raise actionable written feedback?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Each change idea has been followed by more actionable comments elsewhere and the rating method is reliable and quick.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c5"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The number of forms completed per week falls by more than a fifth during a cycle.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Education research office determination that the project is quality improvement",
+              "status": "met",
+              "evidence": "Determination EDU-QI-2026-19 dated 2026-08-05, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Faculty meeting time for micro-teaching",
+              "status": "met",
+              "evidence": "Program director approval PD-2026-08 dated 2026-08-18, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Faculty teaching alone",
+            "Monitoring without change"
+          ],
+          "note": "Rests on ledger claims c1, c2, c3 and c5 from retrieved records and on the investigator's approvals for both gates."
+        },
+        "summary": "QI with PDSA cycles recommended; the decision rests on four ledger claims and both gates are met."
+      },
+      "note": "Claims exist only when S13 applied the appraisal; selectionStatus requires S11; status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-pdsa",
+          "family": "qi-pdsa",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c5"
+          ],
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: four ledger claims from retrieved records, gates met; accepted and ready (G7). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "qi-pdsa"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Program-level QI project using the Model for Improvement: eight weekly baseline points rated from August and September 2026 forms, then three PDSA cycles from October 2026 to March 2027, with a weekly run chart of actionable comments.",
+        "population": "All mini clinical evaluation exercise and case-based discussion forms completed for the 90 residents; each week 25 comments are sampled by form number from the week's completed forms.",
+        "exposure": "Cycle 1 (October to December): feedback field relabelled 'What did the resident do well, and what should they do differently next time?' plus 20-minute micro-teaching in October and November. Cycle 2 (January to February): two separate fields, 'one thing to keep doing' and 'one thing to do differently next time'. Cycle 3 (February to March): a monthly one-page report to each faculty member with a sample of their own rated comments and the program median.",
+        "procedures": "An administrator extracts comment text without dates, form layout or names and mixes baseline and current comments in each rating batch. Chief residents rate each comment against the three criteria using written definitions and examples; 20 percent are rated by both. Cycle decisions are made at the monthly faculty meeting from the run chart.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Actionable comments",
+            "measure": "Weekly proportion of 25 sampled comments meeting all three criteria: specific behaviour, gap, concrete next step",
+            "timing": "Weekly; 8 baseline and about 24 intervention weeks",
+            "why": "Directly measures the feedback residents can use.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Actionable comments by resident gender",
+            "measure": "Monthly proportion meeting all three criteria for women and for men residents",
+            "timing": "Monthly",
+            "why": "Checks that improvement reaches women residents (claim c4).",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Faculty reach of the change package",
+            "measure": "Proportion of faculty attending micro-teaching and opening monthly reports",
+            "timing": "Monthly",
+            "why": "Separates a weak idea from weak delivery.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Forms completed per week",
+            "measure": "Count of completed forms",
+            "timing": "Weekly",
+            "why": "Longer prompts must not reduce the number of assessments.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Days from encounter to form completion",
+            "measure": "Median days per week",
+            "timing": "Weekly",
+            "why": "Late batch completion lowers specificity.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Twenty-five comments at about 40 seconds each plus double rating take under 30 minutes a week, within the chief residents' two hours; relabelling is possible now and the second field from January.",
+        "biasMitigation": [
+          "Comment text rated without dates, layout or names, in mixed batches",
+          "Written operational definition with examples fixed before baseline",
+          "Twenty percent double rating with monthly agreement checks",
+          "Run chart annotated with policy or rotation changes"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Rater expectation",
+            "severity": "watch",
+            "note": "Two-prompt comments may be recognisable from their structure; double rating limits drift."
+          },
+          {
+            "id": "b2",
+            "label": "Secular change",
+            "severity": "watch",
+            "note": "Other education changes are annotated on the chart."
+          },
+          {
+            "id": "b3",
+            "label": "Sampling",
+            "severity": "ok",
+            "note": "Form-number sampling rather than rater choice."
+          }
+        ],
+        "parsimony": {
+          "score": 83,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "One outcome measure, one equity breakdown, one process and two balancing measures"
+          ],
+          "simplestPath": "One weekly measure on a run chart, three cycles, existing forms and meetings."
+        },
+        "theoreticalFramework": "Model for Improvement; audit and feedback principles for the individual reports.",
+        "summary": "Three PDSA cycles after eight baseline weeks with one outcome measure, a gender breakdown and two balancing measures."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].name": "Actionable comments by resident gender",
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Time-ordered weekly measurement on a run chart with pre-specified rules; p-chart as a secondary display.",
+        "sampleSize": "Twenty-five comments a week is what two chief residents can rate with double rating inside their protected time. With a baseline near 26 percent, a subgroup of 25 gives 3-sigma p-chart limits of about 26 points either side of the centre line, too wide to flag single weeks, so the run chart rules carry the judgement. A sustained rise to about 45 percent would produce a shift of six or more consecutive points above the baseline median within the second cycle; the 24 intervention weeks allow the shift rule to trigger and the monthly gender breakdown to accumulate about 50 comments per group per month.",
+        "primaryAnalysis": "Run chart of the weekly proportion with the baseline median as centre line; shift (six or more points on one side), trend (five or more in one direction), runs and an astronomical point agreed in advance. The median is frozen after baseline and re-estimated only after a sustained shift.",
+        "secondaryAnalysis": "p-chart for context; monthly proportions by resident gender with 95 percent intervals; run charts for forms completed and days to completion; inter-rater agreement (kappa) each month.",
+        "missingData": "Weeks with fewer than 25 forms are plotted with their actual subgroup size and annotated; comments that cannot be rated are counted and reported.",
+        "multiplicity": "One outcome measure carries the aim; the gender breakdown and balancing measures are descriptive.",
+        "software": "Spreadsheet run chart template maintained by the chief residents and checked by the associate program director.",
+        "overfittingGuards": [
+          "Run chart rules fixed before baseline",
+          "Baseline median frozen until a sustained shift",
+          "Gender breakdown pre-specified; no other subgroups",
+          "Cycle changes marked on the chart before new points are read"
+        ],
+        "summary": "Run chart with pre-specified rules; 25 comments a week, sized by rating capacity and the change worth keeping."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "shift of six or more"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal. Risks are that individual reports feel punitive to faculty and that rated comments identify residents; reports go only to the faculty member and comments are rated without names.",
+        "consent": "Faculty are told at the September meeting how comments will be sampled and reported, and may ask not to receive individual reports; residents are informed through the program newsletter. No additional data are collected from either group.",
+        "data": "Comment text is extracted without names or dates; the key linking comments to faculty for individual reports is held by the program administrator; results are reported at program level only.",
+        "equity": "PROGRESS-Plus: resident gender is analysed because vaguer comments for women residents are reported elsewhere; international medical graduates are a second group of concern, but the program will not create a new identifier for them and notes this as a limitation.",
+        "effectiveness": "Success is a sustained shift in actionable comments with no fall in forms completed and no widening gender gap.",
+        "efficiency": "Under 30 minutes of rating a week and 20 minutes of each monthly meeting.",
+        "costs": "No direct costs; staff time within existing roles.",
+        "grants": "None needed; a positive result could support a regional medical education innovation grant for spread.",
+        "partnerships": "Chief residents (measurement), program administrator (extraction), two residents from the program's wellness committee (report design) and the competence committee chair.",
+        "rebPath": "Determined to be quality improvement not requiring REB review by the education research office (EDU-QI-2026-19); a later publication follows SQUIRE 2.0 and the journal's QI policy.",
+        "limitations": "One program; raters not fully blinded; gender taken from program records.",
+        "summary": "Minimal-risk QI with private faculty reports, name-free rating and a pre-specified gender breakdown."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "EDU-QI-2026-19"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two residents review the prompt wording before cycle 1 and the report template before cycle 3; one faculty member from each division joins the cycle review at faculty meetings.",
+        "socialListening": "No social media listening; free-text answers from the program's annual resident evaluation are read for mentions of written feedback.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Generic praise",
+            "quote": "Composite paraphrase: Every form says great job; I stopped reading them in first year.",
+            "implication": "Measure comments with a next step, not the number of comments.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Time pressure for faculty",
+            "quote": "Composite paraphrase: I fill these in on Sunday night for the whole rotation, so of course they are vague.",
+            "implication": "Track days to completion and encourage same-day forms.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Committee needs",
+            "quote": "Composite paraphrase: We cannot defend a progress decision on comments like keep reading.",
+            "implication": "Share the run chart with the committee each quarter.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Feedback that differs by gender",
+            "quote": "Composite paraphrase: My male co-residents get told how to manage the patient; I get told I am lovely to work with.",
+            "implication": "Keep the monthly gender breakdown visible at faculty meetings.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on generic praise, time pressure, committee needs and gendered feedback."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].theme": "Feedback that differs by gender",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Raising actionable written feedback on workplace-based assessments in an internal medicine residency: a quality improvement project",
+        "abstract": "Problem: about one in four written comments on the residency's workplace-based assessment forms was actionable. Interventions: relabelled then split feedback prompts, micro-teaching at faculty meetings and monthly individual reports, tested in three PDSA cycles. Measures: weekly proportion of 25 sampled comments meeting three criteria on a run chart, with a gender breakdown and balancing measures. Results will be reported after March 2027.",
+        "introduction": "Written comments on workplace-based assessments are often generic, residents rarely use them, and women residents receive vaguer comments. Single changes to forms or teaching have helped elsewhere but faded without reinforcement.",
+        "methods": "Model for Improvement with eight baseline weeks and three cycles. Comment text was rated without dates or names by two chief residents using a three-criterion checklist, with 20 percent double rating. Run chart rules were fixed before baseline. The project was determined to be quality improvement.",
+        "results": "No data have been collected yet. The report will present the annotated run chart, the gender breakdown, rater agreement and the balancing measures.",
+        "discussion": "The discussion will interpret any shift against the run chart rules and co-interventions, compare the size and durability of change with the retrieved reports, and state what the program keeps.",
+        "limitations": "Single program; raters could sometimes infer the period; the outcome measures comment quality, not resident performance.",
+        "conclusion": "To be written after the final cycle; limited to comment quality in this program.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE-structured draft with results left empty until data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Write the operational definition and examples for each criterion before baseline rating starts",
+          "Confirm with the administrator that comment text can be extracted without dates or form layout",
+          "Run an identity check on the seven retrieved records before the SQUIRE report cites them"
+        ],
+        "improvementNotes": "Seven records came from a recorded search and were appraised at abstract level; the decision rests on four ledger claims. The gender breakdown is pre-specified and the individual reports stay private.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before baseline rating."
+      },
+      "note": "The audit stage's own fields fail at 875fe59 because mergeStage overwrites the audit patch (A3 L1.6); they state the correct behaviour.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.entries": {
+            "min": 13
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Statuses are checked in the export; the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Actionable written feedback on workplace-based assessments in an internal medicine residency",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "No funding. Rating is done by the two chief residents in two hours of protected time a week. The software administrator can relabel the existing feedback field now but cannot add a second field before January 2027. Faculty meetings are monthly and can give 20 minutes to the project.",
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "protocol.outcomes": {
+            "length": 5
+          }
+        },
+        "screen": {
+          "includes": [
+            "Actionable written feedback on workplace-based assessments in an internal medicine residency"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Actionable written feedback on workplace-based assessments in an internal medicine residency",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.rawNeed": "I am the associate program director for assessment in a 90-resident internal medicine residency. Residents receive workplace-based assessments (mini clinical evaluation exercises and case-based discussions) on a web form, and each form has one free-text feedback box. When our competence committee reviewed 200 forms from last year, most comments were generic, such as \"good job\" or \"keep reading\", and only about one in four said what the resident did, what to change and how. Residents tell us the comments are not useful, and the committee struggles to make progress decisions from them.\n\nWe want to run a quality improvement project using PDSA cycles to raise the proportion of forms with actionable written feedback. Change ideas we are considering: relabelling and then splitting the free-text box into two prompts (\"one thing to keep doing\" and \"one thing to do differently next time\"), a 20-minute micro-teaching session at faculty meetings, and a monthly report to each faculty member showing their own comments rated against a short checklist. We would rate a weekly sample of comments against three criteria (specific behaviour, clear gap, concrete next step) and show the results on a run chart.\n\nI need help with the aim statement, the operational definition of an actionable comment, the balancing measures (for example fewer forms completed, or forms completed later), and how to avoid bias when we rate the comments. We also worry that comment quality differs by resident gender, so we want to look at that. We have no funding; the chief residents can rate forms, and faculty meetings happen monthly. We would like to start in October and run until March.",
+          "scan.items": {
+            "length": 7
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Actionable written feedback on workplace-based assessments in an internal medicine residency"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; claims require S13. One click, one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.constraints": "No funding. Rating is done by the two chief residents in two hours of protected time a week. The software administrator can relabel the existing feedback field now but cannot add a second field before January 2027. Faculty meetings are monthly and can give 20 minutes to the project.",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 5
+            },
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "protocol.outcomes[1].role": "secondary"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

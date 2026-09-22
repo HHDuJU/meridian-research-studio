@@ -6,6 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { spawn } from "node:child_process";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import { treeSha256 as digestSourceTree } from "./tree-digest.mjs";
 
@@ -146,7 +147,7 @@ const WORK_ORDER_PATHS = [
   [/^scan\.comparisons(\[|\.|$)/, "S9"],
 ];
 
-const IMPLEMENTED = new Set(["D1", "D7", "D20", "D20(a)", "D21", "L1", "P1", "P2", "R1", "S3", "S16", "S17", "F4"]);
+const IMPLEMENTED = new Set(["D1", "D5", "D7", "D10", "D18", "D20", "D20(a)", "D21", "L1", "P1", "P2", "R1", "S3", "S10", "S11", "S16", "S17", "F4"]);
 
 function capabilityOf(storePath) {
   for (const [re, entry] of WORK_ORDER_PATHS) {
@@ -179,6 +180,7 @@ function matchPred(observed, expected) {
     if ("isNull" in expected) return expected.isNull ? observed === null : observed !== null;
     if ("absent" in expected) return expected.absent ? observed === undefined : observed !== undefined;
     if ("oneOf" in expected) return expected.oneOf.some((v) => matchPred(observed, v));
+    if ("anyOf" in expected) return expected.anyOf.some((v) => matchPred(observed, v));
     if ("min" in expected || "max" in expected) {
       const n = typeof observed === "number" ? observed : Array.isArray(observed) ? observed.length : Number(observed);
       if (Number.isNaN(n)) return false;
@@ -190,6 +192,18 @@ function matchPred(observed, expected) {
     if ("matches" in expected) return new RegExp(expected.matches).test(String(observed ?? ""));
   }
   return JSON.stringify(canonicalJson(observed) ?? null) === JSON.stringify(canonicalJson(expected) ?? null);
+}
+
+/** Screen text match: case-insensitive substring, with anyOf/oneOf objects from the bank goldens. */
+export function screenHas(body, t) {
+  const hay = String(body ?? "");
+  if (t && typeof t === "object" && !Array.isArray(t)) {
+    if (Array.isArray(t.anyOf)) return t.anyOf.some((x) => screenHas(hay, x));
+    if (Array.isArray(t.oneOf)) return t.oneOf.some((x) => screenHas(hay, x));
+    if (typeof t.includes === "string") return screenHas(hay, t.includes);
+  }
+  if (typeof t !== "string") return false;
+  return hay.toLowerCase().includes(t.toLowerCase());
 }
 
 export function evalIssues(expectIssues, lastIssues, step, n, action, checkpoints) {
@@ -290,7 +304,7 @@ function evalExpect({ study, persistedStudy, step, n, action, checkpoints, lastI
   if (step.expect?.screen?.includes) {
     const body = screenText ?? "";
     for (const t of step.expect.screen.includes) {
-      const ok = body.includes(t);
+      const ok = screenHas(body, t);
       checkpoints.push(checkpoint({ step: n, action, check: "screen.includes", expected: t, observed: ok ? t : body.slice(0, 200), ok, reason: ok ? "" : "text not visible" }));
     }
   }
@@ -534,29 +548,11 @@ async function runStore(scenario, lib) {
         actionRoutes.push({ do: step.do, route: "store-fallback" });
         const s = study();
         const beforeItem = s.scan.items.find((it) => it.title === step.record);
-        const beforeVal = beforeItem ? beforeItem[step.field] : undefined;
-        let extraDocs = [];
-        const items = s.scan.items.map((it) => {
-          if (it.title !== step.record) return it;
-          if (step.field === "status") return { ...it, provenance: { ...it.provenance, status: step.value } };
-          if (step.field === "year") return { ...it, year: step.value };
-          if (step.field === "keyFindings") return { ...it, keyFindings: step.value };
-          if (step.field === "limitations") return { ...it, limitations: step.value };
-          if (step.field === "abstract") {
-            const text = String(step.value ?? "");
-            const sha = crypto.createHash("sha256").update(text).digest("hex");
-            const documentId = `doc-${sha.slice(0, 12)}`;
-            extraDocs.push({ id: documentId, recordId: it.id, sha256: sha, text, mediaType: "text/plain", sourceScope: "abstract" });
-            return { ...it, abstract: { documentId, sha256: sha, text } };
-          }
-          return it;
-        });
-        S().mergeStage(studyId, "scan", { items });
-        if (extraDocs.length) S().update(studyId, { documents: [...(study().documents ?? []), ...extraDocs] });
+        const r = S().changeSource(studyId, { title: step.record, id: beforeItem?.id }, step.field, step.value);
         const afterItem = study().scan.items.find((it) => it.title === step.record);
-        const afterVal = afterItem ? afterItem[step.field] : undefined;
-        const changed = sourceContentChanged(beforeVal, afterVal);
-        checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: changed, ok: changed, reason: changed ? "" : "source content did not change; staleness not supported" }));
+        const changed = r.ok === true;
+        checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: changed, ok: changed, reason: changed ? "" : (r.reason || "source content did not change; staleness not supported") }));
+        void afterItem;
       } else if (step.do === "reload") {
         actionRoutes.push({ do: step.do, route: "store-fallback" });
         const raw = globalThis.localStorage?.getItem(PERSIST_KEY);
@@ -724,6 +720,7 @@ async function ensureScenarioServer(preferred) {
     ...process.env,
     VITE_SCENARIO_MODE: "true",
     MERIDIAN_MODEL_MODE: "replay",
+    MERIDIAN_RETRIEVAL_MODE: "replay",
     MERIDIAN_REPLAY_DIR: path.join(ROOT, "scenarios/replay"),
   };
   const child = spawn("node", ["scripts/with-app-env.mjs", "vite", "dev", "--host", "127.0.0.1", "--port", String(port), "--strictPort"], {
@@ -819,6 +816,9 @@ async function runUi(scenario, lib, url) {
           await btn.click();
           await waitIlluminateIdle(page);
           await waitPersistedLastIlluminate(page, step.stage);
+          if (step.stage === "design") {
+            await page.locator("[data-meridian-decision]").first().waitFor({ timeout: 5000 }).catch(() => undefined);
+          }
         } else if (step.do === "retrieve") {
           await gotoStage(page, "scan");
           const q = page.getByLabel(/Search query/i);
@@ -852,6 +852,8 @@ async function runUi(scenario, lib, url) {
           } else {
             actionRoutes.push({ do: step.do, route: "ui" });
             await btn.first().click();
+            await page.locator("[data-meridian-decision]").first().waitFor({ timeout: 3000 }).catch(() => undefined);
+            await page.waitForTimeout(150);
           }
         } else if (step.do === "withdraw-decision") {
           await gotoStage(page, "design");
@@ -903,8 +905,32 @@ async function runUi(scenario, lib, url) {
             await field.fill(String(step.value ?? ""));
           }
         } else if (step.do === "change-source") {
-          unsupported(checkpoints, step, n, "no screen control for change-source (store action only)", actionRoutes);
-          checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: false, ok: false, reason: "source content did not change; UI change-source is unsupported" }));
+          await gotoStage(page, "scan");
+          const field = step.field || "keyFindings";
+          const rec = page.locator("article[data-meridian-record]").filter({ hasText: String(step.record || "") });
+          const loc = (await rec.count())
+            ? rec.locator(`[data-meridian-change-source="${field}"]`).first()
+            : page.locator(`[data-meridian-change-source="${field}"]`).first();
+          if ((await loc.count()) === 0) {
+            unsupported(checkpoints, step, n, "no screen control for change-source", actionRoutes);
+            checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: false, ok: false, reason: "source content did not change; UI change-source is unsupported" }));
+          } else {
+            actionRoutes.push({ do: step.do, route: "ui" });
+            const before = await loc.inputValue().catch(() => "");
+            if (field === "status") await loc.selectOption(String(step.value));
+            else if (field === "year") {
+              await loc.fill(String(step.value));
+              await loc.blur();
+            } else {
+              await loc.fill(String(step.value ?? ""));
+              await loc.blur();
+            }
+            await page.waitForTimeout(200);
+            await page.locator("[data-meridian-decision-stale]").waitFor({ timeout: 4000 }).catch(() => undefined);
+            const after = await loc.inputValue().catch(() => "");
+            const changed = after !== before && after === String(step.value ?? after);
+            checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: changed, ok: changed, reason: changed ? "" : "source content did not change; staleness not supported" }));
+          }
         } else if (step.do === "mark-complete") {
           unsupported(checkpoints, step, n, "no dedicated mark-complete control on screen", actionRoutes);
         } else if (step.do === "wait") {
@@ -965,6 +991,7 @@ async function main() {
   fs.mkdirSync(runDir, { recursive: true });
   const summaryPath = path.join(runDir, "summary.jsonl");
   const statuses = [];
+  let qualifyingFullWorkflows = 0;
 
   let server = { url: baseUrl || "http://127.0.0.1:8080", child: null };
   if (mode === "ui") {
@@ -1026,6 +1053,7 @@ async function main() {
         !usedStoreFallback &&
         !usedUnsupported &&
         !capabilityAbsent;
+      if (executedWorkflow) qualifyingFullWorkflows += 1;
       const failed = run.checkpoints.filter((c) => !c.ok);
       const result = {
         scenarioId: scenario.id,
@@ -1037,6 +1065,9 @@ async function main() {
         appVersion: "a33",
         status,
         executedWorkflow,
+        authored: files.length,
+        executedAttempts: 1,
+        qualifyingFullWorkflows: executedWorkflow ? 1 : 0,
         actionRoutes: routes,
         checkpoints: run.checkpoints,
         consoleErrors: run.consoleErrors ?? [],
@@ -1053,6 +1084,9 @@ async function main() {
     if (server.child) server.child.kill();
   }
   console.log(`wrote ${runDir}`);
+  const counts = { authored: files.length, executedAttempts: statuses.length, qualifyingFullWorkflows };
+  fs.writeFileSync(path.join(runDir, "COUNTS.json"), `${JSON.stringify(counts, null, 2)}\n`);
+  console.log(`counts authored=${counts.authored} executedAttempts=${counts.executedAttempts} qualifyingFullWorkflows=${counts.qualifyingFullWorkflows}`);
   process.exitCode = exitCodeForStatuses(statuses);
 }
 

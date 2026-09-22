@@ -1,0 +1,1294 @@
+{
+  "id": "sc-052",
+  "version": 1,
+  "title": "Day surgery: antiemetic prophylaxis adherence and rescue treatment, case-control study, one model field explicitly cleared",
+  "field": "anesthesia",
+  "level": 2,
+  "family": "case-control",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path with two level-2 ambiguities. The investigator types no constraints at creation; the problem reply omits the investigator-owned constraints field (omitKeys) instead of inventing one, and the investigator then adds the missing constraint on the Problem screen (set-field problem.constraints), which changes the stored text (G11: investigator edits apply) and flags nothing because only the Problem stage is complete (G8). Routing is explicit case-control ('We want to do a case-control study'; the need avoids the other design words). A fixture search returns six records; the appraisal records four claims; the decision rests on c1 to c3 with the ethics gate unknown (accepted, blocked). The protocol reply sends theoreticalFramework null on purpose: an explicit null on a model-owned statement clears it to '' with issue 'cleared' and never becomes a default framework; a reload on the Protocol route checks that it stays empty. The case-control choice is justified by hand-reading of paper drug records within 60 hours (about 182 cases and 364 controls). Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 2, 4, 6 (ev-0nlfv7w, ev-0oyehwd, ev-05117f0, ev-048uene); titleYearKey hash for records 3, 5 (ev-0jp5bzf, ev-0rcchpg). Requires S13 (appraisal), S11 (selectionStatus, actionStatus, basis) and D5 (status text); the null clearing and the investigator edit hold at 875fe59. Catches: a model that fills an empty investigator field, an explicit null replaced by a default, an investigator edit lost on reload, and an export that differs from the store.",
+  "inputs": {
+    "need": "I am an anaesthetist and the clinical lead for our day surgery unit, which does about 6,000 adult procedures a year in gynaecology, orthopaedics, general surgery and ENT. Two years ago we adopted a risk-tailored protocol for preventing postoperative nausea and vomiting: patients are scored with a simple four-factor risk score and should receive one, two or three antiemetic agents depending on the score. Our recovery nurses keep a nausea log, and it shows that about one patient in eight still needs a rescue antiemetic, and nausea is the commonest reason for an unplanned overnight stay. When I look at individual cases, many seem not to have had the prophylaxis the protocol asks for, but I only see the ones that go wrong.\n\nWe want to do a case-control study: take patients who needed rescue treatment for nausea or vomiting in recovery or whose discharge was delayed by it, compare them with patients from the same operating lists who did not, and check in the anaesthetic record whether prophylaxis matched the protocol for their risk score. The drug section of the anaesthetic record is on paper, so every record has to be read by hand, which is why we cannot look at everyone. I would like to know whether patients who received less prophylaxis than the protocol recommends are more likely to need rescue treatment, and whether giving more than recommended causes sedation that delays discharge.\n\nI need help defining cases and controls, deciding how many records we need to read, and handling the fact that sicker patients and longer operations may get more prophylaxis anyway.",
+    "constraints": "",
+    "localFacts": [
+      "The day surgery unit performed about 6,000 adult procedures last year; the recovery nausea log recorded a rescue antiemetic for 742 patients.",
+      "The drug section of the anaesthetic record is on paper and is scanned into the hospital record after discharge.",
+      "The health records department approved access to scanned anaesthetic records for this project on 2026-09-09 (approval HR-2026-118).",
+      "No research ethics board application has been submitted yet."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The investigator leaves the constraints field empty at creation (a missing constraint, level 2).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am an anaesthetist and the clinical lead for our day surgery unit, which does about 6,000 adult procedures a year in gynaecology, orthopaedics, general surgery and ENT. Two years ago we adopted a risk-tailored protocol for preventing postoperative nausea and vomiting: patients are scored with a simple four-factor risk score and should receive one, two or three antiemetic agents depending on the score. Our recovery nurses keep a nausea log, and it shows that about one patient in eight still needs a rescue antiemetic, and nausea is the commonest reason for an unplanned overnight stay. When I look at individual cases, many seem not to have had the prophylaxis the protocol asks for, but I only see the ones that go wrong.\n\nWe want to do a case-control study: take patients who needed rescue treatment for nausea or vomiting in recovery or whose discharge was delayed by it, compare them with patients from the same operating lists who did not, and check in the anaesthetic record whether prophylaxis matched the protocol for their risk score. The drug section of the anaesthetic record is on paper, so every record has to be read by hand, which is why we cannot look at everyone. I would like to know whether patients who received less prophylaxis than the protocol recommends are more likely to need rescue treatment, and whether giving more than recommended causes sedation that delays discharge.\n\nI need help defining cases and controls, deciding how many records we need to read, and handling the fact that sicker patients and longer operations may get more prophylaxis anyway.",
+          "problem.constraints": "",
+          "family": "case-control",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am an anaesthetist and the clinical lead for our day surgery unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Adherence to risk-tailored antiemetic prophylaxis and rescue treatment for nausea and vomiting after day surgery",
+        "subtitle": "Case-control study of under- and over-prophylaxis",
+        "family": "case-control",
+        "statement": "In a day surgery unit of about 6,000 adult procedures a year, about one patient in eight needs a rescue antiemetic in recovery and nausea is the commonest reason for unplanned overnight stays, two years after a risk-tailored prophylaxis protocol was adopted. It is not known how often prophylaxis matches the protocol, or whether patients who receive less than recommended are more likely to need rescue treatment. Because the drug section of the anaesthetic record is on paper, a design that reads a limited number of records is needed. No time or data limits were stated with the request.",
+        "whoAffected": "Adults having day surgery, especially those with high risk scores, their carers who expect them home the same day, recovery nurses and anaesthetists.",
+        "whatHurts": "Nausea and vomiting are distressing, delay discharge and cause unplanned overnight stays; extra antiemetics can sedate patients and delay discharge too.",
+        "currentPractice": "Four-factor risk score and one to three antiemetic agents by score; drugs recorded on the paper section of the anaesthetic record; rescue treatment recorded in the recovery nausea log.",
+        "whyNow": "The protocol has been in place for two years without any check of adherence, and unplanned stays are rising.",
+        "patientCenteredGoal": "Every patient receives the prophylaxis their risk calls for and goes home on the day of surgery without nausea or sedation holding them back.",
+        "summary": "Problem framed as a question about prophylaxis adherence and rescue treatment; the need states no constraints."
+      },
+      "note": "The reply omits the investigator-owned constraints field (omitKeys), so the empty field stays empty and no G11 issue arises; nothing is invented for it.",
+      "expect": {
+        "store": {
+          "title": "Adherence to risk-tailored antiemetic prophylaxis and rescue treatment for nausea and vomiting after day surgery",
+          "family": "case-control",
+          "problem.constraints": "",
+          "problem.statement": {
+            "includes": "No time or data limits were stated"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Adherence to risk-tailored antiemetic prophylaxis and rescue treatment for nausea and vomiting after day surgery"
+          ]
+        }
+      }
+    },
+    {
+      "do": "set-field",
+      "path": "problem.constraints",
+      "value": "Records are read by two anaesthesia fellows within 60 hours in total. No patient contact: scanned anaesthetic records and the recovery nausea log only. Extraction must take place on hospital premises.",
+      "note": "The investigator supplies the missing constraint through the Problem screen. Investigator edits change investigator-owned text (G11). Only the Problem stage is complete, so nothing downstream is flagged (G8).",
+      "expect": {
+        "store": {
+          "problem.constraints": "Records are read by two anaesthesia fellows within 60 hours in total. No patient contact: scanned anaesthetic records and the recovery nausea log only. Extraction must take place on hospital premises.",
+          "problem.rawNeed": "I am an anaesthetist and the clinical lead for our day surgery unit, which does about 6,000 adult procedures a year in gynaecology, orthopaedics, general surgery and ENT. Two years ago we adopted a risk-tailored protocol for preventing postoperative nausea and vomiting: patients are scored with a simple four-factor risk score and should receive one, two or three antiemetic agents depending on the score. Our recovery nurses keep a nausea log, and it shows that about one patient in eight still needs a rescue antiemetic, and nausea is the commonest reason for an unplanned overnight stay. When I look at individual cases, many seem not to have had the prophylaxis the protocol asks for, but I only see the ones that go wrong.\n\nWe want to do a case-control study: take patients who needed rescue treatment for nausea or vomiting in recovery or whose discharge was delayed by it, compare them with patients from the same operating lists who did not, and check in the anaesthetic record whether prophylaxis matched the protocol for their risk score. The drug section of the anaesthetic record is on paper, so every record has to be read by hand, which is why we cannot look at everyone. I would like to know whether patients who received less prophylaxis than the protocol recommends are more likely to need rescue treatment, and whether giving more than recommended causes sedation that delays discharge.\n\nI need help defining cases and controls, deciding how many records we need to read, and handling the fact that sicker patients and longer operations may get more prophylaxis anyway.",
+          "completedStages": [
+            "problem"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "screen": {
+          "includes": [
+            "60 hours"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "risk-tailored antiemetic prophylaxis adherence day surgery rescue treatment postoperative nausea vomiting delayed discharge",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Adherence to risk-tailored antiemetic prophylaxis in ambulatory surgery: an observational study",
+            "authors": "Kowalski-Mensah J, Oduya-Bright L, Svensson-Park A",
+            "year": 2018,
+            "venue": "Orrinford Journal of Perioperative Practice",
+            "doi": "10.5555/ojpp.2018.0412",
+            "providerType": "journal-article",
+            "abstract": "We compared the antiemetic prophylaxis given with that recommended by a risk-tailored protocol in consecutive adults undergoing ambulatory surgery at two hospitals. Across 3,400 ambulatory surgery patients, prophylaxis matched the risk-tailored protocol in 52 percent. Under-prophylaxis was most common in patients with the highest risk scores, who received fewer agents than recommended in 38 percent of cases, while over-prophylaxis was most common in low-risk patients. Adherence varied more between anaesthetists than between surgical specialties. Risk scores were reconstructed from records, which may have misclassified some patients. A protocol alone did not ensure that prophylaxis matched risk."
+          },
+          {
+            "title": "Under-prophylaxis and nausea or vomiting requiring rescue treatment after day surgery: a case-control analysis",
+            "authors": "Ferreira-Nakashima D, Achebe-Holm R",
+            "year": 2021,
+            "venue": "Kestrelmoor Anaesthesia Reports",
+            "doi": "10.5555/kar.2021.0078",
+            "providerType": "journal-article",
+            "abstract": "We identified 214 day surgery patients who needed rescue antiemetic treatment in recovery and 428 controls from the same operating lists, and read their anaesthetic records to classify prophylaxis against the unit protocol. Under-prophylaxis was associated with nausea or vomiting requiring rescue treatment (adjusted odds ratio 1.8, 95 percent CI 1.2 to 2.7) after adjustment for risk score, duration of surgery and opioid dose. Over-prophylaxis was not associated with fewer rescue treatments. Record readers were not blinded to case status, and the protocol changed during the study period. The findings support checking adherence as a target for improvement."
+          },
+          {
+            "title": "Recovery unit nausea logs as a source of outcome data: agreement with nurse observation",
+            "authors": "Mbatha-Carlsson T, Rao-Whitfield P",
+            "year": 2016,
+            "venue": "Harthill Recovery Nursing Letters",
+            "providerType": "journal-article",
+            "abstract": "We compared entries in a recovery unit nausea log with direct observation by research nurses for 480 adults after day surgery. Recovery unit nausea logs captured 87 percent of rescue antiemetic treatments seen by nurse observers, and almost all missed entries occurred during busy periods at the end of the day. Nausea that did not lead to treatment was captured far less reliably. Entries were accurate for the drug and the time given. The log is a reasonable source for rescue treatment as an outcome but not for nausea severity. The study took place in one unit with an established logging culture."
+          },
+          {
+            "title": "Risk-tailored versus fixed antiemetic prophylaxis for adults having surgery: a review of comparative studies",
+            "authors": "Delacroix-Osei M, Lindgren-Adeyemi S, Tanaka-Frost E, Holloway-Nkemelu B",
+            "year": 2023,
+            "venue": "Vellmar Anaesthesia Syntheses",
+            "doi": "10.5555/vas.2023.0156",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 19 comparative studies of risk-tailored and fixed antiemetic prophylaxis in adults having surgery under general anaesthesia. Risk-tailored prophylaxis reduced the incidence of nausea and vomiting in high-risk patients compared with fixed single-agent regimens, while low-risk patients received fewer drugs with similar outcomes. Benefits depended on adherence, which was reported in only seven studies and was often below 60 percent. Few studies reported discharge outcomes after day surgery. Most studies were before-after comparisons with moderate to high risk of bias, and definitions of nausea and vomiting varied widely."
+          },
+          {
+            "title": "Unplanned overnight admission after day surgery: causes and the contribution of nausea and vomiting",
+            "authors": "Quinn-Adebayo F, Solberg-Marsh K",
+            "year": 2019,
+            "venue": "Orrinford Journal of Perioperative Practice",
+            "providerType": "journal-article",
+            "abstract": "We reviewed all unplanned overnight admissions after day surgery in three units over one year. Of 312 unplanned admissions, 31 percent were attributed to nausea and vomiting, 24 percent to pain and 18 percent to surgical complications. Admissions for nausea were more common after gynaecological laparoscopy and in patients who received opioids in recovery. Units differed in how they recorded the reason for admission, and the attribution was made by the discharging nurse. Reducing nausea and vomiting could reduce unplanned admissions substantially, but the proportion depends on local case mix."
+          },
+          {
+            "title": "Over-prophylaxis with antiemetics and sedation delaying discharge after day surgery",
+            "authors": "Brennan-Iqbal O, Varga-Lund C",
+            "year": 2025,
+            "venue": "Kestrelmoor Anaesthesia Reports",
+            "doi": "10.5555/kar.2025.0031",
+            "providerType": "journal-article",
+            "abstract": "We examined whether giving more antiemetic agents than recommended by the risk score affected recovery after day surgery in 1,860 adults. Giving more antiemetic agents than the risk score indicated was associated with sedation that delayed discharge in 6 percent of patients, compared with 2 percent of patients whose prophylaxis matched the score. The difference was largest when a sedating antihistamine was added. Rescue treatment rates were similar in the two groups. The analysis could not fully separate the effect of extra antiemetics from that of the conditions that prompted anaesthetists to give them."
+          }
+        ]
+      },
+      "note": "Six records with abstracts; ids are stableRecordId values computed by the generator (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0nlfv7w",
+            "ev-0oyehwd",
+            "ev-0jp5bzf",
+            "ev-05117f0",
+            "ev-0rcchpg",
+            "ev-048uene"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[1].id": "ev-0oyehwd",
+          "scan.items[1].doi": "10.5555/kar.2021.0078",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Under-prophylaxis and nausea or vomiting requiring rescue treatment after day surgery: a case-control analysis"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0nlfv7w",
+            "relevance": 88,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Prophylaxis matched the protocol in 52 percent of 3,400 patients; high-risk patients were under-treated in 38 percent.",
+            "limitations": "Risk scores reconstructed from records.",
+            "contextTags": [
+              "adherence",
+              "ambulatory surgery"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0oyehwd",
+            "relevance": 95,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Under-prophylaxis associated with rescue treatment (adjusted odds ratio 1.8, 95 percent CI 1.2 to 2.7) in 214 cases and 428 controls.",
+            "limitations": "Unblinded record readers; protocol changed during the study.",
+            "contextTags": [
+              "case-control",
+              "rescue treatment"
+            ],
+            "notes": "Closest design to the planned study."
+          },
+          {
+            "id": "ev-0jp5bzf",
+            "relevance": 82,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "The recovery nausea log captured 87 percent of rescue treatments seen by observers; nausea without treatment was poorly captured.",
+            "limitations": "One unit with an established logging culture.",
+            "contextTags": [
+              "outcome measurement",
+              "nausea log"
+            ],
+            "notes": "Supports rescue treatment from the log as the case definition."
+          },
+          {
+            "id": "ev-05117f0",
+            "relevance": 70,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Risk-tailored prophylaxis reduced nausea and vomiting in high-risk patients; benefit depended on adherence, often below 60 percent.",
+            "limitations": "Mostly before-after studies; few discharge outcomes.",
+            "contextTags": [
+              "risk-tailored prophylaxis"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0rcchpg",
+            "relevance": 66,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Nausea and vomiting caused 31 percent of 312 unplanned overnight admissions after day surgery.",
+            "limitations": "Attribution by discharging nurse; units recorded reasons differently.",
+            "contextTags": [
+              "unplanned admission"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-048uene",
+            "relevance": 74,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Over-prophylaxis associated with sedation delaying discharge in 6 against 2 percent; no fewer rescue treatments.",
+            "limitations": "Confounding by indication for extra antiemetics.",
+            "contextTags": [
+              "over-prophylaxis",
+              "sedation",
+              "balancing"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Across 3,400 ambulatory surgery patients, prophylaxis matched the risk-tailored protocol in 52 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0nlfv7w"
+            ],
+            "location": "Abstract",
+            "passage": "Across 3,400 ambulatory surgery patients, prophylaxis matched the risk-tailored protocol in 52 percent.",
+            "interpretation": "Adherence is likely to be far from complete here too; a planning value for exposure among controls.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Under-prophylaxis was associated with nausea or vomiting requiring rescue treatment (adjusted odds ratio 1.8, 95 percent CI 1.2 to 2.7).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0oyehwd"
+            ],
+            "location": "Abstract, results",
+            "passage": "Under-prophylaxis was associated with nausea or vomiting requiring rescue treatment (adjusted odds ratio 1.8, 95 percent CI 1.2 to 2.7)",
+            "interpretation": "A case-control design with record reading has answered a similar question elsewhere; planning value for the odds ratio.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Recovery unit nausea logs captured 87 percent of rescue antiemetic treatments seen by nurse observers.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0jp5bzf"
+            ],
+            "location": "Abstract",
+            "passage": "Recovery unit nausea logs captured 87 percent of rescue antiemetic treatments seen by nurse observers",
+            "interpretation": "The log can define cases; some cases will be missed at the end of busy days.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Giving more antiemetic agents than the risk score indicated was associated with sedation that delayed discharge in 6 percent of patients against 2 percent with matched prophylaxis.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-048uene"
+            ],
+            "location": "Abstract, results",
+            "passage": "Giving more antiemetic agents than the risk score indicated was associated with sedation that delayed discharge in 6 percent of patients, compared with 2 percent of patients whose prophylaxis matched the score.",
+            "interpretation": "Over-prophylaxis needs its own outcome: sedation delaying discharge.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level. Adherence to risk-tailored prophylaxis was about half in one large study, with high-risk patients under-treated most often. A case-control analysis found under-prophylaxis associated with rescue treatment, and a recovery nausea log captured most rescue treatments, which makes rescue treatment a workable case definition. Over-prophylaxis was associated with sedation delaying discharge rather than fewer rescue treatments. Nausea caused about a third of unplanned admissions in three units. The evidence supports a local case-control study with record reading, with separate attention to over-prophylaxis.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational studies with confounding by indication and unblinded record reading; consistent in direction.",
+        "summary": "Six records appraised; four claims; certainty low."
+      },
+      "note": "Appraisal over six retrieved records (S13); certainty over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[1].grade": "low",
+          "scan.items[1].relevance": 95,
+          "scan.items[3].grade": "moderate",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-0oyehwd"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0jp5bzf"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-048uene"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "day surgery unit, about 6,000 adult procedures a year",
+          "four-factor risk score and one to three agents",
+          "paper drug section of the anaesthetic record",
+          "recovery nausea log",
+          "60 hours of fellow time for record reading"
+        ],
+        "reading": "Prophylaxis sits between the risk score and two opposite harms: under-prophylaxis leading to rescue treatment (c2) and over-prophylaxis leading to sedation and delayed discharge (c4). Adherence is likely to be partial (c1). The recovery log defines cases reliably enough (c3), while the paper drug record limits how many patients can be examined, which favours sampling cases and controls. Longer operations, opioids and sicker patients push toward both more prophylaxis and more nausea, which is the main confounding path.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Four-factor risk score",
+            "kind": "context",
+            "detail": "Sets the recommended number of agents."
+          },
+          {
+            "id": "n2",
+            "label": "Prophylaxis given against the protocol",
+            "kind": "context",
+            "detail": "Under, matched or over; read from paper records."
+          },
+          {
+            "id": "n3",
+            "label": "Rescue treatment for nausea or vomiting",
+            "kind": "outcome",
+            "detail": "From the recovery nausea log (c3)."
+          },
+          {
+            "id": "n4",
+            "label": "Sedation delaying discharge",
+            "kind": "outcome",
+            "detail": "Possible harm of over-prophylaxis (c4)."
+          },
+          {
+            "id": "n5",
+            "label": "Duration of surgery and opioid dose",
+            "kind": "context",
+            "detail": "Confounders raising both prophylaxis and nausea."
+          },
+          {
+            "id": "n6",
+            "label": "Prior case-control analysis",
+            "kind": "observational",
+            "detail": "Adjusted odds ratio 1.8 for under-prophylaxis (c2)."
+          },
+          {
+            "id": "n7",
+            "label": "Anaesthetists",
+            "kind": "stakeholder",
+            "detail": "Adherence varies more between anaesthetists than specialties."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "should determine"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "under-prophylaxis raises"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "over-prophylaxis raises"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "increases"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "increases"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "quantifies the effect of"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "decide"
+          }
+        ],
+        "summary": "Map of prophylaxis between risk score and two opposite harms, with the confounding path through surgery and opioids."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.contexts[4]": "60 hours of fellow time for record reading",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local measure of prophylaxis adherence",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The unit sees only failures; adherence among patients who did well is unknown.",
+            "opportunity": "Read records of controls from the same lists to estimate adherence and its association with rescue treatment."
+          },
+          {
+            "id": "g2",
+            "title": "Confounding by duration, opioids and illness",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Longer, more painful operations attract more prophylaxis and more nausea, which can hide or reverse an association.",
+            "opportunity": "Match on operating list and adjust for duration, opioid dose and risk score."
+          },
+          {
+            "id": "g3",
+            "title": "Over-prophylaxis harm is unmeasured locally",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Extra agents may sedate patients and delay discharge (c4).",
+            "opportunity": "Record sedation delaying discharge for all sampled patients as a second outcome."
+          },
+          {
+            "id": "g4",
+            "title": "Patients with limited English may be scored and counselled less",
+            "kind": "equity",
+            "severity": "watch",
+            "whyItMatters": "The risk score includes history taken at the preoperative visit; missing history may lower the score.",
+            "opportunity": "Record interpreter use and missing risk-factor history, and report adherence by it."
+          }
+        ],
+        "errorsFound": [
+          "The need's 'one patient in eight' comes from the nausea log, which misses some rescue treatments at busy times (c3); case numbers may be slightly underestimated."
+        ],
+        "reevaluation": "The gaps confirm a matched case-control study with two outcomes and adjustment for the main confounders.",
+        "summary": "Four gaps; missing local adherence and confounding are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[1].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No local measure of prophylaxis adherence"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Day surgery patients who received fewer antiemetic agents than the protocol recommends for their risk score have higher odds of needing rescue treatment for nausea or vomiting than patients whose prophylaxis matched (odds ratio 1.5 or more).",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "Consistent with the retrieved case-control estimate (c2); answerable within 60 hours of record reading.",
+            "risks": "Residual confounding by operation and opioid dose."
+          },
+          {
+            "id": "h2",
+            "statement": "Patients who received more agents than recommended have higher odds of sedation delaying discharge.",
+            "novelty": 40,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 80,
+            "parsimony": 70,
+            "rationale": "Suggested by c4; measured from the same records.",
+            "risks": "Few events; confounding by indication."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "h1 primary; h2 secondary."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults having day surgery, is prophylaxis below the protocol's recommendation for the patient's risk score, compared with matched prophylaxis, associated with rescue treatment for nausea or vomiting in recovery or delayed discharge because of it?",
+            "framework": "PECO",
+            "population": "Adults having day surgery in the unit from January 2025 to June 2026",
+            "intervention": "Under-prophylaxis relative to the risk-tailored protocol (exposure)",
+            "comparator": "Prophylaxis matching the protocol",
+            "outcome": "Rescue antiemetic in recovery or discharge delayed by nausea or vomiting",
+            "time": "Day of surgery",
+            "setting": "Adult day surgery unit"
+          }
+        ],
+        "finer": "Feasible within 60 hours of record reading and approval HR-2026-118; interesting to anaesthetists and recovery nurses; novel locally; ethical with a consent waiver request; relevant because nausea drives unplanned stays.",
+        "summary": "One PECO question for the primary exposure."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "case-control",
+        "rationale": "The exposure must be read by hand from paper drug records, and the investigator has 60 hours of reading time, so sampling cases and controls is far more efficient than reading every record. Rescue treatment is well captured in the recovery log (c3), which gives a clean case definition, and a similar case-control analysis answered this question elsewhere (c2). Adherence is likely to be partial (c1), so exposure among controls will be common enough for a precise estimate. Controls come from the same operating lists to match on surgeon, anaesthetist and case mix.",
+        "alternatives": [
+          "Reading every record from six months of lists (refused: about 3,000 records exceed the 60 hours available)",
+          "Prospective recording of prophylaxis on a new form (refused: new data collection is outside the stated constraints and would change behaviour)",
+          "Adherence audit without outcomes"
+        ],
+        "guidelines": [
+          "STROBE (case-control)"
+        ],
+        "whyNotMoreComplex": "A trial of adherence support would need the local association first; the case-control study provides it with existing records.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct a case-control study with controls from the same operating lists, reading anaesthetic records to classify prophylaxis against the protocol, to estimate the association of under-prophylaxis with rescue treatment for nausea or vomiting.",
+          "question": "Should the unit estimate the association between prophylaxis adherence and rescue treatment with a case-control study of existing records?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Adherence is likely partial, a similar design found an association elsewhere, and the nausea log gives a workable case definition.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The reading time needed exceeds the 60 hours available.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Health records approval for access to scanned anaesthetic records",
+              "status": "met",
+              "evidence": "Approval HR-2026-118 dated 2026-09-09, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research ethics board decision on secondary use of records with a waiver of consent",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Adherence audit without outcomes"
+          ],
+          "note": "Rests on ledger claims c1 to c3; the ethics board application has not been submitted, so the action stays blocked."
+        },
+        "summary": "Case-control study recommended; the decision rests on three ledger claims and waits for the ethics decision."
+      },
+      "note": "The decision rests on c1 to c3 (S13). selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "case-control",
+          "family": "case-control",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection on c1 to c3 from retrieved records; the ethics gate is unknown, so the action stays blocked (A2 item 9, G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.basis": "explicit",
+          "family": "case-control"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Case-control study of adults who had day surgery between January 2025 and June 2026, with cases from the recovery nausea log and two controls per case from the same operating lists, classifying prophylaxis against the risk-tailored protocol from scanned anaesthetic records.",
+        "population": "Cases: adults who received a rescue antiemetic in recovery or whose discharge was delayed by nausea or vomiting. Controls: two adults from the same operating list who did neither, chosen by a random number from the list. Excluded: planned overnight stays and procedures under local anaesthesia alone.",
+        "exposure": "Prophylaxis relative to the protocol for the recorded risk score: under (fewer agents than recommended), matched, or over (more agents than recommended). Where the risk score is missing it is reconstructed from recorded risk factors and flagged.",
+        "procedures": "Two anaesthesia fellows read the scanned records on hospital premises with a piloted extraction form: risk score and factors, antiemetics given, duration of surgery, intraoperative and recovery opioid dose, interpreter use. A random 10 percent of records are read by both fellows. Readers see the drug section before the recovery section, so exposure is classified before case status is visible where the scan order allows.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Rescue treatment or delayed discharge for nausea or vomiting",
+            "measure": "Case status from the recovery nausea log and the discharge record",
+            "timing": "Day of surgery",
+            "why": "The event patients and the unit want to prevent; reliably recorded (c3).",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Sedation delaying discharge",
+            "measure": "Recorded sedation or drowsiness as the reason for delayed discharge, in all sampled patients",
+            "timing": "Day of surgery",
+            "why": "The possible harm of over-prophylaxis (c4).",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Adherence among controls",
+            "measure": "Proportion of controls whose prophylaxis matched the protocol",
+            "timing": "At extraction",
+            "why": "Estimates adherence in patients who did well, which the unit has never seen.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 546 records at about six minutes each is about 55 hours, within the 60 hours available; access under HR-2026-118.",
+        "biasMitigation": [
+          "Controls from the same operating list",
+          "Exposure classified from the drug section before recovery notes where possible",
+          "Double reading of a random 10 percent of records",
+          "Adjustment for risk score, duration of surgery and opioid dose fixed before extraction"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by indication",
+            "severity": "high",
+            "note": "Sicker patients and longer operations receive more prophylaxis; adjustment and list matching limit this."
+          },
+          {
+            "id": "b2",
+            "label": "Case under-ascertainment",
+            "severity": "watch",
+            "note": "The log misses some rescue treatments at the end of busy days."
+          },
+          {
+            "id": "b3",
+            "label": "Reader awareness of case status",
+            "severity": "watch",
+            "note": "Order of reading and double reading reduce it."
+          }
+        ],
+        "parsimony": {
+          "score": 82,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 3,
+          "flags": [
+            "Three adjustment variables fixed before extraction"
+          ],
+          "simplestPath": "One exposure in three levels, one primary outcome, three covariates, list-matched controls."
+        },
+        "theoreticalFramework": null,
+        "summary": "Case-control protocol with list-matched controls, one primary outcome, a sedation outcome and a process measure; no theoretical framework is used."
+      },
+      "note": "Explicit null for a model-owned statement: no framework earns its place in this study, so theoreticalFramework is cleared to '' with issue 'cleared' at that path, never filled with a default framework (contracts.ts null semantics, holds at 875fe59). This is the scenario's one null field; it touches no investigator-entered text (G11).",
+      "expect": {
+        "store": {
+          "protocol.theoreticalFramework": "",
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].patientCentered": true,
+          "protocol.parsimony.covariateCount": 3,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "theoreticalFramework",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Protocol route: the cleared framework stays empty (never a default text), and the investigator's added constraint persists.",
+      "expect": {
+        "store": {
+          "title": "Adherence to risk-tailored antiemetic prophylaxis and rescue treatment for nausea and vomiting after day surgery",
+          "protocol.theoreticalFramework": "",
+          "problem.constraints": "Records are read by two anaesthesia fellows within 60 hours in total. No patient contact: scanned anaesthetic records and the recovery nausea log only. Extraction must take place on hospital premises.",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "needsReview": [],
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Adherence to risk-tailored antiemetic prophylaxis and rescue treatment for nausea and vomiting after day surgery"
+          ],
+          "excludes": [
+            "no recorded response"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Case-control study with two controls per case from the same operating list; conditional logistic regression.",
+        "sampleSize": "With matched prophylaxis in about 55 percent of controls (planning value near the 52 percent reported elsewhere) and an odds ratio of 0.6 for matched prophylaxis compared with under-prophylaxis, 80 percent power at two-sided alpha 0.05 with two controls per case needs about 182 cases and 364 controls, 546 records in all. The nausea log recorded 742 rescue treatments last year, so about nine months of lists supply enough cases; the 18-month window allows cases to be sampled at random. Reading 546 records at about six minutes each takes about 55 hours, within the 60 hours available.",
+        "primaryAnalysis": "Conditional logistic regression of case status on prophylaxis category (under, matched, over; matched as reference) adjusted for risk score, duration of surgery and opioid dose, reporting odds ratios with 95 percent confidence intervals.",
+        "secondaryAnalysis": "Logistic regression of sedation delaying discharge on over-prophylaxis among all sampled patients, adjusted for the same variables; adherence among controls with its interval; agreement between the two readers (kappa) on exposure category.",
+        "missingData": "A missing risk score is reconstructed from recorded factors and flagged; if factors are missing too, the record is kept with a missing-score category and a sensitivity analysis excludes it.",
+        "multiplicity": "One primary contrast (under versus matched); secondary analyses reported with intervals and labelled as secondary.",
+        "software": "R with the survival package for conditional logistic regression; extraction form and analysis code archived before reading starts.",
+        "overfittingGuards": [
+          "Three adjustment variables fixed before extraction",
+          "About 60 cases per adjustment variable including exposure levels",
+          "No stepwise selection"
+        ],
+        "summary": "About 182 cases and 364 controls, about 55 hours of reading; conditional logistic regression with three covariates."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "182 cases and 364 controls"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: reading existing records on hospital premises; the main risk is privacy and the identification of individual anaesthetists' practice.",
+        "consent": "Individual consent is impracticable for 546 past patients; the research ethics board will be asked for a waiver of consent for secondary use under minimal risk.",
+        "data": "Extraction on hospital premises into a study database with study numbers; anaesthetists are coded and never reported individually; the key is held by the health records department.",
+        "equity": "PROGRESS-Plus: patients who needed an interpreter or whose risk factors were not recorded may have lower recorded risk scores and less prophylaxis; interpreter use and missing history are recorded and adherence is reported by them. Sex is part of the risk score and is reported.",
+        "effectiveness": "The study is useful if it shows whether adherence support should be the unit's next improvement target.",
+        "efficiency": "About 55 hours of fellow time; no new data collection.",
+        "costs": "Fellow time within training allowances; no other costs.",
+        "grants": "None needed.",
+        "partnerships": "Recovery nurses (case definition and the log), the day surgery patient panel (plain-language summary), and the anaesthesia department's education lead.",
+        "rebPath": "Application to the research ethics board for secondary use of records with a waiver of consent, following ICH-GCP and the Declaration of Helsinki; not yet submitted, so no extraction starts before the decision. Records access is already approved (HR-2026-118).",
+        "limitations": "Residual confounding by indication; incomplete case capture at busy times; single unit.",
+        "summary": "Minimal-risk record study awaiting an ethics decision on a consent waiver; anaesthetists never identified."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "waiver of consent"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two members of the day surgery patient panel review the plain-language summary; recovery nurses review the case definition.",
+        "socialListening": "No social media listening; the unit's patient experience comments for the last year are read for mentions of nausea and overnight stays.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "An unplanned night",
+            "quote": "Composite paraphrase: I had arranged for my daughter to take me home and ended up on a ward overnight because I could not stop being sick.",
+            "implication": "Delayed discharge is part of the case definition.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "The score at the end of a list",
+            "quote": "Composite paraphrase (anaesthetist): By the fifth case of the afternoon I give what I always give; the score is on the form but I do not look.",
+            "implication": "Adherence may vary through the list; record case order.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Too drowsy to go",
+            "quote": "Composite paraphrase (recovery nurse): The ones who got everything are not sick, they are asleep, and they still miss their lift home.",
+            "implication": "Measure sedation delaying discharge.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Three composite voices on unplanned stays, list fatigue and sedation."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 3
+          },
+          "voices.items[2].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Adherence to risk-tailored antiemetic prophylaxis and rescue treatment for nausea and vomiting after day surgery: a case-control study",
+        "abstract": "Objective: to estimate the association between under-prophylaxis relative to a risk-tailored protocol and rescue treatment or delayed discharge for nausea and vomiting after day surgery. Design: case-control study with two controls per case from the same operating lists, using scanned anaesthetic records. Results and conclusions will be written after analysis.",
+        "introduction": "Risk-tailored prophylaxis reduces nausea in high-risk patients when it is followed, but adherence is often about half, and extra agents can sedate patients.",
+        "methods": "Cases from the recovery nausea log, list-matched controls, exposure classified from the drug section, conditional logistic regression adjusted for risk score, duration and opioid dose.",
+        "results": "No data have been analysed yet. The report will present case and control characteristics, adherence among controls, and adjusted odds ratios for under- and over-prophylaxis.",
+        "discussion": "The discussion will consider confounding by indication, case under-ascertainment, and whether adherence support should be the next improvement target.",
+        "limitations": "Observational design; incomplete case capture; one unit.",
+        "conclusion": "To be written after analysis.",
+        "reportingChecklist": "STROBE (case-control)",
+        "summary": "STROBE draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE (case-control)",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Submit the research ethics board application for a consent waiver; extraction waits for the decision",
+          "Pilot the extraction form on ten records not in the sample",
+          "Run an identity check on the six retrieved records before the report cites them"
+        ],
+        "improvementNotes": "The need stated no constraints; the investigator added them on the Problem screen and the model did not invent any. The protocol names no theoretical framework on purpose.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before extraction."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 the audit patch is overwritten by store.ts mergeStage (L1.6 defect, sheet A3).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list.",
+      "expect": {
+        "store": {
+          "title": "Adherence to risk-tailored antiemetic prophylaxis and rescue treatment for nausea and vomiting after day surgery",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "Records are read by two anaesthesia fellows within 60 hours in total. No patient contact: scanned anaesthetic records and the recovery nausea log only. Extraction must take place on hospital premises.",
+          "protocol.theoreticalFramework": "",
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Adherence to risk-tailored antiemetic prophylaxis and rescue treatment for nausea and vomiting after day surgery"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click, one file equal to the store (G10). selectionStatus and actionStatus require S11; scan.claims S13.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.constraints": "Records are read by two anaesthesia fellows within 60 hours in total. No patient contact: scanned anaesthetic records and the recovery nausea log only. Extraction must take place on hospital premises.",
+            "problem.rawNeed": "I am an anaesthetist and the clinical lead for our day surgery unit, which does about 6,000 adult procedures a year in gynaecology, orthopaedics, general surgery and ENT. Two years ago we adopted a risk-tailored protocol for preventing postoperative nausea and vomiting: patients are scored with a simple four-factor risk score and should receive one, two or three antiemetic agents depending on the score. Our recovery nurses keep a nausea log, and it shows that about one patient in eight still needs a rescue antiemetic, and nausea is the commonest reason for an unplanned overnight stay. When I look at individual cases, many seem not to have had the prophylaxis the protocol asks for, but I only see the ones that go wrong.\n\nWe want to do a case-control study: take patients who needed rescue treatment for nausea or vomiting in recovery or whose discharge was delayed by it, compare them with patients from the same operating lists who did not, and check in the anaesthetic record whether prophylaxis matched the protocol for their risk score. The drug section of the anaesthetic record is on paper, so every record has to be read by hand, which is why we cannot look at everyone. I would like to know whether patients who received less prophylaxis than the protocol recommends are more likely to need rescue treatment, and whether giving more than recommended causes sedation that delays discharge.\n\nI need help defining cases and controls, deciding how many records we need to read, and handling the fact that sicker patients and longer operations may get more prophylaxis anyway.",
+            "protocol.theoreticalFramework": "",
+            "scan.gradeOverall": "low",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

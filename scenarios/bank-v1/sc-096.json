@@ -1,0 +1,1503 @@
+{
+  "id": "sc-096",
+  "version": 1,
+  "title": "Patient flow command centre: accuracy of a boarding-risk flag, a two-hit search and leads only before a second search",
+  "field": "health-services",
+  "level": 2,
+  "family": "diagnostic",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "D20",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path with one ambiguity on an explicit diagnostic accuracy need (sensitivity and specificity, reference standard). The first search reports two hits and returns no record bodies (total 2, records empty), a 'partial' event with no records. A leads-only discovery reply follows with no certainty (gradeOverall omitted, listed in omitKeys): four unchecked leads, including the vendor's own validation report, stored as leads (G3); the second lead has no year, grade or method quality (null and 'unrated', G4). The stage stays incomplete ('leads only'), also after a reload on the Scan route. A broader second search returns six records, added after the leads with both events kept; the appraisal (scan call 2) completes the stage with certainty 'low'. A reopen after five stages checks that events, leads and records are all kept. The decision rests on four claims from retrieved records and never on the vendor lead; both gates are met on investigator-supplied records. Unusual outcome roles for the family: the primary outcome is a sensitivity and specificity pair, and false-positive escalations are the balancing measure. The typed constraints are restated unchanged (G11). This differs from sc-095 in family, outcome roles, the omitted rather than null certainty, and the positions of reload and reopen. Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 3, 4, 6 (ev-1u04ycr, ev-0345j1x, ev-1o6403v, ev-15zsf5a, ev-1w3blvh); the titleYearKey(title, year) hash for record 5 (ev-06ll573). Requires D20, D1, S13, S11 and D5 as in sc-095. Catches: completion from a hit count or from leads, a vendor lead treated as evidence, leads lost when records arrive, and unknowns invented.",
+  "inputs": {
+    "need": "I work as a health services researcher in our hospital's patient flow command centre, which opened in March 2025. Every admitted emergency department patient gets a boarding-risk score when the admission decision is entered, and patients above the threshold are flagged on the command centre's wall display so that the bed managers can escalate them. The vendor says the score identifies patients who will board for more than four hours, but nobody here has checked. Median boarding time is still 5.1 hours, and the emergency physicians think the flag mostly marks patients everyone already knew would wait, while quieter medical patients near the threshold get missed.\n\nI want to evaluate the diagnostic accuracy of the flag against what actually happened: the reference standard would be boarding of four hours or more, measured from the admission decision to departure from the emergency department using the timestamps. I need its sensitivity and specificity at the threshold the command centre uses, whether the score is calibrated for our patients, and whether accuracy differs at night, at weekends, and between medical and surgical admissions. I also want to know what published work exists on predicting boarding or inpatient bed waits, because the vendor's documentation cites only its own validation. We cannot change the score itself, and the command centre's data analyst can give us one day a week.",
+    "constraints": "No research funding; the score cannot be changed or retrained during the evaluation; the command centre analyst is available one day a week until June 2027; data come only from existing timestamps and the score log.",
+    "localFacts": [
+      "The command centre has logged every boarding-risk score and flag since March 2025, about 21,000 admission decisions a year.",
+      "Median boarding time from admission decision to emergency department departure was 5.1 hours in the last quarter.",
+      "The data governance office approved use of command centre logs and emergency timestamps for service evaluation on 2026-08-28 (approval DG-2026-311).",
+      "The command centre analyst is available one day a week until June 2027."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I work as a health services researcher in our hospital's patient flow command centre, which opened in March 2025. Every admitted emergency department patient gets a boarding-risk score when the admission decision is entered, and patients above the threshold are flagged on the command centre's wall display so that the bed managers can escalate them. The vendor says the score identifies patients who will board for more than four hours, but nobody here has checked. Median boarding time is still 5.1 hours, and the emergency physicians think the flag mostly marks patients everyone already knew would wait, while quieter medical patients near the threshold get missed.\n\nI want to evaluate the diagnostic accuracy of the flag against what actually happened: the reference standard would be boarding of four hours or more, measured from the admission decision to departure from the emergency department using the timestamps. I need its sensitivity and specificity at the threshold the command centre uses, whether the score is calibrated for our patients, and whether accuracy differs at night, at weekends, and between medical and surgical admissions. I also want to know what published work exists on predicting boarding or inpatient bed waits, because the vendor's documentation cites only its own validation. We cannot change the score itself, and the command centre's data analyst can give us one day a week.",
+          "family": "diagnostic",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I work as a health services researcher in our hospital's patient flow command centre"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Diagnostic accuracy of a command centre boarding-risk flag against observed emergency department boarding",
+        "subtitle": "Accuracy, calibration and spectrum of a deployed flag, with boarding of four hours or more as the reference standard",
+        "family": "diagnostic",
+        "statement": "A patient flow command centre flags admitted emergency patients whose boarding-risk score exceeds a vendor threshold, so that bed managers can escalate them. The score has never been checked locally, median boarding is still 5.1 hours, and clinicians suspect the flag marks obvious cases and misses others. The hospital needs to know the flag's sensitivity and specificity for boarding of four hours or more, the score's calibration, and whether accuracy differs by time of day, weekday and admitting service.",
+        "whoAffected": "Admitted emergency patients who wait for beds, emergency and inpatient clinicians, bed managers and command centre staff.",
+        "whatHurts": "Prolonged boarding is associated with worse care and crowding; if the flag misses patients who will board, escalation goes to the wrong patients and the command centre's effort is wasted.",
+        "currentPractice": "A vendor score computed at the admission decision, a fixed flag threshold on the wall display, and escalation by bed managers; no local validation.",
+        "whyNow": "Eighteen months of logged scores, a data governance approval and persistent boarding despite the command centre.",
+        "constraints": "No research funding; the score cannot be changed or retrained during the evaluation; the command centre analyst is available one day a week until June 2027; data come only from existing timestamps and the score log.",
+        "patientCenteredGoal": "Patients at highest risk of long waits for a bed are identified early enough for escalation to shorten their wait.",
+        "summary": "Problem framed as a diagnostic accuracy study of a deployed boarding-risk flag."
+      },
+      "note": "The typed constraints are restated unchanged (G11).",
+      "expect": {
+        "store": {
+          "title": "Diagnostic accuracy of a command centre boarding-risk flag against observed emergency department boarding",
+          "family": "diagnostic",
+          "problem.constraints": "No research funding; the score cannot be changed or retrained during the evaluation; the command centre analyst is available one day a week until June 2027; data come only from existing timestamps and the score log.",
+          "problem.rawNeed": "I work as a health services researcher in our hospital's patient flow command centre, which opened in March 2025. Every admitted emergency department patient gets a boarding-risk score when the admission decision is entered, and patients above the threshold are flagged on the command centre's wall display so that the bed managers can escalate them. The vendor says the score identifies patients who will board for more than four hours, but nobody here has checked. Median boarding time is still 5.1 hours, and the emergency physicians think the flag mostly marks patients everyone already knew would wait, while quieter medical patients near the threshold get missed.\n\nI want to evaluate the diagnostic accuracy of the flag against what actually happened: the reference standard would be boarding of four hours or more, measured from the admission decision to departure from the emergency department using the timestamps. I need its sensitivity and specificity at the threshold the command centre uses, whether the score is calibrated for our patients, and whether accuracy differs at night, at weekends, and between medical and surgical admissions. I also want to know what published work exists on predicting boarding or inpatient bed waits, because the vendor's documentation cites only its own validation. We cannot change the score itself, and the command centre's data analyst can give us one day a week.",
+          "problem.statement": {
+            "includes": "sensitivity and specificity"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Diagnostic accuracy of a command centre boarding-risk flag against observed emergency department boarding"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "boarding risk score patient flow command centre admission decision flag accuracy emergency department",
+      "response": {
+        "status": 200,
+        "total": 2,
+        "records": [],
+        "note": "The provider reported two hits for this query and returned no record bodies: both are vendor white papers listed without metadata."
+      },
+      "note": "Two hits reported, none returned: a 'partial' event with no records (runSearch at 875fe59). No certainty and no completion follow (G1, G2); 'not assessed' requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "partial",
+          "scan.retrievalEvents[0].resultCount": 2,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "boarding risk score patient flow command centre admission decision flag accuracy emergency department",
+        "sourcesConsulted": [
+          "fixture provider (2 hits, no records returned)",
+          "model recall of hospital operations research"
+        ],
+        "gradeRationale": "Not assessed: nothing has been retrieved.",
+        "synthesis": "The search reported two hits but returned no records. Four leads are recalled for checking: the vendor's own validation report, a descriptive study of command centre escalation, an overview of emergency prediction models and a study of night-time performance. None has been retrieved; a broader search for external validation studies is needed.",
+        "items": [
+          {
+            "title": "Vendor validation report for an admission boarding risk score",
+            "authors": "Product validation team",
+            "year": 2024,
+            "source": "Vendor technical documentation",
+            "kind": "grey",
+            "grade": "very-low",
+            "methodQuality": 25,
+            "relevance": 85,
+            "verification": "ai-lead",
+            "contextTags": [
+              "vendor",
+              "development data",
+              "grey literature"
+            ],
+            "keyFindings": "Reports high discrimination for predicting boarding over four hours in the vendor's development hospitals.",
+            "limitations": "Recalled lead; written by the vendor; no external sites.",
+            "notes": "Recalled as a lead; probably one of the two hits the provider did not return."
+          },
+          {
+            "title": "Command centre dashboards and bed management escalation: a descriptive study",
+            "authors": "Achebe-Holm R, Tanaka-Brennan S",
+            "source": "Hospital Operations Quarterly",
+            "kind": "observational",
+            "relevance": 60,
+            "verification": "ai-lead",
+            "contextTags": [
+              "command centre",
+              "escalation",
+              "descriptive"
+            ],
+            "keyFindings": "Describes how bed managers respond to flagged patients on a command centre display; escalation was more frequent for flagged surgical patients.",
+            "limitations": "Recalled lead with no year, grade or method quality; descriptive only.",
+            "notes": "Recalled as a lead; year not known."
+          },
+          {
+            "title": "Prediction models for hospital admission and bed wait from the emergency department: a scoping overview",
+            "authors": "Lindqvist-Osei M, Carvalho-Mbeki J, Petit-Rourke A",
+            "year": 2022,
+            "source": "Emergency Care Operations Research",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 55,
+            "relevance": 72,
+            "verification": "verify",
+            "contextTags": [
+              "prediction models",
+              "overview",
+              "external validation"
+            ],
+            "keyFindings": "Most published models predicted admission rather than bed wait, and few were externally validated.",
+            "limitations": "Recalled lead; not checked.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Night-time boarding and staffing: why models trained on daytime data fail after midnight",
+            "authors": "Moreau-Oyelaran K, Vasquez-Lund T",
+            "year": 2020,
+            "source": "Journal of Hospital Flow Management",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 48,
+            "relevance": 68,
+            "verification": "ai-lead",
+            "contextTags": [
+              "night",
+              "spectrum",
+              "model performance"
+            ],
+            "keyFindings": "Reports poorer discrimination for night admissions because discharges and bed cleaning stop overnight.",
+            "limitations": "Recalled lead; one hospital.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Four unchecked leads; no certainty proposed."
+      },
+      "omitKeys": [
+        "gradeOverall"
+      ],
+      "note": "Leads-only reply without a certainty. The four leads are stored as leads (origin model, unverified, G3); the second has no year, grade or method quality, which stay null and 'unrated' (G4). The stage stays incomplete ('leads only', G2), which requires D20; at 875fe59 it is marked complete. The sourcesConsulted issue holds at 875fe59.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[0].verification": "ai-lead",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed",
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Scan route while only leads exist: still incomplete, no certainty, the unknown year still null (G1, G2, G4; D20).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.retrievalEvents[0].status": "partial",
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "prediction of emergency department boarding inpatient bed wait model validation calibration sensitivity specificity",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Predicting prolonged emergency department boarding at the time of the admission decision: development and external validation of a logistic model",
+            "authors": "Osei-Whitfield R, Brandt-Nakamura E, Delgado-Hughes P",
+            "year": 2019,
+            "venue": "Emergency Care Operations Research",
+            "doi": "10.5555/ecor.2019.0133",
+            "providerType": "journal-article",
+            "abstract": "We developed a logistic model predicting boarding of more than four hours from nine predictors available at the admission decision, including hour, weekday, admitting service and inpatient occupancy, using 48,200 admissions at one hospital, and validated it at a second hospital. Discrimination fell from a c statistic of 0.78 in development to 0.71 in validation. Calibration was poor in the validation hospital, where 58 percent of patients boarded more than four hours against a mean predicted risk of 44 percent. Recalibration of the intercept corrected most of the difference. The authors advise local recalibration before any model is used."
+          },
+          {
+            "title": "External validation of a commercial boarding prediction tool in three hospitals",
+            "authors": "Kowalewski-Adeyemi T, Lindgren-Soto M, Haddad-Pereira N",
+            "year": 2023,
+            "venue": "Journal of Hospital Flow Management",
+            "doi": "10.5555/jhfm.2023.0208",
+            "providerType": "journal-article",
+            "abstract": "We validated a commercial boarding prediction tool in 61,400 admission decisions at three hospitals that did not contribute to its development. At the vendor's recommended threshold, sensitivity for boarding of four hours or more was 0.62 (95 percent CI 0.60 to 0.64) and specificity 0.71 (95 percent CI 0.70 to 0.72). Sensitivity was 0.49 for admission decisions made at night and 0.66 during the day. Calibration differed between hospitals and was worst in the busiest one. The tool's own published validation had used only its development sites."
+          },
+          {
+            "title": "A hospital command centre and emergency department boarding: an interrupted time series",
+            "authors": "Grieve-Mensah L, Okafor-Stroud B",
+            "year": 2022,
+            "venue": "Hospital Operations Quarterly",
+            "doi": "10.5555/hoq.2022.0071",
+            "providerType": "journal-article",
+            "abstract": "A 600-bed hospital opened a patient flow command centre with a live display of flagged admitted patients. In an interrupted time series over 36 months, mean boarding hours per admitted patient fell from 6.2 to 5.4 after the opening, with no change in the pre-existing trend. The study did not assess the accuracy of the flags that directed the command centre's work, and a new discharge lounge opened three months later. The authors could not say which parts of the command centre produced the change."
+          },
+          {
+            "title": "Occupancy, not patient characteristics, drives emergency department boarding time: a multilevel analysis",
+            "authors": "Ferreira-Nwosu D, Hallberg-Kaur S",
+            "year": 2015,
+            "venue": "Emergency Care Operations Research",
+            "doi": "10.5555/ecor.2015.0044",
+            "providerType": "journal-article",
+            "abstract": "In 27,900 admissions over two years, inpatient occupancy at the hour of the admission decision explained most of the variation in boarding time between days. Adding patient characteristics to a model with occupancy and time of day raised the c statistic only from 0.74 to 0.76. Boarding over four hours occurred on 81 percent of days when occupancy exceeded 92 percent. The authors suggest that tools flagging individual patients mostly identify busy days rather than patients who need escalation, and that occupancy should be the comparison for any patient-level score."
+          },
+          {
+            "title": "Spectrum effects in predicting hospital bed waits: accuracy by admitting service and time of day",
+            "authors": "Rasmussen-Obi A, Castellanos-Tran J",
+            "year": 2021,
+            "venue": "Journal of Hospital Flow Management",
+            "providerType": "journal-article",
+            "abstract": "We examined the accuracy of a bed wait prediction score across patient groups in 19,300 admission decisions. At a fixed threshold, sensitivity for waits of four hours or more was 0.68 for medical admissions and 0.51 for surgical admissions, and specificity was higher for surgical admissions. Accuracy was lowest for admissions decided between midnight and 06:00. Reporting a single overall sensitivity hid these differences. The authors recommend reporting accuracy separately by admitting service and time of day in any evaluation of such scores."
+          },
+          {
+            "title": "Reference standards for boarding time: agreement between emergency department timestamps and bed management records",
+            "authors": "Achterberg-Mwangi P, Sorensen-Lee K",
+            "year": 2020,
+            "venue": "Health Information Quality",
+            "doi": "10.5555/hiq.2020.0118",
+            "providerType": "journal-article",
+            "abstract": "We compared emergency department departure timestamps with bed management records and direct observation for 2,400 admitted patients. The departure timestamp was recorded on average 22 minutes after the patient physically left, and 7 percent of admissions had no departure time. Near the four-hour threshold, these delays misclassified about 5 percent of patients as prolonged boarders. Using the bed management arrival time on the ward as a check reduced misclassification. The authors recommend a documented reference standard with a rule for missing times."
+          }
+        ]
+      },
+      "note": "The broader second search returns six records, added after the four leads in arrival order; both events are kept (G3, D1). Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 6,
+          "scan.retrievalEvents[1].recordIds": [
+            "ev-1u04ycr",
+            "ev-0345j1x",
+            "ev-1o6403v",
+            "ev-15zsf5a",
+            "ev-06ll573",
+            "ev-1w3blvh"
+          ],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[4].id": "ev-1u04ycr",
+          "scan.items[4].provenance.status": "retrieved",
+          "scan.items[8].doi": {
+            "absent": true
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "External validation of a commercial boarding prediction tool in three hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1u04ycr",
+            "relevance": 84,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A nine-predictor model fell from a c statistic of 0.78 to 0.71 at an external hospital, where 58 percent boarded more than four hours against a mean predicted risk of 44 percent.",
+            "limitations": "Two hospitals; different model from the one in use here.",
+            "contextTags": [
+              "development and validation",
+              "calibration",
+              "recalibration"
+            ]
+          },
+          {
+            "id": "ev-0345j1x",
+            "relevance": 94,
+            "methodQuality": 72,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "At the vendor threshold a commercial tool had sensitivity 0.62 and specificity 0.71 across three external hospitals; sensitivity was 0.49 at night and 0.66 by day.",
+            "limitations": "Three hospitals; tool version may differ from the local one.",
+            "contextTags": [
+              "external validation",
+              "commercial tool",
+              "night"
+            ]
+          },
+          {
+            "id": "ev-1o6403v",
+            "relevance": 60,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Mean boarding hours fell from 6.2 to 5.4 after a command centre opened, without assessment of flag accuracy.",
+            "limitations": "Co-intervention (discharge lounge); no control series.",
+            "contextTags": [
+              "command centre",
+              "interrupted time series"
+            ]
+          },
+          {
+            "id": "ev-15zsf5a",
+            "relevance": 78,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Occupancy explained most variation in boarding; patient characteristics raised the c statistic only from 0.74 to 0.76; boarding over four hours occurred on 81 percent of days above 92 percent occupancy.",
+            "limitations": "Older data from one hospital.",
+            "contextTags": [
+              "occupancy",
+              "patient-level prediction",
+              "multilevel"
+            ]
+          },
+          {
+            "id": "ev-06ll573",
+            "relevance": 86,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Sensitivity was 0.68 for medical and 0.51 for surgical admissions at a fixed threshold, and lowest between midnight and 06:00.",
+            "limitations": "One score and one hospital.",
+            "contextTags": [
+              "spectrum effect",
+              "admitting service",
+              "time of day"
+            ]
+          },
+          {
+            "id": "ev-1w3blvh",
+            "relevance": 88,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Departure timestamps ran on average 22 minutes late and were missing for 7 percent of admissions, misclassifying about 5 percent near the four-hour threshold.",
+            "limitations": "One hospital's recording practice.",
+            "contextTags": [
+              "reference standard",
+              "timestamps",
+              "misclassification"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In an external validation at three hospitals, a commercial boarding tool at the vendor's threshold had sensitivity 0.62 and specificity 0.71, with sensitivity 0.49 for night-time admission decisions.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0345j1x"
+            ],
+            "location": "Abstract",
+            "passage": "sensitivity for boarding of four hours or more was 0.62 (95 percent CI 0.60 to 0.64) and specificity 0.71",
+            "interpretation": "Planning values for the local evaluation; night performance must be reported separately.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "A boarding model was poorly calibrated at an external hospital, where 58 percent boarded more than four hours against a mean predicted risk of 44 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1u04ycr"
+            ],
+            "location": "Abstract",
+            "passage": "58 percent of patients boarded more than four hours against a mean predicted risk of 44 percent",
+            "interpretation": "Calibration of the vendor score must be checked locally, not assumed.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Emergency department departure timestamps were recorded on average 22 minutes late and were missing for 7 percent of admissions.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1w3blvh"
+            ],
+            "location": "Abstract",
+            "passage": "The departure timestamp was recorded on average 22 minutes after the patient physically left, and 7 percent of admissions had no departure time.",
+            "interpretation": "The reference standard needs a written rule for missing and late timestamps.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "At a fixed threshold, sensitivity for waits of four hours or more was 0.68 for medical and 0.51 for surgical admissions.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-06ll573"
+            ],
+            "location": "Abstract",
+            "passage": "sensitivity for waits of four hours or more was 0.68 for medical admissions and 0.51 for surgical admissions",
+            "interpretation": "Accuracy must be reported by admitting service.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records from the second search, appraised at abstract level; the first search reported two hits but returned no records, and four model leads remain unchecked. External validation of a commercial boarding tool found moderate sensitivity and specificity at the vendor threshold, with much lower sensitivity at night; a developed model lost discrimination and calibration at an external hospital; sensitivity differed by admitting service; and occupancy, rather than patient characteristics, explained most boarding variation. Timestamps used as the reference standard are late and sometimes missing, which misclassifies patients near the four-hour threshold. A command centre was followed by fewer boarding hours in one hospital, but no study linked flag accuracy to that change. The records support a local accuracy study with a documented reference standard and results by time of day and service.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational validation studies of different tools in other hospitals, with inconsistent calibration and indirectness to the local score; certainty that the local flag performs like the published tools is low.",
+        "summary": "Six retrieved records appraised; four source-derived claims; certainty low; four leads unverified."
+      },
+      "note": "Appraisal of the six retrieved records (S13); leads are not annotated. The stage completes on retrieved records, with the appraisal's certainty over inspected evidence (G1, G2).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[5].grade": "moderate",
+          "scan.items[5].methodQuality": 72,
+          "scan.items[9].keyFindings": {
+            "includes": "22 minutes"
+          },
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0345j1x"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-1w3blvh"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "patient flow command centre opened March 2025",
+          "about 21,000 admission decisions a year",
+          "vendor score with a fixed threshold",
+          "boarding median 5.1 hours"
+        ],
+        "reading": "The flag sits between the admission decision and the bed managers' escalation. Its value depends on identifying the patients who will board and who can be helped, but occupancy explains most boarding, published tools lose accuracy at night and differ by admitting service, and the reference standard itself depends on late and missing timestamps. A local accuracy study must therefore define the reference standard carefully and report the flag's performance where escalation can act.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Boarding-risk score at the admission decision",
+            "kind": "context",
+            "detail": "Vendor model, fixed threshold."
+          },
+          {
+            "id": "n2",
+            "label": "Flag on the command centre display",
+            "kind": "context",
+            "detail": "Drives bed manager escalation."
+          },
+          {
+            "id": "n3",
+            "label": "Boarding of four hours or more",
+            "kind": "outcome",
+            "detail": "Reference standard from timestamps."
+          },
+          {
+            "id": "n4",
+            "label": "Inpatient occupancy",
+            "kind": "context",
+            "detail": "Explains most boarding variation."
+          },
+          {
+            "id": "n5",
+            "label": "External validation of a commercial tool",
+            "kind": "observational",
+            "detail": "Sensitivity 0.62, lower at night (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Calibration loss at external sites",
+            "kind": "observational",
+            "detail": "Claim c2."
+          },
+          {
+            "id": "n7",
+            "label": "Late and missing departure timestamps",
+            "kind": "gap",
+            "detail": "Reference standard error (claim c3)."
+          },
+          {
+            "id": "n8",
+            "label": "Bed managers",
+            "kind": "stakeholder",
+            "detail": "Act on flags."
+          },
+          {
+            "id": "n9",
+            "label": "Surgical admissions and night-time decisions",
+            "kind": "stakeholder",
+            "detail": "Lower sensitivity (claims c1, c4)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "produces"
+          },
+          {
+            "from": "n2",
+            "to": "n8",
+            "relation": "directs"
+          },
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "is meant to predict"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "drives"
+          },
+          {
+            "from": "n5",
+            "to": "n1",
+            "relation": "gives planning values for"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "warns about calibration of"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "misclassifies"
+          },
+          {
+            "from": "n9",
+            "to": "n5",
+            "relation": "shows spectrum in"
+          }
+        ],
+        "summary": "Map links the score, the flag and escalation to the reference standard, with occupancy and timestamp error as the main complications."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[6].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local validation of the flag",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The vendor cites only its own development sites; external validation of a similar tool found moderate accuracy (claim c1).",
+            "opportunity": "Estimate sensitivity, specificity and calibration from the local score log."
+          },
+          {
+            "id": "g2",
+            "title": "Reference standard error",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Late and missing departure timestamps misclassify patients near four hours (claim c3).",
+            "opportunity": "Write a reference standard rule using the ward arrival time as a check and a rule for missing times."
+          },
+          {
+            "id": "g3",
+            "title": "Performance at night and by service",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Sensitivity is lower at night and for surgical admissions elsewhere (claims c1, c4); patients admitted overnight may be systematically missed.",
+            "opportunity": "Report accuracy by time of day, weekday and admitting service."
+          },
+          {
+            "id": "g4",
+            "title": "Occupancy may explain the flag",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "If the score mostly tracks occupancy, it flags busy days rather than patients who can be helped.",
+            "opportunity": "Compare the score's discrimination with an occupancy-only reference model."
+          },
+          {
+            "id": "g5",
+            "title": "Escalation changes the outcome",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Flagged patients are escalated, which may shorten their boarding and make the flag look less accurate.",
+            "opportunity": "Record escalation and analyse accuracy with and without escalated patients as a sensitivity analysis."
+          }
+        ],
+        "errorsFound": [
+          "The need's 'more than four hours' and the reference standard's 'four hours or more' must be fixed to one definition before analysis."
+        ],
+        "reevaluation": "The gaps support a local accuracy study with a documented reference standard, spectrum reporting and an occupancy comparison.",
+        "summary": "Five gaps; the missing local validation and reference standard error are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].severity": "high",
+          "gaps.items[2].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Reference standard error"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "At the deployed threshold, the flag's sensitivity for boarding of four hours or more is below 0.70 overall and below 0.55 for admission decisions made at night.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "Consistent with external validation of a similar tool (c1) and spectrum effects (c4).",
+            "risks": "Escalation of flagged patients biases accuracy downward."
+          },
+          {
+            "id": "h2",
+            "statement": "The score's discrimination is no better than an occupancy-only model.",
+            "novelty": 55,
+            "need": 70,
+            "practiceChange": 75,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Occupancy explained most boarding variation in a multilevel study.",
+            "risks": "Occupancy at the decision hour may be recorded imprecisely."
+          },
+          {
+            "id": "h3",
+            "statement": "The score overestimates boarding risk locally (mean predicted risk above observed).",
+            "novelty": 40,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 85,
+            "parsimony": 70,
+            "rationale": "Calibration varied between external sites (c2).",
+            "risks": "Direction of miscalibration is uncertain."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the primary accuracy question."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among admission decisions in the emergency department from March 2025 to February 2027, what are the sensitivity and specificity of the command centre flag at the deployed threshold for boarding of four hours or more, and how do they differ by time of day, weekday and admitting service?",
+            "framework": "PICO",
+            "population": "Adult admission decisions in the emergency department, March 2025 to February 2027",
+            "intervention": "Boarding-risk flag at the deployed threshold (index test)",
+            "comparator": "Observed boarding of four hours or more from the admission decision to departure (reference standard)",
+            "outcome": "Sensitivity, specificity and calibration",
+            "time": "At the admission decision, with boarding measured to departure",
+            "setting": "Hospital emergency department and patient flow command centre"
+          }
+        ],
+        "finer": "Feasible from existing logs with one analyst day a week; interesting to the command centre and emergency clinicians; novel locally; ethical under the data governance approval; relevant because escalation effort depends on the flag.",
+        "summary": "One accuracy question with pre-specified spectrum subgroups."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work, before the Design stage: the partial first event, the leads and the six records must all be kept, with the leads still unverified.",
+      "expect": {
+        "store": {
+          "title": "Diagnostic accuracy of a command centre boarding-risk flag against observed emergency department boarding",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ],
+          "needsReview": [],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 2,
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "stage": {
+          "questions": "complete",
+          "design": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Diagnostic accuracy of a command centre boarding-risk flag against observed emergency department boarding"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "diagnostic",
+        "rationale": "The question is how well a deployed index test (the flag) classifies a target condition (boarding of four hours or more) against a reference standard, which is a diagnostic accuracy design applied to a prognostic flag. The log of every score since March 2025 allows a consecutive series with complete verification by timestamps, avoiding partial verification bias. External validation of a similar tool (c1), calibration loss at external sites (c2), reference standard error (c3) and spectrum effects (c4) shape the protocol.",
+        "alternatives": [
+          "Before-after comparison of boarding hours around the command centre opening (refused: it would not show whether the flag identifies the right patients)",
+          "Development of a new local model (refused: the score cannot be changed during the evaluation; a model could follow the evaluation)",
+          "Cluster randomised trial of flag display (refused: one command centre and no research funding)"
+        ],
+        "guidelines": [
+          "TRIPOD",
+          "STARD 2015"
+        ],
+        "whyNotMoreComplex": "A randomised evaluation of escalation would answer a different question and needs several hospitals; an accuracy study of the deployed flag uses existing logs and answers the command centre's question.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Evaluate the accuracy of the deployed boarding-risk flag against observed boarding of four hours or more, using the score log and a documented timestamp reference standard from March 2025 to February 2027, and report sensitivity, specificity and calibration by time of day, weekday and admitting service.",
+          "question": "Does the command centre flag identify the admitted patients who will board for four hours or more?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Published tools of this kind show moderate and uneven accuracy, so local performance cannot be assumed.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The reference standard cannot be measured reliably from local timestamps.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Data governance approval for command centre logs and emergency timestamps",
+              "status": "met",
+              "evidence": "Approval DG-2026-311 dated 2026-08-28, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Analyst time for data extraction and analysis",
+              "status": "met",
+              "evidence": "Command centre analyst one day a week until June 2027, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Before-after comparison of boarding hours",
+            "Development of a new local model after the evaluation"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records; none of the four model leads is cited, including the vendor's own report."
+        },
+        "summary": "Diagnostic accuracy study of the deployed flag recommended; both gates met."
+      },
+      "note": "selectionStatus requires S11; claims S13; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "diagnostic",
+          "family": "diagnostic",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: the claims rest on retrieved records (never on the vendor lead) and both gates are met, so the selection is accepted and the action ready (G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "diagnostic"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Diagnostic accuracy study of a deployed boarding-risk flag, using a consecutive series of all admission decisions from March 2025 to February 2027 with complete verification against a documented timestamp reference standard.",
+        "population": "All adult admission decisions in the emergency department in the period (about 38,000); decisions later cancelled or transferred to another hospital are excluded and counted.",
+        "exposure": "Index test: the flag at the deployed threshold, as logged at the admission decision; the underlying score is used for calibration and discrimination.",
+        "procedures": "The analyst links the score log to emergency timestamps and ward arrival times. The reference standard is boarding of four hours or more from the admission decision to emergency department departure; when departure is missing or more than 60 minutes after ward arrival, ward arrival minus 10 minutes is used, and the rule is fixed before analysis. Escalation by bed managers is recorded from the command centre log. The analyst who applies the reference standard rule does not see the flag.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Sensitivity and specificity of the flag at the deployed threshold",
+            "measure": "Proportions with 95 percent confidence intervals against the reference standard, reported as a pair",
+            "timing": "At the admission decision",
+            "why": "The flag is used as a binary signal; both errors matter to escalation.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Calibration of the score",
+            "measure": "Calibration intercept and slope, and a calibration plot by decile of predicted risk",
+            "timing": "At the admission decision",
+            "why": "Miscalibration was common at external sites (claim c2).",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Discrimination compared with occupancy alone",
+            "measure": "c statistic of the score and of an occupancy and time-of-day model",
+            "timing": "At the admission decision",
+            "why": "Tests whether the score adds to occupancy.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Escalations triggered by false-positive flags",
+            "measure": "Number of escalations per week for patients who did not board four hours",
+            "timing": "Weekly",
+            "why": "The workload cost of the flag's errors.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Reference standard completeness",
+            "measure": "Proportion of decisions needing the missing-time rule",
+            "timing": "At linkage",
+            "why": "Shows how much the reference standard depends on the rule (claim c3).",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Linkage and analysis need about 25 analyst days, within one day a week until June 2027.",
+        "biasMitigation": [
+          "Consecutive series with complete verification",
+          "Reference standard rule fixed before analysis and applied blind to the flag",
+          "Accuracy by time of day, weekday and admitting service",
+          "Sensitivity analysis excluding escalated patients"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Treatment paradox from escalation",
+            "severity": "high",
+            "note": "Escalated flagged patients may board less; analysed with and without them."
+          },
+          {
+            "id": "b2",
+            "label": "Reference standard misclassification",
+            "severity": "watch",
+            "note": "Late and missing timestamps; rule fixed in advance."
+          },
+          {
+            "id": "b3",
+            "label": "Spectrum effect",
+            "severity": "watch",
+            "note": "Reported by subgroup rather than averaged."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 3,
+          "flags": [
+            "Primary outcome is a sensitivity and specificity pair",
+            "Three pre-specified subgroup variables"
+          ],
+          "simplestPath": "One index test at one threshold against one reference standard, with three subgroups."
+        },
+        "theoreticalFramework": "None; STARD 2015 and TRIPOD structure the accuracy and validation reporting.",
+        "summary": "Consecutive-series accuracy study with a fixed reference standard rule, calibration and spectrum reporting."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[3].role": "balancing",
+          "protocol.parsimony.covariateCount": 3,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Accuracy estimates against a timestamp reference standard, with calibration and discrimination analyses and subgroup estimates by time of day, weekday and admitting service.",
+        "sampleSize": "About 38,000 admission decisions over two years, with more than half expected to board four hours or more given a median of 5.1 hours, give confidence intervals of about one percentage point for overall sensitivity and specificity. The binding constraint is the smallest subgroup: night-time surgical decisions, perhaps 2,000, still give intervals of about four percentage points. Because boarding clusters by day through occupancy, intervals use day-level cluster-robust standard errors, which widen them by an amount estimated from the data. More than 100 events in every subgroup meets the usual minimum for calibration assessment.",
+        "primaryAnalysis": "Sensitivity and specificity of the flag at the deployed threshold with 95 percent confidence intervals using day-level cluster-robust standard errors; the pair is reported together with the number of true and false positives per 1,000 admission decisions.",
+        "secondaryAnalysis": "Calibration intercept, slope and plot; c statistic of the score and of an occupancy and time-of-day model with the difference and its interval; accuracy by time of day, weekday and admitting service; sensitivity analysis excluding escalated patients.",
+        "missingData": "Decisions with missing departure times use the pre-specified ward-arrival rule; decisions with neither time are excluded and counted, and a sensitivity analysis treats them first as boarded and then as not boarded.",
+        "multiplicity": "One primary pair; subgroup estimates are reported with intervals and an interaction test, not as separate claims.",
+        "software": "R with the pROC and sandwich packages.",
+        "overfittingGuards": [
+          "Reference standard rule fixed before analysis",
+          "Threshold taken as deployed, not re-optimised",
+          "Subgroups limited to three pre-specified variables",
+          "No retraining or recalibration reported as the main result"
+        ],
+        "summary": "About 38,000 decisions give narrow intervals; the smallest subgroup and day-level clustering set the precision."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "cluster-robust"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No contact with patients; the risk is misuse of results, for example ranking bed managers or units, which is avoided by reporting at hospital level.",
+        "consent": "Individual consent is not sought for this service evaluation of existing logs under the data governance approval; patients are informed through the hospital's notice on the use of operational data.",
+        "data": "Linked data on the hospital analytics server, with record numbers replaced by study codes before analysis; no data leave the hospital.",
+        "equity": "PROGRESS-Plus: patients admitted at night, older patients and those admitted to services with lower sensitivity may be systematically missed by the flag. Accuracy is reported by time of day and admitting service, and by age group, so that the command centre can see whom the flag fails.",
+        "effectiveness": "The evaluation is useful whether the flag performs well or badly; a poor result redirects escalation effort.",
+        "efficiency": "Existing logs and about 25 analyst days.",
+        "costs": "No new costs.",
+        "grants": "None needed for the evaluation; a later recalibration or new model could seek funding.",
+        "partnerships": "Command centre staff, emergency and inpatient physicians, bed managers, and a patient partner from the hospital's patient and family advisory council.",
+        "rebPath": "Service evaluation of operational data under data governance approval DG-2026-311; before publication the hospital research ethics board will be asked whether review is required, following the TCPS 2 guidance on program evaluation.",
+        "limitations": "One hospital; escalation may bias accuracy downward; the reference standard depends on timestamps.",
+        "summary": "Evaluation of existing logs under data governance approval, with equity reporting by time of day, service and age."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "ethics.rebPath": {
+            "includes": "DG-2026-311"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A patient partner who waited overnight in the emergency department and a bed manager review the reference standard definition and the plain-language summary.",
+        "socialListening": "No social media listening; complaints about waits for a bed over the last year are themed by time of day.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "The overnight wait",
+            "quote": "Composite paraphrase: They told me a bed was coming at midnight; I got to the ward at nine in the morning.",
+            "implication": "Report the flag's accuracy at night separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Flags for the obvious",
+            "quote": "Composite paraphrase: The screen lights up the patients we already know will wait; it is the quiet ones on the medicine list who get stuck.",
+            "implication": "Report accuracy by admitting service and compare with occupancy alone.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Escalation workload",
+            "quote": "Composite paraphrase: Every flag is a phone call; half of them sort themselves out before I finish dialling.",
+            "implication": "Count escalations triggered by false-positive flags.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Not knowing",
+            "quote": "Composite paraphrase: Nobody could tell us whether it would be one hour or ten.",
+            "implication": "Consider whether a calibrated score could support honest wait estimates for families.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on overnight waits, missed patients, escalation workload and uncertainty for families."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Accuracy of a deployed boarding-risk flag in a hospital patient flow command centre: a diagnostic accuracy study",
+        "abstract": "Objective: to estimate the sensitivity, specificity and calibration of a vendor boarding-risk flag used by a patient flow command centre. Design: consecutive series of admission decisions from March 2025 to February 2027 with a documented timestamp reference standard (boarding of four hours or more). Results and conclusions will be written after the analysis.",
+        "introduction": "Command centres flag patients at risk of prolonged boarding, but published validations of such tools show moderate accuracy that falls at night and varies by service, and the local tool has only vendor validation.",
+        "methods": "Score log linked to emergency timestamps and ward arrival times; reference standard rule fixed in advance and applied blind to the flag; sensitivity and specificity at the deployed threshold with day-level cluster-robust intervals; calibration; comparison with occupancy alone; subgroups by time of day, weekday and service.",
+        "results": "No data have been analysed yet. The report will present the flow of admission decisions, the two-by-two table, accuracy by subgroup, calibration plots and the occupancy comparison.",
+        "discussion": "The discussion will interpret the flag's accuracy against published validations, weigh the treatment paradox from escalation, and state what the command centre should change.",
+        "limitations": "One hospital; escalation bias; timestamp-based reference standard.",
+        "conclusion": "To be written after analysis; it will be limited to the flag's accuracy and will not claim that the command centre reduced boarding.",
+        "reportingChecklist": "TRIPOD, with STARD 2015 items for the binary flag",
+        "summary": "TRIPOD-structured draft with results left empty until analysis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "TRIPOD"
+          },
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Fix the reference standard definition (four hours or more) and the missing-time rule before linkage",
+          "The four model leads, including the vendor report, remain unverified; do not cite them as evidence",
+          "Run identity checks on the six retrieved records before the report cites them"
+        ],
+        "improvementNotes": "The first search reported two hits and returned none; the leads-only reply left the stage incomplete until the second search returned six records, whose appraisal completed it with low certainty. The accepted decision rests on four ledger claims from retrieved records.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the reference standard rule, unverified leads and identity checks."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 the store defect of A3 L1.6 drops it (not a missing work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click, one file equal to the store (G10); selectionStatus and actionStatus require S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.constraints": "No research funding; the score cannot be changed or retrained during the evaluation; the command centre analyst is available one day a week until June 2027; data come only from existing timestamps and the score log.",
+            "scan.retrievalEvents[0].status": "partial",
+            "scan.retrievalEvents[0].recordIds": [],
+            "scan.retrievalEvents[1].status": "ok",
+            "scan.items[0].provenance.status": "unverified",
+            "scan.items[1].year": {
+              "isNull": true
+            },
+            "scan.gradeOverall": "low",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

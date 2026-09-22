@@ -1,0 +1,16 @@
+{
+  "designSummary": "Cohort of catheters clustered within patients, comparing the 12 months after the change with the 12 months before, with an interrupted time series of monthly failure as the main check on secular trends.",
+  "sampleSize": "If the wards insert about 9,000 catheters a year (an assumption to confirm from the 2024 flowsheet count), about 18,000 catheters are available. With failure near 31 percent before the change, the planning value from c1, detecting a rise to 34 percent (3 percentage points) with 90 percent power at two-sided alpha 0.05 needs about 5,100 catheters per period if catheters were independent; with a design effect of 1.4 for several catheters per patient, about 7,200 per period. Both periods should exceed this, so the study can detect or rule out a 3-point rise. Bloodstream infection is too rare for a comparison and is reported as counts.",
+  "primaryAnalysis": "Cause-specific Cox model for time from insertion to failure, with removal for other reasons as a competing event and a shared frailty term for the patient (c4), period after versus before as the exposure, adjusted for age, sex, admitting service, insertion site, catheter gauge and inserter role; reported as a hazard ratio and as an absolute difference in 7-day cumulative incidence with 95 percent confidence intervals.",
+  "secondaryAnalysis": "Segmented regression of the monthly proportion of failed catheters with 12 points on each side (level and slope change), as in the retrieved time series (c3); catheters per admission compared with negative binomial regression; bloodstream infections described as counts and rates; documentation completeness described by shift and period.",
+  "missingData": "Catheters without a removal reason are counted by period and analysed in a sensitivity analysis that treats them first as failures and then as non-failures; missing covariates are handled by multiple imputation with 20 imputations.",
+  "multiplicity": "One primary comparison; secondary outcomes are reported with confidence intervals and labelled secondary.",
+  "software": "R with the survival and coxme packages, inside the hospital's secure analysis environment.",
+  "overfittingGuards": [
+    "Six covariates and the failure coding rule fixed before extraction",
+    "No adjustment for dwell time in the primary model",
+    "Segmented regression specified in advance with 12 points on each side",
+    "No subgroup claims beyond the pre-specified age and interpreter-need groups"
+  ],
+  "summary": "About 7,200 catheters per period are needed for a 3-point difference after clustering; the likely available numbers exceed this."
+}

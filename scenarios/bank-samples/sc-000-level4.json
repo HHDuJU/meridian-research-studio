@@ -1,7 +1,7 @@
 {
   "id": "sc-000-level4",
-  "version": 2,
-  "supersedes": "bank-samples/original-v1/sc-000-level4.json (version 1, format 1). Version 1 changed a source after an acceptance that was itself expected to be refused, so the stale check had no supported positive before it; it also completed the Scan stage from model leads alone. Version 2 retrieves fixture records, quarantines a lead that collides with a retrieved record, refuses an unsupported first decision, accepts a supported second decision, and only then changes a cited record and expects the stale status in the store, on screen, in the export and after reload.",
+  "version": 3,
+  "supersedes": "bank-samples/original-v2/sc-000-level4.json (version 2). Reason: G11: investigator constraints are never erased or replaced by a model response; issue code dropped. Version 2's problem reply reworded the investigator's typed constraints while its expectation allowed no issue and accepted any text containing '18,000'; version 3 expects the typed text exactly, the issue 'dropped' at 'constraints' and a 'kept' warning on screen. The audit step's needsReview check also gains the status text 'review required' on screen.",
   "title": "County health unit: working carbon monoxide and smoke alarms by tenure, adversarial model responses",
   "field": "public-health",
   "level": 4,
@@ -17,7 +17,7 @@
     "S11",
     "S13"
   ],
-  "notes": "Adversarial path on a clear cross-sectional question. A fixture search returns six records with abstracts. The first scan reply is prose, not JSON: nothing is applied and an error is shown (G5). The second reply (shape discovery) carries five leads: the first echoes the id of the retrieved national survey record (same title and year) but adds the invented DOI 10.5555/invented.1 and a 'landmark' label, so it must be quarantined with issue id-collision while the retrieved record stays unchanged (A2 item 6, D1; the lead stays origin model and never verified, G3); another has methodQuality 140 (stored null, out-of-range) and another a boolean year (stored null, invalid-type); the other leads are appended after the retrieved records, never replacing them (D1). The third reply (shape appraisal, S13) annotates the six records and records claims c1 to c3. The first design reply rests on claim-9, which is not in the ledger: its acceptance must be refused (S1, S8). The revised design reply rests on c1 to c3 and is accepted (selectionStatus accepted; action blocked by the unknown ethics gate). Only then is the cited tenure record's key findings changed through the store: the decision must become stale (S10) in the store, on screen and after reload (checked while the route is on the Design stage, where the decision panel is), and in the export, and the completed stages after Scan are flagged for review. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1, 3, 6: ev-1k96ewq, ev-0a7cyij, ev-0k4b84h) or of titleYearKey(title, year) when there is no DOI (records 2, 4, 5: ev-1xlua6n, ev-1gw2t9d, ev-1jty10q). Catches: a non-JSON reply treated as success, a lead that overwrites or duplicates a retrieved record, out-of-range or wrongly typed values stored, a model label turned into verification, acceptance of an unsupported decision, and a source change that leaves an accepted decision current.",
+  "notes": "Adversarial path on a clear cross-sectional question. The problem reply rewords the investigator's typed constraints: the typed text must stay stored with issue 'dropped' at 'constraints' and a 'kept' warning (G11). A fixture search returns six records with abstracts. The first scan reply is prose, not JSON: nothing is applied and an error is shown (G5). The second reply (shape discovery) carries five leads: the first echoes the id of the retrieved national survey record (same title and year) but adds the invented DOI 10.5555/invented.1 and a 'landmark' label, so it must be quarantined with issue id-collision while the retrieved record stays unchanged (A2 item 6, D1; the lead stays origin model and never verified, G3); another has methodQuality 140 (stored null, out-of-range) and another a boolean year (stored null, invalid-type); the other leads are appended after the retrieved records, never replacing them (D1). The third reply (shape appraisal, S13) annotates the six records and records claims c1 to c3. The first design reply rests on claim-9, which is not in the ledger: its acceptance must be refused (S1, S8). The revised design reply rests on c1 to c3 and is accepted (selectionStatus accepted; action blocked by the unknown ethics gate). Only then is the cited tenure record's key findings changed through the store: the decision must become stale (S10) in the store, on screen and after reload (checked while the route is on the Design stage, where the decision panel is), and in the export, and the completed stages after Scan are flagged for review. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1, 3, 6: ev-1k96ewq, ev-0a7cyij, ev-0k4b84h) or of titleYearKey(title, year) when there is no DOI (records 2, 4, 5: ev-1xlua6n, ev-1gw2t9d, ev-1jty10q). Catches: a non-JSON reply treated as success, a lead that overwrites or duplicates a retrieved record, out-of-range or wrongly typed values stored, a model label turned into verification, acceptance of an unsupported decision, and a source change that leaves an accepted decision current.",
   "inputs": {
     "need": "I work in the environmental health team of a county health unit that covers about 180,000 people, a mix of small towns and farms. After two carbon monoxide deaths in rented farm cottages last winter, our board wants to know how many homes actually have a working carbon monoxide alarm and a working smoke alarm, and whether renters are worse off than owners. We want to run a cross-sectional household survey this winter to estimate the prevalence of working alarms by tenure and by main heating type (wood or coal, heating oil, bottled gas, heat pump), so that our alarm giveaway can be targeted instead of spread thin.\n\nThe fire service does home safety visits, but only when someone asks, so their records over-represent motivated households. We have the county property roll with every residential address but no tenure field. Our team has done telephone surveys before and response among renters and younger households was poor; door-to-door visits cost more but would let us press the test button and see where the alarm is.\n\nI need help with the sampling frame, the sample size for comparing renters and owners, a definition of a working alarm (present, correctly sited, sounds when tested), what to do about refusals and addresses where nobody is home, and whether we need ethics review for a household survey that includes a brief look inside the home. I would also like to know what published evidence exists on alarm surveys in rural areas, because a colleague keeps quoting a figure of 40 percent that I cannot trace to any source.",
     "constraints": "Fieldwork budget of 18,000 for this winter. Fieldwork must finish by the end of March. No entry beyond the hallway or kitchen, and never without an adult householder present.",
@@ -70,9 +70,7 @@
         "store": {
           "title": "Working smoke and carbon monoxide alarms by housing tenure in a rural county",
           "family": "cross-sectional",
-          "problem.constraints": {
-            "includes": "18,000"
-          },
+          "problem.constraints": "Fieldwork budget of 18,000 for this winter. Fieldwork must finish by the end of March. No entry beyond the hallway or kitchen, and never without an adult householder present.",
           "problem.rawNeed": "I work in the environmental health team of a county health unit that covers about 180,000 people, a mix of small towns and farms. After two carbon monoxide deaths in rented farm cottages last winter, our board wants to know how many homes actually have a working carbon monoxide alarm and a working smoke alarm, and whether renters are worse off than owners. We want to run a cross-sectional household survey this winter to estimate the prevalence of working alarms by tenure and by main heating type (wood or coal, heating oil, bottled gas, heat pump), so that our alarm giveaway can be targeted instead of spread thin.\n\nThe fire service does home safety visits, but only when someone asks, so their records over-represent motivated households. We have the county property roll with every residential address but no tenure field. Our team has done telephone surveys before and response among renters and younger households was poor; door-to-door visits cost more but would let us press the test button and see where the alarm is.\n\nI need help with the sampling frame, the sample size for comparing renters and owners, a definition of a working alarm (present, correctly sited, sounds when tested), what to do about refusals and addresses where nobody is home, and whether we need ethics review for a household survey that includes a brief look inside the home. I would also like to know what published evidence exists on alarm surveys in rural areas, because a colleague keeps quoting a figure of 40 percent that I cannot trace to any source.",
           "completedStages": [
             "problem"
@@ -82,14 +80,23 @@
           "problem": "complete"
         },
         "issues": {
-          "count": 0
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
         },
         "screen": {
           "includes": [
-            "Working smoke and carbon monoxide alarms by housing tenure in a rural county"
+            "Working smoke and carbon monoxide alarms by housing tenure in a rural county",
+            "constraints",
+            {"anyOf": ["kept", "refused", "not applied"]}
           ]
         }
-      }
+      },
+      "note": "G11: the reply rewords the investigator's typed constraints. The typed text stays stored exactly, the model's value is dropped with an issue 'dropped' at 'constraints', the rest of the reply is applied, and the screen shows the partial-apply warning naming constraints and saying the entered text was kept. At 875fe59 the reworded value replaces the typed text, so these checks fail there."
     },
     {
       "do": "retrieve",
@@ -1517,6 +1524,11 @@
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
         }
       }
     },

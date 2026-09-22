@@ -1,0 +1,1385 @@
+{
+  "id": "sc-054",
+  "version": 1,
+  "title": "Community falls prevention classes: adherence support pragmatic trial, failed search, leads-only scan kept incomplete, two hits",
+  "field": "geriatrics",
+  "level": 2,
+  "family": "pragmatic-trial",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D19",
+    "D20",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path with a thin evidence trail (routing explicit pragmatic-trial from 'We want to run a pragmatic trial'; allocation is described as 'by chance' so no second design word routes the need). The first fixture search is rate limited (HTTP 429): the application records a failed event (status error, count null, no records). The first scan reply (shape discovery) brings five model leads after that failure and an explicit null certainty: the leads are stored as unverified model leads, one undated with methodQuality null (G3, G4), the certainty stays unassessed, and the Scan stays incomplete with the status 'leads only' (G1, G2; D20). The investigator then tries to mark the Scan complete by hand; the attempt is refused (G2; D19, D20). A reload on the Scan route checks the leads-only state. A broader second search returns only two hits (status ok, 2 of 2); the records are added beside the leads (assumed appended at items[5] and items[6]) and the appraisal (scan call 2) annotates both, records claims c1 to c3 and assigns certainty 'low' over the two inspected records, which completes the Scan. The decision rests on c1 to c3 with the ethics gate unknown (accepted, blocked). Unlike an empty search that is later followed by a fuller one, the first channel here fails outright, the leads arrive while there is nothing to confirm, and the successful search finds only two records. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for record 1 (ev-1fe58bk); titleYearKey hash for record 2 (ev-0j5ycdf). Requires D20 and D19 (no completion over leads only, manual completion refused), S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a failed channel shown as an empty search, leads that complete the Scan or earn a certainty, a manual completion bypass, and leads lost when records arrive.",
+  "inputs": {
+    "need": "I am a physiotherapist and I coordinate a community falls prevention exercise programme that our health region runs in 14 community centres. Adults aged 65 and over who have fallen, or who are referred by their family doctor, join a 24-week group programme of strength and balance exercise twice a week, with home exercises in between. The programme only works if people keep coming, but attendance drops sharply after about week six: last year only 38 percent of the 520 people who started attended at least two thirds of the sessions, and few do the home exercises. People tell us the reasons are transport, pain, exercises that feel too easy or too hard, and losing the habit after a missed week.\n\nWe want to run a pragmatic trial of an adherence support package added to the usual programme: a weekly text or phone reminder, two calls from a trained peer volunteer who has completed the programme, and a home exercise booklet with a tick calendar that the instructor reviews every four weeks. Participants would be allocated individually by chance to the usual programme or the programme with support, in all 14 centres, and the instructors would deliver the classes as they do now. The main question is whether attendance and home exercise improve; falls matter most, but I doubt we can show a difference in falls with our numbers.\n\nI need help choosing the primary outcome, the sample size, how to allocate people without disrupting the groups, and what the evidence says about adherence support in exercise programmes, because my first searches found almost nothing.",
+    "constraints": "No research funding beyond the programme budget. Instructors cannot take on extra data collection; attendance comes from the existing class registers. Peer volunteers are unpaid and trained by the programme. The support package must also work for people without a mobile phone.",
+    "localFacts": [
+      "Last year 520 people started the 24-week programme in 14 community centres; 38 percent attended at least two thirds of the 48 sessions.",
+      "The regional falls programme manager approved adding the adherence package and central allocation for the 2027 intakes (approval FPM-2027-03, dated 2026-09-12).",
+      "Twelve former participants have volunteered to be trained as peer supporters.",
+      "No research ethics board application has been made yet."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a physiotherapist and I coordinate a community falls prevention exercise programme that our health region runs in 14 community centres. Adults aged 65 and over who have fallen, or who are referred by their family doctor, join a 24-week group programme of strength and balance exercise twice a week, with home exercises in between. The programme only works if people keep coming, but attendance drops sharply after about week six: last year only 38 percent of the 520 people who started attended at least two thirds of the sessions, and few do the home exercises. People tell us the reasons are transport, pain, exercises that feel too easy or too hard, and losing the habit after a missed week.\n\nWe want to run a pragmatic trial of an adherence support package added to the usual programme: a weekly text or phone reminder, two calls from a trained peer volunteer who has completed the programme, and a home exercise booklet with a tick calendar that the instructor reviews every four weeks. Participants would be allocated individually by chance to the usual programme or the programme with support, in all 14 centres, and the instructors would deliver the classes as they do now. The main question is whether attendance and home exercise improve; falls matter most, but I doubt we can show a difference in falls with our numbers.\n\nI need help choosing the primary outcome, the sample size, how to allocate people without disrupting the groups, and what the evidence says about adherence support in exercise programmes, because my first searches found almost nothing.",
+          "family": "pragmatic-trial",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a physiotherapist and I coordinate a community falls prevention exercise programme"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Adherence support for a community falls prevention exercise programme: a pragmatic trial across 14 centres",
+        "subtitle": "Pragmatic trial with individual allocation in usual classes",
+        "family": "pragmatic-trial",
+        "statement": "Only 38 percent of 520 older adults who started a 24-week community strength and balance programme last year attended at least two thirds of sessions, and few did home exercises. The programme wants to know whether an adherence support package (weekly reminders, two peer volunteer calls and a home exercise calendar reviewed by the instructor) improves attendance and home exercise when delivered in usual classes by usual instructors across 14 centres.",
+        "whoAffected": "Adults aged 65 and over who have fallen or are at risk of falling, their families, instructors in 14 centres, and trained peer volunteers.",
+        "whatHurts": "People who stop attending lose the benefit of exercise that prevents falls, and falls lead to injury, fear and loss of independence.",
+        "currentPractice": "Twice-weekly group classes for 24 weeks with a home exercise sheet; no reminders or follow-up after missed sessions.",
+        "whyNow": "The programme manager has approved the package and central allocation for the 2027 intakes, and twelve former participants have volunteered as peer supporters.",
+        "constraints": "No research funding beyond the programme budget. Instructors cannot take on extra data collection; attendance comes from the existing class registers. Peer volunteers are unpaid and trained by the programme. The support package must also work for people without a mobile phone.",
+        "patientCenteredGoal": "Older adults who join the programme keep exercising long enough to become stronger and steadier and to stay independent at home.",
+        "summary": "Problem framed as a pragmatic trial of adherence support within the usual programme."
+      },
+      "expect": {
+        "store": {
+          "title": "Adherence support for a community falls prevention exercise programme: a pragmatic trial across 14 centres",
+          "family": "pragmatic-trial",
+          "problem.constraints": "No research funding beyond the programme budget. Instructors cannot take on extra data collection; attendance comes from the existing class registers. Peer volunteers are unpaid and trained by the programme. The support package must also work for people without a mobile phone.",
+          "problem.statement": {
+            "includes": "38 percent of 520"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Adherence support for a community falls prevention exercise programme: a pragmatic trial across 14 centres"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "adherence support reminders peer calls community strength balance falls prevention class attendance older adults 24 weeks",
+      "response": {
+        "status": 429,
+        "note": "rate limited by the provider; retry later"
+      },
+      "note": "A rate-limited search is a recorded failed event (status 'error', no count, no records), never a silent empty result and never an empty search the investigator could confirm.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "error",
+          "scan.retrievalEvents[0].resultCount": {
+            "isNull": true
+          },
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "adherence support reminders peer calls community strength balance falls prevention class attendance older adults 24 weeks",
+        "sourcesConsulted": [
+          "model knowledge of the falls prevention literature"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "These are leads only; certainty needs retrieved and inspected records.",
+        "synthesis": "The recorded search failed, so these five items are leads recalled by the model to help build a better query. They suggest that reminders and peer contact may improve attendance and home exercise, but none has been retrieved or checked.",
+        "items": [
+          {
+            "title": "Reminder messages and attendance at exercise programmes for older adults: an overview of trials",
+            "authors": "Hughes-Adebayo C, Lind-Mercer P",
+            "year": 2020,
+            "source": "Journal of Healthy Ageing Programmes",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 60,
+            "relevance": 82,
+            "verification": "verify",
+            "contextTags": [
+              "reminders",
+              "attendance"
+            ],
+            "keyFindings": "Reminder messages were associated with modestly higher attendance in several small trials.",
+            "limitations": "Mixed programmes and populations.",
+            "notes": "Lead only."
+          },
+          {
+            "title": "Peer mentoring to sustain exercise after falls prevention classes",
+            "authors": "Olsen-Mbatha R",
+            "year": 2019,
+            "source": "Community Physiotherapy Notes",
+            "kind": "grey",
+            "relevance": 75,
+            "verification": "ai-lead",
+            "contextTags": [
+              "peer support"
+            ],
+            "keyFindings": "Former participants acting as mentors kept contact with most new participants for three months.",
+            "limitations": "Service report.",
+            "notes": "Lead only."
+          },
+          {
+            "title": "Home exercise calendars and adherence among older adults after group exercise",
+            "authors": "Tanaka-Price J",
+            "year": null,
+            "source": "Rehabilitation Practice Letters",
+            "kind": "observational",
+            "methodQuality": null,
+            "relevance": 70,
+            "verification": "ai-lead",
+            "contextTags": [
+              "home exercise",
+              "self-monitoring"
+            ],
+            "keyFindings": "A tick calendar reviewed by the instructor was linked to more days of home exercise.",
+            "limitations": "Undated; small sample.",
+            "notes": "Lead only."
+          },
+          {
+            "title": "Transport support and attendance at community exercise classes for older people",
+            "authors": "Kaur-Lindqvist M, Osei-Gray T",
+            "year": 2017,
+            "source": "Ageing and Transport Review",
+            "kind": "observational",
+            "relevance": 55,
+            "verification": "ai-lead",
+            "contextTags": [
+              "transport",
+              "barriers"
+            ],
+            "keyFindings": "Free transport raised attendance among people without a car.",
+            "limitations": "One city.",
+            "notes": "Lead only."
+          },
+          {
+            "title": "Behaviour change techniques for exercise adherence in later life",
+            "authors": "Moreau-Adeyemi F, Brandt-Shaw L",
+            "year": 2021,
+            "source": "Journal of Healthy Ageing Programmes",
+            "kind": "systematic-review",
+            "relevance": 68,
+            "verification": "verify",
+            "contextTags": [
+              "behaviour change"
+            ],
+            "keyFindings": "Self-monitoring and feedback were the techniques most often linked to adherence.",
+            "limitations": "Heterogeneous interventions.",
+            "notes": "Lead only."
+          }
+        ],
+        "summary": "Five leads after a failed search; no certainty."
+      },
+      "note": "Leads only: the only search failed, so the five items are model leads (origin model, unverified; G3), the certainty stays unassessed (the explicit null is 'cleared', matching the unassessed value) and the stage stays incomplete with the honest status 'leads only' (G1, G2; sheet A3.2 section 1, D20). The undated lead keeps year and methodQuality null (G4). The sourcesConsulted issue holds at 875fe59.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[2].year": {
+            "isNull": true
+          },
+          "scan.items[2].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[2].grade": "unrated",
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": {
+            "min": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "mark-complete",
+      "stage": "scan",
+      "note": "The investigator tries to mark the Scan complete by hand while it holds leads only. Completion needs a retrieved record or a confirmed empty search (G2), and a failed search is neither, so the attempt is refused and nothing changes (D20; D19 refuses completion while a blocker holds). At 875fe59 markComplete is unconditional.",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem"
+          ],
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 5
+          }
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "leads only"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Scan route: the leads-only state, the failed search event and the refused completion must all survive.",
+      "expect": {
+        "store": {
+          "title": "Adherence support for a community falls prevention exercise programme: a pragmatic trial across 14 centres",
+          "completedStages": [
+            "problem"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 5
+          },
+          "scan.retrievalEvents[0].status": "error",
+          "scan.gradeOverall": ""
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Adherence support for a community falls prevention exercise programme: a pragmatic trial across 14 centres",
+            "leads only"
+          ],
+          "excludes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "exercise adherence support older adults community group programme",
+      "response": {
+        "status": 200,
+        "total": 2,
+        "records": [
+          {
+            "title": "Telephone and text support for attendance at community strength and balance classes: a pragmatic trial",
+            "authors": "Lindberg-Okafor A, Marsh-Venkataraman T, Oduya-Clarke P",
+            "year": 2022,
+            "venue": "Kestrelmoor Journal of Ageing and Activity",
+            "doi": "10.5555/kjaa.2022.0147",
+            "providerType": "journal-article",
+            "abstract": "We allocated 412 adults aged 65 and over who were joining community strength and balance classes either to usual classes or to classes with weekly text or phone reminders and a call after any missed week. Attendance at two thirds or more of sessions over 24 weeks was 54 percent with support and 41 percent with usual classes. Falls over 12 months did not differ between groups (rate ratio 0.94, 95 percent CI 0.71 to 1.25). Participants valued calls more than texts, and people without a mobile phone received calls only. The trial was not blinded, and instructors knew which participants received support."
+          },
+          {
+            "title": "Peer volunteer calls and home exercise after falls prevention classes: a controlled comparison in community programmes",
+            "authors": "Achterberg-Moyo S, Fernandez-Hale R",
+            "year": 2018,
+            "venue": "Ashcombe Community Rehabilitation Reports",
+            "providerType": "journal-article",
+            "abstract": "Two community falls prevention programmes offered participants two calls from a trained peer volunteer, a former participant, while a third programme did not. Home exercise diaries were completed on at least three days a week by 62 percent of participants who received peer calls and 35 percent of those who did not. Attendance at classes was similar in the three programmes. Peer volunteers reported that the calls were rewarding but that some participants were hard to reach. Programmes were not allocated at random, the diaries were self-reported, and the programme that offered no calls served an older population."
+          }
+        ]
+      },
+      "note": "A broader search returns only two hits. The records are added to the Scan beside the five leads; the leads are kept as leads (assumption: the new records are appended after the existing items, so they sit at items[5] and items[6]). The failed first event stays in the history.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].status": "error",
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 2,
+          "scan.retrievalEvents[1].recordIds": [
+            "ev-1fe58bk",
+            "ev-0j5ycdf"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[5].id": "ev-1fe58bk",
+          "scan.items[5].provenance.origin": "retrieval",
+          "scan.items[5].provenance.status": "retrieved",
+          "scan.items[6].id": "ev-0j5ycdf",
+          "scan.items[6].doi": {
+            "absent": true
+          },
+          "scan.items[6].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Telephone and text support for attendance at community strength and balance classes: a pragmatic trial"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1fe58bk",
+            "relevance": 95,
+            "methodQuality": 68,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "In 412 older adults, weekly reminders and a call after missed weeks raised attendance at two thirds of sessions from 41 to 54 percent over 24 weeks; falls over 12 months did not differ.",
+            "limitations": "Unblinded; instructors aware of allocation; falls self-reported.",
+            "contextTags": [
+              "reminders",
+              "attendance",
+              "pragmatic"
+            ],
+            "notes": "Closest to the planned trial."
+          },
+          {
+            "id": "ev-0j5ycdf",
+            "relevance": 88,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Peer volunteer calls were associated with home exercise on three or more days a week in 62 against 35 percent; class attendance similar.",
+            "limitations": "Non-random programme comparison; self-reported diaries; older population in the comparison programme.",
+            "contextTags": [
+              "peer support",
+              "home exercise"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "With weekly reminders and a call after missed weeks, attendance at two thirds or more of sessions over 24 weeks was 54 percent with support and 41 percent with usual classes.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1fe58bk"
+            ],
+            "location": "Abstract, results",
+            "passage": "Attendance at two thirds or more of sessions over 24 weeks was 54 percent with support and 41 percent with usual classes.",
+            "interpretation": "Planning values for the primary outcome; the local baseline of 38 percent is similar.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Home exercise diaries were completed on at least three days a week by 62 percent of participants who received peer calls and 35 percent of those who did not.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0j5ycdf"
+            ],
+            "location": "Abstract",
+            "passage": "Home exercise diaries were completed on at least three days a week by 62 percent of participants who received peer calls and 35 percent of those who did not.",
+            "interpretation": "Peer calls may help home exercise more than attendance; a secondary outcome.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c3",
+            "text": "Falls over 12 months did not differ between groups (rate ratio 0.94, 95 percent CI 0.71 to 1.25).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1fe58bk"
+            ],
+            "location": "Abstract, results",
+            "passage": "Falls over 12 months did not differ between groups (rate ratio 0.94, 95 percent CI 0.71 to 1.25).",
+            "interpretation": "Falls are not a feasible primary outcome at this scale.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Two retrieved records, appraised at abstract level; the five earlier items remain unverified leads and are not part of the certainty. One trial found that reminders and calls after missed weeks raised attendance from 41 to 54 percent without a detectable effect on falls, and a non-random comparison linked peer volunteer calls with more home exercise. The evidence is thin but directly relevant, and it supports attendance as the primary outcome with home exercise as secondary and falls reported descriptively.",
+        "gradeOverall": "low",
+        "gradeRationale": "Two studies only, one unblinded trial and one non-random comparison; consistent direction but imprecise and indirect for peer calls.",
+        "summary": "Two records appraised; three claims; certainty low over the retrieved records only."
+      },
+      "note": "Appraisal over the two retrieved records only (S13); certainty assigned over inspected records (G1), and the Scan completes now that records were retrieved (G2). The leads stay unverified.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[5].grade": "moderate",
+          "scan.items[5].kind": "rct",
+          "scan.items[6].grade": "low",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.claims": {
+            "length": 3
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-1fe58bk"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-0j5ycdf"
+          ],
+          "scan.claims[1].uncertainty": "high",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "14 community centres, 24-week programme",
+          "38 percent attend two thirds of sessions",
+          "instructors without extra data collection",
+          "people without a mobile phone"
+        ],
+        "reading": "Attendance falls after week six for reasons outside the classes: transport, pain, difficulty level and broken habits. Reminders and calls after missed weeks target the broken habit (c1); peer calls target home exercise (c2); neither has been shown to prevent falls at this scale (c3). Class registers already record attendance, which keeps the trial inside usual practice.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Attendance after week six",
+            "kind": "outcome",
+            "detail": "Primary outcome; 38 percent reach two thirds locally."
+          },
+          {
+            "id": "n2",
+            "label": "Weekly reminders and missed-week calls",
+            "kind": "framework",
+            "detail": "Raised attendance from 41 to 54 percent elsewhere (c1)."
+          },
+          {
+            "id": "n3",
+            "label": "Peer volunteer calls",
+            "kind": "framework",
+            "detail": "Linked to more home exercise (c2)."
+          },
+          {
+            "id": "n4",
+            "label": "Home exercise calendar",
+            "kind": "framework",
+            "detail": "Reviewed by the instructor every four weeks."
+          },
+          {
+            "id": "n5",
+            "label": "Falls",
+            "kind": "outcome",
+            "detail": "No detectable difference in the retrieved trial (c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Transport and pain",
+            "kind": "context",
+            "detail": "Barriers the package does not remove."
+          },
+          {
+            "id": "n7",
+            "label": "Unverified leads",
+            "kind": "gap",
+            "detail": "Five model leads from the failed search, not retrieved."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "to": "n1",
+            "relation": "expected to raise"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "supports use of"
+          },
+          {
+            "from": "n1",
+            "to": "n5",
+            "relation": "hoped to reduce, unproven at this scale"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "lowers"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "may sustain"
+          }
+        ],
+        "summary": "Map of the adherence pathway, the package components and the barriers they leave untouched."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 5
+          },
+          "map.nodes[6].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Only two retrieved studies",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The first search failed and the second found two records; the five leads are unchecked.",
+            "opportunity": "Check the leads by identifier before citing them and report the thin evidence plainly."
+          },
+          {
+            "id": "g2",
+            "title": "Falls cannot be powered at this scale",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "The retrieved trial of 412 people found no difference in falls (c3).",
+            "opportunity": "Make attendance primary and report falls descriptively."
+          },
+          {
+            "id": "g3",
+            "title": "People without a mobile phone or with limited English",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Text reminders exclude some older adults; phone calls in the right language are needed.",
+            "opportunity": "Offer phone calls as the default for anyone without a mobile phone and record language."
+          },
+          {
+            "id": "g4",
+            "title": "Contamination within classes",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Supported and unsupported participants share classes and may share encouragement.",
+            "opportunity": "Accept some contamination as part of the pragmatic question and report it."
+          }
+        ],
+        "errorsFound": [
+          "The need's 'first searches found almost nothing' matches the record: one failed search and one search with two hits; the leads are not evidence."
+        ],
+        "reevaluation": "The gaps support an individually allocated pragmatic trial with attendance as the primary outcome.",
+        "summary": "Four gaps; thin retrieved evidence is high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[2].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Only two retrieved studies"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Adding the adherence support package raises the proportion of participants attending at least two thirds of the 48 sessions from about 38 percent to about 50 percent.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 80,
+            "parsimony": 85,
+            "rationale": "The planning difference is smaller than the retrieved trial's 13 points (c1) to allow for a less intensive package.",
+            "risks": "Contamination within classes; peer volunteer availability."
+          },
+          {
+            "id": "h2",
+            "statement": "The package increases home exercise days per week.",
+            "novelty": 40,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Supported by the peer call comparison (c2); a secondary outcome.",
+            "risks": "Self-reported calendars."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "h1 primary, h2 secondary."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults aged 65 and over starting a 24-week community strength and balance programme, does an adherence support package added to usual classes, compared with usual classes alone, increase the proportion attending at least two thirds of the 48 sessions?",
+            "framework": "PICOT",
+            "population": "Adults aged 65 and over starting the programme in 14 centres in 2027",
+            "intervention": "Weekly reminders, two peer volunteer calls and a home exercise calendar reviewed by the instructor",
+            "comparator": "Usual programme",
+            "outcome": "Attendance at 32 or more of 48 sessions from class registers",
+            "time": "24 weeks",
+            "setting": "14 community centres"
+          }
+        ],
+        "finer": "Feasible within the programme budget and existing registers; interesting to the region; novel for this package; ethical with consent and equal access to classes; relevant because attendance decides whether the programme works.",
+        "summary": "One PICOT question with a register-based primary outcome."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICOT",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "pragmatic-trial",
+        "rationale": "The question is whether the package works in usual classes with usual instructors, which is a pragmatic effectiveness question. Individual allocation by a central office keeps classes intact, attendance comes from existing registers, and reminders with missed-week calls have raised attendance elsewhere (c1), while falls cannot be powered (c3). Peer calls may add home exercise (c2). PRECIS-2 domains are set near the pragmatic end.",
+        "alternatives": [
+          "Allocation by centre (refused: 14 centres give too few clusters and centres differ in transport and population)",
+          "Before-after comparison of the 2026 and 2027 intakes (refused: attendance varies by season and instructor)",
+          "Reminders only, without peer calls"
+        ],
+        "guidelines": [
+          "CONSORT extension for pragmatic trials",
+          "PRECIS-2",
+          "TIDieR"
+        ],
+        "whyNotMoreComplex": "A factorial design separating reminders from peer calls would need about four times the sample; the programme's decision is about the package.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a pragmatic trial with individual allocation by a central office in all 14 centres, comparing usual classes with classes plus the adherence support package, with attendance at two thirds of sessions as the primary outcome.",
+          "question": "Should the programme test the adherence support package in a pragmatic trial in 2027?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Reminders and missed-week calls raised attendance elsewhere, peer calls were linked to more home exercise, and falls cannot be powered, so attendance is the right primary outcome.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Fewer than eight trained peer volunteers are available when the first intake starts.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Programme manager approval for the package and central allocation",
+              "status": "met",
+              "evidence": "Approval FPM-2027-03 dated 2026-09-12, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research ethics board approval of the trial",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Reminders only, without peer calls",
+            "Before-after comparison of intakes"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from the two retrieved records; none of the five model leads is cited. The ethics gate is unknown, so the action stays blocked."
+        },
+        "summary": "Pragmatic trial recommended; the decision rests on three ledger claims from two retrieved records and waits for ethics approval."
+      },
+      "note": "The decision rests on c1 to c3 (S13), not on the leads. selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "pragmatic-trial",
+          "family": "pragmatic-trial",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection on c1 to c3 from retrieved records; the ethics gate is unknown, so the action stays blocked (A2 item 9, G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.basis": "explicit",
+          "family": "pragmatic-trial"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Pragmatic trial with individual allocation by a central office, in the 2027 intakes of a 24-week community strength and balance programme in 14 centres, comparing usual classes with classes plus an adherence support package.",
+        "population": "Adults aged 65 and over starting the programme in 2027 who consent; people without a mobile phone and people with limited English are included, with phone calls and interpreters.",
+        "exposure": "Adherence support package: weekly reminder by text or phone, a call within three days of any missed week, two calls from a trained peer volunteer (weeks 3 and 8), and a home exercise tick calendar reviewed by the instructor every four weeks.",
+        "procedures": "After consent at the first class, the central office allocates each participant by computer-generated sequence stratified by centre, and informs the reminder coordinator; instructors see the calendar only for supported participants. Attendance comes from class registers; home exercise from the calendar (supported) and a two-question phone check at weeks 12 and 24 (both groups); falls from a monthly falls calendar returned by post or phone.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Attendance",
+            "measure": "Attendance at 32 or more of 48 sessions, from class registers",
+            "timing": "24 weeks",
+            "why": "The behaviour the package targets and the condition for benefit.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Home exercise days",
+            "measure": "Self-reported days of home exercise in the past week, two-question phone check",
+            "timing": "Weeks 12 and 24",
+            "why": "The second target of the package (c2).",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Falls",
+            "measure": "Falls per person-year from monthly falls calendars",
+            "timing": "12 months",
+            "why": "What matters most to participants; reported descriptively (c3).",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Package delivery",
+            "measure": "Proportion of scheduled reminders, missed-week calls and peer calls delivered",
+            "timing": "Throughout",
+            "why": "Separates a weak package from weak delivery.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Exercise-related injury and pain flares",
+            "measure": "Participant-reported injuries or pain flares leading to a missed class",
+            "timing": "Throughout",
+            "why": "More attendance should not bring more harm.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 43 people start each month; recruitment over about 14 months; reminders by the programme coordinator; peer calls by twelve trained volunteers; no extra work for instructors beyond reviewing calendars.",
+        "biasMitigation": [
+          "Central allocation concealed from instructors until after consent",
+          "Primary outcome from existing registers kept by instructors for all participants",
+          "Phone checks by staff who do not deliver reminders",
+          "Intention-to-treat analysis"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Contamination within classes",
+            "severity": "watch",
+            "note": "Shared classes; accepted and reported as part of the pragmatic question."
+          },
+          {
+            "id": "b2",
+            "label": "Instructor awareness",
+            "severity": "watch",
+            "note": "Instructors review calendars for supported participants; registers are kept as usual."
+          },
+          {
+            "id": "b3",
+            "label": "Thin prior evidence",
+            "severity": "watch",
+            "note": "Two retrieved studies; planning values are conservative."
+          }
+        ],
+        "parsimony": {
+          "score": 84,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 2,
+          "flags": [
+            "Centre and age group as the only adjustment variables"
+          ],
+          "simplestPath": "Individual allocation, one register-based primary outcome, two secondary outcomes."
+        },
+        "theoreticalFramework": "Behaviour change techniques (prompts, self-monitoring, social support) named only to describe the package components with TIDieR.",
+        "summary": "Pragmatic trial with register-based attendance as the primary outcome and falls reported descriptively."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[2].name": "Falls",
+          "protocol.outcomes[4].role": "balancing",
+          "protocol.parsimony.secondaryOutcomeCount": 2,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Two-arm pragmatic trial with individual allocation stratified by centre; binary primary outcome at 24 weeks.",
+        "sampleSize": "With 38 percent attending two thirds of sessions under usual classes and a smallest worthwhile difference of 12 percentage points (to 50 percent), 80 percent power at two-sided alpha 0.05 needs about 268 participants per arm, 536 in total. Allowing 10 percent who consent but never attend a class after allocation gives about 596. At about 43 new participants a month, recruitment takes about 14 months of 2027 and early 2028 intakes. Falls: with about 0.9 falls per person-year, the trial cannot detect a plausible reduction and falls are reported with a rate ratio and its interval, not tested.",
+        "primaryAnalysis": "Logistic regression of attendance at two thirds of sessions on arm, adjusted for centre and age group, intention to treat; the risk difference with its 95 percent confidence interval is reported alongside the odds ratio.",
+        "secondaryAnalysis": "Home exercise days by linear regression at weeks 12 and 24; falls as a rate ratio from negative binomial regression with its interval; delivery proportions; injuries and pain flares described by arm.",
+        "missingData": "Attendance is complete from registers; missing phone checks and falls calendars are handled by multiple imputation under missing at random, with a sensitivity analysis assuming worse outcomes for non-responders.",
+        "multiplicity": "One primary outcome; secondary outcomes reported with intervals and labelled as secondary.",
+        "software": "R; the statistical analysis plan archived before the first allocation.",
+        "overfittingGuards": [
+          "Two adjustment variables fixed in advance",
+          "No subgroup analyses beyond sex and phone ownership, both pre-specified",
+          "Falls never tested for significance"
+        ],
+        "summary": "About 268 participants per arm for a 12-point difference in attendance; falls descriptive."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "268 participants per arm"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: participants receive the usual programme, with or without reminders and calls. Risks are unwanted contact, pressure to attend when unwell, and peer volunteers hearing personal information.",
+        "consent": "Written informed consent at the first class before allocation; participants may stop reminders or calls at any time without leaving the programme.",
+        "data": "Registers and calendars are held by the programme with study numbers; peer volunteers sign a confidentiality agreement and see only a name and phone number.",
+        "equity": "PROGRESS-Plus: people without a mobile phone, people with limited English, people living alone and people without transport are least likely to attend. Phone calls replace texts where needed, interpreters are used for calls, and attendance is reported by phone ownership and language.",
+        "effectiveness": "The trial answers whether the package is worth adding to the programme's standard offer.",
+        "efficiency": "Reminders and calls use existing staff and volunteers; attendance data already exist.",
+        "costs": "Coordinator time for reminders, volunteer training and phone costs, within the programme budget.",
+        "grants": "None needed for the trial; a positive result could support regional funding for the package.",
+        "partnerships": "Twelve peer volunteers, instructors from the 14 centres, and an older adults' advisory group.",
+        "rebPath": "Research ethics board application to be submitted, following ICH-GCP and the Declaration of Helsinki; no allocation begins before approval.",
+        "limitations": "Unblinded; contamination within classes; falls underpowered.",
+        "summary": "Low-risk pragmatic trial with written consent, equal access to classes, and equity reporting by phone ownership and language."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "Written informed consent"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "The older adults' advisory group reviews the reminder wording and the peer call script; two peer volunteers help design the volunteer training.",
+        "socialListening": "No social media listening; programme feedback forms from last year are read for reasons people stopped attending.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "One missed week",
+            "quote": "Composite paraphrase: I missed a week with a cold and then felt too embarrassed to go back.",
+            "implication": "Call within three days of any missed week.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "partner",
+            "theme": "Being a peer volunteer",
+            "quote": "Composite paraphrase (peer volunteer): I know how hard week six was for me, so I can say it gets easier.",
+            "implication": "Time the peer calls around weeks 3 and 8.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "No mobile phone",
+            "quote": "Composite paraphrase: My father has a landline and a hearing aid; a text would never reach him.",
+            "implication": "Phone calls as the default for people without a mobile phone.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Instructor time",
+            "quote": "Composite paraphrase (instructor): I can glance at a calendar at the start of class, but I cannot chase people.",
+            "implication": "Keep instructors out of reminders and calls.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on missed weeks, peer support, phone access and instructor workload."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "family",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Adherence support for a community falls prevention exercise programme: a pragmatic trial in 14 centres",
+        "abstract": "Objective: to test whether reminders, missed-week calls, peer volunteer calls and a home exercise calendar increase attendance at a 24-week community strength and balance programme. Design: pragmatic trial with individual allocation stratified by centre. Primary outcome: attendance at 32 or more of 48 sessions. Results will follow the trial.",
+        "introduction": "Community strength and balance programmes prevent falls only if people keep attending. A recorded search found one trial of reminders and one comparison of peer calls; other suggested studies were unverified leads.",
+        "methods": "Central allocation after consent, usual classes and instructors, register-based attendance, phone checks for home exercise, monthly falls calendars, intention-to-treat analysis.",
+        "results": "No data have been collected yet. The report will present recruitment, delivery of the package, attendance by arm with the risk difference, secondary outcomes and falls.",
+        "discussion": "The discussion will consider contamination within classes, who the package reached, and why falls were not powered.",
+        "limitations": "Unblinded; contamination; self-reported home exercise and falls.",
+        "conclusion": "To be written after the trial.",
+        "reportingChecklist": "CONSORT extension for pragmatic trials with TIDieR",
+        "summary": "CONSORT-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "pragmatic trials"
+          },
+          "manuscript.introduction": {
+            "includes": "unverified leads"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Check the five model leads by identifier before any is cited; they came from the model after a failed search",
+          "Submit the research ethics board application; no allocation before approval",
+          "Confirm that at least eight peer volunteers are trained before the first intake"
+        ],
+        "improvementNotes": "The first search was rate limited and the leads-only Scan stayed incomplete, including a refused attempt to mark it complete by hand; a broader search found two records, and certainty was assigned only over those two.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the unchecked leads, the ethics application and volunteer numbers."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 the audit patch is overwritten by store.ts mergeStage (L1.6 defect, sheet A3).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list.",
+      "expect": {
+        "store": {
+          "title": "Adherence support for a community falls prevention exercise programme: a pragmatic trial across 14 centres",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.claims": {
+            "length": 3
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Adherence support for a community falls prevention exercise programme: a pragmatic trial across 14 centres"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click, one file equal to the store (G10). Leads-only incompleteness before the second search requires D20 and D19; selectionStatus and actionStatus S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].status": "error",
+            "scan.retrievalEvents[1].resultCount": 2,
+            "scan.items[0].provenance.status": "unverified",
+            "scan.items[5].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

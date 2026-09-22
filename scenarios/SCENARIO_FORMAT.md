@@ -1,4 +1,4 @@
-# Full usage scenario format, version 1.1 (coordinating session, 2026-09-22T11:50Z)
+# Full usage scenario format, version 1.1 (coordinating session, 2026-09-22T11:50Z; G11 added 12:50Z)
 
 Version 1.1 replaces version 1 (kept as `SCENARIO_FORMAT_v1_original_2026-09-22T1030Z.md`). The changes:
 expected values are defined by the golden rules below, never by the current behaviour of any build; a
@@ -40,12 +40,23 @@ arms with their own records; a replay run is never reported as either.
 - G9 Migration never invents: no investigator or system authority, no verified provenance, no certainty over
   an empty scan; an empty scan loses its stale certainty and completion on migration.
 - G10 Export bytes equal the stored study (same revision); one click, one file.
-- G11 Investigator-entered `problem.constraints` are not model-editable. A model null, empty string, or replacement is dropped with an issue; the stored text remains. Direct human UI editing and clearing remain. Model-owned nulls (`family`, `gradeOverall`, `synthesis`, `recommended`) still clear.
+- G11 Investigator authority over investigator-entered text (added 2026-09-22T12:50Z, from the master
+  prompt's local-fact and authority sections). Text the investigator entered (`problem.rawNeed`,
+  `problem.constraints` as typed at creation or edited on screen, local facts) is never erased or replaced by
+  a model response: a model `null`, empty string or different value for such a field leaves the stored text
+  unchanged and records an issue with the existing code `dropped` at that path (`constraints`) whose message
+  names the investigator's authority; the application applies the rest of the response and shows a concise
+  partial-apply warning that names the path and the refusal (wording such as "kept", "refused" or "not
+  applied"; a scenario checks it with a screen entry `{ "anyOf": ["kept", "refused", "not applied"] }`, never
+  a single brittle literal), also after reload. The investigator can still edit or clear the field through the screen. Explicit null keeps
+  its clearing meaning for model-owned fields (grades, recommendations, alternatives, model-written
+  statements). A scenario that tests "explicit null clears a field" uses a model-owned field. (Issue code
+  aligned with the owner's implementation on 2026-09-22T13:30Z: `dropped`, not a new enum member.)
 
 ## Files
 
 - `scenarios/bank-v1/<id>.json`: one scenario per file, `id` equal to the file name (`sc-001` to `sc-1xx`).
-- `scenarios/bank-v1/INDEX.json`: `[{ "id", "title", "field", "level", "family", "requires", "sha256" }]`.
+- `scenarios/bank-v1/INDEX.json`: `[{ "id", "title", "field", "level", "family", "requires", "sha256", "eligible" }]` (`eligible` is the author's admission mark; `executedWorkflow` exists only in runner result records).
 - `scenarios/replay/<id>/<stage>.<n>.json`: the model response for call `n` (1-based) of that stage, written
   from the scenario file by `scenarios/expand-replay.mjs`; never edited by hand.
 - `scenarios/replay/<id>/retrieval/<provider>.<n>.json`: the provider response for call `n` of that provider,
@@ -67,7 +78,7 @@ arms with their own records; a replay run is never reported as either.
   "requires": ["D2", "S11"],                  // work-order entries whose absence makes some checkpoints FAIL
   "notes": "what this scenario exercises and which failure it would catch",
   "inputs": {
-    "need": "free text as an investigator would type it (120 to 600 words)",
+    "need": "free text as an investigator would type it (20 to 700 words; most 120 to 400)",
     "constraints": "free text or empty",
     "localFacts": ["one line each; facts the investigator asserts about the setting"]
   },
@@ -129,7 +140,7 @@ by existing record ids, `claims[]` with `sourceIds`, `synthesis`, `gradeOverall`
 ```
 "expect": {
   "store":  { "<study path>": <predicate>, ... },     // the persisted study (localStorage key meridian-studio-v2)
-  "screen": { "includes": [...], "excludes": [...] }, // visible text of the studio route after the step
+  "screen": { "includes": [...], "excludes": [...] }, // visible text of the studio route after the step; an includes entry is a string or { "anyOf": [strings] }
   "issues": { "includes": [{ "path": "items[2].year", "code": "invalid-type" }], "count": <predicate> },
   "export": { "equalsStore": true, "path": { "<study path>": <predicate> } },
   "stage":  { "<stage>": "complete" | "incomplete" | "needs-review" },

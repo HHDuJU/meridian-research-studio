@@ -1,0 +1,1557 @@
+{
+  "id": "sc-015",
+  "version": 1,
+  "title": "Hospital cardiac rehabilitation: remote versus centre-based completion, a score of 140 and a boolean year refused, cited source corrected after acceptance",
+  "field": "cardiology",
+  "level": 4,
+  "family": "retrospective",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S10",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on a clear retrospective question (routing retrospective, explicit under both classifier rules). Refusals: the problem reply sends constraints as an empty string, which G11 refuses (stored text unchanged, rejected-change; counted under S11 as the closest listed entry); a second scan call (shape discovery, after the appraisal) gives a lead's year as the boolean false (stored null, invalid-type) and its four leads must be appended after the seven retrieved records, never replacing them or their annotations (D1); a hypothesis carries feasibility 140 (stored null, out-of-range, never clamped). The appraisal records four source-derived claims whose passages and numbers occur in the cited abstracts. The design decision rests on c1 to c3 with both gates met on the investigator's approvals, and its acceptance is a supported positive (accepted, ready). After protocol, analysis and ethics are completed, the record cited by c1 receives an author correction to its key findings: the decision must become stale in the store, blocked for action, and every completed stage after Scan flagged for review. The route is on Ethics at the change, so the screen shows 'review required'; the investigator then opens Design from the stage list (set-field currentStage) where 'stale' shows, a reload on Design keeps it, and the export carries it. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 2, 3, 4, 6 (ev-17tmqo8, ev-1n3joew, ev-0iyss7e, ev-1h7dri1, ev-11f5pxk) and titleYearKey hash for records 5, 7 (ev-0rszo7j, ev-1m9ojqf). Requires S10 (revision covers key findings; WO D24), S11, S13, D1 and D5. Catches: investigator text blanked by a model, a guessed year, a clamped score, leads that overwrite retrieved records, and an accepted decision that stays current after its cited source is corrected late in the workflow.",
+  "inputs": {
+    "need": "I am the lead physiotherapist for a hospital cardiac rehabilitation programme that serves a city of 300,000 people and a large rural area. Since January 2023 patients referred after a heart attack, a stent or bypass surgery can choose our usual eight-week centre-based programme (two supervised exercise and education sessions a week) or a remote programme with the same content delivered at home, with a weekly video or telephone coaching call and a step counter. About 38 percent now choose remote. The board is asking whether remote rehabilitation should become the default, and staff are split: some think remote patients drop out quietly, others think the centre programme loses the people who live furthest away or cannot leave work.\n\nWe have programme records for every referral from January 2023 to December 2025: referral date, diagnosis, age, sex, postcode, which programme was chosen, sessions attended or coaching weeks completed, and the six-minute walk distance at the start and at the end for those who finished. I would like to do a retrospective comparison of completion between the two programmes, defining completion as attending at least 12 of 16 sessions or completing at least 6 of 8 coaching weeks, and to see whether any difference holds for women, older people and people living in deprived or remote areas.\n\nI know that patients chose their programme, so the groups differ, and I need advice on how to handle that honestly with the data we have, which outcomes beyond completion are worth reporting, and how many patients we need. Our analyst support is limited to about 30 hours, and I cannot collect any new data from patients.",
+    "constraints": "Existing programme records only, January 2023 to December 2025; about 30 hours of analyst support; no new data collection from patients; results are needed for the board's service review in April 2027.",
+    "localFacts": [
+      "The programme received 1,146 referrals between January 2023 and December 2025; 436 patients chose the remote programme.",
+      "The information governance office approved access to the rehabilitation programme records for this analysis on 2026-08-27 (approval IG-CR-2026-19).",
+      "The research ethics board granted a waiver of consent for secondary use of the programme records on 2026-09-15 (REB-2026-331).",
+      "Six-minute walk distance is recorded at the start of both programmes and at the end only for patients who finish."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the lead physiotherapist for a hospital cardiac rehabilitation programme that serves a city of 300,000 people and a large rural area. Since January 2023 patients referred after a heart attack, a stent or bypass surgery can choose our usual eight-week centre-based programme (two supervised exercise and education sessions a week) or a remote programme with the same content delivered at home, with a weekly video or telephone coaching call and a step counter. About 38 percent now choose remote. The board is asking whether remote rehabilitation should become the default, and staff are split: some think remote patients drop out quietly, others think the centre programme loses the people who live furthest away or cannot leave work.\n\nWe have programme records for every referral from January 2023 to December 2025: referral date, diagnosis, age, sex, postcode, which programme was chosen, sessions attended or coaching weeks completed, and the six-minute walk distance at the start and at the end for those who finished. I would like to do a retrospective comparison of completion between the two programmes, defining completion as attending at least 12 of 16 sessions or completing at least 6 of 8 coaching weeks, and to see whether any difference holds for women, older people and people living in deprived or remote areas.\n\nI know that patients chose their programme, so the groups differ, and I need advice on how to handle that honestly with the data we have, which outcomes beyond completion are worth reporting, and how many patients we need. Our analyst support is limited to about 30 hours, and I cannot collect any new data from patients.",
+          "problem.constraints": "Existing programme records only, January 2023 to December 2025; about 30 hours of analyst support; no new data collection from patients; results are needed for the board's service review in April 2027.",
+          "family": "retrospective",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the lead physiotherapist for a hospital cardiac rehabilitation programme"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Completion of remote and centre-based cardiac rehabilitation: a retrospective comparison of programme records, 2023 to 2025",
+        "subtitle": "Retrospective comparison of programme records with a single completion definition",
+        "family": "retrospective",
+        "statement": "Since January 2023 about 38 percent of patients referred for cardiac rehabilitation choose a remote programme instead of the centre-based one. The board is considering making remote rehabilitation the default, but nobody knows whether completion differs between the programmes once the same definition is applied to both, or whether any difference holds for women, older people and people in deprived or remote areas.",
+        "whoAffected": "Adults referred after a heart attack, a stent or bypass surgery, particularly women, people aged 75 or over, people in deprived areas and people living far from the hospital; rehabilitation staff; the board.",
+        "whatHurts": "Patients who do not complete rehabilitation lose its benefits; a default chosen without evidence could exclude people who cannot use remote tools or cannot travel.",
+        "currentPractice": "Patients choose between the centre-based and remote programmes; completion is counted differently in each and is not reported by patient group.",
+        "whyNow": "The board's April 2027 service review will decide the default programme.",
+        "constraints": "",
+        "patientCenteredGoal": "Every referred patient can complete a rehabilitation programme that fits their life, whichever setting they choose.",
+        "summary": "Problem framed as a fair retrospective comparison of completion by setting, with equity subgroups."
+      },
+      "note": "G11: the reply's constraints is an empty string, but the investigator entered constraints at create. The stored text stays exactly as typed and the refusal is recorded as rejected-change at 'constraints' (at 875fe59 the empty string overwrites the text). rejected-change is not an 875fe59 code and is counted under S11, the closest listed entry.",
+      "expect": {
+        "store": {
+          "title": "Completion of remote and centre-based cardiac rehabilitation: a retrospective comparison of programme records, 2023 to 2025",
+          "family": "retrospective",
+          "problem.constraints": "Existing programme records only, January 2023 to December 2025; about 30 hours of analyst support; no new data collection from patients; results are needed for the board's service review in April 2027.",
+          "problem.statement": {
+            "includes": "same definition is applied to both"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "Completion of remote and centre-based cardiac rehabilitation: a retrospective comparison of programme records, 2023 to 2025",
+            "about 30 hours of analyst support"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "remote versus centre-based cardiac rehabilitation completion definition travel distance women older deprivation",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Home-based versus centre-based cardiac rehabilitation: completion and exercise capacity in a regional service",
+            "authors": "Lindberg-Asante M, Hollis-Nakamura R, Petrov-Achebe S",
+            "year": 2019,
+            "venue": "Journal of Cardiac Rehabilitation Services",
+            "doi": "10.5555/jcrs.2019.0144",
+            "providerType": "journal-article",
+            "abstract": "We compared completion and exercise capacity between patients who chose home-based and those who chose centre-based cardiac rehabilitation in one regional service over three years. Among 1,208 patients, completion was 74 percent in the home-based programme and 52 percent in the centre-based programme. Six-minute walk distance improved by a mean of 48 metres in both groups among patients who completed. Patients choosing home-based rehabilitation were younger, more often men and more often in paid work. Completion was defined differently for the two programmes, and patients who never started were counted differently."
+          },
+          {
+            "title": "Remote versus centre-based cardiac rehabilitation after myocardial infarction: a randomised non-inferiority trial",
+            "authors": "Oduya-Carlsen T, Marchetti-Owusu B",
+            "year": 2021,
+            "venue": "Heart Recovery Trials",
+            "doi": "10.5555/hrt.2021.0309",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomised 390 adults after myocardial infarction to remote rehabilitation with weekly coaching calls or to a centre-based programme of the same length. The primary outcome, change in six-minute walk distance at 12 weeks, was non-inferior for remote rehabilitation (mean difference minus 6 metres, within the margin of 25 metres). Completion was 80 percent in the remote group and 71 percent in the centre group. Participants were younger than the usual rehabilitation population, and people without a smartphone were excluded."
+          },
+          {
+            "title": "Home-based compared with centre-based cardiac rehabilitation: a systematic review and meta-analysis of randomised trials",
+            "authors": "Varga-Pellegrini A, Holm-Mensah D, Iwata-Brooks C",
+            "year": 2016,
+            "venue": "Cardiovascular Evidence Syntheses",
+            "doi": "10.5555/ces.2016.0072",
+            "providerType": "journal-article",
+            "abstract": "We searched five databases for randomised trials comparing home-based and centre-based cardiac rehabilitation in adults after a cardiac event or revascularisation. In all, 23 trials with 2,890 participants were included. Mortality, exercise capacity and quality of life were similar between settings. Completion was slightly higher with home-based rehabilitation (risk ratio 1.04, 95 percent confidence interval 0.97 to 1.12). Trials mostly enrolled men under 65, and definitions of completion varied between trials. Few trials reported outcomes beyond 12 months, and none reported completion separately for women or for people living in deprived areas."
+          },
+          {
+            "title": "Who completes remote cardiac rehabilitation? Predictors of dropout in a digital programme",
+            "authors": "Kaplan-Obi E, Serrano-Whitlock J",
+            "year": 2023,
+            "venue": "Digital Health in Cardiology",
+            "doi": "10.5555/dhc.2023.0118",
+            "providerType": "journal-article",
+            "abstract": "We examined dropout among 652 patients who chose a remote cardiac rehabilitation programme with a step counter and weekly calls. Overall, 31 percent dropped out before week six. Dropout was higher among women (odds ratio 1.42), patients aged 75 or over (odds ratio 1.67) and those living in the most deprived areas (odds ratio 1.58). Most dropout followed two missed coaching calls in a row. Patients who completed the first two weeks usually finished the programme. The programme did not record the reasons patients gave for stopping."
+          },
+          {
+            "title": "Travel distance and completion of centre-based cardiac rehabilitation in a rural region",
+            "authors": "MacAulay-Oyelaran F, Duarte-Singh P",
+            "year": 2020,
+            "venue": "Rural Cardiovascular Care",
+            "providerType": "journal-article",
+            "abstract": "We linked travel distance from home postcode to completion of centre-based cardiac rehabilitation for 1,034 patients in a rural region. Each additional 10 km of travel was associated with lower odds of completing the programme (odds ratio 0.91, 95 percent confidence interval 0.87 to 0.95). Patients living more than 40 km away completed in 38 percent of cases, compared with 63 percent of those within 10 km. Access to a car and employment status were not recorded. The authors suggest offering a remote or hybrid option to patients who live far from the centre."
+          },
+          {
+            "title": "Defining completion in cardiac rehabilitation: variation across programmes and its effect on reported rates",
+            "authors": "Brandt-Kimura L, Achterberg-Ruiz N",
+            "year": 2024,
+            "venue": "Rehabilitation Measurement Notes",
+            "doi": "10.5555/rmn.2024.0031",
+            "providerType": "journal-article",
+            "abstract": "We applied six published definitions of completion to the same records of 2,214 patients from four cardiac rehabilitation programmes. Reported completion rates varied from 41 to 79 percent depending on the definition applied to the same records. Definitions based on a proportion of sessions attended gave higher rates than definitions requiring an end-of-programme assessment. Home-based and centre-based programmes were most comparable when both used attendance-equivalent measures over the same number of weeks. The authors recommend that comparisons between settings state the definition used and keep non-starters in every denominator."
+          },
+          {
+            "title": "Barriers to cardiac rehabilitation among women: a qualitative study",
+            "authors": "Sato-Fenwick H, Adeyemi-Lorenz K",
+            "year": 2018,
+            "venue": "Cardiac Nursing Perspectives",
+            "providerType": "journal-article",
+            "abstract": "We held semi-structured interviews with 28 women who were referred to cardiac rehabilitation and did not complete it. Caring responsibilities, transport and feeling out of place in groups of older men were the main barriers. Several women said that a programme at home would have fitted around their caring, while others valued the social contact of a centre. Participants were recruited from one urban hospital and most were over 60. Women who had completed rehabilitation in the past described it as worthwhile once they had started."
+          }
+        ]
+      },
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-17tmqo8",
+            "ev-1n3joew",
+            "ev-0iyss7e",
+            "ev-1h7dri1",
+            "ev-0rszo7j",
+            "ev-11f5pxk",
+            "ev-1m9ojqf"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].doi": "10.5555/jcrs.2019.0144",
+          "scan.items[4].doi": {
+            "absent": true
+          },
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Home-based versus centre-based cardiac rehabilitation: completion and exercise capacity in a regional service"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-17tmqo8",
+            "relevance": 90,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Among 1,208 patients who chose their setting, completion was 74 percent home-based against 52 percent centre-based; six-minute walk distance rose by 48 metres in completers of both.",
+            "limitations": "Patients chose their programme; completion defined differently for the two programmes; non-starters counted differently.",
+            "contextTags": [
+              "patient choice",
+              "completion",
+              "definition problem"
+            ]
+          },
+          {
+            "id": "ev-1n3joew",
+            "relevance": 76,
+            "methodQuality": 70,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Remote rehabilitation non-inferior for six-minute walk change at 12 weeks (mean difference minus 6 metres, margin 25); completion 80 percent remote against 71 percent centre.",
+            "limitations": "Younger than the usual population; people without a smartphone excluded.",
+            "contextTags": [
+              "randomised",
+              "non-inferiority",
+              "exercise capacity"
+            ]
+          },
+          {
+            "id": "ev-0iyss7e",
+            "relevance": 70,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "In 23 trials with 2,890 participants, outcomes were similar between settings and completion slightly higher at home (risk ratio 1.04, 95 percent confidence interval 0.97 to 1.12).",
+            "limitations": "Mostly men under 65; completion definitions varied.",
+            "contextTags": [
+              "systematic review",
+              "setting comparison"
+            ]
+          },
+          {
+            "id": "ev-1h7dri1",
+            "relevance": 84,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 652 remote patients, 31 percent dropped out before week six; higher among women (odds ratio 1.42), age 75 or over (odds ratio 1.67) and the most deprived (odds ratio 1.58).",
+            "limitations": "One programme; reasons for stopping not recorded.",
+            "contextTags": [
+              "remote programme",
+              "dropout",
+              "equity"
+            ]
+          },
+          {
+            "id": "ev-0rszo7j",
+            "relevance": 82,
+            "methodQuality": 57,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Each additional 10 km lowered the odds of completing centre-based rehabilitation (odds ratio 0.91); completion 38 percent beyond 40 km against 63 percent within 10 km.",
+            "limitations": "Car access and employment not recorded.",
+            "contextTags": [
+              "travel distance",
+              "rural",
+              "centre-based"
+            ]
+          },
+          {
+            "id": "ev-11f5pxk",
+            "relevance": 88,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Applied to the same records of 2,214 patients, six definitions gave completion rates from 41 to 79 percent; attendance-equivalent measures made home and centre programmes most comparable.",
+            "limitations": "Four programmes; no outcome beyond completion.",
+            "contextTags": [
+              "measurement",
+              "definitions",
+              "comparability"
+            ]
+          },
+          {
+            "id": "ev-1m9ojqf",
+            "relevance": 64,
+            "methodQuality": 50,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "The 28 women who did not complete cited caring responsibilities, transport and feeling out of place; some preferred home-based rehabilitation, others valued the centre's social contact.",
+            "limitations": "One urban hospital; mostly women over 60.",
+            "contextTags": [
+              "women",
+              "barriers",
+              "interviews"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In one regional service where patients chose their setting, completion was 74 percent in the home-based programme and 52 percent in the centre-based programme.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-17tmqo8"
+            ],
+            "location": "Abstract, results",
+            "passage": "completion was 74 percent in the home-based programme and 52 percent in the centre-based programme",
+            "interpretation": "A large difference is possible, but the abstract warns that definitions and non-starters were handled differently.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c2",
+            "text": "Reported completion rates varied from 41 to 79 percent depending on the definition applied to the same records.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-11f5pxk"
+            ],
+            "location": "Abstract, results",
+            "passage": "Reported completion rates varied from 41 to 79 percent depending on the definition applied to the same records.",
+            "interpretation": "The comparison needs one definition applied to both programmes, fixed before analysis.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Each additional 10 km of travel was associated with lower odds of completing centre-based rehabilitation (odds ratio 0.91).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0rszo7j"
+            ],
+            "location": "Abstract, results",
+            "passage": "Each additional 10 km of travel was associated with lower odds of completing the programme (odds ratio 0.91, 95 percent confidence interval 0.87 to 0.95).",
+            "interpretation": "Distance from home is a confounder and an effect modifier to pre-specify.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "In a randomised trial, completion was 80 percent with remote and 71 percent with centre-based rehabilitation.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1n3joew"
+            ],
+            "location": "Abstract, results",
+            "passage": "Completion was 80 percent in the remote group and 71 percent in the centre group.",
+            "interpretation": "Under randomisation remote completion was higher, in a younger population with smartphones.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Randomised evidence suggests that remote or home-based rehabilitation gives similar outcomes and similar or higher completion than centre-based programmes in younger, mostly male populations. Observational comparisons where patients choose their setting report larger differences, but completion rates depend heavily on the definition used (41 to 79 percent on the same records), travel distance lowers centre-based completion, and remote dropout is higher among women, older and more deprived patients.",
+        "gradeOverall": "low",
+        "gradeRationale": "Randomised evidence is indirect for this population; the observational comparisons are confounded by choice and by inconsistent definitions of completion.",
+        "summary": "Seven retrieved records appraised; four source-derived claims; overall certainty low."
+      },
+      "note": "Appraisal of the seven retrieved records (S13); certainty low over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items[0].grade": "very-low",
+          "scan.items[1].kind": "rct",
+          "scan.items[5].relevance": 88,
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-17tmqo8"
+          ],
+          "scan.claims[0].uncertainty": "high",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 2,
+      "omitKeys": [
+        "gradeOverall",
+        "gradeRationale",
+        "synthesis"
+      ],
+      "response": {
+        "query": "remote versus centre-based cardiac rehabilitation completion definition travel distance women older deprivation",
+        "sourcesConsulted": [
+          "model knowledge of cardiac rehabilitation services"
+        ],
+        "items": [
+          {
+            "title": "Hybrid cardiac rehabilitation combining centre and home sessions: a service evaluation",
+            "authors": "Quist-Oyelowo B, Tanaka-Reid M",
+            "year": 2022,
+            "source": "Journal of Cardiac Rehabilitation Services",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 65,
+            "verification": "verify",
+            "contextTags": [
+              "hybrid",
+              "service evaluation"
+            ],
+            "keyFindings": "A hybrid programme with two centre sessions followed by home sessions had completion similar to the centre programme it replaced.",
+            "limitations": "Before-after comparison in one service.",
+            "notes": "Suggested as a lead."
+          },
+          {
+            "title": "Wearable step counters to support home-based cardiac rehabilitation: a randomised trial",
+            "authors": "Holloway-Mbeki S, Andersen-Diallo R",
+            "year": false,
+            "source": "Heart Recovery Trials",
+            "kind": "rct",
+            "grade": "low",
+            "methodQuality": 58,
+            "relevance": 60,
+            "verification": "ai-lead",
+            "contextTags": [
+              "step counter",
+              "home-based"
+            ],
+            "keyFindings": "Adding a step counter to home-based rehabilitation increased daily steps at 12 weeks but did not change completion.",
+            "limitations": "Small trial; publication year not given in the reply.",
+            "notes": "Suggested as a lead."
+          },
+          {
+            "title": "Cost of remote versus centre-based cardiac rehabilitation from the health service perspective",
+            "authors": "Ferreira-Blake J, Nwosu-Lindqvist A",
+            "year": 2024,
+            "source": "Health Service Costing Notes",
+            "kind": "grey",
+            "grade": "very-low",
+            "methodQuality": 40,
+            "relevance": 55,
+            "verification": "ai-lead",
+            "contextTags": [
+              "cost",
+              "service planning"
+            ],
+            "keyFindings": "Remote delivery cost less per enrolled patient but similar per completer once coaching time was counted.",
+            "limitations": "One service; staff time estimated.",
+            "notes": "Suggested as a lead."
+          },
+          {
+            "title": "Digital exclusion among older adults referred to cardiac rehabilitation",
+            "authors": "Okoro-Svensson L, Pike-Adeleke T",
+            "year": 2021,
+            "source": "Digital Health in Cardiology",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 52,
+            "relevance": 62,
+            "verification": "verify",
+            "contextTags": [
+              "digital exclusion",
+              "older adults"
+            ],
+            "keyFindings": "One in three referred adults aged 75 or over had no smartphone or reliable internet at home.",
+            "limitations": "Cross-sectional; one region.",
+            "notes": "Suggested as a lead."
+          }
+        ],
+        "summary": "Four further leads suggested for checking; none retrieved."
+      },
+      "note": "A second, discovery call asks for further leads. They are appended after the seven retrieved records, never replacing them (D1; at 875fe59 the model items replace the retrieved records and their annotations). The lead at items[1] gives its year as the boolean false: stored null with invalid-type, never a guessed year (G4). The reply omits the certainty, rationale and synthesis (omitKeys), so the appraisal's values stay. Leads are unverified model leads (G3).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 11
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].grade": "very-low",
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[8].title": "Wearable step counters to support home-based cardiac rehabilitation: a randomised trial",
+          "scan.items[8].year": {
+            "isNull": true
+          },
+          "scan.items[8].provenance.status": "unverified",
+          "scan.gradeOverall": "low",
+          "scan.claims": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "items[1].year",
+              "code": "invalid-type"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": {
+            "min": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "hospital cardiac rehabilitation, city and rural catchment",
+          "patient choice of setting since January 2023",
+          "different completion counting per programme",
+          "board review in April 2027"
+        ],
+        "reading": "Completion is shaped by who chooses each setting (younger, working, male patients choosing remote), by distance for the centre programme and by digital access for the remote one. The published difference in completion between settings shrinks or vanishes once definitions and choice are handled, so the local comparison stands or falls on a single definition and honest adjustment.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Choice of setting",
+            "kind": "context",
+            "detail": "Patients choose; groups differ at referral."
+          },
+          {
+            "id": "n2",
+            "label": "Completion",
+            "kind": "outcome",
+            "detail": "One attendance-equivalent definition for both programmes (claim c2)."
+          },
+          {
+            "id": "n3",
+            "label": "Travel distance",
+            "kind": "context",
+            "detail": "Lowers centre completion (claim c3)."
+          },
+          {
+            "id": "n4",
+            "label": "Digital access",
+            "kind": "context",
+            "detail": "Limits remote participation for older adults."
+          },
+          {
+            "id": "n5",
+            "label": "Regional choice-based comparison",
+            "kind": "observational",
+            "detail": "74 against 52 percent with different definitions (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Randomised non-inferiority trial",
+            "kind": "rct",
+            "detail": "80 against 71 percent completion (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Women, older and deprived patients",
+            "kind": "stakeholder",
+            "detail": "Higher dropout in remote programmes."
+          },
+          {
+            "id": "n8",
+            "label": "Inconsistent local counting",
+            "kind": "gap",
+            "detail": "Programmes count completion differently today."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "confounds"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "lowers centre"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "lowers remote"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "reports difference in"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "reports difference in"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "lower in"
+          },
+          {
+            "from": "n8",
+            "to": "n5",
+            "relation": "repeats the problem of"
+          }
+        ],
+        "summary": "Map of choice, distance and digital access around a single completion definition."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No shared completion definition across the two programmes",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Rates move from 41 to 79 percent with the definition alone (claim c2).",
+            "opportunity": "Apply 12 of 16 sessions or 6 of 8 coaching weeks as attendance-equivalent measures, fixed before analysis."
+          },
+          {
+            "id": "g2",
+            "title": "Confounding by choice of setting",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Patients who choose remote differ at referral.",
+            "opportunity": "Adjust for recorded referral factors and report how strong unmeasured confounding would need to be to explain the result."
+          },
+          {
+            "id": "g3",
+            "title": "Non-starters handled differently",
+            "kind": "error",
+            "severity": "moderate",
+            "whyItMatters": "Excluding non-starters from one programme inflates its completion.",
+            "opportunity": "Count every referral that chose a programme in its denominator."
+          },
+          {
+            "id": "g4",
+            "title": "Groups most likely to drop out",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Women, people aged 75 or over and deprived patients drop out of remote programmes more.",
+            "opportunity": "Report completion by sex, age group, deprivation quintile and distance band."
+          },
+          {
+            "id": "g5",
+            "title": "No outcome beyond completion for non-completers",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Six-minute walk distance at the end exists only for completers.",
+            "opportunity": "Report walk distance change for completers descriptively and never as a comparison of programmes."
+          }
+        ],
+        "errorsFound": [
+          "A scan reply gave a lead's year as a boolean; it is stored as unknown."
+        ],
+        "reevaluation": "A retrospective comparison is defensible only with one definition, full denominators and explicit handling of choice.",
+        "summary": "Five gaps; definition and confounding are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[2].kind": "error",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No shared completion definition across the two programmes"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "With one attendance-equivalent definition and all referrals in the denominator, completion of remote rehabilitation differs from centre-based completion by less than 8 percentage points after adjustment.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "The board's decision needs the adjusted difference; randomised evidence suggests a small difference once definitions are aligned.",
+            "risks": "Residual confounding by choice."
+          },
+          {
+            "id": "h2",
+            "statement": "Remote rehabilitation raises completion for patients living more than 40 km away.",
+            "novelty": 55,
+            "need": 70,
+            "practiceChange": 70,
+            "feasibility": 140,
+            "parsimony": 70,
+            "rationale": "Distance lowers centre completion; remote delivery removes the journey.",
+            "risks": "Few distant patients choose the centre programme."
+          },
+          {
+            "id": "h3",
+            "statement": "Remote completion is lower for women, people aged 75 or over and people in the most deprived areas.",
+            "novelty": 45,
+            "need": 75,
+            "practiceChange": 65,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Dropout predictors in remote programmes point this way.",
+            "risks": "Subgroup estimates will be imprecise."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected."
+      },
+      "note": "h2's feasibility of 140 is outside 0 to 100: stored null with out-of-range, never clamped to 100 (G4; holds at 875fe59).",
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.items[1].feasibility": {
+            "isNull": true
+          },
+          "hypotheses.items[1].need": 70,
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "items[1].feasibility",
+              "code": "out-of-range"
+            }
+          ],
+          "count": 1
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults referred for cardiac rehabilitation from January 2023 to December 2025, is choosing the remote programme, compared with the centre-based programme, associated with a different proportion completing, using one attendance-equivalent definition and adjusting for referral factors?",
+            "framework": "PECO",
+            "population": "All 1,146 referrals who chose a programme, January 2023 to December 2025",
+            "intervention": "Remote programme chosen (exposure)",
+            "comparator": "Centre-based programme chosen",
+            "outcome": "Completion: 12 of 16 sessions or 6 of 8 coaching weeks",
+            "time": "Eight weeks from the first scheduled session",
+            "setting": "Hospital cardiac rehabilitation programme, city and rural catchment"
+          }
+        ],
+        "finer": "Feasible from existing records in 30 analyst hours; interesting to the board; novel locally; ethical under the consent waiver; relevant to the April 2027 decision.",
+        "summary": "One PECO question with a single completion definition."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "retrospective",
+        "rationale": "The records exist for every referral, the question is a comparison of settings patients already chose, and no new data can be collected, so a retrospective comparison of programme records fits. It must apply one attendance-equivalent completion definition (claim c2), keep non-starters in both denominators, and adjust for distance (claim c3) and other referral factors, because the published choice-based difference (claim c1) was distorted by exactly these problems.",
+        "alternatives": [
+          "Randomise new referrals between settings (refused: the board wants an answer by April 2027 and patients value choice)",
+          "Crude completion by programme (refused: confounded and inconsistently defined)"
+        ],
+        "guidelines": [
+          "STROBE",
+          "RECORD"
+        ],
+        "whyNotMoreComplex": "A target trial emulation with time-varying exposure is unnecessary because the exposure is fixed at choice; one adjusted model and a sensitivity analysis for unmeasured confounding answer the board's question.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Compare completion between remote and centre-based rehabilitation for all 1,146 referrals from 2023 to 2025 from programme records, applying one attendance-equivalent completion definition to both programmes, adjusting for the factors recorded at referral and reporting results by sex, age, deprivation and distance.",
+          "question": "Is completion of remote rehabilitation different from centre-based rehabilitation in this programme, and for whom?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A difference in completion between settings is plausible in a choice-based service and large enough to matter to the board.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A single definition applied to both programmes and distance adjustment are needed for a fair comparison.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The records cannot identify which patients were offered both programmes.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Information governance approval to access the programme records",
+              "status": "met",
+              "evidence": "Approval IG-CR-2026-19 dated 2026-08-27, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research ethics decision on secondary use without consent",
+              "status": "met",
+              "evidence": "Waiver of consent REB-2026-331 dated 2026-09-15, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Report crude completion by programme without adjustment",
+            "Randomise new referrals between programmes"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; both gates rest on the investigator's approvals."
+        },
+        "summary": "Retrospective comparison recommended; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "selectionStatus and recommendedFamily require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "retrospective",
+          "family": "retrospective",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].recommendedFamily": "retrospective",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The supported positive predecessor of the source change: claims c1 to c3 rest on retrieved records and both gates are met, so selection is accepted and action ready (G7). S11 for the fields, S13 for the claims, D5 for the text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "retrospective"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Retrospective comparison of completion between remote and centre-based cardiac rehabilitation using programme records for all referrals from January 2023 to December 2025.",
+        "population": "All 1,146 adults referred after myocardial infarction, stenting or bypass surgery who chose a programme; each patient's first referral only.",
+        "exposure": "Programme chosen at the booking call: remote (436) or centre-based (710).",
+        "procedures": "The analyst extracts referral date, diagnosis, age, sex, postcode (converted to deprivation quintile and road distance, then deleted), programme chosen, sessions attended or coaching weeks completed, and six-minute walk distances. Completion is derived with one attendance-equivalent rule written before extraction.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Completion",
+            "measure": "At least 12 of 16 sessions (centre) or 6 of 8 coaching weeks (remote), all referrals who chose a programme in the denominator",
+            "timing": "Eight weeks from the first scheduled session",
+            "why": "The board's question and the benefit patients lose by dropping out.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Weeks engaged before stopping",
+            "measure": "Last week with an attended session or completed call",
+            "timing": "Up to eight weeks",
+            "why": "Shows when each programme loses patients.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Change in six-minute walk distance among completers",
+            "measure": "End minus start distance in metres",
+            "timing": "End of programme",
+            "why": "Described for completers only, never compared as an effect.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Uptake of each programme by group",
+            "measure": "Proportion choosing remote by sex, age group, deprivation quintile and distance band",
+            "timing": "At booking",
+            "why": "Describes who each programme reaches.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 30 analyst hours for extraction, derivation and the model; records exist for all referrals.",
+        "biasMitigation": [
+          "One completion rule fixed before extraction",
+          "Non-starters kept in both denominators",
+          "Adjustment for age, sex, diagnosis, deprivation quintile and distance",
+          "E-value for unmeasured confounding"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by choice",
+            "severity": "high",
+            "note": "Employment and car access are not recorded; the E-value states how strong they would need to be."
+          },
+          {
+            "id": "b2",
+            "label": "Definition bias",
+            "severity": "watch",
+            "note": "Handled by one rule; the published regional comparison failed here."
+          },
+          {
+            "id": "b3",
+            "label": "Selective outcome recording",
+            "severity": "watch",
+            "note": "Walk distance exists only for completers."
+          }
+        ],
+        "parsimony": {
+          "score": 79,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 5,
+          "flags": [
+            "Five adjustment variables fixed in advance"
+          ],
+          "simplestPath": "One exposure, one completion rule, one adjusted model, subgroup reporting."
+        },
+        "theoreticalFramework": "No framework; the analysis follows STROBE with the RECORD extension.",
+        "summary": "One completion rule, full denominators and five pre-specified adjustment variables."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.parsimony.covariateCount": 5,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Comparison of completion between two self-selected groups with adjustment and a sensitivity analysis for unmeasured confounding.",
+        "sampleSize": "The sample is all 1,146 referrals (436 remote, 710 centre). With completion near 60 percent, the standard error of the difference is about 3.0 percentage points (square root of 0.24/436 plus 0.24/710), so the study has 80 percent power at two-sided alpha 0.05 to detect a difference of about 8.3 percentage points, which the board regards as the smallest difference worth acting on. About 690 completers and 456 non-completers give more than 90 outcome events per adjustment variable.",
+        "primaryAnalysis": "Adjusted risk difference and risk ratio for completion (remote against centre) from a log-binomial model, or a modified Poisson model if it fails to converge, with age, sex, diagnosis, deprivation quintile and road distance. The E-value for the risk ratio states how strong unmeasured confounding would need to be.",
+        "secondaryAnalysis": "Completion by sex, age group (under 75, 75 or over), deprivation quintile and distance band with interaction tests reported as descriptive; weeks engaged by programme; walk distance change in completers without comparison; propensity-weighted estimate as a sensitivity analysis.",
+        "missingData": "Postcode is missing for about 1 percent; those referrals are kept in the crude comparison and excluded from the adjusted one, and the numbers are reported.",
+        "multiplicity": "One primary comparison; subgroup results are descriptive.",
+        "software": "R; code archived before extraction.",
+        "overfittingGuards": [
+          "Five adjustment variables fixed in advance",
+          "No data-driven subgroup search",
+          "Completion rule fixed before extraction"
+        ],
+        "summary": "All 1,146 referrals give 80 percent power for about 8.3 points; one adjusted model with an E-value."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 8.3 percentage points"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: secondary use of programme records. The main risk is re-identification of patients in small rural subgroups, handled by suppressing cells under five.",
+        "consent": "Waiver of consent granted for secondary use (REB-2026-331); a notice on the programme's web page explains the analysis and how to opt out.",
+        "data": "Access under IG-CR-2026-19; postcodes are converted to deprivation quintile and distance and then deleted; the analysis file is pseudonymised and kept on the hospital research server.",
+        "equity": "PROGRESS-Plus: women, older people, people in deprived areas and rural patients are the groups most likely to be failed by either setting; completion and uptake are reported for each, and the board is told whether a remote default would leave any group worse off.",
+        "effectiveness": "The comparison informs the default programme; it cannot show that remote rehabilitation causes higher or lower completion.",
+        "efficiency": "Existing records and 30 analyst hours.",
+        "costs": "Analyst time only.",
+        "grants": "None needed.",
+        "partnerships": "Rehabilitation staff, the information governance office, and two patient partners (one who completed remotely, one who stopped).",
+        "rebPath": "Research ethics board waiver of consent for secondary use (REB-2026-331) and information governance approval (IG-CR-2026-19) are both in place.",
+        "limitations": "Confounding by choice; employment and car access unrecorded; one programme.",
+        "summary": "Secondary use under a consent waiver, with small-cell suppression and equity reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "REB-2026-331"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "change-source",
+      "record": "Home-based versus centre-based cardiac rehabilitation: completion and exercise capacity in a regional service",
+      "field": "keyFindings",
+      "value": "Correction notice from the authors: completion was 61 percent in the home-based programme and 58 percent in the centre-based programme once 214 home-based patients who never started were returned to the denominator; the earlier 74 percent excluded them, while non-starters were counted in the centre-based figure.",
+      "note": "The record cited by claim c1 (and through k1 by the accepted decision) gets a correction that reverses its finding, after protocol, analysis and ethics were completed on the accepted decision. The decision must become stale (G7): status and selectionStatus 'stale' require S10 (the evidence revision covers source text; WO D24 in A3.2 names keyFindings) and S11; actionStatus blocked follows from the stale input. Every completed stage after Scan is flagged for review (G8; holds at 875fe59). The route is the Ethics stage, so the screen check is the stage list's 'review required' (D5).",
+      "expect": {
+        "store": {
+          "scan.items[0].keyFindings": "Correction notice from the authors: completion was 61 percent in the home-based programme and 58 percent in the centre-based programme once 214 home-based patients who never started were returned to the denominator; the earlier 74 percent excluded them, while non-starters were counted in the centre-based figure.",
+          "scan.items[0].title": "Home-based versus centre-based cardiac rehabilitation: completion and exercise capacity in a regional service",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "scan": "complete",
+          "design": "needs-review",
+          "ethics": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "set-field",
+      "path": "currentStage",
+      "value": "design",
+      "note": "The investigator opens the Design stage from the stage list to see the decision; the decision panel must show 'stale' (D5).",
+      "expect": {
+        "store": {
+          "currentStage": "design",
+          "design.decisions[-1].selectionStatus": "stale"
+        },
+        "stage": {
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: stale survives in the store and on screen (G7). S10 and S11 for the fields, D5 for the text.",
+      "expect": {
+        "store": {
+          "title": "Completion of remote and centre-based cardiac rehabilitation: a retrospective comparison of programme records, 2023 to 2025",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ],
+          "scan.items[0].keyFindings": "Correction notice from the authors: completion was 61 percent in the home-based programme and 58 percent in the centre-based programme once 214 home-based patients who never started were returned to the denominator; the earlier 74 percent excluded them, while non-starters were counted in the centre-based figure.",
+          "hypotheses.items[1].feasibility": {
+            "isNull": true
+          }
+        },
+        "stage": {
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ],
+          "excludes": [
+            "no recorded response"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners, one who completed the remote programme and one who stopped the centre programme, review the completion rule and the plain-language summary for the board.",
+        "socialListening": "No social media listening; the programme's exit feedback cards from 2025 are summarised.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Distance",
+            "quote": "Composite paraphrase: Forty minutes each way twice a week was more than my heart could take, never mind the exercise.",
+            "implication": "Report completion by distance band.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Quiet dropout at home",
+            "quote": "Composite paraphrase: After I missed two calls I felt I had failed, so I stopped answering.",
+            "implication": "Report weeks engaged before stopping for remote patients.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Caring duties",
+            "quote": "Composite paraphrase: She could not leave her mother, so the home programme was the only one she could start.",
+            "implication": "Report completion for women separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Counting fairly",
+            "quote": "Composite paraphrase: We never counted the remote people who never logged in, so of course their numbers looked good.",
+            "implication": "Keep non-starters in both denominators.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on distance, quiet dropout, caring and fair counting."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Completion of remote and centre-based cardiac rehabilitation: a retrospective comparison with a single completion definition",
+        "abstract": "Objective: to compare completion between remote and centre-based cardiac rehabilitation when one definition and full denominators are used. Design: retrospective comparison of programme records for 1,146 referrals, 2023 to 2025. Analysis: adjusted risk difference with an E-value, and results by sex, age, deprivation and distance. Results and conclusions will follow the analysis.",
+        "introduction": "Published comparisons of rehabilitation settings disagree, partly because completion is defined differently between programmes. A cited regional comparison has since been corrected by its authors, which is why the local analysis fixes one definition before extraction.",
+        "methods": "All referrals who chose a programme are included, with non-starters in both denominators. Completion is 12 of 16 sessions or 6 of 8 coaching weeks. A log-binomial model adjusts for five referral factors.",
+        "results": "No data have been analysed yet. The report will present uptake and completion by programme and by group, the adjusted difference and the E-value.",
+        "discussion": "The discussion will weigh the adjusted difference against confounding by choice and state whether a remote default would leave any group worse off.",
+        "limitations": "Confounding by choice; unrecorded employment and car access; one programme.",
+        "conclusion": "To be written after analysis; it will not claim that one setting causes better completion.",
+        "reportingChecklist": "STROBE with the RECORD extension",
+        "summary": "STROBE and RECORD structured draft; the introduction notes the corrected source."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE with the RECORD extension",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The accepted decision is stale since the correction to the regional comparison; re-appraise that record and decide again before extraction starts",
+          "Protocol, analysis and ethics were completed on the stale decision and are flagged for review",
+          "A lead's year arrived as a boolean and a hypothesis feasibility score as 140; both are stored as unknown and must not be filled in by hand without a source"
+        ],
+        "improvementNotes": "The problem reply tried to replace the investigator's constraints with an empty string and was refused. A discovery reply added four leads after the retrieved records; the appraisal's certainty and claims were kept.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the stale decision, the flagged stages and two unknown values."
+      },
+      "note": "audit fields fail at 875fe59 because of the L1.6 store defect, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "After reopen the stage list shows the flagged stages as review required (G8, D5); selectionStatus stale requires S10 and S11.",
+      "expect": {
+        "store": {
+          "title": "Completion of remote and centre-based cardiac rehabilitation: a retrospective comparison of programme records, 2023 to 2025",
+          "design.decisions[-1].selectionStatus": "stale",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ],
+          "problem.constraints": "Existing programme records only, January 2023 to December 2025; about 30 hours of analyst support; no new data collection from patients; results are needed for the board's service review in April 2027."
+        },
+        "stage": {
+          "design": "needs-review",
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "status and selectionStatus 'stale' require S10 and S11; the appended leads D1. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "design.decisions[-1].status": "stale",
+            "design.decisions[-1].selectionStatus": "stale",
+            "design.decisions[-1].actionStatus": "blocked",
+            "scan.items[0].keyFindings": "Correction notice from the authors: completion was 61 percent in the home-based programme and 58 percent in the centre-based programme once 214 home-based patients who never started were returned to the denominator; the earlier 74 percent excluded them, while non-starters were counted in the centre-based figure.",
+            "scan.items": {
+              "length": 11
+            },
+            "scan.items[8].year": {
+              "isNull": true
+            },
+            "hypotheses.items[1].feasibility": {
+              "isNull": true
+            },
+            "problem.constraints": "Existing programme records only, January 2023 to December 2025; about 30 hours of analyst support; no new data collection from patients; results are needed for the board's service review in April 2027.",
+            "needsReview": [
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics"
+            ],
+            "scan.gradeOverall": "low"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

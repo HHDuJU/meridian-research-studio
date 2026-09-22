@@ -1,0 +1,108 @@
+{
+  "contexts": [
+    "patient flow command centre opened March 2025",
+    "about 21,000 admission decisions a year",
+    "vendor score with a fixed threshold",
+    "boarding median 5.1 hours"
+  ],
+  "reading": "The flag sits between the admission decision and the bed managers' escalation. Its value depends on identifying the patients who will board and who can be helped, but occupancy explains most boarding, published tools lose accuracy at night and differ by admitting service, and the reference standard itself depends on late and missing timestamps. A local accuracy study must therefore define the reference standard carefully and report the flag's performance where escalation can act.",
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Boarding-risk score at the admission decision",
+      "kind": "context",
+      "detail": "Vendor model, fixed threshold."
+    },
+    {
+      "id": "n2",
+      "label": "Flag on the command centre display",
+      "kind": "context",
+      "detail": "Drives bed manager escalation."
+    },
+    {
+      "id": "n3",
+      "label": "Boarding of four hours or more",
+      "kind": "outcome",
+      "detail": "Reference standard from timestamps."
+    },
+    {
+      "id": "n4",
+      "label": "Inpatient occupancy",
+      "kind": "context",
+      "detail": "Explains most boarding variation."
+    },
+    {
+      "id": "n5",
+      "label": "External validation of a commercial tool",
+      "kind": "observational",
+      "detail": "Sensitivity 0.62, lower at night (claim c1)."
+    },
+    {
+      "id": "n6",
+      "label": "Calibration loss at external sites",
+      "kind": "observational",
+      "detail": "Claim c2."
+    },
+    {
+      "id": "n7",
+      "label": "Late and missing departure timestamps",
+      "kind": "gap",
+      "detail": "Reference standard error (claim c3)."
+    },
+    {
+      "id": "n8",
+      "label": "Bed managers",
+      "kind": "stakeholder",
+      "detail": "Act on flags."
+    },
+    {
+      "id": "n9",
+      "label": "Surgical admissions and night-time decisions",
+      "kind": "stakeholder",
+      "detail": "Lower sensitivity (claims c1, c4)."
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "relation": "produces"
+    },
+    {
+      "from": "n2",
+      "to": "n8",
+      "relation": "directs"
+    },
+    {
+      "from": "n1",
+      "to": "n3",
+      "relation": "is meant to predict"
+    },
+    {
+      "from": "n4",
+      "to": "n3",
+      "relation": "drives"
+    },
+    {
+      "from": "n5",
+      "to": "n1",
+      "relation": "gives planning values for"
+    },
+    {
+      "from": "n6",
+      "to": "n1",
+      "relation": "warns about calibration of"
+    },
+    {
+      "from": "n7",
+      "to": "n3",
+      "relation": "misclassifies"
+    },
+    {
+      "from": "n9",
+      "to": "n5",
+      "relation": "shows spectrum in"
+    }
+  ],
+  "summary": "Map links the score, the flag and escalation to the reference standard, with occupancy and timestamp error as the main complications."
+}
