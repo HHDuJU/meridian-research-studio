@@ -484,9 +484,9 @@ test("a rate-limited registry call is retried once; a second failure stays visib
   let calls2 = 0;
   const down = async () => { calls2++; return { status: 503, body: "" }; };
   const bad = await lookupDoisLive(["10.5555/r.1"], down, { sleep: noSleep });
-  assert.equal(calls2, 2);
+  assert.equal(calls2, 3);
   assert.equal(bad.chunks[0].outcome.status, "error");
-  assert.match(bad.chunks[0].outcome.note ?? "", /503.*retry/);
+  assert.match(bad.chunks[0].outcome.note ?? "", /503.*after retries/);
 });
 
 test("a failed cross-check does not demote a record a registry already identified", () => {
@@ -550,4 +550,38 @@ test("appraisal batches after the first apply; 'local-fact' claims keep their ki
   assert.equal(claims.find((c) => c.id === "c1")?.kind, "local-fact");
   assert.ok(!JSON.stringify(claims).includes("unresolved:local-fact"));
   assert.ok(!snapshot.includes("unresolved"));
+});
+
+test("a stored text that does not belong to its record blocks claims that cite it (live run)", () => {
+  // Live run 2026-09-22: OpenAlex attached a stroke thrombectomy abstract to a CMAJ paper on medication
+  // errors in critical care; Crossref still matched the title.
+  const study = createStudy({ family: "qi-pdsa", setting: "s", rawNeed: "n" });
+  const { items, documents } = ingestRecords(
+    [{ title: "Medication errors in critical care: risk factors, prevention and disclosure", authors: "C", year: 2009, venue: "CMAJ", doi: "10.5555/mm.1", abstract: "Introduction We sought to evaluate the impact of pretreatment with intravenous thrombolysis on the rate and speed of successful reperfusion in patients with emergent large vessel occlusion treated with mechanical thrombectomy. Results The group had higher reperfusion (73.8% vs 62.9%)." }],
+    { id: "ret-mm", provider: "openalex" },
+  );
+  study.scan.items = items;
+  study.documents = documents;
+  const claim: Claim = { id: "c1", text: "Reperfusion was 73.8% vs 62.9%.", kind: "source-derived", sourceIds: [items[0].id], passage: "higher reperfusion (73.8% vs 62.9%)", uncertainty: "low", origin: "model" };
+  const r = claimSupport(claim, study);
+  assert.equal(r.status, "text-title-mismatch");
+  assert.equal(r.blocking, true);
+  assert.match(compactStudy(study, "scan"), /TEXT \(WARNING: shares almost no words with the title/);
+  // A normal record is untouched.
+  const ok = studyWithRecord(ABSTRACT);
+  assert.equal(claimSupport({ ...claim, sourceIds: [ok.id], text: "Pain fell by 2.1 points.", passage: "Pain scores fell by 2.1 points" }, ok.study).status, "supported");
+});
+
+test("requests to one registry host run one at a time (second live run: HTTP 429 with four studies)", async () => {
+  let inFlight = 0;
+  let peak = 0;
+  const slow = async () => {
+    inFlight++;
+    peak = Math.max(peak, inFlight);
+    await new Promise((r) => setTimeout(r, 15));
+    inFlight--;
+    return { status: 200, body: JSON.stringify({ status: "ok", message: { "total-results": 0, items: [] } }) };
+  };
+  await Promise.all([0, 1, 2, 3].map((i) => lookupDoisLive([`10.5555/g.${i}`], slow, { sleep: noSleep })));
+  assert.equal(peak, 1);
 });

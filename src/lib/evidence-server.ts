@@ -64,6 +64,7 @@ export const searchLiterature = createServerFn({ method: "POST" })
     const result = await searchLive(data.provider, data.query, fetchTransport(), {
       max: data.max ?? 20,
       contact: process.env.MERIDIAN_CONTACT_EMAIL?.trim() || undefined,
+      ncbiApiKey: process.env.MERIDIAN_NCBI_API_KEY?.trim() || undefined,
     });
     return {
       ok: true as const,

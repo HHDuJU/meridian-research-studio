@@ -16,9 +16,10 @@ export const PUBMED = {
   base: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils",
 };
 
-export function pubmedSearchRequest(term: string, retmax = 20, tool = "meridian", email?: string): TransportRequest {
+export function pubmedSearchRequest(term: string, retmax = 20, tool = "meridian", email?: string, apiKey?: string): TransportRequest {
   const params = new URLSearchParams({ db: "pubmed", term, retmode: "json", retmax: String(retmax), tool });
   if (email) params.set("email", email);
+  if (apiKey) params.set("api_key", apiKey);
   return { url: `${PUBMED.base}/esearch.fcgi?${params.toString()}` };
 }
 
@@ -72,9 +73,10 @@ export function parsePubmedSummary(body: string): RawRecord[] {
 }
 
 /** efetch returns full PubMed records (XML) for up to ~200 PMIDs per request. */
-export function pubmedFetchRequest(pmids: string[], tool = "meridian", email?: string): TransportRequest {
+export function pubmedFetchRequest(pmids: string[], tool = "meridian", email?: string, apiKey?: string): TransportRequest {
   const params = new URLSearchParams({ db: "pubmed", id: pmids.join(","), retmode: "xml", rettype: "abstract", tool });
   if (email) params.set("email", email);
+  if (apiKey) params.set("api_key", apiKey);
   return { url: `${PUBMED.base}/efetch.fcgi?${params.toString()}` };
 }
 

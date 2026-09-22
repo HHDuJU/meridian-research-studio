@@ -26,8 +26,10 @@ export interface LiveOptions {
   contact?: string;
   /** Pause between dependent requests to the same host (NCBI asks for at most 3 requests per second). */
   pauseMs?: number;
-  /** Pause before the single retry after HTTP 429 or 5xx. */
+  /** Pause before the first retry after HTTP 429 or 5xx (the second waits three times as long). */
   retryPauseMs?: number;
+  /** NCBI API key (MERIDIAN_NCBI_API_KEY): raises the PubMed limit from 3 to 10 requests a second. */
+  ncbiApiKey?: string;
   sleep?: (ms: number) => Promise<void>;
 }
 
@@ -75,16 +77,61 @@ export function providerQuery(provider: LiveProvider, query: string): string {
     .trim();
 }
 
-/** One retry after a pause for rate limits and server errors; other failures are returned as they are. */
+/*
+ * Per-host request gate. NCBI allows 3 requests a second per address without an API key, and
+ * Crossref's public pool allows one request at a time; four studies searching at once in the second
+ * live run (2026-09-22) got HTTP 429 from both, even after one retry. Requests to the same host now
+ * go one at a time with a minimum spacing, in this server process.
+ */
+const HOST_SPACING_MS: Record<string, number> = {
+  "eutils.ncbi.nlm.nih.gov": 400,
+  "api.crossref.org": 300,
+  "api.openalex.org": 120,
+  "clinicaltrials.gov": 120,
+};
+const hostQueues = new Map<string, Promise<unknown>>();
+
+function hostOf(url: string): string {
+  try {
+    return new URL(url).host;
+  } catch {
+    return "";
+  }
+}
+
+export function gated(transport: Transport, sleep: (ms: number) => Promise<void> = defaultSleep): Transport {
+  return (req) => {
+    const host = hostOf(req.url);
+    const spacing = HOST_SPACING_MS[host];
+    if (spacing === undefined) return transport(req);
+    const prev = hostQueues.get(host) ?? Promise.resolve();
+    const run = prev.then(async () => {
+      try {
+        return await transport(req);
+      } finally {
+        await sleep(spacing);
+      }
+    });
+    hostQueues.set(host, run.catch(() => undefined));
+    return run;
+  };
+}
+
+/** Up to two retries with growing pauses for rate limits and server errors; other failures are returned as they are. */
 function retrying(transport: Transport, sleep: (ms: number) => Promise<void>, pauseMs: number): Transport {
   return async (req) => {
-    const first = await transport(req);
-    if (first.status !== 429 && !(first.status >= 500 && first.status <= 504)) return first;
-    await sleep(pauseMs);
-    const second = await transport(req);
-    return second.status >= 200 && second.status < 300
-      ? { ...second, note: `retried after HTTP ${first.status}` }
-      : { ...second, note: `HTTP ${first.status}, then HTTP ${second.status} on retry${second.note ? ` (${second.note})` : ""}` };
+    const statuses: number[] = [];
+    let res = await transport(req);
+    for (const factor of [1, 3]) {
+      if (res.status !== 429 && !(res.status >= 500 && res.status <= 504)) break;
+      statuses.push(res.status);
+      await sleep(pauseMs * factor);
+      res = await transport(req);
+    }
+    if (!statuses.length) return res;
+    return res.status >= 200 && res.status < 300
+      ? { ...res, note: `retried after HTTP ${statuses.join(", ")}` }
+      : { ...res, note: `HTTP ${[...statuses, res.status].join(", then ")} after retries${res.note ? ` (${res.note})` : ""}` };
   };
 }
 
@@ -98,8 +145,8 @@ function transportFailure(status: number): "blocked" | "error" | null {
 export async function searchPubmedLive(query: string, rawTransport: Transport, opts: LiveOptions = {}): Promise<LiveSearchResult> {
   const max = Math.min(Math.max(opts.max ?? 20, 1), 100);
   const sleep = opts.sleep ?? defaultSleep;
-  const transport = retrying(rawTransport, sleep, opts.retryPauseMs ?? 2000);
-  const searchReq = pubmedSearchRequest(query, max, "meridian", opts.contact);
+  const transport = retrying(gated(rawTransport, sleep), sleep, opts.retryPauseMs ?? 2000);
+  const searchReq = pubmedSearchRequest(query, max, "meridian", opts.contact, opts.ncbiApiKey);
   const requests = [searchReq.url];
   const sres = await transport(searchReq);
   const sfail = transportFailure(sres.status);
@@ -121,7 +168,7 @@ export async function searchPubmedLive(query: string, rawTransport: Transport, o
     };
   }
   await sleep(opts.pauseMs ?? 400);
-  const fetchReq = pubmedFetchRequest(found.pmids, "meridian", opts.contact);
+  const fetchReq = pubmedFetchRequest(found.pmids, "meridian", opts.contact, opts.ncbiApiKey);
   requests.push(fetchReq.url);
   const fres = await transport(fetchReq);
   const ffail = transportFailure(fres.status);
@@ -175,7 +222,7 @@ export async function searchLive(provider: LiveProvider, query: string, transpor
   const q = providerQuery(provider, query);
   if (provider === "pubmed") return searchPubmedLive(q, transport, opts);
   const sleep = opts.sleep ?? defaultSleep;
-  const r = await runSearch(adapterFor(provider, opts), q, retrying(transport, sleep, opts.retryPauseMs ?? 2000));
+  const r = await runSearch(adapterFor(provider, opts), q, retrying(gated(transport, sleep), sleep, opts.retryPauseMs ?? 2000));
   const withAbstract = r.items.filter((i) => i.abstract?.text).length;
   const note = [r.event.note ?? "", r.items.length ? `${withAbstract} of ${r.items.length} records carry an abstract or registry summary` : ""].filter(Boolean).join("; ");
   return { event: { ...r.event, note: note || undefined }, items: r.items, documents: r.documents, requests: [r.request.url] };
@@ -192,7 +239,7 @@ export async function lookupDoisLive(
 ): Promise<{ provider: CheckProvider; chunks: { requested: string[]; outcome: LookupOutcome }[]; requests: string[] }> {
   const requested = [...new Set(dois.map((d) => normalizeDoi(d)).filter((d): d is string => !!d))];
   const sleep = opts.sleep ?? defaultSleep;
-  const transport = retrying(rawTransport, sleep, opts.retryPauseMs ?? 2000);
+  const transport = retrying(gated(rawTransport, sleep), sleep, opts.retryPauseMs ?? 2000);
   const requests: string[] = [];
   const chunks: { requested: string[]; outcome: LookupOutcome }[] = [];
   for (let i = 0; i < requested.length; i += 20) {

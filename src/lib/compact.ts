@@ -1,6 +1,6 @@
 import type { EvidenceItem, StageId, Study } from "./types";
 import { STAGE_BY_ID } from "./stages";
-import { claimSupport } from "./evidence/support";
+import { claimSupport, textMatchesTitle } from "./evidence/support";
 
 /*
  * Compact study context for a model call.
@@ -70,7 +70,14 @@ function evidenceLine(i: EvidenceItem, withAbstract = false): string {
   if (i.keyFindings) parts.push(`  findings: ${clip(i.keyFindings, 600)}`);
   if (i.limitations) parts.push(`  limits: ${clip(i.limitations, 400)}`);
   // At appraisal the record is shown whole: claims must quote it, so nothing may be cut.
-  if (withAbstract && i.abstract?.text) parts.push(`  TEXT: ${i.abstract.text.trim()}`);
+  if (withAbstract && i.abstract?.text) {
+    const fit = textMatchesTitle(i.title ?? "", i.abstract.text);
+    parts.push(
+      fit.ok
+        ? `  TEXT: ${i.abstract.text.trim()}`
+        : `  TEXT (WARNING: shares almost no words with the title; it may belong to another work, so attribute nothing from it to this record): ${i.abstract.text.trim()}`,
+    );
+  }
   else if (withAbstract) parts.push("  TEXT: none stored (metadata only); do not attribute findings to this record.");
   if (withAbstract && i.notes) parts.push(`  notes (commentary, not source text): ${clip(i.notes, 400)}`);
   return parts.join("\n");

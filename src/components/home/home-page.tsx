@@ -122,7 +122,7 @@ export function HomePage() {
                 on={family === "auto"}
                 onClick={() => setFamily("auto")}
               />
-              {FAMILY_META.slice(0, 8).map((f) => (
+              {FAMILY_META.map((f) => (
                 <FamilyChip key={f.id} label={f.label} on={family === f.id} onClick={() => setFamily(f.id)} />
               ))}
             </div>

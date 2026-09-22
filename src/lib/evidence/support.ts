@@ -19,6 +19,7 @@ export type SupportStatus =
   | "no-source-text"
   | "passage-not-found"
   | "numbers-not-in-source"
+  | "text-title-mismatch"
   | "not-source-derived";
 
 export interface ClaimSupport {
@@ -34,7 +35,28 @@ export interface ClaimSupport {
   message: string;
 }
 
-const BLOCKING: ReadonlySet<SupportStatus> = new Set(["passage-not-found", "numbers-not-in-source"]);
+const BLOCKING: ReadonlySet<SupportStatus> = new Set(["passage-not-found", "numbers-not-in-source", "text-title-mismatch"]);
+
+/*
+ * A provider can attach the wrong abstract to a record. In the live run of 2026-09-22 OpenAlex gave a
+ * CMAJ paper on medication errors in critical care the abstract of a stroke thrombectomy study, and the
+ * Crossref check still "verified" it (the check compares titles, not text). A stored text that shares
+ * almost none of the title's content words is flagged: a claim cannot rest on it until checked.
+ */
+const TITLE_STOP = new Set([
+  "study", "studies", "trial", "trials", "patients", "patient", "review", "reviews", "analysis", "effect", "effects",
+  "among", "using", "based", "versus", "after", "during", "between", "clinical", "randomized", "randomised",
+  "systematic", "cohort", "retrospective", "prospective", "their", "which", "within", "without", "adults", "adult",
+  "outcomes", "outcome", "results", "evaluation", "assessment", "impact", "association", "associated", "report",
+]);
+
+export function textMatchesTitle(title: string, text: string): { ok: boolean; titleWords: number; found: number } {
+  const words = [...new Set((normalizeForMatch(title).match(/\p{L}{5,}/gu) ?? []).filter((w) => !TITLE_STOP.has(w)))];
+  if (words.length < 4 || !text) return { ok: true, titleWords: words.length, found: words.length };
+  const body = normalizeForMatch(text);
+  const found = words.filter((w) => body.includes(w.slice(0, 5))).length;
+  return { ok: !(found <= 1 && found / words.length < 0.25), titleWords: words.length, found };
+}
 
 /** Lower-case, NFKC, one kind of dash and quote, "percent" as %, mid-dot decimals, single spaces. */
 export function normalizeForMatch(s: string): string {
@@ -176,6 +198,17 @@ export function claimSupport(claim: Claim, study: Pick<Study, "scan" | "document
       blocking: false,
       passageFound: null,
       message: "no stored text for the cited record(s); the claim cannot be checked (metadata or lead only)",
+    };
+  }
+  const mismatched = sources.filter((src) => sourceTexts(src, docs).some((t) => !textMatchesTitle(src.title ?? "", t).ok));
+  if (mismatched.length) {
+    return {
+      ...base,
+      status: "text-title-mismatch",
+      blocking: true,
+      passageFound: null,
+      checkedSourceIds,
+      message: `the stored text of ${mismatched.map((m) => m.id).join(", ")} shares almost no words with its title and may belong to another work; check the record before relying on this claim`,
     };
   }
   const haystack = normalizeForMatch(texts.join("\n"));

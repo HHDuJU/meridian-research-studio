@@ -942,6 +942,7 @@ const SUPPORT_LABEL: Record<SupportStatus, string> = {
   "no-source-text": "Not checkable: no stored text for the source",
   "passage-not-found": "Passage not in the source text",
   "numbers-not-in-source": "Number not in the source text",
+  "text-title-mismatch": "Stored text may belong to another work (it shares almost no words with the title); check the record",
   "not-source-derived": "",
 };
 
@@ -972,6 +973,7 @@ function ClaimLedger({ study }: { study: Study }) {
               <p className={`mt-1 text-xs ${sup.blocking ? "text-amber-700" : "text-muted-foreground"}`} data-meridian-claim-support="">
                 {SUPPORT_LABEL[sup.status]}
                 {sup.missingNumbers.length ? `: ${sup.missingNumbers.join(", ")}` : ""}
+                {sup.approximateFigures.length ? ` · approximate figures to compare with the source: ${sup.approximateFigures.join(", ")}` : ""}
               </p>
             ) : null}
           </li>

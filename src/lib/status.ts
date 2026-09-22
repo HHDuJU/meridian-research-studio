@@ -35,7 +35,7 @@ export function studyStatus(study: Study): StudyStatus {
     (i) =>
       (i.doi || i.provenance?.identifiers?.doi) &&
       (i.provenance?.status === "retrieved" || i.provenance?.status === "unverified" || i.provenance?.status === "check-failed") &&
-      !(i.provenance?.checks ?? []).some((c) => c.provider !== "manual" && (c.result === "match" || c.result === "mismatch" || c.result === "not-found")),
+      !(i.provenance?.checks ?? []).some((c) => c.provider !== "manual" && (c.result === "match" || c.result === "mismatch" || c.result === "not-found" || c.result === "unresolved")),
   ).length;
   const evidence = {
     records: items.length,
