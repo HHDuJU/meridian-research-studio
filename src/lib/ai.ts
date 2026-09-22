@@ -3,6 +3,7 @@ import type { StageId, StudyFamily } from "./types";
 import { STAGE_IDS, STUDY_FAMILIES } from "./types";
 import { STAGE_BY_ID } from "./stages";
 import { DECISION_SCHEMA } from "./evidence/decision";
+import { APPRAISAL_SCHEMA } from "./evidence/appraise";
 import {
   parseReplayKey,
 } from "./replay-key";
@@ -13,6 +14,8 @@ export interface MeridianRequest {
   compact: string;
   instruction?: string;
   replayKey?: string;
+  /** Scan live schema: appraisal of retrieved records vs unverified lead discovery (S13). */
+  scanPurpose?: "appraisal" | "discovery";
 }
 
 // Sized for the Scan (appraisal) stage, where up to ~40 retrieved records are shown with clipped abstracts.
@@ -41,12 +44,15 @@ export function validateMeridianRequest(input: unknown): MeridianRequest {
     if (r.instruction.length > MAX_INSTRUCTION_CHARS) throw new Error(`Instruction exceeds ${MAX_INSTRUCTION_CHARS} characters.`);
   }
   const replayKey = parseReplayKey(r.replayKey);
+  const scanPurpose =
+    r.scanPurpose === "appraisal" || r.scanPurpose === "discovery" ? r.scanPurpose : undefined;
   return {
     stage: r.stage as StageId,
     family: r.family as StudyFamily | null,
     compact: r.compact,
     instruction: r.instruction as string | undefined,
     replayKey,
+    scanPurpose,
   };
 }
 
@@ -72,7 +78,7 @@ Rules:
 9. Stakeholder "quotes" must be labelled as composite/paraphrase, not real identifiable people.
 10. Always include a parsimony judgement.`;
 
-function schemaFor(stage: StageId): string {
+export function schemaFor(stage: StageId, scanPurpose?: "appraisal" | "discovery"): string {
   switch (stage) {
     case "problem":
       return `{
@@ -89,6 +95,10 @@ function schemaFor(stage: StageId): string {
   "summary": string
 }`;
     case "scan":
+      if (scanPurpose === "appraisal") {
+        return `${APPRAISAL_SCHEMA}
+Rule: annotate existing retrieved records by their id. Do not invent records, identifiers, or a new items array. Certainty (gradeOverall) only over retrieved records.`;
+      }
       return `{
   "query": string,
   "sourcesConsulted": string[],
@@ -205,7 +215,7 @@ ${data.compact}
 ${data.instruction ? `Investigator steer: ${data.instruction}` : "No extra steer."}
 
 JSON schema:
-${schemaFor(data.stage)}
+${schemaFor(data.stage, data.scanPurpose)}
 
 Produce  the richest defensible content you can without inventing evidence. For scan, 6–10 items is enough. For hypotheses, 3 ranked. For questions, 1–2. One primary outcome always.`;
 

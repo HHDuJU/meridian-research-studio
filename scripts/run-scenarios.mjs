@@ -206,6 +206,21 @@ export function screenHas(body, t) {
   return hay.toLowerCase().includes(t.toLowerCase());
 }
 
+/** Which listed wording matched; used so anyOf results record the visible string (A4.1 R-3). */
+export function screenMatch(body, t) {
+  const hay = String(body ?? "");
+  if (t && typeof t === "object" && !Array.isArray(t) && Array.isArray(t.anyOf)) {
+    const matched = t.anyOf.find((x) => screenHas(hay, x));
+    return { ok: matched != null, matched: matched ?? null };
+  }
+  if (t && typeof t === "object" && !Array.isArray(t) && Array.isArray(t.oneOf)) {
+    const matched = t.oneOf.find((x) => screenHas(hay, x));
+    return { ok: matched != null, matched: matched ?? null };
+  }
+  const ok = screenHas(hay, t);
+  return { ok, matched: ok ? t : null };
+}
+
 export function evalIssues(expectIssues, lastIssues, step, n, action, checkpoints) {
   const issues = Array.isArray(lastIssues) ? lastIssues : [];
   let emitted = false;
@@ -304,8 +319,16 @@ function evalExpect({ study, persistedStudy, step, n, action, checkpoints, lastI
   if (step.expect?.screen?.includes) {
     const body = screenText ?? "";
     for (const t of step.expect.screen.includes) {
-      const ok = screenHas(body, t);
-      checkpoints.push(checkpoint({ step: n, action, check: "screen.includes", expected: t, observed: ok ? t : body.slice(0, 200), ok, reason: ok ? "" : "text not visible" }));
+      const { ok, matched } = screenMatch(body, t);
+      checkpoints.push(checkpoint({
+        step: n,
+        action,
+        check: "screen.includes",
+        expected: t,
+        observed: ok ? matched : body.slice(0, 200),
+        ok,
+        reason: ok ? (matched && typeof matched === "string" && t && t.anyOf ? `matched ${matched}` : "") : "text not visible",
+      }));
     }
   }
   if (step.expect?.screen?.excludes) {
@@ -703,7 +726,18 @@ async function screenshotStep(page, files, artifacts, n, name) {
   artifacts.push(file);
 }
 
-async function ensureScenarioServer(preferred) {
+export function chromiumExecutable() {
+  const p = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || process.env.CHROMIUM_PATH;
+  return p && String(p).trim() ? String(p).trim() : "";
+}
+
+export function chromiumLaunchOptions() {
+  const executablePath = chromiumExecutable();
+  const args = ["--no-sandbox", "--disable-dev-shm-usage"];
+  return executablePath ? { headless: true, executablePath, args } : { headless: true, args };
+}
+
+export async function ensureScenarioServer(preferred) {
   if (preferred) return { url: preferred.replace(/\/$/, ""), child: null };
   const port = 8091;
   const url = `http://127.0.0.1:${port}`;
@@ -758,7 +792,13 @@ async function ensureScenarioServer(preferred) {
 async function runUi(scenario, lib, url) {
   void lib;
   const { chromium } = await import("playwright");
-  const browser = await chromium.launch({ headless: true });
+  const launchOpts = chromiumLaunchOptions();
+  const browser = await chromium.launch(launchOpts);
+  const browserMeta = {
+    product: "chromium",
+    executablePath: launchOpts.executablePath || "playwright-bundled",
+    version: browser.version(),
+  };
   const context = await browser.newContext({ acceptDownloads: true, viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
   const checkpoints = [];
@@ -974,7 +1014,7 @@ async function runUi(scenario, lib, url) {
     study = null;
   }
   await browser.close();
-  return { checkpoints, artifacts, study, studyId, actionRoutes, exportJson, consoleErrors, pageErrors, files };
+  return { checkpoints, artifacts, study, studyId, actionRoutes, exportJson, consoleErrors, pageErrors, files, browser: browserMeta };
 }
 
 async function main() {
@@ -1072,6 +1112,7 @@ async function main() {
         checkpoints: run.checkpoints,
         consoleErrors: run.consoleErrors ?? [],
         pageErrors: run.pageErrors ?? [],
+        browser: run.browser ?? { product: mode === "ui" ? "chromium" : "none", executablePath: mode === "ui" ? (chromiumExecutable() || "playwright-bundled") : "", version: "" },
         artifacts,
         artifactSha256,
       };

@@ -51,7 +51,7 @@ export function Field({
 export function GradeBadge({ grade }: { grade: GradeLevel | "" | "unrated" }) {
   if (!grade) return null;
   if (grade === "unrated") {
-    return <Badge variant="secondary">Unrated</Badge>;
+    return <Badge variant="secondary">unrated</Badge>;
   }
   const variant =
     grade === "high"

@@ -21,7 +21,8 @@ export type IssueCode =
   | "resolved"
   | "cleared"
   | "not-an-object"
-  | "unresolved-reference";
+  | "unresolved-reference"
+  | "id-collision";
 
 export interface Issue {
   path: string;

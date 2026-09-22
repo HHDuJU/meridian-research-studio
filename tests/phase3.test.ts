@@ -78,9 +78,16 @@ test("retain_known_mismatch_on_transport_failure", () => {
 
 test("appraisal_refuses_records_without_identity_attempt", () => {
   const { items } = ingestRecords([{ title: "Invented", authors: "A", year: 2024, venue: "J", abstract: "x".repeat(40) }], { id: "r", provider: "f" });
-  const r = applyAppraisal(items, { annotations: [{ id: items[0].id, grade: "high" }] });
-  assert.notEqual(r.items[0].grade, "high");
-  assert.ok(r.issues.some((i) => /identity attempt/.test(i.message)));
+  const r = applyAppraisal(items, {
+    annotations: [{ id: items[0].id, grade: "high", provenance: { status: "verified" }, verification: "landmark" }],
+    claims: [{ id: "c1", text: "a source-derived result", kind: "source-derived", sourceIds: [items[0].id], passage: "x".repeat(40), uncertainty: "low" }],
+  });
+  // S13: retrieved records are inspected evidence; grades apply without a registry identity check.
+  assert.equal(r.items[0].grade, "high");
+  assert.equal(r.items[0].provenance.status, "retrieved");
+  assert.notEqual(r.items[0].verification, "landmark");
+  assert.ok(r.issues.some((i) => /cannot be changed by appraisal/.test(i.message)));
+  assert.equal(r.claims[0]?.kind, "source-derived");
 });
 
 test("do_not_discard_later_duplicate_content", () => {

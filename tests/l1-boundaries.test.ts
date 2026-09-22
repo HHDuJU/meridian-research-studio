@@ -177,7 +177,7 @@ test("verification_badge_from_provenance_only", () => {
   assert.match(bitsSrc, /status === "verified"/);
   assert.match(bitsSrc, /model: \{v\}/);
   assert.match(bitsSrc, /grade === "unrated"/);
-  assert.match(bitsSrc, /Unrated/);
+  assert.match(bitsSrc, />unrated</);
   assert.doesNotMatch(bitsSrc.slice(bitsSrc.indexOf("function GradeBadge"), bitsSrc.indexOf("function VerifyBadge")), /destructive/);
 });
 

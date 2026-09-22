@@ -130,3 +130,47 @@ A4 accepted (zip sha256 7a1e0fa5..., A4 file ee00a4ce...). Bank installed at `sc
 | D5/S10 | TESTED | `changeSource` store + Scan panel controls targeted by record; accepted decision goes stale on screen, store, export, reload. |
 | D18 | TESTED | Scan search action on screen used as ui retrieve route. |
 | S17 samples | TESTED | store + ui sample runs shipped; 1 qualifying full workflow (level 3 ui). Whole bank not run (not a releasable candidate while S13 remains). |
+
+## A4.1 (2026-09-22)
+
+A4.1 accepted (zip sha256 e6b0249c..., A4.1 file 2f26c7b5...). S13: appraisal over retrieved records applies item grades, claims and certainty; discovery never assigns certainty; id-collision quarantines at `scan.quarantine.items` with issue code `id-collision` at `items[n]`. R-1 to R-5 ride with this archive. Product objective recorded in `OPERATING_CONTRACT.md` section 8. Full WO S13 (lint/egress/prompt-rule checks) is not this increment.
+
+### C7 edit list (before → after SHA-256)
+
+| File | Before | After |
+|---|---|---|
+| `src/lib/contracts.ts` | `0001e4a3c607d110c7b6062c43e4b91cc52578eb7025dd1759370896747b4366` | `f1bc2ef37aca83e1c92d8adfa0eced0a2c89a55b61a7dec557ce5b375f8436e0` |
+| `src/lib/evidence/appraise.ts` | `b5134c397c39772424cca65d28a9b24d4d8ec63fd924a3fbfabc435d49c41231` | `f08a4873b3386e0b613cfa15c86e54e6a2d39e9c746549515a8a5fd9b2ddbbc8` |
+| `src/lib/apply-ai.ts` | `0aa48230cb39e571a5080dfe187d5d174e3dc2da6fa6d438b64e12d9405234ca` | `fdf3e47d987e2adf9f67342b880092d158a0d6b3161aa659124a6b3d369313d4` |
+| `src/lib/ai.ts` | `6b1f331815a5a199cf451bab8ac15d9c9c6985bea49b9ade067abe4f01647aa0` | `67793cdb0a90c62b3536bffa27200ca85900022f8e05e05491d735af1b9f8692` |
+| `src/components/studio/stage-frame.tsx` | `ab1146a2f9517a26e0ec1bc0a49f166318a517f575cd7a754667561e5c245431` | `7f9af72c473706ef0264de7c87c403582d69b4656c5467b9b3f5936954cb1be8` |
+| `src/components/studio/bits.tsx` | `66c81115412af4976bf6a717933976ea846bc38c76cf443bc8df7bb3d2a3e784` | `510c5337398594dbb7c25c2e0f0697555588d81ff3a06acef43e5abb56b30121` |
+| `scripts/tree-digest.mjs` | `64d414fa5b9c9aeeeffd16fc568c7bb88d8be5af88d1f9b9ebde58131ace51f3` | `03381e7db1950d019167aa8056271f76008af37422ff2c143b2752e424772f0f` |
+| `scripts/run-scenarios.mjs` | `4c83ccde28f7b77f64c574e4ad3a189ef4d092e72640b1200261a64d7546c795` | `93ef95927da67b712201d1e512a1883511380bf6583eb97ad033cd0c25c39af7` |
+| `tests/phase3.test.ts` | `542f2494fbd99df359cc0e8d3e11e87b2dfc3d1428ce059f2937a2de91189bc7` | `669750f34d4aaff194afe035ba968e14b0126a79530e035f223fdaead0f832c4` |
+| `tests/run-scenarios.test.ts` | `b1ea00368d852b0f23ecb4315bae158f9d08d02a5ae9d37cb8c70ab5f948e548` | `755e53bf7262c305856113cfc2901d94d770ba2161639b7e5ef114476630e1bf` |
+| `tests/s13.test.ts` | (new) | `c993ea0c5b83be69905dee2d454932fc04e367b829d9146e93b470734787f702` |
+| `tests/l1-boundaries.test.ts` | (R-4 unrated wording) | `2aa552105522e86659dbe01e0e875ef8333bce0e31a80f323c6af13256c11715` |
+| `docs/REGRESSION_RULES.md` | `3adfdec8a0ac6297a4220f64a0056a73f418228ac38337653d4287df91959d47` | `03f914cea95541b52b8f775013d4d9d97d8403731e8519ec4b258e3e8318978b` |
+| `docs/FAILED_ATTEMPTS.md` | `750c44afa1683a6d7070ee0b6b03091b7dfe8b6766a3581639b229c421658b1a` | `bcc738e0384c2d5ac24006e6813d629c888ad2dc42bcb1864d2c5ca3a23ad577` |
+| `OPERATING_CONTRACT.md` | (new) | `07f07e178c1b64b98f435d90d1b6666c17f4000386ed442577923b53e8ad2830` |
+
+| Entry | Status | Notes |
+|---|---|---|
+| S13 | TESTED | Production `applyAiResult("scan")` dispatches `applyAppraisal`; retrieved records get grades/claims/certainty without identity checks; unverified leads are not graded; `schemaFor(scan, appraisal\|discovery)`. Tests in `tests/s13.test.ts`. Full WO lint/egress not this increment. |
+| A2 item 6 | TESTED | Id-collision at `items[n]` with code `id-collision`; original retrieved record unchanged; quarantine at `scan.quarantine.items`. |
+| R-1 | TESTED | `spawn` imported from `node:child_process`; `ensureScenarioServer` exported; `self_start_path_starts_server_once`. |
+| R-2 | TESTED | `PLAYWRIGHT_CHROMIUM_EXECUTABLE` / `CHROMIUM_PATH`; result records `browser`. |
+| R-3 | TESTED | `{anyOf}` screen entries; `screenMatch` records the wording that matched. |
+| R-4 | TESTED | Stored word `unrated`; null scores `not assessed`. |
+| R-5 | TESTED | Digest excludes `scenarios/` and `results/`; pack walk still copies `scenarios/`. |
+
+### Samples ui (2026-09-22T16:19Z, run-2026-09-22T16-19-08-207Z)
+
+| Sample | checks | fail | executedWorkflow |
+|---|---|---|---|
+| sc-000-level1 | 185 | 0 | true |
+| sc-000-level3 | 193 | 0 | true |
+| sc-000-level4 | 210 | 1 | false |
+
+Authored 3 / executed attempts 3 / qualifying full workflows 2. Whole bank not run: level 4 still FAILs one `issues.count` on the second Design Illuminate (D16 marks unknown `claim-9` in withdrawn-decision text; not S13). change-source and accept-decision ran as ui. Browser recorded (`chromium` 153.0.8010.12).

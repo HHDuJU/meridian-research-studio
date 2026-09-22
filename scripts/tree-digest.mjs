@@ -25,6 +25,9 @@ export const SKIP_DIRS = new Set([
   ".cache",
 ]);
 
+/** Digest-only skips so installing the bank under scenarios/ does not move treeSha256 (A4.1 R-5). */
+export const DIGEST_SKIP_DIRS = new Set(["scenarios", "results"]);
+
 export function skipFile(rel) {
   if (rel.startsWith(".vercel/") || rel === ".vercel") return true;
   if (rel.startsWith("public/artifacts/") && /\.tar\.gz/.test(rel)) return true;
@@ -33,11 +36,13 @@ export function skipFile(rel) {
   return false;
 }
 
-export function walkSourceTree(root) {
+export function walkSourceTree(root, opts = {}) {
+  const digest = !!opts.digest;
   const acc = [];
   function walk(dir) {
     for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
       if (SKIP_DIRS.has(ent.name)) continue;
+      if (digest && DIGEST_SKIP_DIRS.has(ent.name)) continue;
       const full = path.join(dir, ent.name);
       const rel = path.relative(root, full).split(path.sep).join("/");
       if (ent.isDirectory()) walk(full);
@@ -48,8 +53,8 @@ export function walkSourceTree(root) {
   return acc.sort();
 }
 
-export function sourceManifest(root) {
-  return walkSourceTree(root).map((rel) => {
+export function sourceManifest(root, opts = {}) {
+  return walkSourceTree(root, opts).map((rel) => {
     const buf = fs.readFileSync(path.join(root, rel));
     return {
       path: rel,
@@ -62,7 +67,7 @@ export function sourceManifest(root) {
 /** SHA-256 hex of the pinned source manifest (sorted path + file hash lines). */
 export function treeSha256(root) {
   const h = crypto.createHash("sha256");
-  for (const e of sourceManifest(root)) {
+  for (const e of sourceManifest(root, { digest: true })) {
     h.update(`${e.path}\0${e.sha256}\n`);
   }
   return h.digest("hex");

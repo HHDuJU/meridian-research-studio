@@ -55,8 +55,10 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalRe
       continue;
     }
     const current = byId.get(id)!;
-    if (!current.provenance.checks.length) {
-      issues.add(`${p}.identity`, "dropped", "appraisal refused: no identity attempt on this record");
+    const inspected = current.provenance?.status === "retrieved" || current.provenance?.status === "verified";
+    if (!inspected) {
+      issues.add(p, "dropped", "appraisal of unverified lead refused; annotate retrieved records only");
+      continue;
     }
     const patch: Partial<EvidenceItem> = {};
     const rel = scoreOrNull(a.relevance, `${p}.relevance`, issues);
@@ -66,10 +68,7 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalRe
     const kind = enumOrResolve(EVIDENCE_KINDS, a.kind, `${p}.kind`, issues);
     if (kind) patch.kind = kind;
     const grade = enumOrResolve(GRADES, a.grade, `${p}.grade`, issues);
-    if (grade && current.provenance.checks.length) patch.grade = grade;
-    else if (grade && !current.provenance.checks.length) {
-      issues.add(`${p}.grade`, "dropped", "grade not applied without an identity attempt");
-    }
+    if (grade) patch.grade = grade;
     const kf = stringOrUndefined(a.keyFindings, `${p}.keyFindings`, issues);
     if (kf !== undefined) patch.keyFindings = kf;
     const lim = stringOrUndefined(a.limitations, `${p}.limitations`, issues);
@@ -91,7 +90,7 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalRe
     if (!annotated.has(i.id)) return i;
     const patch = annotated.get(i.id)!;
     const next = { ...i, ...patch };
-    next.abstract = i.abstract;
+    next.abstract = i.abstract && typeof i.abstract === "object" ? { ...i.abstract } : i.abstract;
     next.provenance = i.provenance;
     return next;
   });

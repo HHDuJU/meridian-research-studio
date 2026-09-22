@@ -1,4 +1,5 @@
 import type {
+  EvidenceItem,
   EvidenceKind,
   GapItem,
   GradeLevel,
@@ -228,19 +229,22 @@ function applyStage(
           }),
         };
       }
-      const items = objectArray(raw.items, "items", issues)?.flatMap((i, n) => {
+      const rawItems = objectArray(raw.items, "items", issues) ?? [];
+      const mapped: { n: number; item: EvidenceItem }[] = [];
+      rawItems.forEach((i, n) => {
         const p = `items[${n}]`;
         const title = nonEmpty(stringOrUndefined(i.title, `${p}.title`, issues));
         if (!title) {
           issues.add(`${p}`, "dropped", "evidence item without a title dropped");
-          return [];
+          return;
         }
         const doi = nonEmpty(stringOrUndefined(i.doi, `${p}.doi`, issues));
         const pmid = nonEmpty(stringOrUndefined(i.pmid, `${p}.pmid`, issues));
         const verification =
           enumOrResolve(VERIFICATIONS, i.verification, `${p}.verification`, issues, "ai-lead") ?? "ai-lead";
-        return [
-          {
+        mapped.push({
+          n,
+          item: {
             id: nonEmpty(stringOrUndefined(i.id, `${p}.id`, issues)) ?? uid("ev"),
             title,
             authors: nonEmpty(stringOrUndefined(i.authors, `${p}.authors`, issues)) ?? "",
@@ -265,29 +269,30 @@ function applyStage(
               status: "unverified" as const,
               checks: [],
             },
-          },
-        ];
+          } as EvidenceItem,
+        });
       });
       const existingIds = new Set(currentItems.map((x) => x.id));
-      const kept: typeof items = [];
-      const collided: typeof items = [];
-      for (const it of items ?? []) {
-        if (existingIds.has(it.id)) collided.push(it);
-        else kept.push(it);
-      }
-      if (collided.length) {
-        issues.add("items", "dropped", `id-collision: ${collided.length} model item(s) quarantined`);
+      const kept: EvidenceItem[] = [];
+      const collided: EvidenceItem[] = [];
+      for (const { n, item } of mapped) {
+        const id = item.id;
+        if (id && existingIds.has(id)) {
+          collided.push(item);
+          issues.add(`items[${n}]`, "id-collision", `model item id "${id}" collides with an ingested record and was quarantined`, id);
+        } else {
+          kept.push(item);
+          if (id) existingIds.add(id);
+        }
       }
       const afterItems = kept.length ? [...currentItems, ...kept] : currentItems;
-      const retrievedAfter = afterItems.filter(
-        (i) => i.provenance?.status === "retrieved" || i.provenance?.status === "verified",
-      ).length;
       const requestedGrade = enumOrResolve(GRADES, raw.gradeOverall, "gradeOverall", issues);
-      const refuseCertainty = retrievedAfter === 0;
-      if (refuseCertainty && requestedGrade) {
-        issues.add("gradeOverall", "dropped", "certainty over uninspected records is not assignable");
+      const refuseCertainty = true;
+      if (requestedGrade) {
+        issues.add("gradeOverall", "dropped", "certainty is assigned only by appraisal over retrieved records, not by discovery leads");
       }
       const gradeOverall = refuseCertainty ? "" : requestedGrade;
+      const prevQ = study?.scan.quarantine;
       return {
         ok: recognised(raw, ["items", "query", "gradeOverall", "gradeRationale", "synthesis"]),
         summary,
@@ -297,9 +302,13 @@ function applyStage(
           gradeOverall,
           gradeRationale: refuseCertainty && requestedGrade ? undefined : str(raw, "gradeRationale", issues),
           synthesis: str(raw, "synthesis", issues),
-          items: kept?.length ? [...currentItems, ...kept] : undefined,
+          items: kept.length ? afterItems : undefined,
           quarantine: collided.length
-            ? { items: collided, claims: [], annotations: [] }
+            ? {
+                items: [...(prevQ?.items ?? []), ...collided],
+                claims: prevQ?.claims ?? [],
+                annotations: prevQ?.annotations ?? [],
+              }
             : undefined,
           generatedAt,
         }),

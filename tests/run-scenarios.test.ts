@@ -16,6 +16,10 @@ import {
   statusOfCheckpoints,
   studyWithoutEnvelope,
   screenHas,
+  screenMatch,
+  chromiumLaunchOptions,
+  chromiumExecutable,
+  ensureScenarioServer,
 } from "../scripts/run-scenarios.mjs";
 import { treeSha256, sourceManifest } from "../scripts/tree-digest.mjs";
 import { useStudio } from "../src/lib/store";
@@ -178,5 +182,56 @@ test("source_digest_ignores_generated_vercel_output", () => {
   fs.writeFileSync(path.join(dir, "src", "a.ts"), "export const a = 2;\n");
   const d3 = treeSha256(dir);
   assert.notEqual(d1, d3, "a source change must change the digest");
+});
+
+test("source_digest_excludes_scenarios_bank", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "meridian-digest-scen-"));
+  fs.mkdirSync(path.join(dir, "src"));
+  fs.writeFileSync(path.join(dir, "src", "a.ts"), "export const a = 1;\n");
+  const d1 = treeSha256(dir);
+  fs.mkdirSync(path.join(dir, "scenarios", "bank-v1"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "scenarios", "bank-v1", "sc-001.json"), "{\"id\":\"sc-001\"}\n");
+  fs.mkdirSync(path.join(dir, "results", "run-x"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "results", "run-x", "out.json"), "{}\n");
+  const d2 = treeSha256(dir);
+  assert.equal(d1, d2, "installing scenarios/ or results/ must not change the source digest");
+  const packed = sourceManifest(dir);
+  assert.equal(packed.some((f) => f.path.startsWith("scenarios/")), true, "pack walk still includes scenarios/");
+});
+
+test("screenMatch_records_which_anyOf_wording_matched", () => {
+  const hit = screenMatch("investigator constraints were refused", { anyOf: ["kept", "refused", "not applied"] });
+  assert.equal(hit.ok, true);
+  assert.equal(hit.matched, "refused");
+  const miss = screenMatch("nothing", { anyOf: ["kept", "refused"] });
+  assert.equal(miss.ok, false);
+  assert.equal(miss.matched, null);
+});
+
+test("chromiumLaunchOptions_honours_PLAYWRIGHT_CHROMIUM_EXECUTABLE", () => {
+  const prevA = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE;
+  const prevB = process.env.CHROMIUM_PATH;
+  process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE = "/tmp/fake-chromium";
+  delete process.env.CHROMIUM_PATH;
+  try {
+    assert.equal(chromiumExecutable(), "/tmp/fake-chromium");
+    assert.deepEqual(chromiumLaunchOptions(), { headless: true, executablePath: "/tmp/fake-chromium", args: ["--no-sandbox", "--disable-dev-shm-usage"] });
+  } finally {
+    if (prevA === undefined) delete process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE;
+    else process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE = prevA;
+    if (prevB === undefined) delete process.env.CHROMIUM_PATH;
+    else process.env.CHROMIUM_PATH = prevB;
+  }
+});
+
+test("self_start_path_starts_server_once", { timeout: 60000 }, async () => {
+  const src = fs.readFileSync(new URL("../scripts/run-scenarios.mjs", import.meta.url), "utf8");
+  assert.equal(/import \{ spawn \} from "node:child_process"/.test(src), true);
+  const first = await ensureScenarioServer("http://127.0.0.1:65535");
+  assert.equal(first.url, "http://127.0.0.1:65535");
+  assert.equal(first.child, null);
+  const second = await ensureScenarioServer(first.url);
+  assert.equal(second.child, null);
+  assert.equal(second.url, first.url);
 });
 

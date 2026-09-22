@@ -34,6 +34,9 @@ export function StageFrame({
     setBusy(true);
     try {
       const expectedRevision = studyRevision(study);
+      const retrieved = study.scan.items.some(
+        (i) => i.provenance?.status === "retrieved" || i.provenance?.status === "verified",
+      );
       const res = await runMeridian({
         data: {
           stage,
@@ -41,6 +44,7 @@ export function StageFrame({
           compact: compactStudy(study, stage),
           instruction: steer || undefined,
           replayKey: SCENARIO_MODE ? study.replayKey : undefined,
+          scanPurpose: stage === "scan" ? (retrieved ? "appraisal" : "discovery") : undefined,
         },
       });
       if (!res || typeof res !== "object" || !("ok" in res) || !res.ok) {
