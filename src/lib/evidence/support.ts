@@ -259,8 +259,22 @@ export interface Grounding {
  * "decision pending", "submitted on 2026-09-01") cannot ground a claim that it is in place, even
  * though it contains the same record number or words. Anchors count only from other sentences.
  */
-const NOT_IN_PLACE =
-  /\b(?:not|no|never|none|without|pending|awaiting|undecided|unknown|unclear|unresolved|declined|refused|rejected|denied|withdrawn|expired|lapsed|suspended|submitted|requested|yet to|under review|in review|to be (?:decided|confirmed|determined|requested))\b|n't\b/i;
+const NOT_IN_PLACE = new RegExp(
+  [
+    // Strong signals only. Generic negation ("do not need review", "is not covered", "not requiring")
+    // and "requested" ("the committee requested the review") describe things that are in place; the
+    // bank rerun showed six such false alarms with a broader pattern.
+    String.raw`\b(?:has|have|had)\s+not\s+(?:yet\s+)?(?:been\s+)?(?:approved|granted|agreed|decided|confirmed|obtained|signed|funded|reviewed|requested|submitted|given|issued|said|answered|replied|received)\b`,
+    String.raw`\b(?:hasn't|haven't|hadn't)\s+(?:yet\s+)?(?:been\s+)?\w+`,
+    String.raw`\bnot\s+yet\b`,
+    String.raw`\b(?:was|were|has been|have been)\s+(?:declined|refused|rejected|denied|withdrawn|suspended|revoked)\b`,
+    String.raw`\b(?:pending|awaiting|undecided|unresolved|expired|lapsed|yet to|under review|in review|unknown whether)\b`,
+    String.raw`\b(?:submitted|applied for)\b(?![^.;]*\b(?:approved|granted|agreed|accepted)\b)`,
+    String.raw`\bto be (?:decided|confirmed|determined|requested)\b`,
+    String.raw`\bno\s+(?:approval|decision|agreement|permission)\s+(?:yet|has been|was)\b`,
+  ].join("|"),
+  "i",
+);
 
 export function investigatorSentences(investigator: string): { text: string; notInPlace: boolean }[] {
   return (investigator ?? "")

@@ -432,6 +432,24 @@ test("investigator text that says something is not in place cannot ground a gate
     "The hospital privacy office approved secondary use of the ERAS database on 2026-06-30 (approval PO-2026-117).",
   ].join("\n");
   assert.deepEqual(investigatorSentences(inv).map((x) => x.notInPlace), [true, true, false]);
+  // Found in the bank rerun (sc-001): "not requiring ethical review" does not negate the classification.
+  const qi = "The clinical governance committee classified the project as quality improvement not requiring ethical review on 2026-09-08 (record CGC-2026-031).";
+  assert.equal(investigatorSentences(qi)[0].notInPlace, false);
+  assert.equal(groundedInInvestigatorText("Record CGC-2026-031 dated 2026-09-08, supplied by the investigator", qi).grounded, true);
+  assert.equal(investigatorSentences("The regional research ethics committee has not yet said whether consent can be waived.")[0].notInPlace, true);
+  assert.equal(investigatorSentences("REB application submitted on 2026-08-01 and approved on 2026-09-02 (REB-26-311).")[0].notInPlace, false);
+  // Bank rerun false alarms: in place despite a negation word.
+  for (const inPlace of [
+    "The research ethics board approved the protocol outline on 2026-09-01 (REB-2026-188), on condition that tenancy data are not used before a data-sharing agreement is signed.",
+    "The network governance group confirmed on 2026-07-30 that record-based studies using anonymised extracts do not need research ethics review (note PBRN-GOV-2026-11).",
+    "The digital health committee requested the review on 2026-09-08 and meets on 2027-02-22 (committee minute DHC-2026-31).",
+    "The research ethics board approved an evaluation (approval REB-CN-2026-118, dated 2026-08-29); any design that withholds the template into 2028 is not covered.",
+  ]) assert.equal(investigatorSentences(inPlace)[0].notInPlace, false, inPlace);
+  for (const notInPlace of [
+    "The information governance office has not decided whether linking pharmacy and admission records needs a new data access approval.",
+    "The data governance lead's approval has not been requested.",
+    "Ethics approval was declined on 2026-08-02 (REB-26-9).",
+  ]) assert.equal(investigatorSentences(notInPlace)[0].notInPlace, true, notInPlace);
   const reb = groundedInInvestigatorText("REB approval 26-311, supplied by the investigator", inv);
   assert.equal(reb.grounded, false);
   assert.match(reb.reason, /not in place/);
@@ -500,4 +518,36 @@ test("records with stored text are appraised in batches whatever their check sta
   assert.ok(batches.length > 1);
   assert.equal(batches.flat().length, 20);
   for (const b of batches) assert.ok(compactStudy(study, "scan", { recordIds: b, batch: { index: 1, of: batches.length } }).length <= 32000);
+});
+
+test("appraisal batches after the first apply; 'local-fact' claims keep their kind (live run)", () => {
+  // Live run 2026-09-22: "local-fact" matched the id pattern, was rewritten in place to
+  // "⟦unresolved:local-fact⟧" through an object shared with the stored study, and every batch after
+  // the first was refused as stale.
+  const s = S().create({ family: "qi-pdsa", setting: "s", rawNeed: "Handover PCA errors.", localFacts: ["41 incidents were logged in 2025."] });
+  const recs = Array.from({ length: 20 }, (_, i) => ({ title: `Record ${i}`, authors: "A", year: 2020, venue: "J", doi: `10.5555/lf.${i}`, pmid: String(91000000 + i), abstract: `Opening words of record ${i}. ${"Long methods and results text. ".repeat(90)}` }));
+  const { items, documents } = ingestRecords(recs, { id: "ret-lf", provider: "pubmed" });
+  S().applyRetrieval(s.id, { event: { id: "ret-lf", at: "", provider: "pubmed", query: "q", resultCount: 20, recordIds: items.map((i) => i.id), status: "ok", performedBy: "app" }, items, documents });
+  const fresh = () => S().studies.find((x) => x.id === s.id)!;
+  const batches = scanAppraisalBatches(fresh());
+  assert.ok(batches.length >= 2);
+  const factId = fresh().problem.localFacts![0].id;
+  const r1 = S().illuminateApply(s.id, "scan", {
+    annotations: batches[0].map((id) => ({ id, relevance: 50 })),
+    claims: [{ id: "c1", text: "41 incidents were logged in 2025.", kind: "local-fact", sourceIds: [], uncertainty: "low", interpretation: `from ${factId}` }],
+    synthesis: "s", gradeOverall: "low", gradeRationale: "local-fact evidence only", summary: "b1",
+  }, studyRevision(fresh()), { appraisedRecordIds: batches[0] });
+  assert.equal(r1.ok, true);
+  const snapshot = JSON.stringify(fresh().scan.claims);
+  const expected = studyRevision(fresh());
+  const r2 = S().illuminateApply(s.id, "scan", {
+    annotations: batches[1].map((id) => ({ id, relevance: 40 })),
+    claims: [{ id: "c2", text: "A second claim.", kind: "inference", sourceIds: [], uncertainty: "moderate" }],
+    synthesis: "s2", gradeOverall: "low", gradeRationale: "r", summary: "b2",
+  }, expected, { appraisedRecordIds: batches[1] });
+  assert.equal(r2.ok, true, r2.reason);
+  const claims = fresh().scan.claims ?? [];
+  assert.equal(claims.find((c) => c.id === "c1")?.kind, "local-fact");
+  assert.ok(!JSON.stringify(claims).includes("unresolved:local-fact"));
+  assert.ok(!snapshot.includes("unresolved"));
 });

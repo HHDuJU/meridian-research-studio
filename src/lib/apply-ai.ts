@@ -140,6 +140,11 @@ export function applyAiResult(
 ): AppliedAi {
   const applied = applyStage(stage, input, family, study, options);
   if (!applied.ok || !study) return applied;
+  // The patch can hold objects shared with the stored study (claims carried over by the appraisal
+  // merge). Marking rewrites strings in place, so it works on a copy: the stored study must only
+  // change through the store, never through a shared reference (live run 2026-09-22: the in-place
+  // rewrite changed the study mid-call and every appraisal batch after the first was refused as stale).
+  applied.stagePatch = structuredClone(applied.stagePatch);
   const known = knownSetForApply(study, applied.stagePatch);
   markUnknownIdsInPatch(applied.stagePatch, known, (path, id) => {
     applied.issues.push({

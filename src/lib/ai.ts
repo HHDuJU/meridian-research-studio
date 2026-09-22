@@ -205,7 +205,7 @@ function extractJson(text: string): Record<string, unknown> {
 }
 
 /** Identifies the prompt a call used: system text, stage schema and the user-message template. */
-export const PROMPT_TEMPLATE_VERSION = "meridian-prompt-2026-09-22c";
+export const PROMPT_TEMPLATE_VERSION = "meridian-prompt-2026-09-22d";
 export const LIVE_MODEL = "grok-4.5";
 
 export function promptFingerprintText(stage: StageId, scanPurpose?: "appraisal" | "discovery"): string {
@@ -244,7 +244,9 @@ Produce the richest defensible content you can without inventing evidence. For s
     body: JSON.stringify({
       model: LIVE_MODEL,
       temperature: data.stage === "hypotheses" || data.stage === "voices" ? 0.5 : 0.25,
-      max_tokens: data.stage === "manuscript" ? 3500 : 2600,
+      // An appraisal batch annotates about ten records and quotes their text; 2,600 tokens cut such
+      // replies mid-JSON in the live run (stand-in replies reached 2,400 tokens).
+      max_tokens: data.stage === "manuscript" ? 3500 : data.scanPurpose === "appraisal" ? 6000 : 2600,
       messages: [
         { role: "system", content: SYSTEM },
         { role: "user", content: user },

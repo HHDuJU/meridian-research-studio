@@ -3,6 +3,19 @@ import { isRecord } from "../contracts";
 
 const ID_RE = /\b((?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]+)\b/gi;
 
+/*
+ * Hyphenated words that share an id prefix but are vocabulary, not ids. "local-fact" is a claim kind:
+ * before this list it was rewritten to "⟦unresolved:local-fact⟧" in every appraisal (live run
+ * 2026-09-22), which corrupted the claim and, through a shared object, made the next batch stale.
+ */
+const NOT_IDS = new Set([
+  "local-fact", "local-facts", "local-type", "local-level", "local-data", "local-context", "local-only",
+  "local-practice", "local-team", "local-site", "claim-level", "claim-unsupported", "gate-level", "doc-level",
+]);
+function isIdToken(id: string): boolean {
+  return !NOT_IDS.has(id.toLowerCase());
+}
+
 export interface IdHit {
   path: string;
   id: string;
@@ -47,6 +60,7 @@ function walk(value: unknown, path: string, hits: IdHit[], known: Set<string>, q
   if (typeof value === "string") {
     for (const m of value.matchAll(ID_RE)) {
       const id = m[1];
+      if (!isIdToken(id)) continue;
       hits.push({ path, id, kind: quoted ? "quoted-source" : "active", known: known.has(id) });
     }
     return;
@@ -85,7 +99,7 @@ export function unresolvedActiveIds(study: Study): IdHit[] {
 export function markUnknownIds(text: string, known: Set<string>): { text: string; unknown: string[] } {
   const unknown: string[] = [];
   const next = text.replace(ID_RE, (all, id: string) => {
-    if (known.has(id)) return all;
+    if (known.has(id) || !isIdToken(id)) return all;
     unknown.push(id);
     return `⟦unresolved:${id}⟧`;
   });
@@ -99,7 +113,8 @@ export function resolveAlias(study: Study, id: string): string | undefined {
   return undefined;
 }
 
-const QUOTED_KEYS = new Set(["passage", "quote"]);
+// Quoted source text and enumerated fields (kinds, statuses, levels) are never rewritten.
+const QUOTED_KEYS = new Set(["passage", "quote", "kind", "status", "uncertainty", "grade", "origin", "severity", "selectionStatus", "actionStatus"]);
 
 function collectPatchIds(value: unknown, into: Set<string>) {
   if (Array.isArray(value)) {
