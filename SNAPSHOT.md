@@ -174,3 +174,90 @@ A4.1 accepted (zip sha256 e6b0249c..., A4.1 file 2f26c7b5...). S13: appraisal ov
 | sc-000-level4 | 210 | 1 | false |
 
 Authored 3 / executed attempts 3 / qualifying full workflows 2. Whole bank not run: level 4 still FAILs one `issues.count` on the second Design Illuminate (D16 marks unknown `claim-9` in withdrawn-decision text; not S13). change-source and accept-decision ran as ui. Browser recorded (`chromium` 153.0.8010.12).
+
+## A4.2 (2026-09-22)
+
+A4.2 accepted (zip sha256 e6b0249c companion packet 20260922T165740Z; A4.2 file in `docs/amendments/A4-2.md`). Order: D29, R-6, R-7, T-1 to T-7 product defects, then samples and the whole bank in ui mode. No item rejected.
+
+### C7 edit list this increment (before → after SHA-256)
+
+| File | Before | After |
+|---|---|---|
+| `src/lib/store.ts` | `7bdfefe130507d14ea7747fead13f033106f241694f7a0f780fe6af4eef9c145` | `25e89362f7493be653c65b8cbd5f16dc1c1bd8552bdbd807f8496a0319be32df` |
+| `src/components/studio/studio-view.tsx` | `89c122360f56f2b47a13cea4f386341a19bc1aeb1071f38a174025fb86b408b1` | `17ea92580c422fc5c22d3ec01d6fc6532303e9d3144c43fae10d0168c9c7e767` |
+| `src/lib/apply-ai.ts` | `ae05f461a4a883c6db7e617663ee5cd5ceb110bac8c9ae506c8411cfbc054852` | `43ce7315d1195234cb22e83e6a480daeb0855f1176e8d08053afd571ea8b9049` |
+| `src/lib/evidence/decision.ts` | `3b49eddcb8a410596cc1b2e2b506d5398b2b512c41a591305e455c3981c1aa63` | `962c7a6ecc089dbc7346af240fd9439c0621391813707bb950d12ebd6123b9f2` |
+| `scripts/run-scenarios.mjs` | `82bf844883c400dac6e3ac452e3961ab5f0024e0a5db82e17f460c0aabdb5f19` | `7f7966ffdc4123aff1326cabc4d0830287f01672b8b43f61dc4a3871412e0faa` |
+| `tests/a42.test.ts` | `4d1b828080dd6b97f279c3894bf389024c628daffcbfdd5d33d7fe108c3251e0` | `6d6dda62debe6d2b9fd1cb537c329057734a004f4b277d75832da3568caa2a19` |
+| `tests/apply-ai.test.ts` | `e8ba70a422b6451d8f24e1e04f7e2675c4e4bfbe7bed56b7d59bbc94deb4c88c` | `0a3242763fc0068bf9badc34bcdc44371be12d78073618e4388b007d96b00dd9` |
+| `docs/REGRESSION_RULES.md` | `9a0928d40bc09171b8544a15c7a7be2291e83a2d1f4f3154f33bf4daadcc89bb` | `d0c03c409198f010957faec5ee0c53ae99fafb390c5a2779c281527ba8e8f6c0` |
+| `docs/FAILED_ATTEMPTS.md` | `051126b0b353012aa33e3b195441c3deeda4616d8ab27b21eb69f784fddf8bc3` | `8242a3d1b471f23e5c832ed60e1dd1235f45bae8086a38601672ac9fab8a6261` |
+
+A whole-file rewrite of `docs/FAILED_ATTEMPTS.md` was restored from `/tmp/meridian-before-a42/docs/FAILED_ATTEMPTS.md` before the two T-2/T-4 bullets were appended.
+
+| Entry | Status | Notes |
+|---|---|---|
+| D29 | TESTED | `unresolved_marker_applied_once`; wrapped `⟦unresolved:id⟧` left as it is. |
+| R-6 | TESTED | Download wait has a rejection handler; a step error is that scenario's FAIL; summary always written. |
+| R-7 | TESTED | `set-field`, `mark-complete`, `accept-decision`, `withdraw-decision` have screen controls; missing control recorded unsupported with the reason. |
+| T-1 | TESTED | Full `rawNeed` on Problem panel (`data-meridian-raw-need`). |
+| T-2 | TESTED | Create stores classifyFamily basis; investigator `setFamily` records explicit. |
+| T-3 | TESTED | Proposed recommendation does not write `study.family` or `design.basis`. |
+| T-4 | TESTED | `recommendedFamily` is the model value; omitted is absent, not `""`. |
+| T-5 | TESTED | Discovery does not clear an appraisal `gradeOverall` over retrieved records. |
+| T-6 | TESTED | Accept rule in `decisionIsSupported`; sc-021 golden that expected a refusal is a golden error (FAILED_ATTEMPTS). |
+| T-7 | TESTED | Family, fields, decision statuses visible after set-field / reload. |
+| S13 | TESTED | Kept from A4.1. |
+| R-1..R-5 | TESTED | Kept from A4.1. |
+
+### Samples ui (2026-09-22T18:43Z, run-2026-09-22T18-43-25-911Z)
+
+| Sample | checks | fail | executedWorkflow |
+|---|---|---|---|
+| sc-000-level1 | 185 | 0 | true |
+| sc-000-level3 | 193 | 0 | true |
+| sc-000-level4 | 210 | 0 | true |
+
+Authored 3 / executed attempts 3 / qualifying full workflows 3. Whole bank ui `results/a42b-bank-ui/run-2026-09-22T18-44-22-543Z`: authored 103, executed attempts 103, qualifying full workflows 73 (PASS 73 / FAIL 30). Per-scenario table in `docs/amendments/BANK_RUN_a42b_2026-09-22.md`. Remaining FAIL kinds are dominated by `store.completedStages`, audit notes/openFixes, `provenance.access`, and `recommendedFamily` goldens; they are listed, not claimed as this increment.
+
+## Phase 4 D8 / S1 (2026-09-22)
+
+A4.1 and A4.2 remain delivered. Next unfinished phase-4 entry is D8 (S1): bind attributed numbers and quotations to cited SourceDocument spans; quarantine unsupported claims. No item of A4.1/A4.2 rejected. D10, F6 and the F1 authority portion are not this increment.
+
+### C7 edit list this increment (before → after SHA-256)
+
+| File | Before | After |
+|---|---|---|
+| `src/lib/types.ts` | `cca438563565ea23debad8fe116525e14dbed96f3ad234b2ffe13e38d2f6e887` | `b5b7cc938008258b355061a296741d87e73506c925d43a7669734032fba8e896` |
+| `src/lib/contracts.ts` | `f1bc2ef37aca83e1c92d8adfa0eced0a2c89a55b61a7dec557ce5b375f8436e0` | `1b2358dbb357350e2c5cc85e22729a7669b7ac5828935dcb32ede875108f4bc7` |
+| `src/lib/apply-ai.ts` | `43ce7315d1195234cb22e83e6a480daeb0855f1176e8d08053afd571ea8b9049` | `e62be30ee3cac8cd5f53729c3aad707f950f6c09d6d15a62c8665fbf149050a8` |
+| `src/lib/evidence/appraise.ts` | `f08a4873b3386e0b613cfa15c86e54e6a2d39e9c746549515a8a5fd9b2ddbbc8` | `cfed79b02d46e5145953c749686fb55fdd5609d434889cded5dc427d11835db8` |
+| `src/lib/evidence/ledger.ts` | `be268d0302c3732f17421f6106192aeeb5dc48a3fdc5d774eceb3c709ea1933d` | `6a5b750fd2177a7b069bdf244d4e2a6c842f662ff14ad1c0671f204ba2fa850d` |
+| `src/lib/evidence/decision.ts` | `962c7a6ecc089dbc7346af240fd9439c0621391813707bb950d12ebd6123b9f2` | `3b3385421599cdfc239884f6b8da5cb233316993909bf6f1956bd7dacb4e40c0` |
+| `src/lib/evidence/index.ts` | `a09cdd6454ad0e5c94f1da7fce0d5bba82a6a8018236cf29445459114bb8b8ab` | `e63c6a50b537ed03f78d13d8cc495c2e5098a81ec6a24192f0f2c62aebc04399` |
+| `src/lib/evidence/numbers.ts` | (new) | `ded09ecd4ee39e2b563571788503158de0c77e100046de1e6ccb12b19427bf74` |
+| `src/lib/evidence/support.ts` | (new) | `503263f414aa74755c46c95ddafc3d679d3203f15cd6a35566e9347d1884dd67` |
+| `tests/numbers.test.ts` | (new) | `068685cd7fc4bfa3c31f824641e24428fe6612d09a261167a2d17eb42c31c149` |
+| `tests/support.test.ts` | (new) | `8038aba8760febe660473da92530326f63b40d2319417c1b014938fa4433025d` |
+| `tests/appraise.test.ts` | (updated) | `03cef4941bdcc486908e84861dbcc1f2026656bd0e6ba9bc4fba64f7d563bd5b` |
+| `docs/REGRESSION_RULES.md` | `d0c03c409198f010957faec5ee0c53ae99fafb390c5a2779c281527ba8e8f6c0` | `b43c7c15b195ad525d328a87fed0ef4a2a937bc4f76d7f3ac1262c960579dc3a` |
+| `docs/FAILED_ATTEMPTS.md` | `8242a3d1b471f23e5c832ed60e1dd1235f45bae8086a38601672ac9fab8a6261` | `37ff599748060855f13dbb1b80c60b0e3f68965b81a661843f64e6d9768b030d` |
+
+| Entry | Status | Notes |
+|---|---|---|
+| D8 | TESTED | Required tests in `tests/numbers.test.ts` and `tests/support.test.ts`. Production `applyAppraisal` + `applyAiResult("scan")` quarantine unsupported claims at `scan.quarantine.claims`. |
+| S1 | TESTED | ClaimAssertion / SourceSpan / Derivation; `numbers.ts` lexical extract; `support.ts` outcome-bound verdict. Full WO S2 interpretation is not this increment. |
+| D10 | NOT STARTED | Phase 4 remainder. |
+| F6 | NOT STARTED | Phase 4 remainder. |
+| F1 authority | NOT STARTED | Phase 4 remainder. |
+| S13 | TESTED | Kept from A4.1; samples still 3/3. |
+
+### Samples ui (2026-09-22T19:27Z, run-2026-09-22T19-27-31-406Z)
+
+| Sample | checks | fail | executedWorkflow |
+|---|---|---|---|
+| sc-000-level1 | 185 | 0 | true |
+| sc-000-level3 | 193 | 0 | true |
+| sc-000-level4 | 210 | 0 | true |
+
+Authored 3 / executed attempts 3 / qualifying full workflows 3. Whole bank ui `results/d8-bank-ui/run-2026-09-22T19-30-49-316Z`: authored 103, executed attempts 103, qualifying full workflows 68 (PASS 68 / FAIL 35). Per-scenario table in `docs/amendments/BANK_RUN_d8_2026-09-22.md`. `illuminate:issues.count` rose (3 → 16) where bank goldens expected silent application of unsupported numbers; that is D8, listed not claimed as a golden error.

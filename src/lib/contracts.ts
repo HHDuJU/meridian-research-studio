@@ -22,7 +22,9 @@ export type IssueCode =
   | "cleared"
   | "not-an-object"
   | "unresolved-reference"
-  | "id-collision";
+  | "id-collision"
+  | "unsupported"
+  | "quote-not-in-source";
 
 export interface Issue {
   path: string;

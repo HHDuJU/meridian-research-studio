@@ -20,6 +20,7 @@ import type {
   VoicesStage,
 } from "./types";
 import { uid, nowIso } from "./utils";
+import { classifyFamily } from "./stages";
 import { abstractPrefixMatch, makeSourceDocument, storedTextOf } from "./evidence/documents";
 import { sha256Hex } from "./evidence/hash";
 
@@ -163,8 +164,16 @@ export function createStudy(input: {
   rawNeed: string;
   replayKey?: string;
   constraints?: string;
+  basis?: "explicit" | "inferred" | "unresolved";
 }): Study {
   const createdAt = nowIso();
+  const classified = classifyFamily(input.rawNeed);
+  let basis: NonNullable<DesignStage["basis"]> = classified.basis;
+  if (input.basis) basis = input.basis;
+  else if (input.family && classified.family && input.family !== classified.family) basis = "explicit";
+  else if (input.family && classified.family === input.family) basis = classified.basis;
+  else if (input.family && classified.basis === "unresolved") basis = "explicit";
+  else if (!input.family) basis = classified.basis;
   const study: Study = {
     id: uid("study"),
     title: input.title || "Untitled study",
@@ -185,7 +194,7 @@ export function createStudy(input: {
     gaps: emptyGaps(),
     hypotheses: emptyHypotheses(),
     questions: emptyQuestions(),
-    design: emptyDesign(),
+    design: { ...emptyDesign(), basis },
     protocol: emptyProtocol(),
     stats: emptyStats(),
     ethics: emptyEthics(),

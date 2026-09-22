@@ -24,12 +24,14 @@ export function Field({
   onChange,
   rows = 4,
   placeholder,
+  name,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   rows?: number;
   placeholder?: string;
+  name?: string;
 }) {
   return (
     <label className="block">
@@ -43,6 +45,7 @@ export function Field({
         onChange={(e) => onChange(e.target.value)}
         className="min-h-0"
         style={{ minHeight: `${Math.max(rows * 1.5, 4.5)}rem` }}
+        data-meridian-field={name}
       />
     </label>
   );

@@ -29,7 +29,7 @@ export function StudioView({ study, stage }: { study: Study; stage: StageId }) {
   ).slice(0, 6);
   const [exportNote, setExportNote] = useState<string | null>(null);
   const [modelMode, setModelMode] = useState(runtimeMeta().modelMode);
-  const update = useStudio((s) => s.update);
+  const setFamily = useStudio((s) => s.setFamily);
   const backupFailure = useStudio((s) => s.backupFailure);
 
   useEffect(() => {
@@ -53,21 +53,36 @@ export function StudioView({ study, stage }: { study: Study; stage: StageId }) {
           <p className="text-[11px] uppercase tracking-[0.16em] text-spine-muted">This study</p>
           <p className="mt-1 font-display text-lg font-medium leading-snug">{study.title}</p>
           <p className="mt-1 text-xs text-spine-muted">{family.label}</p>
+          {study.design.decisions?.length ? (
+            <ul className="mt-2 space-y-0.5 text-xs text-spine-muted" data-meridian-decision-status-list="">
+              {study.design.decisions.map((d) => (
+                <li key={d.id} data-meridian-decision-status={d.selectionStatus ?? d.status}>
+                  {d.selectionStatus ?? d.status} {d.actionStatus ?? "blocked"}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          <label className="mt-2 block text-[10px] uppercase tracking-[0.14em] text-spine-muted">
+            Family
+            <select
+              className="mt-1 w-full rounded-md border border-spine-foreground/30 bg-spine px-2 py-1 text-xs text-spine-foreground"
+              data-meridian-field="family"
+              value={study.family ?? ""}
+              onChange={(e) =>
+                setFamily(study.id, (e.target.value || null) as StudyFamily | null)
+              }
+            >
+              <option value="">undetermined</option>
+              {FAMILY_META.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.label}
+                </option>
+              ))}
+            </select>
+          </label>
           {study.family == null ? (
             <div className="mt-2">
               <p className="text-xs text-spine-muted">Design undetermined — choose a family before routing.</p>
-              <div className="mt-2 flex flex-wrap gap-1">
-                {FAMILY_META.slice(0, 8).map((f) => (
-                  <button
-                    key={f.id}
-                    type="button"
-                    className="rounded-full border border-spine-foreground/30 px-2 py-0.5 text-[10px] text-spine-foreground"
-                    onClick={() => update(study.id, { family: f.id as StudyFamily })}
-                  >
-                    {f.short}
-                  </button>
-                ))}
-              </div>
             </div>
           ) : null}
           <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-spine-foreground/15">
@@ -122,6 +137,11 @@ export function StudioView({ study, stage }: { study: Study; stage: StageId }) {
           </Button>
           <div className="ml-auto hidden items-center gap-2 sm:flex">
             <Badge variant="secondary">{family.short}</Badge>
+            {study.design.decisions?.length ? (
+              <span className="text-xs text-muted-foreground" data-meridian-decision-status-list="">
+                {study.design.decisions.map((d) => `${d.selectionStatus ?? d.status} ${d.actionStatus ?? "blocked"}`).join(" · ")}
+              </span>
+            ) : null}
             {SCENARIO_MODE && modelMode === "replay" ? <Badge variant="outline">model replay</Badge> : null}
             {SCENARIO_MODE && modelMode === "replay" && study.replayKey ? (
               <Badge variant="outline">replay {study.replayKey}</Badge>

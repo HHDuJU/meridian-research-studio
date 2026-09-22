@@ -83,12 +83,24 @@ export function unresolvedActiveIds(study: Study): IdHit[] {
 }
 
 export function markUnknownIds(text: string, known: Set<string>): { text: string; unknown: string[] } {
+  const held: string[] = [];
+  const protectedText = text.replace(
+    /⟦unresolved:(?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]+⟧/gi,
+    (all) => {
+      held.push(all);
+      return `\u0000WRAP${held.length - 1}\u0000`;
+    },
+  );
   const unknown: string[] = [];
-  const next = text.replace(ID_RE, (all, id: string) => {
-    if (known.has(id)) return all;
-    unknown.push(id);
-    return `⟦unresolved:${id}⟧`;
-  });
+  let next = protectedText.replace(
+    /\b((?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]+)\b/gi,
+    (all, id: string) => {
+      if (known.has(id)) return all;
+      unknown.push(id);
+      return `⟦unresolved:${id}⟧`;
+    },
+  );
+  next = next.replace(/\u0000WRAP(\d+)\u0000/g, (_, n) => held[Number(n)] ?? "");
   return { text: next, unknown: [...new Set(unknown)] };
 }
 

@@ -89,14 +89,14 @@ test("payload with no recognised keys → ok:false", () => {
   assert.equal(applyAiResult("stats", { banana: 1 }, "cohort").ok, false);
 });
 
-test("design: valid recommendation is marked as inferred; invalid one leaves family untouched", () => {
+test("design: valid recommendation is stored; invalid one leaves family untouched", () => {
   const good = applyAiResult("design", { recommended: "scoping-review", rationale: "r" }, "cohort");
   assert.equal(good.stagePatch.recommended, "scoping-review");
-  assert.equal(good.stagePatch.basis, "inferred");
-  assert.deepEqual(good.studyPatch, { family: "scoping-review" });
+  assert.equal(good.stagePatch.basis, undefined);
+  assert.equal(good.studyPatch?.family, undefined);
   const bad = applyAiResult("design", { recommended: "vibes-based", rationale: "r" }, "cohort");
   assert.equal("recommended" in bad.stagePatch, false);
-  assert.deepEqual(bad.studyPatch, {});
+  assert.deepEqual(bad.studyPatch ?? {}, {});
 });
 
 test("questions: PCC frame accepted with concept/context; unknown frame dropped", () => {

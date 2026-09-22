@@ -149,3 +149,23 @@ test("illuminateApply_scan_mapper_writes_grades_and_claims", async () => {
   assert.equal(after.scan.claims[0].id, "c1");
   assert.equal(after.scan.gradeOverall, "low");
 });
+
+test("discovery_after_appraisal_does_not_clear_gradeOverall", () => {
+  const created = createStudy({ family: "qi-pdsa", setting: "ward", rawNeed: "handoff" });
+  const study0 = retrievedStudy();
+  const study = {
+    ...created,
+    scan: {
+      ...created.scan,
+      items: study0.scan.items,
+      retrievalEvents: study0.scan.retrievalEvents,
+      gradeOverall: "low" as const,
+      claims: [{ id: "c1", text: "Fewer missed items.", kind: "source-derived" as const, sourceIds: [study0.scan.items[0].id], uncertainty: "low" as const, origin: "model" as const }],
+    },
+  };
+  const r = applyAiResult("scan", { items: [{ title: "Invented lead", kind: "grey" }], summary: "discovery" }, study.family, study);
+  assert.equal(r.ok, true);
+  assert.equal("gradeOverall" in r.stagePatch, false);
+  const merged = { ...study.scan, ...r.stagePatch };
+  assert.equal(merged.gradeOverall, "low");
+});

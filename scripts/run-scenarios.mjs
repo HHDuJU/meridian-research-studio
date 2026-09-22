@@ -565,7 +565,8 @@ async function runStore(scenario, lib) {
           });
           S().mergeStage(studyId, stage, patch);
         } else {
-          S().update(studyId, { [step.path]: step.value });
+          if (step.path === "family") S().setFamily(studyId, step.value ?? null);
+          else S().update(studyId, { [step.path]: step.value });
         }
       } else if (step.do === "change-source") {
         actionRoutes.push({ do: step.do, route: "store-fallback" });
@@ -699,6 +700,14 @@ async function waitRetrieveIdle(page) {
   }
 }
 
+function fieldValueForFill(value) {
+  if (Array.isArray(value)) return value.map((x) => String(x ?? "")).join("\n");
+  if (value == null) return "";
+  return String(value);
+}
+
+export { fieldValueForFill };
+
 async function clickFirstVisible(locator) {
   const n = await locator.count();
   for (let i = 0; i < n; i++) {
@@ -717,6 +726,25 @@ async function gotoStage(page, stage) {
   if (await clickFirstVisible(page.getByRole("button", { name: label, exact: true }))) return;
   if (await clickFirstVisible(page.getByRole("button", { name: new RegExp(label, "i") }))) return;
   throw new Error(`stage control not found: ${stage}`);
+}
+
+async function readScreenText(page) {
+  return page.evaluate(() => {
+    const body = document.body ? document.body.innerText || "" : "";
+    const fields = [...document.querySelectorAll("input, textarea, select")]
+      .map((el) => ("value" in el ? String(el.value || "") : ""))
+      .filter(Boolean)
+      .join("\n");
+    const extras = [...document.querySelectorAll("[data-meridian-visible]")]
+      .map((el) => el.textContent || "")
+      .join("\n");
+    return [body, fields, extras].filter(Boolean).join("\n");
+  }).catch(() => "");
+}
+
+function fieldStage(path) {
+  const head = String(path).split(".")[0];
+  return STAGE_LABEL[head] ? head : null;
 }
 
 async function screenshotStep(page, files, artifacts, n, name) {
@@ -789,6 +817,23 @@ export async function ensureScenarioServer(preferred) {
   return { url, child };
 }
 
+export function attachDownloadWait(page, timeoutMs = 10000) {
+  const downloads = [];
+  const onDl = (d) => downloads.push(d);
+  page.on("download", onDl);
+  const wait = page.waitForEvent("download", { timeout: timeoutMs }).then(
+    (d) => ({ download: d, error: null }),
+    (err) => ({ download: null, error: err instanceof Error ? err : new Error(String(err)) }),
+  );
+  return {
+    wait,
+    downloads,
+    detach() {
+      page.off("download", onDl);
+    },
+  };
+}
+
 async function runUi(scenario, lib, url) {
   void lib;
   const { chromium } = await import("playwright");
@@ -845,6 +890,7 @@ async function runUi(scenario, lib, url) {
           await page.getByRole("button", { name: /Begin a study/i }).click();
           await page.waitForURL(/\/studio\//, { timeout: 15000 });
           await page.locator("[data-meridian-illuminate]").waitFor({ timeout: 15000 });
+          await page.locator("[data-meridian-raw-need]").waitFor({ timeout: 8000 }).catch(() => undefined);
           await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 8000 }).catch(() => undefined);
           const s = await readPersistedStudy(page, null, scenario.id);
           studyId = s?.id ?? null;
@@ -886,38 +932,66 @@ async function runUi(scenario, lib, url) {
           }
         } else if (step.do === "accept-decision") {
           await gotoStage(page, "design");
-          const btn = page.getByRole("button", { name: /^Accept$/ });
-          if ((await btn.count()) === 0) {
-            unsupported(checkpoints, step, n, "Accept control not on screen", actionRoutes);
+          await page.locator("[data-meridian-decision]").first().waitFor({ timeout: 5000 }).catch(() => undefined);
+          const cards = page.locator("[data-meridian-decision]");
+          const count = await cards.count();
+          if (count === 0) {
+            unsupported(checkpoints, step, n, "Accept control not on screen: no decision cards (data-meridian-accept)", actionRoutes);
           } else {
-            actionRoutes.push({ do: step.do, route: "ui" });
-            await btn.first().click();
-            await page.locator("[data-meridian-decision]").first().waitFor({ timeout: 3000 }).catch(() => undefined);
-            await page.waitForTimeout(150);
+            const which = step.which ?? "latest";
+            const idx = which === "latest" ? count - 1 : Number(which);
+            const card = cards.nth(Number.isFinite(idx) ? idx : count - 1);
+            const btn = card.locator("[data-meridian-accept]");
+            if ((await btn.count()) === 0) {
+              unsupported(checkpoints, step, n, `Accept control not on screen for decision index ${idx}: card has no data-meridian-accept`, actionRoutes);
+            } else {
+              actionRoutes.push({ do: step.do, route: "ui" });
+              await btn.click();
+              await page.waitForTimeout(150);
+              await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 4000 }).catch(() => undefined);
+            }
           }
         } else if (step.do === "withdraw-decision") {
           await gotoStage(page, "design");
-          const btn = page.getByRole("button", { name: /^Withdraw$/ });
-          if ((await btn.count()) === 0) {
-            unsupported(checkpoints, step, n, "Withdraw control not on screen", actionRoutes);
+          await page.locator("[data-meridian-decision]").first().waitFor({ timeout: 5000 }).catch(() => undefined);
+          const cards = page.locator("[data-meridian-decision]");
+          const count = await cards.count();
+          if (count === 0) {
+            unsupported(checkpoints, step, n, "Withdraw control not on screen: no decision cards (data-meridian-withdraw)", actionRoutes);
           } else {
-            actionRoutes.push({ do: step.do, route: "ui" });
-            await btn.first().click();
+            const which = step.which ?? "latest";
+            const idx = which === "latest" ? count - 1 : Number(which);
+            const card = cards.nth(Number.isFinite(idx) ? idx : count - 1);
+            const btn = card.locator("[data-meridian-withdraw]");
+            if ((await btn.count()) === 0) {
+              unsupported(checkpoints, step, n, `Withdraw control not on screen for decision index ${idx}: card has no data-meridian-withdraw`, actionRoutes);
+            } else {
+              actionRoutes.push({ do: step.do, route: "ui" });
+              await btn.click();
+              await page.waitForTimeout(150);
+              await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 4000 }).catch(() => undefined);
+            }
           }
         } else if (step.do === "export") {
           actionRoutes.push({ do: step.do, route: "ui" });
-          const downloads = [];
-          page.on("download", (d) => downloads.push(d));
-          const wait = page.waitForEvent("download", { timeout: 10000 });
-          await page.getByRole("button", { name: /Export JSON/i }).click();
+          const pending = attachDownloadWait(page, 10000);
           let download = null;
           try {
-            download = await wait;
+            await page.getByRole("button", { name: /Export JSON/i }).click();
+            const got = await pending.wait;
+            if (got.download) download = got.download;
+            else {
+              checkpoints.push(checkpoint({ step: n, action: step, check: "export.download", expected: "file", observed: String(got.error ?? "timeout"), ok: false, reason: "no download event" }));
+            }
           } catch (err) {
-            checkpoints.push(checkpoint({ step: n, action: step, check: "export.download", expected: "file", observed: String(err), ok: false, reason: "no download event" }));
+            await pending.wait.catch(() => undefined);
+            checkpoints.push(checkpoint({ step: n, action: step, check: "run", expected: "ok", observed: String(err), ok: false, reason: err instanceof Error ? err.message : String(err) }));
+          } finally {
+            pending.detach();
           }
+          const downloads = pending.downloads;
           const count = downloads.length + (download && !downloads.includes(download) ? 1 : 0);
-          const unique = new Set(downloads.map((d) => d)).size || (download ? 1 : 0);
+          const unique = new Set(downloads).size || (download ? 1 : 0);
           checkpoints.push(checkpoint({ step: n, action: step, check: "export.downloadCount", expected: 1, observed: unique || count, ok: (unique || count) === 1, reason: (unique || count) === 1 ? "" : `D22 expected 1 download, observed ${unique || count}` }));
           if (download) {
             const tmp = await download.path();
@@ -927,6 +1001,9 @@ async function runUi(scenario, lib, url) {
           actionRoutes.push({ do: step.do, route: "ui" });
           await page.reload({ waitUntil: "networkidle" });
           await page.evaluate(() => new Promise((r) => setTimeout(r, 50)));
+          await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 8000 }).catch(() => undefined);
+          const after = await readPersistedStudy(page, studyId, scenario.id);
+          if (after?.currentStage) await gotoStage(page, after.currentStage).catch(() => undefined);
         } else if (step.do === "reopen") {
           actionRoutes.push({ do: step.do, route: "ui" });
           const s = await readPersistedStudy(page, studyId, scenario.id);
@@ -936,13 +1013,46 @@ async function runUi(scenario, lib, url) {
           await page.getByRole("heading", { name: title }).first().click();
           await page.waitForURL(/\/studio\//, { timeout: 15000 });
         } else if (step.do === "set-field") {
-          const label = String(step.path).split(".").pop();
-          const field = page.getByLabel(new RegExp(label, "i"));
-          if ((await field.count()) === 0) {
-            unsupported(checkpoints, step, n, `no screen control for ${step.path}`, actionRoutes);
-          } else {
+          const pathName = String(step.path || "");
+          if (pathName === "currentStage") {
             actionRoutes.push({ do: step.do, route: "ui" });
-            await field.fill(String(step.value ?? ""));
+            await gotoStage(page, step.value);
+          } else {
+            const st = fieldStage(pathName);
+            if (st) await gotoStage(page, st).catch(() => undefined);
+            if (pathName === "family") {
+              const loc = page.locator('[data-meridian-field="family"]');
+              if ((await loc.count()) === 0) {
+                unsupported(checkpoints, step, n, `no screen control for ${pathName}`, actionRoutes);
+              } else {
+                actionRoutes.push({ do: step.do, route: "ui" });
+                await loc.first().selectOption(String(step.value ?? "")).catch(async () => {
+                  await loc.first().fill(String(step.value ?? ""));
+                });
+              }
+            } else if (pathName === "hypotheses.selectedId") {
+              const card = page.locator(`[data-meridian-hypothesis="${step.value}"]`);
+              const btn = card.getByRole("button", { name: /Prefer this/i });
+              if ((await btn.count()) === 0) {
+                unsupported(checkpoints, step, n, `no screen control for ${pathName}`, actionRoutes);
+              } else {
+                actionRoutes.push({ do: step.do, route: "ui" });
+                await btn.first().click();
+              }
+            } else {
+              const loc = page.locator(`[data-meridian-field="${pathName}"]`);
+              const label = pathName.split(".").pop();
+              const byLabel = page.getByLabel(new RegExp(String(label).replace(/\[|\]/g, "\\$&"), "i"));
+              const field = (await loc.count()) ? loc.first() : byLabel;
+              if ((await field.count()) === 0) {
+                unsupported(checkpoints, step, n, `no screen control for ${pathName}`, actionRoutes);
+              } else {
+                actionRoutes.push({ do: step.do, route: "ui" });
+                await field.fill(fieldValueForFill(step.value));
+                await field.blur().catch(() => undefined);
+                await page.waitForTimeout(150);
+              }
+            }
           }
         } else if (step.do === "change-source") {
           await gotoStage(page, "scan");
@@ -972,7 +1082,15 @@ async function runUi(scenario, lib, url) {
             checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: changed, ok: changed, reason: changed ? "" : "source content did not change; staleness not supported" }));
           }
         } else if (step.do === "mark-complete") {
-          unsupported(checkpoints, step, n, "no dedicated mark-complete control on screen", actionRoutes);
+          if (step.stage) await gotoStage(page, step.stage).catch(() => undefined);
+          const btn = page.locator("[data-meridian-mark-complete]");
+          if ((await btn.count()) === 0) {
+            unsupported(checkpoints, step, n, "no dedicated mark-complete control on screen", actionRoutes);
+          } else {
+            actionRoutes.push({ do: step.do, route: "ui" });
+            await btn.first().click();
+            await page.waitForTimeout(100);
+          }
         } else if (step.do === "wait") {
           actionRoutes.push({ do: step.do, route: "ui" });
           await page.waitForTimeout(Math.min(step.ms || 0, 5000));
@@ -989,7 +1107,7 @@ async function runUi(scenario, lib, url) {
       const s = await readPersistedStudy(page, studyId, scenario.id);
       if (s?.id) studyId = s.id;
       const illum = s?.lastIlluminate;
-      const body = await page.locator("body").innerText().catch(() => "");
+      const body = await readScreenText(page);
       evalExpect({
         study: s,
         persistedStudy: s,
@@ -1013,7 +1131,11 @@ async function runUi(scenario, lib, url) {
   } catch {
     study = null;
   }
-  await browser.close();
+  try {
+    await browser.close();
+  } catch {
+    /* already closed */
+  }
   return { checkpoints, artifacts, study, studyId, actionRoutes, exportJson, consoleErrors, pageErrors, files, browser: browserMeta };
 }
 
@@ -1032,6 +1154,7 @@ async function main() {
   const summaryPath = path.join(runDir, "summary.jsonl");
   const statuses = [];
   let qualifyingFullWorkflows = 0;
+  let counts = { authored: files.length, executedAttempts: 0, qualifyingFullWorkflows: 0 };
 
   let server = { url: baseUrl || "http://127.0.0.1:8080", child: null };
   if (mode === "ui") {
@@ -1123,19 +1246,23 @@ async function main() {
     }
   } finally {
     if (server.child) server.child.kill();
+    counts = { authored: files.length, executedAttempts: statuses.length, qualifyingFullWorkflows };
+    fs.writeFileSync(path.join(runDir, "COUNTS.json"), `${JSON.stringify(counts, 2)}\n`.replace(" 2}", " 2}"));
+    fs.writeFileSync(path.join(runDir, "COUNTS.json"), `${JSON.stringify(counts, null, 2)}\n`);
+    console.log(`wrote ${runDir}`);
+    console.log(`counts authored=${counts.authored} executedAttempts=${counts.executedAttempts} qualifyingFullWorkflows=${counts.qualifyingFullWorkflows}`);
   }
-  console.log(`wrote ${runDir}`);
-  const counts = { authored: files.length, executedAttempts: statuses.length, qualifyingFullWorkflows };
-  fs.writeFileSync(path.join(runDir, "COUNTS.json"), `${JSON.stringify(counts, null, 2)}\n`);
-  console.log(`counts authored=${counts.authored} executedAttempts=${counts.executedAttempts} qualifyingFullWorkflows=${counts.qualifyingFullWorkflows}`);
   process.exitCode = exitCodeForStatuses(statuses);
 }
 
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
 if (isMain) {
+  process.on("unhandledRejection", (err) => {
+    console.error("unhandledRejection", err);
+  });
   parseArgv(process.argv.slice(2));
   main().catch((err) => {
     console.error(err);
-    process.exit(1);
+    process.exitCode = 1;
   });
 }

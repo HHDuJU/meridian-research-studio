@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { applyDecision, decisionIsSupported, evaluateDecision, evidenceRevision } from "../src/lib/evidence/decision";
+import { applyDecision, decisionIsSupported, evaluateDecision, evidenceRevision, studyRevision } from "../src/lib/evidence/decision";
 import { createStudy } from "../src/lib/defaults";
 import { useStudio } from "../src/lib/store";
 import { studyToJson } from "../src/lib/export";
@@ -146,4 +146,48 @@ test("accept_narrow_without_claims_sets_selection_accepted_action_blocked", () =
   assert.equal(s.design.decisions[0].status, "accepted");
   assert.equal(s.design.decisions[0].actionStatus, "blocked");
   assert.equal(s.design.basis, "explicit");
+});
+
+test("accept_implementation_without_claims_sets_selection_accepted_action_blocked", () => {
+  const created = S().create({ family: "economic", setting: "s", rawNeed: "n" });
+  const s0 = S().studies.find((x) => x.id === created.id)!;
+  const applied = applyDecision(
+    {
+      kind: "implementation",
+      statement: "Run a hybrid implementation study",
+      question: "q",
+      claimIds: [],
+      recommendedFamily: "implementation",
+      gates: [{ id: "g1", requirement: "data office approval", status: "unknown" }],
+      alternatives: ["Model now"],
+    },
+    s0,
+  );
+  assert.ok(applied.decision);
+  assert.equal(applied.decision!.recommendedFamily, "implementation");
+  assert.equal(decisionIsSupported(applied.decision!, s0).ok, true);
+  S().mergeStage(created.id, "design", { decisions: [applied.decision!] });
+  const r = S().acceptDecision(created.id, "latest");
+  assert.equal(r.ok, true);
+  const s = S().studies.find((x) => x.id === created.id)!;
+  assert.equal(s.design.decisions[0].selectionStatus, "accepted");
+  assert.equal(s.design.decisions[0].actionStatus, "blocked");
+  assert.equal(s.family, "implementation");
+  assert.equal(s.design.basis, "explicit");
+});
+
+test("proposed_recommendation_does_not_write_study_family", () => {
+  const created = S().create({ family: null, setting: "s", rawNeed: "n" });
+  const before = S().studies.find((x) => x.id === created.id)!;
+  const result = S().illuminateApply(
+    created.id,
+    "design",
+    { recommended: "pragmatic-trial", rationale: "proposal only", decision: { kind: "narrow", statement: "Wait", claimIds: [] } },
+    studyRevision(before),
+  );
+  assert.equal(result.ok, true);
+  const s = S().studies.find((x) => x.id === created.id)!;
+  assert.equal(s.family, null);
+  assert.equal(s.design.recommended, "pragmatic-trial");
+  assert.equal(s.design.decisions.at(-1)?.recommendedFamily, "pragmatic-trial");
 });

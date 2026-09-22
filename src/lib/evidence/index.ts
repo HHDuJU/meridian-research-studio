@@ -17,3 +17,5 @@ export * from "./ids";
 export * from "./access";
 export * from "./fulltext";
 export * from "./publication-status";
+export * from "./numbers";
+export * from "./support";

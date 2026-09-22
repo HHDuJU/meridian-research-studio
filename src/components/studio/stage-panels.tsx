@@ -62,10 +62,14 @@ function ProblemPanel({ study }: { study: Study }) {
   return (
     <div className="grid gap-4">
       <Panel title="The itch, in the language you think in">
+        <p data-meridian-raw-need="" data-meridian-visible="" className="whitespace-pre-wrap text-[15px] leading-relaxed">
+          {p.rawNeed}
+        </p>
         <Field
+          name="problem.rawNeed"
           label="Raw need"
           value={p.rawNeed}
-          rows={4}
+          rows={8}
           onChange={(v) => patchProblem(study, "rawNeed", v)}
           placeholder="What is going wrong, for whom, in what service?"
         />
@@ -77,7 +81,13 @@ function ProblemPanel({ study }: { study: Study }) {
           <Field label="What hurts" value={p.whatHurts} rows={3} onChange={(v) => patchProblem(study, "whatHurts", v)} />
           <Field label="Current practice" value={p.currentPractice} rows={3} onChange={(v) => patchProblem(study, "currentPractice", v)} />
           <Field label="Why now" value={p.whyNow} rows={3} onChange={(v) => patchProblem(study, "whyNow", v)} />
-          <Field label="Constraints" value={p.constraints} rows={3} onChange={(v) => patchProblem(study, "constraints", v)} />
+          <Field
+            name="problem.constraints"
+            label="Constraints"
+            value={p.constraints}
+            rows={3}
+            onChange={(v) => patchProblem(study, "constraints", v)}
+          />
           <Field
             label="Patient-centred goal"
             value={p.patientCenteredGoal}
@@ -405,11 +415,12 @@ function HypothesesPanel({ study }: { study: Study }) {
         return (
           <article
             key={item.id}
+            data-meridian-hypothesis={item.id}
             className={`rounded-xl bg-card p-5 shadow-[var(--shadow-border)] ${selected ? "ring-1 ring-primary/40" : ""}`}
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Badge variant={selected ? "default" : "outline"}>{selected ? "Selected" : "Candidate"}</Badge>
-              <Button size="sm" variant="ghost" onClick={() => merge(study.id, "hypotheses", { selectedId: item.id })}>
+              <Button size="sm" variant="ghost" data-meridian-field="hypotheses.selectedId" onClick={() => merge(study.id, "hypotheses", { selectedId: item.id })}>
                 Prefer this
               </Button>
             </div>
@@ -489,7 +500,7 @@ function DesignPanel({ study }: { study: Study }) {
   const fam = familyOf(d.recommended || study.family);
   const acceptDecision = useStudio((st) => st.acceptDecision);
   const withdrawDecision = useStudio((st) => st.withdrawDecision);
-  if (!d.rationale) return <EmptyHint>Illuminate to match the question to the simplest honest design.</EmptyHint>;
+  if (!d.rationale && !d.decisions.length) return <EmptyHint>Illuminate to match the question to the simplest honest design.</EmptyHint>;
   return (
     <div className="grid gap-4">
       <Panel>
@@ -523,6 +534,7 @@ function DesignPanel({ study }: { study: Study }) {
                     <Button
                       type="button"
                       size="sm"
+                      data-meridian-accept=""
                       onClick={() => {
                         const r = acceptDecision(study.id, idx);
                         if (!r.ok) toast.warning(r.reason ?? "Accept refused");
@@ -530,7 +542,13 @@ function DesignPanel({ study }: { study: Study }) {
                     >
                       Accept
                     </Button>
-                    <Button type="button" size="sm" variant="outline" onClick={() => withdrawDecision(study.id, idx)}>
+                    <Button type="button" size="sm" variant="outline" data-meridian-withdraw="" onClick={() => withdrawDecision(study.id, idx)}>
+                      Withdraw
+                    </Button>
+                  </div>
+                ) : (dec.selectionStatus ?? dec.status) === "accepted" || (dec.selectionStatus ?? dec.status) === "stale" ? (
+                  <div className="mt-2 flex gap-2">
+                    <Button type="button" size="sm" variant="outline" data-meridian-withdraw="" onClick={() => withdrawDecision(study.id, idx)}>
                       Withdraw
                     </Button>
                   </div>
@@ -580,10 +598,13 @@ function ProtocolPanel({ study }: { study: Study }) {
       </Panel>
       <Panel title="Who, what, how">
         <div className="grid gap-3 text-sm leading-relaxed">
-          <p>
-            <span className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Population. </span>
-            {p.population}
-          </p>
+          <Field
+            name="protocol.population"
+            label="Population"
+            value={p.population}
+            rows={3}
+            onChange={(v) => useStudio.getState().mergeStage(study.id, "protocol", { population: v })}
+          />
           <p>
             <span className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Exposure. </span>
             {p.exposure}
@@ -607,7 +628,7 @@ function ProtocolPanel({ study }: { study: Study }) {
                 </tr>
               </thead>
               <tbody>
-                {p.outcomes.map((o) => (
+                {p.outcomes.map((o, i) => (
                   <tr key={o.id} className="border-b border-border/70 align-top">
                     <td className="py-2 pr-3">
                       <Badge variant={o.role === "primary" ? "default" : "outline"}>{o.role}</Badge>
@@ -619,7 +640,15 @@ function ProtocolPanel({ study }: { study: Study }) {
                       ) : null}
                     </td>
                     <td className="py-2 pr-3 text-muted-foreground">
-                      {o.measure}
+                      <textarea
+                        data-meridian-field={`protocol.outcomes[${i}].measure`}
+                        className="w-full min-h-12 rounded-md border border-border bg-background px-2 py-1 text-sm"
+                        value={o.measure}
+                        onChange={(e) => {
+                          const outcomes = p.outcomes.map((x, j) => (j === i ? { ...x, measure: e.target.value } : x));
+                          useStudio.getState().mergeStage(study.id, "protocol", { outcomes });
+                        }}
+                      />
                       <span className="block text-[11px]">{o.timing}</span>
                     </td>
                     <td className="py-2">{o.why}</td>
@@ -818,18 +847,24 @@ function AuditPanel({ study }: { study: Study }) {
   return (
     <div className="grid gap-4">
       <Panel title="Open fixes">
-        {a.openFixes.length ? (
-          <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed">
-            {a.openFixes.map((f) => (
-              <li key={f}>{f}</li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-muted-foreground">Nothing queued. Illuminate this stage after a pass through the others.</p>
-        )}
+        <Field
+          name="audit.openFixes"
+          label="Open fixes"
+          value={a.openFixes.join("\n")}
+          rows={3}
+          onChange={(v) =>
+            merge(study.id, "audit", {
+              openFixes: v
+                .split("\n")
+                .map((line) => line.trim())
+                .filter(Boolean),
+            })
+          }
+        />
       </Panel>
       <Panel title="How the studio should improve">
         <Field
+          name="audit.improvementNotes"
           label="Notes to the next cycle"
           value={a.improvementNotes}
           rows={4}

@@ -27,6 +27,7 @@ export function StageFrame({
   const meta = STAGE_BY_ID[stage];
   const illuminateApply = useStudio((s) => s.illuminateApply);
   const recordIlluminateFailure = useStudio((s) => s.recordIlluminateFailure);
+  const markComplete = useStudio((s) => s.markComplete);
   const [busy, setBusy] = useState(false);
   const [steer, setSteer] = useState("");
 
@@ -103,10 +104,21 @@ export function StageFrame({
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">{meta.hint}</p>
         </div>
-        <Button onClick={illuminate} disabled={busy} className="shrink-0" data-meridian-illuminate="">
-          {busy ? <Loader2 className="size-4 animate-spin" /> : <ScanSearch className="size-4" />}
-          {busy ? "Working" : "Illuminate"}
-        </Button>
+        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+          <Button onClick={illuminate} disabled={busy} className="shrink-0" data-meridian-illuminate="">
+            {busy ? <Loader2 className="size-4 animate-spin" /> : <ScanSearch className="size-4" />}
+            {busy ? "Working" : "Illuminate"}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="shrink-0"
+            data-meridian-mark-complete=""
+            onClick={() => markComplete(study.id, stage)}
+          >
+            Mark complete
+          </Button>
+        </div>
       </div>
       {partialNotice ? (
         <p

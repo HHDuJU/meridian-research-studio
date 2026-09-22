@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { createStudy, migrateStudy, scanMayComplete, queryHashOf, scanContentRevision, withdrawScanCompletionIfInvalid } from "./defaults";
 import { writeImmutableBackup, browserLocalStorage, createGuardedStorage, readBackupFailure, FAIL_KEY, MAIN_KEY } from "./persist-backup";
 import { SEED_IDS, SEED_STUDIES } from "./seed";
-import { STAGE_IDS, STUDY_SCHEMA_VERSION } from "./types";
+import { STAGE_IDS, STUDY_SCHEMA_VERSION, STUDY_FAMILIES } from "./types";
 import type { AuditEntry, StageId, Study, StudyFamily, EvidenceItem, RetrievalEvent, SourceDocument } from "./types";
 import { nowIso, uid } from "./utils";
 import { refreshDecisionStatuses, studyRevision, decisionIsSupported } from "./evidence/decision";
@@ -26,8 +26,11 @@ interface StudioState {
     title?: string;
     replayKey?: string;
     constraints?: string;
+    basis?: "explicit" | "inferred" | "unresolved";
   }) => Study;
   update: (id: string, patch: StudyPatch) => void;
+  /** Investigator family choice: records design.basis explicit, or unresolved when cleared. */
+  setFamily: (id: string, family: StudyFamily | null) => void;
   remove: (id: string) => void;
   restoreSeeds: () => void;
   setStage: (id: string, stage: StageId) => void;
@@ -103,6 +106,14 @@ export const useStudio = create<StudioState>()(
         set({
           studies: get().studies.map((s) =>
             s.id === id ? { ...s, ...patch, updatedAt: nowIso() } : s,
+          ),
+        });
+      },
+      setFamily: (id, family) => {
+        const basis = family ? ("explicit" as const) : ("unresolved" as const);
+        set({
+          studies: get().studies.map((s) =>
+            s.id === id ? { ...s, family, design: { ...s.design, basis }, updatedAt: nowIso() } : s,
           ),
         });
       },
@@ -265,7 +276,21 @@ export const useStudio = create<StudioState>()(
             ? { ...d, status: "accepted" as const, selectionStatus: "accepted" as const, actionStatus: d.actionStatus ?? "blocked" }
             : d,
         );
-        get().mergeStage(id, "design", { decisions, basis: "explicit" });
+        const fam =
+          (current.recommendedFamily && (STUDY_FAMILIES as readonly string[]).includes(current.recommendedFamily)
+            ? current.recommendedFamily
+            : undefined) ||
+          (s.design.recommended && (STUDY_FAMILIES as readonly string[]).includes(s.design.recommended)
+            ? s.design.recommended
+            : undefined);
+        const familyApplied = Boolean(fam);
+        get().mergeStage(id, "design", {
+          decisions,
+          ...(familyApplied || s.family ? { basis: "explicit" as const } : {}),
+        });
+        if (familyApplied) {
+          get().update(id, { family: fam as StudyFamily });
+        }
         get().log(id, {
           id: uid("audit"),
           at: nowIso(),
@@ -394,7 +419,8 @@ export const useStudio = create<StudioState>()(
           const patch = { ...decision.applied.studyPatch };
           if (!patch.title) delete patch.title;
           if (!patch.subtitle) delete patch.subtitle;
-          get().update(id, patch);
+          if (stage === "design") delete patch.family;
+          if (Object.keys(patch).length) get().update(id, patch);
         }
         if (decision.complete) get().markComplete(id, stage);
         get().log(id, {

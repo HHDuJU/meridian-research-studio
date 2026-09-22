@@ -174,8 +174,52 @@ test("apply_marks_unknown_ids_in_free_text", () => {
     null,
     study,
   );
-  const claim = (quoted.stagePatch.claims as { passage?: string }[])?.[0];
+  const qClaims = (quoted.stagePatch.quarantine as { claims: { passage?: string }[] } | undefined)?.claims ?? [];
+  const liveClaims = (quoted.stagePatch.claims as { passage?: string }[] | undefined) ?? [];
+  const claim = [...liveClaims, ...qClaims].find((c) => c.passage === "the paper mentioned ev-foreign once") ?? qClaims[0] ?? liveClaims[0];
   assert.equal(claim?.passage, "the paper mentioned ev-foreign once");
+});
+
+test("unresolved_marker_applied_once", () => {
+  const known = new Set<string>();
+  const first = markUnknownIds("see claim-9 in the statement", known);
+  assert.equal(first.text, "see ⟦unresolved:claim-9⟧ in the statement");
+  assert.deepEqual(first.unknown, ["claim-9"]);
+  const second = markUnknownIds(first.text, known);
+  assert.equal(second.text, first.text);
+  assert.deepEqual(second.unknown, []);
+  const study = createStudy({ family: "cross-sectional", setting: "s", rawNeed: "n" });
+  study.design.decisions = [
+    {
+      id: "dec-1",
+      at: "2026-09-22T00:00:00.000Z",
+      actor: "model",
+      kind: "pursue",
+      statement: "Run it because ⟦unresolved:claim-9⟧ said so",
+      question: "q",
+      claimIds: [],
+      criteria: [],
+      gates: [],
+      alternatives: [],
+      inputRevision: "ev1-x",
+      status: "withdrawn",
+      selectionStatus: "withdrawn",
+      actionStatus: "blocked",
+    },
+  ];
+  const applied = applyAiResult(
+    "design",
+    {
+      recommended: "cross-sectional",
+      rationale: "r",
+      decision: { kind: "pursue", statement: "Run the door-to-door survey", claimIds: ["c1"] },
+    },
+    "cross-sectional",
+    study,
+  );
+  const prev = (applied.stagePatch.decisions as { statement: string }[])[0].statement;
+  assert.equal(prev.includes("⟦unresolved:⟦unresolved:"), false);
+  assert.equal(applied.issues.filter((i) => i.code === "unresolved-reference").length, 0);
 });
 
 test("record_id_survives_title_and_doi_edit_on_retrieval", () => {

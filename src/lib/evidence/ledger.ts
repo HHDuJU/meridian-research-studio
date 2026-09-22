@@ -1,5 +1,6 @@
-import type { Claim, ClaimKind, EvidenceItem } from "../types";
+import type { Claim, ClaimKind, EvidenceItem, SourceDocument } from "../types";
 import { uid } from "../utils";
+import { supportClaim } from "./support";
 
 /**
  * Claim–source ledger: every consequential assertion says where it comes from and how sure it is.
@@ -28,10 +29,19 @@ const SOURCE_REQUIRED: ClaimKind[] = ["source-derived"];
  *  - a claim resting on a "mismatch" source is blocked (the identifier points elsewhere);
  *  - local facts, assumptions and scenarios are allowed without sources but must be labelled so.
  */
-export function ledgerIssues(claims: Claim[], items: EvidenceItem[]): LedgerIssue[] {
+export function ledgerIssues(claims: Claim[], items: EvidenceItem[], documents: SourceDocument[] = []): LedgerIssue[] {
   const byId = new Map(items.map((i) => [i.id, i]));
   const out: LedgerIssue[] = [];
+  const known = new Map(claims.filter((c) => c.assertion).map((c) => [c.id, c.assertion!]));
   for (const c of claims) {
+    if (c.supportStatus === "quarantined" || c.supportStatus === "unsupported" || c.assertion?.supportStatus === "quarantined") {
+      out.push({ claimId: c.id, severity: "block", message: "claim is unsupported or quarantined and cannot authorize action" });
+    } else if (c.kind === "source-derived" && documents.length) {
+      const verdict = supportClaim(c, items, documents, `claims[${c.id}]`, known);
+      if (verdict.status === "quarantined" || verdict.status === "unsupported") {
+        out.push({ claimId: c.id, severity: "block", message: verdict.issues[0]?.message ?? "source-derived claim failed support recheck" });
+      }
+    }
     const sources = c.sourceIds.map((id) => byId.get(id));
     const missing = c.sourceIds.filter((id) => !byId.has(id));
     if (missing.length) out.push({ claimId: c.id, severity: "block", message: `references unknown source id(s): ${missing.join(", ")}` });

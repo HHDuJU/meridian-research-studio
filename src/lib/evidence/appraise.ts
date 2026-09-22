@@ -1,4 +1,4 @@
-import type { Claim, EvidenceItem, EvidenceKind, GradeLevel } from "../types";
+import type { Claim, ClaimAssertion, DerivationMethod, EvidenceItem, EvidenceKind, GradeLevel, SourceDocument } from "../types";
 import {
   Issues,
   enumOrResolve,
@@ -10,6 +10,7 @@ import {
 } from "../contracts";
 import type { Issue } from "../contracts";
 import { uid } from "../utils";
+import { annotationHasUnsupportedNumber, supportClaim } from "./support";
 
 /**
  * When evidence comes from retrieval, the model's job at the Scan stage changes: it *annotates*
@@ -24,6 +25,7 @@ const EVIDENCE_KINDS: readonly EvidenceKind[] = [
 const GRADES: readonly GradeLevel[] = ["high", "moderate", "low", "very-low"];
 const CLAIM_KINDS = ["source-derived", "local-fact", "assumption", "inference", "scenario"] as const;
 const UNCERTAINTY = ["low", "moderate", "high"] as const;
+const DERIVATION_METHODS = ["percent", "difference", "ratio", "sum"] as const satisfies readonly DerivationMethod[];
 
 export interface AppraisalResult {
   items: EvidenceItem[];
@@ -34,15 +36,31 @@ export interface AppraisalResult {
   issues: Issue[];
   /** ids the model annotated that do not exist — a sign it invented or misremembered records */
   unknownIds: string[];
+  quarantine: { claims: Claim[]; annotations: unknown[] };
+}
+
+function parseDerivation(raw: unknown): ClaimAssertion["derivation"] {
+  if (!isRecord(raw) || typeof raw.method !== "string") return undefined;
+  if (!(DERIVATION_METHODS as readonly string[]).includes(raw.method)) return undefined;
+  return {
+    method: raw.method as DerivationMethod,
+    operandIds: Array.isArray(raw.operandIds) ? raw.operandIds.filter((x): x is string => typeof x === "string") : [],
+    rounding:
+      isRecord(raw.rounding) && typeof raw.rounding.decimals === "number"
+        ? { mode: raw.rounding.mode === "trunc" ? "trunc" : "half-up", decimals: raw.rounding.decimals }
+        : undefined,
+    unit: typeof raw.unit === "string" ? raw.unit : undefined,
+  };
 }
 
 /** Expected model payload: { annotations: [{id, relevance, methodQuality, kind, grade, keyFindings, limitations, contextTags, notes}], claims: [...], synthesis, gradeOverall, gradeRationale } */
-export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalResult {
+export function applyAppraisal(items: EvidenceItem[], raw: unknown, documents: SourceDocument[] = []): AppraisalResult {
   const issues = new Issues();
   const unknownIds: string[] = [];
+  const quarantine: { claims: Claim[]; annotations: unknown[] } = { claims: [], annotations: [] };
   if (!isRecord(raw)) {
     issues.add("$", "not-an-object", "appraisal payload is not an object");
-    return { items, claims: [], issues: issues.list, unknownIds };
+    return { items, claims: [], issues: issues.list, unknownIds, quarantine };
   }
   const byId = new Map(items.map((i) => [i.id, i]));
   const annotated = new Map<string, Partial<EvidenceItem>>();
@@ -70,9 +88,23 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalRe
     const grade = enumOrResolve(GRADES, a.grade, `${p}.grade`, issues);
     if (grade) patch.grade = grade;
     const kf = stringOrUndefined(a.keyFindings, `${p}.keyFindings`, issues);
-    if (kf !== undefined) patch.keyFindings = kf;
+    if (kf !== undefined) {
+      if (annotationHasUnsupportedNumber(kf, current, documents)) {
+        issues.add(`${p}.keyFindings`, "unsupported", "annotation number is not in the cited source; it cannot validate a claim");
+        quarantine.annotations.push({ id, field: "keyFindings", value: kf });
+      } else {
+        patch.keyFindings = kf;
+      }
+    }
     const lim = stringOrUndefined(a.limitations, `${p}.limitations`, issues);
-    if (lim !== undefined) patch.limitations = lim;
+    if (lim !== undefined) {
+      if (annotationHasUnsupportedNumber(lim, current, documents)) {
+        issues.add(`${p}.limitations`, "unsupported", "annotation number is not in the cited source; it cannot validate a claim");
+        quarantine.annotations.push({ id, field: "limitations", value: lim });
+      } else {
+        patch.limitations = lim;
+      }
+    }
     const notes = stringOrUndefined(a.notes, `${p}.notes`, issues);
     if (notes !== undefined) patch.notes = notes;
     const tags = stringArray(a.contextTags, `${p}.contextTags`, issues);
@@ -96,8 +128,10 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalRe
   });
 
   const claims: Claim[] = [];
+  const pendingAssertions = new Map<string, NonNullable<Claim["assertion"]>>();
   for (const c of objectArray(raw.claims, "claims", issues) ?? []) {
-    const p = `claims[${typeof c.id === "string" ? c.id : "?"}]`;
+    const id = typeof c.id === "string" && c.id.trim() ? c.id : uid("claim");
+    const p = `claims[${id}]`;
     const text = stringOrUndefined(c.text, `${p}.text`, issues);
     if (!text?.trim()) {
       issues.add(p, "dropped", "claim without text dropped");
@@ -109,14 +143,41 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalRe
       continue;
     }
     const uncertainty = enumOrResolve(UNCERTAINTY, c.uncertainty, `${p}.uncertainty`, issues, "high") ?? "high";
-    const sourceIds = (stringArray(c.sourceIds, `${p}.sourceIds`, issues) ?? []).filter((sid) => {
-      if (byId.has(sid)) return true;
-      unknownIds.push(sid);
-      issues.add(`${p}.sourceIds`, "dropped", `claim cites unknown record id "${sid}"`);
-      return false;
-    });
-    claims.push({
-      id: typeof c.id === "string" && c.id.trim() ? c.id : uid("claim"),
+    const sourceIds = stringArray(c.sourceIds, `${p}.sourceIds`, issues) ?? [];
+    for (const sid of sourceIds) {
+      if (!byId.has(sid)) unknownIds.push(sid);
+    }
+    const assertionRaw = isRecord(c.assertion)
+      ? c.assertion
+      : c.outcome !== undefined || c.timeWindow !== undefined || c.estimate !== undefined || c.derivation !== undefined
+        ? c
+        : undefined;
+    const assertion: ClaimAssertion | undefined = assertionRaw
+      ? {
+          subject: typeof assertionRaw.subject === "string" ? assertionRaw.subject : undefined,
+          population: typeof assertionRaw.population === "string" ? assertionRaw.population : undefined,
+          intervention: typeof assertionRaw.intervention === "string" ? assertionRaw.intervention : undefined,
+          comparator: typeof assertionRaw.comparator === "string" ? assertionRaw.comparator : undefined,
+          outcome: typeof assertionRaw.outcome === "string" ? assertionRaw.outcome : undefined,
+          timeOrigin: typeof assertionRaw.timeOrigin === "string" ? assertionRaw.timeOrigin : undefined,
+          timeWindow: typeof assertionRaw.timeWindow === "string" ? assertionRaw.timeWindow : undefined,
+          estimate: assertionRaw.estimate !== undefined && assertionRaw.estimate !== null ? String(assertionRaw.estimate) : undefined,
+          unit: typeof assertionRaw.unit === "string" ? assertionRaw.unit : undefined,
+          denominator: typeof assertionRaw.denominator === "string" ? assertionRaw.denominator : undefined,
+          polarity:
+            assertionRaw.polarity === "benefit" ||
+            assertionRaw.polarity === "harm" ||
+            assertionRaw.polarity === "null" ||
+            assertionRaw.polarity === "unknown"
+              ? assertionRaw.polarity
+              : undefined,
+          supportStatus: "unassessed",
+          spans: [],
+          derivation: parseDerivation(assertionRaw.derivation),
+        }
+      : undefined;
+    const drafted: Claim = {
+      id,
       text,
       kind,
       sourceIds,
@@ -125,7 +186,21 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalRe
       interpretation: stringOrUndefined(c.interpretation, `${p}.interpretation`, issues) || undefined,
       uncertainty,
       origin: "model",
-    });
+      assertion,
+    };
+    const verdict = supportClaim(drafted, items, documents, p, pendingAssertions);
+    issues.list.push(...verdict.issues);
+    const next: Claim = {
+      ...drafted,
+      assertion: verdict.assertion,
+      supportStatus: verdict.status,
+    };
+    if (verdict.status === "supported" || verdict.status === "unassessed") {
+      claims.push(next);
+      pendingAssertions.set(id, verdict.assertion);
+    } else {
+      quarantine.claims.push(next);
+    }
   }
   return {
     items: nextItems,
@@ -135,6 +210,7 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalRe
     gradeRationale: stringOrUndefined(raw.gradeRationale, "gradeRationale", issues),
     issues: issues.list,
     unknownIds: [...new Set(unknownIds)],
+    quarantine,
   };
 }
 

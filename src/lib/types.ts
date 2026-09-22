@@ -122,6 +122,42 @@ export interface RetrievalEvent {
 
 export type ClaimKind = "source-derived" | "local-fact" | "assumption" | "inference" | "scenario" | "unknown";
 
+export type SupportStatus = "supported" | "unsupported" | "unassessed" | "quarantined";
+export type Polarity = "benefit" | "harm" | "null" | "unknown";
+export type DerivationMethod = "percent" | "difference" | "ratio" | "sum";
+
+/** Unicode code-point span into an immutable SourceDocument. */
+export interface SourceSpan {
+  documentId: string;
+  sha256: string;
+  start: number;
+  end: number;
+}
+
+export interface Derivation {
+  method: DerivationMethod;
+  operandIds: string[];
+  rounding?: { mode: "half-up" | "trunc"; decimals: number };
+  unit?: string;
+}
+
+export interface ClaimAssertion {
+  subject?: string;
+  population?: string;
+  intervention?: string;
+  comparator?: string;
+  outcome?: string;
+  timeOrigin?: string;
+  timeWindow?: string;
+  estimate?: string;
+  unit?: string;
+  denominator?: string;
+  polarity?: Polarity;
+  supportStatus: SupportStatus;
+  spans: SourceSpan[];
+  derivation?: Derivation;
+}
+
 /** A consequential assertion linked to where it comes from. */
 export interface Claim {
   id: string;
@@ -137,6 +173,9 @@ export interface Claim {
   uncertainty: "low" | "moderate" | "high";
   /** Who wrote the claim. Historical unproven claims migrate as "unknown". */
   origin?: "investigator" | "model" | "system" | "unknown";
+  /** Outcome-bound support (S1). Absent on historic unassessed claims. */
+  assertion?: ClaimAssertion;
+  supportStatus?: SupportStatus;
 }
 
 export type EvidenceKind =

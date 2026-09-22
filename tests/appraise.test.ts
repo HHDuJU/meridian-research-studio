@@ -37,7 +37,7 @@ test("annotations for ids that do not exist are dropped and reported — the mod
   assert.equal(r.items.length, items.length);
 });
 
-test("claims are validated; unknown source ids are stripped and the ledger then flags the claim", () => {
+test("claims are validated; unknown source ids stay on the quarantined claim", () => {
   const items = base();
   const r = applyAppraisal(items, {
     claims: [
@@ -48,10 +48,13 @@ test("claims are validated; unknown source ids are stripped and the ledger then 
     ],
     gradeOverall: "excellent",
   });
-  assert.equal(r.claims.length, 3);
-  assert.deepEqual(r.claims[1].sourceIds, []);
+  assert.equal(r.claims.some((c) => c.id === "c1"), true);
+  assert.equal(r.claims.some((c) => c.id === "c2"), false);
+  assert.equal(r.quarantine.claims.some((c) => c.id === "c2"), true);
+  assert.deepEqual(r.quarantine.claims.find((c) => c.id === "c2")?.sourceIds, ["ev-ghost"]);
+  assert.equal(r.claims.some((c) => c.id === "c3"), true);
   assert.equal(r.gradeOverall, undefined);
-  const issues = ledgerIssues(r.claims, r.items);
+  const issues = ledgerIssues([...r.claims, ...r.quarantine.claims], r.items);
   assert.ok(issues.some((i) => i.claimId === "c2" && i.severity === "block"));
   assert.equal(issues.filter((i) => i.claimId === "c1" && i.severity === "block").length, 0);
 });

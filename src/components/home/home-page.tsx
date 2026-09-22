@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FAMILY_GROUPS, FAMILY_META, familyOf, guessFamily, STAGES } from "@/lib/stages";
+import { FAMILY_GROUPS, FAMILY_META, familyOf, classifyFamily, STAGES } from "@/lib/stages";
 import { useStudio } from "@/lib/store";
 import type { StudyFamily } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
@@ -24,12 +24,14 @@ export function HomePage() {
   const [family, setFamily] = useState<StudyFamily | "auto">("auto");
   const [scenarioKey, setScenarioKey] = useState("");
 
-  const suggested = useMemo(() => (rawNeed.trim() ? guessFamily(rawNeed) : null), [rawNeed]);
+  const suggested = useMemo(() => (rawNeed.trim() ? classifyFamily(rawNeed).family : null), [rawNeed]);
 
   function begin() {
     const text = rawNeed.trim();
     if (!text) return;
-    const fam = family === "auto" ? suggested : family;
+    const classified = classifyFamily(text);
+    const fam = family === "auto" ? classified.family : family;
+    const basis = family === "auto" ? classified.basis : "explicit";
     const study = useStudio.getState().create({
       family: fam,
       setting: setting.trim() || "Unspecified setting",
@@ -37,6 +39,7 @@ export function HomePage() {
       title: text.length > 72 ? `${text.slice(0, 70)}…` : text,
       replayKey: SCENARIO_MODE && scenarioKey.trim() ? scenarioKey.trim() : undefined,
       constraints: constraints.trim() || undefined,
+      basis,
     });
     navigate({ to: "/studio/$studyId", params: { studyId: study.id }, search: { stage: "problem" } });
   }

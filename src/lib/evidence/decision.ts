@@ -1,4 +1,5 @@
-import type { DecisionCriterion, DecisionGate, DecisionKind, DecisionRecord, Study } from "../types";
+import type { DecisionCriterion, DecisionGate, DecisionKind, DecisionRecord, Study, StudyFamily } from "../types";
+import { STUDY_FAMILIES } from "../types";
 import { Issues, enumOrResolve, isRecord, objectArray, stringArray, stringOrUndefined } from "../contracts";
 import type { Issue } from "../contracts";
 import { uid, nowIso } from "../utils";
@@ -133,9 +134,10 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
     status: "proposed",
     selectionStatus: "proposed",
     actionStatus: "blocked",
-    recommendedFamily: (typeof raw.recommendedFamily === "string" && raw.recommendedFamily
-      ? raw.recommendedFamily
-      : study.design.recommended || study.family || "") as DecisionRecord["recommendedFamily"],
+    ...(typeof raw.recommendedFamily === "string" &&
+    (STUDY_FAMILIES as readonly string[]).includes(raw.recommendedFamily)
+      ? { recommendedFamily: raw.recommendedFamily as StudyFamily }
+      : {}),
     ...(stringOrUndefined(raw.note, "decision.note", issues)?.trim() ? { note: raw.note as string } : {}),
   };
   return { decision, issues: issues.list };
@@ -169,6 +171,9 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
     if (sources.some((s) => s.provenance.status === "mismatch")) blockers.push(`claim ${c.id} rests on a source whose identifier resolved to a different work`);
     if (sources.some((s) => isWithdrawnResult(s))) {
       blockers.push(`claim ${c.id} rests on a withdrawn or retracted result that cannot support an active recommendation`);
+    }
+    if (c.supportStatus === "quarantined" || c.supportStatus === "unsupported" || c.assertion?.supportStatus === "quarantined") {
+      blockers.push(`claim ${c.id} is unsupported or quarantined`);
     }
   }
   const sourceDerived = supporting.filter((c) => c.kind === "source-derived");
@@ -231,6 +236,9 @@ export function decisionIsSupported(d: DecisionRecord, study: Study): { ok: bool
   for (const id of d.claimIds) {
     const c = claimsById.get(id);
     if (!c) return { ok: false, reason: `unsupported selection: claim ${id} is not in the ledger` };
+    if (c.supportStatus === "quarantined" || c.supportStatus === "unsupported" || c.assertion?.supportStatus === "quarantined") {
+      return { ok: false, reason: `unsupported selection: claim ${id} is quarantined and cannot authorize action` };
+    }
     const sources = c.sourceIds.map((s) => itemsById.get(s)).filter((s): s is NonNullable<typeof s> => !!s);
     if (!sources.length) return { ok: false, reason: `unsupported selection: claim ${id} has no bound sources` };
     if (sources.some((s) => s.provenance.status === "mismatch")) {
@@ -243,7 +251,7 @@ export function decisionIsSupported(d: DecisionRecord, study: Study): { ok: bool
     if (!retrieved) return { ok: false, reason: `unsupported selection: claim ${id} does not rest on a retrieved record` };
     restsOnRetrieved = true;
   }
-  const commitsToAct = d.kind === "pursue" || d.kind === "implementation" || d.kind === "replicate";
+  const commitsToAct = d.kind === "pursue" || d.kind === "replicate";
   if (commitsToAct && !restsOnRetrieved) {
     return { ok: false, reason: "unsupported selection: no ledger claims on retrieved records" };
   }

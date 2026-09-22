@@ -209,12 +209,17 @@ function applyStage(
       ).length;
       const hasAppraisalShape = present(raw, "annotations") || present(raw, "claims");
       if (hasAppraisalShape) {
-        const appraisal = applyAppraisal(currentItems, raw);
+        const appraisal = applyAppraisal(currentItems, raw, study?.documents ?? []);
         issues.list.push(...appraisal.issues);
         const refuseCertainty = retrievedCount === 0;
         if (refuseCertainty && present(raw, "gradeOverall")) {
           issues.add("gradeOverall", "dropped", "certainty over uninspected records is not assignable");
         }
+        const prevQ = study?.scan.quarantine;
+        const qClaims = [...(prevQ?.claims ?? []), ...(appraisal.quarantine.claims ?? [])];
+        const qAnns = [...(prevQ?.annotations ?? []), ...(appraisal.quarantine.annotations ?? [])];
+        const qItems = prevQ?.items ?? [];
+        const hasQ = qClaims.length + qAnns.length + qItems.length > 0;
         return {
           ok: recognised(raw, ["annotations", "claims", "synthesis", "gradeOverall", "gradeRationale"]),
           summary,
@@ -225,6 +230,7 @@ function applyStage(
             synthesis: appraisal.synthesis,
             gradeOverall: refuseCertainty ? "" : appraisal.gradeOverall,
             gradeRationale: refuseCertainty && appraisal.gradeOverall ? undefined : appraisal.gradeRationale,
+            quarantine: hasQ ? { items: qItems, claims: qClaims, annotations: qAnns } : undefined,
             generatedAt,
           }),
         };
@@ -287,11 +293,14 @@ function applyStage(
       }
       const afterItems = kept.length ? [...currentItems, ...kept] : currentItems;
       const requestedGrade = enumOrResolve(GRADES, raw.gradeOverall, "gradeOverall", issues);
-      const refuseCertainty = true;
       if (requestedGrade) {
         issues.add("gradeOverall", "dropped", "certainty is assigned only by appraisal over retrieved records, not by discovery leads");
       }
-      const gradeOverall = refuseCertainty ? "" : requestedGrade;
+      const retrievedHere = currentItems.filter(
+        (i) => i.provenance?.status === "retrieved" || i.provenance?.status === "verified",
+      ).length;
+      // Discovery never assigns certainty. Over retrieved records it must not clear an appraisal grade (T-5).
+      const gradeOverall = retrievedHere > 0 ? undefined : "";
       const prevQ = study?.scan.quarantine;
       return {
         ok: recognised(raw, ["items", "query", "gradeOverall", "gradeRationale", "synthesis"]),
@@ -300,7 +309,7 @@ function applyStage(
         stagePatch: compactPatch({
           query: str(raw, "query", issues),
           gradeOverall,
-          gradeRationale: refuseCertainty && requestedGrade ? undefined : str(raw, "gradeRationale", issues),
+          gradeRationale: retrievedHere > 0 || requestedGrade ? undefined : str(raw, "gradeRationale", issues),
           synthesis: str(raw, "synthesis", issues),
           items: kept.length ? afterItems : undefined,
           quarantine: collided.length
@@ -485,9 +494,14 @@ function applyStage(
           const r = applyDecision(raw.decision, study);
           issues.list.push(...r.issues);
           if (r.decision) {
-            if (recommended && !r.decision.recommendedFamily) {
-              r.decision.recommendedFamily = recommended;
-            }
+            const fromDecision =
+              typeof r.decision.recommendedFamily === "string" &&
+              (STUDY_FAMILIES as readonly string[]).includes(r.decision.recommendedFamily)
+                ? r.decision.recommendedFamily
+                : undefined;
+            const chosen = fromDecision ?? recommended;
+            if (chosen) r.decision.recommendedFamily = chosen;
+            else delete r.decision.recommendedFamily;
             // Earlier proposed decisions are superseded, not erased.
             decisions = [
               ...(study.design.decisions ?? []).map((d) =>
@@ -504,11 +518,10 @@ function applyStage(
         ok: recognised(raw, ["recommended", "rationale", "alternatives", "guidelines", "whyNotMoreComplex", "decision"]),
         summary,
         issues: issues.list,
-        // A model recommendation changes the study family only when it is a valid member; it is an inference.
-        studyPatch: compactPatch({ family: recommended }),
+        // S11 / A4.2 T-3: a proposed recommendation never writes study.family. Acceptance does.
+        // A4.2 T-2: design.basis is owned by create / investigator setFamily / accept, not by a proposal.
         stagePatch: compactPatch({
           recommended,
-          basis: recommended ? (study?.family && recommended === study.family ? ("explicit" as const) : ("inferred" as const)) : ("unresolved" as const),
           decisions,
           rationale: str(raw, "rationale", issues),
           alternatives: strs(raw, "alternatives", issues),
