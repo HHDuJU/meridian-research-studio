@@ -55,7 +55,9 @@ export function textMatchesTitle(title: string, text: string): { ok: boolean; ti
   if (words.length < 4 || !text) return { ok: true, titleWords: words.length, found: words.length };
   const body = normalizeForMatch(text);
   const found = words.filter((w) => body.includes(w.slice(0, 5))).length;
-  return { ok: !(found <= 1 && found / words.length < 0.25), titleWords: words.length, found };
+  // Zero shared content words only: the bank's fixtures showed real abstracts that share a single
+  // distinctive title word ("fluoridation", "vignettes"), so one shared word is not a mismatch.
+  return { ok: found > 0, titleWords: words.length, found };
 }
 
 /** Lower-case, NFKC, one kind of dash and quote, "percent" as %, mid-dot decimals, single spaces. */

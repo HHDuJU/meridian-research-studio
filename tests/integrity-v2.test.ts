@@ -7,7 +7,7 @@ import { crossrefLookupRequest } from "../src/lib/evidence/providers/crossref";
 import { lookupDoisLive, providerQuery, queryProblem, searchLive } from "../src/lib/evidence/live";
 import { recordedTransport, blockedTransport } from "../src/lib/evidence/transport";
 import { ingestRecords, stableRecordId } from "../src/lib/evidence/records";
-import { approximateFigures, claimSupport, extractNumbers, groundedInInvestigatorText, investigatorSentences, numberWordsToDigits } from "../src/lib/evidence/support";
+import { approximateFigures, claimSupport, extractNumbers, groundedInInvestigatorText, investigatorSentences, numberWordsToDigits, textMatchesTitle } from "../src/lib/evidence/support";
 import { applyDecision, decisionIsSupported, evaluateDecision, evidenceRevision, evidenceRevisionFor, studyRevision } from "../src/lib/evidence/decision";
 import { mergeAppraisedClaims } from "../src/lib/evidence/appraise";
 import { applyAiResult } from "../src/lib/apply-ai";
@@ -567,6 +567,9 @@ test("a stored text that does not belong to its record blocks claims that cite i
   assert.equal(r.status, "text-title-mismatch");
   assert.equal(r.blocking, true);
   assert.match(compactStudy(study, "scan"), /TEXT \(WARNING: shares almost no words with the title/);
+  // Bank fixtures (sc-017, sc-039): a real abstract sharing one distinctive title word is not flagged.
+  assert.equal(textMatchesTitle("Public attitudes to community water fluoridation: a qualitative study of a contested local decision", "We interviewed 36 residents in a town that debated ending fluoridation.").ok, true);
+  assert.equal(textMatchesTitle("Vignette-based evaluation of digital triage tools: a methodological critique", "We rewrote 60 vignettes in the words lay users chose and entered both versions into five apps.").ok, true);
   // A normal record is untouched.
   const ok = studyWithRecord(ABSTRACT);
   assert.equal(claimSupport({ ...claim, sourceIds: [ok.id], text: "Pain fell by 2.1 points.", passage: "Pain scores fell by 2.1 points" }, ok.study).status, "supported");
