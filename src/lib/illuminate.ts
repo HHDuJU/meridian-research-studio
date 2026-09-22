@@ -1,4 +1,4 @@
-import { applyAiResult, type AppliedAi } from "./apply-ai";
+import { applyAiResult, type AppliedAi, type ApplyOptions } from "./apply-ai";
 import { scanMayComplete } from "./defaults";
 import { isStaleRequest } from "./evidence/decision";
 import type { StageId, Study } from "./types";
@@ -41,9 +41,10 @@ export function illuminateDecision(
   stage: StageId,
   raw: unknown,
   expectedRevision: string,
+  options: ApplyOptions = {},
 ): IlluminateDecision {
   const { payload, dropped } = stripModelAuthority(raw);
-  const applied = applyAiResult(stage, payload, study.family, study);
+  const applied = applyAiResult(stage, payload, study.family, study, options);
   if (!applied.ok) {
     return { applied, merge: false, complete: false, reason: "rejected", droppedGates: dropped };
   }

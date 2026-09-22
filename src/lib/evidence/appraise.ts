@@ -138,11 +138,47 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown): AppraisalRe
   };
 }
 
+/**
+ * Merge a new appraisal's claims into the ledger. Model claims that rest only on the records this
+ * appraisal covered are replaced (and kept in `superseded`); investigator claims and claims about
+ * other records stay. A new claim whose id is already taken by a kept claim gets a fresh id, so two
+ * batches that both number their claims c1, c2, ... cannot overwrite each other.
+ */
+export function mergeAppraisedClaims(
+  existing: Claim[],
+  incoming: Claim[],
+  appraisedRecordIds: ReadonlySet<string>,
+): { claims: Claim[]; superseded: Claim[]; renamed: Record<string, string> } {
+  const superseded: Claim[] = [];
+  const kept: Claim[] = [];
+  for (const c of existing) {
+    const modelMade = c.origin === "model" || c.origin === "unknown" || c.origin === undefined;
+    const withinBatch = c.sourceIds.length > 0 && c.sourceIds.every((id) => appraisedRecordIds.has(id));
+    if (modelMade && withinBatch) superseded.push(c);
+    else kept.push(c);
+  }
+  const taken = new Set(kept.map((c) => c.id));
+  const renamed: Record<string, string> = {};
+  const fresh = incoming.map((c) => {
+    if (!taken.has(c.id)) {
+      taken.add(c.id);
+      return c;
+    }
+    let n = 2;
+    while (taken.has(`${c.id}-${n}`)) n++;
+    const id = `${c.id}-${n}`;
+    renamed[c.id] = id;
+    taken.add(id);
+    return { ...c, id };
+  });
+  return { claims: [...kept, ...fresh], superseded, renamed };
+}
+
 export const APPRAISAL_SCHEMA = `{
   "annotations": [{ "id": string (must be an existing record id), "relevance": 0-100|null, "methodQuality": 0-100|null,
     "kind": "guideline"|"systematic-review"|"rct"|"observational"|"qi-report"|"grey"|"qualitative"|"patient-voice"|"expert"|"preprint"|"trial-registry",
     "grade": "high"|"moderate"|"low"|"very-low"|null, "keyFindings": string, "limitations": string, "contextTags": string[], "notes": string }],
   "claims": [{ "id": string, "text": string, "kind": "source-derived"|"local-fact"|"assumption"|"inference"|"scenario",
-    "sourceIds": string[] (existing record ids), "location": string (section/table/figure in the source), "passage": string (short quotation or close paraphrase), "interpretation": string, "uncertainty": "low"|"moderate"|"high" }],
+    "sourceIds": string[] (existing record ids), "location": string (section/table/figure in the source), "passage": string (exact words copied from that record's text as shown; Meridian checks that they occur there), "interpretation": string, "uncertainty": "low"|"moderate"|"high" }],
   "synthesis": string, "gradeOverall": "high"|"moderate"|"low"|"very-low"|null, "gradeRationale": string, "summary": string
 }`;

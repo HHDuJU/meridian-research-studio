@@ -28,7 +28,8 @@ import {
 import type { Issue } from "./contracts";
 import { uid, nowIso } from "./utils";
 import { applyDecision } from "./evidence/decision";
-import { applyAppraisal } from "./evidence/appraise";
+import { applyAppraisal, mergeAppraisedClaims } from "./evidence/appraise";
+import { claimSupport } from "./evidence/support";
 import { knownSetForApply, markUnknownIdsInPatch } from "./evidence/ids";
 
 /*
@@ -124,14 +125,20 @@ function refuseModelConstraints(raw: Record<string, unknown>, study: Study | und
   );
 }
 
+export interface ApplyOptions {
+  /** Scan appraisal only: the records shown to the model in this call (one batch). Defaults to all records. */
+  appraisedRecordIds?: string[];
+}
+
 export function applyAiResult(
   stage: StageId,
   input: unknown,
   family: StudyFamily | null,
   /** The current study, needed for stages whose payload must be validated against ledger content (design → decision). */
   study?: Study,
+  options: ApplyOptions = {},
 ): AppliedAi {
-  const applied = applyStage(stage, input, family, study);
+  const applied = applyStage(stage, input, family, study, options);
   if (!applied.ok || !study) return applied;
   const known = knownSetForApply(study, applied.stagePatch);
   markUnknownIdsInPatch(applied.stagePatch, known, (path, id) => {
@@ -150,6 +157,7 @@ function applyStage(
   input: unknown,
   family: StudyFamily | null,
   study?: Study,
+  options: ApplyOptions = {},
 ): AppliedAi {
   const issues = new Issues();
   if (!isRecord(input)) {
@@ -170,6 +178,9 @@ function applyStage(
     case "problem": {
       const keys = ["statement", "whoAffected", "whatHurts", "currentPractice", "whyNow", "constraints", "patientCenteredGoal", "title", "subtitle", "family"];
       refuseModelConstraints(raw, study, issues);
+      if (present(raw, "localFacts")) {
+        issues.add("localFacts", "dropped", "local facts are entered by the investigator; a model cannot add, edit or remove them", raw.localFacts);
+      }
       const fam = present(raw, "family")
         ? enumOrResolve(STUDY_FAMILIES, raw.family, "family", issues, family ?? undefined)
         : undefined;
@@ -215,13 +226,29 @@ function applyStage(
         if (refuseCertainty && present(raw, "gradeOverall")) {
           issues.add("gradeOverall", "dropped", "certainty over uninspected records is not assignable");
         }
+        // Claims are merged, not replaced: claims about records outside this call and investigator
+        // claims stay; replaced model claims are kept in supersededClaims (the trail is never lost).
+        const appraised = new Set(options.appraisedRecordIds ?? currentItems.map((i) => i.id));
+        const merged = present(raw, "claims")
+          ? mergeAppraisedClaims(study?.scan.claims ?? [], appraisal.claims, appraised)
+          : null;
+        const supportView = { scan: { ...(study?.scan ?? { claims: [] }), items: appraisal.items } as Study["scan"], documents: study?.documents ?? [] };
+        if (merged) {
+          for (const a of appraisal.claims) {
+            const c = merged.claims.find((x) => x.id === (merged.renamed[a.id] ?? a.id));
+            if (!c) continue;
+            const sup = claimSupport(c, supportView);
+            if (sup.blocking) issues.add(`claims[${c.id}]`, "claim-unsupported", sup.message, c.passage);
+          }
+        }
         return {
           ok: recognised(raw, ["annotations", "claims", "synthesis", "gradeOverall", "gradeRationale"]),
           summary,
           issues: issues.list,
           stagePatch: compactPatch({
             items: appraisal.items,
-            claims: appraisal.claims,
+            claims: merged ? merged.claims : undefined,
+            supersededClaims: merged && merged.superseded.length ? [...(study?.scan.supersededClaims ?? []), ...merged.superseded] : undefined,
             synthesis: appraisal.synthesis,
             gradeOverall: refuseCertainty ? "" : appraisal.gradeOverall,
             gradeRationale: refuseCertainty && appraisal.gradeOverall ? undefined : appraisal.gradeRationale,
