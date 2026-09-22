@@ -76,8 +76,9 @@ function evidenceLine(i: EvidenceItem, withAbstract = false): string {
   return parts.join("\n");
 }
 
+/** A record can be appraised when its text is stored or a search or registry check produced it. */
 function isAppraisable(i: EvidenceItem): boolean {
-  return i.provenance?.status === "retrieved" || i.provenance?.status === "verified";
+  return !!i.abstract?.text || i.provenance?.status === "retrieved" || i.provenance?.status === "verified";
 }
 
 /**

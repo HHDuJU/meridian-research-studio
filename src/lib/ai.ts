@@ -103,9 +103,6 @@ Rule: annotate existing retrieved records by their id. Do not invent records, id
       }
       return `{
   "query": string,
-  "sourcesConsulted": string[],
-  "gradeOverall": "high"|"moderate"|"low"|"very-low",
-  "gradeRationale": string,
   "synthesis": string,
   "items": [{
     "title": string, "authors": string, "year": number, "source": string,
@@ -117,7 +114,9 @@ Rule: annotate existing retrieved records by their id. Do not invent records, id
     "contextTags": string[], "keyFindings": string, "limitations": string, "notes": string
   }],
   "summary": string
-}`;
+}
+Rule: "query" is what Meridian will send to PubMed, OpenAlex and ClinicalTrials.gov, so write a database search string, not a sentence: 2 to 4 concept groups in parentheses joined by AND, synonyms inside a group joined by OR, "quoted phrases" allowed, no field tags, at most 200 characters. Example: (ketamine OR esketamine) AND ("neuropathic pain" OR neuralgia) AND (infusion OR intravenous).
+Rule: no certainty grade and no list of consulted sources here; certainty is assigned only when retrieved records are appraised.`;
     case "map":
       return `{
   "contexts": string[],
@@ -206,7 +205,7 @@ function extractJson(text: string): Record<string, unknown> {
 }
 
 /** Identifies the prompt a call used: system text, stage schema and the user-message template. */
-export const PROMPT_TEMPLATE_VERSION = "meridian-prompt-2026-09-22b";
+export const PROMPT_TEMPLATE_VERSION = "meridian-prompt-2026-09-22c";
 export const LIVE_MODEL = "grok-4.5";
 
 export function promptFingerprintText(stage: StageId, scanPurpose?: "appraisal" | "discovery"): string {

@@ -1038,7 +1038,8 @@ function LiveSearch({ study }: { study: Study }) {
           elapsedMs: typeof res.elapsedMs === "number" ? res.elapsedMs : Date.now() - started,
           note: data.event.note,
         });
-        lines.push(`${LIVE_LABEL[provider]}: ${data.event.status}, ${data.items.length} records${data.event.resultCount !== null ? ` of ${data.event.resultCount}` : ""}`);
+        const why = data.event.status === "error" || data.event.status === "blocked" ? ` (${(data.event.note ?? "no detail").slice(0, 220)})` : "";
+        lines.push(`${LIVE_LABEL[provider]}: ${data.event.status}, ${data.items.length} records${data.event.resultCount !== null ? ` of ${data.event.resultCount}` : ""}${why}`);
       }
     } finally {
       setBusy(null);

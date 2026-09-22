@@ -4,13 +4,15 @@ import { parsePubmedArticles, pubmedFetchRequest, pubmedSearchRequest } from "..
 import { abstractFromInvertedIndex, openalexDiscoveryRequest, parseOpenAlexWorks } from "../src/lib/evidence/providers/openalex";
 import { clinicalTrialsSearchRequest, parseClinicalTrials } from "../src/lib/evidence/providers/clinicaltrials";
 import { crossrefLookupRequest } from "../src/lib/evidence/providers/crossref";
-import { lookupDoisLive, searchLive } from "../src/lib/evidence/live";
+import { lookupDoisLive, providerQuery, queryProblem, searchLive } from "../src/lib/evidence/live";
 import { recordedTransport, blockedTransport } from "../src/lib/evidence/transport";
 import { ingestRecords, stableRecordId } from "../src/lib/evidence/records";
-import { claimSupport, extractNumbers, groundedInInvestigatorText, numberWordsToDigits } from "../src/lib/evidence/support";
+import { approximateFigures, claimSupport, extractNumbers, groundedInInvestigatorText, investigatorSentences, numberWordsToDigits } from "../src/lib/evidence/support";
 import { applyDecision, decisionIsSupported, evaluateDecision, evidenceRevision, evidenceRevisionFor, studyRevision } from "../src/lib/evidence/decision";
 import { mergeAppraisedClaims } from "../src/lib/evidence/appraise";
 import { applyAiResult } from "../src/lib/apply-ai";
+import { applyLookupOutcome } from "../src/lib/evidence/verify";
+import { schemaFor } from "../src/lib/ai";
 import { compactStudy, scanAppraisalBatches } from "../src/lib/compact";
 import { createStudy } from "../src/lib/defaults";
 import { validateSearchInput, validateDoiInput } from "../src/lib/evidence-server";
@@ -404,4 +406,98 @@ test("investigator anchors: identifiers must appear, a verbatim phrase or figure
   assert.equal(groundedInInvestigatorText("Investigator's constraints: one research nurse two days a week to May 2027", inv).grounded, true);
   assert.equal(groundedInInvestigatorText("REB-2026-188 approved", inv).grounded, false);
   assert.equal(groundedInInvestigatorText("Approved.", inv).grounded, false);
+});
+
+test("fractions in words are approximate figures, not numbers the source must contain", () => {
+  // Found in the bank run (sc-030): "about three quarters" for a reported 76 percent was blocked as a
+  // fabricated number "3". A word fraction is listed for the reader instead; digits still must occur.
+  const { study, id } = studyWithRecord("RESULTS: The database captured 76 percent of events meeting its own definition.");
+  const base: Claim = { id: "c4", text: "The database captured about three quarters of qualifying events.", kind: "source-derived", sourceIds: [id], passage: "The database captured 76 percent of events meeting its own definition", uncertainty: "moderate", origin: "model" };
+  const r = claimSupport(base, study);
+  assert.equal(r.blocking, false);
+  assert.equal(r.status, "supported");
+  assert.deepEqual(r.approximateFigures, ["three quarters"]);
+  assert.match(r.message, /approximate figure/);
+  assert.deepEqual(approximateFigures("One in five patients, half the wards, 1 in 3 nurses, two-thirds of sites"), ["one in five", "half", "1 in 3", "two-thirds"]);
+  // A digit the source lacks is still refused, with or without a word fraction beside it.
+  const wrong = claimSupport({ ...base, text: "The database captured about three quarters (81 percent) of events." }, study);
+  assert.equal(wrong.status, "numbers-not-in-source");
+  assert.deepEqual(wrong.missingNumbers, ["81"]);
+});
+
+test("investigator text that says something is not in place cannot ground a gate as met", () => {
+  const inv = [
+    "The research ethics board application 26-311 was submitted on 2026-09-01; the decision is pending.",
+    "Use of the out-of-hours activity data requires the data governance lead's approval, which has not been requested.",
+    "The hospital privacy office approved secondary use of the ERAS database on 2026-06-30 (approval PO-2026-117).",
+  ].join("\n");
+  assert.deepEqual(investigatorSentences(inv).map((x) => x.notInPlace), [true, true, false]);
+  const reb = groundedInInvestigatorText("REB approval 26-311, supplied by the investigator", inv);
+  assert.equal(reb.grounded, false);
+  assert.match(reb.reason, /not in place/);
+  const phrase = groundedInInvestigatorText("Data governance: requires the data governance lead's approval (investigator)", inv);
+  assert.equal(phrase.grounded, false);
+  assert.equal(groundedInInvestigatorText("Privacy office approval PO-2026-117 dated 2026-06-30", inv).grounded, true);
+});
+
+test("live search refuses sentence queries and shapes Boolean queries per source (first live run)", async () => {
+  // The three sentence queries of the first live run (2026-09-22) gave 0, 0 and 358,453 PubMed hits.
+  const sentence = "PCA pump programming-error timing vs detection timing around nursing shift handover; handover/handoff safety bundles; QI measurement design under no added funding or staff.";
+  assert.match(queryProblem(sentence) ?? "", /reads like a sentence/);
+  assert.match(queryProblem("IV ketamine infusion for adult refractory neuropathic pain with analgesic and functional efficacy in one pain clinic") ?? "", /sentence/);
+  assert.equal(queryProblem('(ketamine OR esketamine) AND ("neuropathic pain" OR neuralgia) AND (infusion)'), null);
+  assert.equal(queryProblem("ketamine neuropathic pain infusion"), null);
+  const r = await searchLive("pubmed", sentence, blockedTransport("must not be called"), { sleep: noSleep });
+  assert.equal(r.event.status, "error");
+  assert.match(r.event.note ?? "", /^not searched: /);
+  assert.deepEqual(r.requests, []);
+  assert.equal(providerQuery("openalex", "(ketamine[tiab] OR esketamine*) AND neuralgia[mh]"), "(ketamine OR esketamine) AND neuralgia");
+  assert.equal(providerQuery("pubmed", "ketamine[tiab]"), "ketamine[tiab]");
+  assert.match(schemaFor("scan", "discovery"), /database search string, not a sentence/);
+  assert.equal(schemaFor("scan", "discovery").includes("sourcesConsulted"), false);
+});
+
+test("a rate-limited registry call is retried once; a second failure stays visible", async () => {
+  let calls = 0;
+  const flaky = async () => (++calls === 1 ? { status: 429, body: "" } : { status: 200, body: JSON.stringify({ status: "ok", message: { "total-results": 0, items: [] } }) });
+  const ok = await lookupDoisLive(["10.5555/r.1"], flaky, { sleep: noSleep });
+  assert.equal(calls, 2);
+  assert.equal(ok.chunks[0].outcome.status, "ok");
+  let calls2 = 0;
+  const down = async () => { calls2++; return { status: 503, body: "" }; };
+  const bad = await lookupDoisLive(["10.5555/r.1"], down, { sleep: noSleep });
+  assert.equal(calls2, 2);
+  assert.equal(bad.chunks[0].outcome.status, "error");
+  assert.match(bad.chunks[0].outcome.note ?? "", /503.*retry/);
+});
+
+test("a failed cross-check does not demote a record a registry already identified", () => {
+  // First live run: one failed Crossref chunk turned 20 PubMed records into "check-failed", which then
+  // fell out of appraisal batching and pushed the appraisal context past its limit.
+  const { items } = ingestRecords(
+    [
+      { title: "PubMed record", authors: "A", year: 2021, venue: "J", doi: "10.5555/pm.1", pmid: "90000001", abstract: "Text." },
+      { title: "Connector record", authors: "B", year: 2021, venue: "J", doi: "10.5555/cx.1" },
+    ],
+    { id: "ret-x", provider: "pubmed" },
+  );
+  const r = applyLookupOutcome(items, ["10.5555/pm.1", "10.5555/cx.1"], "crossref", { status: "error", records: [], note: "HTTP 500" });
+  const pm = r.items.find((i) => i.doi === "10.5555/pm.1")!;
+  const cx = r.items.find((i) => i.doi === "10.5555/cx.1")!;
+  assert.equal(pm.provenance.identifiers.pmid, "90000001");
+  assert.equal(pm.provenance.status, "retrieved");
+  assert.equal(pm.provenance.checks.at(-1)?.result, "error");
+  assert.equal(cx.provenance.status, "check-failed");
+});
+
+test("records with stored text are appraised in batches whatever their check status", () => {
+  const study = createStudy({ family: "qi-pdsa", setting: "s", rawNeed: "n" });
+  const recs = Array.from({ length: 20 }, (_, i) => ({ title: `Record ${i}`, authors: "A", year: 2020, venue: "J", doi: `10.5555/b.${i}`, abstract: `Abstract ${i}. ${"Long methods and results text. ".repeat(90)}` }));
+  const { items, documents } = ingestRecords(recs, { id: "ret-b", provider: "fixture" });
+  study.scan.items = items.map((i) => ({ ...i, provenance: { ...i.provenance, status: "check-failed" as const } }));
+  study.documents = documents;
+  const batches = scanAppraisalBatches(study);
+  assert.ok(batches.length > 1);
+  assert.equal(batches.flat().length, 20);
+  for (const b of batches) assert.ok(compactStudy(study, "scan", { recordIds: b, batch: { index: 1, of: batches.length } }).length <= 32000);
 });

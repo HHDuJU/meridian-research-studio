@@ -26,6 +26,8 @@ export interface LiveOptions {
   contact?: string;
   /** Pause between dependent requests to the same host (NCBI asks for at most 3 requests per second). */
   pauseMs?: number;
+  /** Pause before the single retry after HTTP 429 or 5xx. */
+  retryPauseMs?: number;
   sleep?: (ms: number) => Promise<void>;
 }
 
@@ -43,6 +45,49 @@ function failedEvent(provider: string, query: string, status: "blocked" | "error
   return { id: uid("ret"), at: nowIso(), provider, query, resultCount: null, recordIds: [], status, performedBy: "app", note };
 }
 
+/*
+ * Query checks and per-source shaping. Databases need key terms or Boolean groups; a sentence sent
+ * verbatim returns nothing (PubMed and OpenAlex require every word) or noise (a stray "or" in a
+ * sentence becomes a top-level OR in PubMed), and ClinicalTrials.gov rejects long punctuated text.
+ * Found in the first live run on 2026-09-22: three model-written sentence queries gave 0, 0 and
+ * 358,453 PubMed hits.
+ */
+export function queryProblem(query: string): string | null {
+  const q = (query ?? "").trim();
+  if (!q) return "empty query";
+  if (q.length > 300) return `the query is ${q.length} characters; use at most 300 (key terms or Boolean groups)`;
+  const hasOperators = /\b(?:AND|OR|NOT)\b/.test(q);
+  const words = q.replace(/[()"]/g, " ").split(/\s+/).filter((w) => w && !/^(?:AND|OR|NOT)$/.test(w));
+  if (/[;:]\s/.test(q) || /[.?!]$/.test(q) || (!hasOperators && words.length > 10)) {
+    return "the query reads like a sentence; databases need 2 to 4 key terms or Boolean groups, e.g. (ketamine) AND (\"neuropathic pain\") AND (infusion)";
+  }
+  return null;
+}
+
+/** PubMed takes the query as written; OpenAlex and ClinicalTrials.gov get it without PubMed field tags or wildcards. */
+export function providerQuery(provider: LiveProvider, query: string): string {
+  const q = (query ?? "").trim();
+  if (provider === "pubmed") return q;
+  return q
+    .replace(/\[[^\]]*\]/g, " ")
+    .replace(/\*/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** One retry after a pause for rate limits and server errors; other failures are returned as they are. */
+function retrying(transport: Transport, sleep: (ms: number) => Promise<void>, pauseMs: number): Transport {
+  return async (req) => {
+    const first = await transport(req);
+    if (first.status !== 429 && !(first.status >= 500 && first.status <= 504)) return first;
+    await sleep(pauseMs);
+    const second = await transport(req);
+    return second.status >= 200 && second.status < 300
+      ? { ...second, note: `retried after HTTP ${first.status}` }
+      : { ...second, note: `HTTP ${first.status}, then HTTP ${second.status} on retry${second.note ? ` (${second.note})` : ""}` };
+  };
+}
+
 function transportFailure(status: number): "blocked" | "error" | null {
   if (status === 0 || status === 403 || status === 407 || status === 451) return "blocked";
   if (status < 200 || status >= 300) return "error";
@@ -50,9 +95,10 @@ function transportFailure(status: number): "blocked" | "error" | null {
 }
 
 /** PubMed: esearch for PMIDs, then efetch for whole records with abstracts. */
-export async function searchPubmedLive(query: string, transport: Transport, opts: LiveOptions = {}): Promise<LiveSearchResult> {
+export async function searchPubmedLive(query: string, rawTransport: Transport, opts: LiveOptions = {}): Promise<LiveSearchResult> {
   const max = Math.min(Math.max(opts.max ?? 20, 1), 100);
   const sleep = opts.sleep ?? defaultSleep;
+  const transport = retrying(rawTransport, sleep, opts.retryPauseMs ?? 2000);
   const searchReq = pubmedSearchRequest(query, max, "meridian", opts.contact);
   const requests = [searchReq.url];
   const sres = await transport(searchReq);
@@ -124,10 +170,12 @@ function adapterFor(provider: "openalex" | "clinicaltrials", opts: LiveOptions):
 }
 
 export async function searchLive(provider: LiveProvider, query: string, transport: Transport, opts: LiveOptions = {}): Promise<LiveSearchResult> {
-  const q = query.trim();
-  if (!q) return { event: failedEvent(provider, query, "error", "empty query; nothing searched"), items: [], documents: [], requests: [] };
+  const problem = queryProblem(query);
+  if (problem) return { event: failedEvent(provider, query, "error", `not searched: ${problem}`), items: [], documents: [], requests: [] };
+  const q = providerQuery(provider, query);
   if (provider === "pubmed") return searchPubmedLive(q, transport, opts);
-  const r = await runSearch(adapterFor(provider, opts), q, transport);
+  const sleep = opts.sleep ?? defaultSleep;
+  const r = await runSearch(adapterFor(provider, opts), q, retrying(transport, sleep, opts.retryPauseMs ?? 2000));
   const withAbstract = r.items.filter((i) => i.abstract?.text).length;
   const note = [r.event.note ?? "", r.items.length ? `${withAbstract} of ${r.items.length} records carry an abstract or registry summary` : ""].filter(Boolean).join("; ");
   return { event: { ...r.event, note: note || undefined }, items: r.items, documents: r.documents, requests: [r.request.url] };
@@ -139,11 +187,12 @@ export async function searchLive(provider: LiveProvider, query: string, transpor
  */
 export async function lookupDoisLive(
   dois: string[],
-  transport: Transport,
+  rawTransport: Transport,
   opts: LiveOptions = {},
 ): Promise<{ provider: CheckProvider; chunks: { requested: string[]; outcome: LookupOutcome }[]; requests: string[] }> {
   const requested = [...new Set(dois.map((d) => normalizeDoi(d)).filter((d): d is string => !!d))];
   const sleep = opts.sleep ?? defaultSleep;
+  const transport = retrying(rawTransport, sleep, opts.retryPauseMs ?? 2000);
   const requests: string[] = [];
   const chunks: { requested: string[]; outcome: LookupOutcome }[] = [];
   for (let i = 0; i < requested.length; i += 20) {

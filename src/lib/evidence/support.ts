@@ -28,6 +28,8 @@ export interface ClaimSupport {
   blocking: boolean;
   passageFound: boolean | null;
   missingNumbers: string[];
+  /** Fractions and ratios in words ("about three quarters", "one in five"): shown, not required verbatim. */
+  approximateFigures: string[];
   checkedSourceIds: string[];
   message: string;
 }
@@ -73,6 +75,32 @@ export function numberWordsToDigits(text: string): string {
     )
     .replace(new RegExp(`\\b(${tens})\\b`, "gi"), (_, t: string) => String(TENS[t.toLowerCase()]))
     .replace(new RegExp(`\\b(${units})\\b`, "gi"), (_, u: string) => String(UNITS[u.toLowerCase()]));
+}
+
+/*
+ * Fractions and ratios written in words ("three quarters", "two thirds", "half", "one in five") are
+ * approximations of a source figure, not numbers the source must contain verbatim: "about three
+ * quarters" for a reported 76 percent is faithful. They are listed as approximate figures and their
+ * digits are not required to occur in the source.
+ */
+const FRACTION_NOUN = "halves|half|thirds|third|quarters|quarter|fifths|fifth|sixths|sixth|tenths|tenth";
+const SMALL_WORD = "a|an|one|two|three|four|five|six|seven|eight|nine";
+const FRACTION_RE = new RegExp(
+  [
+    `\\b(?:${SMALL_WORD})[-\\s]+(?:${FRACTION_NOUN})\\b`,
+    `\\bhalf\\b`,
+    `\\b(?:${SMALL_WORD})\\s+(?:in|out of)\\s+(?:two|three|four|five|six|seven|eight|nine|ten|twenty|\\d{1,3})\\b`,
+    `\\b\\d{1,2}\\s+in\\s+\\d{1,3}\\b`,
+  ].join("|"),
+  "gi",
+);
+
+export function approximateFigures(text: string): string[] {
+  return [...new Set([...(text ?? "").matchAll(FRACTION_RE)].map((m) => m[0].toLowerCase().replace(/\s+/g, " ")))];
+}
+
+function withoutFractions(text: string): string {
+  return (text ?? "").replace(FRACTION_RE, " ");
 }
 
 /**
@@ -132,7 +160,7 @@ function tokenOverlap(passage: string, haystack: string): number {
 }
 
 export function claimSupport(claim: Claim, study: Pick<Study, "scan" | "documents">): ClaimSupport {
-  const base = { claimId: claim.id, missingNumbers: [] as string[], checkedSourceIds: [] as string[] };
+  const base = { claimId: claim.id, missingNumbers: [] as string[], approximateFigures: [] as string[], checkedSourceIds: [] as string[] };
   if (claim.kind !== "source-derived") {
     return { ...base, status: "not-source-derived", blocking: false, passageFound: null, message: `${claim.kind} claims are not checked against source text` };
   }
@@ -172,7 +200,8 @@ export function claimSupport(claim: Claim, study: Pick<Study, "scan" | "document
   const available = new Set(extractNumbers(texts.join("\n")));
   const years = new Set(sources.map((s) => (s.year === null ? "" : String(s.year))).filter(Boolean));
   // 0 and 1 are skipped: "one of", "a single" and ordinal uses make them unreliable as stated results.
-  const missingNumbers = extractNumbers(claim.text).filter(
+  const approx = approximateFigures(claim.text);
+  const missingNumbers = extractNumbers(withoutFractions(claim.text)).filter(
     (n) => n !== "0" && n !== "1" && !available.has(n) && !years.has(n) && !(n === String(sources.length)),
   );
   if (missingNumbers.length && status !== "passage-not-found") status = "numbers-not-in-source";
@@ -186,7 +215,8 @@ export function claimSupport(claim: Claim, study: Pick<Study, "scan" | "document
           : status === "passage-not-found"
             ? "the quoted passage does not occur in the stored text of the cited record(s)"
             : `number(s) ${missingNumbers.join(", ")} do not occur in the cited record's stored text`;
-  return { ...base, status, blocking: BLOCKING.has(status), passageFound, missingNumbers, checkedSourceIds, message };
+  const note = approx.length ? `; approximate figure(s) in words, compare with the source: ${approx.join(", ")}` : "";
+  return { ...base, status, blocking: BLOCKING.has(status), passageFound, missingNumbers, approximateFigures: approx, checkedSourceIds, message: message + note };
 }
 
 export function supportByClaim(study: Pick<Study, "scan" | "documents">): Map<string, ClaimSupport> {
@@ -224,15 +254,42 @@ export interface Grounding {
   reason: string;
 }
 
+/*
+ * A sentence of the investigator's that says something is not in place ("has not been requested",
+ * "decision pending", "submitted on 2026-09-01") cannot ground a claim that it is in place, even
+ * though it contains the same record number or words. Anchors count only from other sentences.
+ */
+const NOT_IN_PLACE =
+  /\b(?:not|no|never|none|without|pending|awaiting|undecided|unknown|unclear|unresolved|declined|refused|rejected|denied|withdrawn|expired|lapsed|suspended|submitted|requested|yet to|under review|in review|to be (?:decided|confirmed|determined|requested))\b|n't\b/i;
+
+export function investigatorSentences(investigator: string): { text: string; notInPlace: boolean }[] {
+  return (investigator ?? "")
+    .split(/\n+|(?<=[.;!?])\s+(?=[A-Z0-9"(])/)
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .map((text) => ({ text, notInPlace: NOT_IN_PLACE.test(text) }));
+}
+
 export function groundedInInvestigatorText(statement: string, investigator: string): Grounding {
-  const hay = normalizeForMatch(investigator);
+  const sentences = investigatorSentences(investigator);
+  const positive = sentences.filter((x) => !x.notInPlace).map((x) => x.text).join("\n");
+  const negative = sentences.filter((x) => x.notInPlace);
+  const hay = normalizeForMatch(positive);
   const ids = identifierTokens(statement);
   const missingIds = ids.filter((id) => !hay.includes(normalizeForMatch(id)));
   if (missingIds.length) {
-    return { grounded: false, foundAnchors: [], missingAnchors: missingIds, reason: `cites ${missingIds.join(", ")}, which the investigator never supplied` };
+    const contradicting = negative.find((x) => missingIds.some((id) => normalizeForMatch(x.text).includes(normalizeForMatch(id))));
+    return {
+      grounded: false,
+      foundAnchors: [],
+      missingAnchors: missingIds,
+      reason: contradicting
+        ? `cites ${missingIds.join(", ")}, but the investigator's own words say it is not in place: "${contradicting.text.slice(0, 160)}"`
+        : `cites ${missingIds.join(", ")}, which the investigator never supplied`,
+    };
   }
   const nums = extractNumbers(statement).filter((n) => n.replace(".", "").length >= 2);
-  const haveNums = new Set(extractNumbers(investigator));
+  const haveNums = new Set(extractNumbers(positive));
   const foundNums = nums.filter((n) => haveNums.has(n));
   const missingNums = nums.filter((n) => !haveNums.has(n));
   const foundIds = ids;
