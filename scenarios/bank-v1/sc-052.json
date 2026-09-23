@@ -1,6 +1,6 @@
 {
   "id": "sc-052",
-  "version": 1,
+  "version": 2,
   "title": "Day surgery: antiemetic prophylaxis adherence and rescue treatment, case-control study, one model field explicitly cleared",
   "field": "anesthesia",
   "level": 2,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary path with two level-2 ambiguities. The investigator types no constraints at creation; the problem reply omits the investigator-owned constraints field (omitKeys) instead of inventing one, and the investigator then adds the missing constraint on the Problem screen (set-field problem.constraints), which changes the stored text (G11: investigator edits apply) and flags nothing because only the Problem stage is complete (G8). Routing is explicit case-control ('We want to do a case-control study'; the need avoids the other design words). A fixture search returns six records; the appraisal records four claims; the decision rests on c1 to c3 with the ethics gate unknown (accepted, blocked). The protocol reply sends theoreticalFramework null on purpose: an explicit null on a model-owned statement clears it to '' with issue 'cleared' and never becomes a default framework; a reload on the Protocol route checks that it stays empty. The case-control choice is justified by hand-reading of paper drug records within 60 hours (about 182 cases and 364 controls). Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 2, 4, 6 (ev-0nlfv7w, ev-0oyehwd, ev-05117f0, ev-048uene); titleYearKey hash for records 3, 5 (ev-0jp5bzf, ev-0rcchpg). Requires S13 (appraisal), S11 (selectionStatus, actionStatus, basis) and D5 (status text); the null clearing and the investigator edit hold at 875fe59. Catches: a model that fills an empty investigator field, an explicit null replaced by a default, an investigator edit lost on reload, and an export that differs from the store.",
   "inputs": {
@@ -783,13 +784,35 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1290,5 +1313,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-052.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

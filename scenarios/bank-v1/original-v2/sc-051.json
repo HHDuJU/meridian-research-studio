@@ -1,0 +1,1480 @@
+{
+  "id": "sc-051",
+  "version": 2,
+  "title": "Emergency department triage lactate for suspected sepsis: umbrella review, diagnostic outcome roles, stale audit reply refused",
+  "field": "emergency-medicine",
+  "level": 5,
+  "family": "umbrella-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D27",
+    "S11",
+    "S13"
+  ],
+  "notes": "Expert path on an umbrella review with diagnostic content (routing explicit umbrella-review from 'We want to do an umbrella review'; the need avoids every other design phrase, including the review types it summarises). A fixture search returns eight records (pooled accuracy and prognosis reviews, a method-comparison review, a pathway review, an overlap assessment, a confidence appraisal and a consensus statement); the appraisal records five claims; the decision rests on c1 to c4 with both gates met, so acceptance is accepted and ready. Unusual outcome roles: the primary outcome is false reassurance (one minus negative predictive value) rather than sensitivity, accuracy is secondary, false alarms (one minus positive predictive value, the cost to other patients) are a balancing outcome, and overlap and review confidence are process measures. Late audit reply: the investigator clicks Illuminate on the Audit stage and, while the reply is pending, types a note into the audit notes (set-field audit.improvementNotes). Because the format has no field for request timing, the pending request is encoded as the illuminate step right after the set-field, and both notes say the runner dispatches it before the edit and delivers the reply after. That reply must be refused (G6): the investigator's note is kept, no open fixes are stored, the stage stays incomplete, the refusal is shown and logged. Audit call 2, requested after the edit, omits improvementNotes on purpose (omitKeys) and is applied. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 2, 4, 5, 8 (ev-01no1dk, ev-1f5c1ne, ev-0wrwf2k, ev-0ntlpuk, ev-0kpbi4i); titleYearKey hash for records 3, 6, 7 (ev-160sxwi, ev-1bule19, ev-1qzl6sm). Requires D27 (substantive audit content in studyRevision, so an audit-notes edit stales a pending reply; with L1.6 and L1.2 from sheet A3 in place), S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a stale audit reply that overwrites the investigator's note or completes the stage, outcome roles collapsed into sensitivity alone, and overlapping reviews counted twice.",
+  "inputs": {
+    "need": "I am the nursing lead for an emergency department with about 72,000 adult attendances a year, and I chair our sepsis group. Our triage nurses can measure capillary lactate with a point-of-care meter, but practice varies: some nurses test every adult with a fever, others only when the patient looks unwell, and a raised lactate at triage fast-tracks the patient to the resuscitation area. The medical director wants a rule for which adults with suspected sepsis should have lactate measured at triage, and what to do with the result. Many reviews of lactate in sepsis have been published, but they disagree: some pool any lactate measurement in the emergency department, some look only at point-of-care meters, some use in-hospital death as the outcome and others a diagnosis of sepsis, and their conclusions point in different directions. I do not have time to read thirty primary studies.\n\nWe want to do an umbrella review of the existing reviews on point-of-care lactate for adults with suspected sepsis at emergency department triage: how well a raised or normal lactate identifies patients who have sepsis with organ dysfunction or who die, how much the reviews overlap, how trustworthy they are, and whether the evidence is strong enough to support a triage rule. I am particularly worried about false reassurance, meaning patients with a normal lactate who turn out to be seriously unwell, and about false alarms that send stable patients to resuscitation and delay care for others.\n\nA librarian will run the search and a clinical fellow can give eight hours a week. We need the answer before the sepsis pathway is revised next May. I need help with the question, the outcomes that matter for a triage decision, how to handle overlapping reviews, and how to rate confidence in the reviews' conclusions.",
+    "constraints": "A librarian for the search and a clinical fellow for eight hours a week; no funding for translation. The answer is needed before the sepsis pathway revision in May 2027. Only published reviews and their included-study tables are used; no individual patient data.",
+    "localFacts": [
+      "The emergency department had about 72,000 adult attendances last year; triage nurses recorded suspected sepsis for about 4,100 of them.",
+      "Point-of-care capillary lactate meters are available at both triage bays; the department's sepsis pathway is due for revision in May 2027.",
+      "The hospital librarian agreed to design and run the search strategies (library request LIB-2026-311).",
+      "The hospital research office confirmed on 2026-09-11 that a review of published literature needs no ethics review (reference RO-2026-0907)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the nursing lead for an emergency department with about 72,000 adult attendances a year, and I chair our sepsis group. Our triage nurses can measure capillary lactate with a point-of-care meter, but practice varies: some nurses test every adult with a fever, others only when the patient looks unwell, and a raised lactate at triage fast-tracks the patient to the resuscitation area. The medical director wants a rule for which adults with suspected sepsis should have lactate measured at triage, and what to do with the result. Many reviews of lactate in sepsis have been published, but they disagree: some pool any lactate measurement in the emergency department, some look only at point-of-care meters, some use in-hospital death as the outcome and others a diagnosis of sepsis, and their conclusions point in different directions. I do not have time to read thirty primary studies.\n\nWe want to do an umbrella review of the existing reviews on point-of-care lactate for adults with suspected sepsis at emergency department triage: how well a raised or normal lactate identifies patients who have sepsis with organ dysfunction or who die, how much the reviews overlap, how trustworthy they are, and whether the evidence is strong enough to support a triage rule. I am particularly worried about false reassurance, meaning patients with a normal lactate who turn out to be seriously unwell, and about false alarms that send stable patients to resuscitation and delay care for others.\n\nA librarian will run the search and a clinical fellow can give eight hours a week. We need the answer before the sepsis pathway is revised next May. I need help with the question, the outcomes that matter for a triage decision, how to handle overlapping reviews, and how to rate confidence in the reviews' conclusions.",
+          "family": "umbrella-review",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the nursing lead for an emergency department"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Point-of-care lactate at emergency department triage for adults with suspected sepsis: an umbrella review",
+        "subtitle": "Reviews of reviews with triage-relevant accuracy outcomes, overlap correction and confidence ratings",
+        "family": "umbrella-review",
+        "statement": "Triage nurses in a department with about 4,100 adults with suspected sepsis a year use point-of-care lactate inconsistently, and a raised value fast-tracks patients to resuscitation. Published reviews disagree because they pool different measurements, thresholds and outcomes and share many primary studies. The department needs to know, before the May 2027 pathway revision, how well lactate at triage identifies sepsis with organ dysfunction or death, how often a normal value falsely reassures and a raised value falsely alarms, and how much confidence the reviews deserve.",
+        "whoAffected": "Adults presenting with suspected sepsis, especially older patients and those on beta blockers; other patients whose care is delayed by false alarms; triage nurses and the resuscitation team.",
+        "whatHurts": "False reassurance delays antibiotics for patients with sepsis; false alarms fill the resuscitation area and delay care for others; inconsistent testing makes both invisible.",
+        "currentPractice": "Lactate measured at the triage nurse's discretion with a capillary meter; a raised value fast-tracks to resuscitation; no written rule for a normal value.",
+        "whyNow": "The sepsis pathway is revised in May 2027 and the medical director wants a triage rule grounded in the best available syntheses.",
+        "constraints": "A librarian for the search and a clinical fellow for eight hours a week; no funding for translation. The answer is needed before the sepsis pathway revision in May 2027. Only published reviews and their included-study tables are used; no individual patient data.",
+        "patientCenteredGoal": "Adults with sepsis are recognised and treated quickly at triage, without a normal lactate lowering their priority and without false alarms delaying care for others.",
+        "summary": "Problem framed as an umbrella review of diagnostic and prognostic reviews, judged by outcomes that matter for a triage decision."
+      },
+      "expect": {
+        "store": {
+          "title": "Point-of-care lactate at emergency department triage for adults with suspected sepsis: an umbrella review",
+          "family": "umbrella-review",
+          "problem.constraints": "A librarian for the search and a clinical fellow for eight hours a week; no funding for translation. The answer is needed before the sepsis pathway revision in May 2027. Only published reviews and their included-study tables are used; no individual patient data.",
+          "problem.statement": {
+            "includes": "falsely reassures"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Point-of-care lactate at emergency department triage for adults with suspected sepsis: an umbrella review"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "point-of-care lactate emergency department triage suspected sepsis review accuracy mortality overlap",
+      "response": {
+        "status": 200,
+        "total": 8,
+        "records": [
+          {
+            "title": "Point-of-care lactate for identifying sepsis with organ dysfunction at emergency department triage: a pooled analysis of accuracy studies",
+            "authors": "Adeyemi-Lund S, Kowalczyk-Obi R, Tanaka-Brennan M",
+            "year": 2021,
+            "venue": "Rookhurst Emergency Care Reviews",
+            "doi": "10.5555/recr.2021.0077",
+            "providerType": "journal-article",
+            "abstract": "We pooled accuracy studies of point-of-care lactate measured at emergency department triage in adults with suspected infection. At a threshold of 2 mmol/L, pooled sensitivity for sepsis with organ dysfunction was 0.65 and pooled specificity was 0.72 across 14 studies. At 4 mmol/L, sensitivity fell to 0.31 and specificity rose to 0.94. Heterogeneity was substantial, and studies that tested only patients who looked unwell reported higher sensitivity. Most studies defined sepsis from the hospital record without blinding to the lactate result. Point-of-care lactate alone misses a large share of patients with sepsis and should not be used to rule it out."
+          },
+          {
+            "title": "Lactate and in-hospital mortality among adults with suspected infection in the emergency department: a review of observational studies",
+            "authors": "Mensah-Harlow D, Lindqvist-Oduya P",
+            "year": 2019,
+            "venue": "Vellmar Critical Care Syntheses",
+            "doi": "10.5555/vccs.2019.0233",
+            "providerType": "journal-article",
+            "abstract": "We reviewed observational studies of adults with suspected infection in emergency departments that reported in-hospital mortality by initial lactate. In 22 studies, a lactate of 4 mmol/L or more was associated with higher in-hospital mortality than a lactate below 2 mmol/L, with unadjusted odds ratios between 2.1 and 6.8. Venous, arterial and capillary measurements were combined, and few studies measured lactate at triage rather than after medical assessment. Mortality among patients with lactate below 2 mmol/L was not negligible in the larger studies. The review supports lactate as a marker of risk but not as a triage rule on its own."
+          },
+          {
+            "title": "Agreement between capillary and venous lactate in adults: a review of method comparison studies",
+            "authors": "Rutherford-Ansah K, Varga-Solberg L",
+            "year": 2020,
+            "venue": "Harthill Laboratory Medicine Letters",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 11 method comparison studies of capillary point-of-care and venous laboratory lactate in adults. Mean bias was small, with capillary values about 0.3 mmol/L higher, but the limits of agreement widened at higher values and in patients with poor peripheral perfusion. Agreement was worse when the finger was cold or when the first drop of blood was used. Most studies were small and recruited convenience samples in the emergency department. The authors conclude that capillary lactate is adequate for triage decisions near 2 mmol/L if the sampling technique is standardised, and less reliable at high values."
+          },
+          {
+            "title": "Triage lactate within sepsis pathways and time to antibiotics: a review of before-after pathway studies",
+            "authors": "Olawale-Fischer J, Castellanos-Kim H, Duarte-Mbeki A",
+            "year": 2023,
+            "venue": "Rookhurst Emergency Care Reviews",
+            "doi": "10.5555/recr.2023.0141",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 17 before-after studies of emergency department sepsis pathways that included lactate at triage. Pathways using triage lactate reduced median time to antibiotics by 38 minutes, with no clear effect on mortality. Several studies reported more patients moved to resuscitation areas and longer waits for other patients, but none measured the effect on patients who were not suspected of sepsis. Pathways changed several things at once, so the contribution of lactate itself could not be separated. Most studies had high risk of bias from secular trends and changing definitions of sepsis."
+          },
+          {
+            "title": "Normal lactate and false reassurance in suspected sepsis: a pooled analysis of negative predictive value",
+            "authors": "Petrov-Achebe N, Holmberg-Rao S",
+            "year": 2024,
+            "venue": "Vellmar Critical Care Syntheses",
+            "doi": "10.5555/vccs.2024.0019",
+            "providerType": "journal-article",
+            "abstract": "We pooled data from studies that reported outcomes for adults with suspected sepsis whose first lactate in the emergency department was normal. Among patients with a lactate below 2 mmol/L, 9 percent had sepsis with organ dysfunction and 3 percent died in hospital. False reassurance was more common among older patients and among patients taking beta blockers. The negative predictive value depended strongly on the prevalence of sepsis in each study population. We conclude that a normal lactate should not lower the priority of a patient who meets other sepsis criteria."
+          },
+          {
+            "title": "Overlap of primary studies in reviews of lactate for sepsis: a methodological assessment",
+            "authors": "Nakamura-Ellis G, Fernandes-Ayo T",
+            "year": 2025,
+            "venue": "Harthill Evidence Synthesis Methods",
+            "providerType": "journal-article",
+            "abstract": "We identified 19 reviews of lactate for the diagnosis or prognosis of sepsis and built a citation matrix of their included primary studies. The corrected covered area was 18 percent, indicating very high overlap, and five primary studies appeared in more than ten reviews. Reviews that reached opposite conclusions often shared most of their primary studies but differed in outcome definitions and thresholds. Few reviews reported which lactate sample type was used. We recommend that umbrella reviews of this topic present a citation matrix and avoid counting the same primary evidence more than once."
+          },
+          {
+            "title": "Confidence in reviews of sepsis biomarkers: an appraisal with a standard critical appraisal checklist",
+            "authors": "Brandt-Nwosu E, Silva-Hartmann O",
+            "year": 2017,
+            "venue": "Harthill Evidence Synthesis Methods",
+            "providerType": "journal-article",
+            "abstract": "We appraised 34 reviews of sepsis biomarkers, including lactate, procalcitonin and white cell count, with a standard critical appraisal checklist for reviews. Most reviews of sepsis biomarkers were rated at critically low confidence, mainly because they lacked a registered protocol, did not assess risk of bias in included studies or did not account for it in their conclusions. Reviews of lactate were no better than reviews of other biomarkers. Only three reviews were rated at high confidence. The appraisal predates several recent reviews, and one appraiser rated each review with checking of a sample."
+          },
+          {
+            "title": "Regional consensus statement on early recognition of sepsis in adult emergency departments",
+            "authors": "Regional Emergency Care Network sepsis working group",
+            "year": 2022,
+            "venue": "Regional Emergency Care Network statements",
+            "doi": "10.5555/recn.2022.0005",
+            "providerType": "journal-article",
+            "abstract": "A working group of emergency physicians, nurses and microbiologists reviewed published evidence and agreed recommendations for early recognition of sepsis in adult emergency departments. The statement recommends measuring lactate in adults with suspected infection who meet at least one physiological criterion, and treating a lactate of 4 mmol/L or more as a trigger for immediate senior review. It does not recommend using a normal lactate to lower priority. The group acknowledged that the evidence for lactate at triage came mainly from reviews of low confidence and that the recommendations were based partly on consensus."
+          }
+        ]
+      },
+      "note": "Eight records (reviews, a methods assessment and a consensus statement), with abstracts; ids are stableRecordId values computed by the generator (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 8,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-01no1dk",
+            "ev-1f5c1ne",
+            "ev-160sxwi",
+            "ev-0wrwf2k",
+            "ev-0ntlpuk",
+            "ev-1bule19",
+            "ev-1qzl6sm",
+            "ev-0kpbi4i"
+          ],
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[0].id": "ev-01no1dk",
+          "scan.items[5].id": "ev-1bule19",
+          "scan.items[5].doi": {
+            "absent": true
+          },
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Overlap of primary studies in reviews of lactate for sepsis: a methodological assessment"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-01no1dk",
+            "relevance": 95,
+            "methodQuality": 55,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "At 2 mmol/L, pooled sensitivity 0.65 and specificity 0.72 for sepsis with organ dysfunction across 14 studies; at 4 mmol/L, 0.31 and 0.94.",
+            "limitations": "Substantial heterogeneity; unblinded reference diagnoses; spectrum bias where only unwell-looking patients were tested.",
+            "contextTags": [
+              "accuracy",
+              "triage",
+              "thresholds"
+            ],
+            "notes": "The review closest to the triage question."
+          },
+          {
+            "id": "ev-1f5c1ne",
+            "relevance": 80,
+            "methodQuality": 50,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Lactate of 4 mmol/L or more associated with higher in-hospital mortality (unadjusted odds ratios 2.1 to 6.8 across 22 studies).",
+            "limitations": "Mixed sample types; few triage measurements; unadjusted estimates.",
+            "contextTags": [
+              "prognosis",
+              "mortality"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-160sxwi",
+            "relevance": 70,
+            "methodQuality": 52,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Capillary values about 0.3 mmol/L higher than venous, with wider limits at high values and poor perfusion.",
+            "limitations": "Small convenience samples.",
+            "contextTags": [
+              "sample type",
+              "measurement"
+            ],
+            "notes": "Relevant to whether capillary triage values can be read against thresholds from venous studies."
+          },
+          {
+            "id": "ev-0wrwf2k",
+            "relevance": 76,
+            "methodQuality": 45,
+            "kind": "systematic-review",
+            "grade": "very-low",
+            "keyFindings": "Pathways with triage lactate reduced median time to antibiotics by 38 minutes, with no clear effect on mortality; more patients moved to resuscitation.",
+            "limitations": "Before-after studies with multiple simultaneous changes.",
+            "contextTags": [
+              "pathways",
+              "time to antibiotics",
+              "crowding"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0ntlpuk",
+            "relevance": 92,
+            "methodQuality": 58,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Among patients with lactate below 2 mmol/L, 9 percent had sepsis with organ dysfunction and 3 percent died; false reassurance more common in older patients and those on beta blockers.",
+            "limitations": "Negative predictive value depends on prevalence in each study.",
+            "contextTags": [
+              "false reassurance",
+              "negative predictive value"
+            ],
+            "notes": "Directly addresses the investigator's main worry."
+          },
+          {
+            "id": "ev-1bule19",
+            "relevance": 85,
+            "methodQuality": 65,
+            "kind": "expert",
+            "grade": "moderate",
+            "keyFindings": "Corrected covered area 18 percent across 19 reviews; five primary studies appeared in more than ten reviews; opposite conclusions often shared primary studies.",
+            "limitations": "Citation matrix built from reported reference lists.",
+            "contextTags": [
+              "overlap",
+              "citation matrix",
+              "methods"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1qzl6sm",
+            "relevance": 78,
+            "methodQuality": 60,
+            "kind": "expert",
+            "grade": "low",
+            "keyFindings": "Most of 34 biomarker reviews were rated at critically low confidence; only three at high confidence.",
+            "limitations": "Predates recent reviews; single appraiser with sample checking.",
+            "contextTags": [
+              "confidence",
+              "critical appraisal"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0kpbi4i",
+            "relevance": 68,
+            "methodQuality": 40,
+            "kind": "guideline",
+            "grade": "very-low",
+            "keyFindings": "Recommends lactate for adults with suspected infection meeting a physiological criterion, treats 4 mmol/L or more as a senior-review trigger, and advises against lowering priority on a normal value.",
+            "limitations": "Partly consensus-based on reviews of low confidence.",
+            "contextTags": [
+              "guideline",
+              "regional standard"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "At a threshold of 2 mmol/L, pooled sensitivity of point-of-care lactate for sepsis with organ dysfunction was 0.65 and pooled specificity 0.72 across 14 studies.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-01no1dk"
+            ],
+            "location": "Abstract, results",
+            "passage": "At a threshold of 2 mmol/L, pooled sensitivity for sepsis with organ dysfunction was 0.65 and pooled specificity was 0.72 across 14 studies.",
+            "interpretation": "Lactate alone misses about a third of patients with sepsis with organ dysfunction; not a rule-out test.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Among patients with a lactate below 2 mmol/L, 9 percent had sepsis with organ dysfunction.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0ntlpuk"
+            ],
+            "location": "Abstract, results",
+            "passage": "Among patients with a lactate below 2 mmol/L, 9 percent had sepsis with organ dysfunction",
+            "interpretation": "False reassurance is common enough to forbid lowering priority on a normal value.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "The corrected covered area across reviews of lactate for sepsis was 18 percent, indicating very high overlap.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1bule19"
+            ],
+            "location": "Abstract",
+            "passage": "The corrected covered area was 18 percent, indicating very high overlap",
+            "interpretation": "The umbrella review must present a citation matrix and avoid double counting.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c4",
+            "text": "Most reviews of sepsis biomarkers were rated at critically low confidence.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1qzl6sm"
+            ],
+            "location": "Abstract",
+            "passage": "Most reviews of sepsis biomarkers were rated at critically low confidence",
+            "interpretation": "Confidence in each included review must be rated and carried into conclusions.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Pathways using triage lactate reduced median time to antibiotics by 38 minutes, with no clear effect on mortality.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0wrwf2k"
+            ],
+            "location": "Abstract",
+            "passage": "Pathways using triage lactate reduced median time to antibiotics by 38 minutes, with no clear effect on mortality.",
+            "interpretation": "Process benefit without shown outcome benefit; false alarms are the likely cost.",
+            "uncertainty": "high"
+          }
+        ],
+        "synthesis": "Eight retrieved records, appraised at abstract level. The syntheses agree that a raised lactate marks higher risk, but a pooled accuracy review shows that a threshold of 2 mmol/L misses about a third of patients with sepsis with organ dysfunction, and a pooled analysis finds that about one in eleven patients with a normal lactate has such sepsis. Reviews overlap heavily in their primary studies and are mostly of critically low confidence, which explains much of their disagreement. Pathway studies show faster antibiotics but no clear mortality benefit and hint at crowding costs. The evidence supports an umbrella review that corrects for overlap, rates confidence and reports false reassurance and false alarms as the outcomes that matter for a triage rule.",
+        "gradeOverall": "low",
+        "gradeRationale": "Reviews of mostly unblinded, heterogeneous accuracy studies with heavy overlap and low confidence; consistent direction on risk, serious inconsistency on thresholds.",
+        "summary": "Eight records appraised; five claims; certainty low."
+      },
+      "note": "Appraisal over eight retrieved records (S13); certainty over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[5].grade": "moderate",
+          "scan.items[7].kind": "guideline",
+          "scan.items[4].keyFindings": {
+            "includes": "9 percent"
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-01no1dk"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-0ntlpuk"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-1bule19"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-1qzl6sm"
+          ],
+          "scan.claims[4].uncertainty": "high",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "emergency department, about 72,000 adult attendances a year",
+          "about 4,100 adults with suspected sepsis a year",
+          "capillary lactate meters at triage",
+          "pathway revision in May 2027"
+        ],
+        "reading": "The triage decision turns on two errors: a normal lactate in a patient who has sepsis (false reassurance, c2) and a raised lactate in a patient who does not (false alarm, which fills the resuscitation area; c5 hints at this). Accuracy depends on the threshold and on who is tested (c1), and capillary values drift from venous ones at high levels. The reviews that should settle this share their primary studies (c3) and mostly deserve low confidence (c4), so their disagreement is largely about definitions, not new evidence. A regional statement already forbids lowering priority on a normal value.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Point-of-care lactate at triage",
+            "kind": "context",
+            "detail": "Capillary meter; discretionary use."
+          },
+          {
+            "id": "n2",
+            "label": "False reassurance",
+            "kind": "outcome",
+            "detail": "About 9 percent of patients with lactate below 2 mmol/L had sepsis with organ dysfunction (c2)."
+          },
+          {
+            "id": "n3",
+            "label": "False alarm",
+            "kind": "outcome",
+            "detail": "Raised lactate without sepsis; cost to other patients."
+          },
+          {
+            "id": "n4",
+            "label": "Pooled accuracy at 2 mmol/L",
+            "kind": "systematic-review",
+            "detail": "Sensitivity 0.65, specificity 0.72 (c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Overlap of primary studies",
+            "kind": "gap",
+            "detail": "Corrected covered area 18 percent (c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Low confidence in reviews",
+            "kind": "gap",
+            "detail": "Most critically low (c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Triage nurses and resuscitation team",
+            "kind": "stakeholder",
+            "detail": "Act on the rule."
+          },
+          {
+            "id": "n8",
+            "label": "Regional consensus statement",
+            "kind": "guideline",
+            "detail": "Lactate for suspected infection plus a physiological criterion."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "can cause"
+          },
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "can cause"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "quantifies"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "inflates apparent agreement with"
+          },
+          {
+            "from": "n6",
+            "to": "n8",
+            "relation": "weakens the basis of"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "decide on"
+          }
+        ],
+        "summary": "Map of the two triage errors, the evidence that quantifies them and the overlap and confidence problems behind the disagreement."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "map.nodes[3].kind": "systematic-review",
+          "map.nodes[7].kind": "guideline",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "False alarms are not measured by any review",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "A triage rule sends patients with raised lactate to resuscitation; pathway studies hint at crowding but none measured harm to other patients.",
+            "opportunity": "Derive the false-alarm proportion from reported accuracy at local prevalence and report it as a balancing outcome."
+          },
+          {
+            "id": "g2",
+            "title": "Overlap makes reviews look more consistent than the evidence is",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "With a corrected covered area of 18 percent (c3), counting reviews would count the same studies again.",
+            "opportunity": "Build a citation matrix and report each primary study once."
+          },
+          {
+            "id": "g3",
+            "title": "Older patients and people on beta blockers are falsely reassured more often",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "A normal lactate misleads more often in these groups (retrieved pooled analysis).",
+            "opportunity": "Extract subgroup findings by age and medication from each review."
+          },
+          {
+            "id": "g4",
+            "title": "Capillary values are read against venous thresholds",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Capillary lactate runs slightly higher and diverges at high values.",
+            "opportunity": "Record sample type for each review and flag thresholds derived from venous or arterial samples."
+          },
+          {
+            "id": "g5",
+            "title": "Confidence in the reviews is mostly critically low",
+            "kind": "evidence",
+            "severity": "watch",
+            "whyItMatters": "Conclusions resting on low-confidence reviews should not drive a firm rule (c4).",
+            "opportunity": "Rate each review and carry the rating into every conclusion."
+          }
+        ],
+        "errorsFound": [
+          "The need treats 'sepsis' and 'death' as interchangeable outcomes; reviews of accuracy for sepsis with organ dysfunction and reviews of mortality answer different questions and must be synthesised separately."
+        ],
+        "reevaluation": "The gaps confirm an umbrella review with outcomes chosen for the triage decision, overlap correction and confidence ratings.",
+        "summary": "Five gaps; unmeasured false alarms and overlap are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].kind": "outcome",
+          "gaps.items[2].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "False alarms are not measured by any review"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Across reviews, after correcting for overlap, a normal point-of-care lactate at triage leaves at least one in twenty adults with suspected sepsis falsely reassured, so it cannot justify lowering priority.",
+            "novelty": 45,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 80,
+            "parsimony": 85,
+            "rationale": "The retrieved pooled figure (c2) exceeds this bound; the umbrella review tests whether it holds across non-overlapping evidence of adequate confidence.",
+            "risks": "Few reviews report negative predictive value directly."
+          },
+          {
+            "id": "h2",
+            "statement": "A threshold of 4 mmol/L gives few false alarms but misses most patients with sepsis, so no single threshold serves both escalation and reassurance.",
+            "novelty": 40,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Follows the threshold trade-off in the pooled accuracy review (c1 and its 4 mmol/L figures).",
+            "risks": "Threshold-specific data may be sparse."
+          },
+          {
+            "id": "h3",
+            "statement": "Reviews that reach opposite conclusions share most of their primary studies and differ mainly in outcome definitions.",
+            "novelty": 50,
+            "need": 60,
+            "practiceChange": 50,
+            "feasibility": 85,
+            "parsimony": 70,
+            "rationale": "Suggested by the overlap assessment (c3); explains the disagreement the investigator sees.",
+            "risks": "Depends on complete reference lists."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "h1 selected as the proposition most relevant to the triage rule."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among reviews of adults with suspected sepsis at emergency department triage, what do reviews of point-of-care lactate report about identifying sepsis with organ dysfunction and in-hospital death, how often does a normal value falsely reassure and a raised value falsely alarm, how much do the reviews overlap, and how much confidence do they deserve?",
+            "framework": "PICO",
+            "population": "Adults with suspected sepsis at emergency department triage, as studied in published reviews",
+            "intervention": "Point-of-care lactate at triage at thresholds of 2 and 4 mmol/L",
+            "comparator": "Diagnosis of sepsis with organ dysfunction, or in-hospital death, as defined by each review",
+            "outcome": "False reassurance, accuracy, false alarms, overlap and confidence",
+            "time": "Reviews published to the search date",
+            "setting": "Emergency department triage"
+          }
+        ],
+        "finer": "Feasible with a librarian and eight fellow hours a week before May 2027; interesting to the sepsis group; novel because no umbrella review corrects this overlap; ethical under RO-2026-0907; relevant because the pathway revision needs a rule.",
+        "summary": "One PICO question with triage-relevant outcomes."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "umbrella-review",
+        "rationale": "Many reviews exist and disagree, they share most of their primary studies (c3), and most deserve low confidence (c4), so another pooled analysis of primary studies would repeat their problems within the time available. An umbrella review with a citation matrix, confidence ratings for each review and outcomes chosen for the triage decision (false reassurance first, c2; accuracy at thresholds, c1; false alarms as the cost to other patients) answers the medical director's question. Reporting follows PRIOR.",
+        "alternatives": [
+          "New pooled analysis of primary accuracy studies (refused: duplicates the overlapping evidence and exceeds the fellow's time)",
+          "Local accuracy study at triage (refused for now: needs a reference diagnosis protocol and ethics review; may follow)",
+          "Adopt the regional consensus statement unchanged (refused: its basis is reviews of low confidence that the umbrella review will rate)"
+        ],
+        "guidelines": [
+          "PRIOR",
+          "Citation matrix with corrected covered area"
+        ],
+        "whyNotMoreComplex": "Re-analysing primary studies or collecting local data would be slower and would not remove the definitional disagreements the umbrella review can expose.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct an umbrella review of reviews of point-of-care lactate at emergency department triage for adults with suspected sepsis, reporting false reassurance as the primary outcome, accuracy at 2 and 4 mmol/L, and false alarms as a balancing outcome, with overlap correction and a confidence rating for each review, before the May 2027 pathway revision.",
+          "question": "Should the department base its triage lactate rule on an umbrella review of the existing reviews?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Reviews disagree, overlap heavily and are mostly of low confidence, and the triage-relevant errors can be derived from their reported accuracy.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A high-confidence umbrella review answering the triage question already exists.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Librarian support to design and run the searches",
+              "status": "met",
+              "evidence": "Library request LIB-2026-311, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Confirmation that a review of published literature needs no ethics review",
+              "status": "met",
+              "evidence": "Research office reference RO-2026-0907 dated 2026-09-11, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Adopt the regional consensus statement unchanged",
+            "Local accuracy study at triage later"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records and on two investigator-supplied confirmations."
+        },
+        "summary": "Umbrella review recommended; the decision rests on four ledger claims and both gates are met."
+      },
+      "note": "The decision rests on c1 to c4 (S13). selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "umbrella-review",
+          "family": "umbrella-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: c1 to c4 rest on retrieved records and both gates are met on investigator-supplied references; accepted and ready (G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "umbrella-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Umbrella review of published reviews of point-of-care lactate at emergency department triage in adults with suspected sepsis, with outcomes chosen for a triage decision, a citation matrix to handle overlap, and a confidence rating for each review; October 2026 to March 2027.",
+        "population": "Reviews (with a stated search and inclusion criteria) of adults with suspected sepsis or suspected infection in emergency departments that report lactate accuracy or outcomes by lactate; reviews limited to intensive care or children are excluded.",
+        "exposure": "Lactate measured at or near triage, point-of-care or laboratory, with sample type recorded; thresholds of 2 and 4 mmol/L extracted where reported.",
+        "procedures": "The librarian searches four databases and two registers of review protocols. Two reviewers (the clinical fellow and the investigator) screen titles, abstracts and full texts, extract review characteristics, outcomes, thresholds, sample types and included primary studies, and rate each review with a standard critical appraisal checklist. A citation matrix of primary studies gives the corrected covered area; where reviews overlap, the most recent review of adequate confidence is used for each outcome and threshold. Results are derived at the department's prevalence where reviews report sensitivity and specificity.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "False reassurance",
+            "measure": "Proportion of patients with lactate below the threshold who have sepsis with organ dysfunction (one minus negative predictive value), as reported or derived at local prevalence",
+            "timing": "At review extraction",
+            "why": "The error that would harm patients if a normal value lowered priority; the investigator's main concern.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Accuracy at 2 and 4 mmol/L",
+            "measure": "Sensitivity and specificity for sepsis with organ dysfunction and for in-hospital death, as pooled by each review, kept separate by outcome",
+            "timing": "At review extraction",
+            "why": "Shows the threshold trade-off behind any rule.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "False alarms",
+            "measure": "Proportion of patients with a raised lactate who do not have sepsis with organ dysfunction (one minus positive predictive value) at local prevalence, and reported effects on resuscitation-area use",
+            "timing": "At review extraction",
+            "why": "The cost of a triage rule to other patients through crowding and delay.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Overlap of primary studies",
+            "measure": "Corrected covered area from the citation matrix, overall and by outcome",
+            "timing": "After extraction",
+            "why": "Prevents counting the same evidence twice.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Confidence in each review",
+            "measure": "Rating from the critical appraisal checklist (high, moderate, low, critically low)",
+            "timing": "After extraction",
+            "why": "Conclusions must carry the confidence of the reviews they rest on.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Eight fellow hours a week over six months, the librarian's search under LIB-2026-311, and no translation budget; reviews in other languages are placed in the matrix from abstracts and tables where possible and listed.",
+        "biasMitigation": [
+          "Two independent reviewers for selection, extraction and confidence ratings",
+          "Citation matrix to prevent double counting",
+          "Outcomes for sepsis with organ dysfunction and for death kept separate",
+          "Sample type and threshold recorded for every estimate"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Overlapping reviews",
+            "severity": "high",
+            "note": "Handled by the citation matrix and one review per outcome and threshold."
+          },
+          {
+            "id": "b2",
+            "label": "Spectrum bias in primary studies",
+            "severity": "watch",
+            "note": "Studies that tested only unwell patients overstate sensitivity; recorded for each review."
+          },
+          {
+            "id": "b3",
+            "label": "Language restriction",
+            "severity": "watch",
+            "note": "No translation budget; reviews in other languages listed and placed where possible."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "False reassurance is primary; accuracy is secondary; false alarms are a balancing outcome, which is unusual for an accuracy question but matches the triage decision"
+          ],
+          "simplestPath": "One primary triage error, one accuracy table, one balancing error, a citation matrix and confidence ratings."
+        },
+        "theoreticalFramework": "None; GRADE-style reasoning is applied to the reviews' conclusions through the confidence ratings.",
+        "summary": "Umbrella review with false reassurance as the primary outcome, accuracy as secondary, false alarms as balancing, and overlap and confidence as process measures."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].name": "False reassurance",
+          "protocol.outcomes[2].role": "balancing",
+          "protocol.outcomes[2].name": "False alarms",
+          "protocol.outcomes[3].role": "process",
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Narrative and tabular synthesis of reviews, with derived predictive values at the department's prevalence and overlap correction; no new pooled analysis of primary studies.",
+        "sampleSize": "The unit of analysis is the review. The overlap assessment found 19 reviews on lactate for sepsis; about 8 to 12 are expected to meet the criteria. There is no power calculation. Precision is inherited from each review's intervals and shown with them. As an illustration of what the derivation will show: with a sensitivity of 0.65 and specificity of 0.72, and an assumed 20 percent of triage patients with suspected sepsis having sepsis with organ dysfunction, about 11 percent of patients with a normal lactate would be falsely reassured and about 63 percent of patients with a raised lactate would be false alarms; the local prevalence will be estimated from the department's records before the derivation is final.",
+        "primaryAnalysis": "For each outcome and threshold, the most recent review of adequate confidence with the least overlap is selected; false reassurance is taken as reported or derived from its sensitivity and specificity at local prevalence, with the review's interval carried through; results are tabulated with the review's confidence rating.",
+        "secondaryAnalysis": "Accuracy at 2 and 4 mmol/L for each outcome; false alarms at local prevalence; citation matrix with corrected covered area overall and by outcome; subgroup findings by age and beta blocker use where reviews report them.",
+        "missingData": "Where a review does not report the counts needed to derive predictive values, the outcome is reported as not derivable, never imputed from another review.",
+        "multiplicity": "No hypothesis testing; each estimate is reported with its interval and the confidence of its source review.",
+        "software": "Spreadsheet citation matrix and a script for predictive values at stated prevalence, archived with the extraction forms.",
+        "overfittingGuards": [
+          "Selection rule for overlapping reviews fixed before extraction",
+          "Local prevalence estimated before any predictive value is derived",
+          "Outcomes for sepsis and for death never pooled together"
+        ],
+        "summary": "Review-level synthesis with derived false reassurance and false alarms at local prevalence; illustration: about 11 and 63 percent at an assumed 20 percent prevalence."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 11 percent of patients with a normal lactate"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No direct risk to participants; the risk is a triage rule built on overstated or double-counted evidence that falsely reassures or crowds the resuscitation area.",
+        "consent": "Not applicable: published reviews only (RO-2026-0907).",
+        "data": "Extraction forms, the citation matrix and confidence ratings are kept on the department's shared drive and published with the report.",
+        "equity": "PROGRESS-Plus: older adults, people on beta blockers, and people with darker skin or poor peripheral perfusion (in whom capillary sampling may be harder) may be falsely reassured more often; findings by age, medication and sample type are extracted and reported, and the absence of such data is stated.",
+        "effectiveness": "The review is useful if it tells the sepsis group what a normal and a raised lactate can and cannot justify at triage.",
+        "efficiency": "Uses existing reviews rather than new primary data; fits the fellow's time.",
+        "costs": "Staff time within existing roles; no translation budget.",
+        "grants": "None needed.",
+        "partnerships": "The sepsis group, triage nurses, the resuscitation team lead, the librarian, and two patient partners who survived sepsis.",
+        "rebPath": "No ethics review needed for a review of published literature (research office reference RO-2026-0907, 2026-09-11); the protocol will be registered in a public register of review protocols before screening.",
+        "limitations": "Depends on the quality and reporting of the reviews; language restriction; predictive values depend on an estimated local prevalence.",
+        "summary": "No participant risk; equity reporting by age, medication and sample type; protocol registration before screening."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "RO-2026-0907"
+          },
+          "ethics.equity": {
+            "includes": "beta blockers"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners who survived sepsis and two triage nurses review the outcome definitions and the plain-language summary; the resuscitation team lead reviews the false-alarm outcome.",
+        "socialListening": "No social media listening; the department's complaints about delays in the last year are read for mentions of sepsis and triage.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Sent back to wait",
+            "quote": "Composite paraphrase: They told me my blood test was fine and I waited four hours; by the time a doctor saw me I could not stand.",
+            "implication": "False reassurance is the primary outcome.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "The meter decides",
+            "quote": "Composite paraphrase (triage nurse): If the number is high the patient goes through; if it is low I have to argue with myself.",
+            "implication": "The rule must say what a normal value does not justify.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Crowded resuscitation area",
+            "quote": "Composite paraphrase (resuscitation lead): Half the fast-tracked patients are well enough for a cubicle, and the next stroke waits in the corridor.",
+            "implication": "False alarms are a balancing outcome.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Older relatives",
+            "quote": "Composite paraphrase: My mother never runs a temperature and never looks as ill as she is.",
+            "implication": "Report findings for older adults separately.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on false reassurance, nurse judgement, crowding and older patients."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "clinician",
+          "voices.items[0].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Point-of-care lactate at emergency department triage for adults with suspected sepsis: an umbrella review of false reassurance, accuracy and false alarms",
+        "abstract": "Objective: to synthesise published reviews of point-of-care lactate at emergency department triage for adults with suspected sepsis, with false reassurance as the primary outcome. Methods: umbrella review with a citation matrix, confidence ratings for each review and predictive values derived at local prevalence. Results and conclusions will be written after extraction.",
+        "introduction": "Many reviews of lactate in sepsis disagree. They overlap heavily and most deserve low confidence, and none reports the two errors that matter at triage: false reassurance and false alarms.",
+        "methods": "Searches by a librarian; two reviewers; extraction of outcomes, thresholds and sample types; critical appraisal of each review; corrected covered area; selection of one review per outcome and threshold; derivation of predictive values at local prevalence.",
+        "results": "No data have been extracted yet. The report will present the review flow, the citation matrix, confidence ratings and tables of false reassurance, accuracy and false alarms by threshold.",
+        "discussion": "The discussion will state what a normal and a raised lactate can justify at triage, how confident the evidence allows us to be, and what a local accuracy study would add.",
+        "limitations": "Review-level evidence only; language restriction; dependence on an estimated local prevalence.",
+        "conclusion": "To be written after extraction; it will be limited to what the reviews support.",
+        "reportingChecklist": "PRIOR",
+        "summary": "PRIOR-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRIOR",
+          "manuscript.results": {
+            "includes": "No data have been extracted yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Register the protocol before screening begins",
+          "Estimate the department's prevalence of sepsis with organ dysfunction among triage patients with suspected sepsis",
+          "Agree the rule for choosing one review per outcome and threshold"
+        ],
+        "improvementNotes": "The umbrella review is well scoped; no further notes.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before screening."
+      },
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Late reply refused (G6): produced before the investigator edited the audit notes, so the studyRevision guard must refuse it: nothing applied (the investigator's note is not replaced, no open fixes stored), the stage stays incomplete, the refusal is shown and logged in the audit entries. At 875fe59 studyRevision ignores the whole audit object, so an audit-notes edit leaves the revision unchanged and the reply would be accepted; including substantive audit content in the revision is D27 (sheet A3.2), fixed together with L1.6 (the audit patch kept). The screen's use of the guard is sheet A3 item L1.2 as corrected in A3.1 item 1.",
+      "expect": {
+        "error": {
+          "shown": true
+        },
+        "store": {
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
+          "audit.openFixes": {
+            "length": 0
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ],
+          "audit.entries[0].summary": {
+            "includes": "refused"
+          }
+        },
+        "stage": {
+          "audit": "incomplete"
+        }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "audit.improvementNotes",
+          "value": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
+          "note": "Late-reply timing (format 1.2 late step): the investigator has already clicked Illuminate on the Audit stage, so the request for audit call 1 (the next step) was dispatched with the studyRevision of the study before this edit; while it is pending, the investigator types a note into the audit notes on screen. The runner dispatches the next step's request before applying this edit and delivers its reply after the edit is saved. This is investigator-entered audit text. Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "audit.improvementNotes": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
+              "audit.openFixes": {
+                "length": 0
+              },
+              "completedStages": [
+                "problem",
+                "scan",
+                "map",
+                "gaps",
+                "hypotheses",
+                "questions",
+                "design",
+                "protocol",
+                "stats",
+                "ethics",
+                "voices",
+                "manuscript"
+              ]
+            },
+            "stage": {
+              "audit": "incomplete"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 2,
+      "omitKeys": [
+        "improvementNotes"
+      ],
+      "response": {
+        "openFixes": [
+          "Register the protocol before screening begins",
+          "Estimate the department's prevalence of sepsis with organ dysfunction among triage patients with suspected sepsis before deriving predictive values",
+          "Decide with the librarian how the two reviews in other languages enter the citation matrix, as the investigator's note asks"
+        ],
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes, including the investigator's question about reviews in other languages; the investigator's audit note is left as written."
+      },
+      "note": "Fresh request after the edit: applied (G6 positive control). The reply omits improvementNotes on purpose (omitKeys), so the investigator's note stays unchanged (an omitted key is not in the patch). The audit patch being kept at all needs L1.6 (sheet A3), a store defect at 875fe59 rather than a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.openFixes[2]": {
+            "includes": "other languages"
+          },
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Audit route: the investigator's note, the applied second reply and the logged refusal must persist.",
+      "expect": {
+        "store": {
+          "title": "Point-of-care lactate at emergency department triage for adults with suspected sepsis: an umbrella review",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
+          "audit.openFixes": {
+            "length": 3
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "protocol.outcomes[2].name": "False alarms"
+        },
+        "screen": {
+          "includes": [
+            "Point-of-care lactate at emergency department triage for adults with suspected sepsis: an umbrella review",
+            "other languages"
+          ],
+          "excludes": [
+            "no further notes"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list.",
+      "expect": {
+        "store": {
+          "title": "Point-of-care lactate at emergency department triage for adults with suspected sepsis: an umbrella review",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
+          "design.decisions": {
+            "length": 1
+          },
+          "scan.items": {
+            "length": 8
+          }
+        },
+        "screen": {
+          "includes": [
+            "Point-of-care lactate at emergency department triage for adults with suspected sepsis: an umbrella review"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click, one file equal to the store (G10). The refused audit reply leaves no trace in the audit fields (D27 with L1.2); selectionStatus and actionStatus require S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "audit.improvementNotes": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
+            "audit.openFixes": {
+              "length": 3
+            },
+            "protocol.outcomes[0].role": "primary",
+            "protocol.outcomes[0].name": "False reassurance",
+            "protocol.outcomes[2].role": "balancing",
+            "scan.gradeOverall": "low",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-051.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
+}

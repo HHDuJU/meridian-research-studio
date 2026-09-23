@@ -1,0 +1,1310 @@
+{
+  "id": "sc-020",
+  "version": 1,
+  "title": "Maternity service group antenatal care: failed first search, leads-only scan kept incomplete, two-hit second search appraised",
+  "field": "obstetrics",
+  "level": 2,
+  "family": "economic",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D20",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary ambiguity around a thin search. A public health midwife wants a cost-effectiveness analysis of offering group antenatal care (routing economic, explicit under both classifier rules). The first recorded search fails with HTTP 429 and records an event with status 'error' and no result count. The scan reply that follows (shape discovery) has four model leads only, one undated with null quality, and a certainty 'low': the leads are stored unverified, unknowns stay unknown, the certainty is dropped and the stage stays incomplete with the status 'leads only' (G1 to G4; A3.2). The investigator broadens the query and a second search returns only two records; the appraisal of those two records completes the stage with its own certainty and three claims whose passages and numbers occur in the cited abstracts. The order of the retrieved records relative to the earlier leads is not asserted (the format leaves it open); the second event's record ids are. The decision rests on c1 to c3 with both gates met on the investigator's records, and acceptance is a supported positive (accepted, ready). Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for record 1 (ev-1s02hpy) and titleYearKey hash for record 2 (ev-1426e3a). Requires D20 (leads-only scan incomplete with the certainty dropped and 'leads only' shown), S11, S13 and D5. Catches: a failed search turned into silence, certainty assigned to leads, completion without retrieval, and a thin search treated as more than it is.",
+  "inputs": {
+    "need": "I am the public health midwife for a maternity service that books about 3,400 pregnancies a year across six community hubs. In January 2025 two hubs in our most deprived areas started offering group antenatal care: groups of eight to twelve women due around the same time meet for ten two-hour sessions that combine checks, education and peer support, instead of short individual appointments. Before the change, fewer than half of the women booked at those hubs attended the eight contacts we recommend, and attendance was lowest among women under 20, women new to the country and women with a previous pregnancy loss.\n\nThe trust board will decide in 2027 whether to offer group care in all six hubs. Midwives are enthusiastic, but group care needs more midwife hours per session, rooms, childcare and interpreters, and finance wants to know what it costs for each extra woman who attends her recommended contacts, and whether that is good value compared with sending reminders or offering evening clinics.\n\nI would like to do a cost-effectiveness analysis using what we already hold: booking and attendance data for 2024 to 2026 across all six hubs, the rota and room booking data, and invoices for childcare and interpreters. I need help defining the outcome, choosing the comparison (the same hubs before 2025, the other four hubs, or both), costing the sessions properly, and presenting uncertainty honestly. I also want to know whether the evidence on group care and attendance is strong enough to rely on, because I have heard very different claims from colleagues.",
+    "constraints": "No new data collection from women; existing booking, attendance, rota and invoice data only; about 60 hours of finance analyst time; the report is due to the trust board in March 2027.",
+    "localFacts": [
+      "The service booked 3,412 pregnancies in 2025 across six community hubs; the two group-care hubs booked 1,086.",
+      "Group antenatal care started in the two hubs in January 2025; women booked there can choose group or individual care.",
+      "The trust's research office classified the evaluation as a service evaluation on 2026-08-05 (reference SEV-MAT-2026-21).",
+      "The finance team agreed to provide 60 hours of analyst time and 2026 unit costs for midwife hours and room hire (memo FIN-MAT-2026-09)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the public health midwife for a maternity service that books about 3,400 pregnancies a year across six community hubs. In January 2025 two hubs in our most deprived areas started offering group antenatal care: groups of eight to twelve women due around the same time meet for ten two-hour sessions that combine checks, education and peer support, instead of short individual appointments. Before the change, fewer than half of the women booked at those hubs attended the eight contacts we recommend, and attendance was lowest among women under 20, women new to the country and women with a previous pregnancy loss.\n\nThe trust board will decide in 2027 whether to offer group care in all six hubs. Midwives are enthusiastic, but group care needs more midwife hours per session, rooms, childcare and interpreters, and finance wants to know what it costs for each extra woman who attends her recommended contacts, and whether that is good value compared with sending reminders or offering evening clinics.\n\nI would like to do a cost-effectiveness analysis using what we already hold: booking and attendance data for 2024 to 2026 across all six hubs, the rota and room booking data, and invoices for childcare and interpreters. I need help defining the outcome, choosing the comparison (the same hubs before 2025, the other four hubs, or both), costing the sessions properly, and presenting uncertainty honestly. I also want to know whether the evidence on group care and attendance is strong enough to rely on, because I have heard very different claims from colleagues.",
+          "problem.constraints": "No new data collection from women; existing booking, attendance, rota and invoice data only; about 60 hours of finance analyst time; the report is due to the trust board in March 2027.",
+          "family": "economic",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the public health midwife for a maternity service"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Group antenatal care and attendance at recommended contacts: a cost-effectiveness analysis for a six-hub maternity service",
+        "subtitle": "Economic evaluation of offering group care across community hubs",
+        "family": "economic",
+        "statement": "Two of six community hubs have offered group antenatal care since January 2025, where fewer than half of women previously attended the eight recommended contacts. The trust board will decide in 2027 whether to offer it in all hubs, and needs the cost for each additional woman attending her recommended contacts compared with individual care, with honest uncertainty.",
+        "whoAffected": "Pregnant women booked at the six hubs, especially women under 20, women new to the country and women with a previous loss; midwives; the trust board and finance team.",
+        "whatHurts": "Missed antenatal contacts, which can mean missed screening and late recognition of problems, concentrated in groups already at higher risk.",
+        "currentPractice": "Individual appointments in four hubs; a choice of group or individual care in two hubs since January 2025.",
+        "whyNow": "The board decides on extension in 2027 and the finance team has offered analyst time now.",
+        "constraints": "No new data collection from women; existing booking, attendance, rota and invoice data only; about 60 hours of finance analyst time; the report is due to the trust board in March 2027.",
+        "patientCenteredGoal": "Every pregnant woman attends the care she needs in a form she can use.",
+        "summary": "Problem framed as a cost-effectiveness question about offering group care."
+      },
+      "expect": {
+        "store": {
+          "title": "Group antenatal care and attendance at recommended contacts: a cost-effectiveness analysis for a six-hub maternity service",
+          "family": "economic",
+          "problem.constraints": "No new data collection from women; existing booking, attendance, rota and invoice data only; about 60 hours of finance analyst time; the report is due to the trust board in March 2027.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Group antenatal care and attendance at recommended contacts: a cost-effectiveness analysis for a six-hub maternity service"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "group antenatal care attendance cost-effectiveness community hubs deprived areas young women migrants",
+      "response": {
+        "status": 429,
+        "note": "provider rate limit reached; request not served"
+      },
+      "note": "The first search fails with HTTP 429: a visible retrieval event with status 'error', no result count and no records, never a silent empty list (retrieve.ts at 875fe59 maps non-2xx to 'error').",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "error",
+          "scan.retrievalEvents[0].resultCount": {
+            "isNull": true
+          },
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "group antenatal care attendance cost-effectiveness community hubs deprived areas young women migrants",
+        "sourcesConsulted": [
+          "model knowledge of maternity care research"
+        ],
+        "gradeOverall": "low",
+        "gradeRationale": "A few trials and reviews suggest better attendance, so certainty is low.",
+        "synthesis": "The search did not run, so four leads are recalled from memory: a randomised trial in urban clinics, a review of attendance and outcomes, an undated economic evaluation and an interview study with migrant women. None has been retrieved or checked.",
+        "items": [
+          {
+            "title": "Group prenatal care and attendance: a randomised trial in urban clinics",
+            "authors": "Whitfield-Osei A, Lindqvist-Moreau K",
+            "year": 2019,
+            "source": "Journal of Perinatal Care",
+            "kind": "rct",
+            "grade": "moderate",
+            "methodQuality": 68,
+            "relevance": 85,
+            "verification": "verify",
+            "contextTags": [
+              "group care",
+              "attendance"
+            ],
+            "keyFindings": "Group care increased adequate attendance compared with individual care.",
+            "limitations": "Urban clinics; high uptake.",
+            "notes": "Recalled as a lead; not retrieved."
+          },
+          {
+            "title": "Group antenatal care: a systematic review of attendance, outcomes and experience",
+            "authors": "Pillai-Hughes R, Bergstrom-Adeyemi N",
+            "year": 2021,
+            "source": "Maternity Evidence Reviews",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 60,
+            "relevance": 80,
+            "verification": "verify",
+            "contextTags": [
+              "systematic review",
+              "group care"
+            ],
+            "keyFindings": "Attendance improved in most studies; clinical outcomes were inconsistent.",
+            "limitations": "Heterogeneous models of group care.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Economic evaluation of group antenatal care in a publicly funded service",
+            "authors": "Delaney-Mbatha P, Suzuki-Farrell G",
+            "year": null,
+            "source": "Health Economics in Maternity Care",
+            "kind": "grey",
+            "grade": null,
+            "methodQuality": null,
+            "relevance": 78,
+            "verification": "ai-lead",
+            "contextTags": [
+              "cost-effectiveness",
+              "group care"
+            ],
+            "keyFindings": "Reported a cost per additional woman with adequate attendance, with wide uncertainty.",
+            "limitations": "No year given; model inputs not described.",
+            "notes": "Recalled as a lead; undated."
+          },
+          {
+            "title": "Experiences of migrant women in group antenatal care: an interview study",
+            "authors": "Haddad-Johansson L, Nwankwo-Price E",
+            "year": 2023,
+            "source": "Midwifery Perspectives",
+            "kind": "qualitative",
+            "grade": "low",
+            "methodQuality": 55,
+            "relevance": 65,
+            "verification": "ai-lead",
+            "contextTags": [
+              "migrant women",
+              "interpreters"
+            ],
+            "keyFindings": "Women valued peer support but needed interpreters in every session.",
+            "limitations": "One city.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Four unchecked leads after a failed search."
+      },
+      "note": "Leads only, with no retrieved record: the leads are stored as unverified model leads (G3), the undated lead keeps year and quality null (G4), the certainty is dropped with an issue and the stage stays incomplete with the honest status 'leads only' (G1, G2; A3.2 section 1). Requires D20; at 875fe59 the certainty is stored and the stage completes.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 4
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[2].year": {
+            "isNull": true
+          },
+          "scan.items[2].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[2].grade": "unrated",
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "dropped"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "group antenatal care attendance recommended contacts costs",
+      "response": {
+        "status": 200,
+        "total": 2,
+        "records": [
+          {
+            "title": "Group antenatal care and attendance at recommended contacts: a cluster randomised trial in 24 community clinics",
+            "authors": "Adjei-Lindholm M, Carrasco-Whyte E, Okwuosa-Brandt L",
+            "year": 2022,
+            "venue": "Midwifery Trials Journal",
+            "doi": "10.5555/mtj.2022.0174",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomised 24 community clinics to offer group antenatal care or individual appointments to women booking before 16 weeks of pregnancy. Among 2,960 women, 71 percent in group-care clinics and 58 percent in individual-care clinics attended eight or more contacts (risk ratio 1.22, 95 percent confidence interval 1.09 to 1.37). The difference was larger among women under 20. Only 46 percent of women offered group care took it up. Preterm birth and low birthweight did not differ between arms. Costs were not measured, and clinics in the most deprived areas were under-represented."
+          },
+          {
+            "title": "Costs of group versus individual antenatal care: a micro-costing study in two maternity services",
+            "authors": "Haverford-Nakamura T, Obi-Castellanos R",
+            "year": 2016,
+            "venue": "Maternity Services Economics",
+            "providerType": "journal-article",
+            "abstract": "We micro-costed antenatal care for 412 women receiving group care and 398 receiving individual care in two maternity services. Midwife time per woman was similar, but group care required room hire, refreshments, childcare and interpreters, so the mean cost per woman was 12 percent higher (mean difference 64 in local currency). Costs per woman fell as group size rose from 8 to 12. The study did not measure attendance or outcomes, so cost-effectiveness could not be estimated. Interpreter costs varied most between the two services."
+          }
+        ]
+      },
+      "note": "The investigator broadens the query and the second search returns only two records. Their ids are stableRecordId values (see notes). The order of retrieved records relative to the four earlier leads is not asserted; the event's record ids are.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].status": "error",
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 2,
+          "scan.retrievalEvents[1].recordIds": [
+            "ev-1s02hpy",
+            "ev-1426e3a"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Group antenatal care and attendance at recommended contacts: a cluster randomised trial in 24 community clinics"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1s02hpy",
+            "relevance": 94,
+            "methodQuality": 74,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Among 2,960 women in 24 clinics, 71 percent offered group care and 58 percent offered individual care attended eight or more contacts (risk ratio 1.22, 95 percent confidence interval 1.09 to 1.37); larger difference under 20; uptake 46 percent.",
+            "limitations": "Deprived areas under-represented; costs not measured.",
+            "contextTags": [
+              "cluster randomised",
+              "attendance",
+              "uptake"
+            ]
+          },
+          {
+            "id": "ev-1426e3a",
+            "relevance": 90,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Mean cost per woman 12 percent higher for group care (mean difference 64), mainly rooms, childcare and interpreters; cost per woman fell as group size rose from 8 to 12.",
+            "limitations": "Two services; no attendance or outcome data.",
+            "contextTags": [
+              "micro-costing",
+              "group size",
+              "interpreters"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a cluster randomised trial of 2,960 women, 71 percent of women in clinics offering group care and 58 percent in clinics offering individual care attended eight or more contacts.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1s02hpy"
+            ],
+            "location": "Abstract, results",
+            "passage": "71 percent in group-care clinics and 58 percent in individual-care clinics attended eight or more contacts",
+            "interpretation": "Offering group care can raise attendance; the planning value for the effect.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Group antenatal care cost 12 percent more per woman than individual care (mean difference 64), mostly for rooms, childcare and interpreters.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1426e3a"
+            ],
+            "location": "Abstract, results",
+            "passage": "so the mean cost per woman was 12 percent higher (mean difference 64 in local currency)",
+            "interpretation": "The cost side is modest per woman and depends on group size and interpreter use.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Only 46 percent of women offered group care took it up.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1s02hpy"
+            ],
+            "location": "Abstract, results",
+            "passage": "Only 46 percent of women offered group care took it up.",
+            "interpretation": "The analysis must compare hubs offering group care, not women who chose it.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Two retrieved records, appraised at abstract level, after a first search that failed and a leads-only reply that could not be assessed. A cluster randomised trial found that offering group care raised attendance at eight or more contacts (71 against 58 percent), especially among women under 20, with less than half of women taking up the offer. A micro-costing study found group care about 12 percent more expensive per woman, driven by rooms, childcare and interpreters and falling with larger groups. No retrieved study combines costs and attendance; the four model leads remain unchecked.",
+        "gradeOverall": "low",
+        "gradeRationale": "One randomised trial with deprived areas under-represented and one costing study without outcomes; only two records, indirect to this service.",
+        "summary": "Two retrieved records appraised; three claims; overall certainty low."
+      },
+      "note": "Appraisal of the two retrieved records (S13): now at least one record was retrieved and inspected, so the stage completes and the certainty is the appraisal's own value (G1, G2). The leads stay unverified.",
+      "expect": {
+        "store": {
+          "scan.claims": {
+            "length": 3
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-1s02hpy"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-1426e3a"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-1s02hpy"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.items": {
+            "length": 6
+          },
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Both retrieval events, the leads and the claims survive a reload; the failed event stays visible.",
+      "expect": {
+        "store": {
+          "title": "Group antenatal care and attendance at recommended contacts: a cost-effectiveness analysis for a six-hub maternity service",
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].status": "error",
+          "scan.claims": {
+            "length": 3
+          },
+          "scan.gradeOverall": "low"
+        },
+        "screen": {
+          "includes": [
+            "Group antenatal care and attendance at recommended contacts: a cost-effectiveness analysis for a six-hub maternity service",
+            "low certainty"
+          ],
+          "excludes": [
+            "no recorded response"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "six community hubs, about 3,400 bookings a year",
+          "group care offered in two deprived hubs since January 2025",
+          "women choose group or individual care",
+          "board decision in 2027"
+        ],
+        "reading": "Group care changes both sides of the ledger: it may raise attendance, especially for young women, and it adds rooms, childcare and interpreters. Uptake is partial, so the fair comparison is between hubs that offer it and hubs that do not, before and after the change. The evidence is thin: two retrieved records and four unchecked leads.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Offer of group care at a hub",
+            "kind": "framework",
+            "detail": "Two hubs since January 2025."
+          },
+          {
+            "id": "n2",
+            "label": "Attendance at eight or more contacts",
+            "kind": "outcome",
+            "detail": "Primary effect measure (claim c1)."
+          },
+          {
+            "id": "n3",
+            "label": "Cost per woman booked",
+            "kind": "outcome",
+            "detail": "About 12 percent higher elsewhere (claim c2)."
+          },
+          {
+            "id": "n4",
+            "label": "Uptake of group care",
+            "kind": "context",
+            "detail": "46 percent in the trial (claim c3)."
+          },
+          {
+            "id": "n5",
+            "label": "Women under 20 and women new to the country",
+            "kind": "stakeholder",
+            "detail": "Lowest attendance now."
+          },
+          {
+            "id": "n6",
+            "label": "Unchecked leads",
+            "kind": "gap",
+            "detail": "Four leads from a failed search."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "may raise"
+          },
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "raises"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "dilutes effect on"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "gain most in"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "unverified evidence on"
+          }
+        ],
+        "summary": "Map of costs and attendance around the offer of group care."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 6
+          },
+          "map.edges": {
+            "length": 5
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No study combines the costs and attendance of group care",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The board's question is cost per additional attender, which no retrieved record answers.",
+            "opportunity": "Combine local attendance and cost data in one analysis."
+          },
+          {
+            "id": "g2",
+            "title": "Women choose group care, so users differ from non-users",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Comparing users would overstate the effect.",
+            "opportunity": "Compare hubs offering group care with other hubs, before and after."
+          },
+          {
+            "id": "g3",
+            "title": "Interpreter and childcare costs vary widely",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "They drive the cost difference (claim c2).",
+            "opportunity": "Cost them from invoices and vary them in sensitivity analyses."
+          },
+          {
+            "id": "g4",
+            "title": "Groups with the lowest attendance",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Young women and women new to the country attend least.",
+            "opportunity": "Report attendance and cost-effectiveness for these groups."
+          }
+        ],
+        "errorsFound": [
+          "The first scan reply assigned a certainty to leads recalled after a failed search; it was dropped."
+        ],
+        "reevaluation": "An economic evaluation comparing hubs before and after remains the right design, with uptake and equity handled explicitly.",
+        "summary": "Four gaps; the missing combined evidence and self-selection are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Offering group care raises attendance at eight or more contacts by at least 7 percentage points relative to the comparison hubs, at an incremental cost the board would accept.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "The trial suggests an effect of this size (claim c1) and costs are modest per woman (claim c2).",
+            "risks": "Comparison hubs may have changed too; uptake may be lower."
+          },
+          {
+            "id": "h2",
+            "statement": "Cost per additional attender is lowest for women under 20.",
+            "novelty": 50,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "The trial's effect was largest in this group.",
+            "risks": "Small numbers."
+          },
+          {
+            "id": "h3",
+            "statement": "Groups of 10 to 12 halve the cost difference compared with groups of 8.",
+            "novelty": 45,
+            "need": 55,
+            "practiceChange": 60,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Costs fall with group size (claim c2).",
+            "risks": "Larger groups may lower attendance."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "For women booking at the service's six hubs, what is the incremental cost per additional woman attending eight or more antenatal contacts when a hub offers group care, compared with hubs offering individual care only, from 2024 to 2026?",
+            "framework": "PICO",
+            "population": "Women booking antenatal care at the six community hubs, 2024 to 2026",
+            "intervention": "Booking at a hub offering group antenatal care (from January 2025)",
+            "comparator": "Booking at a hub offering individual care only, and the same hubs in 2024",
+            "outcome": "Attendance at eight or more contacts and cost per woman booked; incremental cost per additional attender",
+            "time": "Booking to birth",
+            "setting": "Maternity service with six community hubs"
+          }
+        ],
+        "finer": "Feasible with existing data and 60 analyst hours; interesting to the board; novel in combining costs and attendance; ethical as a service evaluation; relevant to the 2027 decision.",
+        "summary": "One PICO question with an incremental cost-effectiveness ratio."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "economic",
+        "rationale": "The board needs a cost per additional attender, so the design is a cost-effectiveness analysis alongside a controlled before-after comparison of hubs: the two group-care hubs against the four others, 2024 against 2025 to 2026, analysed by hub of booking because uptake is partial (claim c3). The trial gives the planning value for the effect (claim c1) and the costing study the expected cost drivers (claim c2). Reporting follows CHEERS 2022.",
+        "alternatives": [
+          "Before-after in the two hubs only (refused: cannot separate group care from other changes)",
+          "Compare women who chose group care with those who did not (refused: self-selection)",
+          "Cost-utility analysis (refused: no utility data for pregnant women in routine records)"
+        ],
+        "guidelines": [
+          "CHEERS 2022"
+        ],
+        "whyNotMoreComplex": "A modelled analysis of birth outcomes would need effects the evidence does not show; attendance is the outcome the board asked about and the data record it.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a cost-effectiveness analysis of offering group antenatal care, comparing the two group-care hubs with the four other hubs before (2024) and after (2025 to 2026) the change, with the cost per additional woman attending eight or more contacts as the primary result and bootstrap uncertainty.",
+          "question": "What does offering group antenatal care cost per additional woman attending her recommended contacts in this service?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Offering group care plausibly raises attendance and costs somewhat more per woman.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Uptake is partial, so the comparison must be between hubs offering group care, not women choosing it.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The four comparison hubs changed their own antenatal pathway in 2025.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research office classification of the evaluation",
+              "status": "met",
+              "evidence": "Service evaluation reference SEV-MAT-2026-21 dated 2026-08-05, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Finance analyst time and 2026 unit costs",
+              "status": "met",
+              "evidence": "Finance memo FIN-MAT-2026-09, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Compare the two hubs before and after only",
+            "Cost the sessions without an attendance outcome"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from the two retrieved records; the model leads are unchecked and not used."
+        },
+        "summary": "Cost-effectiveness analysis with a controlled before-after comparison of hubs; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "selectionStatus and recommendedFamily require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "economic",
+          "family": "economic",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].recommendedFamily": "economic",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: c1 to c3 rest on the two retrieved records and both gates are met, so the selection is accepted and the action ready (G7). The defeating criterion is unknown, which is a condition to check, not a block. S11, S13, D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "economic"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Cost-effectiveness analysis of offering group antenatal care, using a controlled before-after comparison of the two group-care hubs and the four individual-care hubs, 2024 against 2025 to 2026, from the health service perspective.",
+        "population": "All women booking antenatal care at the six hubs from January 2024 to June 2026 whose pregnancy ended by December 2026 (about 8,500 women); analysed by hub of booking.",
+        "exposure": "Booking at a hub that offered group care (the two hubs from January 2025).",
+        "procedures": "Attendance from the booking system; midwife hours per session from rotas; rooms from the booking system; childcare and interpreters from invoices; unit costs from finance memo FIN-MAT-2026-09. Individual appointment costs from the same sources.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Incremental cost per additional woman attending eight or more contacts",
+            "measure": "Difference-in-differences in cost per woman booked divided by the difference-in-differences in attendance",
+            "timing": "Booking to birth",
+            "why": "The board's question.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Attendance at eight or more contacts",
+            "measure": "Proportion of women booked",
+            "timing": "Booking to birth",
+            "why": "The effect in its own right.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Uptake of group care",
+            "measure": "Proportion of women booked at group-care hubs who attended at least one group session",
+            "timing": "Booking to birth",
+            "why": "Explains dilution (claim c3).",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Late booking after 16 weeks",
+            "measure": "Proportion booking after 16 weeks",
+            "timing": "At booking",
+            "why": "Group scheduling could delay booking for some women.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Existing data; 60 finance analyst hours cover costing and the bootstrap analysis.",
+        "biasMitigation": [
+          "Analysis by hub of booking, not by choice",
+          "Pre-change trends compared between hub groups",
+          "Costs from invoices rather than estimates",
+          "Sensitivity analyses for group size and interpreter use"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Non-random hub selection",
+            "severity": "high",
+            "note": "The two hubs were chosen for deprivation; the before-after contrast handles stable differences only."
+          },
+          {
+            "id": "b2",
+            "label": "Changes in comparison hubs",
+            "severity": "watch",
+            "note": "Defeating criterion k3; checked with the service's change log."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 2,
+          "flags": [],
+          "simplestPath": "One comparison of hub groups before and after, one ratio with bootstrap uncertainty."
+        },
+        "theoreticalFramework": "None beyond the CHEERS 2022 reporting framework.",
+        "summary": "Controlled before-after cost-effectiveness analysis by hub of booking."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Difference-in-differences for attendance and cost, combined into an incremental cost-effectiveness ratio with bootstrap uncertainty.",
+        "sampleSize": "About 1,050 women a year book at the two group-care hubs and about 2,300 at the other four. With attendance near 50 percent, the standard error of the difference-in-differences is about 2.6 percentage points (square root of 0.25/1,050 times 2 plus 0.25/2,300 times 2), so the analysis has 80 percent power at two-sided alpha 0.05 for a difference of about 7.4 points, below the 13-point difference seen in the trial (claim c1). The cost side has no power calculation: costs are estimated with intervals.",
+        "primaryAnalysis": "Linear probability model for attendance with hub group, period and their interaction, standard errors clustered by hub; the same for cost per woman; the ratio with 2,000 bootstrap replicates resampling women within hubs, shown on a cost-effectiveness plane and an acceptability curve over a range of values the board might place on an additional attender.",
+        "secondaryAnalysis": "Results for women under 20, women new to the country and women with a previous loss; sensitivity analyses for group size, interpreter costs and excluding the first three months of group care.",
+        "missingData": "Women who transfer out are kept in the hub of booking up to transfer; missing invoices are reported and costed at the median.",
+        "multiplicity": "One primary ratio; subgroup and sensitivity results descriptive.",
+        "software": "R; code and cost inputs archived before analysis.",
+        "overfittingGuards": [
+          "Comparison and outcome fixed before analysis",
+          "Subgroups limited to three named groups",
+          "Sensitivity analyses listed in advance"
+        ],
+        "summary": "About 7.4 points detectable for attendance; the cost-effectiveness ratio reported with bootstrap intervals."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 7.4 points"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: routine data. Small subgroups (for example women new to the country at one hub) could be identifiable, so cells under five are suppressed.",
+        "consent": "No individual consent for routine data under the service evaluation classification; the service's privacy notice covers evaluation.",
+        "data": "Pseudonymised extract prepared by the maternity information team; invoices contain no personal data.",
+        "equity": "PROGRESS-Plus: women under 20, women new to the country, women needing interpreters and women in deprived areas attend least; results are reported for each, and interpreter costs are presented as a cost of equitable care, not a reason against it.",
+        "effectiveness": "Estimates whether offering group care raises attendance and at what cost per additional attender.",
+        "efficiency": "Existing data and finance time.",
+        "costs": "No additional costs.",
+        "grants": "None needed.",
+        "partnerships": "Community midwives, the finance team, a maternity voices partnership and an interpreter service lead.",
+        "rebPath": "Service evaluation (SEV-MAT-2026-21); no research ethics review required. Publication would follow CHEERS 2022.",
+        "limitations": "Non-random hub selection; the evidence base retrieved was only two records.",
+        "summary": "Minimal-risk service evaluation with equity reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "SEV-MAT-2026-21"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "The maternity voices partnership and two women who attended group care review the outcome definition and the plain-language summary.",
+        "socialListening": "No social media listening; comment cards from the two group-care hubs are summarised.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Peer support",
+            "quote": "Composite paraphrase: I was nineteen and on my own; the group was the first place I did not feel judged.",
+            "implication": "Report results for women under 20.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Language",
+            "quote": "Composite paraphrase: When the interpreter came every week I understood everything; the one week she did not, I stayed home.",
+            "implication": "Cost interpreters as part of the intervention.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Midwife time",
+            "quote": "Composite paraphrase: Two hours with ten women feels long, but I see each of them properly and they talk to each other.",
+            "implication": "Measure midwife hours per woman, not per session.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Childcare",
+            "quote": "Composite paraphrase: Half our mothers would not come without the creche.",
+            "implication": "Include childcare in costs and sensitivity analyses.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on support, language, midwife time and childcare."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Offering group antenatal care in community hubs: a cost-effectiveness analysis of attendance at recommended contacts",
+        "abstract": "Objective: to estimate the incremental cost per additional woman attending eight or more antenatal contacts when community hubs offer group care. Design: cost-effectiveness analysis alongside a controlled before-after comparison of two group-care hubs and four individual-care hubs, 2024 to 2026. Results and conclusions will follow the analysis.",
+        "introduction": "Group antenatal care can raise attendance but costs more per woman; no retrieved study combined the two. A first literature search failed and a second returned only two records, so the evidence base is thin.",
+        "methods": "Analysis by hub of booking; difference-in-differences for attendance and cost; bootstrap uncertainty; CHEERS 2022 reporting.",
+        "results": "No data have been analysed yet. The report will present attendance and costs by hub group and period, the cost-effectiveness plane and acceptability curve, and results for three named groups.",
+        "discussion": "The discussion will set the ratio against the board's willingness to pay and the thin evidence base.",
+        "limitations": "Non-random hub selection; routine data; thin external evidence.",
+        "conclusion": "To be written after analysis; it will not claim effects on birth outcomes.",
+        "reportingChecklist": "CHEERS 2022",
+        "summary": "CHEERS-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "CHEERS 2022",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Retry the first search when the provider allows and check whether it returns records the second search missed",
+          "Check the four model leads by identifier before citing any of them; one is undated",
+          "Confirm from the service change log whether the comparison hubs changed their pathway in 2025"
+        ],
+        "improvementNotes": "The first search failed and the leads-only reply was kept incomplete with its certainty dropped; the stage completed only after the second search returned two records that were appraised.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the failed search, the unchecked leads and the comparison hubs."
+      },
+      "note": "audit fields fail at 875fe59 because of the L1.6 store defect, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Group antenatal care and attendance at recommended contacts: a cost-effectiveness analysis for a six-hub maternity service",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.items": {
+            "length": 6
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Group antenatal care and attendance at recommended contacts: a cost-effectiveness analysis for a six-hub maternity service"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The leads-only certainty drop requires D20; decision fields S11; claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].status": "error",
+            "scan.retrievalEvents[0].resultCount": {
+              "isNull": true
+            },
+            "scan.retrievalEvents[1].status": "ok",
+            "scan.retrievalEvents[1].recordIds": [
+              "ev-1s02hpy",
+              "ev-1426e3a"
+            ],
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 3
+            },
+            "scan.items[2].year": {
+              "isNull": true
+            },
+            "scan.items[0].provenance.status": "unverified",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "problem.constraints": "No new data collection from women; existing booking, attendance, rota and invoice data only; about 60 hours of finance analyst time; the report is due to the trust board in March 2027."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

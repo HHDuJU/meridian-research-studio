@@ -1,6 +1,6 @@
 {
   "id": "sc-029",
-  "version": 1,
+  "version": 2,
   "title": "Early intervention in psychosis: peer support feasibility study, prose scan reply refused, cited feasibility trial corrected after a late acceptance",
   "field": "psychiatry",
   "level": 4,
@@ -11,7 +11,8 @@
     "D5",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear feasibility study (the need names a feasibility study and interviews; classifyFamily gives feasibility, explicit). A fixture search returns six records. The first scan reply is prose, not JSON: nothing is applied, an error is shown, the records stay unrated and the stage stays incomplete (G5). A valid second call (shape appraisal) annotates the six records and records claims c1 to c4. The Design stage recommends feasibility and proposes a decision resting on claims c2 to c4, with one gate met (funded posts) and one unknown (approvals). The investigator reads the protocol and statistics drafts first and accepts the decision afterwards on the Design panel (accepted, blocked). Then the key findings of the feasibility trial behind claim c2 are corrected through the store: the decision must become stale in the store, on screen, after reload and in the export, and every completed stage after Scan, including protocol and stats, is flagged for review; the later stages completed afterwards are not. The problem reply restates the typed constraints verbatim, so G11 is not engaged. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator: DOI-based for records 1, 2, 3, 5, 6 (ev-1g96e5y, ev-086u53q, ev-15dq183, ev-05nkrf7, ev-0hehrv4) and title and year for record 4 (ev-1mngnqj). Requires S13 (appraisal dispatch), S10 (evidence revision covering keyFindings; amendment A3.2 D24 names the same defect), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a prose reply treated as success, an accepted decision left current after its benchmark source changed, and stages drafted on the old evidence shown as complete.",
   "inputs": {
@@ -780,7 +781,7 @@
             "c3",
             "c4"
           ],
-          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
           "design.decisions[-1].gates[1].status": "unknown",
           "design.decisions[-1].selectionStatus": "proposed",
           "design.decisions[-1].actionStatus": "blocked",
@@ -792,7 +793,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -804,6 +806,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1341,5 +1363,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-029.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

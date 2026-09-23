@@ -179,7 +179,19 @@ export function identifierTokens(text: string): string[] {
   for (const m of t.matchAll(/\b[A-Z][A-Z0-9]*(?:[-/][A-Z0-9]+)*[-/]\d[A-Z0-9-]*\b/g)) ids.add(m[0]);
   for (const m of t.matchAll(/\b\d{2,4}-\d{2,5}\b/g)) ids.add(m[0]);
   for (const m of t.matchAll(/\bNCT\d{8}\b/gi)) ids.add(m[0].toUpperCase());
-  return [...ids].filter((x) => !/^\d{4}-\d{2}(-\d{2})?$/.test(x));
+  // "Project #17843", "prot. n. 1234/2026": board and protocol numbers written without letters.
+  for (const m of t.matchAll(/#\s?(\d{3,}(?:[-/]\d+)*)/g)) ids.add(`#${m[1]}`);
+  for (const m of t.matchAll(/\b\d{3,5}\/\d{4}\b/g)) ids.add(m[0]);
+  // Dates (2026-09-01, 01-08-2026) and ICD codes are not reference numbers; "2026-188" inside
+  // "REB-2026-188" is the same reference.
+  const list = [...ids].filter((x) => !/^\d{4}-\d{2}(-\d{2})?$/.test(x) && !/^\d{2}-\d{2}$/.test(x) && !/^ICD-\d+$/i.test(x));
+  return list.filter((x) => !list.some((y) => y !== x && y.includes(x)));
+}
+
+/** Whether `hay` holds `id` as a whole reference ("REB-2026-18" is not in "REB-2026-188"). */
+export function holdsReference(hay: string, id: string): boolean {
+  const n = normalizeForMatch(id).replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+  return new RegExp(`(^|[^a-z0-9])${n}([^a-z0-9]|$)`).test(normalizeForMatch(hay).replace(/#\s+/g, "#"));
 }
 
 const UNITS: Record<string, number> = {
@@ -257,9 +269,18 @@ const NOT_IN_PLACE_STRONG = new RegExp(
     String.raw`\b(?:was|were|has been|have been|is|are)\s+(?:declined|refused|rejected|denied|withdrawn|suspended|revoked|cancell?ed|rescinded|terminated|stopped|removed)\b`,
     String.raw`\b(?:pending|awaiting|undecided|unresolved|expired|lapsed|yet to|under review|in review|unknown whether|under consideration|being considered|being reviewed|in preparation)\b`,
     String.raw`\b(?:is|are)\s+expected\b|\bexpect(?:s|ed)?\s+(?:it|them|approval|a decision|a reply|an answer)\b|\bexpected\s+(?:in|by|on|before|after|next|later)\b`,
-    String.raw`\b(?:submitted|applied for)\b(?![^.;]*\b(?:approved|granted|agreed|accepted)\b)`,
     String.raw`\bto be (?:decided|confirmed|determined|requested|approved|granted|signed|agreed|funded|issued)\b`,
     String.raw`\bno\s+(?:approval|decision|agreement|permission)\s+(?:yet|has been|was)\b`,
+    // Refusals and reversals in any voice: "the REB did not approve", "was never granted", "the REB
+    // suspended REB-2026-188", "on hold", "cut to 2 h weekly".
+    String.raw`\b(?:did|does|do)\s+not\s+(?:approve|grant|sign|agree|fund|authori[sz]e|clear|endorse|accept|issue|renew|extend|allocate|release|permit|confirm)\b`,
+    String.raw`\bnever\s+(?:been\s+)?(?:approved|granted|signed|agreed|funded|issued|received|obtained|given|allocated|released|confirmed)\b`,
+    String.raw`\b(?:suspended|revoked|rescinded|withdrew|overruled|annulled|voided|halted)\b`,
+    String.raw`\bon\s+hold\b`,
+    String.raw`\b(?:cut|reduced|lowered|decreased|slashed)\s+(?:back\s+)?to\b`,
+    // "REB-2026-188: not approved"; "signed by the pharmacy but not by the hospital".
+    String.raw`(?:^|[:;,(]\s*)not\s+(?:yet\s+)?(?:approved|granted|signed|funded|agreed|issued|renewed|given|confirmed|in\s+place)\b`,
+    String.raw`\bbut\s+not\s+(?:yet\s+)?(?:by|from)\b`,
   ].join("|"),
   "i",
 );
@@ -268,6 +289,12 @@ const NOT_IN_PLACE_STRONG = new RegExp(
  * "unclear whether the custodian agrees", "status: to be confirmed". Predicate forms only, so that
  * "cancer of unknown primary" stays a fact.
  */
+const SUBMITTED = /\b(?:submitted|applied for|lodged)\b/i;
+const COMPLETED = /\b(?:approved|granted|agreed|accepted|signed|issued)\b/i;
+/** Strong not-in-place signals; "submitted" counts only when nothing in the text says it was granted. */
+function notInPlaceStrong(t: string): boolean {
+  return NOT_IN_PLACE_STRONG.test(t) || (SUBMITTED.test(t) && !COMPLETED.test(t));
+}
 const UNCERTAIN = new RegExp(
   [
     String.raw`\b(?:is|are|was|were|remains?|remained|still|currently|status|as yet)\s+(?:\w+\s+){0,2}?(?:unknown|unclear|uncertain|undetermined|unconfirmed|unverified|unanswered|undecided)\b`,
@@ -283,14 +310,20 @@ const UNCERTAIN = new RegExp(
 const QUESTION = /\?\s*\)?\s*$/;
 const OBLIGATION =
   /\b(?:must|has to|have to|had to|needs? to|we need|i need|they need|you need|is required|are required|will be required|should|would like|wants? to|wanted to|wish(?:es)? to|hopes? to|plans? to|planning to|intends? to|intending to|aims? to|would need)\b/i;
-const NOT_IN_PLACE = { test: (t: string) => NOT_IN_PLACE_STRONG.test(normalizeForMatch(t)) || UNCERTAIN.test(normalizeForMatch(t)) };
+const NOT_IN_PLACE = {
+  test: (t: string) => {
+    const n = expandNot(normalizeForMatch(t));
+    return notInPlaceStrong(n) || UNCERTAIN.test(n);
+  },
+};
+
+/** Whether a statement leaves something open: not in place, pending, unknown or asked ("REB approval is expected in October"). */
+export function statusOpen(text: string): boolean {
+  return NOT_IN_PLACE.test(text) || QUESTION.test((text ?? "").trim());
+}
 
 export function investigatorSentences(investigator: string): { text: string; notInPlace: boolean }[] {
-  return (investigator ?? "")
-    .split(/\n+|(?<=[.;!?])\s+(?=[A-Z0-9"(])/)
-    .map((t) => t.trim())
-    .filter(Boolean)
-    .map((text) => ({ text, notInPlace: NOT_IN_PLACE.test(text) }));
+  return splitSentences(investigator).map((text) => ({ text, notInPlace: NOT_IN_PLACE.test(text) }));
 }
 
 /** Lower-case words and digits only, with "n't" written out as " not". */
@@ -309,7 +342,11 @@ export interface FactClause {
 }
 
 const clauseCache = new Map<string, FactClause[]>();
-const STATUS_STEMS = new Set(["statu", "pendi", "unkno", "uncle", "uncer", "confi", "await", "expec", "decis", "revie", "known", "clear", "sure", "yet", "still", "outst", "open", "curre", "later", "month", "week", "decid", "deter"]);
+const STATUS_STEMS = new Set([
+  "statu", "pendi", "unkno", "uncle", "uncer", "confi", "await", "expec", "decis", "revie", "known", "clear", "sure", "yet", "still", "outst", "open", "curre", "later", "month", "week", "decid", "deter",
+  // verbs of approval and signature: "which has not been requested", "but not yet signed"
+  "reque", "signe", "sign", "appro", "grant", "submi", "recei", "sough", "obtai", "renew", "issue", "agree", "given", "filed", "lodge", "sent", "made", "done",
+]);
 
 /*
  * The investigator's text in clauses: sentences split at semicolons. A clause that says something is
@@ -323,11 +360,12 @@ export function factClauses(investigator: string): FactClause[] {
   const out: FactClause[] = [];
   for (const s of investigatorSentences(key)) {
     const parts: FactClause[] = [];
-    for (const part of s.text.split(/;\s+/)) {
+    for (const part of s.text.split(/;\s+|,\s+(?=(?:but|which|although|though|whereas)\b)/)) {
       const text = part.trim();
       if (!text) continue;
       const norm = normalizeForMatch(text);
-      const notFact = NOT_IN_PLACE_STRONG.test(norm) || UNCERTAIN.test(norm) || QUESTION.test(norm) || OBLIGATION.test(norm);
+      const expanded = expandNot(norm);
+      const notFact = notInPlaceStrong(expanded) || UNCERTAIN.test(expanded) || QUESTION.test(norm) || OBLIGATION.test(expanded);
       parts.push({ text, sentence: s.text, norm, flat: flatWords(text), stems: contentStems(text), notFact });
     }
     // "REB approval REB-2026-188; status: pending": a status clause with no subject of its own speaks
@@ -360,9 +398,9 @@ export function groundedInInvestigatorText(statement: string, investigator: stri
   const facts = clauses.filter((c) => !c.notFact);
   const hay = facts.map((c) => c.norm).join("\n");
   const ids = identifierTokens(statement);
-  const missingIds = ids.filter((id) => !hay.includes(normalizeForMatch(id)));
+  const missingIds = ids.filter((id) => !holdsReference(hay, id));
   if (missingIds.length) {
-    const contradicting = clauses.find((c) => c.notFact && missingIds.some((id) => c.norm.includes(normalizeForMatch(id))));
+    const contradicting = clauses.find((c) => c.notFact && missingIds.some((id) => holdsReference(c.norm, id)));
     return {
       grounded: false,
       foundAnchors: [],
@@ -407,7 +445,7 @@ export function groundedInInvestigatorText(statement: string, investigator: stri
   }
   const clauseAnchors: { text: string; sentence: string; byId: boolean }[] = [];
   facts.forEach((c, k) => {
-    const byId = ids.some((id) => c.norm.includes(normalizeForMatch(id)));
+    const byId = ids.some((id) => holdsReference(c.norm, id));
     const byPhrase = !!phrase && nonNegatedOccurrence(c.flat, phrase);
     const byFigure = foundNums.some((num) => {
       const have = factFigs[k].get(num);
@@ -515,7 +553,7 @@ const AUTHORITY_GROUPS: { label: string; need: RegExp; has: RegExp }[] = [
   {
     label: "approval, permission or agreement",
     need: /\b(?:approv\w*|permi(?:t|ts|tted|ssion|ssions)|authori[sz]\w*|clearance|sanction\w*|endors\w*|licen[cs]\w*|waivers?|exemptions?|agreements?|agreed|contracts?|signed|signature|sign-off)\b/i,
-    has: /\b(?:approv\w*|permi(?:t|ts|tted|ssion|ssions)|allow(?:s|ed)?|authori[sz]\w*|clear(?:ed|ance)|sanction\w*|endors\w*|licen[cs]\w*|waive[dr]?|waivers?|exempt\w*|grant(?:ed|s)?|agree(?:d|ment|ments|s)?|contract\w*|signed|signature|signatures|sign-off|signoff|sponsor\w*|favou?rable\s+opinion|classified|determined|determination|decided|decision|confirm\w*|screened|accepted|supported|commissioned|requested)\b/i,
+    has: /\b(?:approv\w*|permi(?:t|ts|tted|ssion|ssions)|allow(?:s|ed)?|authori[sz]\w*|clear(?:ed|ance)|sanction\w*|endors\w*|licen[cs]\w*|waive[dr]?|waivers?|exempt\w*|grant(?:ed|s)?|agree(?:d|ment|ments|s)?|contract\w*|signed|signature|signatures|sign-off|signoff|sponsor\w*|favou?rable\s+opinion|classified|determined|determination|decided|decision|confirm\w*|screened|accepted|supported|commissioned|requested|in\s+place|executed|obtained|received|valid|active)\b/i,
   },
   {
     label: "funding",
@@ -531,10 +569,29 @@ const DATA_USE = /\b(?:data|record|records|chart|charts|dashboard|registry|datab
 const OTHER_STUDY =
   /\b(?:another|previous|prior|earlier|former|past|different|separate|sister|parent|companion|older|last\s+year's|other)\s+(?:\w+\s+){0,2}?(?:study|studies|protocol|protocols|project|projects|trial|trials|registry|registries|application|applications|audit|audits|submission|submissions|review|reviews)\b/i;
 const THIS_STUDY =
-  /\b(?:this|the present|the current|the proposed|our current|our proposed)\s+(?:[\w-]+\s+){0,2}?(?:study|sub-study|substudy|project|audit|protocol|trial|review|evaluation|initiative|pilot|work|survey|analysis)\b/i;
+  /\b(?:this|the present|the current|the proposed|our current|our proposed|our(?!\s+(?:previous|prior|earlier|former|past|other|last|older|sister|parent|companion|separate|different)\b))\s+(?:[\w-]+\s+){0,2}?(?:study|sub-study|substudy|project|audit|protocol|trial|review|evaluation|initiative|pilot|work|survey|analysis)\b/i;
 /** What an approval verb applies to, up to the next punctuation. */
 const APPROVED_OBJECT = /\b(?:approved|granted|cleared|endorsed|authori[sz]ed|sanctioned|permitted)\s+(?:the\s+|an?\s+|our\s+|their\s+)?([^.;,()]{0,80})/i;
 const STUDY_NOUN = /\b(?:study|studies|sub-study|substudy|project|audit|trial|registry|protocol|evaluation|review|survey|pilot)\b/i;
+/**
+ * What an approval is for, cut at `stops`. In the passive ("the protocol was approved by the REB") the
+ * thing approved is the subject, not the approving body after "by".
+ */
+function approvalObject(norm0: string, stops: RegExp): string {
+  const norm = norm0.replace(/\b(dr|mr|mrs|ms|prof)\.\s/g, "$1 ");
+  const m = APPROVED_OBJECT.exec(norm);
+  if (!m) {
+    // "REB-2026-188 is the approval for Dr. Rossi's foot-care project".
+    const f = /\b(?:approval|clearance|permission|authori[sz]ation|favou?rable\s+opinion)\s+(?:is\s+|was\s+)?for\s+(?:the\s+|an?\s+|our\s+|their\s+)?([^.;,()]{0,80})/.exec(norm);
+    return f ? f[1].split(stops)[0].trim() : "";
+  }
+  let object = m[1];
+  if (/^by\b/.test(object)) {
+    const subj = /([^.;,()]{0,80}?)\s+(?:was|were|is|are|has\s+been|have\s+been|had\s+been|being|got|get)\s*$/.exec(norm.slice(0, m.index));
+    object = subj ? subj[1] : "";
+  }
+  return object.split(stops)[0].trim();
+}
 /** Words about the document rather than its subject ("protocol outline", "full protocol"). */
 const DOCUMENT_STEMS = new Set(["outli", "versi", "draft", "amend", "full", "final", "revis", "updat", "origi", "initi", "packa", "summa", "templ", "plan", "descr", "appli", "submi", "dated", "refer"]);
 /** A protocol or study named by number ("protocol CARE-KET-01", "study CARE-KET-01"). */
@@ -574,7 +631,6 @@ function trimQuote(s: string): string {
 const UNIT_ALIASES: Record<string, string> = { hrs: "hours", hr: "hours", h: "hours", hour: "hours", mins: "minut", min: "minut", wks: "weeks", wk: "weeks", week: "weeks", days: "days", day: "days" };
 /** Month names: "10 September" is a date, not an amount of Septembers. */
 const MONTHS = new Set(["janua", "febru", "march", "april", "may", "june", "july", "augus", "septe", "octob", "novem", "decem", "jan", "feb", "mar", "apr", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "dec"]);
-const NEGATORS = new Set([...NEGATION_WORDS, "forbids", "forbid", "forbidden", "prohibits", "prohibited", "bars", "barred", "excludes", "excluded", "excluding"]);
 
 /** Words and numbers, with "n't" as " not" and decimals kept whole ("0.4 FTE" is not a zero). */
 function tokensOf(text: string): string[] {
@@ -655,6 +711,24 @@ const TOTAL = /\b(?:in total|total|overall|altogether|in all|combined|whole-time
  * subject; an absence counts for a word the anchor affirms and the requirement or evidence names; a
  * different amount counts for the same unit said of the same thing.
  */
+/** Per-clause readings the conflict scan needs, computed once per clause (the clause list is cached per text). */
+const clauseMemos = new WeakMap<FactClause, { skip: boolean; status: boolean; different: boolean; total: boolean; absent: Set<string>; figures: ReturnType<typeof figureMentions> }>();
+function clauseMemo(c: FactClause) {
+  let m = clauseMemos.get(c);
+  if (!m) {
+    m = {
+      skip: QUESTION.test(c.norm) || OBLIGATION.test(c.norm),
+      status: notInPlaceStrong(c.norm) || UNCERTAIN.test(c.norm),
+      different: DIFFERENT_SUBJECT.test(c.norm),
+      total: TOTAL.test(c.norm),
+      absent: absentStems(c.text),
+      figures: figureMentions(c.text),
+    };
+    clauseMemos.set(c, m);
+  }
+  return m;
+}
+
 export function conflictingFact(requirement: string, anchor: string, investigator: string, quoted = ""): string | null {
   const clauses = factClauses(investigator);
   const anchorClause = clauses.find((c) => c.text === anchor.trim()) ?? null;
@@ -668,15 +742,17 @@ export function conflictingFact(requirement: string, anchor: string, investigato
   const anchorFigures = figureMentions(anchor);
   for (const c of clauses) {
     if (c.text === anchor.trim()) continue;
-    if (QUESTION.test(c.norm) || OBLIGATION.test(c.norm)) continue;
+    const m = clauseMemo(c);
+    if (m.skip) continue;
     const sameItem = anchorIds.some((id) => c.norm.includes(id));
     const reqShare = reqSubject.length ? reqSubject.filter((w) => c.stems.has(w)).length / reqSubject.length : 0;
-    if ((NOT_IN_PLACE_STRONG.test(c.norm) || UNCERTAIN.test(c.norm)) && (sameItem || (reqShare >= 0.6 && reqSubject.length >= 2))) return c.sentence;
+    if (m.status && (sameItem || (reqShare >= 0.6 && reqSubject.length >= 2))) return c.sentence;
     const shared = [...anchorStems].filter((w) => c.stems.has(w));
     const aboutRequirement = reqSubject.some((w) => c.stems.has(w));
-    if (shared.length >= 2 && aboutRequirement && [...absentStems(c.text)].some((w) => said.has(w) && anchorStems.has(w) && !deniedInAnchor.has(w))) return c.sentence;
-    if (DIFFERENT_SUBJECT.test(c.norm) || TOTAL.test(c.norm)) continue;
-    for (const f of figureMentions(c.text)) {
+    if (m.different) continue;
+    if (shared.length >= 2 && aboutRequirement && [...m.absent].some((w) => said.has(w) && anchorStems.has(w) && !deniedInAnchor.has(w))) return c.sentence;
+    if (m.total) continue;
+    for (const f of m.figures) {
       for (const a of anchorFigures) {
         if (f.unit === a.unit && f.value !== a.value && [...f.ctx].filter((w) => a.ctx.has(w)).length >= 2) return c.sentence;
       }
@@ -732,7 +808,7 @@ function clauseRefusal(
   // with this study's own description or the requirement is an approval for something else.
   if (!THIS_STUDY.test(keyPart)) {
     // The object's noun phrase stops at the first preposition ("the survey protocol as minimal risk").
-    const object = (APPROVED_OBJECT.exec(keyPart)?.[1] ?? "").split(/\s+(?:as|on|in|for|with|at|by|from|under|until|dated|to|of|subject|provided|pending|while|and|but)\s+/)[0];
+    const object = approvalObject(keyPart, /\s+(?:as|on|in|for|with|at|by|from|under|until|dated|to|of|subject|provided|pending|while|and|but)\s+/);
     if (STUDY_NOUN.test(object)) {
       const naming = [...topicStems(object.replace(new RegExp(STUDY_NOUN.source, "gi"), " "))].filter((w) => !DOCUMENT_STEMS.has(w) && !UNIT_STEMS.has(w) && !MONTHS.has(w));
       const ownStemsAll = contentStems(ownOutside);
@@ -761,9 +837,10 @@ function clauseRefusal(
     if (otherIds.length) {
       return `the investigator's statement is limited to ${otherIds.join(", ")} ${quote}, which this study's own description does not name`;
     }
-    const pointsHere = thisStudy || windowIds.length > 0;
     const ownStems = contentStems(ownOutside);
-    const object = [...topicStems(window.replace(AUTHORITY_WORD, " ").replace(INCLUDE_LIMIT, " "))].filter((w) => !UNIT_STEMS.has(w));
+    const object = [...topicStems(window.replace(AUTHORITY_WORD, " ").replace(INCLUDE_LIMIT, " ").replace(/\b(?:covers?|covering|includes?|including|applies|apply|holds?|records?)\b/gi, " "))].filter((w) => !UNIT_STEMS.has(w));
+    // "covers the surgical wards only" in a study of the surgical wards: the limit is this study's setting.
+    const pointsHere = thisStudy || windowIds.length > 0 || (object.length > 0 && object.every((w) => ownStems.has(w)));
     if (!pointsHere && object.length && !object.some((w) => ownStems.has(w) || subject.includes(w))) {
       return `the investigator's statement is limited to ${wordsFor(object, window)} ${quote}, which is not what this study is about`;
     }
@@ -797,7 +874,7 @@ export function gateGrounding(requirement: string, evidence: string, investigato
     .filter((c) => !c.notFact)
     .map((c) => c.norm)
     .join("\n");
-  const unsuppliedIds = identifierTokens(requirement).filter((id) => !hay.includes(normalizeForMatch(id)));
+  const unsuppliedIds = identifierTokens(requirement).filter((id) => !holdsReference(hay, id));
   if (unsuppliedIds.length) {
     return { grounded: false, foundAnchors: [], missingAnchors: unsuppliedIds, reason: `the requirement names ${unsuppliedIds.join(", ")}, which the investigator never supplied as a fact` };
   }
@@ -807,7 +884,10 @@ export function gateGrounding(requirement: string, evidence: string, investigato
       return { ...g, grounded: false, reason: "the evidence's anchors could not be tied to one statement of fact by the investigator" };
     }
     let firstRefusal = "";
-    for (const a of anchors) {
+    // Statements anchored by a reference number first; a text where a hundred anchored statements all
+    // fail is refused (the conflict scan is linear per statement, so this bounds the work).
+    const ordered = [...anchors.filter((a) => a.byId), ...anchors.filter((a) => !a.byId)];
+    for (const a of ordered.slice(0, 100)) {
       const refusal = clauseRefusal(requirement, a, own, cited, investigator, evidence);
       if (!refusal) return g;
       firstRefusal ||= refusal;
@@ -834,94 +914,49 @@ export function gateGrounding(requirement: string, evidence: string, investigato
   return byEvidence;
 }
 
-/*
- * D10 / S5, SYN-LOCAL-04: a model decision that says no approval, review or consent is needed makes an
- * authorization claim. It stands only when one of the investigator's own statements of fact states that
- * exemption for the same activity (shared subject words or a shared reference number), and is itself
- * settled. Clinical access to data does not count.
+/** Sentences, split at full stops that end a sentence ("Aug. 1" and "prot. n. 1234" do not end one). */
+function splitSentences(text: string): string[] {
+  return (text ?? "")
+    .split(/\n+|(?<!\b(?:[A-Z]|[Jj]an|[Ff]eb|[Mm]ar|[Aa]pr|[Jj]un|[Jj]ul|[Aa]ug|[Ss]ept?|[Oo]ct|[Nn]ov|[Dd]ec|[Nn]o|[Nn]|[Nn]r|[Pp]rot|[Rr]ef|[Ff]ig|[Dd]r|[Ss]t|vs|approx|e\.g|i\.e|etc|cf)\.)(?<=[.;!?])\s+(?=[A-Z0-9"(])/)
+    .map((t) => t.trim())
+    .filter(Boolean);
+}
+
+function expandNot(norm: string): string {
+  return norm.replace(/\bwon't\b/g, "will not").replace(/\bcan't\b/g, "cannot").replace(/\bshan't\b/g, "shall not").replace(/n't\b/g, " not");
+}
+
+/**
+ * Whether a local-fact claim only repeats one of the investigator's own local facts: the fact contains the
+ * claim word for word and denies none of its words ("No research nurses are available" does not establish
+ * "Research nurses are available"; a claim that adds "and two funded nurses" to a fact is not established).
  */
-const EXEMPTION = new RegExp(
-  [
-    String.raw`\b(?:needs?|requires?|required)\s+no\s+(?:formal\s+|further\s+|separate\s+|additional\s+|new\s+)?(?:approval|ethics|reb|irb|review|consent|permission|authori[sz]ation|data[- ]use agreement)`,
-    String.raw`\bno\s+(?:formal\s+|further\s+|separate\s+|additional\s+|new\s+)?(?:approval|ethics|reb|irb|review|consent|permission|authori[sz]ation)(?:\s+(?:approval|review|submission|application|form))?s?\s+(?:is\s+|are\s+|would be\s+|will be\s+)?(?:needed|required|necessary)`,
-    String.raw`\b(?:does|do|did|will|would)\s+not\s+(?:need|require)\s+(?:an?\s+|any\s+)?(?:formal\s+|further\s+|separate\s+|new\s+)?(?:approval|ethics|reb|irb|review|consent|permission|authori[sz]ation)`,
-    String.raw`\bnot\s+requiring\s+(?:an?\s+|any\s+)?(?:formal\s+|further\s+|separate\s+|new\s+)?(?:approval|ethics|reb|irb|review|consent|permission|authori[sz]ation)`,
-    String.raw`\b(?:approval|ethics|reb|irb|review|consent|permission|authori[sz]ation)(?:\s+(?:approval|review))?\s*:?\s*(?:is\s+not|are\s+not|was\s+not|will\s+not\s+be|would\s+not\s+be|not)\s+(?:needed|required|necessary)`,
-    String.raw`\b(?:approval|ethics|reb|irb|review|consent|permission)(?:\s+(?:approval|review))?\s+(?:is|are|was|will be|would be)\s+unnecessary`,
-    String.raw`\bexempt(?:ed)?\s+from\s+(?:ethics\s+|reb\s+|irb\s+|research\s+ethics\s+)?(?:review|approval|oversight|consent)`,
-    String.raw`\bexemption\s+from\s+(?:ethics\s+|reb\s+|irb\s+|research\s+ethics\s+)?(?:review|approval|oversight)`,
-    String.raw`\bno\s+need\s+(?:for|of)\s+(?:an?\s+)?(?:approval|ethics|reb|irb|review|consent|permission)`,
-    String.raw`\bno\s+requirement\s+for\s+(?:an?\s+)?(?:ethics\s+|reb\s+|irb\s+|research\s+ethics\s+)?(?:review|approval|consent)`,
-    String.raw`\bnot\s+subject\s+to\s+(?:ethics\s+|reb\s+|irb\s+|research\s+ethics\s+)?(?:review|approval)`,
-    String.raw`\b(?:falls?|is|are)\s+outside\s+(?:the\s+)?(?:scope\s+of\s+)?(?:ethics|reb|irb|research\s+ethics)(?:\s+(?:review|approval|board))?`,
-    String.raw`\bwithout\s+(?:the\s+need\s+(?:for|of)\s+|(?:any\s+)?)(?:ethics|reb|irb|research\s+ethics)(?:\s+(?:review|approval))?`,
-    String.raw`\b(?:review|approval|consent)\s+(?:is|was|can be|will be|may be)\s+waived\b`,
-  ].join("|"),
-  "i",
-);
-const CONDITIONAL = /\b(?:if|whether|unless|until)\b|\b(?:confirm|check|verify|ask|determine|clarify)\s+(?:whether|if|that)\b|\b(?:apply|applying|request|requesting|seek|seeking)\s+(?:for\s+)?(?:an?\s+)?(?:exemption|waiver)/i;
-const NEGATED_OBLIGATION = /\b(?:cannot|can not|must not|should not|may not|not\s+\w+\s+without|no\s+\w+\s+without)\b[^.;]*\bwithout\b/i;
-const EXEMPTION_VOCAB = new Set([
-  "needs", "need", "neede", "requi", "appro", "ethic", "revie", "conse", "permi", "exemp", "board", "commi", "confi", "writi", "lette", "resea",
-  "autho", "waive", "offic", "said", "states", "state", "forma", "furth", "separ", "addit", "under", "scope", "outsi", "subje", "unnec", "neces",
-]);
-
-/** The parts of a sentence that say no approval, review or consent is needed, as settled assertions. */
-function exemptionClauses(sentence: string): string[] {
-  const norm = normalizeForMatch(sentence)
-    .replace(/\bwon't\b/g, "will not")
-    .replace(/\bcan't\b/g, "cannot")
-    .replace(/\bshan't\b/g, "shall not")
-    .replace(/n't\b/g, " not");
-  if (QUESTION.test(norm)) return [];
-  return norm
-    .replace(/\([^)]*\)/g, " ")
-    .split(/[;,]\s+|\s+(?:and|but|so)\s+/)
-    .filter((part) => EXEMPTION.test(part) && !CONDITIONAL.test(part) && !NEGATED_OBLIGATION.test(part));
-}
-
-/** Sentences in `text` that say no approval, review or consent is needed, as plain assertions. */
-export function exemptionAssertions(text: string): string[] {
-  return investigatorSentences(text)
-    .map((x) => x.text)
-    .filter((t) => exemptionClauses(t).length > 0);
-}
-
-/** Whether one of the investigator's settled statements of fact states the same exemption as `assertion`. */
-export function exemptionCovered(assertion: string, investigator: string): boolean {
-  const ids = identifierTokens(assertion).map((id) => normalizeForMatch(id));
-  const subject = [...topicStems(assertion)].filter((w) => !EXEMPTION_VOCAB.has(w));
-  return factClauses(investigator).some((c) => {
-    if (c.notFact) return false;
-    return c.text.split(/,\s+(?=but\b)|\s+but\s+/).some((part) => {
-      if (!exemptionClauses(part).length) return false;
-      const partNorm = normalizeForMatch(part);
-      if (ids.some((id) => partNorm.includes(id))) return true;
-      const stems = contentStems(part);
-      return subject.filter((w) => stems.has(w)).length >= 2;
-    });
-  });
-}
-
-/** Whether the investigator's own facts state any exemption (kept for callers that do not know the assertion). */
-export function investigatorStatesExemption(investigator: string): boolean {
-  return factClauses(investigator).some((c) => !c.notFact && exemptionClauses(c.text).length > 0);
-}
-
-/** Whether a local-fact claim repeats one of the investigator's own local facts (then it is established, not a proposal). */
 export function localFactEstablished(text: string, facts: string[]): boolean {
   const n = flatWords(text);
   if (!n) return false;
   const stems = contentStems(text);
-  return facts.some((f) => {
-    const fn = flatWords(f);
-    if (!fn) return false;
-    if (fn.includes(n) || n.includes(fn)) return true;
-    const fs = contentStems(f);
-    const inter = [...stems].filter((w) => fs.has(w)).length;
-    const union = new Set([...stems, ...fs]).size;
-    return union > 0 && inter / union >= 0.8;
-  });
+  // The investigator's sentence that holds the claim must state it: not ask it, doubt it, await it, make it
+  // conditional or limit it in time ("It is unknown whether...", "If the grant is funded, ...", "only after
+  // the ward reopens").
+  const settled = (sentence: string) => {
+    const x = expandNot(normalizeForMatch(sentence));
+    return !(
+      QUESTION.test(sentence.trim()) ||
+      notInPlaceStrong(x) ||
+      UNCERTAIN.test(x) ||
+      OBLIGATION.test(x) ||
+      /\b(?:if|once|provided|unless|until|when|whether|waiting|wait|hear|only\s+after|only\s+from|only\s+once)\b/.test(x)
+    );
+  };
+  return facts.some((f) =>
+    splitSentences(f).some((sentence) => {
+      const fn = flatWords(sentence);
+      if (!fn || !` ${fn} `.includes(` ${n} `)) return false;
+      if (!settled(sentence)) return false;
+      const denied = absentStems(sentence);
+      return ![...stems].some((w) => denied.has(w) && !absentStems(text).has(w));
+    }),
+  );
 }
 
 /*
@@ -929,8 +964,69 @@ export function localFactEstablished(text: string, facts: string[]): boolean {
  * permission ("two funded research nurses are available") is a local-fact proposal under another name.
  */
 const LOCAL_RESOURCE =
-  /\b(?:nurses?|pharmacists?|analysts?|coordinators?|assistants?|staff|fte|whole-time|protected time|hours|sessions|funding|funded|budget|grant|approval|approved|permission|access|agreement|signed|capacity|beds|slots|allocated|available|availability)\b/i;
+  /\b(?:nurses?|pharmacists?|analysts?|coordinators?|assistants?|staff|team|fte|whole-time|protected time|hours|sessions|funding|funded|budget|grant|approval|approved|cleared|permission|access|agreement|agreed|signed|consent|ethics|reb|irb|custodian|capacity|beds|slots|allocated|available|availability|extract\w*|release[sd]?|completed|in place|obtained|granted)\b/i;
 
 export function assertsLocalResource(text: string): boolean {
   return LOCAL_RESOURCE.test(normalizeForMatch(text));
 }
+
+/**
+ * Meridian's reading of the investigator's facts for a gate the model proposes as met: the facts its
+ * evidence points to, and what to check before confirming (the refusal reasons of the grounding rules).
+ * Advisory only: a model proposal never sets a gate (D10 / S5).
+ */
+export function gateSupport(requirement: string, evidence0: string, investigator: string, own = ""): { supportingFacts: string[]; concerns: string[] } {
+  // A model's evidence for a gate is a line or two; a longer text is read up to this length.
+  const evidence = (evidence0 ?? "").slice(0, 4000);
+  const g = gateGrounding(requirement, evidence, investigator, own);
+  const anchors = groundedInInvestigatorText(evidence, investigator);
+  const held = g.grounded ? (g.clauseAnchors ?? (g.sentences ?? []).map((t) => ({ text: t, sentence: t, byId: false }))) : (anchors.clauseAnchors ?? []);
+  const supportingFacts = [...new Set(held.map((a) => a.sentence))].slice(0, 3);
+  const concerns = g.grounded ? [] : [g.reason];
+  if (!g.grounded || !held.length) return { supportingFacts, concerns };
+  // Two further readings, kept narrow because a false concern teaches people to skip concerns. Both read
+  // the clause that holds the anchor, not its whole sentence ("REB-2026-188 was granted; whether the
+  // pharmacy signs the form is unknown" is about the approval, not the pharmacy).
+  //
+  // 1. An approval of something else: for an approval gate, a clause that says what was approved
+  //    ("REB-2026-188 approved the dashboard redesign") and names neither this study nor anything the gate
+  //    or the study's own description mentions. A bare approval ("REB approval REB-2026-188 was granted")
+  //    names no object and passes; so does a clause that names this study or its own protocol number.
+  if (AUTHORITY_GROUPS[0].need.test(requirement) || BODIES.some((b) => b.re.test(requirement))) {
+    const ownNorm = normalizeForMatch(own);
+    const namesThisStudy = (t: string) => THIS_STUDY.test(normalizeForMatch(t)) || (!!ownNorm && identifierTokens(t).some((id) => holdsReference(ownNorm, id)));
+    const known = new Set([...subjectStems(requirement), ...contentStems(own)]);
+    const objects = held.map((a) => {
+      if (namesThisStudy(a.text)) return null;
+      const object = approvalObject(normalizeForMatch(a.text), /\s+(?:as|on|in|with|at|by|from|to|under|until|between|dated|subject|provided|pending|while|and|but)\s+/);
+      // An allocation ("approved 60 hours for two residents") names people and time, not a subject.
+      if (/^(?:\d|one|two|three|four|five|six|seven|eight|nine|ten)\b|\b(?:hours?|hrs?|minutes?|days?|weeks?|sessions?|fte|percent|funding|budget)\b|%/.test(object)) return null;
+      // Words that name the approving body or the kind of approval ("ethics approval", "full approval to
+      // our team") say nothing about what was approved.
+      const words = subjectStems(object.replace(new RegExp(STUDY_NOUN.source, "gi"), " ")).filter(
+        (w) => !UNIT_STEMS.has(w) && !MONTHS.has(w) && !DOCUMENT_STEMS.has(w) && !APPROVAL_KIND_STEMS.has(w),
+      );
+      return words.length && !words.some((w) => known.has(w)) ? object : null;
+    });
+    if (objects.every((o) => o)) concerns.push(`the approval in your fact is for "${trimQuote(objects[0]!)}", which is not this gate's subject; check that it covers this study`);
+  }
+  // 2. The kind of body: an ethics approval is not a data-sharing agreement or a custodian's permission.
+  const need = BODIES.filter((b) => b.re.test(requirement));
+  if (need.length) {
+    const said = BODIES.filter((b) => held.some((a) => b.re.test(a.text)));
+    if (said.length && !need.some((b) => said.includes(b))) {
+      concerns.push(`the gate asks for ${need.map((b) => b.label).join(" or ")}, and your fact is about ${said.map((b) => b.label).join(" or ")}`);
+    }
+  }
+  return { supportingFacts, concerns };
+}
+
+const APPROVAL_KIND_STEMS = new Set(["ethic", "board", "commi", "favou", "favor", "opini", "forma", "writt", "condi", "uncon", "provi", "team", "inves", "appli", "group", "resea", "insti", "local", "hospi", "revie", "letter", "lette", "memo"]);
+
+/** Kinds of approving body, for gates that name one. */
+const BODIES: { label: string; re: RegExp }[] = [
+  { label: "an ethics approval", re: /\b(?:reb|irb|hireb|ethics (?:board|committee|approval|review|clearance)|research ethics|ethical approval)\b/i },
+  { label: "a data-sharing agreement", re: /\b(?:dua|dsa|data[- ](?:use|sharing|access|transfer|processing|release)[- ]agreements?|information[- ]sharing agreements?)\b/i },
+  { label: "a data custodian's permission", re: /\b(?:data custodian|custodian's|caldicott|privacy office|data governance|information governance)\b/i },
+];
+

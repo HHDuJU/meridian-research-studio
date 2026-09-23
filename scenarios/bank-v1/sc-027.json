@@ -1,6 +1,6 @@
 {
   "id": "sc-027",
-  "version": 1,
+  "version": 2,
   "title": "Women's health physiotherapy: pelvic floor class attendance, design unresolved until Design, ethics gate claimed met without evidence",
   "field": "physiotherapy",
   "level": 3,
@@ -11,7 +11,8 @@
     "D2",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Demanding path. The need names two designs (a cross-sectional survey and a retrospective records review), so routing is unresolved at create and the problem reply returns family null (family unchanged, basis unresolved). The fixture search returns seven records; one undated service report has year null and the appraisal leaves it without grade or method score (it stays 'unrated' with null scores, never 2020, 50 or 'low'). The Design stage resolves the family to cross-sectional. Its decision rests on ledger claims c1, c2 and c4, but the model marks the ethics gate 'met' with no evidence: the gate is resolved to 'unknown' with an issue (holds at 875fe59 in applyDecision), so acceptance is allowed (a supported selection) while the action stays blocked, and it stays blocked after reload, reopen and in the export because nothing ever supplies the ethics decision. The problem reply restates the typed constraints verbatim, so G11 leaves them unchanged with no rejected-change issue. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator: DOI-based for records 1, 3, 4, 6, 7 (ev-1ouzx7v, ev-1kpf7p0, ev-0qp4o82, ev-0uhs1nc, ev-10nu9sn); title and year for record 2 (ev-1a3srca) and title with an unknown year for record 5 (ev-0pk9zqe). Requires D2 (null family leaves basis unresolved), S13 (appraisal dispatch), S11 (routing, recommendedFamily, selectionStatus, actionStatus, family set on acceptance) and D5 (decision status text). Catches: a gate accepted as met on model prose, an action that becomes ready while a gate is unknown, invented values for an undated record, and a family set before acceptance.",
   "inputs": {
@@ -805,7 +806,7 @@
           "design.decisions[-1].gates[0].evidence": {
             "absent": true
           },
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
           "design.decisions[-1].recommendedFamily": "cross-sectional",
           "design.decisions[-1].selectionStatus": "proposed",
           "design.decisions[-1].actionStatus": "blocked",
@@ -817,7 +818,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -835,6 +837,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1348,5 +1370,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-027.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

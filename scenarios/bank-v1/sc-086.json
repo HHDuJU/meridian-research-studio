@@ -1,6 +1,6 @@
 {
   "id": "sc-086",
-  "version": 1,
+  "version": 2,
   "title": "Imaging stewardship: umbrella review of decision support for low back pain, landmark lead unverified, stale decision",
   "field": "radiology",
   "level": 4,
@@ -13,7 +13,8 @@
     "S5",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Level 4 adversarial path on an explicitly named umbrella review. The problem reply paraphrases the investigator's typed constraints: under G11 the typed text stays and the replacement is refused with issue rejected-change (S5). A fixture search returns seven records. The first scan call (shape discovery) adds four leads; the first is presented as a 'landmark' multicentre study with the invented DOI 10.5555/jrp.2015.9001 that no retrieval returned: it is appended after the retrieved records (D1) and stays origin 'model', status unverified, with no checks, whatever its label (G3); its explicit null certainty is logged 'cleared'. The second scan call (shape appraisal) annotates the seven records; one annotation tries to change a record's year and that write is dropped with an issue (identity is not annotatable). Certainty 'low' comes only from the appraisal (G1). The design decision rests on c1 to c3 from retrieved records with both gates met, so acceptance is a supported positive (accepted, ready). Then the review cited by c1 receives an erratum through the store's change-source action: the decision must become stale with the action blocked, in the store, on screen (Design route) and after reload, and in the export; completed stages after Scan are flagged for review (G7, G8). Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 2, 3, 5, 6 (ev-0n5rc5h, ev-0ji9hw4, ev-0culnpd, ev-0uigllw, ev-1vyeeld) and titleYearKey-keyed for records 4 and 7 (ev-1p1anhe, ev-1pkyfyv). Requires S5 (rejected-change), D1 (leads appended), S13 (appraisal payload), S10 (stale on a key findings change), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a model overwriting investigator text, a landmark label turned into verification, an appraisal rewriting identity, and an accepted decision left current after its cited source changed.",
   "inputs": {
@@ -967,8 +968,8 @@
             "c2",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -977,13 +978,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1518,5 +1564,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-086.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1. Model responses, need and records are unchanged."
 }

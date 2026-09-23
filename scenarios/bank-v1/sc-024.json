@@ -1,6 +1,6 @@
 {
   "id": "sc-024",
-  "version": 1,
+  "version": 2,
   "title": "Primary care network: accuracy of chronic kidney disease coding, empty search confirmed, design unresolved until the Design stage",
   "field": "primary-care",
   "level": 3,
@@ -11,7 +11,8 @@
     "D2",
     "D5",
     "D20",
-    "S11"
+    "S11",
+    "D10"
   ],
   "notes": "Demanding path. The need names two designs (a cross-sectional count of missed patients, or sensitivity and specificity against laboratory results), so routing is unresolved at create; the problem reply returns family null (D2: family unchanged, basis unresolved) and also constraints null. By G11 the investigator's typed constraints are kept unchanged and the null is refused with a 'rejected-change' issue at 'constraints' (not cleared, as the older level 3 sample expected before G11). The recorded fixture search returns HTTP 200 with zero records. The discovery reply brings five model leads, two with year, grade and methodQuality null (stored null and 'unrated', never 2020, 50 or 'low'), plus a certainty 'low' that must be dropped with an issue; leads alone leave the stage incomplete with the status 'leads only' (G1, G2, G3, G4). The study is reopened after this partial work, and only then does the investigator confirm the empty search on screen, which completes the stage with certainty still unassessed. The Design stage resolves the family to diagnostic; the proposed decision must not change study.family (D3 within S11) and acceptance sets it with basis 'explicit'. The decision cites no claim (nothing was retrieved) and both gates are met on investigator-supplied approvals, so the action is ready. The 'rejected-change' code is not an 875fe59 IssueCode: its checkpoint depends on the null-handling matrix of D2 extended by format rule G11 (no separate work-order entry is named for G11 yet; S5's authority boundary is related). Requires D2, D20 (no certainty and no completion over an empty scan, leads only, confirm-empty-search, 'not assessed'), S11 (routing, recommendedFamily, selectionStatus, actionStatus, family set only on acceptance) and D5 (decision status text). Catches: a model null erasing investigator text, certainty or completion without retrieved records, invented defaults for unknowns, and a proposed recommendation that changes the family before acceptance.",
   "inputs": {
@@ -764,8 +765,8 @@
           "design.decisions[-1].claimIds": [],
           "design.decisions[-1].recommendedFamily": "diagnostic",
           "design.decisions[-1].selectionStatus": "proposed",
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -774,13 +775,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "The network's research governance lead classified the work as service evaluation on 10 September 2026 (reference SE-PCN-2026-03).",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1250,5 +1296,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-024.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) citing the investigator's own fact before accepting decision 1. Model responses, need and records are unchanged."
 }

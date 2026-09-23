@@ -1,0 +1,1462 @@
+{
+  "id": "sc-025",
+  "version": 1,
+  "title": "Orthopaedic rehabilitation: rapid review of wearable activity feedback after knee replacement before a device lease decision",
+  "field": "digital-health",
+  "level": 1,
+  "family": "rapid-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Routine path with clean inputs: the need names a rapid review, so routing is explicit at create. A fixture search returns seven well-formed records with abstracts (years 2016 to 2024); the appraisal call annotates all seven by id and records five source-derived claims whose passages are exact substrings of the abstracts; certainty \"low\" is the appraisal's own value over inspected records. The problem reply restates the investigator's constraints verbatim, so G11 leaves them unchanged with no issue. A reload between the Design stage and the acceptance checks that a proposed decision survives a reload. The decision rests on ledger claims c1, c2 and c4 and both gates are met on investigator-supplied records, so acceptance gives selectionStatus accepted and actionStatus ready. Record ids are not typed by hand: each is stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1, 2, 4, 6, 7: ev-14bc9ym, ev-1gkku0k, ev-0f90usc, ev-0bvjgav, ev-1hrnbpa) or of titleYearKey(title, year) when there is no DOI (records 3, 5: ev-1f7dnlu, ev-1udqr2q). Requires S13 (appraisal dispatched on the production scan path), S11 (routing basis at create, selectionStatus, actionStatus, basis 'explicit' on acceptance) and D5 (decision status text on screen). Catches: certainty or completion without retrieval, claims that never reach the ledger, a proposed decision lost on reload, acceptance without ledger support, and an export that differs from the store.",
+  "inputs": {
+    "need": "I lead the outpatient physiotherapy service at a regional orthopaedic centre that does a little over 900 primary total knee replacements a year. Our rehabilitation after discharge is six weeks of group and home exercise, with a physiotherapy review at two, six and twelve weeks. A supplier has offered us a 12-month lease of 150 wrist-worn activity trackers with an app that sets daily step targets and lets a physiotherapist see each patient's step counts on a dashboard and send short messages of encouragement or advice. The procurement committee will decide on 10 December 2026 whether to fund it, and the chair has asked for an evidence summary first.\n\nWhat I need is a rapid review, done properly but within eight weeks, of what wearable-based activity feedback does after knee replacement: does it improve physical function and activity at around three months compared with usual rehabilitation, how many patients actually keep wearing the device, and what it costs in physiotherapist time to look at the data. I also want to know whether older patients, people without a smartphone and people living alone benefit less, because about a third of our patients are over 75 and many live in rural areas with poor mobile coverage.\n\nI have an information specialist from the library for 20 hours and two physiotherapists who can each give a day a week. We cannot translate papers, and I do not want a summary that simply repeats the supplier's brochure. The output should be a short report that tells the committee what the evidence shows, how certain it is, and what a local evaluation would need to answer if we go ahead.",
+    "constraints": "Report due to the procurement committee on 10 December 2026, eight weeks after protocol sign-off. Searching is limited to 20 hours of information specialist time; two physiotherapists at one day a week each do screening and extraction. English-language sources only.",
+    "localFacts": [
+      "The library service confirmed 20 hours of information specialist time between 5 October and 27 November 2026 (request LIB-2026-311).",
+      "The procurement committee has listed the wearable lease decision for its meeting of 10 December 2026 (agenda item PC-26-44).",
+      "The centre performed 912 primary total knee replacements in the 2025-26 financial year; 34 percent of patients were aged 75 or over."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names a rapid review and no other design, so classifyFamily gives rapid-review with basis explicit; the basis field at create requires S11.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I lead the outpatient physiotherapy service at a regional orthopaedic centre that does a little over 900 primary total knee replacements a year. Our rehabilitation after discharge is six weeks of group and home exercise, with a physiotherapy review at two, six and twelve weeks. A supplier has offered us a 12-month lease of 150 wrist-worn activity trackers with an app that sets daily step targets and lets a physiotherapist see each patient's step counts on a dashboard and send short messages of encouragement or advice. The procurement committee will decide on 10 December 2026 whether to fund it, and the chair has asked for an evidence summary first.\n\nWhat I need is a rapid review, done properly but within eight weeks, of what wearable-based activity feedback does after knee replacement: does it improve physical function and activity at around three months compared with usual rehabilitation, how many patients actually keep wearing the device, and what it costs in physiotherapist time to look at the data. I also want to know whether older patients, people without a smartphone and people living alone benefit less, because about a third of our patients are over 75 and many live in rural areas with poor mobile coverage.\n\nI have an information specialist from the library for 20 hours and two physiotherapists who can each give a day a week. We cannot translate papers, and I do not want a summary that simply repeats the supplier's brochure. The output should be a short report that tells the committee what the evidence shows, how certain it is, and what a local evaluation would need to answer if we go ahead.",
+          "problem.constraints": "Report due to the procurement committee on 10 December 2026, eight weeks after protocol sign-off. Searching is limited to 20 hours of information specialist time; two physiotherapists at one day a week each do screening and extraction. English-language sources only.",
+          "family": "rapid-review",
+          "design.basis": "explicit",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I lead the outpatient physiotherapy service at a regional orthopaedic centre"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Wearable activity feedback after total knee replacement: a rapid review for a device lease decision",
+        "subtitle": "Rapid review in eight weeks for the procurement committee of a regional orthopaedic centre",
+        "family": "rapid-review",
+        "statement": "The regional orthopaedic centre must decide by 10 December 2026 whether to lease 150 wrist-worn activity trackers with physiotherapist feedback for patients recovering from primary total knee replacement. The service needs a rapid review of whether wearable-based activity feedback improves physical function and activity at about three months compared with usual rehabilitation, how many patients keep using the devices, how much physiotherapist time the feedback takes, and whether older patients, people without smartphones and people living alone benefit less.",
+        "whoAffected": "Adults recovering from primary total knee replacement at the centre (about 900 a year, a third aged 75 or over, many in rural areas with poor mobile coverage), the outpatient physiotherapists who would review the data, and the procurement committee that must decide on the lease.",
+        "whatHurts": "Patients walk little in the first weeks after surgery and some regain function slowly. A device that adds physiotherapist workload without improving recovery, or that suits only younger patients with smartphones, would take money and clinic time away from rehabilitation that works.",
+        "currentPractice": "Six weeks of group and home exercise after discharge, with physiotherapy reviews at two, six and twelve weeks and no activity monitoring between reviews.",
+        "whyNow": "A supplier has offered a 12-month lease and the procurement committee meets on 10 December 2026; its chair has asked for an evidence summary before deciding.",
+        "constraints": "Report due to the procurement committee on 10 December 2026, eight weeks after protocol sign-off. Searching is limited to 20 hours of information specialist time; two physiotherapists at one day a week each do screening and extraction. English-language sources only.",
+        "patientCenteredGoal": "Patients regain walking and everyday function after knee replacement with rehabilitation that fits their age, home situation and access to technology.",
+        "summary": "Problem framed as a rapid review for a lease decision, with function at about three months as the outcome that matters most."
+      },
+      "note": "The reply's constraints equal the typed constraints, so nothing changes and no rejected-change issue arises (G11).",
+      "expect": {
+        "store": {
+          "title": "Wearable activity feedback after total knee replacement: a rapid review for a device lease decision",
+          "subtitle": "Rapid review in eight weeks for the procurement committee of a regional orthopaedic centre",
+          "family": "rapid-review",
+          "problem.statement": {
+            "includes": "rapid review of whether wearable-based activity feedback improves physical function"
+          },
+          "problem.constraints": "Report due to the procurement committee on 10 December 2026, eight weeks after protocol sign-off. Searching is limited to 20 hours of information specialist time; two physiotherapists at one day a week each do screening and extraction. English-language sources only.",
+          "problem.rawNeed": "I lead the outpatient physiotherapy service at a regional orthopaedic centre that does a little over 900 primary total knee replacements a year. Our rehabilitation after discharge is six weeks of group and home exercise, with a physiotherapy review at two, six and twelve weeks. A supplier has offered us a 12-month lease of 150 wrist-worn activity trackers with an app that sets daily step targets and lets a physiotherapist see each patient's step counts on a dashboard and send short messages of encouragement or advice. The procurement committee will decide on 10 December 2026 whether to fund it, and the chair has asked for an evidence summary first.\n\nWhat I need is a rapid review, done properly but within eight weeks, of what wearable-based activity feedback does after knee replacement: does it improve physical function and activity at around three months compared with usual rehabilitation, how many patients actually keep wearing the device, and what it costs in physiotherapist time to look at the data. I also want to know whether older patients, people without a smartphone and people living alone benefit less, because about a third of our patients are over 75 and many live in rural areas with poor mobile coverage.\n\nI have an information specialist from the library for 20 hours and two physiotherapists who can each give a day a week. We cannot translate papers, and I do not want a summary that simply repeats the supplier's brochure. The output should be a short report that tells the committee what the evidence shows, how certain it is, and what a local evaluation would need to answer if we go ahead.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Wearable activity feedback after total knee replacement: a rapid review for a device lease decision"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "wearable activity tracker feedback after total knee replacement function step count adherence",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Wearable activity trackers with feedback after total knee arthroplasty: a systematic review and meta-analysis",
+            "authors": "Halvorsen-Mbeki T, Carrow-Adeyemi J, Lindqvist-Oduya P",
+            "year": 2023,
+            "venue": "Journal of Joint Rehabilitation Research",
+            "doi": "10.5555/jjrr.2023.0217",
+            "providerType": "review",
+            "abstract": "We searched five bibliographic databases from inception to March 2022 for randomised trials comparing activity tracker feedback with usual rehabilitation after primary total knee arthroplasty. Eleven trials with 1,146 participants met the criteria. Feedback increased daily step count at 12 weeks (mean difference 1,090 steps, 95 percent CI 540 to 1,640; eight trials) but did not clearly improve patient-reported function (standardised mean difference 0.12, 95 percent CI -0.05 to 0.29; nine trials). Heterogeneity was high for steps. Most trials were at some risk of bias from unblinded outcome assessment, and none reported results separately for patients over 75. Certainty was moderate for steps and low for function."
+          },
+          {
+            "title": "Remote step-count feedback versus usual physiotherapy after knee replacement: a multicentre trial",
+            "authors": "Castell-Nwosu R, Brightman-Oyelaran K, Tanaka-Ferris D, Obi-Lundgren S",
+            "year": 2021,
+            "venue": "Clinical Orthopaedic Rehabilitation",
+            "doi": "10.5555/cor.2021.0088",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "Two hundred and twelve adults were randomly allocated after primary knee replacement to a wrist-worn tracker with weekly physiotherapist feedback on step targets or to usual physiotherapy. At 12 weeks the feedback group walked more (median 5,900 versus 4,700 steps per day), but the difference in patient-reported knee function was small and uncertain (2.1 points on a 48-point scale, 95 percent CI -0.8 to 5.0). Device wear on at least five days a week fell from 78 percent at week 6 to 61 percent at week 12. There were no differences in falls or readmissions. Physiotherapists spent a median of 4 minutes per patient per week on feedback."
+          },
+          {
+            "title": "Who stops wearing it? Adherence to activity trackers among older adults after joint replacement",
+            "authors": "Ferreira-Doyle M, Asante-Kowalski B",
+            "year": 2019,
+            "venue": "Digital Health in Ageing",
+            "providerType": "journal-article",
+            "abstract": "We followed 318 adults aged 65 and over who were given an activity tracker after hip or knee replacement and recorded whether data were synchronised each week for 12 weeks. Twenty-three percent never synchronised any data. Stopping within four weeks was more common in people aged over 80, people without a smartphone and people living alone. Patients who stopped reported difficulty charging the device, skin irritation and a sense that nobody looked at the data. The study could not tell whether stopping affected recovery, because function was not measured after discharge from the programme."
+          },
+          {
+            "title": "Physiotherapist time spent reviewing remote activity data: a time-and-motion study in three orthopaedic services",
+            "authors": "Olumide-Sandberg E, Rourke-Achterberg N, Vasquez-Holm T",
+            "year": 2022,
+            "venue": "Physiotherapy Service Delivery",
+            "doi": "10.5555/psd.2022.0310",
+            "providerType": "journal-article",
+            "abstract": "Fourteen physiotherapists in three orthopaedic services recorded the time they spent on dashboards of patients' activity data after joint replacement over eight weeks. Reviewing the data and messaging patients took a median of 3.5 minutes per patient per week (interquartile range 2.0 to 6.0), with most time spent on patients whose step counts fell. Threshold alerts produced many prompts that led to no action, and two services switched them off. Physiotherapists valued the data for patients who lived far from the clinic but felt that reviews displaced face-to-face time when caseloads were high."
+          },
+          {
+            "title": "Early walking volume and function six months after total knee replacement: a secondary analysis of exercise study data",
+            "authors": "Nakashima-Pryce A, Delacroix-Amadi O",
+            "year": 2016,
+            "venue": "Knee Outcomes Quarterly",
+            "providerType": "journal-article",
+            "abstract": "Using step counts recorded in the sixth week after surgery by 406 participants of an exercise study, we examined whether walking volume predicted patient-reported function at six months. Each additional 1,000 steps per day was associated with a 1.4-point better function score, but the association fell to 0.5 points (95 percent CI -0.2 to 1.2) after adjustment for pre-operative function and pain. Walking volume may mark recovery rather than cause it, so raising step counts alone may not improve function. Participants were younger and fitter than typical surgical patients."
+          },
+          {
+            "title": "Rapid reviews for hospital technology decisions: agreement with full systematic reviews on the direction of effect",
+            "authors": "Whitcombe-Eze L, Sorensen-Baptiste H, Quayle-Moreno R",
+            "year": 2020,
+            "venue": "Evidence Synthesis Methods Notes",
+            "doi": "10.5555/esmn.2020.0045",
+            "providerType": "journal-article",
+            "abstract": "We compared 30 rapid reviews produced for hospital technology decisions with full systematic reviews on the same questions. Conclusions agreed on the direction of effect in 27 of 30 pairs. Rapid reviews more often missed non-English and grey literature and less often reported a risk of bias assessment. Disagreements arose where the evidence base was small or changing quickly. We recommend that rapid reviews state every shortcut taken, date their searches and say which conclusions would change if a missed study pointed the other way."
+          },
+          {
+            "title": "Being watched or being supported? Patients' experience of app-based activity feedback in knee rehabilitation",
+            "authors": "Mbatha-Rowntree C, Ekstrom-Idowu F",
+            "year": 2024,
+            "venue": "Journal of Joint Rehabilitation Research",
+            "doi": "10.5555/jjrr.2024.0102",
+            "providerType": "qualitative research",
+            "abstract": "We interviewed 22 patients who had used an activity tracker with physiotherapist feedback for 12 weeks after knee replacement. Most valued seeing their progress and said that messages from a named physiotherapist kept them walking. Several felt judged by daily step targets on days when pain or swelling limited walking, and some stopped wearing the device after a week of low counts. Patients in areas with poor mobile coverage described missed synchronisation and repeated reminders. Participants asked for targets that could be adjusted and for someone to explain what the data were used for."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values (see notes). Before appraisal the records carry no grade and no scores (G1, G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-14bc9ym",
+            "ev-1gkku0k",
+            "ev-1f7dnlu",
+            "ev-0f90usc",
+            "ev-1udqr2q",
+            "ev-0bvjgav",
+            "ev-1hrnbpa"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-14bc9ym",
+          "scan.items[0].doi": "10.5555/jjrr.2023.0217",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].kind": "rct",
+          "scan.items[2].id": "ev-1f7dnlu",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.items[4].year": 2016,
+          "scan.items[6].kind": "qualitative",
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Wearable activity trackers with feedback after total knee arthroplasty: a systematic review and meta-analysis"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-14bc9ym",
+            "relevance": 95,
+            "methodQuality": 72,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Across trials to March 2022, feedback raised daily steps at 12 weeks by about 1,090 but did not clearly improve patient-reported function (standardised mean difference 0.12).",
+            "limitations": "Search is four years old; unblinded outcome assessment in most trials; no results for patients over 75.",
+            "contextTags": [
+              "meta-analysis",
+              "step count",
+              "function",
+              "update needed"
+            ]
+          },
+          {
+            "id": "ev-1gkku0k",
+            "relevance": 90,
+            "methodQuality": 70,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "More steps with feedback at 12 weeks (5,900 against 4,700 per day), a small and uncertain function difference, device wear falling from 78 to 61 percent, and about 4 minutes of physiotherapist time per patient per week.",
+            "limitations": "Single trial; function assessed unblinded; adherence defined by wear days, not by use of the feedback.",
+            "contextTags": [
+              "randomised",
+              "adherence",
+              "physiotherapist time"
+            ]
+          },
+          {
+            "id": "ev-1f7dnlu",
+            "relevance": 78,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Twenty-three percent of adults aged 65 and over never synchronised data; stopping early was more common over 80, without a smartphone and when living alone.",
+            "limitations": "No comparison group and no functional outcome; hip and knee patients combined.",
+            "contextTags": [
+              "older adults",
+              "digital exclusion",
+              "adherence"
+            ]
+          },
+          {
+            "id": "ev-0f90usc",
+            "relevance": 74,
+            "methodQuality": 48,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Reviewing dashboards and messaging took a median of 3.5 minutes per patient per week; threshold alerts produced many prompts that led to no action.",
+            "limitations": "Self-recorded time; three services; no link to patient outcomes.",
+            "contextTags": [
+              "workload",
+              "alerts",
+              "service delivery"
+            ]
+          },
+          {
+            "id": "ev-1udqr2q",
+            "relevance": 62,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Week-6 step counts predicted six-month function, but the association largely disappeared after adjustment for pre-operative function and pain.",
+            "limitations": "Secondary analysis; fitter participants than usual; not a test of feedback.",
+            "contextTags": [
+              "mechanism",
+              "confounding",
+              "step count"
+            ]
+          },
+          {
+            "id": "ev-0bvjgav",
+            "relevance": 55,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Rapid reviews agreed with full reviews on the direction of effect in 27 of 30 pairs but more often missed non-English and grey literature.",
+            "limitations": "Methods study of other topics; agreement on direction says little about precision.",
+            "contextTags": [
+              "rapid review methods",
+              "shortcuts"
+            ]
+          },
+          {
+            "id": "ev-1hrnbpa",
+            "relevance": 70,
+            "methodQuality": 58,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Patients valued progress and messages from a named physiotherapist, felt judged by fixed step targets on painful days, and lost synchronisation where coverage was poor.",
+            "limitations": "Twenty-two patients from one service; interviewers were part of the programme.",
+            "contextTags": [
+              "patient experience",
+              "step targets",
+              "rural coverage"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Across eight trials, activity tracker feedback after knee arthroplasty increased daily step count at 12 weeks by about 1,090 steps.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-14bc9ym"
+            ],
+            "location": "Abstract, results",
+            "passage": "Feedback increased daily step count at 12 weeks (mean difference 1,090 steps, 95 percent CI 540 to 1,640; eight trials)",
+            "interpretation": "Feedback changes the behaviour it targets; this is not yet evidence of better recovery.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "The same review found no clear improvement in patient-reported function and no results for patients over 75.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-14bc9ym"
+            ],
+            "location": "Abstract, results",
+            "passage": "did not clearly improve patient-reported function (standardised mean difference 0.12, 95 percent CI -0.05 to 0.29; nine trials)",
+            "interpretation": "Function is the decision-critical outcome and it is uncertain; the oldest third of the centre's patients is not represented in reported results.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "In a multicentre trial, device wear on at least five days a week fell from 78 percent at week 6 to 61 percent at week 12.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1gkku0k"
+            ],
+            "location": "Abstract, results",
+            "passage": "Device wear on at least five days a week fell from 78 percent at week 6 to 61 percent at week 12.",
+            "interpretation": "Adherence should be a reported outcome of the review and a cost driver for the lease.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Among adults aged 65 and over, stopping early was more common in people over 80, without a smartphone or living alone.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1f7dnlu"
+            ],
+            "location": "Abstract",
+            "passage": "Stopping within four weeks was more common in people aged over 80, people without a smartphone and people living alone.",
+            "interpretation": "The review must extract results for these groups where reported and say where trials excluded them.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Reviewing activity dashboards and messaging patients took a median of 3.5 minutes per patient per week.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0f90usc"
+            ],
+            "location": "Abstract",
+            "passage": "Reviewing the data and messaging patients took a median of 3.5 minutes per patient per week (interquartile range 2.0 to 6.0)",
+            "interpretation": "Planning value for physiotherapist time: about 9 hours a week for 150 active patients.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Feedback from wearable trackers raises daily steps after knee replacement (about 1,090 steps at 12 weeks across eight trials) but a clear gain in patient-reported function has not been shown, and walking volume may mark recovery rather than cause it. Device wear falls from about four in five patients at six weeks to three in five at twelve, and stopping is more common in the oldest patients, people without smartphones and people living alone, who are a large share of this centre's patients. Physiotherapist review takes a few minutes per patient per week. The retrieved meta-analysis searched only to March 2022, so a dated rapid update focused on function, adherence, workload and older patients is justified.",
+        "gradeOverall": "low",
+        "gradeRationale": "Moderate certainty that feedback increases steps, but low certainty about function, the outcome that matters most for the decision: unblinded outcomes, imprecision around a small effect, and indirectness for patients over 75. Adherence and workload evidence comes from single observational studies.",
+        "summary": "Seven retrieved records appraised; five source-derived claims with passages; overall certainty low because function is uncertain."
+      },
+      "note": "Appraisal of the seven retrieved records; annotations and claims reach the store only through the appraisal mapper on the production scan path (S13). The certainty is assigned over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[0].methodQuality": 72,
+          "scan.items[0].relevance": 95,
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[1].grade": "moderate",
+          "scan.items[2].grade": "low",
+          "scan.items[3].keyFindings": {
+            "includes": "3.5 minutes per patient per week"
+          },
+          "scan.items[6].kind": "qualitative",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].id": "c1",
+          "scan.claims[0].sourceIds": [
+            "ev-14bc9ym"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-1gkku0k"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-1f7dnlu"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-0f90usc"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.synthesis": {
+            "includes": "Seven retrieved records"
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional orthopaedic centre, about 900 primary knee replacements a year",
+          "six weeks of group and home exercise after discharge",
+          "procurement decision on 10 December 2026",
+          "rural patients with poor mobile coverage"
+        ],
+        "reading": "The supplier's case rests on step counts, which feedback raises (claim c1), while the outcome that matters to patients and to the committee is function, where the retrieved review found no clear gain (claim c2). Walking volume may be a marker of recovery rather than its cause. Device wear falls over 12 weeks (claim c3) and stopping is more common among the oldest patients, people without smartphones and people living alone (claim c4), a large share of this centre's patients. Physiotherapist review time is small per patient but adds up across a caseload (claim c5).",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Wrist-worn tracker with physiotherapist feedback",
+            "kind": "context",
+            "detail": "Offered on a 12-month lease of 150 devices."
+          },
+          {
+            "id": "n2",
+            "label": "Daily step count",
+            "kind": "outcome",
+            "detail": "What the feedback targets directly."
+          },
+          {
+            "id": "n3",
+            "label": "Patient-reported function at about three months",
+            "kind": "outcome",
+            "detail": "The outcome the decision should rest on."
+          },
+          {
+            "id": "n4",
+            "label": "Meta-analysis of eleven trials",
+            "kind": "systematic-review",
+            "detail": "Steps up by about 1,090 (c1); function unclear (c2); search ended March 2022."
+          },
+          {
+            "id": "n5",
+            "label": "Multicentre trial with falling device wear",
+            "kind": "rct",
+            "detail": "Wear from 78 to 61 percent between weeks 6 and 12 (c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Patients over 80, without smartphones or living alone",
+            "kind": "stakeholder",
+            "detail": "Stop early more often (c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Outpatient physiotherapists",
+            "kind": "stakeholder",
+            "detail": "About 3.5 minutes per patient per week on dashboards (c5)."
+          },
+          {
+            "id": "n8",
+            "label": "Procurement committee",
+            "kind": "context",
+            "detail": "Decides on the lease on 10 December 2026."
+          },
+          {
+            "id": "n9",
+            "label": "No reported results for patients over 75",
+            "kind": "gap",
+            "detail": "A third of the centre's patients."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "raises"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "may mark rather than cause"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "summarises trials of"
+          },
+          {
+            "from": "n5",
+            "to": "n1",
+            "relation": "shows falling use of"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "stop using more often"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "spend review time on"
+          },
+          {
+            "from": "n9",
+            "to": "n8",
+            "relation": "leaves uncertain for"
+          }
+        ],
+        "summary": "Map separates the step count gain from the uncertain function gain and places adherence, workload and older patients around the lease decision."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.contexts": {
+            "length": 4
+          },
+          "map.nodes[8].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No results reported separately for patients over 75",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "A third of the centre's patients are 75 or over and none of the pooled trials reported them separately (claim c2), so the committee cannot tell whether the lease would help them.",
+            "opportunity": "Extract age-specific results where trials report them, list trials that excluded older patients, and state the gap plainly."
+          },
+          {
+            "id": "g2",
+            "title": "Function, not steps, is the decision-critical outcome",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "Step count gains are consistent (claim c1) but function is uncertain, and walking volume may follow recovery rather than cause it.",
+            "opportunity": "Make patient-reported function at about three months the review's primary outcome and report steps as secondary."
+          },
+          {
+            "id": "g3",
+            "title": "Device use falls after six weeks",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Falling wear (claim c3) limits benefit and raises the cost per patient who actually uses the device.",
+            "opportunity": "Report adherence at 6 and 12 weeks as a separate review outcome."
+          },
+          {
+            "id": "g4",
+            "title": "Digital exclusion among older and rural patients",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "People without smartphones, living alone or with poor coverage stop early (claim c4) and could be left with worse follow-up than now.",
+            "opportunity": "Extract data on offline devices, loaned phones or clinic synchronisation, and flag trials that required a smartphone."
+          },
+          {
+            "id": "g5",
+            "title": "The pooled evidence is four years old",
+            "kind": "evidence",
+            "severity": "watch",
+            "whyItMatters": "The meta-analysis searched to March 2022, and a small or changing evidence base is where rapid and full reviews disagree most.",
+            "opportunity": "Run a dated update search from January 2022 and state every shortcut."
+          }
+        ],
+        "errorsFound": [
+          "The supplier's brochure presents step count gains as recovery gains; the retrieved evidence separates the two."
+        ],
+        "reevaluation": "The rapid review should update the 2022 search, make function at about three months its primary outcome, and report adherence, physiotherapist time and results for older and digitally excluded patients as separate questions.",
+        "summary": "Five gaps; missing results for older patients and the uncertain function outcome are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No results reported separately for patients over 75"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "An updated rapid review will find that wearable activity feedback after knee replacement increases daily steps at about three months but produces no patient-important improvement in function (standardised mean difference below 0.2).",
+            "novelty": 25,
+            "need": 82,
+            "practiceChange": 78,
+            "feasibility": 85,
+            "parsimony": 86,
+            "rationale": "Need and practice change are high because a lease decision depends on the answer; novelty is low because it updates an existing review; feasibility and parsimony are high because one primary outcome can be updated in eight weeks.",
+            "risks": "Few new trials since 2022; heterogeneous function scales; industry-funded trials."
+          },
+          {
+            "id": "h2",
+            "statement": "Benefits on function and adherence are smaller in patients aged 75 or over and in patients without a smartphone.",
+            "novelty": 55,
+            "need": 72,
+            "practiceChange": 65,
+            "feasibility": 40,
+            "parsimony": 58,
+            "rationale": "Matters for a centre where a third of patients are over 75, but few trials report subgroups, so it will be described rather than tested.",
+            "risks": "Ecological reasoning from trials that excluded the oldest patients."
+          },
+          {
+            "id": "h3",
+            "statement": "Feedback that includes messages from a named physiotherapist improves function more than automated step targets alone.",
+            "novelty": 50,
+            "need": 55,
+            "practiceChange": 60,
+            "feasibility": 45,
+            "parsimony": 55,
+            "rationale": "Patients describe named messages as what kept them walking, but head-to-head comparisons are unlikely to exist.",
+            "risks": "Comparison across trials confounded by other trial differences."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected because it answers the committee's question with one primary outcome."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[1].feasibility": 40,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In adults after primary total knee replacement, does wearable-based activity feedback during the first 12 weeks, compared with usual rehabilitation, improve patient-reported function at about three months?",
+            "framework": "PICO",
+            "population": "Adults after primary total knee replacement",
+            "intervention": "Wearable activity tracker with feedback (targets, app messages or physiotherapist messages) for up to 12 weeks",
+            "comparator": "Usual rehabilitation, or the device without feedback",
+            "outcome": "Patient-reported knee function at 10 to 14 weeks",
+            "time": "About three months after surgery",
+            "setting": "Outpatient or home-based rehabilitation"
+          },
+          {
+            "id": "q2",
+            "text": "What do patients recovering from knee replacement experience when using activity feedback, and what makes them stop?",
+            "framework": "SPIDER",
+            "population": "Adults using activity feedback after knee replacement",
+            "intervention": "Experience of wearing a tracker and receiving feedback",
+            "outcome": "Reasons for continued use or stopping, including technology access and step targets",
+            "time": "First 12 weeks after surgery",
+            "setting": "Home rehabilitation, including rural areas"
+          }
+        ],
+        "finer": "Feasible in eight weeks with the confirmed library hours; interesting to the committee and the physiotherapy team; novel only as an update focused on function and older patients; ethical as a review of published data; relevant because a lease decision is scheduled.",
+        "summary": "One PICO effectiveness question and one SPIDER question on experience and stopping."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PICO",
+          "questions.items[1].framework": "SPIDER",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "rapid-review",
+        "rationale": "The committee needs an answer by 10 December 2026 and the service has eight weeks, 20 information specialist hours and two part-time reviewers. A rapid review with stated shortcuts (a dated update search from January 2022, single screening with a 20 percent check, English only) can update the existing meta-analysis for function at about three months (claims c1, c2) and summarise adherence (c3), older and digitally excluded patients (c4) and physiotherapist time (c5). Rapid and full reviews usually agree on the direction of effect when shortcuts are reported.",
+        "alternatives": [
+          "Full systematic review (refused: cannot finish before the committee meets)",
+          "Summarise the 2023 meta-analysis only (refused: search ended in March 2022 and function for older patients is not addressed)",
+          "Local evaluation of a small device batch before any review (deferred: the committee first needs to know whether the evidence justifies spending)"
+        ],
+        "guidelines": [
+          "PRISMA 2020, with rapid review shortcuts stated",
+          "PRISMA-S for the search"
+        ],
+        "whyNotMoreComplex": "A full systematic review with duplicate screening and author contact would take months and is unlikely to change the direction of the answer; the decision needs a dated, transparent update now.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct an eight-week rapid review of wearable activity feedback after total knee replacement, with function at about three months as the primary outcome and adherence, physiotherapist time and results for older patients as secondary questions, and report to the procurement committee on 10 December 2026.",
+          "question": "Should the centre commission a rapid review before deciding on the wearable lease?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Retrieved evidence shows an effect on the targeted behaviour but leaves the decision-critical outcome uncertain, so an updated synthesis could change the decision.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "An up-to-date review already answers the question for patients over 75.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": [
+                "c2"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Information specialist time for the searches",
+              "status": "met",
+              "evidence": "Library request LIB-2026-311 confirming 20 hours between 5 October and 27 November 2026, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "A decision date and forum for the report",
+              "status": "met",
+              "evidence": "Procurement committee agenda item PC-26-44 for 10 December 2026, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Summarise the 2023 meta-analysis only",
+            "Full systematic review after the lease decision"
+          ],
+          "note": "Rests on ledger claims c1, c2 and c4 from retrieved records; both gates are met on investigator-supplied records."
+        },
+        "summary": "Rapid review recommended; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "The decision cites ledger claims c1, c2 and c4 from the appraisal (they exist only when S13 applied it). selectionStatus requires S11; the status text in the decision panel requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "rapid-review",
+          "family": "rapid-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c4"
+          ],
+          "design.decisions[-1].criteria[0].claimIds": [
+            "c1",
+            "c2"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route before acceptance: the proposed decision and its claim links must survive (selectionStatus requires S11, the panel text D5).",
+      "expect": {
+        "store": {
+          "title": "Wearable activity feedback after total knee replacement: a rapid review for a device lease decision",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "needsReview": [],
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c4"
+          ]
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: the claims exist in the ledger and rest on retrieved records and both gates are met, so the selection is accepted and the action is ready (G7). selectionStatus, actionStatus and basis 'explicit' require S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c4"
+          ],
+          "design.basis": "explicit",
+          "family": "rapid-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Rapid review with documented shortcuts, updating the 2023 meta-analysis for patient-reported function at about three months and summarising adherence, physiotherapist time, patient experience and results for older and digitally excluded patients, reported to the procurement committee on 10 December 2026.",
+        "population": "Adults after primary total knee replacement in randomised trials (effectiveness) and in qualitative or observational studies (adherence, workload, experience) published from January 2015 in English.",
+        "exposure": "Wearable-based activity feedback in the first 12 weeks after surgery: a worn device that records activity with feedback to the patient through targets, app messages or physiotherapist messages. Comparator: usual rehabilitation or the same device without feedback.",
+        "procedures": "The information specialist searches three bibliographic databases and two trial registries from January 2022 to October 2026 with a dated strategy and checks the reference list of the 2023 meta-analysis. One physiotherapist screens titles and abstracts and the second checks a random 20 percent; full texts are screened by one reviewer and disagreements discussed. One reviewer extracts data into a tested form and the second checks every primary outcome value. Trials are judged with a short domain-based risk of bias tool; qualitative studies are summarised thematically. Function is pooled if at least five trials report it; otherwise effect directions are tabulated.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Patient-reported knee function at about three months",
+            "measure": "Standardised mean difference between feedback and comparator in validated knee function scores",
+            "timing": "10 to 14 weeks after surgery",
+            "why": "The outcome that matters to patients and to the committee; step counts may not translate into function.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Daily step count",
+            "measure": "Mean difference in device-measured steps per day",
+            "timing": "About 12 weeks after surgery",
+            "why": "The behaviour the feedback targets directly.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Device wear and synchronisation",
+            "measure": "Proportion of participants wearing the device on at least five days a week at 6 and 12 weeks",
+            "timing": "6 and 12 weeks",
+            "why": "Low adherence limits benefit and raises the cost per active user.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Physiotherapist time",
+            "measure": "Minutes per patient per week spent reviewing data and messaging",
+            "timing": "During the feedback period",
+            "why": "Clinic time is the main hidden cost of the lease.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Falls and readmissions",
+            "measure": "Participants with a fall or readmission as reported by trials",
+            "timing": "To 12 weeks",
+            "why": "More walking in the early weeks could bring more falls.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Fits 20 information specialist hours and two physiotherapists at one day a week for eight weeks if about 1,500 records are screened; protocol sign-off by 5 October 2026 keeps the 10 December deadline.",
+        "biasMitigation": [
+          "Search strategy dated and reported in full",
+          "Second reviewer checks 20 percent of screening decisions and every primary outcome extraction",
+          "Every shortcut stated in the report",
+          "Supplier-funded studies flagged and removed in a sensitivity analysis"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Single-reviewer screening",
+            "severity": "watch",
+            "note": "May miss eligible studies; the 20 percent check estimates how many."
+          },
+          {
+            "id": "b2",
+            "label": "English-language restriction",
+            "severity": "watch",
+            "note": "Rapid reviews more often miss non-English studies."
+          },
+          {
+            "id": "b3",
+            "label": "Industry funding",
+            "severity": "watch",
+            "note": "Device makers fund several trials; analysed separately."
+          }
+        ],
+        "parsimony": {
+          "score": 82,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "Two process and balancing outcomes reported descriptively"
+          ],
+          "simplestPath": "Update one meta-analysis for one primary outcome and summarise adherence, workload and experience narratively."
+        },
+        "theoreticalFramework": "None; the question is effectiveness and adherence, and no framework earns its place in an eight-week review.",
+        "summary": "Rapid review protocol with one primary outcome, one secondary, one process and two balancing outcomes, and every shortcut stated."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.outcomes[3].role": "balancing",
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Rapid review with an updated random-effects meta-analysis for the primary outcome when at least five trials report it.",
+        "sampleSize": "The unit of analysis is the trial. The 2023 meta-analysis pooled nine trials for function; if the update adds two or three trials, a random-effects meta-analysis of about 11 trials and 1,200 participants gives a 95 percent confidence interval roughly 0.12 either side of the standardised mean difference, enough to separate a patient-important effect (0.3 or more) from little or no effect (below 0.2). With fewer than five trials reporting function the review will not pool.",
+        "primaryAnalysis": "Random-effects meta-analysis (restricted maximum likelihood with the Hartung-Knapp adjustment) of standardised mean differences in function at about three months; certainty rated with GRADE.",
+        "secondaryAnalysis": "Mean difference in daily steps; adherence and physiotherapist time summarised as medians and ranges across studies; qualitative findings grouped into themes; results for patients aged 75 or over extracted where reported.",
+        "missingData": "No author contact in the time available; trials reporting only medians are included with a standard conversion and removed in a sensitivity analysis.",
+        "multiplicity": "One primary outcome; secondary outcomes described with intervals and no significance testing.",
+        "software": "R with the metafor package; screening log and extraction form kept in a dated shared workbook.",
+        "overfittingGuards": [
+          "Pooling rule fixed before the search",
+          "No subgroup analysis beyond the pre-specified age split",
+          "Supplier-funded trials removed in one sensitivity analysis only"
+        ],
+        "summary": "Trial-level meta-analysis of function if five or more trials report it; about 11 trials would give an interval narrow enough for the decision."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "unit of analysis is the trial"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No participants are involved; the risk is a misleading summary that drives a costly lease or rejects a useful one.",
+        "consent": "Not applicable: only published and publicly reported data are used.",
+        "data": "No personal data; the search strategy, screening log, extraction form and analysis code are archived with the report.",
+        "equity": "PROGRESS-Plus: age over 75, rural residence with poor mobile coverage, living alone, lower income and not owning a smartphone may reduce access and benefit. The review extracts results for these groups where reported and names trials that excluded them, so the committee can weigh loaned phones, offline devices or clinic synchronisation.",
+        "effectiveness": "The review succeeds if the committee can see the size and certainty of any effect on function and adherence before deciding.",
+        "efficiency": "Uses existing library and physiotherapy time; no new data collection.",
+        "costs": "Staff time within existing roles (20 information specialist hours and about 16 physiotherapist days).",
+        "grants": "None needed.",
+        "partnerships": "Library service, procurement committee, two patient partners from the joint replacement class, and the centre's digital services team for coverage questions.",
+        "rebPath": "No research ethics review is required for a review of published data; the report goes to the procurement committee, and any later local evaluation of the devices would be screened separately.",
+        "limitations": "Shortcuts (single screening with a 20 percent check, English only, no author contact) may miss evidence; results may not transfer to rural patients with poor coverage.",
+        "summary": "Low-risk review of published data with an explicit equity lens on age, rurality and technology access."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "ethics.rebPath": {
+            "includes": "No research ethics review is required"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners from the joint replacement class review the review questions and the plain-language summary; the digital services team advises on mobile coverage; physiotherapists comment on the workload findings before the committee meets.",
+        "socialListening": "No social media listening; the centre's patient feedback forms from the last year are read for comments on activity monitoring and home exercise.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Encouragement",
+            "quote": "Composite paraphrase: Seeing the numbers go up each week kept me going, especially when the physio sent a message.",
+            "implication": "Report whether trials used named physiotherapist messages or automated targets.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Feeling judged on bad days",
+            "quote": "Composite paraphrase: On the days my knee swelled I barely walked, and the watch made me feel I was failing.",
+            "implication": "Extract whether step targets could be adjusted and whether trials reported harms such as distress.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Technology at home",
+            "quote": "Composite paraphrase: Dad does not have a smartphone; we would have to set it up for him and we live an hour away.",
+            "implication": "Record whether trials required a smartphone and what support they gave.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Clinic time",
+            "quote": "Composite paraphrase: Three minutes a patient sounds small until there are forty patients on the dashboard.",
+            "implication": "Present physiotherapist time per 150 active patients, not per patient.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "partner",
+            "theme": "Coverage",
+            "quote": "Composite paraphrase: Half the valley has no signal; the devices will only sync when people come into town.",
+            "implication": "Flag evidence from areas with poor coverage and consider clinic synchronisation.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on encouragement, targets, technology access, clinic time and coverage."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[0].verification": "ai-lead",
+          "voices.items[2].source": "family",
+          "voices.items[1].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Wearable activity feedback after total knee replacement: a rapid review to inform a device lease decision",
+        "abstract": "Objective: to update the evidence on whether wearable-based activity feedback after primary total knee replacement improves patient-reported function at about three months, and to summarise adherence, physiotherapist time and results for older and digitally excluded patients. Design: rapid review with a dated update search from January 2022, single screening with a 20 percent check and stated shortcuts. Results and conclusions will be written after the synthesis.",
+        "introduction": "Activity trackers with feedback raise step counts after knee replacement, but whether they improve function is uncertain and the most recent synthesis searched to March 2022. A regional centre must decide whether to lease devices for about 900 patients a year, a third of them aged 75 or over.",
+        "methods": "Three bibliographic databases and two trial registries were searched from January 2022 to October 2026 and the 2023 meta-analysis was used as the base. Randomised trials informed effectiveness; qualitative and observational studies informed adherence, workload and experience. Function at about three months was pooled with a random-effects model when at least five trials reported it.",
+        "results": "No studies have been screened yet. The report will present the search flow, the updated pooled estimate for function with its certainty, step counts, adherence at 6 and 12 weeks, physiotherapist time and results for older patients where reported.",
+        "discussion": "The discussion will weigh a probable step count gain against the size and certainty of any function gain, set adherence and workload against the lease cost, and state what a local evaluation would need to measure if the committee proceeds.",
+        "limitations": "Shortcuts may miss studies; English only; no author contact; few trials report results for patients over 75.",
+        "conclusion": "To be written after the synthesis; it will be limited to what the evidence shows about function, adherence and workload and will not claim benefits for groups the trials did not include.",
+        "reportingChecklist": "PRISMA 2020, with the rapid review shortcuts listed",
+        "summary": "PRISMA-structured draft with results left empty until the synthesis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRISMA 2020, with the rapid review shortcuts listed",
+          "manuscript.results": {
+            "includes": "No studies have been screened yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Record the search date and every shortcut in the protocol before screening starts",
+          "Run identity checks on the seven retrieved records before the report cites them",
+          "Ask the supplier which of the included trials it funded"
+        ],
+        "improvementNotes": "Seven records came from a recorded search and were appraised at abstract level; the accepted decision rests on three ledger claims with passages from those abstracts. No record has an identity check yet, and the committee report will not present step count gains as recovery gains.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before screening; evidence retrieved and appraised at abstract level but not yet identity-checked."
+      },
+      "note": "audit.openFixes, audit.lastReview and audit.improvementNotes state the correct behaviour; at 875fe59 they fail because store.ts mergeStage overwrites the audit stage's patch (deliverable 1b item L1.6), not because of a missing work-order entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "three ledger claims"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list. Statuses are checked in the export, because the decision panel is not necessarily on the reopened route.",
+      "expect": {
+        "store": {
+          "title": "Wearable activity feedback after total knee replacement: a rapid review for a device lease decision",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "Report due to the procurement committee on 10 December 2026, eight weeks after protocol sign-off. Searching is limited to 20 hours of information specialist time; two physiotherapists at one day a week each do screening and extraction. English-language sources only.",
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Wearable activity feedback after total knee replacement: a rapid review for a device lease decision"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; scan.claims requires S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 5
+            },
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c2",
+              "c4"
+            ],
+            "problem.constraints": "Report due to the procurement committee on 10 December 2026, eight weeks after protocol sign-off. Searching is limited to 20 hours of information specialist time; two physiotherapists at one day a week each do screening and extraction. English-language sources only.",
+            "problem.rawNeed": "I lead the outpatient physiotherapy service at a regional orthopaedic centre that does a little over 900 primary total knee replacements a year. Our rehabilitation after discharge is six weeks of group and home exercise, with a physiotherapy review at two, six and twelve weeks. A supplier has offered us a 12-month lease of 150 wrist-worn activity trackers with an app that sets daily step targets and lets a physiotherapist see each patient's step counts on a dashboard and send short messages of encouragement or advice. The procurement committee will decide on 10 December 2026 whether to fund it, and the chair has asked for an evidence summary first.\n\nWhat I need is a rapid review, done properly but within eight weeks, of what wearable-based activity feedback does after knee replacement: does it improve physical function and activity at around three months compared with usual rehabilitation, how many patients actually keep wearing the device, and what it costs in physiotherapist time to look at the data. I also want to know whether older patients, people without a smartphone and people living alone benefit less, because about a third of our patients are over 75 and many live in rural areas with poor mobile coverage.\n\nI have an information specialist from the library for 20 hours and two physiotherapists who can each give a day a week. We cannot translate papers, and I do not want a summary that simply repeats the supplier's brochure. The output should be a short report that tells the committee what the evidence shows, how certain it is, and what a local evaluation would need to answer if we go ahead."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

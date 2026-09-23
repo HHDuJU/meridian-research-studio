@@ -1,0 +1,1426 @@
+{
+  "id": "sc-074",
+  "version": 2,
+  "title": "Community hospital pharmacy: scoping review of technician medication reconciliation, certainty over an empty search dropped",
+  "field": "pharmacy",
+  "level": 3,
+  "family": "scoping-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D20",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding level 3 path. The need names a scoping review and no other design, so classifyFamily routes it to \"scoping-review\" at create; the problem reply returns the typed constraints unchanged (G11). A first recorded fixture search with a narrow query returns HTTP 200 with zero records. The discovery reply that follows carries no leads but a certainty \"moderate\" and a key investigatorConfirmsEmptySearch: true: over zero records the certainty is dropped with an issue and stays \"\" (G1), the model's confirmation key is dropped with an issue because only the investigator's screen action can confirm an empty search (G2; A3 D20(a) correction), and the stage stays incomplete (\"not assessed\"). A second, broader recorded search returns seven records and is a second retrieval event, not a replacement; the appraisal (scan call 2) annotates all seven and records four claims, certainty \"low\" over inspected records, and only now is Scan complete. The decision rests on claims c1 to c4, but its second-reviewer gate stays unknown (the residency director has not replied), so acceptance gives selectionStatus accepted with actionStatus blocked through reload, reopen and export (G7; A2 item 9). Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3, 5 and 7; titleYearKey for records 2, 4 and 6): ev-1gh39r9, ev-1jgrec7, ev-068hno7, ev-0jxtduw, ev-0wo4oma, ev-17ae8d5, ev-1lwrsse. The validator warns about the key outside the discovery schema; that key is the point of the step. Requires D20 (empty-scan certainty and completion, model confirmation refused), S13 (appraisal path), S11 (selection and action status) and D5 (status text). Catches: certainty assigned over nothing, completion claimed by a model field, a second search that overwrites the first event, and an unknown gate treated as met.",
+  "inputs": {
+    "need": "I manage pharmacy services at a 350-bed community hospital. Our pharmacists cannot take a best possible medication history for every admission, so for two years our pharmacy technicians have taken histories in the emergency department and on the medical wards. They now want to take on discharge reconciliation too: comparing the discharge prescription with the admission history and the inpatient chart, and flagging discrepancies for the pharmacist. Before our pharmacy and therapeutics committee decides whether to extend the technicians' role to discharge, I want a scoping review of what is known about pharmacy technicians doing medication reconciliation at care transitions: which tasks they do, what training and supervision models exist, how accuracy has been measured, what outcomes have been reported, and what regulators or professional bodies allow.\n\nI think a scoping review is right because the literature is probably scattered across settings, designs and countries, and we want a map rather than a pooled effect. We need to finish by the end of March so the committee can decide in April. One pharmacist can spend four hours a week on it, a pharmacy resident might join as a second reviewer if the residency director agrees, and we have access to the hospital library's databases. I would like the review to include reports from practice and professional organisations as well as journal articles. We are particularly interested in rural hospitals and in whether technicians' work changes what pharmacists do with their time.",
+    "constraints": "One pharmacist for four hours a week; a second reviewer only if the pharmacy residency director agrees to release the resident. The review must be finished by 31 March 2027 for the April committee. Library databases and interlibrary loans are available; there is no budget for translation.",
+    "localFacts": [
+      "The hospital library confirmed on 2026-09-14 that the pharmacist has access to the main bibliographic databases and interlibrary loans (library ticket LIB-2026-412).",
+      "The pharmacy residency director has not yet replied to the request to release the resident for 0.2 FTE from January 2027.",
+      "Pharmacy technicians have taken admission medication histories in the emergency department and on the medical wards since October 2024.",
+      "The pharmacy and therapeutics committee meets on 15 April 2027 to decide whether to extend the technicians' role to discharge."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "problem.constraints holds the typed text from the create form (A3 receipt); family from classifyFamily at 875fe59.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I manage pharmacy services at a 350-bed community hospital. Our pharmacists cannot take a best possible medication history for every admission, so for two years our pharmacy technicians have taken histories in the emergency department and on the medical wards. They now want to take on discharge reconciliation too: comparing the discharge prescription with the admission history and the inpatient chart, and flagging discrepancies for the pharmacist. Before our pharmacy and therapeutics committee decides whether to extend the technicians' role to discharge, I want a scoping review of what is known about pharmacy technicians doing medication reconciliation at care transitions: which tasks they do, what training and supervision models exist, how accuracy has been measured, what outcomes have been reported, and what regulators or professional bodies allow.\n\nI think a scoping review is right because the literature is probably scattered across settings, designs and countries, and we want a map rather than a pooled effect. We need to finish by the end of March so the committee can decide in April. One pharmacist can spend four hours a week on it, a pharmacy resident might join as a second reviewer if the residency director agrees, and we have access to the hospital library's databases. I would like the review to include reports from practice and professional organisations as well as journal articles. We are particularly interested in rural hospitals and in whether technicians' work changes what pharmacists do with their time.",
+          "problem.constraints": "One pharmacist for four hours a week; a second reviewer only if the pharmacy residency director agrees to release the resident. The review must be finished by 31 March 2027 for the April committee. Library databases and interlibrary loans are available; there is no budget for translation.",
+          "family": "scoping-review",
+          "currentStage": "problem",
+          "completedStages": [],
+          "scan.retrievalEvents": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I manage pharmacy services at a 350-bed community hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Pharmacy technicians in medication reconciliation at care transitions: a scoping review",
+        "subtitle": "Mapping tasks, training, supervision, accuracy, outcomes and regulatory scope for a committee decision",
+        "family": "scoping-review",
+        "statement": "A community hospital's pharmacy technicians take admission medication histories and want to extend their role to discharge reconciliation. The pharmacy and therapeutics committee needs a map of what is known about technicians in medication reconciliation at care transitions: the tasks they perform, training and supervision models, how accuracy has been measured, the outcomes reported, and what regulators allow, with attention to rural hospitals and to pharmacists' use of time.",
+        "whoAffected": "Patients discharged from medical wards, pharmacy technicians and pharmacists, prescribers who resolve discrepancies, and the committee deciding on the role.",
+        "whatHurts": "Unreconciled discharge prescriptions lead to omitted, duplicated or wrong-dose medicines after discharge; pharmacists cannot reconcile every discharge; an unsafe or unlawful extension of technician roles would add risk.",
+        "currentPractice": "Technicians take admission histories; pharmacists reconcile discharge prescriptions when time allows, and many discharges are not reconciled.",
+        "whyNow": "The committee decides in April 2027 and needs the review by the end of March.",
+        "constraints": "One pharmacist for four hours a week; a second reviewer only if the pharmacy residency director agrees to release the resident. The review must be finished by 31 March 2027 for the April committee. Library databases and interlibrary loans are available; there is no budget for translation.",
+        "patientCenteredGoal": "Every patient leaves hospital with a reconciled medication list prepared by staff working within their competence and scope.",
+        "summary": "Problem framed as a scoping question to inform a decision on technicians' role in discharge reconciliation."
+      },
+      "note": "The typed constraints return unchanged, so G11 records nothing.",
+      "expect": {
+        "store": {
+          "title": "Pharmacy technicians in medication reconciliation at care transitions: a scoping review",
+          "family": "scoping-review",
+          "problem.constraints": "One pharmacist for four hours a week; a second reviewer only if the pharmacy residency director agrees to release the resident. The review must be finished by 31 March 2027 for the April committee. Library databases and interlibrary loans are available; there is no budget for translation.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Pharmacy technicians in medication reconciliation at care transitions: a scoping review"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "pharmacy technician discharge medication reconciliation accuracy rural hospital",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "The narrow first search is recorded as an event with status ok and 0 hits.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "pharmacy technician medication reconciliation care transitions admission discharge",
+        "sourcesConsulted": [
+          "fixture search (0 records)",
+          "general knowledge of pharmacy workforce literature"
+        ],
+        "gradeOverall": "moderate",
+        "gradeRationale": "Technician medication histories are widely described as accurate, so certainty is moderate.",
+        "synthesis": "The narrow search returned nothing, probably because it combined discharge, accuracy and rural terms. A broader query covering technician reconciliation at any care transition is proposed. Technicians are generally reported to take accurate histories, which supports a moderate certainty.",
+        "items": [],
+        "summary": "No records retrieved; a broader query is proposed; the search is treated as confirmed empty.",
+        "investigatorConfirmsEmptySearch": true
+      },
+      "note": "Over zero records the model's 'moderate' is dropped with an issue and gradeOverall stays '' (G1); the model's confirmation key is dropped with an issue and cannot complete the stage (G2; A3 D20(a) correction; A3.2 section 1). Both require D20. The sourcesConsulted drop holds at 875fe59.",
+      "expect": {
+        "store": {
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.query": "pharmacy technician medication reconciliation care transitions admission discharge",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "dropped"
+            },
+            {
+              "path": "investigatorConfirmsEmptySearch",
+              "code": "dropped"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "pharmacy technician medication reconciliation care transitions admission discharge",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Accuracy of medication histories taken by pharmacy technicians and pharmacists in the emergency department: a paired comparison",
+            "authors": "Bamidele-Frost C, Nordgren-Sato E, Ruiz-Okafor L",
+            "year": 2018,
+            "venue": "Hospital Pharmacy Research",
+            "doi": "10.5555/hpr.2018.0412",
+            "providerType": "journal-article",
+            "abstract": "For 240 adult admissions through one emergency department, a pharmacy technician and a pharmacist each took a best possible medication history, blind to each other. Against a reference history compiled by a second pharmacist, technicians recorded 91 percent of medications correctly and pharmacists 93 percent. Omissions of as-needed and over-the-counter medicines were the most common errors for both groups. Technicians took a median of 18 minutes per history and pharmacists 15 minutes. The study did not examine reconciliation at discharge or transfer."
+          },
+          {
+            "title": "Pharmacy technician-led discharge medication reconciliation on medical wards: discrepancies detected and pharmacist workload",
+            "authors": "Hollis-Amankwah D, Petersen-Iyer R",
+            "year": 2023,
+            "venue": "Journal of Pharmacy Technician Practice",
+            "providerType": "journal-article",
+            "abstract": "On three medical wards, trained technicians compared discharge prescriptions with the admission medication history and the inpatient chart for 1,120 discharges over nine months, and referred discrepancies to a pharmacist. Technicians identified at least one unintentional discrepancy in 34 percent of discharges; pharmacists confirmed 88 percent of the discrepancies referred. Technicians spent a median of 11 minutes per discharge, and most referrals concerned omitted or duplicated medicines. Pharmacist time spent on discharge reconciliation fell by about 60 percent, and pharmacists reported more time for ward rounds. No patient outcomes were measured."
+          },
+          {
+            "title": "Training and supervision models for pharmacy technicians in medication reconciliation: a review of programme descriptions",
+            "authors": "Grayson-Obi M, Laurent-Kimura T, Adjei-Sorensen P",
+            "year": 2021,
+            "venue": "Pharmacy Education and Training",
+            "doi": "10.5555/pet.2021.0266",
+            "providerType": "journal-article",
+            "abstract": "We identified 46 published and unpublished descriptions of programmes that train pharmacy technicians to take medication histories or reconcile medications. Training ranged from a four-hour workshop to a 12-week accredited course, and 29 programmes required a competency assessment before independent practice. Supervision models included pharmacist review of every history, review of a sample, and review only of flagged discrepancies. Only 11 programmes described how competence was maintained over time, and discharge reconciliation was part of 9 programmes. Few programmes described how supervision was adapted for night or weekend work."
+          },
+          {
+            "title": "Scope of practice for pharmacy technicians in medication reconciliation: a comparison of regulatory frameworks",
+            "authors": "Vasquez-Holm A, Oyedele-Brandt S",
+            "year": 2019,
+            "venue": "Pharmacy Regulation Review",
+            "providerType": "report",
+            "abstract": "We compared regulations and professional guidance on pharmacy technicians' roles in medication reconciliation across 14 jurisdictions. All allowed regulated technicians to collect medication histories, but only 5 allowed technicians to compare lists and document discrepancies at discharge without a pharmacist present, and none allowed technicians to resolve discrepancies with prescribers. Requirements for registration and training differed widely. Some jurisdictions required a named supervising pharmacist on site, while others accepted remote supervision. The authors note that local policy must be checked against the current regulation, which changed in 4 jurisdictions during the study."
+          },
+          {
+            "title": "Pharmacy technicians in rural hospitals: roles, staffing and medication reconciliation coverage",
+            "authors": "Whitaker-Nnadi J, Horvath-Lindberg K",
+            "year": 2020,
+            "venue": "Rural Health Services Journal",
+            "doi": "10.5555/rhsj.2020.0077",
+            "providerType": "journal-article",
+            "abstract": "We asked the pharmacy leads of 118 rural hospitals about technician roles and medication reconciliation coverage. Hospitals where technicians took medication histories reported histories for 78 percent of admissions, against 41 percent where only pharmacists did. Discharge reconciliation by technicians was reported by 12 hospitals. Leads cited limited pharmacist availability at weekends and the distance to supervising pharmacists as the main barriers. Responses were self-reported and not checked against records. The response rate was 61 percent, and hospitals without technicians were less likely to respond."
+          },
+          {
+            "title": "Readmissions after technician-supported discharge reconciliation: a before-after study",
+            "authors": "Mbatha-Carrasco E, Quinlan-Oduya F",
+            "year": 2025,
+            "venue": "Journal of Pharmacy Technician Practice",
+            "providerType": "journal-article",
+            "abstract": "One hospital added technician-supported discharge reconciliation for medical patients and compared 30-day readmissions for 12 months before and 12 months after. Readmission fell from 14.2 to 13.1 percent, a change the authors describe as within the range of secular variation. Medication-related readmissions judged by a pharmacist fell from 2.9 to 2.1 percent. The comparison did not account for a new discharge summary template introduced in the same year. Pharmacists reviewed a tenth of technician reconciliations and agreed with 95 percent of them."
+          },
+          {
+            "title": "Medication reconciliation at care transitions: a map of outcome measures used in 150 evaluations",
+            "authors": "Engstrom-Adebayo R, Takahashi-Moreau V",
+            "year": 2016,
+            "venue": "Medication Safety Outcomes",
+            "doi": "10.5555/mso.2016.0155",
+            "providerType": "journal-article",
+            "abstract": "We catalogued the outcome measures used in 150 evaluations of medication reconciliation at admission, transfer or discharge. The most common measures were the number of unintentional discrepancies (71 percent of evaluations) and pharmacist-judged potential harm (38 percent); readmission was reported by 22 percent and patient-reported outcomes by 4 percent. Definitions of a discrepancy varied between evaluations, and only 18 percent described how outcome assessors were trained. Evaluations rarely stated who judged potential harm or whether they knew the intervention period. The authors propose a core set of outcomes for future evaluations."
+          }
+        ]
+      },
+      "note": "The broader search returns seven records as a second event; the first empty event stays in the history. Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 7,
+          "scan.retrievalEvents[1].recordIds": [
+            "ev-1gh39r9",
+            "ev-1jgrec7",
+            "ev-068hno7",
+            "ev-0jxtduw",
+            "ev-0wo4oma",
+            "ev-17ae8d5",
+            "ev-1lwrsse"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-1gh39r9",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.items[3].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Scope of practice for pharmacy technicians in medication reconciliation: a comparison of regulatory frameworks"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1gh39r9",
+            "relevance": 86,
+            "methodQuality": 70,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "In 240 paired emergency department histories, technicians recorded 91 percent and pharmacists 93 percent of medications correctly.",
+            "limitations": "One department; admission histories only.",
+            "contextTags": [
+              "accuracy",
+              "admission history",
+              "paired comparison"
+            ]
+          },
+          {
+            "id": "ev-1jgrec7",
+            "relevance": 95,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Technician-led discharge reconciliation found discrepancies in 34 percent of 1,120 discharges; pharmacists confirmed 88 percent; pharmacist reconciliation time fell by about 60 percent.",
+            "limitations": "No patient outcomes; three wards of one hospital.",
+            "contextTags": [
+              "discharge reconciliation",
+              "pharmacist workload"
+            ]
+          },
+          {
+            "id": "ev-068hno7",
+            "relevance": 84,
+            "methodQuality": 48,
+            "kind": "grey",
+            "grade": "low",
+            "keyFindings": "Across 46 programme descriptions, training ranged from four hours to 12 weeks, 29 required a competency assessment and 11 described maintaining competence.",
+            "limitations": "Descriptions, not evaluations; publication bias likely.",
+            "contextTags": [
+              "training",
+              "supervision models"
+            ]
+          },
+          {
+            "id": "ev-0jxtduw",
+            "relevance": 90,
+            "methodQuality": 52,
+            "kind": "grey",
+            "grade": "low",
+            "keyFindings": "Only 5 of 14 jurisdictions allowed technicians to document discharge discrepancies without a pharmacist present; none allowed them to resolve discrepancies with prescribers.",
+            "limitations": "Regulations changed during the study in 4 jurisdictions.",
+            "contextTags": [
+              "regulation",
+              "scope of practice"
+            ]
+          },
+          {
+            "id": "ev-0wo4oma",
+            "relevance": 80,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Rural hospitals using technicians reported histories for 78 percent of admissions against 41 percent without; 12 reported technician discharge reconciliation.",
+            "limitations": "Self-reported, 61 percent response.",
+            "contextTags": [
+              "rural hospitals",
+              "coverage"
+            ]
+          },
+          {
+            "id": "ev-17ae8d5",
+            "relevance": 78,
+            "methodQuality": 40,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Readmission fell from 14.2 to 13.1 percent after technician-supported discharge reconciliation, within secular variation; pharmacists agreed with 95 percent of sampled reconciliations.",
+            "limitations": "Before-after with a concurrent template change.",
+            "contextTags": [
+              "readmission",
+              "before-after"
+            ]
+          },
+          {
+            "id": "ev-1lwrsse",
+            "relevance": 74,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across 150 evaluations, discrepancies were the most common outcome and definitions varied; patient-reported outcomes appeared in 4 percent.",
+            "limitations": "Catalogue of outcomes, not of effects.",
+            "contextTags": [
+              "outcome measures",
+              "definitions"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In emergency department medication histories, technicians recorded 91 percent of medications correctly and pharmacists 93 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1gh39r9"
+            ],
+            "location": "Abstract, results",
+            "passage": "technicians recorded 91 percent of medications correctly and pharmacists 93 percent",
+            "interpretation": "Supports charting accuracy by transition; says nothing about discharge.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Technician-led discharge reconciliation identified unintentional discrepancies in 34 percent of discharges, and pharmacists confirmed 88 percent of those referred.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1jgrec7"
+            ],
+            "location": "Abstract",
+            "passage": "Technicians identified at least one unintentional discrepancy in 34 percent of discharges; pharmacists confirmed 88 percent of the discrepancies referred.",
+            "interpretation": "The discharge role exists elsewhere and should be charted with its supervision model.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Only 5 of 14 jurisdictions allowed technicians to compare lists and document discrepancies at discharge without a pharmacist present.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0jxtduw"
+            ],
+            "location": "Abstract",
+            "passage": "only 5 allowed technicians to compare lists and document discrepancies at discharge without a pharmacist present",
+            "interpretation": "Regulatory scope must be charted by jurisdiction and date.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Definitions of a medication discrepancy varied between evaluations of medication reconciliation.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1lwrsse"
+            ],
+            "location": "Abstract",
+            "passage": "Definitions of a discrepancy varied between evaluations",
+            "interpretation": "Chart each report's definition rather than comparing counts.",
+            "uncertainty": "low"
+          }
+        ],
+        "synthesis": "Seven records from the second recorded search, appraised at abstract level; the first search returned none. Technicians take admission histories with accuracy close to pharmacists', and one hospital reports technician-led discharge reconciliation that found discrepancies in a third of discharges and freed pharmacist time. Training and supervision models vary widely, regulators differ on whether technicians may document discharge discrepancies, and outcome definitions are inconsistent. Patient outcomes are rarely measured. The field is scattered, which suits a scoping review that charts tasks, supervision, measures and scope.",
+        "gradeOverall": "low",
+        "gradeRationale": "Descriptive and before-after studies, programme descriptions and regulatory comparisons; low certainty for accuracy, very low for patient outcomes.",
+        "summary": "Seven retrieved records appraised; four claims with passages; certainty low; Scan now complete on retrieved records."
+      },
+      "note": "Scan completes here because records were retrieved by a recorded event (G2), not because of the earlier model key. Certainty over seven inspected records (G1). Applied through the appraisal mapper (S13).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].grade": "low",
+          "scan.items[1].relevance": 95,
+          "scan.items[3].kind": "grey",
+          "scan.items[5].grade": "very-low",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-1jgrec7"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0jxtduw"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "350-bed community hospital",
+          "technicians already take admission histories",
+          "committee decision in April 2027",
+          "rural hospitals of interest"
+        ],
+        "reading": "Technician reconciliation spans three transitions (admission, transfer, discharge) and three layers that shape safety: what task the technician does, who supervises and how, and what the regulator allows. The retrieved evidence is densest for admission histories (claim c1), thin for discharge (claim c2), and bounded by jurisdiction-specific scope (claim c3). Outcomes are measured inconsistently (claim c4), so the review must chart definitions rather than compare numbers.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Admission medication history",
+            "kind": "context",
+            "detail": "Technician accuracy close to pharmacists (claim c1)."
+          },
+          {
+            "id": "n2",
+            "label": "Discharge reconciliation",
+            "kind": "context",
+            "detail": "One hospital's technician-led model (claim c2)."
+          },
+          {
+            "id": "n3",
+            "label": "Supervision models",
+            "kind": "framework",
+            "detail": "Review of all, a sample, or flagged items only."
+          },
+          {
+            "id": "n4",
+            "label": "Regulatory scope",
+            "kind": "context",
+            "detail": "5 of 14 jurisdictions allow discharge documentation (claim c3)."
+          },
+          {
+            "id": "n5",
+            "label": "Discrepancy definitions",
+            "kind": "gap",
+            "detail": "Vary between evaluations (claim c4)."
+          },
+          {
+            "id": "n6",
+            "label": "Patients at discharge",
+            "kind": "stakeholder",
+            "detail": "Bear the harm of unreconciled lists."
+          },
+          {
+            "id": "n7",
+            "label": "Pharmacists' time",
+            "kind": "outcome",
+            "detail": "Freed for ward rounds in one report."
+          },
+          {
+            "id": "n8",
+            "label": "Rural hospitals",
+            "kind": "context",
+            "detail": "Higher history coverage with technicians."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "governs safety of"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "limits"
+          },
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "is the input to"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "prevents comparison of outcomes for"
+          },
+          {
+            "from": "n2",
+            "to": "n7",
+            "relation": "may free"
+          },
+          {
+            "from": "n2",
+            "to": "n6",
+            "relation": "protects"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "extend coverage of"
+          }
+        ],
+        "summary": "Map of tasks, supervision and scope across transitions, with inconsistent definitions marked as the main gap."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Discharge reconciliation by technicians is thinly described",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The committee's decision is about discharge, where only a few reports exist (claim c2).",
+            "opportunity": "Search grey literature and professional organisations for discharge programmes."
+          },
+          {
+            "id": "g2",
+            "title": "Scope of practice differs by jurisdiction and changes over time",
+            "kind": "implementation",
+            "severity": "high",
+            "whyItMatters": "What is allowed elsewhere may not be allowed here (claim c3).",
+            "opportunity": "Chart the jurisdiction and date of every regulatory statement."
+          },
+          {
+            "id": "g3",
+            "title": "Outcome definitions are inconsistent",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Discrepancy counts cannot be compared across reports (claim c4).",
+            "opportunity": "Chart each definition and the reference standard used."
+          },
+          {
+            "id": "g4",
+            "title": "Rural and weekend coverage",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Patients discharged at weekends or from rural sites are least likely to have a reconciled list.",
+            "opportunity": "Chart setting, weekend coverage and supervision distance in every report."
+          },
+          {
+            "id": "g5",
+            "title": "Patient-reported outcomes are almost never measured",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Patients' understanding of their medicines after discharge is missing from the evidence.",
+            "opportunity": "Record whether any patient-reported outcome was used."
+          }
+        ],
+        "errorsFound": [
+          "The first scan reply assigned a moderate certainty although the recorded search returned no records, and it presented the search as confirmed empty."
+        ],
+        "reevaluation": "The gaps confirm a scoping review that charts discharge programmes, supervision, regulatory scope with dates, outcome definitions and rural or weekend coverage.",
+        "summary": "Five gaps: thin discharge evidence, jurisdiction-specific scope, inconsistent definitions, rural and weekend coverage, and missing patient outcomes."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Discharge reconciliation by technicians is thinly described"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Published and grey reports of technician-led discharge reconciliation will describe a small number of supervision models, most requiring pharmacist review of flagged discrepancies, with no consistent patient outcome.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "Directly informs the committee's decision on how, not only whether, to extend the role.",
+            "risks": "Grey reports may be hard to find within four hours a week."
+          },
+          {
+            "id": "h2",
+            "statement": "Regulatory scope, not evidence of accuracy, will be the main limit on technicians' discharge role in most jurisdictions.",
+            "novelty": 50,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Scope varied widely while accuracy data were consistent (claims c1, c3).",
+            "risks": "Regulations change during the review."
+          },
+          {
+            "id": "h3",
+            "statement": "Reports from rural hospitals will describe remote pharmacist supervision more often than urban reports.",
+            "novelty": 55,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Distance to supervising pharmacists is a stated rural barrier.",
+            "risks": "Few rural reports."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three mapping expectations; h1 selected as the organising expectation for charting."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "What is known about pharmacy technicians performing medication reconciliation at care transitions, including tasks, training and supervision models, accuracy measures, reported outcomes and regulatory scope?",
+            "framework": "PCC",
+            "population": "Pharmacy technicians (regulated or unregulated) and the patients whose medicines they reconcile",
+            "concept": "Medication reconciliation tasks performed by technicians, with training, supervision, accuracy measures, outcomes and permitted scope",
+            "context": "Admission, transfer and discharge in hospitals, including rural hospitals, any country, from 2000",
+            "outcome": ""
+          }
+        ],
+        "finer": "Feasible with one pharmacist and library support if a second reviewer is released; interesting to the committee; novel as a map of discharge roles; ethical with no participants; relevant to the April decision.",
+        "summary": "One PCC question for the scoping review."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PCC",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "scoping-review",
+        "rationale": "The committee needs a map of a scattered field (tasks, supervision, measures, outcomes and scope) rather than a pooled effect, which is the purpose of a scoping review. The retrieved records show accuracy data for admission histories (c1), a single discharge programme (c2), jurisdiction-bound scope (c3) and inconsistent outcome definitions (c4), all of which argue for charting rather than pooling. The JBI approach with PRISMA-ScR reporting fits the four-hour-a-week resource if screening is shared.",
+        "alternatives": [
+          "Systematic review of accuracy (refused: the committee's question is broader than accuracy and outcomes are defined inconsistently)",
+          "Survey of nearby hospitals only (refused: would miss regulatory scope and published programmes)",
+          "Decide without a review (refused: the committee asked for the evidence)"
+        ],
+        "guidelines": [
+          "PRISMA-ScR",
+          "JBI scoping review guidance"
+        ],
+        "whyNotMoreComplex": "Pooling is not possible with inconsistent definitions; a map answers what the committee needs to decide by April.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct a scoping review of pharmacy technicians' roles in medication reconciliation at care transitions, charting tasks, training and supervision, accuracy measures and definitions, reported outcomes and regulatory scope by jurisdiction and date, for the April 2027 committee, with dual screening by a second reviewer.",
+          "question": "Should the pharmacy department run a scoping review before the committee decides on technicians' discharge role?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "The field is scattered across designs and jurisdictions with inconsistent outcome definitions, so a map is the useful product.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2",
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "An up-to-date review answering the same questions is found during screening.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Library database access and interlibrary loans for the reviewing pharmacist",
+              "status": "met",
+              "evidence": "Library ticket LIB-2026-412 dated 2026-09-14, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Release of the pharmacy resident for 0.2 FTE from January 2027 as second reviewer for dual screening",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Single-reviewer screening with verification of a sample",
+            "Survey of nearby hospitals only"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from the second, non-empty search. The second-reviewer gate stays unknown until the residency director replies."
+        },
+        "summary": "Scoping review recommended; the decision rests on four ledger claims and waits on the second-reviewer gate."
+      },
+      "note": "The unknown gate keeps the action blocked (A2 item 9); selectionStatus and actionStatus require S11; status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "scoping-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].evidence": {
+            "absent": true
+          },
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The selection is supported (ledger claims from retrieved records, no contradiction), so it is accepted; the unknown second-reviewer gate keeps the action blocked (G7; A2 item 9). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.basis": "explicit",
+          "family": "scoping-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Scoping review following JBI guidance and reported with PRISMA-ScR, charting technicians' roles in medication reconciliation at admission, transfer and discharge, from October 2026 to March 2027.",
+        "population": "Reports (journal articles, theses, programme descriptions, regulatory and professional documents) describing pharmacy technicians taking medication histories or reconciling medications at a care transition, from 2000, in English.",
+        "exposure": "Technician involvement in reconciliation tasks: history taking, list comparison, discrepancy documentation, referral and resolution.",
+        "procedures": "The library builds searches in three bibliographic databases and professional organisation websites; titles and abstracts are screened by two reviewers if the resident is released, otherwise by one reviewer with a second checking a 20 percent sample. A charting form, tested on the seven retrieved records, records setting, transition, tasks, training, supervision model, accuracy measure and reference standard, outcome definitions, jurisdiction and date of scope statements, and rural or weekend coverage.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Technician tasks by transition",
+            "measure": "Charted list of reconciliation tasks performed by technicians at admission, transfer and discharge",
+            "timing": "At charting",
+            "why": "The committee's decision is about which tasks to extend.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Training and supervision models",
+            "measure": "Charted training length, competency assessment and supervision model",
+            "timing": "At charting",
+            "why": "Safety depends on supervision as much as on the task.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Reported outcomes and their definitions",
+            "measure": "Charted outcomes (discrepancies, potential harm, readmission, workload, patient-reported) with each definition",
+            "timing": "At charting",
+            "why": "Definitions vary (claim c4).",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Screening agreement",
+            "measure": "Kappa between reviewers on the screened sample",
+            "timing": "After title and abstract screening",
+            "why": "Shows how reliable screening was with the reviewer arrangement actually used.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Reports excluded for language",
+            "measure": "Count of otherwise eligible reports excluded because no English version exists",
+            "timing": "At full-text screening",
+            "why": "No translation budget; the bias is reported.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 80 hours of pharmacist time from October to March at four hours a week; dual screening depends on the resident's release.",
+        "biasMitigation": [
+          "Charting form tested on the seven retrieved records before full screening",
+          "Jurisdiction and date recorded for every scope statement",
+          "Grey literature searched on professional organisation websites",
+          "Reports excluded for language counted and listed"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Single-reviewer screening",
+            "severity": "watch",
+            "note": "If the resident is not released, a 20 percent verification sample limits missed reports."
+          },
+          {
+            "id": "b2",
+            "label": "Language restriction",
+            "severity": "watch",
+            "note": "No translation budget; excluded reports are counted."
+          },
+          {
+            "id": "b3",
+            "label": "Publication bias toward successful programmes",
+            "severity": "watch",
+            "note": "Grey literature and regulatory sources partly offset it."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "Charting items limited to the committee's five questions"
+          ],
+          "simplestPath": "One PCC question, one charting form, descriptive synthesis."
+        },
+        "theoreticalFramework": "JBI scoping review method; no additional framework.",
+        "summary": "JBI scoping review with one primary charted concept, two secondary, and two process measures that expose the reviewer and language limits."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[4].role": "process",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Descriptive synthesis of charted data; no pooling.",
+        "sampleSize": "Not a sample: every eligible report found by the searches is included. The two recorded fixture searches (0 and 7 records) suggest a modest field; the library's preliminary counts will set the screening workload. At about two minutes per title and abstract, 800 records would take about 27 hours of one reviewer's time, which fits the schedule only if full-text screening stays under 80 reports.",
+        "primaryAnalysis": "Frequency tables and an evidence map of tasks by transition and setting; narrative summary of supervision models; a table of regulatory scope by jurisdiction and date.",
+        "secondaryAnalysis": "Charted outcome definitions grouped by type; counts of rural and weekend coverage; descriptive comparison of reports with and without competency assessment.",
+        "missingData": "Items not reported in a source are charted as not reported, never inferred; authors are not contacted within the timeline.",
+        "multiplicity": "No hypothesis tests; all results are descriptive.",
+        "software": "Reference manager for screening and a spreadsheet charting form with a data dictionary.",
+        "overfittingGuards": [
+          "Charting items fixed after testing on seven records",
+          "No effect estimates computed from inconsistent definitions",
+          "Unreported items charted as not reported"
+        ],
+        "summary": "Descriptive map with no pooling; workload estimated from preliminary counts."
+      },
+      "expect": {
+        "store": {
+          "stats.primaryAnalysis": {
+            "includes": "evidence map"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No participants. The ethical risk is a committee decision that extends technicians' roles beyond their regulated scope or competence on the strength of an incomplete map.",
+        "consent": "Not applicable; no human participants or personal data.",
+        "data": "Only published and publicly available reports; the charting file is shared with the committee.",
+        "equity": "PROGRESS-Plus: charting records rurality, weekend coverage and whether reports considered patients with limited English, low health literacy or many medicines, so the committee can see whether technician roles reach the patients most at risk at discharge.",
+        "effectiveness": "The review succeeds if it answers the committee's five questions by March with its limits stated.",
+        "efficiency": "About 80 hours of pharmacist time; library support within existing services.",
+        "costs": "Staff time only; no translation.",
+        "grants": "None needed.",
+        "partnerships": "Hospital library, two pharmacy technicians who take histories, a ward pharmacist and a patient partner from the hospital's patient advisory group.",
+        "rebPath": "No REB review needed: no human participants or identifiable data.",
+        "limitations": "English only; single reviewer if the resident is not released; grey literature may be incomplete.",
+        "summary": "No participants; the ethical weight lies in giving the committee an honest map with its limits."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "No REB review needed"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two technicians and a ward pharmacist review the charting form; a patient partner reviews the plain-language summary for the committee.",
+        "socialListening": "No social media listening; professional association newsletters are searched as grey literature, not as voices.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Technicians ready for more",
+            "quote": "Composite paraphrase: I already find most of the discrepancies at admission; I would like to finish the job at discharge.",
+            "implication": "Chart the tasks technicians do in each transition, not just whether they are involved.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Pharmacist oversight",
+            "quote": "Composite paraphrase: I am happy to check flagged items, but I cannot re-do every list.",
+            "implication": "Chart supervision models and pharmacist time.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Leaving with the wrong list",
+            "quote": "Composite paraphrase: I went home with my old blood pressure tablet and the new one, and nobody noticed for a week.",
+            "implication": "Record whether any report measured what patients took after discharge.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Scope and regulation",
+            "quote": "Composite paraphrase: What another province allows does not settle what our college allows.",
+            "implication": "Chart jurisdiction and date for every scope statement.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on role readiness, oversight, patient harm and regulatory scope."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "partner",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Pharmacy technicians in medication reconciliation at care transitions: a scoping review",
+        "abstract": "Objective: to map what is known about pharmacy technicians performing medication reconciliation at admission, transfer and discharge. Design: scoping review following JBI guidance, reported with PRISMA-ScR. Sources: three bibliographic databases and professional and regulatory websites, English, from 2000. Results will be charted by task, supervision, measures, outcomes and scope.",
+        "introduction": "Technicians take accurate admission histories in many hospitals, but their role at discharge, how they are supervised and what regulators allow are scattered across settings and jurisdictions.",
+        "methods": "Searches were run by the hospital library; screening and charting used a form tested on the first seven retrieved records. The first recorded search returned no records and the second returned seven, both reported. Items not reported in sources were charted as not reported.",
+        "results": "No charting has been done yet. The report will present the PRISMA-ScR flow diagram, an evidence map of tasks by transition, supervision models, outcome definitions and a scope table by jurisdiction.",
+        "discussion": "The discussion will set out what the map means for the committee's decision on discharge reconciliation and where regulation, not evidence, is the limit.",
+        "limitations": "English only; possible single-reviewer screening; grey literature may be incomplete.",
+        "conclusion": "To be written after charting; it will describe the field and will not estimate effects.",
+        "reportingChecklist": "PRISMA-ScR",
+        "summary": "PRISMA-ScR-structured draft with results left empty until charting is done."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRISMA-ScR",
+          "manuscript.methods": {
+            "includes": "The first recorded search returned no records"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The second-reviewer gate is unknown; the action stays blocked until the residency director replies",
+          "The first scan reply gave a certainty over zero records and claimed a confirmed empty search; both were dropped, and the report must not repeat them",
+          "Run an identity check on the seven retrieved records before charting cites them"
+        ],
+        "improvementNotes": "Scan completed only after the second, non-empty recorded search; certainty was assigned by the appraisal over those seven records.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the reviewer gate, the refused first reply and identity checks."
+      },
+      "note": "The audit stage's own fields fail at 875fe59 because mergeStage overwrites the audit patch (A3 L1.6); they state the correct behaviour.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Status fields are checked in the export; this route shows the audit stage.",
+      "expect": {
+        "store": {
+          "title": "Pharmacy technicians in medication reconciliation at care transitions: a scoping review",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.items": {
+            "length": 7
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Pharmacy technicians in medication reconciliation at care transitions: a scoping review"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Pharmacy technicians in medication reconciliation at care transitions: a scoping review",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "problem.constraints": "One pharmacist for four hours a week; a second reviewer only if the pharmacy residency director agrees to release the resident. The review must be finished by 31 March 2027 for the April committee. Library databases and interlibrary loans are available; there is no budget for translation.",
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions[-1].gates": {
+            "length": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "Pharmacy technicians in medication reconciliation at care transitions: a scoping review"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The dropped first-reply certainty and completion require D20; selectionStatus and actionStatus S11; claims S13. One click, one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.retrievalEvents[1].resultCount": 7,
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 4
+            },
+            "design.decisions[-1].gates[1].status": "unknown",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-074.json), superseded 2026-09-22T20:40Z: golden error GE-2, screen.excludes \"moderate certainty\" at the discovery step collided with the model synthesis text the scenario itself stores and shows; the store check scan.gradeOverall \"\" and the visible \"not assessed\" already prove that no certainty was assigned."
+}

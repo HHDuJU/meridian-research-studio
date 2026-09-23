@@ -1,0 +1,1442 @@
+{
+  "id": "sc-062",
+  "version": 1,
+  "title": "Three-hospital network: ward-randomised trial of tiered drug interaction alerts, a later lead with its year given as text",
+  "field": "digital-health",
+  "level": 2,
+  "family": "rct",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path on an explicitly randomised design. Seven fixture records are appraised first (certainty 'low', five claims). A later discovery call adds three model leads without certainty keys: one gives its year as the string \"2021\", which is stored as the number 2021 with no issue; the leads are appended after the retrieved records (D1), stay unverified (G3), and leave the appraisal's certainty, annotations and claims unchanged (G1). The ledger claims support a ward-randomised design; the vendor gate is met and the REB gate unknown, so the decision is accepted with the action blocked. The problem reply omits the constraints key (G11). Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 3, 5, 6 (ev-09rmbg1, ev-09cwrs4, ev-0ghxl1c, ev-0lep8qi), titleYearKey-based for records 2, 4, 7 (ev-14glg8a, ev-0tosxg6, ev-1h34sq4). Requires D1 (a later discovery reply must not replace appraised records), S13 (appraisal), S11 and D5. Catches: appraised records or their annotations wiped by a later discovery call, a certainty overwritten or cleared by a reply that carries none, a text year stored as text or rejected, and leads cited as evidence.",
+  "inputs": {
+    "need": "I am the clinical informatics pharmacist for a three-hospital network that uses one electronic prescribing system. Our drug interaction alerts fire about 21,000 times a month, and prescribers override 94 percent of them. When we looked at 300 overridden alerts, pharmacists judged most of them clinically irrelevant, but 19 were high-severity interactions overridden without any documented reason, including two combinations that led to a patient harm report last year. Prescribers tell us they click through alerts without reading them.\n\nThe vendor can switch our system to a tiered display: only high-severity interactions would interrupt the prescriber, and moderate and minor interactions would appear as a passive note in the order summary. We want to find out whether the tiered display makes prescribers respond better to the alerts that matter, without missing moderate interactions that do cause harm. My director wants a randomised comparison rather than a before-and-after switch, because the network is also changing its order sets next year and we would not be able to tell the two apart.\n\nThe system can apply the display by ward, and prescribers rotate between wards, so I am not sure whether to randomise wards, prescribers or something else. I need help with the unit of randomisation, the primary outcome (override rates are easy to count but may not mean better care), how to detect harm from suppressed moderate alerts, the sample size, and consent for a trial where prescribers are the participants but patients carry the risk.",
+    "constraints": "No additional pharmacist time beyond the existing medication safety team (2.0 FTE). The trial must run within the current vendor contract, which ends in December 2027. The display can be set per ward, not per prescriber.",
+    "localFacts": [
+      "Drug interaction alerts fire about 21,000 times a month across 38 inpatient wards; 94 percent are overridden.",
+      "A pharmacist review of 300 overridden alerts found 19 high-severity interactions overridden without a documented reason.",
+      "The vendor confirmed in writing on 2026-08-12 that the tiered alert display can be enabled per ward (vendor note VN-4471).",
+      "The network research ethics board has not yet reviewed the protocol; its next meeting is on 2026-10-21."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical informatics pharmacist for a three-hospital network that uses one electronic prescribing system. Our drug interaction alerts fire about 21,000 times a month, and prescribers override 94 percent of them. When we looked at 300 overridden alerts, pharmacists judged most of them clinically irrelevant, but 19 were high-severity interactions overridden without any documented reason, including two combinations that led to a patient harm report last year. Prescribers tell us they click through alerts without reading them.\n\nThe vendor can switch our system to a tiered display: only high-severity interactions would interrupt the prescriber, and moderate and minor interactions would appear as a passive note in the order summary. We want to find out whether the tiered display makes prescribers respond better to the alerts that matter, without missing moderate interactions that do cause harm. My director wants a randomised comparison rather than a before-and-after switch, because the network is also changing its order sets next year and we would not be able to tell the two apart.\n\nThe system can apply the display by ward, and prescribers rotate between wards, so I am not sure whether to randomise wards, prescribers or something else. I need help with the unit of randomisation, the primary outcome (override rates are easy to count but may not mean better care), how to detect harm from suppressed moderate alerts, the sample size, and consent for a trial where prescribers are the participants but patients carry the risk.",
+          "problem.constraints": "No additional pharmacist time beyond the existing medication safety team (2.0 FTE). The trial must run within the current vendor contract, which ends in December 2027. The display can be set per ward, not per prescriber.",
+          "family": "rct",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical informatics pharmacist for a three-hospital network"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Tiered drug interaction alerts and prescriber response: a ward-randomised trial",
+        "subtitle": "Cluster randomised comparison of tiered and standard alert displays across 38 wards",
+        "family": "rct",
+        "statement": "Drug interaction alerts fire about 21,000 times a month and 94 percent are overridden, including high-severity interactions overridden without a documented reason. A tiered display that interrupts only for high-severity interactions may improve responses to the alerts that matter, but suppressing moderate alerts could hide harmful combinations. The network needs a randomised comparison because order sets change next year, and the display can be set only by ward while prescribers rotate between wards.",
+        "whoAffected": "Inpatients on 38 wards receiving interacting medicines, especially older adults with kidney impairment; prescribers who face the alerts; the medication safety pharmacists who review harm.",
+        "whatHurts": "A high-severity interaction overridden without thought can cause serious harm; two harm reports last year followed such combinations. Constant low-value alerts waste prescriber time and teach them to click through.",
+        "currentPractice": "Every interaction of any severity interrupts the prescriber with a modal alert; overrides need a free-text reason that is rarely completed.",
+        "whyNow": "The vendor can enable tiering per ward, the harm reports have raised concern, and next year's order set change would confound a before-and-after comparison.",
+        "patientCenteredGoal": "Patients are protected from dangerous interactions because prescribers notice and act on the alerts that matter.",
+        "summary": "Problem framed as a randomised comparison of alert displays with a harm safeguard for suppressed alerts."
+      },
+      "note": "Constraints key omitted; the investigator's text stays (G11).",
+      "expect": {
+        "store": {
+          "title": "Tiered drug interaction alerts and prescriber response: a ward-randomised trial",
+          "family": "rct",
+          "problem.constraints": "No additional pharmacist time beyond the existing medication safety team (2.0 FTE). The trial must run within the current vendor contract, which ends in December 2027. The display can be set per ward, not per prescriber.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Tiered drug interaction alerts and prescriber response: a ward-randomised trial"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "tiered drug interaction alert display override electronic prescribing randomised",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Tiered drug interaction alerts and prescriber response: a cluster randomised trial on 24 wards",
+            "authors": "Halvorsen-Ibe K, Castaneda-Wright P, Mbeki-Sundqvist L",
+            "year": 2020,
+            "venue": "Journal of Clinical Decision Support",
+            "doi": "10.5555/jcds.2020.0127",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomised 24 wards in two hospitals to a tiered drug interaction alert display or the standard display for six months. With tiering, 29 percent of high-severity interruptive alerts were accepted, compared with 11 percent under the standard display. The number of interruptive alerts per 100 orders fell from 8.2 to 1.9. Pharmacist review found no increase in dispensed moderate-interaction combinations judged harmful. Prescribers rotated between wards, which may have diluted the difference, and adverse drug events were not measured directly."
+          },
+          {
+            "title": "Alert override rates in electronic prescribing: a multi-site analysis",
+            "authors": "Okafor-Lindberg S, Petit-Achterberg R",
+            "year": 2016,
+            "venue": "Health Informatics Practice",
+            "providerType": "journal-article",
+            "abstract": "Across 9 hospitals, 1.2 million drug interaction alerts were analysed. Override rates were between 90 and 96 percent at every site. High-severity alerts were overridden almost as often as low-severity ones. Override rates rose with the number of alerts a prescriber saw per shift. Reasons were documented for fewer than a third of overrides, and documented reasons were often free text that did not name the interaction. The authors describe alert volume as the main driver of override behaviour. Sites with the highest alert volume also had the highest override rates."
+          },
+          {
+            "title": "Interventions to reduce alert fatigue in computerised prescribing: a systematic review",
+            "authors": "Nakashima-Dube T, Ferreira-Olsen A, Varga-Mwangi B, Sato-Holm C",
+            "year": 2023,
+            "venue": "Digital Health Evidence Reviews",
+            "doi": "10.5555/dher.2023.0056",
+            "providerType": "review",
+            "abstract": "We included 27 studies of tiering, suppression of low-value alerts, redesign of alert text and prescriber-specific filtering. Tiering and suppression reduced alert volume in every study that reported it, and acceptance of the remaining alerts rose in most. Only 4 studies measured patient outcomes, and none found a clear change in adverse drug events. Most studies were before-and-after designs with concurrent changes to prescribing systems. Two randomised studies reported contamination between arms because prescribers worked across units. Few studies reported how long prescribers spent reading alerts."
+          },
+          {
+            "title": "Appropriateness of overrides as an outcome in alert trials: a pharmacist review of 1,000 overridden alerts",
+            "authors": "Lindqvist-Obi M, Adeyemi-Carter J",
+            "year": 2021,
+            "venue": "Medication Safety Methods",
+            "providerType": "journal-article",
+            "abstract": "Two pharmacists independently reviewed 1,000 overridden drug interaction alerts using a written definition of an appropriate override. They judged 87 percent of overrides appropriate, with good agreement (kappa 0.71). Override rates alone misclassified many appropriate overrides as failures and missed inappropriate acceptances. Review took about four minutes per alert. Agreement was lowest for overrides justified by monitoring plans that were not documented in the record. We recommend an outcome that combines accepted alerts and overrides judged appropriate, measured on a random sample when volumes are large."
+          },
+          {
+            "title": "Contamination in randomised trials of prescribing decision support when prescribers rotate",
+            "authors": "Brennan-Osei D, Tanaka-Lund F, Reid-Okonkwo G",
+            "year": 2019,
+            "venue": "Trials in Health Informatics",
+            "doi": "10.5555/thi.2019.0033",
+            "providerType": "journal-article",
+            "abstract": "Using rotation data from 3 hospitals, we simulated trials of a prescribing alert display. When displays were set by ward but prescribers were randomised, 40 percent of orders were exposed to the other arm. Randomising wards reduced exposure to the other arm to under 10 percent but needed a design effect of about 2.1 for the same number of orders. Stratifying by specialty reduced imbalance when there were fewer than 40 wards. We recommend ward-level randomisation whenever the display is a ward setting."
+          },
+          {
+            "title": "Harm from suppressed moderate interaction alerts: pharmacist surveillance after tiering",
+            "authors": "Dubois-Achebe H, Quist-Moreno V",
+            "year": 2025,
+            "venue": "Medication Safety Methods",
+            "doi": "10.5555/msm.2025.0018",
+            "providerType": "journal-article",
+            "abstract": "After tiering in one hospital, pharmacists reviewed 2,400 dispensed moderate-interaction combinations over four months. They judged 14 as having caused or contributed to harm (0.6 percent), a rate similar to the year before tiering. Most harms involved potassium-raising combinations in older adults with kidney impairment. The surveillance took about 6 pharmacist hours a week. No harm was judged to have followed a combination that remained interruptive. The authors suggest targeting surveillance at a short list of combinations that caused most harm rather than reviewing every moderate interaction."
+          },
+          {
+            "title": "Why prescribers override interaction alerts: a questionnaire study in teaching hospitals",
+            "authors": "Achterberg-Moss E, Oduya-Fischer R",
+            "year": 2018,
+            "venue": "Health Informatics Practice",
+            "providerType": "journal-article",
+            "abstract": "Among 410 prescribers in three teaching hospitals who answered a questionnaire, 72 percent said they overrode interaction alerts without reading them at least weekly. The most common reasons given were that the interaction was already known, that the alert appeared for combinations used routinely, and that the alert text was too long. Junior doctors reported more alerts per shift than consultants. Prescribers supported tiering if high-severity alerts stayed interruptive and were fewer. Consultants were more likely than junior doctors to say that an alert had changed one of their prescriptions in the past month."
+          }
+        ]
+      },
+      "note": "Provider labels map to kinds at ingestion (holds at 875fe59): 'Randomized Controlled Trial' to rct and 'review' to systematic-review; the others stay grey until appraised.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-09rmbg1",
+            "ev-14glg8a",
+            "ev-09cwrs4",
+            "ev-0tosxg6",
+            "ev-0ghxl1c",
+            "ev-0lep8qi",
+            "ev-1h34sq4"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].kind": "rct",
+          "scan.items[2].kind": "systematic-review",
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Contamination in randomised trials of prescribing decision support when prescribers rotate"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-09rmbg1",
+            "relevance": 95,
+            "methodQuality": 72,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "On 24 randomised wards, tiering raised acceptance of high-severity interruptive alerts from 11 to 29 percent and cut interruptive alerts from 8.2 to 1.9 per 100 orders, without more harmful moderate-interaction combinations on pharmacist review.",
+            "limitations": "Two hospitals; rotation contamination; no direct adverse drug event outcome.",
+            "contextTags": [
+              "cluster randomised",
+              "tiered alerts",
+              "acceptance"
+            ]
+          },
+          {
+            "id": "ev-14glg8a",
+            "relevance": 70,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across 9 hospitals, override rates were 90 to 96 percent, similar for high- and low-severity alerts, and rose with alerts per shift.",
+            "limitations": "Descriptive; reasons rarely documented.",
+            "contextTags": [
+              "override rates",
+              "alert volume"
+            ]
+          },
+          {
+            "id": "ev-09cwrs4",
+            "relevance": 80,
+            "methodQuality": 64,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 27 studies, tiering and suppression reduced alert volume; only 4 measured patient outcomes and none showed a clear change in adverse drug events.",
+            "limitations": "Mostly before-and-after designs with concurrent changes.",
+            "contextTags": [
+              "systematic review",
+              "alert fatigue",
+              "patient outcomes"
+            ]
+          },
+          {
+            "id": "ev-0tosxg6",
+            "relevance": 85,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Two pharmacists judged 87 percent of 1,000 overridden alerts appropriate (kappa 0.71); override rate alone misclassifies appropriate overrides.",
+            "limitations": "One organisation's definition; four minutes per alert.",
+            "contextTags": [
+              "outcome definition",
+              "appropriateness",
+              "measurement"
+            ]
+          },
+          {
+            "id": "ev-0ghxl1c",
+            "relevance": 88,
+            "methodQuality": 62,
+            "kind": "expert",
+            "grade": "low",
+            "keyFindings": "Randomising prescribers under ward-set displays exposed 40 percent of orders to the other arm; ward randomisation cut this below 10 percent at a design effect of about 2.1.",
+            "limitations": "Simulation from 3 hospitals' rotation data.",
+            "contextTags": [
+              "contamination",
+              "unit of randomisation",
+              "design effect"
+            ]
+          },
+          {
+            "id": "ev-0lep8qi",
+            "relevance": 86,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Surveillance of 2,400 dispensed moderate-interaction combinations after tiering judged 14 harmful (0.6 percent), similar to the previous year; potassium-raising combinations dominated.",
+            "limitations": "One hospital; before-and-after comparison of harm.",
+            "contextTags": [
+              "harm surveillance",
+              "balancing measure",
+              "kidney impairment"
+            ]
+          },
+          {
+            "id": "ev-1h34sq4",
+            "relevance": 60,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Seventy-two percent of 410 responding prescribers overrode alerts without reading them at least weekly; they supported tiering if high-severity alerts stayed interruptive.",
+            "limitations": "Self-report; response rate not given.",
+            "contextTags": [
+              "prescriber views",
+              "acceptability"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a cluster randomised trial on 24 wards, 29 percent of high-severity interruptive alerts were accepted with a tiered display against 11 percent with the standard display.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-09rmbg1"
+            ],
+            "location": "Abstract, results",
+            "passage": "With tiering, 29 percent of high-severity interruptive alerts were accepted, compared with 11 percent under the standard display.",
+            "interpretation": "Gives the planning values for the primary comparison; contamination may have diluted it.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "When displays were set by ward but prescribers were randomised, 40 percent of orders were exposed to the other arm; ward randomisation cut this to under 10 percent at a design effect of about 2.1.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0ghxl1c"
+            ],
+            "location": "Abstract, simulation results",
+            "passage": "Randomising wards reduced exposure to the other arm to under 10 percent but needed a design effect of about 2.1 for the same number of orders.",
+            "interpretation": "Randomise wards, stratified by hospital and specialty.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Pharmacist surveillance of 2,400 dispensed moderate-interaction combinations after tiering judged 14 harmful (0.6 percent), a rate similar to the year before.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0lep8qi"
+            ],
+            "location": "Abstract",
+            "passage": "They judged 14 as having caused or contributed to harm (0.6 percent), a rate similar to the year before tiering.",
+            "interpretation": "Targeted surveillance of suppressed combinations is a workable balancing measure.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Two pharmacists judged 87 percent of 1,000 overridden alerts appropriate, with good agreement (kappa 0.71).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0tosxg6"
+            ],
+            "location": "Abstract",
+            "passage": "They judged 87 percent of overrides appropriate, with good agreement (kappa 0.71).",
+            "interpretation": "Use appropriate response (accepted or appropriately overridden) as the primary outcome rather than raw override rates.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Only 4 of 27 studies of alert fatigue interventions measured patient outcomes, and none found a clear change in adverse drug events.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-09cwrs4"
+            ],
+            "location": "Abstract",
+            "passage": "Only 4 studies measured patient outcomes, and none found a clear change in adverse drug events.",
+            "interpretation": "Do not promise an adverse drug event effect; measure harm as a balancing outcome.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. One cluster randomised trial found tiering raised acceptance of high-severity alerts from 11 to 29 percent and cut interruptions fourfold, with no rise in harmful moderate combinations. Override rates are uniformly high and uninformative on their own; pharmacist-judged appropriateness is a reliable alternative outcome. Ward randomisation avoids most contamination when displays are ward settings. Surveillance after tiering found harm from suppressed moderate interactions at about the previous rate. No study shows an effect on adverse drug events.",
+        "gradeOverall": "low",
+        "gradeRationale": "One moderate-quality cluster trial with contamination, a simulation study and observational work; consistent direction for prescriber response, low certainty for patient outcomes.",
+        "summary": "Seven records appraised; five claims; overall certainty low."
+      },
+      "note": "Appraisal of the seven retrieved records (S13); certainty over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[4].kind": "expert",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-09rmbg1"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-0ghxl1c"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 2,
+      "omitKeys": [
+        "gradeOverall",
+        "gradeRationale"
+      ],
+      "response": {
+        "query": "tiered drug interaction alert display override electronic prescribing randomised",
+        "sourcesConsulted": [
+          "model knowledge of clinical decision support literature"
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level, remain the evidence base: one cluster trial found tiering raised acceptance of high-severity alerts from 11 to 29 percent, ward randomisation avoids most contamination, and harm from suppressed moderate interactions stayed near its previous rate. Three further reports are suggested as unverified leads on automated suppression, tiering in paediatric prescribing and alert burden and burnout; none has been retrieved or checked.",
+        "items": [
+          {
+            "title": "Automated suppression of low-value interaction alerts using prescribing history",
+            "authors": "Olsen-Mensah R, Takahashi-Brandt E",
+            "year": 2022,
+            "source": "Journal of Clinical Decision Support",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 55,
+            "verification": "ai-lead",
+            "contextTags": [
+              "suppression",
+              "prescribing history"
+            ],
+            "keyFindings": "Suppressing alerts for combinations a prescriber had already continued cut alert volume by about a third.",
+            "limitations": "One hospital; no harm review.",
+            "notes": "Lead; not retrieved."
+          },
+          {
+            "title": "Tiered interaction alerting in paediatric electronic prescribing",
+            "authors": "Laurent-Obi S, Kowalczyk-Reid H",
+            "year": "2021",
+            "source": "Paediatric Medication Safety",
+            "kind": "qi-report",
+            "grade": "low",
+            "methodQuality": 40,
+            "relevance": 50,
+            "verification": "ai-lead",
+            "contextTags": [
+              "paediatrics",
+              "tiering"
+            ],
+            "keyFindings": "Tiering in a children's hospital reduced interruptive alerts without more reported interaction harm.",
+            "limitations": "Before-and-after report.",
+            "notes": "Lead; the year came back as text."
+          },
+          {
+            "title": "Alert burden and burnout among hospital prescribers",
+            "authors": "Nyberg-Adeyemi C, Fairweather-Oduya J",
+            "year": 2020,
+            "source": "Health Workforce Informatics",
+            "kind": "observational",
+            "grade": "very-low",
+            "methodQuality": 35,
+            "relevance": 35,
+            "verification": "ai-lead",
+            "contextTags": [
+              "burnout",
+              "alert burden"
+            ],
+            "keyFindings": "Prescribers seeing more alerts per shift reported more burnout symptoms.",
+            "limitations": "Cross-sectional self-report.",
+            "notes": "Lead; background only."
+          }
+        ],
+        "summary": "Three unverified leads added; the appraisal of the retrieved records stands."
+      },
+      "note": "A later discovery call adds three leads after the appraisal. They are appended after the seven retrieved records (D1; at 875fe59 the leads would replace the appraised records and their annotations). The second lead's year arrives as the string \"2021\" and is stored as the number 2021 with no issue (holds at 875fe59). The reply carries no certainty keys, so the appraisal's certainty and claims stay unchanged; leads never add certainty (G1, G3).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].id": "ev-09rmbg1",
+          "scan.items[0].grade": "moderate",
+          "scan.items[6].id": "ev-1h34sq4",
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[8].title": "Tiered interaction alerting in paediatric electronic prescribing",
+          "scan.items[8].year": 2021,
+          "scan.items[8].provenance.origin": "model",
+          "scan.items[8].provenance.status": "unverified",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.gradeOverall": "low",
+          "scan.synthesis": {
+            "includes": "unverified leads"
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "three hospitals, 38 inpatient wards, one prescribing system",
+          "about 21,000 alerts a month",
+          "prescribers rotating between wards",
+          "order set change next year"
+        ],
+        "reading": "Alert volume trains prescribers to override, so high-severity alerts are lost among low-value ones. Tiering removes interruptions for moderate and minor interactions, which should raise attention to the few that remain, but shifts the risk of moderate interactions onto passive notes and pharmacist surveillance. Because the display is a ward setting and prescribers rotate, the unit of randomisation is the ward, and contamination through rotating prescribers will dilute any difference.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Alert volume per prescriber shift",
+            "kind": "context",
+            "detail": "Drives override behaviour."
+          },
+          {
+            "id": "n2",
+            "label": "Tiered alert display",
+            "kind": "framework",
+            "detail": "Interruptive for high severity only."
+          },
+          {
+            "id": "n3",
+            "label": "Appropriate response to high-severity alerts",
+            "kind": "outcome",
+            "detail": "Accepted or appropriately overridden (claims c1, c4)."
+          },
+          {
+            "id": "n4",
+            "label": "Harm from suppressed moderate interactions",
+            "kind": "outcome",
+            "detail": "Balancing outcome by pharmacist surveillance (claim c3)."
+          },
+          {
+            "id": "n5",
+            "label": "Rotating prescribers",
+            "kind": "context",
+            "detail": "Contamination between arms (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Ward-level randomisation",
+            "kind": "framework",
+            "detail": "Matches the display setting."
+          },
+          {
+            "id": "n7",
+            "label": "Older adults with kidney impairment",
+            "kind": "stakeholder",
+            "detail": "Bear most moderate-interaction harm."
+          },
+          {
+            "id": "n8",
+            "label": "Adverse drug events",
+            "kind": "gap",
+            "detail": "No study shows an effect (claim c5)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "lowers"
+          },
+          {
+            "from": "n2",
+            "to": "n1",
+            "relation": "reduces"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "may increase"
+          },
+          {
+            "from": "n5",
+            "to": "n6",
+            "relation": "requires"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "allows a fair comparison of"
+          },
+          {
+            "from": "n7",
+            "to": "n4",
+            "relation": "most affected by"
+          },
+          {
+            "from": "n3",
+            "to": "n8",
+            "relation": "hoped to reduce"
+          }
+        ],
+        "summary": "Map links alert volume to lost attention and places ward randomisation and harm surveillance around the tiered display."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No randomised evidence in this network",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "A before-and-after switch would be confounded by next year's order set change.",
+            "opportunity": "Randomise wards to tiered or standard display for six months."
+          },
+          {
+            "id": "g2",
+            "title": "Override rate is a poor primary outcome",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "Most overrides are appropriate (claim c4), so a falling override rate need not mean better care.",
+            "opportunity": "Use appropriate response to high-severity alerts, judged on a random sample by pharmacists."
+          },
+          {
+            "id": "g3",
+            "title": "Harm from suppressed moderate interactions",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Tiering moves moderate interactions to a passive note (claim c3).",
+            "opportunity": "Targeted surveillance of high-risk moderate combinations in both arms."
+          },
+          {
+            "id": "g4",
+            "title": "Contamination by rotating prescribers",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Prescriber randomisation would expose many orders to the other arm (claim c2).",
+            "opportunity": "Randomise wards, stratify by hospital and specialty, and record prescriber rotation."
+          },
+          {
+            "id": "g5",
+            "title": "Older adults with kidney impairment carry the risk",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Potassium-raising combinations dominated harm after tiering.",
+            "opportunity": "Keep potassium-raising combinations interruptive for patients with reduced kidney function in both arms."
+          }
+        ],
+        "errorsFound": [
+          "The request treats override rates as the measure of alert fatigue; the appraised evidence shows most overrides are appropriate."
+        ],
+        "reevaluation": "The gaps confirm a ward-randomised trial with an appropriateness outcome and a harm safeguard.",
+        "summary": "Five gaps; the absent randomised evidence and the outcome definition are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].kind": "outcome",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "On wards randomised to the tiered display, the proportion of high-severity interaction alerts with an appropriate response (accepted or appropriately overridden) is at least 9 percentage points higher than on standard-display wards over six months, without more harm from moderate interactions.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 85,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "The retrieved trial suggests a large effect (c1), but contamination and a different outcome definition (c4) justify a conservative target; harm is a safeguard (c3).",
+            "risks": "Contamination through rotation; pharmacist review workload."
+          },
+          {
+            "id": "h2",
+            "statement": "Interruptive alerts per 100 orders fall by at least half on tiered wards.",
+            "novelty": 30,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 90,
+            "parsimony": 80,
+            "rationale": "Volume reduction is consistent across studies.",
+            "risks": "A process measure, not a benefit to patients."
+          },
+          {
+            "id": "h3",
+            "statement": "Tiering reduces reported prescriber alert burden.",
+            "novelty": 40,
+            "need": 50,
+            "practiceChange": 45,
+            "feasibility": 70,
+            "parsimony": 55,
+            "rationale": "Prescribers support tiering if high-severity alerts stay interruptive.",
+            "risks": "Self-report and response bias."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 is the primary comparison."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among inpatient wards in a three-hospital network, does a tiered drug interaction alert display, compared with the standard display, increase the proportion of high-severity alerts with an appropriate prescriber response over six months, without increasing harm from suppressed moderate interactions?",
+            "framework": "PICOT",
+            "population": "Inpatient wards (clusters) and the high-severity interaction alerts raised on them",
+            "intervention": "Tiered alert display set per ward",
+            "comparator": "Standard display with every interaction interruptive",
+            "outcome": "Proportion of high-severity alerts accepted or overridden appropriately, judged by pharmacists on a random sample",
+            "time": "Six months after randomisation",
+            "setting": "Three hospitals, 38 inpatient wards"
+          }
+        ],
+        "finer": "Feasible within the vendor contract and the medication safety team's time if review is sampled; interesting to prescribers and the director; novel for this network; ethical with harm surveillance; relevant before the order set change.",
+        "summary": "One PICOT question with a harm safeguard."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICOT",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "rct",
+        "rationale": "A concurrent randomised comparison is the only way to separate the display change from next year's order set change. Because the display is a ward setting and prescribers rotate, wards are the unit of randomisation (c2). Reporting follows the CONSORT extension for cluster randomised trials.",
+        "alternatives": [
+          "Prescriber-level randomisation (refused: 40 percent of orders would be exposed to the other arm)",
+          "Before-and-after switch (refused: confounded by the order set change)",
+          "Stepped-wedge rollout (refused: longer than the vendor contract allows and still confounded by calendar time)"
+        ],
+        "guidelines": [
+          "CONSORT extension for cluster randomised trials"
+        ],
+        "whyNotMoreComplex": "An adverse drug event primary outcome would need many times more wards and years; the trial measures prescriber response with harm as a safeguard.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Pursue a ward-randomised trial of the tiered alert display for six months, stratified by hospital and specialty, with appropriate response to high-severity alerts as the primary outcome and targeted harm surveillance of suppressed moderate interactions, because tiering improved response in a cluster trial (c1), ward randomisation limits contamination (c2), appropriateness is a reliable outcome (c4) and harm surveillance is workable (c3).",
+          "question": "Should the network run a randomised comparison of tiered and standard alert displays?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Tiering has improved prescriber response in a randomised comparison, and a ward-level design can avoid most contamination.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Suppressed moderate interactions cause more harm than before tiering.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Vendor confirmation that the tiered display can be enabled per ward",
+              "status": "met",
+              "evidence": "Vendor note VN-4471 dated 2026-08-12, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Network REB approval of the cluster trial, including the consent approach for prescribers and patients",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Before-and-after switch to tiering across all wards",
+            "Prescriber education on alert types without changing the display"
+          ],
+          "note": "Rests on ledger claims c1 to c4; the leads are not cited. The vendor gate is met; the REB has not reviewed the protocol, so the action is blocked."
+        },
+        "summary": "Ward-randomised trial recommended; the vendor gate is met and the REB gate is unknown."
+      },
+      "note": "Claims require S13; S11 for the statuses; D5 for the text.",
+      "expect": {
+        "store": {
+          "design.recommended": "rct",
+          "family": "rct",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive; the unknown REB gate keeps the action blocked (G7; A2 item 9). S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.basis": "explicit",
+          "family": "rct"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Two-arm cluster randomised trial: 36 of 38 inpatient wards randomised 1:1 to the tiered or standard drug interaction alert display for six months, stratified by hospital and ward specialty.",
+        "population": "Adult inpatient wards in the three hospitals, excluding the two intensive care units, which use a separate alert configuration; all high-severity interaction alerts raised on participating wards.",
+        "exposure": "Tiered display: high-severity interactions interrupt the prescriber with a modal alert; moderate and minor interactions appear as a passive note in the order summary. Potassium-raising combinations stay interruptive in both arms for patients with reduced kidney function.",
+        "procedures": "The vendor enables the display per ward after randomisation by the trial statistician. Each month, a random sample of high-severity alerts per ward is reviewed by two pharmacists blind to arm where possible, using a written definition of an appropriate response. Pharmacists run targeted surveillance of dispensed moderate combinations from a short list of high-risk pairs in both arms. Prescriber rotation is recorded from the rota system.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Appropriate response to high-severity alerts",
+            "measure": "Proportion of sampled high-severity alerts accepted or overridden with an appropriate reason, judged by two pharmacists",
+            "timing": "Months 1 to 6",
+            "why": "Captures whether prescribers act on the alerts that matter, not just how often they click.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Interruptive alerts per 100 orders",
+            "measure": "System count",
+            "timing": "Monthly",
+            "why": "Alert burden.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Harm from moderate interactions",
+            "measure": "Dispensed high-risk moderate combinations judged by pharmacists to have caused or contributed to harm, per 1,000 patient days",
+            "timing": "Months 1 to 6",
+            "why": "Safeguard for suppressed alerts.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Exposure to the other arm",
+            "measure": "Proportion of orders written by prescribers who also worked on wards in the other arm that week",
+            "timing": "Monthly",
+            "why": "Quantifies contamination.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Double review of about 20 high-severity alerts per ward per month (720 alerts at about four minutes each) takes about 48 hours a month for each of the two reviewers, roughly 0.6 FTE in total, which fits within the 2.0 FTE team only if targeted surveillance is limited to the short list of high-risk pairs.",
+        "biasMitigation": [
+          "Ward randomisation with stratification",
+          "Pharmacist reviewers blind to arm where the alert history allows",
+          "Written appropriateness definition fixed before review",
+          "Recorded prescriber rotation for a contamination sensitivity analysis"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Contamination through rotating prescribers",
+            "severity": "watch",
+            "note": "Expected under 10 percent with ward randomisation; measured directly."
+          },
+          {
+            "id": "b2",
+            "label": "Reviewer unblinding",
+            "severity": "watch",
+            "note": "Alert display type may be visible in the record."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 2,
+          "flags": [
+            "Stratification variables only"
+          ],
+          "simplestPath": "Two arms, one primary outcome on a pharmacist-reviewed sample, one harm safeguard."
+        },
+        "theoreticalFramework": "None beyond the trial design; alert fatigue is treated as a volume-attention problem.",
+        "summary": "Ward-randomised trial of 36 wards with an appropriateness primary outcome and harm surveillance."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[2].role": "balancing",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Two-arm cluster randomised trial of 36 wards, stratified by hospital and specialty; primary outcome on a monthly random sample of high-severity alerts.",
+        "sampleSize": "About 1,260 high-severity alerts fire each month across the network (about 6 percent of 21,000), roughly 33 per ward; reviewing 20 per ward per month gives about 120 per ward over six months. With an intracluster correlation of 0.05, the design effect is about 7. Detecting an increase in appropriate response from 60 to 69 percent (9 points, more conservative than the retrieved trial's acceptance difference, c1) with 80 percent power at two-sided alpha 0.05 needs about 450 alerts per arm before clustering and about 3,150 after, or about 26 wards per arm at 120 alerts each; with 18 wards per arm the trial has about 65 percent power for 9 points and about 89 percent for 12 points. This is the largest trial the network can run, and the estimate is reported with its confidence interval.",
+        "primaryAnalysis": "Mixed-effects logistic regression of appropriate response with a random intercept for ward and fixed effects for the stratification variables; intention to treat by ward allocation.",
+        "secondaryAnalysis": "Negative binomial model for interruptive alerts per 100 orders; harm rate per 1,000 patient days with exact confidence intervals; sensitivity analysis excluding orders by prescribers exposed to both arms.",
+        "missingData": "Sampled alerts that cannot be judged are replaced by the next random alert and counted; wards that close are analysed as randomised for the months they were open.",
+        "multiplicity": "One primary outcome; secondary and balancing outcomes are reported with confidence intervals.",
+        "software": "R with lme4; allocation sequence generated by the trial statistician and concealed until wards are configured.",
+        "overfittingGuards": [
+          "Analysis plan registered before randomisation",
+          "No outcome-driven change to the sampling fraction",
+          "Stratification variables as the only covariates"
+        ],
+        "summary": "Thirty-six wards; about 65 percent power for a 9-point difference and 89 percent for 12 points."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 65 percent power for 9 points"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Moderate for patients on tiered wards if a suppressed moderate interaction causes harm; low for prescribers. Mitigated by keeping potassium-raising combinations interruptive for kidney impairment and by targeted harm surveillance with a stopping review.",
+        "consent": "Prescribers are the direct participants but cannot opt out of a ward setting; they receive information and can decline alert review of their orders being used for research. Patients are affected indirectly; a waiver of patient consent is requested because the display is a system setting within usual care and individual consent is impracticable, with notices on every ward.",
+        "data": "Alert logs and review forms carry order identifiers only; results are reported by arm, never by prescriber.",
+        "equity": "PROGRESS-Plus: older adults, people with kidney impairment and patients on many medicines carry most interaction risk; results are reported for patients aged 75 and over and for reduced kidney function. Junior doctors see more alerts and are over-represented among prescribers; their workload is monitored.",
+        "effectiveness": "The trial decides whether tiering is adopted network-wide before the order set change.",
+        "efficiency": "Uses vendor configuration and existing pharmacist time with sampled review.",
+        "costs": "No vendor cost within the current contract; pharmacist time within the team.",
+        "grants": "None needed.",
+        "partnerships": "Prescriber representatives from each hospital, the medication safety committee and two patient partners from the network's patient safety panel.",
+        "rebPath": "Full network REB review under ICH-GCP and Declaration of Helsinki principles, with a request for waiver of patient consent; the REB has not reviewed it yet, and randomisation waits for approval.",
+        "limitations": "Contamination; reviewer unblinding; no adverse drug event outcome; six months only.",
+        "summary": "Cluster trial with a patient consent waiver request, harm surveillance and an unknown REB decision."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "waiver of patient consent"
+          },
+          "ethics.rebPath": {
+            "includes": "has not reviewed it yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Prescriber representatives and two patient partners review the alert wording and the harm surveillance list before randomisation.",
+        "socialListening": "No social media listening; the network's incident reports mentioning alerts from the last two years are read for themes.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Clicking through",
+            "quote": "Composite paraphrase: On a take I see forty alerts before lunch; I stopped reading them months ago.",
+            "implication": "Measure appropriate response, not clicks, and report alert burden.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Pharmacist safety net",
+            "quote": "Composite paraphrase: If the moderate ones go quiet, I want to know someone is still looking at the risky pairs.",
+            "implication": "Keep targeted surveillance of high-risk moderate combinations in both arms.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Trusting the system",
+            "quote": "Composite paraphrase: I assumed the computer would stop a doctor giving me two things that clash.",
+            "implication": "Explain in ward notices what the alert system does and does not do.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Older relatives on many medicines",
+            "quote": "Composite paraphrase: My mother takes eleven tablets and her kidneys are poor; that is exactly who I worry about.",
+            "implication": "Keep potassium-raising alerts interruptive for reduced kidney function and report results for older adults.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on alert fatigue, safety nets, trust and older patients."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Tiered drug interaction alerts and prescriber response: a ward-randomised trial in three hospitals",
+        "abstract": "Objective: to compare a tiered drug interaction alert display with the standard display. Design: cluster randomised trial of 36 wards, stratified by hospital and specialty, for six months. Primary outcome: appropriate response to high-severity alerts on a pharmacist-reviewed sample. Balancing outcome: harm from moderate interactions. Results will be written after the trial.",
+        "introduction": "Prescribers override almost all interaction alerts, including dangerous ones. Tiering improved response to high-severity alerts in one cluster trial, but no study has shown an effect on adverse drug events.",
+        "methods": "Wards were randomised by the trial statistician, stratified by hospital and specialty. Pharmacists judged appropriateness on monthly random samples, and targeted surveillance covered high-risk moderate combinations in both arms.",
+        "results": "No data have been collected yet. The report will present the flow of wards and alerts, the primary comparison with its confidence interval, alert burden, harm surveillance and contamination.",
+        "discussion": "The discussion will interpret the effect with contamination in mind and weigh it against the harm surveillance. It will state whether tiering should be adopted before the order set change.",
+        "limitations": "Rotating prescribers may dilute the difference, and reviewers may be unblinded. There is no adverse drug event outcome, and follow-up is six months.",
+        "conclusion": "To be written after the trial. It will be limited to prescriber response and harm surveillance.",
+        "reportingChecklist": "CONSORT extension for cluster randomised trials",
+        "summary": "CONSORT cluster draft; results empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "CONSORT extension for cluster randomised trials",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "REB review is pending; the decision's action stays blocked and no ward is configured",
+          "Three model leads, one with a year that arrived as text, are unverified and not cited",
+          "Agree the short list of high-risk moderate combinations for surveillance before randomisation"
+        ],
+        "improvementNotes": "The appraisal of seven retrieved records carries the decision; a later discovery call added unverified leads without changing the certainty or the ledger.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes; REB pending."
+      },
+      "note": "Audit fields fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Tiered drug interaction alerts and prescriber response: a ward-randomised trial",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[8].year": 2021,
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Tiered drug interaction alerts and prescriber response: a ward-randomised trial"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Tiered drug interaction alerts and prescriber response: a ward-randomised trial",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[8].year": 2021,
+          "scan.items[8].provenance.origin": "model",
+          "stats.sampleSize": {
+            "includes": "design effect"
+          }
+        },
+        "screen": {
+          "includes": [
+            "Tiered drug interaction alerts and prescriber response: a ward-randomised trial"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "S11 for the decision fields; one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items": {
+              "length": 10
+            },
+            "scan.items[8].year": 2021,
+            "scan.items[8].provenance.status": "unverified",
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 5
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

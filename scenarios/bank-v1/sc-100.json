@@ -1,6 +1,6 @@
 {
   "id": "sc-100",
-  "version": 1,
+  "version": 2,
   "title": "Medical and surgical wards: peripheral catheter failure before and after a clinically indicated replacement policy, one explicit null",
   "field": "nursing",
   "level": 2,
@@ -12,7 +12,8 @@
     "D5",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary path with one explicit null. The need names a cohort comparing catheters inserted in the 12 months before and after a change to clinically indicated replacement; the local facts include an ethics approval with a waiver of consent and agreed informatics time. The problem reply restates the investigator's constraints exactly (G11: nothing to reject). A first fixture search on failure and phlebitis returns five records, and the first appraisal rates overall certainty low. A second search on the sub-questions the first did not cover (infection, several catheters per patient, removal-reason documentation, nursing time) adds five records; the re-appraisal annotates only the new records, restates the whole ledger (c1 to c6) and returns gradeOverall null: an explicit null on a model-owned field, which must clear the stored 'low' to '' (unassessed, shown as not assessed) with an issue 'cleared' at gradeOverall, while the first five records keep their earlier grades because omitted annotations never overwrite. This is the scenario's only null; the investigator's constraints and need are never nulled (G11). The Scan stays complete throughout because records were retrieved (G2). The cohort decision rests on ledger claims c1 to c4, both gates are met on the investigator's records (not on constraint text), and acceptance gives selection accepted and action ready. Record ids are stableRecordId(record) imported by the generator from src/lib/evidence/records.ts at 875fe59: the DOI hash, or the titleYearKey hash for the records without a DOI (records 4, 8, 9); every id is listed in the retrieve steps' notes. Requires D2 (explicit null clears gradeOverall and the cleared issue matches the value), S13 (appraisal payloads on the production scan path), D20 (not assessed as the display of an unassessed certainty), S11 (explicit basis, selectionStatus, actionStatus) and D5 (status text). Catches: a cleared log that leaves the earlier certainty in place (the 875fe59 pattern where enumOrResolve returns undefined and a compact patch keeps the old value), a null turned into a default grade, a re-appraisal that wipes annotations it omitted, a Scan made incomplete by an unrated certainty, and work lost on reload or reopen.",
   "inputs": {
@@ -1117,8 +1118,8 @@
             "c6"
           ],
           "design.decisions[-1].criteria[2].status": "unknown",
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -1127,13 +1128,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "met",
+      "reason": "Research ethics board approval with a waiver of consent for secondary use of flowsheet and surveillance data: Approval REB-2026-0412 dated 2026-08-27, supplied by the investigator",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "met",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1696,5 +1742,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-100.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (approved) citing the ethics gate the investigator confirmed before accepting decision 1. Model responses, need and records are unchanged."
 }

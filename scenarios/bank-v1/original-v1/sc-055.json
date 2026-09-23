@@ -1,0 +1,1429 @@
+{
+  "id": "sc-055",
+  "version": 1,
+  "title": "Postpartum hypertension: remote blood pressure monitoring pragmatic trial, one lead with its year given as text",
+  "field": "obstetrics",
+  "level": 2,
+  "family": "pragmatic-trial",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path on a pragmatic trial (routing explicit pragmatic-trial from 'We want to run a pragmatic trial'; allocation is not described with any other design word). A fixture search returns seven records. The first scan reply (shape discovery) omits the certainty keys (omitKeys) and appends three leads after the records (D1): the first gives its year as the 4-digit string '2021', which must be stored as the number 2021 with no issue and survive a reload; the third has year null, stored null and unrated (G4); all three stay unverified model leads (G3). The only issue is the routine sourcesConsulted drop, and with records retrieved the Scan can complete (G2). A reload on the Scan route follows. The appraisal (scan call 2) annotates the seven records and records claims c1 to c4; certainty 'low' over inspected records. The decision rests on c1 to c4 with two gates met on investigator-supplied records and the ethics gate unknown (accepted, blocked). The protocol makes six-week blood pressure control primary because readmission is underpowered (about 950 women would be needed), with inclusion measured as a process outcome. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 3, 4, 5 (ev-0v29ru5, ev-1ni9nbz, ev-0tgdamh, ev-08nx7om); titleYearKey hash for records 2, 6, 7 (ev-125igf5, ev-02pc6lt, ev-1cn5t3n). Requires D1 (leads appended after retrieved records), S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text); the string year conversion holds at 875fe59. Catches: a year stored as text or dropped, an invented year for an undated lead, leads replacing retrieved records, and a readmission outcome chosen without the numbers to power it.",
+  "inputs": {
+    "need": "I am an obstetric physician at a regional maternity unit with about 5,200 births a year. Women with pre-eclampsia or gestational hypertension are discharged two or three days after birth, and their blood pressure is then checked by community midwives around day five and at the six-week visit with the family doctor. Blood pressure often peaks in the first week after birth, and we see women readmitted with severe hypertension or headaches, and rarely strokes, sometimes because nobody measured their pressure between visits or because their medicines were not adjusted. Last year 38 women were readmitted within six weeks with postpartum hypertension.\n\nThe hospital charity has funded home blood pressure monitors and a simple app: women would measure their blood pressure twice a day for two weeks and then daily to six weeks, with readings sent to a midwife-led hub that adjusts antihypertensive medicines by a written protocol and calls women with high readings. We want to run a pragmatic trial comparing remote monitoring with the usual community checks, in the real conditions of our service, with our own midwives rather than research staff.\n\nI need help choosing an outcome that matters to women and that we can measure well (severe hypertension, readmission, or blood pressure control at six weeks), estimating the sample size with our numbers, and making sure that women who do not own a smartphone or who speak little English are not excluded. We would also like to hear what women think of measuring their own blood pressure with a newborn at home.",
+    "constraints": "Charity funding covers 300 monitors and the app licence for 18 months. The midwife hub runs from 08:00 to 20:00; high readings out of hours go to the maternity assessment unit. No extra clinic visits for trial purposes.",
+    "localFacts": [
+      "The maternity unit had about 5,200 births last year; 412 women were discharged with a hypertensive disorder of pregnancy.",
+      "Thirty-eight women were readmitted within six weeks of birth with postpartum hypertension last year.",
+      "The hospital charity funded 300 home blood pressure monitors and an 18-month app licence (award HC-2026-017).",
+      "The midwife-led hub has an approved medication titration protocol for postpartum hypertension (protocol MAT-HTN-04, approved 2026-06-30).",
+      "The research ethics application has not been submitted."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am an obstetric physician at a regional maternity unit with about 5,200 births a year. Women with pre-eclampsia or gestational hypertension are discharged two or three days after birth, and their blood pressure is then checked by community midwives around day five and at the six-week visit with the family doctor. Blood pressure often peaks in the first week after birth, and we see women readmitted with severe hypertension or headaches, and rarely strokes, sometimes because nobody measured their pressure between visits or because their medicines were not adjusted. Last year 38 women were readmitted within six weeks with postpartum hypertension.\n\nThe hospital charity has funded home blood pressure monitors and a simple app: women would measure their blood pressure twice a day for two weeks and then daily to six weeks, with readings sent to a midwife-led hub that adjusts antihypertensive medicines by a written protocol and calls women with high readings. We want to run a pragmatic trial comparing remote monitoring with the usual community checks, in the real conditions of our service, with our own midwives rather than research staff.\n\nI need help choosing an outcome that matters to women and that we can measure well (severe hypertension, readmission, or blood pressure control at six weeks), estimating the sample size with our numbers, and making sure that women who do not own a smartphone or who speak little English are not excluded. We would also like to hear what women think of measuring their own blood pressure with a newborn at home.",
+          "family": "pragmatic-trial",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am an obstetric physician at a regional maternity unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Remote blood pressure monitoring after hypertensive pregnancy: a pragmatic trial in a regional maternity unit",
+        "subtitle": "Remote monitoring with midwife-led titration against usual community checks",
+        "family": "pragmatic-trial",
+        "statement": "About 412 women a year leave a regional maternity unit with a hypertensive disorder of pregnancy, and blood pressure often peaks after discharge when it is checked only around day five and at six weeks. Last year 38 of these women were readmitted with postpartum hypertension. The unit wants to know whether remote monitoring with midwife-led medication titration, delivered by its own midwives, improves blood pressure outcomes compared with usual community checks, without excluding women who lack a smartphone or speak little English.",
+        "whoAffected": "Women after pre-eclampsia or gestational hypertension, their newborns and families, community midwives, the midwife-led hub and the maternity assessment unit.",
+        "whatHurts": "Uncontrolled blood pressure after birth leads to headaches, readmission, separation from the newborn and, rarely, stroke; women without devices or English may be missed most.",
+        "currentPractice": "Discharge on day two or three, a midwife check around day five, and a family doctor check at six weeks; medicines adjusted at those contacts only.",
+        "whyNow": "Charity funding for 300 monitors and an 18-month app licence (HC-2026-017) and an approved titration protocol (MAT-HTN-04) make a trial possible now.",
+        "constraints": "Charity funding covers 300 monitors and the app licence for 18 months. The midwife hub runs from 08:00 to 20:00; high readings out of hours go to the maternity assessment unit. No extra clinic visits for trial purposes.",
+        "patientCenteredGoal": "Every woman leaves hospital with a safe way to have her blood pressure watched and treated at home, whatever her phone, language or circumstances.",
+        "summary": "Problem framed as a pragmatic comparison of remote monitoring with usual postpartum checks."
+      },
+      "expect": {
+        "store": {
+          "title": "Remote blood pressure monitoring after hypertensive pregnancy: a pragmatic trial in a regional maternity unit",
+          "family": "pragmatic-trial",
+          "problem.constraints": "Charity funding covers 300 monitors and the app licence for 18 months. The midwife hub runs from 08:00 to 20:00; high readings out of hours go to the maternity assessment unit. No extra clinic visits for trial purposes.",
+          "problem.statement": {
+            "includes": "38 of these women were readmitted"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Remote blood pressure monitoring after hypertensive pregnancy: a pragmatic trial in a regional maternity unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "postpartum hypertension remote blood pressure monitoring midwife medication titration readmission six weeks",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Remote blood pressure monitoring after hypertensive pregnancy: a pragmatic trial in two maternity units",
+            "authors": "Nkemelu-Forsberg A, Castellano-Hart D, Iwu-Lindqvist P",
+            "year": 2021,
+            "venue": "Orrinford Journal of Maternal Medicine",
+            "doi": "10.5555/ojmm.2021.0233",
+            "providerType": "journal-article",
+            "abstract": "We allocated 440 women discharged after a hypertensive disorder of pregnancy to remote blood pressure monitoring with text-message reporting or to usual community checks. Blood pressure was recorded between days 3 and 10 in 92 percent of women with remote monitoring and 44 percent with usual care. Readmission for hypertension within six weeks was 3.1 percent with remote monitoring and 4.0 percent with usual care, a difference the trial was not powered to detect. Women in the remote arm more often had their medicines reduced before six weeks. Most women found remote monitoring reassuring. The trial excluded women without a smartphone."
+          },
+          {
+            "title": "Timing of peak blood pressure after pre-eclampsia and gestational hypertension",
+            "authors": "Varga-Oyelowo S, Holm-Achebe J",
+            "year": 2017,
+            "venue": "Harthill Obstetric Medicine Letters",
+            "providerType": "journal-article",
+            "abstract": "We reviewed twice-daily blood pressure readings for 356 women with pre-eclampsia or gestational hypertension during the first two weeks after birth, from inpatient charts and home readings. Blood pressure peaked between days 3 and 6 after birth in 71 percent of women, often after discharge. Women with pre-eclampsia and those who had stopped antihypertensive medicine before discharge had the highest peaks. Severe readings of 160 over 110 or more occurred in 14 percent of women, most at home. Home readings were taken on devices of different makes, and some women stopped recording after the first week."
+          },
+          {
+            "title": "Self-management of postpartum hypertension with home monitoring and medication titration: blood pressure at six weeks",
+            "authors": "Lindgren-Obi K, Marsh-Takahashi R",
+            "year": 2023,
+            "venue": "Vellmar Women's Health Reports",
+            "doi": "10.5555/vwhr.2023.0118",
+            "providerType": "journal-article",
+            "abstract": "Women with postpartum hypertension were allocated to self-management, with home monitoring and medication titration by a written protocol, or to usual care. Mean diastolic blood pressure at six weeks was 5 mmHg lower with self-management, and blood pressure below 140 over 90 at six weeks was reached by 76 percent of women with self-management and 61 percent with usual care. Fewer women in the self-management group were still taking antihypertensive medicine at six weeks. The trial was small and conducted in one hospital, and women who agreed to take part were more often educated beyond school."
+          },
+          {
+            "title": "Readmission for postpartum hypertension: incidence and predictors in a regional population",
+            "authors": "Petrakis-Mensah L, Ferreira-Doyle N",
+            "year": 2019,
+            "venue": "Orrinford Journal of Maternal Medicine",
+            "doi": "10.5555/ojmm.2019.0087",
+            "providerType": "journal-article",
+            "abstract": "Using regional hospital records for 9,820 women with a hypertensive disorder of pregnancy, we examined readmission for hypertension within six weeks of birth. Readmission occurred in 7 percent of women and was more common after pre-eclampsia, in women aged over 35 and in women discharged without antihypertensive medicine despite high readings. Most readmissions occurred within ten days of birth. Readmitted women stayed a median of two nights. The records did not show whether blood pressure had been measured between discharge and readmission, so missed opportunities could not be counted."
+          },
+          {
+            "title": "Digital exclusion in postpartum remote monitoring programmes",
+            "authors": "Adjei-Rasmussen M, Kowalski-Frost E",
+            "year": 2024,
+            "venue": "Vellmar Women's Health Reports",
+            "doi": "10.5555/vwhr.2024.0031",
+            "providerType": "journal-article",
+            "abstract": "We examined who took part in a postpartum remote blood pressure monitoring programme offered to all eligible women in three maternity units. Twelve percent of eligible women did not own a smartphone. Uptake of remote monitoring was 58 percent among women who needed an interpreter and 86 percent among other women. Offering a loan phone and a paper diary with phone calls from the hub raised uptake among women without a smartphone to 71 percent. Women living in the most deprived areas submitted readings on fewer days. Programmes that rely on a smartphone app alone risk widening inequalities in postpartum care."
+          },
+          {
+            "title": "Women's experiences of measuring their own blood pressure with a newborn at home",
+            "authors": "Olawale-Brennan T, Sato-Lund F",
+            "year": 2020,
+            "venue": "Harthill Obstetric Medicine Letters",
+            "providerType": "journal-article",
+            "abstract": "We held semi-structured conversations with 22 women who monitored their own blood pressure after a hypertensive pregnancy. Women described feeling reassured and in control, but found twice-daily readings hard to fit around feeding and broken sleep, especially in the first week. Several women said that a call from a midwife after a high reading made them feel looked after rather than alarmed. Women with other young children and those without a partner at home found monitoring hardest. Most women wanted to stop monitoring once readings were stable. Participants were recruited from one programme and were mostly fluent in English."
+          },
+          {
+            "title": "Accuracy of automated home blood pressure monitors in postpartum women",
+            "authors": "Brandt-Iwu C, Mahlangu-Holt R",
+            "year": 2016,
+            "venue": "Harthill Obstetric Medicine Letters",
+            "providerType": "journal-article",
+            "abstract": "We compared three automated upper-arm home blood pressure monitors with observer measurements in 180 postpartum women. Two monitors met accuracy standards, with mean differences within 5 mmHg for systolic and diastolic pressure, while the third underestimated systolic pressure by about 8 mmHg at high readings. Accuracy was similar in women with and without pre-eclampsia. Correct cuff size mattered more than monitor model. We recommend using only monitors validated in pregnancy and the postpartum period and checking cuff size at the first use."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values computed by the generator (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0v29ru5",
+            "ev-125igf5",
+            "ev-1ni9nbz",
+            "ev-0tgdamh",
+            "ev-08nx7om",
+            "ev-02pc6lt",
+            "ev-1cn5t3n"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-0v29ru5",
+          "scan.items[0].doi": "10.5555/ojmm.2021.0233",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Remote blood pressure monitoring after hypertensive pregnancy: a pragmatic trial in two maternity units"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "omitKeys": [
+        "gradeOverall",
+        "gradeRationale"
+      ],
+      "response": {
+        "query": "postpartum hypertension remote monitoring",
+        "sourcesConsulted": [
+          "model knowledge of obstetric medicine literature"
+        ],
+        "synthesis": "Three further items are suggested as leads beside the retrieved records: a text-message surveillance trial, a report of midwife titration under a protocol, and a survey of smartphone ownership among postpartum women.",
+        "items": [
+          {
+            "title": "Text-message blood pressure surveillance after delivery for hypertensive disorders: outcomes at ten days",
+            "authors": "Okoro-Lindahl F, Brandt-Nasser H",
+            "year": "2021",
+            "source": "Maternal Medicine Letters",
+            "kind": "rct",
+            "grade": "moderate",
+            "methodQuality": 70,
+            "relevance": 90,
+            "verification": "verify",
+            "contextTags": [
+              "text messaging",
+              "surveillance"
+            ],
+            "keyFindings": "Text-message reporting of home readings led to more women having blood pressure measured in the first ten days after delivery.",
+            "limitations": "Single centre.",
+            "notes": "Lead; the year was given as text."
+          },
+          {
+            "title": "Postpartum antihypertensive titration by midwives under a written protocol",
+            "authors": "Moreau-Kaur S",
+            "year": 2018,
+            "source": "Midwifery Practice Reports",
+            "kind": "observational",
+            "methodQuality": 55,
+            "relevance": 80,
+            "verification": "ai-lead",
+            "contextTags": [
+              "titration",
+              "midwife-led"
+            ],
+            "keyFindings": "Midwives adjusted doses safely under a protocol, with few hypotension episodes.",
+            "limitations": "Service report.",
+            "notes": "Lead."
+          },
+          {
+            "title": "Smartphone ownership and uptake of remote monitoring among postpartum women",
+            "authors": "Achterberg-Silva P",
+            "year": null,
+            "source": "Digital Maternity Notes",
+            "kind": "grey",
+            "relevance": 66,
+            "verification": "ai-lead",
+            "contextTags": [
+              "digital access"
+            ],
+            "keyFindings": "Ownership was lower among younger mothers and recent migrants.",
+            "limitations": "Undated survey report.",
+            "notes": "Lead."
+          }
+        ],
+        "summary": "Three leads appended; certainty left to the appraisal."
+      },
+      "note": "Leads are appended after the seven retrieved records (D1) as model leads (origin model, unverified; G3). The first lead gives its year as the 4-digit string '2021': a 4-digit string is read as that year and stored as the number 2021 without an issue (contracts.ts yearOrNull, holds at 875fe59); the third lead has year null, stored null (G4). The reply omits the certainty keys (omitKeys), so no certainty is set by a discovery reply (G1). The only issue is the routine sourcesConsulted drop. With records retrieved, the Scan can complete (G2).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[7].title": "Text-message blood pressure surveillance after delivery for hypertensive disorders: outcomes at ten days",
+          "scan.items[7].year": 2021,
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[8].year": 2018,
+          "scan.items[9].year": {
+            "isNull": true
+          },
+          "scan.items[9].grade": "unrated",
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Scan route: the year read from the string must persist as the number 2021, never revert to text or become null, and the null year must stay null.",
+      "expect": {
+        "store": {
+          "title": "Remote blood pressure monitoring after hypertensive pregnancy: a pragmatic trial in a regional maternity unit",
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[7].year": 2021,
+          "scan.items[9].year": {
+            "isNull": true
+          },
+          "scan.items[7].provenance.status": "unverified"
+        },
+        "screen": {
+          "includes": [
+            "Remote blood pressure monitoring after hypertensive pregnancy: a pragmatic trial in a regional maternity unit",
+            "unverified"
+          ],
+          "excludes": [
+            "no recorded response"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0v29ru5",
+            "relevance": 95,
+            "methodQuality": 68,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Blood pressure recorded between days 3 and 10 in 92 against 44 percent; readmission 3.1 against 4.0 percent, not powered.",
+            "limitations": "Excluded women without a smartphone; two units.",
+            "contextTags": [
+              "remote monitoring",
+              "ascertainment"
+            ],
+            "notes": "Closest to the planned trial."
+          },
+          {
+            "id": "ev-125igf5",
+            "relevance": 80,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Blood pressure peaked on days 3 to 6 in 71 percent; severe readings in 14 percent, mostly at home.",
+            "limitations": "Mixed devices; drop-off after week one.",
+            "contextTags": [
+              "timing",
+              "peak"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1ni9nbz",
+            "relevance": 90,
+            "methodQuality": 60,
+            "kind": "rct",
+            "grade": "low",
+            "keyFindings": "Blood pressure below 140 over 90 at six weeks in 76 against 61 percent; diastolic 5 mmHg lower with self-management.",
+            "limitations": "Small single-centre trial; educated participants.",
+            "contextTags": [
+              "titration",
+              "six-week control"
+            ],
+            "notes": "Planning values for the primary outcome."
+          },
+          {
+            "id": "ev-0tgdamh",
+            "relevance": 75,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Readmission in 7 percent of 9,820 women, mostly within ten days.",
+            "limitations": "Records could not show missed measurements.",
+            "contextTags": [
+              "readmission",
+              "incidence"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-08nx7om",
+            "relevance": 85,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "12 percent had no smartphone; uptake 58 percent with an interpreter against 86 percent otherwise; a loan phone and paper diary raised uptake to 71 percent.",
+            "limitations": "Three units; observational.",
+            "contextTags": [
+              "equity",
+              "digital exclusion"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-02pc6lt",
+            "relevance": 70,
+            "methodQuality": 56,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Monitoring reassured women but was hard to fit around feeding and sleep; midwife calls after high readings felt supportive.",
+            "limitations": "Mostly fluent English speakers from one programme.",
+            "contextTags": [
+              "experience",
+              "burden"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1cn5t3n",
+            "relevance": 60,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Two of three home monitors met accuracy standards; cuff size mattered more than model.",
+            "limitations": "Three devices only.",
+            "contextTags": [
+              "device accuracy"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Blood pressure was recorded between days 3 and 10 in 92 percent of women with remote monitoring and 44 percent with usual care.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0v29ru5"
+            ],
+            "location": "Abstract, results",
+            "passage": "Blood pressure was recorded between days 3 and 10 in 92 percent of women with remote monitoring and 44 percent with usual care.",
+            "interpretation": "Remote monitoring closes the measurement gap after discharge.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c2",
+            "text": "Readmission for hypertension within six weeks was 3.1 percent with remote monitoring and 4.0 percent with usual care, a difference the trial was not powered to detect.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0v29ru5"
+            ],
+            "location": "Abstract, results",
+            "passage": "Readmission for hypertension within six weeks was 3.1 percent with remote monitoring and 4.0 percent with usual care, a difference the trial was not powered to detect.",
+            "interpretation": "Readmission is too rare to be the primary outcome at this scale.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Blood pressure below 140 over 90 at six weeks was reached by 76 percent of women with self-management and 61 percent with usual care.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1ni9nbz"
+            ],
+            "location": "Abstract, results",
+            "passage": "blood pressure below 140 over 90 at six weeks was reached by 76 percent of women with self-management and 61 percent with usual care",
+            "interpretation": "Planning values for a six-week control outcome.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Uptake of remote monitoring was 58 percent among women who needed an interpreter and 86 percent among other women.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-08nx7om"
+            ],
+            "location": "Abstract, results",
+            "passage": "Uptake of remote monitoring was 58 percent among women who needed an interpreter and 86 percent among other women.",
+            "interpretation": "Design for inclusion: loan phones, paper diaries, interpreter calls.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level; the three leads remain unverified and are not part of the certainty. Remote monitoring closes the measurement gap in the first ten days, and self-management with protocol titration improved blood pressure control at six weeks in a small trial, while readmission differences were too small to detect. Blood pressure peaks after discharge, mostly in days 3 to 6. Uptake is lower among women who need an interpreter and those without a smartphone unless loan phones and paper options are offered. Validated devices and correct cuffs matter.",
+        "gradeOverall": "low",
+        "gradeRationale": "Two small or partly selected trials and observational studies; consistent on measurement and six-week control, imprecise for readmission, and trials excluded digitally excluded women.",
+        "summary": "Seven records appraised; four claims; certainty low."
+      },
+      "note": "Appraisal of the seven retrieved records only (S13); certainty assigned over inspected records (G1). The leads, including the one whose year arrived as text, stay unverified and unannotated.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[2].kind": "rct",
+          "scan.items[4].keyFindings": {
+            "includes": "loan phone"
+          },
+          "scan.items[7].year": 2021,
+          "scan.items[7].provenance.status": "unverified",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0v29ru5"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-1ni9nbz"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-08nx7om"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional maternity unit, about 5,200 births a year",
+          "412 women a year with a hypertensive disorder",
+          "midwife hub 08:00 to 20:00",
+          "300 monitors for 18 months"
+        ],
+        "reading": "Blood pressure peaks after discharge (days 3 to 6) when nobody is measuring, which remote monitoring addresses (c1). Protocol titration turns measurement into control at six weeks (c3). Readmission is the outcome women and the unit care about but is too rare to power (c2). Digital access and language shape who benefits (c4), so the trial's inclusion arrangements are part of the intervention.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Peak blood pressure after discharge",
+            "kind": "context",
+            "detail": "Days 3 to 6 for most women."
+          },
+          {
+            "id": "n2",
+            "label": "Remote monitoring with hub titration",
+            "kind": "framework",
+            "detail": "Readings twice daily for two weeks, then daily."
+          },
+          {
+            "id": "n3",
+            "label": "Blood pressure control at six weeks",
+            "kind": "outcome",
+            "detail": "76 against 61 percent in a small trial (c3)."
+          },
+          {
+            "id": "n4",
+            "label": "Readmission for hypertension",
+            "kind": "outcome",
+            "detail": "Too rare to power here (c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Women without a smartphone or needing an interpreter",
+            "kind": "stakeholder",
+            "detail": "Lower uptake (c4)."
+          },
+          {
+            "id": "n6",
+            "label": "Midwife-led hub",
+            "kind": "stakeholder",
+            "detail": "Adjusts medicines under protocol MAT-HTN-04."
+          },
+          {
+            "id": "n7",
+            "label": "Unverified leads",
+            "kind": "gap",
+            "detail": "Three model leads, one with a year given as text."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "is the target of"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "expected to improve"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "may reduce, underpowered"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "face barriers to"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "produces through titration"
+          }
+        ],
+        "summary": "Map from the post-discharge peak to control at six weeks, with digital access as an effect modifier."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 5
+          },
+          "map.nodes[6].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Trials excluded women without a smartphone",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "The largest trial excluded them, and uptake is lower among women needing an interpreter (c4).",
+            "opportunity": "Include loan phones, paper diaries with hub calls, and interpreter calls; report outcomes by digital access and language."
+          },
+          {
+            "id": "g2",
+            "title": "Readmission cannot be the primary outcome",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Differences in readmission are small and underpowered (c2).",
+            "opportunity": "Use control at six weeks as the primary outcome and report readmission and severe episodes as secondary."
+          },
+          {
+            "id": "g3",
+            "title": "Out-of-hours high readings",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "The hub closes at 20:00; severe readings at night go to the assessment unit.",
+            "opportunity": "Count out-of-hours escalations as a process measure."
+          },
+          {
+            "id": "g4",
+            "title": "Monitor accuracy and cuff size",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "One of three monitors underestimated systolic pressure at high readings.",
+            "opportunity": "Use validated monitors and check cuff size at discharge."
+          }
+        ],
+        "errorsFound": [
+          "A discovery lead gave its publication year as text; it was read as 2021 and remains an unverified lead."
+        ],
+        "reevaluation": "The gaps support a pragmatic trial with inclusive delivery, control at six weeks as the primary outcome and readmission as secondary.",
+        "summary": "Four gaps; digital exclusion is high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].kind": "equity",
+          "gaps.items[0].severity": "high",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Trials excluded women without a smartphone"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Remote monitoring with hub titration increases the proportion of women with blood pressure below 140 over 90 at the six-week check from about 60 percent to about 75 percent.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 80,
+            "parsimony": 85,
+            "rationale": "Planning values follow the retrieved self-management trial (c3); feasible within 300 monitors.",
+            "risks": "Missing six-week readings; contamination through midwives."
+          },
+          {
+            "id": "h2",
+            "statement": "Inclusive delivery (loan phones, paper diaries and interpreter calls) keeps uptake among women needing an interpreter within 10 percentage points of other women.",
+            "novelty": 50,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Addresses the uptake gap in c4.",
+            "risks": "Small subgroup."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "h1 primary; h2 an equity process hypothesis."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among women discharged after a hypertensive disorder of pregnancy, does remote blood pressure monitoring with midwife-led titration, compared with usual community checks, increase the proportion with blood pressure below 140 over 90 at the six-week check?",
+            "framework": "PICOT",
+            "population": "Women discharged from the regional maternity unit after pre-eclampsia or gestational hypertension",
+            "intervention": "Home monitoring with app, paper or phone reporting and midwife hub titration by protocol MAT-HTN-04",
+            "comparator": "Usual community midwife and family doctor checks",
+            "outcome": "Blood pressure below 140 over 90 at the six-week check",
+            "time": "Six weeks after birth",
+            "setting": "Regional maternity unit and its community services"
+          }
+        ],
+        "finer": "Feasible with 300 monitors over 18 months; interesting to women and the service; novel with inclusive delivery; ethical with consent in the postnatal ward and equal access; relevant because readmissions follow unmeasured peaks.",
+        "summary": "One PICOT question."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICOT",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "pragmatic-trial",
+        "rationale": "The question is whether remote monitoring works in the unit's own service with its own midwives, a pragmatic effectiveness question. Individual allocation on the postnatal ward is possible because monitoring happens at home. Remote monitoring closes the early measurement gap (c1), titration improved six-week control in a small trial (c3), readmission is underpowered (c2), and digital exclusion must be designed out (c4).",
+        "alternatives": [
+          "Introduce remote monitoring for all and compare with last year (refused: secular change and changing case mix)",
+          "Stepped introduction by community team (considered: fewer teams than needed for a stable comparison)",
+          "Readmission as the primary outcome (refused: about 950 women would be needed)"
+        ],
+        "guidelines": [
+          "CONSORT extension for pragmatic trials",
+          "PRECIS-2",
+          "TIDieR"
+        ],
+        "whyNotMoreComplex": "A trial powered for readmission would need about three years of births and more monitors than funded; six-week control is measurable now.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a pragmatic trial with individual allocation on the postnatal ward, comparing remote monitoring with midwife hub titration and inclusive reporting options against usual community checks, with blood pressure below 140 over 90 at six weeks as the primary outcome.",
+          "question": "Should the unit test remote postpartum blood pressure monitoring in a pragmatic trial?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Remote monitoring closes the early measurement gap, titration improved six-week control elsewhere, readmission is underpowered, and inclusion needs design.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The funded monitors cannot be allocated to the trial arm alone.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Funding for monitors and the app licence",
+              "status": "met",
+              "evidence": "Charity award HC-2026-017, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Approved medication titration protocol for the hub",
+              "status": "met",
+              "evidence": "Protocol MAT-HTN-04 approved 2026-06-30, supplied by the investigator"
+            },
+            {
+              "id": "g3",
+              "requirement": "Research ethics approval of the trial",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Stepped introduction by community team",
+            "Remote monitoring for all without comparison"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records; none of the three leads is cited. Ethics approval is unknown, so the action stays blocked."
+        },
+        "summary": "Pragmatic trial recommended; the decision rests on four ledger claims and waits for ethics approval."
+      },
+      "note": "The decision rests on c1 to c4 (S13). selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "pragmatic-trial",
+          "family": "pragmatic-trial",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates": {
+            "length": 3
+          },
+          "design.decisions[-1].gates[2].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection on c1 to c4 from retrieved records; ethics approval is unknown, so the action stays blocked (A2 item 9, G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.basis": "explicit",
+          "family": "pragmatic-trial"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Pragmatic trial with individual allocation on the postnatal ward, over 18 months, comparing remote blood pressure monitoring with midwife hub titration against usual community checks for women discharged after a hypertensive disorder of pregnancy.",
+        "population": "Women aged 16 and over discharged after pre-eclampsia or gestational hypertension who consent before discharge; women without a smartphone or needing an interpreter are included with a loan phone, a paper diary with hub calls, or interpreter calls.",
+        "exposure": "A validated upper-arm monitor with a cuff sized at discharge; readings twice daily for two weeks, then daily to six weeks, sent by app, text or phone; hub midwives adjust medicines under protocol MAT-HTN-04 and call after high readings; out-of-hours severe readings go to the maternity assessment unit.",
+        "procedures": "Allocation by a central web service after consent on the postnatal ward, stratified by pre-eclampsia versus gestational hypertension. Usual care continues in both arms. The six-week blood pressure is taken at the family doctor visit and retrieved from the shared record; readmissions from hospital records.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Blood pressure control at six weeks",
+            "measure": "Blood pressure below 140 over 90 at the six-week check, from the shared record",
+            "timing": "Six weeks after birth",
+            "why": "Measurable in both arms from routine care and linked to long-term cardiovascular risk; readmission is too rare to power.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Readmission or unplanned attendance for hypertension",
+            "measure": "Hospital readmission or assessment unit attendance for hypertension within six weeks",
+            "timing": "Six weeks",
+            "why": "The outcome women care most about; reported with its interval.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Severe readings treated within 24 hours",
+            "measure": "Proportion of readings of 160 over 110 or more followed by treatment within 24 hours (remote arm) or recorded severe hypertension events (both arms)",
+            "timing": "Six weeks",
+            "why": "Severe peaks are the danger remote monitoring aims to catch.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Uptake and reporting by digital access and language",
+            "measure": "Proportion reporting readings on at least 10 of the first 14 days, by smartphone ownership and interpreter need",
+            "timing": "First two weeks",
+            "why": "Checks that inclusion arrangements work.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Burden and low blood pressure",
+            "measure": "Two-item burden question at six weeks; symptomatic low blood pressure after titration",
+            "timing": "Six weeks",
+            "why": "Monitoring should not overload new mothers or over-treat.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 412 eligible women a year; with about 55 percent consenting, about 340 women in 18 months, within the 300 funded monitors for the remote arm.",
+        "biasMitigation": [
+          "Central allocation after consent",
+          "Primary outcome from routine six-week measurement in both arms",
+          "Validated monitors and cuff sizing",
+          "Intention-to-treat analysis including women who never report"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Missing six-week readings",
+            "severity": "watch",
+            "note": "Family doctor checks may be missed more in one arm; retrieval from the shared record and a reminder in both arms."
+          },
+          {
+            "id": "b2",
+            "label": "Contamination through midwives",
+            "severity": "watch",
+            "note": "Community midwives may adjust care for usual-care women; accepted as pragmatic."
+          },
+          {
+            "id": "b3",
+            "label": "Selective consent",
+            "severity": "watch",
+            "note": "Consent rates by language and digital access are reported."
+          }
+        ],
+        "parsimony": {
+          "score": 83,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 1,
+          "flags": [
+            "Stratification by diagnosis is the only adjustment"
+          ],
+          "simplestPath": "Individual allocation, one routine primary outcome, two secondary outcomes, inclusive delivery."
+        },
+        "theoreticalFramework": "None beyond describing the intervention with TIDieR.",
+        "summary": "Pragmatic trial with six-week control as the primary outcome, readmission and severe readings as secondary, and inclusion measured as a process outcome."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": false,
+          "protocol.outcomes[1].patientCentered": true,
+          "protocol.parsimony.secondaryOutcomeCount": 2,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Two-arm pragmatic trial with individual allocation stratified by diagnosis; binary primary outcome at six weeks.",
+        "sampleSize": "Planning values from the retrieved self-management trial: 61 percent of usual-care women with blood pressure below 140 over 90 at six weeks, rounded to 60 percent, and 75 percent with remote monitoring. With 80 percent power at two-sided alpha 0.05, about 152 women per arm are needed, 304 in total; allowing 10 percent missing six-week readings gives about 340. With about 412 eligible women a year and about 55 percent consenting, recruitment takes about 18 months, and the remote arm needs about 170 monitors, within the 300 funded. Readmission (about 9 percent locally) would need about 950 women to detect a halving and is reported descriptively.",
+        "primaryAnalysis": "Logistic regression of control at six weeks on arm, adjusted for the stratification variable, intention to treat; risk difference with its 95 percent confidence interval.",
+        "secondaryAnalysis": "Readmission or unplanned attendance and severe readings as risk differences with intervals; uptake and reporting by smartphone ownership and interpreter need, descriptive; burden and low blood pressure described by arm.",
+        "missingData": "Missing six-week readings are handled by multiple imputation under missing at random, with a sensitivity analysis treating missing as uncontrolled.",
+        "multiplicity": "One primary outcome; secondary outcomes labelled as secondary with intervals.",
+        "software": "R; statistical analysis plan archived before the first allocation.",
+        "overfittingGuards": [
+          "One adjustment variable, the stratification factor",
+          "Two pre-specified subgroups (digital access, interpreter need) reported descriptively",
+          "No change to the primary outcome after recruitment starts"
+        ],
+        "summary": "About 152 women per arm for 60 against 75 percent control at six weeks; readmission descriptive."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "152 women per arm"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low to moderate: remote titration could over-treat or miss a severe reading outside hub hours; usual care continues in both arms and severe readings have an escalation route.",
+        "consent": "Written informed consent on the postnatal ward before discharge, with interpreters and translated information; women can stop monitoring at any time and keep their usual care.",
+        "data": "Readings are held on the app provider's platform under a data processing agreement and in the hub record; the analysis file uses study numbers.",
+        "equity": "PROGRESS-Plus: women without a smartphone, women needing an interpreter, younger mothers, recent migrants and women in deprived areas are the most likely to be excluded or to report less. Loan phones, paper diaries with hub calls and interpreter calls are part of the intervention, and outcomes are reported by digital access and language.",
+        "effectiveness": "The trial is useful if it shows whether remote monitoring improves six-week control within the unit's own service and reaches women equally.",
+        "efficiency": "Uses existing midwives and charity-funded devices; no extra clinic visits.",
+        "costs": "Monitors, app licence and loan phones funded by the charity; hub midwife time within existing roles.",
+        "grants": "None beyond the charity award; a positive result could support a larger trial powered for readmission.",
+        "partnerships": "The midwife hub, community midwives, family doctors, the maternity assessment unit and a maternity voices group.",
+        "rebPath": "Research ethics application to be submitted, following ICH-GCP and the Declaration of Helsinki; no allocation before approval.",
+        "limitations": "Surrogate primary outcome; unblinded; underpowered for readmission.",
+        "summary": "Written consent with interpreters, an escalation route, and inclusive delivery reported by digital access and language."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "interpreters"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A maternity voices group, including women who needed an interpreter, reviews the information leaflet, the paper diary and the hub call script before recruitment.",
+        "socialListening": "No social media listening; the unit's postnatal feedback comments from the last year are read for mentions of blood pressure checks.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Fitting it around feeding",
+            "quote": "Composite paraphrase: Twice a day sounds easy until you are feeding every two hours and the cuff is somewhere under the baby blanket.",
+            "implication": "Allow a flexible reading window and report the burden outcome.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Being looked after",
+            "quote": "Composite paraphrase: When the midwife rang after a high reading I felt someone was watching over me, not that I was in trouble.",
+            "implication": "Keep hub calls warm and prompt.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "No smartphone",
+            "quote": "Composite paraphrase (through an interpreter): My phone only makes calls; I thought the monitoring was not for women like me.",
+            "implication": "Offer paper diaries and hub calls in the woman's language.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Night-time readings",
+            "quote": "Composite paraphrase (assessment unit midwife): The worst readings come at night, when the hub is closed.",
+            "implication": "Measure out-of-hours escalations.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on burden, reassurance, digital access and night-time readings."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "family",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Remote blood pressure monitoring with midwife-led titration after hypertensive pregnancy: a pragmatic trial",
+        "abstract": "Objective: to test whether remote blood pressure monitoring with midwife hub titration and inclusive reporting options improves blood pressure control at six weeks after a hypertensive disorder of pregnancy. Design: pragmatic trial with individual allocation. Primary outcome: blood pressure below 140 over 90 at the six-week check. Results will follow the trial.",
+        "introduction": "Blood pressure often peaks after discharge, when few women are measured. Retrieved trials show that remote monitoring closes this gap and may improve six-week control, but they excluded women without smartphones.",
+        "methods": "Allocation after consent on the postnatal ward; validated monitors; app, text, paper or phone reporting; titration by protocol; routine six-week measurement; intention-to-treat analysis.",
+        "results": "No data have been collected yet. The report will present recruitment by language and digital access, reporting adherence, the primary outcome with a risk difference, and secondary outcomes.",
+        "discussion": "The discussion will weigh a surrogate primary outcome against the underpowered readmission outcome and consider who the intervention reached.",
+        "limitations": "Surrogate primary outcome; unblinded; single unit.",
+        "conclusion": "To be written after the trial.",
+        "reportingChecklist": "CONSORT extension for pragmatic trials with TIDieR",
+        "summary": "CONSORT-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "pragmatic trials"
+          },
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Submit the research ethics application; no allocation before approval",
+          "Check the three model leads by identifier before any is cited; one gave its year as text",
+          "Agree the out-of-hours escalation pathway with the maternity assessment unit"
+        ],
+        "improvementNotes": "Seven records came from a recorded search and were appraised; three leads were appended as unverified, one with a year given as text and stored as a number, one undated. The decision rests on four ledger claims.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before recruitment."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 the audit patch is overwritten by store.ts mergeStage (L1.6 defect, sheet A3).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list.",
+      "expect": {
+        "store": {
+          "title": "Remote blood pressure monitoring after hypertensive pregnancy: a pragmatic trial in a regional maternity unit",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[7].year": 2021,
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Remote blood pressure monitoring after hypertensive pregnancy: a pragmatic trial in a regional maternity unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click, one file equal to the store (G10). The appended leads require D1; selectionStatus and actionStatus S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items[7].year": 2021,
+            "scan.items[7].provenance.status": "unverified",
+            "scan.items[9].year": {
+              "isNull": true
+            },
+            "scan.gradeOverall": "low",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "problem.constraints": "Charity funding covers 300 monitors and the app licence for 18 months. The midwife hub runs from 08:00 to 20:00; high readings out of hours go to the maternity assessment unit. No extra clinic visits for trial purposes."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

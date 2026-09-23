@@ -485,6 +485,28 @@ export interface DecisionGate {
   setBy?: "model" | "investigator";
   /** Why a model "met" was accepted (the investigator anchors found), or why it was refused. */
   grounding?: string;
+  /**
+   * D10 / S5: a model never sets a gate. Its "met" is kept here as a proposal and the gate stays
+   * "unknown" until the investigator confirms it. `supportingFacts` and `concerns` are Meridian's reading
+   * of the investigator's local facts and constraints, shown to help that decision; they carry no authority.
+   */
+  proposal?: GateProposal;
+  /**
+   * D10 / S5: set only by the store's addGate, when the investigator records the status of one kind of
+   * approval for the work from the record form. A model reply can never set it, and confirming a gate never does.
+   */
+  record?: true;
+}
+
+export interface GateProposal {
+  status: "met";
+  evidence: string;
+  /** Investigator facts the model's evidence points to (by reference number or wording). */
+  supportingFacts: string[];
+  /** What to check before confirming: pending, conflicting, other-study, out-of-scope or clinical-access facts. */
+  concerns: string[];
+  /** The investigator's facts this reading was made against; a change makes Meridian read them again. */
+  factsRevision?: string;
 }
 
 /** What would justify or defeat the decision, with the claims that speak to it. */
@@ -520,6 +542,11 @@ export interface DecisionRecord {
   /** Family this decision would pursue, when stated. */
   recommendedFamily?: StudyFamily | "" | null;
   note?: string;
+  /**
+   * D10 / S5: the investigator's own facts that left an approval open, acted on for this decision: given (with
+   * the reference) or set aside as not concerning it (with the reason). Their call, logged in the audit.
+   */
+  settledItems?: { text: string; how: "given" | "aside"; note: string; at: string }[];
 }
 
 export interface DesignStage {

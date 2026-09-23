@@ -1,12 +1,15 @@
-import type { DecisionCriterion, DecisionGate, DecisionKind, DecisionRecord, Study, StudyFamily } from "../types";
+import type { DecisionCriterion, DecisionGate, DecisionKind, DecisionRecord, GateProposal, Study, StudyFamily } from "../types";
 import { STUDY_FAMILIES } from "../types";
 import { Issues, enumOrResolve, isRecord, objectArray, stringArray, stringOrUndefined } from "../contracts";
 import type { Issue } from "../contracts";
 import { uid, nowIso } from "../utils";
+import { sha256Hex } from "./hash";
 import { treatAsFullTextRead } from "./access";
 import { isWithdrawnResult } from "./publication-status";
 import { emptySearchConfirmationValid } from "../defaults";
-import { assertsLocalResource, checkClaim, exemptionAssertions, exemptionCovered, gateGrounding, investigatorFactText, localFactEstablished, studyOwnText } from "./grounding";
+import { assertsLocalResource, checkClaim, factClauses, gateGrounding, gateSupport, investigatorFactText, localFactEstablished, normalizeForMatch, statusOpen, studyOwnText } from "./grounding";
+import { ACTIONABLE_KINDS, OTHER_WORK, approvalFacts, authorityClaims, ethicsGateCandidates, ethicsRecord, isRecordWording, localAssertions, openApprovalItems } from "./authority";
+import type { AuthorityBody, OpenItem } from "./authority";
 
 /*
  * Evidence-backed decisions.
@@ -20,6 +23,8 @@ import { assertsLocalResource, checkClaim, exemptionAssertions, exemptionCovered
  *                            gates, defeating criteria met, claims resting on mismatched sources.
  *  isStaleRequest(...)       reject a model response produced against an older revision.
  */
+
+/** A gate about approval, review, consent or an exemption determination. */
 
 const KINDS: readonly DecisionKind[] = ["pursue", "narrow", "defer", "no-new-study", "refer", "implementation", "replicate"];
 const GATE_STATUS = ["met", "unmet", "unknown"] as const;
@@ -124,11 +129,30 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
         id: typeof c.id === "string" && c.id.trim() ? c.id : `crit-${n + 1}`,
         text,
         role,
-        status: enumOrResolve(GATE_STATUS, c.status, `${p}.status`, issues, "unknown") ?? "unknown",
+        status: (() => {
+          const st = enumOrResolve(GATE_STATUS, c.status, `${p}.status`, issues, "unknown") ?? "unknown";
+          // D10 / S5: a criterion that states a local approval or resource as met is a local fact the
+          // model cannot establish; it stays unknown (a justifying criterion that is unknown only warns).
+          if (st === "met" && actor === "model" && assertsLocalResource(text) && !(stringArray(c.claimIds, `${p}.claimIds`, new Issues()) ?? []).some((id) => known.has(id))) {
+            issues.add(`${p}.status`, "resolved", `"met" for a local approval or resource is the investigator's to establish; resolved to "unknown"`);
+            return "unknown";
+          }
+          return st;
+        })(),
         claimIds: (stringArray(c.claimIds, `${p}.claimIds`, issues) ?? []).filter((id) => known.has(id)),
       },
     ];
   });
+  // Meridian owns gate identity: ids are unique within a decision whatever the model sends, so a
+  // confirmation changes exactly the gate on screen.
+  const gateIds = new Set<string>();
+  const uniqueGateId = (wanted: unknown, n: number): string => {
+    const base = typeof wanted === "string" && wanted.trim() ? wanted.trim() : `gate-${n + 1}`;
+    let id = base;
+    for (let k = 2; gateIds.has(id); k++) id = `${base}-${k}`;
+    gateIds.add(id);
+    return id;
+  };
   const gates: DecisionGate[] = (objectArray(raw.gates, "decision.gates", issues) ?? []).flatMap((g, n) => {
     const p = `decision.gates[${n}]`;
     const requirement = stringOrUndefined(g.requirement, `${p}.requirement`, issues);
@@ -136,36 +160,43 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
       issues.add(p, "dropped", "gate needs a requirement");
       return [];
     }
+    // The record form's wording belongs to the investigator's records; a model gate that uses it is renamed.
+    if (isRecordWording(requirement)) issues.add(`${p}.requirement`, "resolved", "a model gate may not use the wording of an investigator record; renamed");
     const evidence = stringOrUndefined(g.evidence, `${p}.evidence`, issues);
     let status = enumOrResolve(GATE_STATUS, g.status, `${p}.status`, issues, "unknown") ?? "unknown";
     let grounding: string | undefined;
+    let proposal: GateProposal | undefined;
     if (status === "met" && !evidence?.trim()) {
       // A model cannot declare a gate met without pointing at evidence — that is the whole point of a gate.
       issues.add(`${p}.status`, "resolved", '"met" without evidence resolved to "unknown"');
       status = "unknown";
     } else if (status === "met" && actor === "model") {
-      // D10/S5: the evidence must be anchored in text the investigator entered (need, constraints,
-      // local facts). An approval number or figure the investigator never supplied cannot meet a gate.
-      const g2 = gateGrounding(requirement, evidence ?? "", investigatorFactText(study), studyOwnText(study));
-      grounding = g2.reason;
-      if (!g2.grounded) {
-        issues.add(`${p}.status`, "ungrounded-gate", `"met" refused: ${g2.reason}; resolved to "unknown"`);
-        status = "unknown";
+      // D10 / S5: a model never sets a gate. Its "met" is a proposal the investigator confirms; Meridian's
+      // reading of the investigator's facts (supporting facts, concerns) is shown to help, with no authority.
+      const read = readProposal(requirement, evidence ?? "", study);
+      proposal = read.proposal;
+      grounding = read.grounding;
+      // The proposal itself is the record; an issue is raised only when Meridian sees something to check.
+      if (proposal.concerns.length) {
+        issues.add(`${p}.status`, "ungrounded-gate", `"met" is the model's proposal; the gate stays "unknown" until the investigator confirms it (${proposal.concerns[0]})`);
       }
+      status = "unknown";
     }
     return [
       {
-        id: typeof g.id === "string" && g.id.trim() ? g.id : `gate-${n + 1}`,
-        requirement,
+        id: uniqueGateId(g.id, n),
+        requirement: isRecordWording(requirement) ? `Model proposal: ${requirement}` : requirement,
         status,
         setBy: actor,
         ...(evidence?.trim() ? { evidence } : {}),
         ...(grounding ? { grounding } : {}),
+        ...(proposal ? { proposal } : {}),
       },
     ];
   });
   const decision: DecisionRecord = {
-    id: typeof raw.id === "string" && raw.id.trim() ? raw.id : uid("dec"),
+    // Meridian owns decision identity too: a model id already used by another decision is replaced.
+    id: typeof raw.id === "string" && raw.id.trim() && !(study.design.decisions ?? []).some((x) => x.id === raw.id) ? raw.id : uid("dec"),
     at: nowIso(),
     actor,
     kind,
@@ -187,6 +218,120 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
     ...(stringOrUndefined(raw.note, "decision.note", issues)?.trim() ? { note: raw.note as string } : {}),
   };
   return { decision, issues: issues.list };
+}
+
+/** A model sentence about approvals or local facts, shown to the investigator to check (advisory). */
+export interface ModelStatement {
+  kind: "authority" | "local";
+  text: string;
+  bodies: AuthorityBody[];
+}
+
+/** Where a decision stands on approvals (D10 / S5). */
+export interface ApprovalReview {
+  /** The investigator has not recorded, on this decision, the research ethics status of the work. */
+  ethicsRecordMissing: boolean;
+  /** The decision's kind leads to no work: the record can say so in one click. */
+  leadsToNoWork: boolean;
+  /** The investigator's own facts that leave an approval open and that they have not acted on for this decision. */
+  openItems: OpenItem[];
+  /** What the model's text says about approvals and local facts: advisory, it settles and blocks nothing. */
+  modelStatements: ModelStatement[];
+  /** References the investigator may use for the record: a confirmed ethics gate's evidence, or their own fact about this work. */
+  suggestedEthicsRecord?: string;
+  /** Where the suggestion comes from: a gate the investigator confirmed (the model's words), or their own fact. */
+  suggestionSource?: "gate" | "fact";
+  /** All of the investigator's statements about approvals, for them to check when they record (nothing is inferred). */
+  approvalFacts: string[];
+}
+
+const flat = (t: string) => normalizeForMatch(t).replace(/\s+/g, " ").trim();
+
+/** Every text the model wrote that a decision acts on. */
+function modelTexts(d: DecisionRecord, study: Study): string[] {
+  const claimsById = new Map((study.scan.claims ?? []).map((c) => [c.id, c]));
+  const gates = d.gates ?? [];
+  const criteria = d.criteria ?? [];
+  const e = study.ethics;
+  const texts = [
+    d.statement,
+    d.question ?? "",
+    d.note ?? "",
+    ...(d.alternatives ?? []),
+    study.design.rationale ?? "",
+    study.design.whyNotMoreComplex ?? "",
+    ...(study.design.alternatives ?? []),
+    ...criteria.map((c) => c.text),
+    // The model's words for a gate stay the model's after the investigator confirms the gate.
+    ...gates.flatMap((g) => [g.setBy !== "investigator" ? `${g.requirement}. ${g.evidence ?? ""}` : "", g.proposal?.evidence ?? ""]),
+    ...(e ? [e.rebPath, e.consent, e.data, e.risks, e.limitations, e.partnerships, e.equity].map((x) => x ?? "") : []),
+  ];
+  const cited = [...(d.claimIds ?? []), ...criteria.flatMap((c) => c.claimIds ?? [])].map((id) => claimsById.get(id));
+  for (const c of cited) if (c && c.origin !== "investigator") texts.push(c.text);
+  return texts.filter((t) => t && t.trim());
+}
+
+/*
+ * D10 / S5. Action is blocked by structure, never by the model's wording: a decision that leads to work needs
+ * the investigator's record of the research ethics status of this work, and an approval the investigator's own
+ * facts leave open blocks until the investigator records the determination for that kind of body or sets the
+ * fact aside for this decision. The model's statements about approvals and local facts are listed for the
+ * investigator to check; they settle nothing and block nothing.
+ */
+export function approvalReview(d: DecisionRecord, study: Study): ApprovalReview {
+  const gates = d.gates ?? [];
+  const invText = investigatorFactText(study);
+  const own = studyOwnText(study);
+  const acted = new Set((d.settledItems ?? []).map((x) => flat(x.text)));
+  const ethicsRecordMissing = !ethicsRecord(gates);
+  const openItems = openApprovalItems(invText).filter((it) => !acted.has(flat(it.text)));
+  const modelStatements: ModelStatement[] = [];
+  if (d.actor !== "investigator") {
+    const seen = new Set<string>();
+    const facts = (study.problem.localFacts ?? []).filter((f) => f.by === "investigator").map((f) => f.text);
+    for (const t of modelTexts(d, study)) {
+      for (const claim of authorityClaims(t)) {
+        if (seen.has(flat(claim.sentence))) continue;
+        seen.add(flat(claim.sentence));
+        modelStatements.push({ kind: "authority", text: claim.sentence, bodies: claim.bodies });
+      }
+      for (const clause of localAssertions(t)) {
+        if (seen.has(flat(clause)) || localFactEstablished(clause, facts) || gateGrounding(clause, clause, invText, own).grounded) continue;
+        seen.add(flat(clause));
+        modelStatements.push({ kind: "local", text: clause, bodies: [] });
+      }
+    }
+  }
+  const fromGate = ethicsGateCandidates(gates).map((g) => `${g.requirement}: ${g.evidence ?? ""}`.trim())[0];
+  const suggestedEthicsRecord = ethicsRecordMissing ? (fromGate ?? suggestEthicsRecord(invText, own)) : undefined;
+  const suggestionSource = suggestedEthicsRecord ? (fromGate ? "gate" : "fact") : undefined;
+  return {
+    ethicsRecordMissing,
+    approvalFacts: ethicsRecordMissing ? approvalFacts(invText) : [],
+    leadsToNoWork: !ACTIONABLE_KINDS.has(d.kind),
+    openItems,
+    modelStatements,
+    ...(suggestedEthicsRecord ? { suggestedEthicsRecord, suggestionSource } : {}),
+  };
+}
+
+/** An investigator sentence about this work that states an ethics approval or determination and leaves nothing open. */
+function suggestEthicsRecord(investigator: string, own: string): string | undefined {
+  const ownWords = new Set((normalizeForMatch(own).match(/\p{L}{5,}/gu) ?? []).map((w) => w.slice(0, 5)));
+  for (const c of factClauses(investigator)) {
+    if (c.notFact || statusOpen(c.sentence) || /\b(?:hope|hopefully|assume|assuming|believe|think|probably|likely|may|might|should|would|could|if)\b/i.test(c.norm)) continue;
+    // Another study's approval is not this work's ("the staff survey", "our 2024 audit", "the original trial").
+    if (OTHER_WORK.test(c.norm)) continue;
+    const words = (c.norm.match(/\p{L}{5,}/gu) ?? []).map((w) => w.slice(0, 5));
+    const aboutThis =
+      /\b(?:this|our)\s+(?:[\w-]+\s+){0,2}?(?:study|audit|project|evaluation|survey|review|work|programme|program|initiative|pilot|analysis|count|extract|report)\b/i.test(c.norm) ||
+      /\bthe\s+(?:study|audit|project|evaluation|work|programme|program|initiative|pilot|analysis)\b(?!\s+(?:of|for|by|at|in|on)\b)/i.test(c.norm) ||
+      words.filter((w) => ownWords.has(w)).length >= 2;
+    if (!aboutThis) continue;
+    if (!/\b(?:reb|irb|rec|hireb|hreb|ethics|ethical|research\s+ethics|quality\s+improvement|service\s+evaluation|program(?:me)?\s+evaluation|not\s+research|clinical\s+audit)\b/i.test(c.norm)) continue;
+    if (/\b(?:approv\w*|granted|classified|screened|determined|determination|registered|confirmed|exempt\w*|not\s+(?:required|needed)|no\s+(?:reb|ethics)\s+review|favou?rable)\b/i.test(c.norm)) return c.sentence;
+  }
+  return undefined;
 }
 
 export interface DecisionEvaluation {
@@ -243,46 +388,48 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
   const investigatorFacts = (study.problem.localFacts ?? []).filter((f) => f.by === "investigator").map((f) => f.text);
   for (const c of [...supporting, ...criterionClaims]) {
     const proposal =
-      c.kind === "local-fact" || ((c.kind === "assumption" || c.kind === "scenario") && assertsLocalResource(c.text));
+      c.kind === "local-fact" ||
+      ((c.kind === "assumption" || c.kind === "scenario") && assertsLocalResource(c.text)) ||
+      ((c.kind === "inference" || c.kind === "unknown") && localAssertions(c.text).length > 0);
     if (proposal && c.origin !== "investigator" && !localFactEstablished(c.text, investigatorFacts)) {
       // D10 / S5, SYN-LOCAL-01: a plan cannot treat the model's proposed local fact as available.
       blockers.push(`claim ${c.id} is a local fact the model proposed ("${c.text.slice(0, 120)}"); only the investigator can establish it`);
     }
   }
-  const invText = investigatorFactText(study);
-  const ownText = studyOwnText(study);
   for (const g of d.gates) {
     if (g.status === "unmet") blockers.push(`gate unmet: ${g.requirement}`);
-    if (g.status === "unknown") blockers.push(`gate unknown: ${g.requirement}`);
+    if (g.status === "unknown") {
+      blockers.push(
+        g.proposal
+          ? `gate unknown: ${g.requirement} (the model proposes "met": ${g.proposal.evidence.slice(0, 160)}; confirm it if it is true)`
+          : `gate unknown: ${g.requirement}`,
+      );
+    }
     if (g.status === "not-required") {
       if (g.setBy === "investigator" && g.evidence?.trim()) warnings.push(`gate "${g.requirement}" marked not required for this decision by the investigator: ${g.evidence}`);
       else blockers.push(`gate "${g.requirement}" is marked not required, but only the investigator can waive a gate, with a reason`);
     }
     if (g.status === "met" && g.setBy !== "investigator") {
-      // Re-checked every time: removing the local fact a gate rested on reopens the gate.
-      const gr = gateGrounding(g.requirement, g.evidence ?? "", invText, ownText);
-      if (!gr.grounded) blockers.push(`gate "${g.requirement}" was declared met by the model, but ${gr.reason}`);
+      // Stored before D10: a model's "met" is only a proposal now.
+      blockers.push(`gate "${g.requirement}" was declared met by the model; only the investigator can confirm a gate`);
     }
   }
-  if (d.actor === "model") {
-    // D10 / S5, SYN-LOCAL-04: "needs no approval" is an authorization claim the model cannot make.
-    const modelGates = d.gates.filter((g) => g.setBy !== "investigator");
-    const texts = [
-      d.statement,
-      d.question ?? "",
-      d.note ?? "",
-      ...d.criteria.map((c) => c.text),
-      ...modelGates.map((g) => g.evidence ?? ""),
-      ...modelGates.filter((g) => g.status === "met").map((g) => g.requirement),
-    ];
-    // A model claim the decision rests on can carry the same assertion ("the count needs no approval").
-    for (const c of [...supporting, ...criterionClaims]) if (c.origin !== "investigator") texts.push(c.text);
-    const uncovered = texts.flatMap((t) => exemptionAssertions(t)).filter((a) => !exemptionCovered(a, invText));
-    if (uncovered.length) {
-      blockers.push(
-        `the decision says no approval is needed ("${uncovered[0].slice(0, 160)}"), but the investigator has not stated that for this work; an exemption is the review board's or the investigator's call, and clinical access to data is not research permission (if it was confirmed, add it as a local fact with its reference)`,
-      );
-    }
+  const review = approvalReview(d, study);
+  if (review.ethicsRecordMissing) {
+    const claim = review.modelStatements.find((m) => m.kind === "authority" && m.bodies.some((b) => b !== "data"));
+    const what = review.leadsToNoWork
+      ? "record the approval's reference, or why review is not required (for example, that no people, records or practice are involved)"
+      : "record the approval's reference, or why review is not required";
+    blockers.push(
+      claim
+        ? `the decision says no approval is needed ("${claim.text.slice(0, 160)}"), but the investigator has not recorded the research ethics status of this work; an exemption is the review board's or the investigator's call, and clinical access to data is not research permission. ${what[0].toUpperCase()}${what.slice(1)}`
+        : `the investigator has not recorded the research ethics status of this work: ${what}`,
+    );
+  }
+  for (const it of review.openItems) {
+    blockers.push(
+      `your own facts leave an approval open ("${it.text.slice(0, 160)}"); mark it given on this decision with the reference, or set it aside with the reason it does not concern this decision`,
+    );
   }
   for (const c of d.criteria) {
     if (c.role === "defeats" && c.status === "met") blockers.push(`defeating condition holds: ${c.text}`);
@@ -305,7 +452,20 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
 
 /** Re-derive the stored status of every decision after the evidence changes. Never deletes. */
 export function refreshDecisionStatuses(study: Study): Study {
-  const decisions = (study.design.decisions ?? []).map((d) => {
+  const rev = factsRevisionOf(study);
+  const decisions = (study.design.decisions ?? []).map((d0) => {
+    // A proposal still open is read again when the investigator's facts changed since it was read.
+    const stale = (d0.gates ?? []).some((g) => g.proposal && g.setBy !== "investigator" && g.status === "unknown" && g.proposal.factsRevision !== rev);
+    const d = stale
+      ? {
+          ...d0,
+          gates: d0.gates.map((g) => {
+            if (!(g.proposal && g.setBy !== "investigator" && g.status === "unknown" && g.proposal.factsRevision !== rev)) return g;
+            const read = readProposal(g.requirement, g.proposal.evidence, study);
+            return { ...g, proposal: read.proposal, grounding: read.grounding };
+          }),
+        }
+      : d0;
     const e = evaluateDecision(d, study);
     const next: DecisionRecord = {
       ...d,
@@ -313,9 +473,26 @@ export function refreshDecisionStatuses(study: Study): Study {
       selectionStatus: e.selectionStatus,
       actionStatus: e.actionStatus,
     };
-    return d.status === next.status && d.selectionStatus === next.selectionStatus && d.actionStatus === next.actionStatus ? d : next;
+    return !stale && d.status === next.status && d.selectionStatus === next.selectionStatus && d.actionStatus === next.actionStatus ? d0 : next;
   });
   return { ...study, design: { ...study.design, decisions } };
+}
+
+/** The investigator's facts and the study's own description, as one revision key. */
+function factsRevisionOf(study: Study): string {
+  return sha256Hex(`${investigatorFactText(study)}\u0001${studyOwnText(study)}`).slice(0, 16);
+}
+
+/** Meridian's reading of the investigator's facts for a model "met" proposal (advisory only). */
+function readProposal(requirement: string, evidence: string, study: Study): { proposal: GateProposal; grounding: string } {
+  const support = gateSupport(requirement, evidence, investigatorFactText(study), studyOwnText(study));
+  const proposal: GateProposal = { status: "met", evidence, supportingFacts: support.supportingFacts, concerns: support.concerns, factsRevision: factsRevisionOf(study) };
+  const grounding = support.concerns.length
+    ? `proposed by the model; check before confirming: ${support.concerns[0]}`
+    : support.supportingFacts.length
+      ? `proposed by the model; it points to your fact: "${support.supportingFacts[0].slice(0, 160)}"`
+      : "proposed by the model; confirm it only if it is true";
+  return { proposal, grounding };
 }
 
 /** S11 / T-6: refuse a dropped or unresolved claim, a claim that does not rest on a retrieved or verified record, and a pursue/implementation/replicate with neither such a claim nor a valid empty-search confirmation over zero records. defer/narrow/refer/no-new-study may be accepted with no claims. */

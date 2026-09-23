@@ -1,6 +1,6 @@
 {
   "id": "sc-040",
-  "version": 1,
+  "version": 2,
   "title": "Family practice network: systematic review of continuity and unplanned admissions, a failed search, leads only, then two hits",
   "field": "primary-care",
   "level": 2,
@@ -11,7 +11,8 @@
     "D5",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary path with a search that finds little. The need names a systematic review (routing explicit). The first recorded search fails with HTTP 500: the retrieval event is 'error' with resultCount null and no records, visible rather than silently empty. The scan reply that follows (shape discovery) offers five model leads, one labelled 'landmark', and no certainty: the leads are stored as unverified model leads whatever their label (G3), and the stage stays incomplete, shown as leads only and not assessed (G1, G2; D20). A reworded second search returns only two hits; both records are appended after the leads, and the appraisal (S13) over them records two claims and certainty 'very-low' (two observational studies, one compatible with no change). The stage completes only now. The decision to run the full review rests on c1 and c2, and its single gate (protected reviewer time) is met on the committee minute, so the accepted action is ready. The two-record search is below the usual 5 to 9 records because thin evidence is the point of the scenario. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-1fh7abw), or of titleYearKey(title, year) when there is no DOI (records 2 ev-0ygi9te). Catches: a failed search reported as an empty or successful one, a 'landmark' label turned into verification, completion or certainty from leads, and over-confident certainty from two records.",
   "inputs": {
@@ -756,7 +757,7 @@
             "c1",
             "c2"
           ],
-          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -765,13 +766,54 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1256,5 +1298,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-040.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1. Model responses, need and records are unchanged."
 }

@@ -1,6 +1,6 @@
 {
   "id": "sc-026",
-  "version": 1,
+  "version": 2,
   "title": "Mixed-practice veterinary clinic: a brief vague request about dairy biosecurity becomes an implementation study of facilitated planning",
   "field": "veterinary",
   "level": 2,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary ambiguity from a brief, vague request (47 words, the input class admitted by amendment A3.2 section 3; the validator's lower bound of 120 words is being lowered to 20, so a need-word failure here is expected until then). The need names no design; 'uptake' is a cue, so routing is inferred as implementation at create (S11) and the problem reply keeps that family. The reply lists the missing facts (herd numbers, vet time, timeframe, funding) as unknowns and omits constraints (omitKeys): with nothing typed, nothing is invented. The investigator then types constraints on the Problem screen with set-field, which must change the stored text (G11: investigator edits still apply) without flagging any stage, because nothing downstream is complete yet. A fixture search with few hits returns five records; the appraisal records four claims. The Design stage weighs an implementation study against a second cluster-randomised trial and recommends implementation; its decision rests on claims c2 to c4, one gate is met on the investigator's own constraint and farmer agreement is unknown, so acceptance gives accepted with the action blocked and turns the inferred basis explicit. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator: DOI-based for records 1, 3, 4, 5 (ev-16ifqqo, ev-1439lmj, ev-0lop19j, ev-1cvb3bl) and title and year for record 2 (ev-1q6elts). Requires S13 (appraisal dispatch), S11 (inferred routing, selectionStatus, actionStatus, basis explicit on acceptance) and D5 (decision status text). Catches: constraints invented for a vague request, an investigator edit that does not persist, and an inferred family presented as explicit before acceptance.",
   "inputs": {
@@ -757,7 +758,7 @@
             "c3",
             "c4"
           ],
-          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
           "design.decisions[-1].gates[1].status": "unknown",
           "design.decisions[-1].selectionStatus": "proposed",
           "design.decisions[-1].actionStatus": "blocked",
@@ -769,7 +770,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -781,6 +783,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1244,5 +1266,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-026.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

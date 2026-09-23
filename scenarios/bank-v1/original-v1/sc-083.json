@@ -1,0 +1,1379 @@
+{
+  "id": "sc-083",
+  "version": 1,
+  "title": "General practice network: dental pain pathway to reduce antibiotics, undated sources, consent gate unknown",
+  "field": "dentistry",
+  "level": 3,
+  "family": "rct",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Level 3 with unknown values and an unknown gate. Routing is explicit ('rct', from 'cluster randomised trial' with an intent verb); the problem reply echoes the typed constraints byte for byte (no rejected-change, G11). A fixture search returns seven records, two of them undated (a conference abstract and a guidance leaflet, year null). The appraisal leaves both unrated with null scores: one annotation sends explicit nulls for relevance, methodQuality and grade (scores null; the grade null is logged 'cleared' and the grade stays 'unrated'), the other omits them; years stay null because identity is not annotatable (G4). A fifth claim rests on the undated abstract with uncertainty 'high'. The decision rests on c1 to c4; its consent-waiver gate has no evidence and stays 'unknown', so the selection is accepted and the action stays blocked (G7, A2 item 9), in the store, on screen at the accept step and in the export. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 2, 5, 6, 7 (ev-05uhrtg, ev-1mexxb1, ev-04k189f, ev-0to2z9k, ev-1nsp62d); records 3 and 4 have no DOI and no year, so their titleYearKey ends in '|?' (ev-18eldj0, ev-1lgdh34). Requires S11 (selectionStatus, actionStatus, basis), S13 (appraisal payload) and D5 (status text); the unknown years, null scores and unrated grades hold at 875fe59. Catches: a guessed year, a default score of 50 or grade 'low', a gate treated as met without evidence, and an action allowed while a gate is unknown.",
+  "inputs": {
+    "need": "I am a general practitioner and the prescribing lead for a primary care network of 11 practices in a district where many adults have no regular dentist. Every week our GPs see people with toothache or facial swelling, and in a notes search of three practices we found that 123 of 212 dental pain consultations over six months ended with an antibiotic prescription, often without any dental treatment planned. Antibiotics do not treat most dental pain, and the local microbiology team keeps asking us to reduce this.\n\nWe would like to run a cluster randomised trial across the network: practices would be allocated to a dental pain pathway (a short decision aid for GPs, a same-day telephone triage line run by the community dental service, and analgesia advice) or to usual care. The aim would be to reduce antibiotic prescribing for dental pain without increasing emergency attendances for dental infection. The community dental service has agreed in principle to run the triage line for 12 months.\n\nI need help with the outcome definitions, how to count consultations and prescriptions from practice systems, how many practices and months we need, how to make sure patients with spreading infection still get antibiotics quickly, and whether we need individual consent from patients when the allocation is at practice level. Our practice teams are stretched, so anything that adds work during consultations will not be used.",
+    "constraints": "The triage line exists only for 12 months from January 2027. Study work in practices is limited to routine data extraction by the network data team. No change to how practices code consultations.",
+    "localFacts": [
+      "A notes search of three practices found 212 dental pain consultations in six months, 123 of them with an antibiotic prescription.",
+      "The community dental service agreed in principle on 2026-09-09 to run a same-day telephone triage line for 12 months from January 2027 (letter CDS-2026-17).",
+      "The network's 11 practices use the same clinical system, and the network data team can extract coded consultations and prescriptions monthly.",
+      "The regional research ethics committee has not yet said whether individual patient consent can be waived for allocation at practice level."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a general practitioner and the prescribing lead for a primary care network of 11 practices in a district where many adults have no regular dentist. Every week our GPs see people with toothache or facial swelling, and in a notes search of three practices we found that 123 of 212 dental pain consultations over six months ended with an antibiotic prescription, often without any dental treatment planned. Antibiotics do not treat most dental pain, and the local microbiology team keeps asking us to reduce this.\n\nWe would like to run a cluster randomised trial across the network: practices would be allocated to a dental pain pathway (a short decision aid for GPs, a same-day telephone triage line run by the community dental service, and analgesia advice) or to usual care. The aim would be to reduce antibiotic prescribing for dental pain without increasing emergency attendances for dental infection. The community dental service has agreed in principle to run the triage line for 12 months.\n\nI need help with the outcome definitions, how to count consultations and prescriptions from practice systems, how many practices and months we need, how to make sure patients with spreading infection still get antibiotics quickly, and whether we need individual consent from patients when the allocation is at practice level. Our practice teams are stretched, so anything that adds work during consultations will not be used.",
+          "problem.constraints": "The triage line exists only for 12 months from January 2027. Study work in practices is limited to routine data extraction by the network data team. No change to how practices code consultations.",
+          "family": "rct",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a general practitioner and the prescribing"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "A dental pain pathway to reduce antibiotic prescribing in general practice: cluster randomised trial",
+        "subtitle": "Eleven practices, allocation at practice level",
+        "family": "rct",
+        "statement": "In three practices of an 11-practice network, 123 of 212 dental pain consultations over six months ended with an antibiotic prescription, often without planned dental treatment, in a district where many adults have no regular dentist. The network wants to test whether a dental pain pathway, with a short decision aid, a same-day dental telephone triage line and analgesia advice, reduces antibiotic prescribing for dental pain without increasing emergency attendances for dental infection, using a cluster randomised design.",
+        "whoAffected": "Adults with toothache or facial swelling who consult general practices, especially those without a regular dentist; GPs and practice nurses; the community dental service; the microbiology team.",
+        "whatHurts": "Antibiotics that do not relieve most dental pain, delayed dental treatment, adverse effects and antimicrobial resistance, and patients who return in pain.",
+        "currentPractice": "GPs assess dental pain without dental access or a decision aid; antibiotics are commonly prescribed; there is no triage route to dental care.",
+        "whyNow": "The community dental service can run a triage line for 12 months from January 2027, and the microbiology team is pressing for reduced prescribing.",
+        "constraints": "The triage line exists only for 12 months from January 2027. Study work in practices is limited to routine data extraction by the network data team. No change to how practices code consultations.",
+        "patientCenteredGoal": "People with toothache get pain relief and timely dental treatment, and antibiotics only when infection is spreading.",
+        "summary": "Problem framed as a cluster randomised trial of a dental pain pathway in general practice."
+      },
+      "note": "Constraints are echoed byte for byte, so no rejected-change issue arises (G11).",
+      "expect": {
+        "store": {
+          "title": "A dental pain pathway to reduce antibiotic prescribing in general practice: cluster randomised trial",
+          "family": "rct",
+          "problem.statement": {
+            "includes": "cluster randomised design"
+          },
+          "problem.rawNeed": "I am a general practitioner and the prescribing lead for a primary care network of 11 practices in a district where many adults have no regular dentist. Every week our GPs see people with toothache or facial swelling, and in a notes search of three practices we found that 123 of 212 dental pain consultations over six months ended with an antibiotic prescription, often without any dental treatment planned. Antibiotics do not treat most dental pain, and the local microbiology team keeps asking us to reduce this.\n\nWe would like to run a cluster randomised trial across the network: practices would be allocated to a dental pain pathway (a short decision aid for GPs, a same-day telephone triage line run by the community dental service, and analgesia advice) or to usual care. The aim would be to reduce antibiotic prescribing for dental pain without increasing emergency attendances for dental infection. The community dental service has agreed in principle to run the triage line for 12 months.\n\nI need help with the outcome definitions, how to count consultations and prescriptions from practice systems, how many practices and months we need, how to make sure patients with spreading infection still get antibiotics quickly, and whether we need individual consent from patients when the allocation is at practice level. Our practice teams are stretched, so anything that adds work during consultations will not be used.",
+          "problem.constraints": "The triage line exists only for 12 months from January 2027. Study work in practices is limited to routine data extraction by the network data team. No change to how practices code consultations.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "A dental pain pathway to reduce antibiotic prescribing in general practice: cluster randomised trial"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "antibiotic prescribing dental pain general practice decision aid dental triage",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "A decision aid for dental pain in general practice and antibiotic prescribing: a cluster randomised trial",
+            "authors": "Halvorsen-Mbatha J, Price-Okonkwo L, Varga-Tennant S",
+            "year": 2020,
+            "venue": "Primary Care Prescribing Research",
+            "doi": "10.5555/pcpr.2020.0233",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomly allocated 24 general practices to a one-page decision aid for dental pain with access to urgent dental advice, or to usual care, for 12 months. Among 4,310 dental pain consultations, antibiotic prescribing fell from 61 to 38 percent in intervention practices and from 60 to 55 percent in control practices. Hospital admissions for dental infection within 14 days were 0.4 percent in intervention practices and 0.5 percent in control practices. Repeat consultations for the same problem did not increase. The intracluster correlation for prescribing was 0.06. Practices were self-selected and had better access to dentists than average."
+          },
+          {
+            "title": "Antibiotics for toothache caused by pulpitis or apical periodontitis in adults: a systematic review of placebo-controlled comparisons",
+            "authors": "Nakamura-Ellis F, Oduya-Grant H",
+            "year": 2018,
+            "venue": "Oral Health Evidence Reviews",
+            "doi": "10.5555/ohr.2018.0077",
+            "providerType": "systematic review",
+            "abstract": "We searched four databases for placebo-controlled comparisons of systemic antibiotics for adults with toothache from irreversible pulpitis or acute apical periodontitis. Six small trials with 412 participants were included. When dental treatment was also provided, antibiotics did not reduce pain or swelling compared with placebo at 24 or 72 hours. No trial studied people who could not obtain dental treatment. Adverse effects were more common with antibiotics. Certainty was low because of small samples and imprecision. The review supports reserving antibiotics for spreading infection or systemic signs."
+          },
+          {
+            "title": "Same-day dental telephone triage for people presenting to general practice with toothache: first-year service data",
+            "authors": "Community Dental Service Development Team",
+            "year": null,
+            "venue": "Dental public health conference abstracts",
+            "providerType": "conference abstract",
+            "abstract": "A community dental service ran a same-day telephone triage line for patients referred by general practices with toothache. In its first year the line took 1,140 calls. Dental nurses booked 62 percent of callers for urgent dental care within 48 hours and gave self-care and analgesia advice to 29 percent. Antibiotics were advised for 9 percent, mostly for facial swelling or fever. The abstract does not state the year of the service data, the number of practices involved or what happened to patients who were not booked. No comparison with prescribing before the line opened is reported."
+          },
+          {
+            "title": "Management of acute dental problems for prescribers who are not dentists",
+            "authors": "Oral Health Advisory Panel",
+            "year": null,
+            "venue": "Clinical guidance leaflet series",
+            "providerType": "guidance leaflet",
+            "abstract": "This guidance leaflet for doctors, nurses and pharmacists covers toothache, dental abscess, ulcers and dental trauma. For toothache without swelling it recommends analgesia with paracetamol or ibuprofen and referral for dental treatment. Antibiotics are recommended only for spreading infection, systemic signs such as fever, or when urgent dental treatment cannot be obtained and infection is present. Red flags for same-day hospital referral include difficulty swallowing, trismus and swelling extending to the eye or neck. The leaflet gives no publication date, and its evidence sources are not listed."
+          },
+          {
+            "title": "Adults without a regular dentist and dental consultations in general practice: a population analysis",
+            "authors": "Abara-Lindqvist P, Moreno-Achterberg C",
+            "year": 2022,
+            "venue": "Journal of Primary Care Equity",
+            "doi": "10.5555/jpce.2022.0149",
+            "providerType": "cross-sectional study",
+            "abstract": "We linked a population survey of adults to practice consultation data in one region. In the most deprived fifth of neighbourhoods, 38 percent of adults had no regular dentist, compared with 17 percent in the least deprived fifth. Adults without a regular dentist were three times as likely to consult a general practitioner for dental pain in a year. Among these consultations, antibiotic prescribing was more common where the nearest dental practice accepting new patients was more than 10 kilometres away. The survey response rate was 46 percent."
+          },
+          {
+            "title": "Why general practitioners prescribe antibiotics for toothache: an interview study",
+            "authors": "Whitfield-Oyelaran R, Castellanos-Nair D",
+            "year": 2024,
+            "venue": "Northgate Primary Care Qualitative Research",
+            "doi": "10.5555/npcqr.2024.0036",
+            "providerType": "qualitative research",
+            "abstract": "We interviewed 21 general practitioners about consultations for dental pain. Most described prescribing antibiotics because patients could not get dental care, because they feared missing a spreading infection, or because patients expected a prescription after waiting to be seen. Several said they lacked confidence in examining the mouth. Doctors wanted a direct route to same-day dental advice and a short decision aid that fitted into a ten-minute consultation. Some worried that declining antibiotics would lead patients to attend emergency departments instead."
+          },
+          {
+            "title": "Emergency department attendances for dental infection after changes in access to dental care",
+            "authors": "Keane-Obafemi T, Sundberg-Rao M",
+            "year": 2016,
+            "venue": "Emergency Dental Epidemiology",
+            "doi": "10.5555/ede.2016.0012",
+            "providerType": "observational study",
+            "abstract": "We examined emergency department attendances for dental abscess and facial swelling over three years in which the number of dental practices accepting new adult patients fell. Attendances rose by 24 percent over the period. Admissions for spreading dental infection remained rare at about 0.3 per 10,000 adults per year but were concentrated in adults without a regular dentist. Most attenders had seen a general practitioner or pharmacist in the week before. The analysis could not link attendances to earlier antibiotic prescriptions."
+          }
+        ]
+      },
+      "note": "Seven records; records 3 and 4 have year null (G4). Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-05uhrtg",
+            "ev-1mexxb1",
+            "ev-18eldj0",
+            "ev-1lgdh34",
+            "ev-04k189f",
+            "ev-0to2z9k",
+            "ev-1nsp62d"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[2].id": "ev-18eldj0",
+          "scan.items[2].year": {
+            "isNull": true
+          },
+          "scan.items[3].id": "ev-1lgdh34",
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.items[2].grade": "unrated",
+          "scan.items[3].grade": "unrated",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Same-day dental telephone triage for people presenting to general practice with toothache: first-year service data"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-05uhrtg",
+            "relevance": 94,
+            "methodQuality": 75,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Antibiotic prescribing fell from 61 to 38 percent with the decision aid against 60 to 55 percent with usual care; admissions for dental infection 0.4 versus 0.5 percent; intracluster correlation 0.06.",
+            "limitations": "Self-selected practices with better dental access than average.",
+            "contextTags": [
+              "cluster randomised",
+              "decision aid",
+              "prescribing"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1mexxb1",
+            "relevance": 80,
+            "methodQuality": 68,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Six small placebo-controlled trials (412 participants): antibiotics did not reduce pain or swelling at 24 or 72 hours when dental treatment was given.",
+            "limitations": "Small trials; no trial of people without access to dental treatment.",
+            "contextTags": [
+              "placebo-controlled",
+              "pulpitis",
+              "periodontitis"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-18eldj0",
+            "relevance": null,
+            "methodQuality": null,
+            "kind": "grey",
+            "grade": null,
+            "keyFindings": "A triage line took 1,140 calls in its first year; 62 percent of callers were booked for urgent dental care within 48 hours and antibiotics were advised for 9 percent.",
+            "limitations": "Conference abstract; year of the data, number of practices and follow-up not reported.",
+            "contextTags": [
+              "telephone triage",
+              "service data"
+            ],
+            "notes": "Too little reported to rate relevance, quality or certainty; left unrated."
+          },
+          {
+            "id": "ev-1lgdh34",
+            "kind": "guideline",
+            "keyFindings": "Recommends analgesia and dental referral for toothache without swelling, and antibiotics only for spreading infection, systemic signs or infection without access to urgent dental treatment.",
+            "limitations": "Undated leaflet with no listed evidence sources.",
+            "contextTags": [
+              "guidance",
+              "red flags"
+            ],
+            "notes": "Not a study; no scores given."
+          },
+          {
+            "id": "ev-04k189f",
+            "relevance": 78,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "38 percent of adults in the most deprived fifth had no regular dentist against 17 percent in the least deprived fifth; those without a dentist consulted GPs for dental pain three times as often.",
+            "limitations": "Survey response 46 percent; one region.",
+            "contextTags": [
+              "deprivation",
+              "dental access"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0to2z9k",
+            "relevance": 82,
+            "methodQuality": 60,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "21 GPs prescribed because patients could not get dental care, for fear of missing spreading infection and because of patient expectation; they wanted same-day dental advice and a short decision aid.",
+            "limitations": "Volunteers; one country's primary care.",
+            "contextTags": [
+              "prescriber reasoning",
+              "decision aid"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1nsp62d",
+            "relevance": 64,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Emergency attendances for dental infection rose 24 percent as dental access fell; admissions for spreading infection about 0.3 per 10,000 adults per year.",
+            "limitations": "No link to earlier prescribing.",
+            "contextTags": [
+              "emergency attendance",
+              "safety"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-05uhrtg"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "In a cluster randomised trial in 24 practices, antibiotic prescribing for dental pain fell from 61 to 38 percent with a decision aid and urgent dental advice, against 60 to 55 percent with usual care.",
+            "passage": "antibiotic prescribing fell from 61 to 38 percent in intervention practices and from 60 to 55 percent in control practices",
+            "interpretation": "A reduction of this size is plausible for the local pathway; the trial's practices had better dental access."
+          },
+          {
+            "id": "c2",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-05uhrtg"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "Hospital admissions for dental infection within 14 days were 0.4 percent with the decision aid and 0.5 percent with usual care.",
+            "passage": "Hospital admissions for dental infection within 14 days were 0.4 percent in intervention practices and 0.5 percent in control practices.",
+            "interpretation": "No signal of harm, but admissions are too rare for one trial to exclude it; a balancing measure is needed."
+          },
+          {
+            "id": "c3",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1mexxb1"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "When dental treatment was also provided, antibiotics did not reduce toothache or swelling compared with placebo at 24 or 72 hours.",
+            "passage": "When dental treatment was also provided, antibiotics did not reduce pain or swelling compared with placebo at 24 or 72 hours.",
+            "interpretation": "Supports reserving antibiotics, conditional on access to dental treatment, which the triage line provides."
+          },
+          {
+            "id": "c4",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0to2z9k"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "General practitioners said they prescribed antibiotics for toothache because patients could not get dental care or for fear of missing a spreading infection, and asked for same-day dental advice.",
+            "passage": "Doctors wanted a direct route to same-day dental advice and a short decision aid that fitted into a ten-minute consultation.",
+            "interpretation": "The pathway targets the stated reasons for prescribing."
+          },
+          {
+            "id": "c5",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-18eldj0"
+            ],
+            "uncertainty": "high",
+            "location": "Abstract",
+            "text": "In the first year of a same-day dental telephone triage line, 62 percent of callers were booked for urgent dental care within 48 hours.",
+            "passage": "Dental nurses booked 62 percent of callers for urgent dental care within 48 hours",
+            "interpretation": "Indicates the triage line can work; high uncertainty because the source is an undated conference abstract left unrated."
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level; two have no stated year and were left unrated. A cluster randomised trial found that a decision aid with urgent dental advice lowered antibiotic prescribing for dental pain without more admissions for dental infection, and a review of placebo-controlled trials found no benefit of antibiotics when dental treatment was given. General practitioners prescribe mainly because patients cannot reach dental care, a problem concentrated in deprived neighbourhoods. A triage line booked most callers for urgent care in one service report whose date and follow-up are unknown. Evidence supports testing the pathway locally with a safety balancing measure.",
+        "gradeOverall": "low",
+        "gradeRationale": "One cluster randomised trial in better-served practices and a review of small trials; indirect to a district with poor dental access; two sources undated and unrated.",
+        "summary": "Seven retrieved records appraised; two left unrated with unknown year; five claims; certainty low."
+      },
+      "note": "The two undated records stay unrated with null scores: record 3's annotation sends relevance, methodQuality and grade as explicit nulls (scores stored null; the grade null is logged 'cleared' and the grade stays 'unrated', which holds at 875fe59 because the ingested grade is already 'unrated'); record 4's annotation omits them (nothing written). Years stay null because identity is not annotatable (G4). Certainty 'low' over inspected records (G1, S13).",
+      "expect": {
+        "store": {
+          "scan.items[2].year": {
+            "isNull": true
+          },
+          "scan.items[2].relevance": {
+            "isNull": true
+          },
+          "scan.items[2].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[2].grade": "unrated",
+          "scan.items[2].kind": "grey",
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.items[3].relevance": {
+            "isNull": true
+          },
+          "scan.items[3].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[3].grade": "unrated",
+          "scan.items[3].kind": "guideline",
+          "scan.items[0].grade": "moderate",
+          "scan.items[0].methodQuality": 75,
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[4].sourceIds": [
+            "ev-18eldj0"
+          ],
+          "scan.claims[4].uncertainty": "high",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-18eldj0].grade",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "low certainty",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "Primary care network of 11 practices",
+          "District with many adults lacking a regular dentist",
+          "Triage line available for 12 months from January 2027",
+          "Monthly coded data from one clinical system"
+        ],
+        "reading": "Prescribing for dental pain is driven by lack of dental access and fear of missing infection rather than by expected benefit, which trials show is absent when dental treatment is given. A pathway that supplies same-day dental advice addresses the driver directly. The main risk is that fewer antibiotics could delay treatment of spreading infection, so emergency attendance must be watched. Deprivation shapes both dental access and prescribing.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "No regular dentist",
+            "kind": "context",
+            "detail": "38 percent in the most deprived fifth (record E)."
+          },
+          {
+            "id": "n2",
+            "label": "GP consultation for dental pain",
+            "kind": "context",
+            "detail": "Three times as common without a dentist."
+          },
+          {
+            "id": "n3",
+            "label": "Antibiotic prescription",
+            "kind": "outcome",
+            "detail": "Primary outcome."
+          },
+          {
+            "id": "n4",
+            "label": "Dental pain pathway",
+            "kind": "framework",
+            "detail": "Decision aid, triage line, analgesia advice."
+          },
+          {
+            "id": "n5",
+            "label": "Cluster trial of a decision aid",
+            "kind": "rct",
+            "detail": "61 to 38 percent (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Emergency attendance for dental infection",
+            "kind": "outcome",
+            "detail": "Balancing measure (claim c2)."
+          },
+          {
+            "id": "n7",
+            "label": "Triage line service report",
+            "kind": "grey",
+            "detail": "Undated, unrated (claim c5)."
+          },
+          {
+            "id": "n8",
+            "label": "General practitioners",
+            "kind": "stakeholder",
+            "detail": "Want same-day dental advice (claim c4)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "increases"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "often ends in"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "expected to reduce"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "supports"
+          },
+          {
+            "from": "n4",
+            "to": "n6",
+            "relation": "must not increase"
+          },
+          {
+            "from": "n7",
+            "to": "n4",
+            "relation": "suggests feasibility of"
+          },
+          {
+            "from": "n8",
+            "to": "n4",
+            "relation": "ask for"
+          }
+        ],
+        "summary": "Map links dental access, prescribing and safety around the proposed pathway."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[6].kind": "grey",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No trial in a district with poor dental access",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The retrieved trial's practices had better dental access than average (claim c1); the effect may differ where the triage line is the only route.",
+            "opportunity": "Test the pathway in the network with the triage line as a core component."
+          },
+          {
+            "id": "g2",
+            "title": "Safety of reduced prescribing where dental care is scarce",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "Admissions for spreading infection are rare (claim c2) but could rise if antibiotics are withheld without treatment.",
+            "opportunity": "Pre-specify emergency attendance and admission for dental infection as balancing measures with a safety review."
+          },
+          {
+            "id": "g3",
+            "title": "Two sources undated and unrated",
+            "kind": "evidence",
+            "severity": "watch",
+            "whyItMatters": "The triage service report and the guidance leaflet give no year and too little detail to rate.",
+            "opportunity": "Keep them unrated; use them only for design ideas, not effect sizes."
+          },
+          {
+            "id": "g4",
+            "title": "Deprivation and dental access",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "People without a dentist are concentrated in deprived neighbourhoods and consult GPs more.",
+            "opportunity": "Stratify allocation by practice deprivation and report outcomes by deprivation fifth."
+          }
+        ],
+        "errorsFound": [],
+        "reevaluation": "The gaps support a cluster randomised trial in the network with a safety balancing measure and stratification by deprivation.",
+        "summary": "Four gaps: applicability, safety, undated sources and deprivation."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[2].title": "Two sources undated and unrated",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Two sources undated and unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Over 12 months, the pathway will reduce the proportion of dental pain consultations with an antibiotic prescription from about 58 percent to 38 percent or less, compared with usual care.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 85,
+            "feasibility": 70,
+            "parsimony": 85,
+            "rationale": "The retrieved trial reached a similar level; the triage line addresses the main reason GPs prescribe.",
+            "risks": "Few practices; the triage line may be under-used."
+          },
+          {
+            "id": "h2",
+            "statement": "The pathway will not increase emergency attendance or admission for dental infection within 14 days.",
+            "novelty": 30,
+            "need": 80,
+            "practiceChange": 70,
+            "feasibility": 70,
+            "parsimony": 80,
+            "rationale": "No signal of harm in the retrieved trial; rare events.",
+            "risks": "Too few events to exclude a small increase."
+          },
+          {
+            "id": "h3",
+            "statement": "The reduction in prescribing will be at least as large in the most deprived practices.",
+            "novelty": 50,
+            "need": 70,
+            "practiceChange": 60,
+            "feasibility": 60,
+            "parsimony": 65,
+            "rationale": "The triage line targets lack of dental access, which is greatest there.",
+            "risks": "Underpowered subgroup."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 primary, h2 safety, h3 equity."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In adults consulting network practices for dental pain, does a dental pain pathway (decision aid, same-day dental telephone triage and analgesia advice) reduce the proportion of consultations with an antibiotic prescription within 3 days, compared with usual care, over 12 months?",
+            "framework": "PICOT",
+            "population": "Adults consulting 11 network practices for dental pain",
+            "intervention": "Dental pain pathway",
+            "comparator": "Usual care",
+            "outcome": "Antibiotic prescription within 3 days of the consultation",
+            "time": "12 months from January 2027",
+            "setting": "General practice network"
+          }
+        ],
+        "finer": "Feasible with routine coded data and the 12-month triage line; interesting to the microbiology team; novel in a district with poor dental access; ethical if the consent question is resolved; relevant to antimicrobial stewardship.",
+        "summary": "One PICOT question with allocation at practice level."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICOT",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "rct",
+        "rationale": "The pathway is delivered by practices and the triage line, so allocation must be at practice level to avoid contamination; a cluster randomised trial with 11 practices stratified by size and deprivation, using routine coded data, answers whether prescribing falls without harm. The retrieved trial supports a plausible effect (c1) and no signal of harm (c2); antibiotics add nothing when dental treatment is given (c3); GPs ask for exactly this support (c4).",
+        "alternatives": [
+          "Before-after comparison across the network (refused: prescribing is falling nationally, so secular trends would be confounded)",
+          "Individually randomised trial (refused: GPs cannot use and not use the pathway with different patients)",
+          "Stepped-wedge design (refused: the triage line runs only 12 months)"
+        ],
+        "guidelines": [
+          "CONSORT extension for cluster randomised trials",
+          "TIDieR"
+        ],
+        "whyNotMoreComplex": "A multi-network trial would need funding and a longer triage line; the network's 11 practices answer the question with stated uncertainty.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a 12-month cluster randomised trial of the dental pain pathway in the network's 11 practices, stratified by practice size and deprivation, with antibiotic prescribing as the primary outcome and emergency attendance for dental infection as a balancing measure.",
+          "question": "Should the network test the dental pain pathway in a cluster randomised trial?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A decision aid with dental advice reduced prescribing without more admissions in a cluster randomised trial.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The triage line cannot be staffed for 12 months.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Community dental service agreement to run the triage line for 12 months",
+              "status": "met",
+              "evidence": "Letter CDS-2026-17 dated 2026-09-09, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Research ethics committee decision on waiving individual patient consent for allocation at practice level",
+              "status": "unknown"
+            },
+            {
+              "id": "g3",
+              "requirement": "Monthly extraction of coded consultations and prescriptions by the network data team",
+              "status": "met",
+              "evidence": "Network data team capability stated in the investigator's local facts (one clinical system, monthly extraction)"
+            }
+          ],
+          "alternatives": [
+            "Before-after comparison across the network",
+            "Decision aid alone without the triage line"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records; the consent-waiver gate stays unknown until the ethics committee decides, so the action is blocked."
+        },
+        "summary": "Cluster randomised trial recommended; the decision rests on four ledger claims and one gate is unknown."
+      },
+      "note": "The consent-waiver gate has no evidence and stays 'unknown', so the action is blocked (G7). Gate g3 is met on the investigator's stated local fact. selectionStatus and actionStatus require S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "rct",
+          "family": "rct",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].evidence": {
+            "absent": true
+          },
+          "design.decisions[-1].gates[0].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection accepted; the unknown consent gate keeps the action blocked (G7; A2 item 9). Requires S11, S13, D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.basis": "explicit",
+          "family": "rct"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Two-arm cluster randomised trial in 11 general practices over 12 months, comparing a dental pain pathway with usual care, using routinely coded data.",
+        "population": "All consultations by adults aged 16 or over coded for dental pain, toothache, dental abscess or facial swelling of dental origin in the 11 practices from January to December 2027.",
+        "exposure": "Intervention practices: a one-page decision aid in the clinical system, a same-day telephone triage line run by the community dental service, and a printed analgesia advice sheet. Control practices: usual care.",
+        "procedures": "Practices are allocated by a statistician outside the network, stratified by list size and deprivation fifth. The data team extracts coded consultations, prescriptions within 3 days and emergency attendances monthly. A safety group reviews emergency admissions for dental infection every three months.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Antibiotic prescription for dental pain",
+            "measure": "Proportion of dental pain consultations followed by an antibiotic prescription within 3 days",
+            "timing": "12 months",
+            "why": "The behaviour the pathway targets.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Repeat consultation",
+            "measure": "Further GP consultation for the same problem within 14 days",
+            "timing": "14 days after each consultation",
+            "why": "Signals unresolved pain.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Emergency attendance or admission for dental infection",
+            "measure": "Emergency department attendance or admission coded for dental infection within 14 days",
+            "timing": "14 days after each consultation",
+            "why": "The main safety concern.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Triage line use",
+            "measure": "Calls to the triage line per 100 dental pain consultations in intervention practices",
+            "timing": "Monthly",
+            "why": "Shows whether the pathway was used.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 1,500 dental pain consultations are expected across 11 practices in 12 months; routine extraction needs no practice staff time beyond the data team.",
+        "biasMitigation": [
+          "Allocation concealed and done outside the network",
+          "Stratification by size and deprivation",
+          "Outcomes from coded data, not clinician report",
+          "Safety review independent of the investigators"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Few clusters",
+            "severity": "high",
+            "note": "Eleven practices; small-sample correction and stratification."
+          },
+          {
+            "id": "b2",
+            "label": "Coding variation",
+            "severity": "watch",
+            "note": "Practices may code dental pain differently; code lists fixed in advance."
+          }
+        ],
+        "parsimony": {
+          "score": 85,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 2,
+          "flags": [
+            "Two stratification variables only"
+          ],
+          "simplestPath": "One primary outcome from routine data, one balancing measure with safety review."
+        },
+        "theoreticalFramework": "None beyond the TIDieR description of the pathway.",
+        "summary": "Cluster trial with one primary outcome, one secondary, one balancing and one process measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[2].role": "balancing",
+          "protocol.parsimony.covariateCount": 2,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Two-arm cluster randomised trial, 11 practices, 12 months, analysis at consultation level accounting for clustering.",
+        "sampleSize": "The network search suggests about 140 dental pain consultations per practice per year. With a baseline of 58 percent, an intracluster correlation of 0.06 as in the retrieved trial and 5 or 6 practices per arm, the design effect is about 9.3, giving roughly 80 percent power to detect a fall to 38 percent at two-sided alpha 0.05. A smaller fall, to 45 percent, would need about twice as many practices; if the observed intracluster correlation is higher, a neighbouring network would have to join.",
+        "primaryAnalysis": "Mixed-effects logistic regression of prescription within 3 days on arm, with practice as a random effect and the stratification variables as fixed effects; small-sample corrected confidence intervals.",
+        "secondaryAnalysis": "The same model for repeat consultation; emergency attendance and admission for dental infection reported as counts and rates per 1,000 consultations by arm, with the safety group's review; prescribing by deprivation fifth.",
+        "missingData": "Outcomes come from coded records and are complete for consultations that are coded; coding completeness is checked against a sample of free-text notes in two practices.",
+        "multiplicity": "One primary outcome; secondary and balancing measures are reported with intervals.",
+        "software": "R (lme4 with small-sample corrections); analysis plan finalised before data extraction.",
+        "overfittingGuards": [
+          "Analysis plan fixed before extraction",
+          "Stratification variables only as covariates",
+          "No subgroup claims beyond deprivation"
+        ],
+        "summary": "About 80 percent power for 58 to 38 percent with 11 practices; smaller effects would need more practices."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "design effect is about 9.3"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: the pathway follows existing guidance; the risk is delayed antibiotics for spreading infection, managed by red flag advice and the safety review.",
+        "consent": "Allocation is at practice level and outcomes come from routine records; a waiver of individual consent has been requested and the ethics committee has not yet decided. Practices give organisational consent; patients are informed by practice notices and may opt out of data use.",
+        "data": "Pseudonymised extraction by the network data team; no free text leaves practices except the coding check sample, which stays within the practice.",
+        "equity": "PROGRESS-Plus: people without a regular dentist, in deprived neighbourhoods or with limited English are most affected. Allocation is stratified by deprivation, the triage line offers interpreters, and outcomes are reported by deprivation fifth.",
+        "effectiveness": "A fall in prescribing without more emergency attendances would justify commissioning the pathway.",
+        "efficiency": "Uses routine data and an existing dental service.",
+        "costs": "Triage line staffing is met by the community dental service; data extraction within the data team's role.",
+        "grants": "A small stewardship grant could fund independent statistical support.",
+        "partnerships": "Community dental service, microbiology team, local dental committee and a patient panel from the network's participation group.",
+        "rebPath": "Regional research ethics committee review under ICH-GCP and the Ottawa Statement on cluster trials; the waiver of individual consent is pending, and no allocation happens before the committee decides.",
+        "limitations": "Few clusters; coded data may miss some consultations; the triage line exists only for 12 months.",
+        "summary": "Cluster trial with a pending consent-waiver decision, a safety review and equity-stratified allocation."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "has not yet decided"
+          },
+          "ethics.rebPath": {
+            "includes": "Ottawa Statement"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Three members of the network's patient participation group, one without a regular dentist, review the analgesia sheet and the practice notices.",
+        "socialListening": "No social media listening; the community dental service's complaint themes are shared in anonymised form.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "No dentist",
+            "quote": "Composite paraphrase: I rang every dentist in town; the GP was the only person who would see me.",
+            "implication": "The triage line must offer a real appointment, not only advice.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Fear of missing infection",
+            "quote": "Composite paraphrase: I cannot see into the jaw; if I send them away and it spreads, that is on me.",
+            "implication": "Make red flags and the same-day route explicit in the decision aid.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Triage capacity",
+            "quote": "Composite paraphrase: We can take the calls, but we need to know how many to expect each week.",
+            "implication": "Report triage use monthly and review capacity.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "patient",
+            "theme": "Pain relief",
+            "quote": "Composite paraphrase: Nobody told me the painkillers work better than the antibiotics for this.",
+            "implication": "Give clear analgesia advice with every consultation.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on access, fear of infection, triage capacity and pain relief."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "partner",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A dental pain pathway to reduce antibiotic prescribing in general practice: protocol for a cluster randomised trial",
+        "abstract": "Objective: to test whether a dental pain pathway reduces antibiotic prescribing for dental pain in general practice without increasing emergency attendance for dental infection. Design: two-arm cluster randomised trial in 11 practices over 12 months. Primary outcome: antibiotic prescription within 3 days of a dental pain consultation. Results will follow the trial.",
+        "introduction": "Antibiotics do not relieve most dental pain, but GPs prescribe them when patients cannot reach dental care. A pathway supplying same-day dental advice may change this.",
+        "methods": "Practices allocated in strata by size and deprivation; routine coded outcomes; mixed-effects analysis; independent safety review.",
+        "results": "No data have been collected yet.",
+        "discussion": "The discussion will compare the results with the retrieved trial and consider generalisability to districts with poor dental access.",
+        "limitations": "Few clusters; reliance on coding; one district.",
+        "conclusion": "To be written after the trial.",
+        "reportingChecklist": "CONSORT extension for cluster randomised trials; SPIRIT for the protocol",
+        "summary": "Trial protocol structure with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.results": "No data have been collected yet.",
+          "manuscript.reportingChecklist": {
+            "includes": "cluster randomised"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The ethics committee decision on the consent waiver is unknown; allocation waits for it and the action stays blocked",
+          "Two retrieved sources have no year and no rating; keep them unrated and do not cite them for effect sizes",
+          "Fix the dental pain code list with the data team before extraction"
+        ],
+        "improvementNotes": "The decision rests on four ledger claims from retrieved records; a fifth claim rests on an undated conference abstract and carries high uncertainty. The consent gate stays unknown rather than being assumed met.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the consent gate, undated sources and the code list."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 store.ts mergeStage overwrites it (L1.6, a store defect).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Audit route; the decision panel is not on screen, so the gate is checked here by its missing evidence, and its unknown status and the blocked action are checked on screen at the accept step and in the export.",
+      "expect": {
+        "store": {
+          "title": "A dental pain pathway to reduce antibiotic prescribing in general practice: cluster randomised trial",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[2].year": {
+            "isNull": true
+          },
+          "scan.items[3].relevance": {
+            "isNull": true
+          },
+          "design.decisions[-1].gates[1].evidence": {
+            "absent": true
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "A dental pain pathway to reduce antibiotic prescribing in general practice: cluster randomised trial"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "A dental pain pathway to reduce antibiotic prescribing in general practice: cluster randomised trial",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[2].methodQuality": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "family": "rct"
+        },
+        "screen": {
+          "includes": [
+            "A dental pain pathway to reduce antibiotic prescribing in general practice: cluster randomised trial"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; claims S13; the unrated grades and null scores hold at 875fe59. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.gradeOverall": "low",
+            "scan.items[2].year": {
+              "isNull": true
+            },
+            "scan.items[2].grade": "unrated",
+            "scan.items[2].relevance": {
+              "isNull": true
+            },
+            "scan.items[3].year": {
+              "isNull": true
+            },
+            "scan.items[3].grade": "unrated",
+            "scan.items[3].methodQuality": {
+              "isNull": true
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[1].status": "unknown",
+            "problem.constraints": "The triage line exists only for 12 months from January 2027. Study work in practices is limited to routine data extraction by the network data team. No change to how practices code consultations."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -43,6 +43,23 @@ interface StudioState {
     status: "met" | "unmet" | "unknown" | "not-required",
     evidence?: string,
   ) => { ok: boolean; reason?: string };
+  /**
+   * Investigator-only: add a gate they have settled to a decision (for example the review board's
+   * determination that no approval is needed for this work), with the reference or reason.
+   */
+  addGate: (
+    id: string,
+    which: "latest" | number,
+    requirement: string,
+    status: "met" | "unmet" | "not-required",
+    evidence: string,
+  ) => { ok: boolean; reason?: string; gateId?: string };
+  /**
+   * Investigator-only (D10 / S5): act on one of their own facts that leaves an approval open, for one
+   * decision: it has been given (with the reference), or it does not concern this decision (with the reason).
+   * Logged in the audit; it settles that fact for that decision and nothing else.
+   */
+  settleOpenItem: (id: string, which: "latest" | number, text: string, how: "given" | "aside", note: string) => { ok: boolean; reason?: string };
   update: (id: string, patch: StudyPatch) => void;
   /** Investigator family choice: records design.basis explicit, or unresolved when cleared. */
   setFamily: (id: string, family: StudyFamily | null) => void;
@@ -167,9 +184,11 @@ export const useStudio = create<StudioState>()(
         if (status === "met" && !ev) return { ok: false, reason: "a met gate needs the evidence that shows it (a document, reference or approval number)" };
         if (status === "not-required" && !ev) return { ok: false, reason: "a gate marked not required for this decision needs the reason" };
         const target = list[idx];
-        const prior = target.gates.find((g) => g.id === gateId);
+        const matching = target.gates.filter((g) => g.id === gateId);
+        if (matching.length > 1) return { ok: false, reason: "more than one gate has this id; nothing was changed" };
+        const prior = matching[0];
         if (!prior) return { ok: false, reason: "gate not found" };
-        const priorModelEvidence = prior.setBy !== "investigator" ? prior.evidence : undefined;
+        const priorModelEvidence = prior.setBy !== "investigator" ? (prior.proposal?.evidence ?? prior.evidence) : undefined;
         const decisions = list.map((d, i) =>
           i === idx
             ? {
@@ -190,7 +209,58 @@ export const useStudio = create<StudioState>()(
         // flagging downstream stages for review.
         const refreshed = refreshDecisionStatuses({ ...s, design: { ...s.design, decisions } });
         get().update(id, { design: refreshed.design });
-        get().log(id, { id: uid("audit"), at: nowIso(), kind: "note", stage: "design", actor: "investigator", summary: `Investigator set gate ${gateId} of decision ${target.id} to ${status}${ev ? ` (${ev})` : ""}${priorModelEvidence ? `; the model's evidence was: ${priorModelEvidence}` : ""}.` });
+        const shown = prior.setBy !== "investigator" && prior.proposal ? prior.proposal.concerns : [];
+        get().log(id, {
+          id: uid("audit"),
+          at: nowIso(),
+          kind: "note",
+          stage: "design",
+          actor: "investigator",
+          summary: `Investigator set gate ${gateId} of decision ${target.id} to ${status}${ev ? ` (${ev})` : ""}${prior.setBy !== "investigator" && prior.proposal ? ", confirming the model's proposal" : ""}${priorModelEvidence ? `; the model's evidence was: ${priorModelEvidence}` : ""}${shown.length ? `; Meridian's concerns shown: ${shown.join(" | ")}` : ""}.`,
+        });
+        return { ok: true };
+      },
+      addGate: (id, which, requirement, status, evidence) => {
+        const s = get().studies.find((x) => x.id === id);
+        if (!s) return { ok: false, reason: "study not found" };
+        const idx = decisionIndex(s, which);
+        const list = s.design.decisions ?? [];
+        if (idx < 0 || idx >= list.length) return { ok: false, reason: "no decision" };
+        const req = (requirement ?? "").trim();
+        const ev = (evidence ?? "").trim();
+        if (!req) return { ok: false, reason: "a gate needs its requirement" };
+        if ((status === "met" || status === "not-required") && !ev) return { ok: false, reason: "a settled gate needs the reference or the reason" };
+        const gateId = uid("gate");
+        const target = list[idx];
+        const gate = { id: gateId, requirement: req, status, setBy: "investigator" as const, grounding: "added by the investigator", ...(ev ? { evidence: ev } : {}), record: true as const };
+        const decisions = list.map((d, i) => (i === idx ? { ...d, gates: [...(d.gates ?? []), gate] } : d));
+        const refreshed = refreshDecisionStatuses({ ...s, design: { ...s.design, decisions } });
+        get().update(id, { design: refreshed.design });
+        get().log(id, { id: uid("audit"), at: nowIso(), kind: "note", stage: "design", actor: "investigator", summary: `Investigator added gate ${gateId} to decision ${target.id}: ${req} is ${status}${ev ? ` (${ev})` : ""}.` });
+        return { ok: true, gateId };
+      },
+      settleOpenItem: (id, which, text, how, note) => {
+        const s = get().studies.find((x) => x.id === id);
+        if (!s) return { ok: false, reason: "study not found" };
+        const idx = decisionIndex(s, which);
+        const list = s.design.decisions ?? [];
+        if (idx < 0 || idx >= list.length) return { ok: false, reason: "no decision" };
+        const t = (text ?? "").trim();
+        const n = (note ?? "").trim();
+        if (!t) return { ok: false, reason: "no statement given" };
+        if (!n) return { ok: false, reason: how === "given" ? "give the reference that shows it was given" : "say why it does not concern this decision" };
+        const target = list[idx];
+        const decisions = list.map((d, i) => (i === idx ? { ...d, settledItems: [...(d.settledItems ?? []), { text: t, how, note: n, at: nowIso() }] } : d));
+        const refreshed = refreshDecisionStatuses({ ...s, design: { ...s.design, decisions } });
+        get().update(id, { design: refreshed.design });
+        get().log(id, {
+          id: uid("audit"),
+          at: nowIso(),
+          kind: "note",
+          stage: "design",
+          actor: "investigator",
+          summary: `Investigator ${how === "given" ? "marked as given" : "set aside"}, for decision ${target.id}, a fact that left an approval open: "${t.slice(0, 200)}" (${n.slice(0, 200)}).`,
+        });
         return { ok: true };
       },
       update: (id, patch) => {
@@ -291,7 +361,8 @@ export const useStudio = create<StudioState>()(
               status: consequential && s.status === "complete" ? "active" : s.status === "draft" ? "active" : s.status,
             } as Study;
             const gated = stage === "scan" ? withdrawScanCompletionIfInvalid(merged) : merged;
-            return consequential && (stage === "scan" || stage === "problem" || stage === "design") ? refreshDecisionStatuses(gated) : gated;
+            // The Ethics stage can state that no review or consent is needed (D10 / S5), so it re-evaluates decisions too.
+            return consequential && (stage === "scan" || stage === "problem" || stage === "design" || stage === "ethics") ? refreshDecisionStatuses(gated) : gated;
           }),
         });
       },
@@ -353,6 +424,7 @@ export const useStudio = create<StudioState>()(
         const list = s.design.decisions ?? [];
         if (idx < 0 || idx >= list.length) return { ok: false, reason: "no decision" };
         const current = list[idx];
+        if (current.status === "withdrawn" || current.selectionStatus === "withdrawn") return { ok: false, reason: "a withdrawn decision cannot be accepted" };
         const support = decisionIsSupported(current, s);
         if (!support.ok) {
           get().log(id, {
@@ -609,12 +681,13 @@ export const useStudio = create<StudioState>()(
             recordId: merged.aliases[d.recordId] ?? d.recordId,
           })),
         ];
+        // Documents first: the scan merge re-derives the decisions, and they must see the new documents.
+        get().update(id, { documents, idAliases: merged.aliases });
         get().mergeStage(id, "scan", {
           items: merged.items,
           retrievalEvents: [...(s.scan.retrievalEvents ?? []), payload.event],
           sourcesConsulted: [...new Set([...(s.scan.sourcesConsulted ?? []), payload.event.provider])],
         });
-        get().update(id, { documents, idAliases: merged.aliases });
       },
       applyIdentityChecks: (id, provider, chunks) => {
         const zero: IdentityCheckSummary = { checked: 0, verified: 0, mismatch: 0, notFound: 0, unresolved: 0, failed: 0 };
@@ -699,7 +772,7 @@ export const useStudio = create<StudioState>()(
         }
         const state = (persisted ?? {}) as { studies?: unknown[] };
         return {
-          studies: Array.isArray(state.studies) ? state.studies.map((s) => migrateStudy(s)) : SEED_STUDIES.map((s) => migrateStudy(s)),
+          studies: Array.isArray(state.studies) ? state.studies.map((s) => loadStudy(s)) : SEED_STUDIES.map((s) => loadStudy(s)),
           lastMigrationBackup: backup,
           backupFailure: backup.written ? null : backup,
         } as unknown as StudioState;
@@ -710,7 +783,7 @@ export const useStudio = create<StudioState>()(
         return {
           ...current,
           ...p,
-          studies: rawStudies.map((s) => migrateStudy(s)),
+          studies: rawStudies.map((s) => loadStudy(s)),
           backupFailure: readBackupFailure(browserLocalStorage()) ?? current.backupFailure,
         };
       },
@@ -719,13 +792,18 @@ export const useStudio = create<StudioState>()(
           state.hydrated = true;
           state.backupFailure = readBackupFailure(browserLocalStorage());
           queueMicrotask(() => {
-            useStudio.setState((s) => ({ studies: s.studies.map((x) => migrateStudy(x)) }));
+            useStudio.setState((s) => ({ studies: s.studies.map((x) => loadStudy(x)) }));
           });
         }
       },
     },
   ),
 );
+
+/** A stored study as the app reads it: migrated, with every decision's status re-derived (never trusted from storage). */
+function loadStudy(raw: unknown): Study {
+  return refreshDecisionStatuses(migrateStudy(raw));
+}
 
 export function useStudy(id: string | undefined): Study | undefined {
   return useStudio((s) => s.studies.find((x) => x.id === id));

@@ -1,0 +1,1535 @@
+{
+  "id": "sc-034",
+  "version": 1,
+  "title": "Pain clinic: prospective follow-up of pharmacist-led opioid tapering, prose scan reply and a corrected source after acceptance",
+  "field": "pain-medicine",
+  "level": 4,
+  "family": "prospective",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S5",
+    "S10",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on a clear prospective observational question. The need names a prospective observational study, so routing is explicit at create. The problem reply rewrites the investigator's constraints and inserts the very dose target the investigator excluded; under G11 the stored constraints stay as typed and the attempt is an issue (rejected-change) shown on screen (S5 is named because no listed entry defines rejected-change; see the problem step). A fixture search returns seven records with abstracts. The first scan reply is prose, not JSON: nothing is applied, the error is shown and the stage stays incomplete (G5). The second scan reply (shape appraisal, S13) annotates all seven records and records five source-derived claims whose passages are exact substrings of the abstracts; certainty 'low' is the appraisal's own value over inspected records (G1). The design decision rests on claims c1 to c3 and is accepted as a supported positive; the ethics gate is unmet, so the action stays blocked (S11). Only then does the record cited by c1 change its key findings through the store: the decision must become stale in the store, on screen, after reload and in the export, and the completed stages after Scan are flagged for review (G7, G8; S10, A3.2 D24). Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-0x6ov70, 2 ev-1k3nnob, 4 ev-0v35rhd, 6 ev-03yvnbs, 7 ev-04yvuj5), or of titleYearKey(title, year) when there is no DOI (records 3 ev-14cye93, 5 ev-0141ysd). Catches: a model overwriting investigator constraints, a prose reply treated as success, certainty without appraisal, an accepted decision that stays current after its cited source changes, and an export that differs from the store.",
+  "inputs": {
+    "need": "I am the clinical pharmacist in the multidisciplinary pain clinic at Vellmoor General Hospital, a regional hospital serving about 300,000 people. Since July 2025 we have run a tapering support pathway for adults on long-term opioids at 50 mg oral morphine equivalents a day or more who choose to reduce their dose. Each patient gets a written taper plan agreed with the clinic physician, a pharmacist phone call every two weeks, a naloxone kit, and a same-week appointment if withdrawal symptoms or a pain flare make the plan hard to follow. The pace is set with the patient and is paused when symptoms or life events make it unsafe to continue.\n\nThe clinic director wants to know whether the pathway is doing any good before the hospital decides whether to keep the pharmacist post after March 2028. A trial that withholds support from people who want to taper would not be acceptable to us or to our patients, and everyone eligible is already offered the pathway. I am thinking of a prospective observational study that follows everyone who enters the pathway over the next 12 months, for 12 months each, collecting outcomes at the fortnightly calls and the clinic visits we already do.\n\nWhat I want to measure: the change in daily dose at 6 and 12 months, pain interference with daily life, withdrawal symptoms, whether people stay in the pathway, emergency visits, and any overdose. I also want to understand who drops out, because I suspect we lose people who live far from the clinic or who need an interpreter. I need help with outcome definitions, how many patients we need, how to handle people who leave the pathway, and what the research ethics board will want to see.",
+    "constraints": "The clinic pharmacist has 0.4 FTE for the pathway and there is no research funding. Tapering pace is agreed with each patient and is never faster than 10 percent of the daily dose per month; the study must not add dose targets, deadlines or reminders that push the pace. Outcomes can be collected only at the existing fortnightly calls and clinic visits.",
+    "localFacts": [
+      "The tapering support pathway accepted 88 adults between 2025-07-01 and 2026-06-30, about seven a month.",
+      "The clinic pharmacist's 0.4 FTE for the pathway is funded until 2028-03-31 (allocation letter VGH-PC-2025-07).",
+      "The hospital research ethics board has not reviewed this study; submission is planned for 2026-10-20."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical pharmacist in the multidisciplinary pain clinic at Vellmoor General Hospital, a regional hospital serving about 300,000 people. Since July 2025 we have run a tapering support pathway for adults on long-term opioids at 50 mg oral morphine equivalents a day or more who choose to reduce their dose. Each patient gets a written taper plan agreed with the clinic physician, a pharmacist phone call every two weeks, a naloxone kit, and a same-week appointment if withdrawal symptoms or a pain flare make the plan hard to follow. The pace is set with the patient and is paused when symptoms or life events make it unsafe to continue.\n\nThe clinic director wants to know whether the pathway is doing any good before the hospital decides whether to keep the pharmacist post after March 2028. A trial that withholds support from people who want to taper would not be acceptable to us or to our patients, and everyone eligible is already offered the pathway. I am thinking of a prospective observational study that follows everyone who enters the pathway over the next 12 months, for 12 months each, collecting outcomes at the fortnightly calls and the clinic visits we already do.\n\nWhat I want to measure: the change in daily dose at 6 and 12 months, pain interference with daily life, withdrawal symptoms, whether people stay in the pathway, emergency visits, and any overdose. I also want to understand who drops out, because I suspect we lose people who live far from the clinic or who need an interpreter. I need help with outcome definitions, how many patients we need, how to handle people who leave the pathway, and what the research ethics board will want to see.",
+          "problem.constraints": "The clinic pharmacist has 0.4 FTE for the pathway and there is no research funding. Tapering pace is agreed with each patient and is never faster than 10 percent of the daily dose per month; the study must not add dose targets, deadlines or reminders that push the pace. Outcomes can be collected only at the existing fortnightly calls and clinic visits.",
+          "family": "prospective",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical pharmacist in the multidisciplinary pain clinic"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Pharmacist-led opioid tapering support in a multidisciplinary pain clinic: a prospective observational study",
+        "subtitle": "Twelve-month follow-up of everyone entering the tapering pathway, Vellmoor General Hospital",
+        "family": "prospective",
+        "statement": "Adults on long-term opioids of 50 mg oral morphine equivalents a day or more who choose to taper at the Vellmoor pain clinic receive pharmacist-led support: a shared taper plan, fortnightly pharmacist calls, naloxone and rapid review. Whether the pathway is followed by meaningful dose reduction without worse pain interference, withdrawal distress, disengagement or overdose is not known locally. The study will describe 12-month outcomes for everyone entering the pathway over one year and identify who leaves it.",
+        "whoAffected": "Adults tapering long-term opioids and their families, the clinic pharmacist and physicians, community pharmacists who dispense the tapered doses, and emergency department staff who see withdrawal or overdose.",
+        "whatHurts": "Unsupported tapers can bring withdrawal, uncontrolled pain, loss of trust and, after fast reductions, overdose; staying on high doses carries its own risks. Patients who leave the pathway lose support at the point of highest risk, and the clinic does not know who they are.",
+        "currentPractice": "Since July 2025 every eligible patient who wants to taper is offered the pathway; outcomes are written in the clinic notes but never summarised, and patients who stop answering calls are not followed up systematically.",
+        "whyNow": "The hospital decides in 2027 whether to fund the pharmacist post beyond March 2028, and the first year of the pathway (88 patients) shows the clinic can enrol about seven patients a month.",
+        "constraints": "0.4 FTE pharmacist, no research funding, routine calls and visits only; every participant should reach a 25 percent dose reduction by 6 months so that the outcome is comparable across patients.",
+        "patientCenteredGoal": "People who choose to taper reduce their opioid dose at a pace they agree to, with pain and daily life no worse, and nobody is lost from support without the clinic noticing.",
+        "summary": "Problem framed as a prospective observational follow-up of the tapering pathway with dose, pain interference, withdrawal, disengagement and overdose outcomes."
+      },
+      "note": "G11: the reply replaces the investigator's constraints with a text that adds a 25 percent dose target by 6 months, which the typed constraints rule out. The stored constraints stay exactly as typed and the attempt is recorded as issue rejected-change at 'constraints', shown on screen; the other fields apply. At 875fe59 the model text overwrites problem.constraints with no issue. rejected-change is not an 875fe59 IssueCode and no listed work-order entry defines it; S5 (trusted local facts and investigator authority, the source of G11) is named.",
+      "expect": {
+        "store": {
+          "title": "Pharmacist-led opioid tapering support in a multidisciplinary pain clinic: a prospective observational study",
+          "family": "prospective",
+          "problem.constraints": "The clinic pharmacist has 0.4 FTE for the pathway and there is no research funding. Tapering pace is agreed with each patient and is never faster than 10 percent of the daily dose per month; the study must not add dose targets, deadlines or reminders that push the pace. Outcomes can be collected only at the existing fortnightly calls and clinic visits.",
+          "problem.statement": {
+            "includes": "pharmacist-led support"
+          },
+          "problem.rawNeed": "I am the clinical pharmacist in the multidisciplinary pain clinic at Vellmoor General Hospital, a regional hospital serving about 300,000 people. Since July 2025 we have run a tapering support pathway for adults on long-term opioids at 50 mg oral morphine equivalents a day or more who choose to reduce their dose. Each patient gets a written taper plan agreed with the clinic physician, a pharmacist phone call every two weeks, a naloxone kit, and a same-week appointment if withdrawal symptoms or a pain flare make the plan hard to follow. The pace is set with the patient and is paused when symptoms or life events make it unsafe to continue.\n\nThe clinic director wants to know whether the pathway is doing any good before the hospital decides whether to keep the pharmacist post after March 2028. A trial that withholds support from people who want to taper would not be acceptable to us or to our patients, and everyone eligible is already offered the pathway. I am thinking of a prospective observational study that follows everyone who enters the pathway over the next 12 months, for 12 months each, collecting outcomes at the fortnightly calls and the clinic visits we already do.\n\nWhat I want to measure: the change in daily dose at 6 and 12 months, pain interference with daily life, withdrawal symptoms, whether people stay in the pathway, emergency visits, and any overdose. I also want to understand who drops out, because I suspect we lose people who live far from the clinic or who need an interpreter. I need help with outcome definitions, how many patients we need, how to handle people who leave the pathway, and what the research ethics board will want to see.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            {"anyOf": ["kept", "refused", "not applied"]},
+            "never faster than 10 percent of the daily dose per month"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "pharmacist-led opioid tapering support outpatient pain clinic dose reduction pain interference withdrawal disengagement overdose",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Pharmacist telephone support during outpatient opioid tapering: a before-after evaluation in a specialist pain clinic",
+            "authors": "Marlowe-Aduku P, Tennant-Ishida R, Oyelaran-Fisk J",
+            "year": 2021,
+            "venue": "Journal of Ambulatory Pain Pharmacotherapy",
+            "doi": "10.5555/japp.2021.0214",
+            "providerType": "journal-article",
+            "abstract": "Background: patients who taper long-term opioids often stop engaging with care before the taper is finished. Methods: a specialist pain clinic added fortnightly pharmacist telephone calls to physician-led tapering and compared patients who started a taper in the 12 months before the change (n = 94) with those who started in the 12 months after it (n = 101). Results: in the after period, 58 percent of patients reached a 25 percent reduction in daily dose at six months, against 37 percent before. Mean pain interference scores did not change in either period. Eleven percent of patients left care within six months after the change, against 24 percent before. Conclusions: pharmacist telephone support was followed by more dose reduction and fewer patients leaving care; a concurrent comparison is needed."
+          },
+          {
+            "title": "Voluntary opioid tapering and pain interference over 12 months: a prospective observational study in two pain clinics",
+            "authors": "Castellane-Obi D, Frey-Mwangi L",
+            "year": 2023,
+            "venue": "Tessary Journal of Pain Care",
+            "doi": "10.5555/tjpc.2023.0088",
+            "providerType": "journal-article",
+            "abstract": "We followed 212 adults who chose to taper long-term opioid therapy in two specialist pain clinics, with outcomes collected at routine visits every three months. Over 12 months, the mean daily dose fell by 41 percent. Pain interference with daily activities, rated from 0 to 10, improved from a mean of 6.8 at baseline to 6.1 at 12 months, and 19 percent of patients paused or reversed their taper at least once. Patients with moderate or severe depression at baseline had smaller improvements in pain interference. Twelve-month data were missing for 14 percent of patients, mostly those who had stopped attending. The absence of a comparison group limits causal interpretation."
+          },
+          {
+            "title": "Overdose and withdrawal-related emergency visits after opioid dose reduction: a population study of dispensing data",
+            "authors": "Nakagawa-Brent S, Adeyemi-Holt K, Rasmussen-Lowe T",
+            "year": 2019,
+            "venue": "Northreach Epidemiology Reports",
+            "providerType": "journal-article",
+            "abstract": "Using regional dispensing and hospital data for 33,400 adults on stable long-term opioid therapy, we compared periods after a dose reduction with periods of stable dosing. In the two months after a reduction of more than 20 percent per month, overdose or withdrawal-related emergency visits were 1.7 times as frequent as during stable dosing. After slower reductions of 10 percent per month or less there was no measurable excess. The excess was concentrated among patients who received no follow-up contact within four weeks of the reduction. Confounding by the reasons for dose reduction cannot be excluded, and dispensing data do not show what patients actually took."
+          },
+          {
+            "title": "Patient-centred interventions for opioid tapering: a systematic review of dose, pain and safety outcomes",
+            "authors": "Whitcombe-Diallo A, Sorensen-Okafor B, Ibarra-Lund C, Petrov-Achebe M",
+            "year": 2020,
+            "venue": "Clinical Tapering Review",
+            "doi": "10.5555/ctr.2020.0311",
+            "providerType": "review",
+            "abstract": "We searched four bibliographic databases to 2019 for studies of interventions supporting voluntary opioid tapering in adults with chronic non-cancer pain. Twenty-seven studies met the inclusion criteria, only five with a concurrent comparison group. Multidisciplinary support with frequent contact was associated with greater dose reduction, and pain and function were stable or improved in most studies. Only six studies reported overdose or emergency visits. Definitions of a successful taper ranged from a 25 percent reduction to complete discontinuation, which prevented pooling. Most studies were at high risk of bias from selection and loss to follow-up."
+          },
+          {
+            "title": "Who leaves an opioid tapering programme? Distance, language and disengagement in a regional pain service",
+            "authors": "Okonjo-Lindqvist R, Barros-Hale E",
+            "year": 2024,
+            "venue": "Journal of Rural Pain Services",
+            "providerType": "journal-article",
+            "abstract": "We reviewed clinic data for 176 adults who started a supported opioid taper in a regional pain service between 2019 and 2022. Disengagement, defined as no contact for six weeks, occurred within six months in 31 percent of patients living more than 60 km from the clinic and in 15 percent of those living closer. Patients who needed an interpreter disengaged about twice as often as other patients. Among distant patients, those offered telephone contact every two weeks disengaged less often than those offered clinic visits only. Distance and language were recorded routinely, but reasons for leaving were rarely documented."
+          },
+          {
+            "title": "A brief telephone checklist for withdrawal symptoms during slow outpatient opioid tapers: agreement with clinic assessment",
+            "authors": "Delacroix-Nguyen H, Mbatha-Ross F",
+            "year": 2022,
+            "venue": "Tessary Journal of Pain Care",
+            "doi": "10.5555/tjpc.2022.0147",
+            "providerType": "journal-article",
+            "abstract": "Withdrawal symptoms during slow tapers are usually assessed only at clinic visits. We developed an eight-item checklist that a pharmacist can administer by telephone in about three minutes and compared it with a clinician's in-clinic assessment on the same day in 84 patients. Agreement was good (intraclass correlation 0.81), and repeated telephone checks showed that symptoms peaked two to five days after each dose step. Patients preferred the telephone check to extra clinic visits. The checklist has not been tested in patients with limited English or in rapid tapers."
+          },
+          {
+            "title": "Collaborative pharmacist and physician tapering in primary care: a controlled study across 18 practices",
+            "authors": "Hollis-Mensah G, Varga-Tanaka I, Oduya-Pereira L",
+            "year": 2016,
+            "venue": "Primary Care Pharmacy Quarterly",
+            "doi": "10.5555/pcpq.2016.0056",
+            "providerType": "journal-article",
+            "abstract": "Eighteen primary care practices were allocated by region to collaborative tapering, in which a practice pharmacist and physician agreed a taper plan and reviewed it monthly, or to usual care. At 12 months, 28 percent of patients in intervention practices had reduced their daily dose by at least 30 percent, against 17 percent in usual-care practices. Emergency visits did not differ between groups. Allocation was not random, intervention practices were larger, and patients were recruited from primary care rather than specialist pain clinics, so the findings may not transfer to patients referred for complex pain."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values (see notes). Before any appraisal the records carry no grade and no scores (G1, G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0x6ov70",
+            "ev-1k3nnob",
+            "ev-14cye93",
+            "ev-0v35rhd",
+            "ev-0141ysd",
+            "ev-03yvnbs",
+            "ev-04yvuj5"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-0x6ov70",
+          "scan.items[0].doi": "10.5555/japp.2021.0214",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[2].id": "ev-14cye93",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Pharmacist telephone support during outpatient opioid tapering: a before-after evaluation in a specialist pain clinic"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "responseText": "Thank you for the seven records. Taken together they suggest that pharmacist telephone support during slow tapers is followed by more dose reduction and fewer people leaving care, although most of the evidence comes from before-after comparisons in single clinics. The population study warns that fast reductions carry a short-term overdose risk, which fits your clinic's rule of no more than 10 percent a month, and the regional service found that distance and interpreter need predict who leaves. I would grade the overall certainty as low. If it helps, I can go through each record in turn, set out relevance, method quality and the main limitation, and then list the claims your design would rest on.",
+      "note": "Prose, not JSON: extractJson in ai.ts finds no brace and throws 'The model did not return JSON.'; nothing is applied, no certainty is stored and the stage does not complete (G5). Holds at 875fe59.",
+      "expect": {
+        "error": {
+          "shown": true,
+          "includes": "did not return JSON"
+        },
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0x6ov70",
+            "relevance": 92,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Fortnightly pharmacist calls were followed by more patients reaching a 25 percent dose reduction at six months (58 against 37 percent) and fewer leaving care (11 against 24 percent); pain interference did not change.",
+            "limitations": "Uncontrolled before-after comparison in one clinic; how patients who left care were counted is not described; secular change in prescribing not addressed.",
+            "contextTags": [
+              "specialist pain clinic",
+              "pharmacist telephone support",
+              "before-after"
+            ],
+            "notes": "Closest match to the Vellmoor pathway."
+          },
+          {
+            "id": "ev-1k3nnob",
+            "relevance": 88,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Among 212 adults who chose to taper, mean dose fell 41 percent over 12 months, pain interference improved from 6.8 to 6.1, and 19 percent paused or reversed the taper; depression predicted smaller improvement.",
+            "limitations": "No comparison group; 14 percent missing at 12 months, mostly patients who stopped attending.",
+            "contextTags": [
+              "voluntary tapering",
+              "pain interference",
+              "prospective follow-up"
+            ],
+            "notes": "Supplies planning values for dose change and missing data."
+          },
+          {
+            "id": "ev-14cye93",
+            "relevance": 76,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Emergency visits for overdose or withdrawal were 1.7 times as frequent in the two months after reductions above 20 percent per month; no excess after reductions of 10 percent per month or less; excess concentrated where no follow-up contact occurred within four weeks.",
+            "limitations": "Dispensing data do not show consumption; confounding by the reasons for reduction.",
+            "contextTags": [
+              "overdose",
+              "taper speed",
+              "population data"
+            ],
+            "notes": "Supports emergency visits and overdose as balancing outcomes."
+          },
+          {
+            "id": "ev-0v35rhd",
+            "relevance": 70,
+            "methodQuality": 60,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 27 studies, multidisciplinary support with frequent contact was associated with greater dose reduction and stable or better pain and function; only six studies reported overdose or emergency visits.",
+            "limitations": "Only five studies had a concurrent comparison; taper success definitions too varied to pool; search ended in 2019.",
+            "contextTags": [
+              "systematic review",
+              "outcome definitions"
+            ],
+            "notes": "Argues for a continuous primary outcome rather than a success threshold."
+          },
+          {
+            "id": "ev-0141ysd",
+            "relevance": 84,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Disengagement within six months was 31 percent beyond 60 km against 15 percent closer; interpreter need doubled disengagement; fortnightly telephone contact reduced it among distant patients.",
+            "limitations": "Retrospective clinic data; reasons for leaving rarely documented; one service.",
+            "contextTags": [
+              "disengagement",
+              "rurality",
+              "language",
+              "equity"
+            ],
+            "notes": "Names the two predictors for the disengagement analysis."
+          },
+          {
+            "id": "ev-03yvnbs",
+            "relevance": 72,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "An eight-item telephone withdrawal checklist agreed with in-clinic assessment (intraclass correlation 0.81), took about three minutes and showed symptom peaks two to five days after each dose step.",
+            "limitations": "84 patients in one service; not tested with interpreters or rapid tapers.",
+            "contextTags": [
+              "measurement",
+              "withdrawal",
+              "telephone"
+            ],
+            "notes": "Usable at the existing fortnightly calls."
+          },
+          {
+            "id": "ev-04yvuj5",
+            "relevance": 55,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Collaborative pharmacist and physician tapering in primary care was followed by more patients with a 30 percent reduction at 12 months (28 against 17 percent), with no difference in emergency visits.",
+            "limitations": "Allocation by region; larger intervention practices; primary care patients rather than complex pain referrals.",
+            "contextTags": [
+              "primary care",
+              "concurrent control"
+            ],
+            "notes": "Indirect for a specialist clinic."
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a specialist pain clinic, 58 percent of patients reached a 25 percent reduction in daily dose at six months after fortnightly pharmacist calls were added, against 37 percent before.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0x6ov70"
+            ],
+            "location": "Abstract, results",
+            "passage": "58 percent of patients reached a 25 percent reduction in daily dose at six months, against 37 percent before",
+            "interpretation": "Supports pharmacist support as the exposure of interest; uncontrolled, so a planning value only.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Overdose or withdrawal-related emergency visits were more frequent after reductions of more than 20 percent per month, with no measurable excess after reductions of 10 percent per month or less.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-14cye93"
+            ],
+            "location": "Abstract",
+            "passage": "After slower reductions of 10 percent per month or less there was no measurable excess.",
+            "interpretation": "Emergency visits and overdose belong in the protocol as balancing outcomes even for slow tapers.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Patients living more than 60 km from the clinic left a supported taper about twice as often as those living closer.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0141ysd"
+            ],
+            "location": "Abstract",
+            "passage": "Disengagement, defined as no contact for six weeks, occurred within six months in 31 percent of patients living more than 60 km from the clinic and in 15 percent of those living closer.",
+            "interpretation": "Distance and interpreter need should be recorded at entry and the disengagement analysis limited to them.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Among adults who chose to taper in two pain clinics, the mean daily dose fell by 41 percent over 12 months.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1k3nnob"
+            ],
+            "location": "Abstract",
+            "passage": "Over 12 months, the mean daily dose fell by 41 percent.",
+            "interpretation": "Planning value for the primary outcome.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "An eight-item telephone checklist for withdrawal symptoms agreed well with in-clinic assessment.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-03yvnbs"
+            ],
+            "location": "Abstract",
+            "passage": "Agreement was good (intraclass correlation 0.81)",
+            "interpretation": "Withdrawal can be measured at the existing fortnightly calls.",
+            "uncertainty": "low"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Pharmacist support during slow tapers was followed by more dose reduction and fewer patients leaving care in one before-after study (58 against 37 percent reaching a 25 percent reduction), and a two-clinic follow-up found a 41 percent mean dose fall with slightly better pain interference. Fast reductions carried an excess of overdose or withdrawal-related emergency visits that slow reductions did not. Distance and interpreter need predicted disengagement. No study had a randomised comparison, and success definitions varied too much to pool.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational and before-after studies from single services, one review of mostly high-risk studies, and indirect primary care evidence; consistent in direction but at serious risk of bias from selection and loss to follow-up.",
+        "summary": "Seven retrieved records appraised; five source-derived claims recorded with passages; overall certainty low."
+      },
+      "note": "Valid second call. Annotations and claims reach the store only through the appraisal mapper on the production scan path (S13); certainty is the appraisal's own value over seven retrieved records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].relevance": 92,
+          "scan.items[0].methodQuality": 45,
+          "scan.items[3].kind": "systematic-review",
+          "scan.items[4].keyFindings": {
+            "includes": "31 percent beyond 60 km"
+          },
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].id": "c1",
+          "scan.claims[0].sourceIds": [
+            "ev-0x6ov70"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0141ysd"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "Vellmoor pain clinic, regional hospital",
+          "fortnightly pharmacist calls",
+          "patients living up to 150 km away",
+          "no research funding"
+        ],
+        "reading": "Dose reduction, pain interference and safety all run through the same mechanism: frequent contact during slow steps. The retrieved evidence links pharmacist contact to more dose reduction and fewer patients leaving care, and links fast reductions without follow-up to emergency visits. Disengagement is the weak point, and it is patterned by distance and language, so the patients the clinic loses are the ones whose outcomes matter most for safety.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Pharmacist-led tapering pathway",
+            "kind": "framework",
+            "detail": "Taper plan, fortnightly calls, naloxone, same-week review."
+          },
+          {
+            "id": "n2",
+            "label": "Percent change in daily dose",
+            "kind": "outcome",
+            "detail": "Primary outcome; claim c4 gives a planning value."
+          },
+          {
+            "id": "n3",
+            "label": "Pain interference with daily life",
+            "kind": "outcome",
+            "detail": "Patient-important secondary outcome."
+          },
+          {
+            "id": "n4",
+            "label": "Emergency visits and overdose",
+            "kind": "outcome",
+            "detail": "Balancing outcomes; claim c2."
+          },
+          {
+            "id": "n5",
+            "label": "Disengagement from the pathway",
+            "kind": "gap",
+            "detail": "Who leaves and why is unknown locally; claim c3."
+          },
+          {
+            "id": "n6",
+            "label": "Distance from the clinic and interpreter need",
+            "kind": "context",
+            "detail": "Predictors of leaving in a regional service."
+          },
+          {
+            "id": "n7",
+            "label": "Before-after report of pharmacist calls",
+            "kind": "observational",
+            "detail": "Claim c1."
+          },
+          {
+            "id": "n8",
+            "label": "Patients and families",
+            "kind": "stakeholder",
+            "detail": "Set the pace; bear withdrawal and pain."
+          },
+          {
+            "id": "n9",
+            "label": "Community pharmacists",
+            "kind": "stakeholder",
+            "detail": "Dispense the tapered doses; see missed collections first."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "expected to increase"
+          },
+          {
+            "from": "n1",
+            "to": "n5",
+            "relation": "expected to reduce"
+          },
+          {
+            "from": "n6",
+            "to": "n5",
+            "relation": "predicts"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "raises risk of"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "supports"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "traded off against"
+          },
+          {
+            "from": "n9",
+            "to": "n5",
+            "relation": "can detect early"
+          }
+        ],
+        "summary": "Map joins the pathway to dose, pain and safety outcomes and marks disengagement, patterned by distance and language, as the weak point."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "gap",
+          "map.reading": {
+            "includes": "patterned by distance and language"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local account of who leaves the pathway",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Patients who stop answering calls lose support when risk is highest, and the clinic cannot say who they are.",
+            "opportunity": "Define disengagement as no contact for six weeks and follow dispensing history, with consent, after disengagement."
+          },
+          {
+            "id": "g2",
+            "title": "Success defined by a dose threshold",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Thresholds from 25 percent to discontinuation made studies impossible to compare and can read as a target for patients.",
+            "opportunity": "Use percent change in dose as the primary outcome and report the proportion reaching 25 percent only descriptively."
+          },
+          {
+            "id": "g3",
+            "title": "Overdose and emergency visits rarely measured",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "Only six of 27 studies in the review reported them; a pathway could reduce dose and still cause harm.",
+            "opportunity": "Collect emergency visits and overdose from hospital data for everyone, including those who leave."
+          },
+          {
+            "id": "g4",
+            "title": "Interpreter need and distance not planned for",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Both predicted leaving a supported taper elsewhere (claim c3).",
+            "opportunity": "Record both at entry and report outcomes separately; offer interpreter-supported calls."
+          },
+          {
+            "id": "g5",
+            "title": "No concurrent comparison",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Dose falls over time for many reasons; a single-arm follow-up cannot attribute change to the pathway.",
+            "opportunity": "Describe outcomes honestly as outcomes of pathway patients and compare with published figures only as context."
+          }
+        ],
+        "errorsFound": [
+          "The planning figure of 58 percent reaching a 25 percent reduction comes from an uncontrolled before-after study and should not be used as an expected effect."
+        ],
+        "reevaluation": "The gaps point to a descriptive prospective follow-up with a continuous dose outcome, deliberate follow-up of people who leave, and safety outcomes for everyone.",
+        "summary": "Five gaps: unknown disengagement, threshold outcomes, unmeasured harm, equity of access to support, and no comparison group."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No local account of who leaves the pathway"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Adults entering the pharmacist-led pathway will reduce their daily opioid dose by a mean of at least 25 percent at 6 months, with pain interference no worse than at entry.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 75,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "Need is high because the post depends on the answer; novelty is modest; feasibility is high because data come from existing calls.",
+            "risks": "Dose falls for reasons other than the pathway; missing data among those who leave."
+          },
+          {
+            "id": "h2",
+            "statement": "Patients living more than 60 km away or needing an interpreter will disengage more often than other patients.",
+            "novelty": 40,
+            "need": 75,
+            "practiceChange": 65,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Replicates a pattern from a regional service and would change how support is offered.",
+            "risks": "About 20 disengagement events limit the analysis to two predictors."
+          },
+          {
+            "id": "h3",
+            "statement": "Emergency visits for withdrawal or overdose will not rise during the first three months of the taper.",
+            "novelty": 30,
+            "need": 80,
+            "practiceChange": 60,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "A safety question that the pathway must answer for the hospital.",
+            "risks": "Events are rare; the study can only describe them."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the primary descriptive aim, h2 and h3 kept as secondary and safety aims."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[1].need": 75,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults on 50 mg oral morphine equivalents a day or more who enter the pharmacist-led tapering pathway between November 2026 and October 2027, what is the mean percent change in daily opioid dose and in pain interference from entry to 6 and 12 months?",
+            "framework": "PECO",
+            "population": "Adults entering the tapering pathway at the Vellmoor pain clinic",
+            "intervention": "Pharmacist-led tapering support as delivered",
+            "comparator": "Entry values (no concurrent comparison)",
+            "outcome": "Percent change in daily dose; change in pain interference",
+            "time": "6 and 12 months after entry",
+            "setting": "Multidisciplinary pain clinic, regional hospital"
+          },
+          {
+            "id": "q2",
+            "text": "Are distance from the clinic and interpreter need associated with disengagement from the pathway within 12 months?",
+            "framework": "PECO",
+            "population": "Pathway participants",
+            "intervention": "Living more than 60 km away; needing an interpreter",
+            "comparator": "Living closer; no interpreter need",
+            "outcome": "Disengagement (no contact for six weeks)",
+            "time": "12 months",
+            "setting": "Vellmoor pain clinic"
+          }
+        ],
+        "finer": "Feasible with existing calls and 0.4 FTE; interesting to the hospital and to patients; novel locally; ethical because nothing is added to care; relevant to the 2027 funding decision.",
+        "summary": "Two PECO questions: dose and pain interference over 12 months, and predictors of disengagement."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[1].outcome": {
+            "includes": "Disengagement"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "prospective",
+        "rationale": "The question is what happens to people who choose supported tapering, measured as they go, with deliberate follow-up of those who leave. A prospective observational design fits: the pathway is already offered to everyone eligible, the outcomes can be collected at existing calls, and prospective collection gives consistent pain interference and withdrawal data that the clinic notes lack. The retrieved evidence supports pharmacist contact as the exposure (c1), emergency visits and overdose as balancing outcomes (c2) and distance and language as predictors of leaving (c3). Reporting follows STROBE.",
+        "alternatives": [
+          "Randomised comparison of pathway support against unsupported tapering (refused: withholding support from people who want it is not acceptable and everyone eligible is already offered the pathway)",
+          "Retrospective review of the first year's clinic notes (refused as the main design: pain interference and withdrawal were not recorded consistently; useful as a feasibility check)",
+          "Before-after comparison with patients who tapered before July 2025"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "A comparative design would need an unsupported group the clinic does not have and would not accept; a descriptive follow-up with pre-specified outcomes answers what the hospital needs for its 2027 decision.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Follow every adult who enters the pharmacist-led tapering pathway from November 2026 for 12 months in a prospective observational study, with percent change in daily dose at 6 months as the primary outcome and pain interference, withdrawal, disengagement, emergency visits and overdose as secondary and balancing outcomes.",
+          "question": "Should the clinic run a prospective observational study of the pharmacist-led tapering pathway?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Pharmacist contact during tapering has been followed by more dose reduction and fewer patients leaving care, and the predictors of leaving are known well enough to plan data collection.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Emergency visits for withdrawal or overdose rise among pathway patients during the first months of the taper.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c2"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics board approval of the protocol",
+              "status": "unmet"
+            },
+            {
+              "id": "g2",
+              "requirement": "Pharmacist time to collect outcomes at the fortnightly calls",
+              "status": "met",
+              "evidence": "Allocation letter VGH-PC-2025-07: 0.4 FTE funded until 2028-03-31, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Retrospective review of the first year's clinic notes",
+            "Before-after comparison with patients who tapered before July 2025"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; the ethics gate is unmet until the board approves."
+        },
+        "summary": "Prospective observational study recommended; the decision rests on three ledger claims and waits for ethics approval."
+      },
+      "note": "The decision cites c1 to c3, which exist only when S13 applied the appraisal. selectionStatus and actionStatus require S11; the status text requires D5. The unmet ethics gate keeps the action blocked (G7).",
+      "expect": {
+        "store": {
+          "design.recommended": "prospective",
+          "family": "prospective",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "unmet",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].recommendedFamily": "prospective",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: claims c1 to c3 exist and rest on retrieved records, so the selection is accepted; the unmet ethics gate keeps the action blocked (G7; A2 item 9). This is the predecessor the source change needs. selectionStatus, actionStatus and basis 'explicit' require S11; the claims S13; the status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "prospective"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "change-source",
+      "record": "Pharmacist telephone support during outpatient opioid tapering: a before-after evaluation in a specialist pain clinic",
+      "field": "keyFindings",
+      "value": "Correction notice from the authors (2026): the after-period figure of 58 percent counted patients who left care before six months as having reached the 25 percent reduction. Counting them as not reduced, 34 percent reached the reduction in the after period, against 37 percent before; the difference in patients leaving care (11 against 24 percent) is unchanged.",
+      "note": "The record cited by c1 publishes a correction that removes most of the reported difference; the change goes through the store's own action while the route is still on the Design stage. status and selectionStatus 'stale' require S10 (the evidence revision must cover source text; A3.2 D24) with S11 for the field; the status text requires D5. The stored key findings and the review flags for the completed stages after Scan hold at 875fe59.",
+      "expect": {
+        "store": {
+          "scan.items[0].keyFindings": "Correction notice from the authors (2026): the after-period figure of 58 percent counted patients who left care before six months as having reached the 25 percent reduction. Counting them as not reduced, 34 percent reached the reduction in the after period, against 37 percent before; the difference in patients leaving care (11 against 24 percent) is unchanged.",
+          "scan.items[0].title": "Pharmacist telephone support during outpatient opioid tapering: a before-after evaluation in a specialist pain clinic",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "scan": "complete",
+          "map": "needs-review",
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: the stale status survives in the store and on screen (G7). status 'stale' requires S10, selectionStatus S10 and S11, the status text D5. The constraints are still the investigator's text (G11).",
+      "expect": {
+        "store": {
+          "title": "Pharmacist-led opioid tapering support in a multidisciplinary pain clinic: a prospective observational study",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "scan.items[0].keyFindings": "Correction notice from the authors (2026): the after-period figure of 58 percent counted patients who left care before six months as having reached the 25 percent reduction. Counting them as not reduced, 34 percent reached the reduction in the after period, against 37 percent before; the difference in patients leaving care (11 against 24 percent) is unchanged.",
+          "problem.constraints": "The clinic pharmacist has 0.4 FTE for the pathway and there is no research funding. Tapering pace is agreed with each patient and is never faster than 10 percent of the daily dose per month; the study must not add dose targets, deadlines or reminders that push the pace. Outcomes can be collected only at the existing fortnightly calls and clinic visits."
+        },
+        "stage": {
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Prospective observational study of all adults entering the pharmacist-led tapering pathway at Vellmoor General Hospital from November 2026 to October 2027, each followed for 12 months with outcomes collected at the existing fortnightly calls and 6 and 12 month clinic visits.",
+        "population": "Adults aged 18 or over on long-term opioid therapy of 50 mg oral morphine equivalents a day or more for at least three months who choose to taper and enter the pathway; about 85 expected over 12 months. Patients whose opioids are prescribed for opioid use disorder are managed by another service and are not included.",
+        "exposure": "The pathway as delivered: written taper plan agreed with the physician, pharmacist call every two weeks, naloxone kit and same-week review for withdrawal or pain flares. Pace is agreed with each patient and never exceeds 10 percent of the daily dose per month; the study adds no dose target, deadline or reminder.",
+        "procedures": "At entry the pharmacist records daily dose, pain interference (0 to 10), the eight-item telephone withdrawal checklist, distance from the clinic, interpreter need and a depression screen. At each fortnightly call the pharmacist records dose and the checklist. At 6 and 12 months the clinic visit records pain interference, and dose is confirmed from the dispensing history. Patients who stop answering calls receive one letter; with consent given at entry, their dispensing history and hospital attendances are still collected so that dose and emergency visits are known after they leave.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Percent change in daily opioid dose",
+            "measure": "Daily oral morphine equivalent dose from the dispensing history at 6 months minus entry dose, divided by entry dose",
+            "timing": "6 months after entry",
+            "why": "Continuous, comparable across patients and not a target; the proportion reaching 25 percent is reported only descriptively.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Pain interference with daily life",
+            "measure": "0 to 10 rating of interference with daily activities",
+            "timing": "Entry, 6 and 12 months",
+            "why": "The outcome patients care about most while tapering.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Withdrawal symptom burden",
+            "measure": "Eight-item telephone checklist score",
+            "timing": "Every fortnightly call",
+            "why": "Detects distress between visits.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Emergency visits or admissions for withdrawal, uncontrolled pain or overdose",
+            "measure": "Count per participant from hospital data and patient report",
+            "timing": "Over 12 months",
+            "why": "A pathway that lowers dose must not raise acute harm.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Disengagement from the pathway",
+            "measure": "No contact for six weeks",
+            "timing": "Continuously over 12 months",
+            "why": "Identifies who the pathway loses.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About seven entries a month give about 85 participants in 12 months. Data collection uses calls the pharmacist already makes, adding about five minutes per call for the checklist; dispensing and hospital data are extracted twice by the pharmacist.",
+        "biasMitigation": [
+          "Primary outcome from dispensing history, available even for patients who leave",
+          "Written definitions of disengagement and of each emergency visit category fixed before the first entry",
+          "Analysis plan registered before data collection starts",
+          "Outcomes reported separately for patients living more than 60 km away and for those needing an interpreter"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Loss of patients who leave",
+            "severity": "high",
+            "note": "Mitigated by consent to dispensing and hospital data at entry."
+          },
+          {
+            "id": "b2",
+            "label": "No concurrent comparison",
+            "severity": "high",
+            "note": "Findings describe pathway patients; no causal claim."
+          },
+          {
+            "id": "b3",
+            "label": "Self-selection into tapering",
+            "severity": "watch",
+            "note": "Participants chose to taper; results do not transfer to patients who did not."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 2,
+          "flags": [
+            "Disengagement model limited to two predictors"
+          ],
+          "simplestPath": "One clinic, one year of entries, outcomes from existing calls and dispensing data."
+        },
+        "theoreticalFramework": "No behavioural framework is used; a pre-specified causal diagram guides the disengagement analysis.",
+        "summary": "Prospective follow-up of about 85 participants with a continuous dose outcome, patient-reported secondary outcomes and safety outcomes for everyone, including those who leave."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].patientCentered": true,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "protocol.exposure": {
+            "includes": "adds no dose target"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Single-group prospective follow-up with outcomes at entry, 6 and 12 months; descriptive estimation with confidence intervals, no hypothesis test against a comparator.",
+        "sampleSize": "About 85 participants in 12 months (88 entered in the pathway's first year). With a standard deviation of about 30 percentage points for percent change in dose (two-clinic follow-up), 85 participants give a 95 percent confidence interval of about 6.4 percentage points either side of the mean. For the descriptive proportion reaching a 25 percent reduction, an expected 40 percent gives an interval of about 10 percentage points either side. About 20 disengagement events are expected, which supports a model with at most two predictors.",
+        "primaryAnalysis": "Mean percent change in daily dose at 6 months with a 95 percent confidence interval, using dispensing data for everyone who consented, including participants who left the pathway.",
+        "secondaryAnalysis": "Mixed model of pain interference at entry, 6 and 12 months; description of withdrawal checklist scores around dose steps; counts and rates of emergency visits and overdose; logistic regression of disengagement on distance over 60 km and interpreter need.",
+        "missingData": "Dose is missing only when dispensing data are absent; those participants are reported and handled by multiple imputation in a sensitivity analysis. Missing pain interference is not imputed in the primary description; a sensitivity analysis compares completers with all participants.",
+        "multiplicity": "One primary outcome; secondary outcomes are described with intervals and are not tested.",
+        "software": "R with standard packages for mixed models and multiple imputation; code kept with the analysis plan.",
+        "overfittingGuards": [
+          "Two predictors only in the disengagement model",
+          "Analysis plan fixed before data collection",
+          "No subgroup testing beyond distance and interpreter need"
+        ],
+        "summary": "Descriptive estimates with intervals from about 85 participants; the disengagement model is limited to two predictors."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "6.4 percentage points"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "The study adds no intervention; risks are to privacy and the burden of a few extra minutes per call. Tapering itself carries withdrawal and overdose risk, managed by the pathway's naloxone supply and same-week review, not by the study.",
+        "consent": "Written consent at entry to the pathway for research use of pathway data, dispensing history and hospital attendances for 12 months, including after leaving the pathway. Declining has no effect on care. Consent is taken with a professional interpreter when needed.",
+        "data": "Coded data on the hospital's research drive; the key is held by the pharmacist; dispensing and hospital data are extracted for consenting participants only.",
+        "equity": "PROGRESS-Plus: place of residence (patients up to 150 km away), language (interpreter need), disability and mental health (depression screen) and socioeconomic position. Interpreter-supported calls are offered and outcomes are reported separately for distant patients and those needing an interpreter.",
+        "effectiveness": "The study informs, but cannot prove, the pathway's effect; its value is honest outcome data for the 2027 decision.",
+        "efficiency": "Uses existing calls and 0.4 FTE; no new clinic visits.",
+        "costs": "Interpreter time for consent and calls; no other new costs.",
+        "grants": "None needed; a hospital small grant could fund interpreter time.",
+        "partnerships": "Clinic physicians, community pharmacies that dispense tapered doses, and two patient partners who have tapered with the pathway.",
+        "rebPath": "Hospital research ethics board review under ICH-GCP and the Declaration of Helsinki; submission planned for 2026-10-20 and no research data collected before approval.",
+        "limitations": "Single clinic, no comparison group, self-selected participants.",
+        "summary": "Low-risk observational study with consent that covers follow-up after leaving, interpreter support and an equity split by distance and language."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "after leaving the pathway"
+          },
+          "ethics.rebPath": {
+            "includes": "2026-10-20"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners who tapered with the pathway review the consent form and the call script before submission and meet the team at 6 and 12 months to interpret results.",
+        "socialListening": "None; comments from the clinic's feedback cards over the past year are read for mentions of tapering.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Pace",
+            "quote": "Composite paraphrase: I agreed to come down slowly, and the calls made it feel like someone would notice if it went wrong.",
+            "implication": "Keep the pace with the patient; the study must not add targets.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Distance",
+            "quote": "Composite paraphrase: It is two hours each way; when I stopped picking up, nobody knew why.",
+            "implication": "Record distance and follow dispensing after disengagement.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Fear of overdose",
+            "quote": "Composite paraphrase: We kept the naloxone in the kitchen and hoped we would never need it.",
+            "implication": "Report overdose and emergency visits for everyone.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Community pharmacy",
+            "quote": "Composite paraphrase: We see the missed collections first; a call to the clinic would take two minutes.",
+            "implication": "Invite community pharmacists to flag missed collections.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on pace, distance, overdose fear and community pharmacy signals."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "partner",
+          "voices.items[0].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Outcomes of pharmacist-led support for voluntary opioid tapering in a multidisciplinary pain clinic: a prospective observational study",
+        "abstract": "Objective: to describe dose, pain interference, withdrawal, disengagement and acute harm over 12 months among adults entering a pharmacist-led opioid tapering pathway. Design: prospective observational study of consecutive entries from November 2026 to October 2027. Setting: multidisciplinary pain clinic of a regional hospital. Participants: about 85 adults on 50 mg oral morphine equivalents a day or more who chose to taper. Main outcome: percent change in daily dose at 6 months from dispensing data. Results and conclusions will be written when 12-month data exist.",
+        "introduction": "Supported tapering of long-term opioids is widely recommended, but most reports are uncontrolled, define success by different dose thresholds and rarely follow patients who stop attending. Fast reductions carry a short-term excess of overdose and withdrawal-related emergency visits, so safety outcomes matter as much as dose. This study describes outcomes for every patient entering one pharmacist-led pathway, including those who disengage.",
+        "methods": "Consecutive adults entering the pathway over 12 months are followed for 12 months each, with outcomes collected at the existing fortnightly pharmacist calls and at 6 and 12 month clinic visits. Dose comes from the dispensing history, which remains available after disengagement for participants who consented at entry. Pain interference is rated from 0 to 10 and withdrawal with an eight-item telephone checklist. Disengagement is defined as no contact for six weeks and modelled on two pre-specified predictors, distance over 60 km and interpreter need.",
+        "results": "No data have been collected yet. The report will give the mean percent change in dose with its interval, the course of pain interference, withdrawal scores around dose steps, emergency visits and overdose for all participants, and disengagement by distance and interpreter need.",
+        "discussion": "The discussion will set the observed dose change against the two-clinic follow-up and the before-after report, noting that the latter's headline figure was corrected after publication. It will not attribute change to the pathway, because there is no concurrent comparison.",
+        "limitations": "There is no comparison group, participants chose to taper, and all data come from one clinic. Pain interference is self-reported and missing for patients who leave, although dose and emergency visits are not.",
+        "conclusion": "To be written after 12-month follow-up of the last participant. It will describe outcomes of pathway patients and will not claim that the pathway caused them.",
+        "reportingChecklist": "STROBE",
+        "summary": "STROBE-structured draft with results left empty until data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Re-appraise the corrected before-after record and request a new design decision; the accepted decision is stale",
+          "Re-review the map, gaps, hypotheses, questions and design stages flagged after the correction",
+          "Submit the protocol to the research ethics board as planned on 2026-10-20",
+          "Run identity checks on the seven retrieved records before any report cites them"
+        ],
+        "improvementNotes": "Seven records came from a recorded search and were appraised at abstract level after a first reply that was not JSON. The decision rested on claim c1, whose source has since been corrected, so it is stale until re-decided. The constraints remain the investigator's text; the model's attempt to add a dose target was rejected.",
+        "lastReview": "2026-09-22",
+        "summary": "Four open fixes; the decision is stale after a source correction and the ethics gate is unmet."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour and FAIL at 875fe59 because of the store defect L1.6 (mergeStage overwrites the audit stage patch with the audit entries), not a missing work-order entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.entries": {
+            "min": 13
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "After reopen the route is not the Design stage, so the status text on screen is the stage list's 'review required' (G8, D5); selectionStatus 'stale' requires S10 and S11.",
+      "expect": {
+        "store": {
+          "title": "Pharmacist-led opioid tapering support in a multidisciplinary pain clinic: a prospective observational study",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "design.decisions[-1].selectionStatus": "stale",
+          "scan.claims": {
+            "length": 5
+          },
+          "problem.constraints": "The clinic pharmacist has 0.4 FTE for the pathway and there is no research funding. Tapering pace is agreed with each patient and is never faster than 10 percent of the daily dose per month; the study must not add dose targets, deadlines or reminders that push the pace. Outcomes can be collected only at the existing fortnightly calls and clinic visits.",
+          "audit.openFixes": {
+            "length": 4
+          }
+        },
+        "stage": {
+          "design": "needs-review",
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "review required",
+            "Pharmacist-led opioid tapering support in a multidisciplinary pain clinic: a prospective observational study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "status and selectionStatus 'stale' require S10 (and S11 for the field); actionStatus S11; the claims S13; the constraints kept as typed G11 (S5). One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "needsReview": [
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design"
+            ],
+            "design.decisions[-1].status": "stale",
+            "design.decisions[-1].selectionStatus": "stale",
+            "design.decisions[-1].actionStatus": "blocked",
+            "scan.items[0].keyFindings": "Correction notice from the authors (2026): the after-period figure of 58 percent counted patients who left care before six months as having reached the 25 percent reduction. Counting them as not reduced, 34 percent reached the reduction in the after period, against 37 percent before; the difference in patients leaving care (11 against 24 percent) is unchanged.",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 5
+            },
+            "problem.constraints": "The clinic pharmacist has 0.4 FTE for the pathway and there is no research funding. Tapering pace is agreed with each patient and is never faster than 10 percent of the daily dose per month; the study must not add dose targets, deadlines or reminders that push the pace. Outcomes can be collected only at the existing fortnightly calls and clinic visits.",
+            "problem.rawNeed": "I am the clinical pharmacist in the multidisciplinary pain clinic at Vellmoor General Hospital, a regional hospital serving about 300,000 people. Since July 2025 we have run a tapering support pathway for adults on long-term opioids at 50 mg oral morphine equivalents a day or more who choose to reduce their dose. Each patient gets a written taper plan agreed with the clinic physician, a pharmacist phone call every two weeks, a naloxone kit, and a same-week appointment if withdrawal symptoms or a pain flare make the plan hard to follow. The pace is set with the patient and is paused when symptoms or life events make it unsafe to continue.\n\nThe clinic director wants to know whether the pathway is doing any good before the hospital decides whether to keep the pharmacist post after March 2028. A trial that withholds support from people who want to taper would not be acceptable to us or to our patients, and everyone eligible is already offered the pathway. I am thinking of a prospective observational study that follows everyone who enters the pathway over the next 12 months, for 12 months each, collecting outcomes at the fortnightly calls and the clinic visits we already do.\n\nWhat I want to measure: the change in daily dose at 6 and 12 months, pain interference with daily life, withdrawal symptoms, whether people stay in the pathway, emergency visits, and any overdose. I also want to understand who drops out, because I suspect we lose people who live far from the clinic or who need an interpreter. I need help with outcome definitions, how many patients we need, how to handle people who leave the pathway, and what the research ethics board will want to see."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

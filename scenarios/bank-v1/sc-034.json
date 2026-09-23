@@ -1,6 +1,6 @@
 {
   "id": "sc-034",
-  "version": 1,
+  "version": 2,
   "title": "Pain clinic: prospective follow-up of pharmacist-led opioid tapering, prose scan reply and a corrected source after acceptance",
   "field": "pain-medicine",
   "level": 4,
@@ -12,7 +12,8 @@
     "S5",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear prospective observational question. The need names a prospective observational study, so routing is explicit at create. The problem reply rewrites the investigator's constraints and inserts the very dose target the investigator excluded; under G11 the stored constraints stay as typed and the attempt is an issue (rejected-change) shown on screen (S5 is named because no listed entry defines rejected-change; see the problem step). A fixture search returns seven records with abstracts. The first scan reply is prose, not JSON: nothing is applied, the error is shown and the stage stays incomplete (G5). The second scan reply (shape appraisal, S13) annotates all seven records and records five source-derived claims whose passages are exact substrings of the abstracts; certainty 'low' is the appraisal's own value over inspected records (G1). The design decision rests on claims c1 to c3 and is accepted as a supported positive; the ethics gate is unmet, so the action stays blocked (S11). Only then does the record cited by c1 change its key findings through the store: the decision must become stale in the store, on screen, after reload and in the export, and the completed stages after Scan are flagged for review (G7, G8; S10, A3.2 D24). Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-0x6ov70, 2 ev-1k3nnob, 4 ev-0v35rhd, 6 ev-03yvnbs, 7 ev-04yvuj5), or of titleYearKey(title, year) when there is no DOI (records 3 ev-14cye93, 5 ev-0141ysd). Catches: a model overwriting investigator constraints, a prose reply treated as success, certainty without appraisal, an accepted decision that stays current after its cited source changes, and an export that differs from the store.",
   "inputs": {
@@ -94,7 +95,13 @@
         },
         "screen": {
           "includes": [
-            {"anyOf": ["kept", "refused", "not applied"]},
+            {
+              "anyOf": [
+                "kept",
+                "refused",
+                "not applied"
+              ]
+            },
             "never faster than 10 percent of the daily dose per month"
           ]
         }
@@ -904,7 +911,7 @@
             "c3"
           ],
           "design.decisions[-1].gates[0].status": "unmet",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
           "design.decisions[-1].recommendedFamily": "prospective",
           "completedStages": [
             "problem",
@@ -914,7 +921,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -926,6 +934,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1531,5 +1559,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-034.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

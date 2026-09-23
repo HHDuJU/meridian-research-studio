@@ -1,6 +1,6 @@
 {
   "id": "sc-080",
-  "version": 1,
+  "version": 2,
   "title": "Labour and birth unit: induction scheduling and workload, failed search then two hits, qualitative study",
   "field": "obstetrics",
   "level": 2,
@@ -12,7 +12,8 @@
     "D5",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Level 2 with a thin evidence base. The need names a qualitative design (routing explicit). The first recorded search fails with HTTP 429 (event status 'error', resultCount null, no records). The first scan call (shape discovery) returns five model leads and an explicit null certainty: the leads are stored as unverified model leads without grades (G3, G4), certainty stays unassessed (the null is logged as 'cleared' and resolves to '', D2) and the stage stays incomplete with the honest status 'leads only' (G1, G2; D20). A second search returns only two records, appended after the leads (D1); the second scan call appraises them (shape appraisal) and records three claims, one with high uncertainty, and only then is the stage complete with certainty 'low' over inspected records. The design decision rests on c1 to c3; the ethics gate is unmet (application not yet submitted), so acceptance is a supported selection with the action blocked (A2 item 9). The problem reply echoes the typed constraints byte for byte (no rejected-change, G11). Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: ev-1rbf0qq (DOI-keyed) and ev-0zba2f1 (titleYearKey-keyed). Requires D20 (no completion or certainty over leads only, status text), D1 (leads and records appended, never replaced), S13 (appraisal payload), S11 (selectionStatus, actionStatus, basis) and D5 (status text). Catches: a failed search rendered as empty or successful, completion or certainty from leads, retrieved records replacing or replaced by leads, and an action allowed past an unmet gate.",
   "inputs": {
@@ -838,7 +839,7 @@
             "c2",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
           "design.decisions[-1].gates[1].status": "unmet",
           "design.decisions[-1].gates[1].evidence": {
             "absent": true
@@ -851,7 +852,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -863,6 +865,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1385,5 +1407,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-080.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

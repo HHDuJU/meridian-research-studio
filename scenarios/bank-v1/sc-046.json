@@ -1,6 +1,6 @@
 {
   "id": "sc-046",
-  "version": 1,
+  "version": 2,
   "title": "Anticoagulation clinic: nomogram or computer-assisted warfarin dosing, empty search confirmed, design deferred and unresolved",
   "field": "pharmacy",
   "level": 3,
@@ -11,7 +11,8 @@
     "D2",
     "D5",
     "D20",
-    "S11"
+    "S11",
+    "D10"
   ],
   "notes": "Demanding path whose correct end state is an unresolved family. The need names two designs with intent cues (a retrospective records comparison and a randomised comparison), so routing is unresolved at create; the problem reply returns family null (issue 'cleared', basis stays unresolved, D2). The recorded fixture search returns HTTP 200 with zero records. The only scan reply (shape discovery, no items) proposes certainty 'moderate' and also carries a key investigatorConfirmsEmptySearch: the certainty is dropped with an issue, the key is dropped with an issue and no confirmation is stored, and the stage stays incomplete ('not assessed', no 'moderate certainty' label; G1, G2, D20). The investigator then confirms the empty search on screen, which completes the stage with certainty still unassessed. The design reply recommends null on purpose: design.recommended stays empty and basis unresolved (D2), and its 'defer' decision rests on no claim (nothing was retrieved) and on one gate met by the investigator's approval ACM-2026-14; acceptance is therefore accepted with the action ready, and no family is set (recommendedFamily null). A reload on the Design route follows the acceptance and a reopen follows the last stage. Unlike an empty search followed by a later successful search, this path never retrieves a record and never assigns certainty. No record ids exist in this scenario (the only search is empty). Requires D2 (null family and null recommendation keep basis unresolved), D20 (no certainty and no completion over zero records, the model confirmation key dropped, investigator confirmation, 'not assessed'), S11 (routing at create, recommendedFamily, selectionStatus, actionStatus) and D5 (decision status text). Catches: a certainty label over an empty search, a model field that confirms an empty search, a null recommendation that leaves a stale family or basis, and a defer decision refused or blocked without reason.",
   "inputs": {
@@ -630,7 +631,7 @@
             "isNull": true
           },
           "design.decisions[-1].claimIds": [],
-          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
           "design.alternatives": {
             "length": 3
           },
@@ -642,7 +643,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -664,6 +666,26 @@
       }
     },
     {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
       "do": "accept-decision",
       "which": "latest",
       "note": "The deferral cites no claim (nothing was retrieved) and none of its text is contradicted, so the selection is acceptable (A2 item 9, G7); its only gate is met on the investigator's approval, so the action (the profile) is ready. With a null recommendedFamily, acceptance changes no family and design.basis stays 'unresolved' (sheet A1 item A2). Requires S11 and D5.",
@@ -671,7 +693,7 @@
         "store": {
           "design.decisions[-1].status": "accepted",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].actionStatus": "blocked",
           "design.decisions[-1].recommendedFamily": {
             "isNull": true
           },
@@ -681,7 +703,7 @@
         "screen": {
           "includes": [
             "accepted",
-            "ready"
+            "blocked"
           ]
         }
       }
@@ -707,7 +729,7 @@
           "design.recommended": "",
           "design.basis": "unresolved",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready"
+          "design.decisions[-1].actionStatus": "blocked"
         },
         "screen": {
           "includes": [
@@ -1172,7 +1194,7 @@
               "isNull": true
             },
             "design.decisions[-1].selectionStatus": "accepted",
-            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].actionStatus": "blocked",
             "problem.constraints": "No research funding. Pharmacist time for data work is limited to about four hours a week. Patient-identifiable clinic records may not leave the hospital network. Any change to dosing practice needs approval from the anticoagulation committee."
           }
         },
@@ -1181,5 +1203,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-046.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Decision 1 is expected blocked from its acceptance (step 12) on: the investigator's facts give no research ethics status. Model responses, need and records are unchanged."
 }

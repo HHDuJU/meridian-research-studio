@@ -1,0 +1,1392 @@
+{
+  "id": "sc-073",
+  "version": 1,
+  "title": "Children's hospital ward: high-flow weaning protocol for bronchiolitis, design unresolved until Design, conflicting safety evidence",
+  "field": "pediatrics",
+  "level": 3,
+  "family": "qi-pdsa",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding level 3 path. The need names two designs (a quality improvement project with PDSA cycles, and a before-after cohort comparison), so classifyFamily returns unresolved at create and design.basis is \"unresolved\"; the problem reply keeps the family null (issue \"cleared\" at \"family\") and the basis stays unresolved (D2), with the typed constraints returned unchanged (G11). A reopen after the Questions stage checks that the unresolved routing persists. The fixture search returns seven records, one of them an undated preprint (year null, never guessed; G4) whose appraisal annotation gives methodQuality null and no grade, so the record stays \"unrated\" and \"not assessed\". The evidence conflicts on safety in infants younger than 8 weeks: an observational study reports twice the re-escalation after direct cessation and the undated preprint reports none; the appraisal records this as claim c3 with uncertainty \"high\" and certainty \"low\". The Design stage resolves the family to qi-pdsa (recommendedFamily, S11) with a decision that keeps stepwise weaning for infants under 8 weeks because of c3; acceptance of this supported decision sets family qi-pdsa and basis explicit with actionStatus ready (G7). Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3, 5 and 7; titleYearKey(title, year) for records 2, 4 and 6, record 4 keyed with year \"?\"): ev-0yfbrsq, ev-10hn6tn, ev-1ku3nab, ev-1u8g37a, ev-1wclwdq, ev-1or3tpx, ev-1kuoyl9. Requires D2 (null family leaves basis unresolved), S13 (appraisal path), S11 (routing, recommendedFamily, selection and action status) and D5 (status text). Catches: a defaulted family, a guessed year or score, a conflict flattened into a confident claim, and a resolved family lost on reload.",
+  "inputs": {
+    "need": "I am a pediatric hospitalist at a 180-bed children's hospital. Every winter our general pediatric ward cares for 250 to 300 infants with bronchiolitis, and about 40 percent of them are started on high-flow nasal cannula in the emergency department or on the ward. Starting high flow follows a protocol, but stopping it does not: each attending weans differently. Some step the flow down by 1 litre per kilogram every few hours, others stop it outright once the infant looks comfortable in low oxygen. Our median time on high flow last winter was 52 hours, and families often ask why their baby is still on it when they look well.\n\nA group of us drafted a weaning protocol: once an infant has been stable for two hours on FiO2 of 40 percent or less, high flow is stopped directly with a trial off instead of stepping down, with defined criteria for restarting. Some of our PICU colleagues worry that direct cessation leads to more re-escalation, particularly in younger infants, and the papers they sent us seem to disagree.\n\nI am not sure how to evaluate this. We could run it as a quality improvement project with PDSA cycles over the coming winter, or we could do a before-after cohort comparison of this winter's infants against last winter's using the charts. The outcomes we care about are time on high flow, length of stay, and safety: restarting high flow, PICU transfer, and readmission within 7 days. Nurses and respiratory therapists would do the two-hourly checks, and nights are short-staffed. We have no research funding, and the season starts in about six weeks.",
+    "constraints": "No research funding. The weaning protocol has to start with the winter season in November 2026. Two-hourly checks must fit existing nurse and respiratory therapist staffing, which is thinner at night. Evaluation data must come from the chart plus a short bedside log.",
+    "localFacts": [
+      "The pediatric department's quality committee screened the weaning protocol as quality improvement on 2026-09-15 (screening QC-PED-2026-044).",
+      "The PICU and ward medical leads signed off the draft weaning protocol, version 1.2, on 2026-09-18.",
+      "From November 2025 to March 2026, 276 infants with bronchiolitis were admitted to the ward; 112 received high flow, with a median of 52 hours on high flow.",
+      "Respiratory therapists cover the ward from 07:00 to 23:00; overnight respiratory checks are done by nurses."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "design.basis 'unresolved' at create requires S11 (routing recorded where classifyFamily is called); the need names two designs. problem.constraints holds the typed text (A3 receipt).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a pediatric hospitalist at a 180-bed children's hospital. Every winter our general pediatric ward cares for 250 to 300 infants with bronchiolitis, and about 40 percent of them are started on high-flow nasal cannula in the emergency department or on the ward. Starting high flow follows a protocol, but stopping it does not: each attending weans differently. Some step the flow down by 1 litre per kilogram every few hours, others stop it outright once the infant looks comfortable in low oxygen. Our median time on high flow last winter was 52 hours, and families often ask why their baby is still on it when they look well.\n\nA group of us drafted a weaning protocol: once an infant has been stable for two hours on FiO2 of 40 percent or less, high flow is stopped directly with a trial off instead of stepping down, with defined criteria for restarting. Some of our PICU colleagues worry that direct cessation leads to more re-escalation, particularly in younger infants, and the papers they sent us seem to disagree.\n\nI am not sure how to evaluate this. We could run it as a quality improvement project with PDSA cycles over the coming winter, or we could do a before-after cohort comparison of this winter's infants against last winter's using the charts. The outcomes we care about are time on high flow, length of stay, and safety: restarting high flow, PICU transfer, and readmission within 7 days. Nurses and respiratory therapists would do the two-hourly checks, and nights are short-staffed. We have no research funding, and the season starts in about six weeks.",
+          "problem.constraints": "No research funding. The weaning protocol has to start with the winter season in November 2026. Two-hourly checks must fit existing nurse and respiratory therapist staffing, which is thinner at night. Evaluation data must come from the chart plus a short bedside log.",
+          "completedStages": [],
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a pediatric hospitalist at a 180-bed children's hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis on a general pediatric ward",
+        "subtitle": "Evaluation design not yet settled: improvement cycles or a before-after comparison",
+        "family": null,
+        "statement": "Infants with bronchiolitis spend a median of 52 hours on high-flow nasal cannula on the general pediatric ward, partly because weaning varies between attendings. A drafted protocol stops high flow directly after two stable hours in FiO2 of 40 percent or less. The team needs to know whether the protocol shortens time on high flow and length of stay without more re-escalation, PICU transfer or readmission, particularly in young infants, and how to evaluate it within one season.",
+        "whoAffected": "Infants with bronchiolitis on high flow (about 110 a season), their parents, ward nurses and respiratory therapists who do the checks, and the PICU team that receives infants who deteriorate.",
+        "whatHurts": "Unnecessary hours on high flow delay feeding, holding and discharge, and inconsistent weaning confuses families; stopping too early in a vulnerable infant could lead to re-escalation or PICU transfer.",
+        "currentPractice": "Weaning is at each attending's discretion, stepwise or direct, with no shared criteria for a trial off or for restarting.",
+        "whyNow": "The protocol has been drafted and signed off, the season starts in November, and families keep asking why weaning takes so long.",
+        "constraints": "No research funding. The weaning protocol has to start with the winter season in November 2026. Two-hourly checks must fit existing nurse and respiratory therapist staffing, which is thinner at night. Evaluation data must come from the chart plus a short bedside log.",
+        "patientCenteredGoal": "Infants come off high flow as soon as it is safe, go home sooner and are not harmed by stopping too early, and parents know the criteria for stopping and restarting.",
+        "summary": "Problem framed; the evaluation design is left unresolved between improvement cycles and a before-after comparison until the evidence has been reviewed."
+      },
+      "note": "Family null: issue 'cleared' at 'family' (875fe59) and design.basis stays 'unresolved' (D2). The typed constraints return unchanged, so G11 records nothing.",
+      "expect": {
+        "store": {
+          "title": "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis on a general pediatric ward",
+          "problem.constraints": "No research funding. The weaning protocol has to start with the winter season in November 2026. Two-hourly checks must fit existing nurse and respiratory therapist staffing, which is thinner at night. Evaluation data must come from the chart plus a short bedside log.",
+          "problem.statement": {
+            "includes": "without more re-escalation"
+          },
+          "design.basis": "unresolved",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis on a general pediatric ward"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "high-flow nasal cannula weaning direct cessation stepwise bronchiolitis infants re-escalation",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Direct cessation versus stepwise weaning of high-flow nasal cannula in infants with bronchiolitis: a randomised trial",
+            "authors": "Okonjo-Reyes A, Lindqvist-Barros M, Tamura-Holt E",
+            "year": 2022,
+            "venue": "Pediatric Respiratory Research",
+            "doi": "10.5555/prr.2022.0317",
+            "providerType": "journal-article",
+            "abstract": "We randomly allocated 184 infants aged 1 to 24 months with bronchiolitis on high-flow nasal cannula to direct cessation once stable for two hours in FiO2 of 40 percent or less, or to stepwise weaning of flow. Time on high flow was shorter with direct cessation (median 26 against 44 hours), and length of stay fell by a median of 18 hours. Re-escalation to high flow within 24 hours occurred in 11 percent with direct cessation and 8 percent with stepwise weaning, a difference compatible with chance. Infants younger than 3 months made up 21 percent of participants. No infant required intubation."
+          },
+          {
+            "title": "Re-escalation after abrupt discontinuation of high-flow support in young infants: a multicentre observational study",
+            "authors": "Varela-Nkosi T, Brandstrom-Ade O",
+            "year": 2020,
+            "venue": "Journal of Pediatric Hospital Care",
+            "providerType": "journal-article",
+            "abstract": "Across five pediatric wards, we compared 1,030 infants with bronchiolitis whose high flow was stopped abruptly with those weaned stepwise, according to local practice. Among infants younger than 8 weeks, re-escalation within 48 hours occurred in 24 percent after abrupt discontinuation and 12 percent after stepwise weaning (adjusted odds ratio 2.1). In older infants there was no difference. PICU transfer was rare in both groups. Wards that used abrupt discontinuation also admitted younger and sicker infants, and residual confounding is likely."
+          },
+          {
+            "title": "A ward-based weaning protocol for high-flow nasal cannula in bronchiolitis: a quality improvement report",
+            "authors": "Fitzsimmons-Obi K, Arakawa-Lund P, Mensah-Carlyle J",
+            "year": 2021,
+            "venue": "Hospital Quality and Safety in Children",
+            "doi": "10.5555/hqsc.2021.0145",
+            "providerType": "journal-article",
+            "abstract": "We introduced a nurse-driven weaning protocol for high-flow nasal cannula on a general pediatric ward over three PDSA cycles in one winter. Median time on high flow fell from 49 to 30 hours on the run chart, with a shift sustained for 11 weeks. Length of stay fell from 3.4 to 2.7 days. Readmission within 7 days was unchanged at 3 percent, and PICU transfers fell slightly. Protocol adherence at night was 62 percent compared with 85 percent during the day, and most missed trials off occurred after midnight."
+          },
+          {
+            "title": "Stepwise weaning is not needed after high-flow therapy in bronchiolitis: an individual patient analysis from three hospitals",
+            "authors": "Delgado-Imani S, Wren-Oyelaran B",
+            "year": null,
+            "venue": "Pediatric Respiratory Research preprint series",
+            "providerType": "preprint",
+            "abstract": "Using routinely collected data from three hospitals, we analysed 2,410 episodes of high-flow therapy for bronchiolitis in infants under 12 months, comparing direct cessation with stepwise weaning. After adjustment for age, oxygen requirement and hospital, re-escalation within 24 hours did not differ (8.9 against 9.4 percent), including in infants younger than 8 weeks (13.1 against 12.4 percent). Time on high flow was 20 hours shorter with direct cessation. This preprint has not been peer reviewed, and its listing does not give a year of posting."
+          },
+          {
+            "title": "Parents' experience of high-flow nasal cannula and weaning decisions for infants with bronchiolitis",
+            "authors": "Achterberg-Moyo L, Castellano-Reid H",
+            "year": 2019,
+            "venue": "Family-Centred Nursing",
+            "doi": "10.5555/fcn.2019.0088",
+            "providerType": "journal-article",
+            "abstract": "We held structured conversations with 32 parents of infants treated with high-flow nasal cannula on two pediatric wards. Parents described the high flow as frightening at first and later as a barrier to feeding and holding their baby. Many did not understand why weaning took so long once their baby looked well, and inconsistent explanations from different doctors increased their worry. Parents wanted to be told the criteria for stopping and restarting high flow. Conversations took place on the ward, which may have limited criticism."
+          },
+          {
+            "title": "Two-hourly respiratory assessments at night on pediatric wards: nurse workload during the bronchiolitis season",
+            "authors": "Huang-Mbeki R, Soderberg-Nwosu C",
+            "year": 2024,
+            "venue": "Journal of Pediatric Hospital Care",
+            "providerType": "journal-article",
+            "abstract": "We timed respiratory assessments on three pediatric wards during a bronchiolitis season. A structured assessment took a median of 6 minutes, and nurses caring for four infants on high flow spent about a quarter of each night hour on assessments. Scheduled assessments were missed in 18 percent of night hours and 6 percent of day hours. Missed assessments were most common between 02:00 and 05:00. Wards with a respiratory therapist overnight missed fewer assessments. The authors suggest weaning protocols set assessment frequencies that night staffing can deliver."
+          },
+          {
+            "title": "Variation in high-flow weaning practice among pediatric hospitalists: a national survey",
+            "authors": "Obradovic-Ansah D, Kline-Matsuda F",
+            "year": 2016,
+            "venue": "Pediatric Hospitalist Perspectives",
+            "doi": "10.5555/php.2016.0412",
+            "providerType": "journal-article",
+            "abstract": "We surveyed 412 pediatric hospitalists about how they wean high-flow nasal cannula in bronchiolitis. Forty-six percent used stepwise flow reduction, 31 percent stopped high flow directly once oxygen requirements were low, and 23 percent varied by patient. Only 18 percent of respondents worked in hospitals with a written weaning protocol. Respondents who feared re-escalation most often cited young infant age and night-time staffing. Most respondents said they would follow a local protocol if one existed. The response rate was 44 percent, and hospitalists in teaching hospitals were over-represented."
+          }
+        ]
+      },
+      "note": "Seven records; record 4 is an undated preprint whose year stays null (G4). Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0yfbrsq",
+            "ev-10hn6tn",
+            "ev-1ku3nab",
+            "ev-1u8g37a",
+            "ev-1wclwdq",
+            "ev-1or3tpx",
+            "ev-1kuoyl9"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[3].id": "ev-1u8g37a",
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.items[3].provenance.origin": "retrieval",
+          "scan.items[3].grade": "unrated",
+          "scan.items[0].doi": "10.5555/prr.2022.0317",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Stepwise weaning is not needed after high-flow therapy in bronchiolitis: an individual patient analysis from three hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0yfbrsq",
+            "relevance": 95,
+            "methodQuality": 74,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Direct cessation shortened time on high flow (median 26 against 44 hours) and length of stay by 18 hours; re-escalation 11 against 8 percent, compatible with chance.",
+            "limitations": "Only 21 percent of infants were younger than 3 months; imprecise for rare harms.",
+            "contextTags": [
+              "direct cessation",
+              "time on high flow",
+              "trial"
+            ]
+          },
+          {
+            "id": "ev-10hn6tn",
+            "relevance": 90,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In infants younger than 8 weeks, re-escalation within 48 hours was 24 percent after abrupt discontinuation against 12 percent after stepwise weaning; no difference in older infants.",
+            "limitations": "Practice chosen by ward; wards using abrupt discontinuation admitted younger, sicker infants.",
+            "contextTags": [
+              "young infants",
+              "re-escalation",
+              "confounding"
+            ]
+          },
+          {
+            "id": "ev-1ku3nab",
+            "relevance": 88,
+            "methodQuality": 46,
+            "kind": "qi-report",
+            "grade": "low",
+            "keyFindings": "A nurse-driven weaning protocol in three PDSA cycles was followed by median time on high flow falling from 49 to 30 hours; adherence was 62 percent at night against 85 percent by day.",
+            "limitations": "Single ward, one season, no concurrent comparison.",
+            "contextTags": [
+              "PDSA",
+              "run chart",
+              "night adherence"
+            ]
+          },
+          {
+            "id": "ev-1u8g37a",
+            "relevance": 86,
+            "methodQuality": null,
+            "kind": "preprint",
+            "keyFindings": "In 2,410 episodes, re-escalation within 24 hours did not differ between direct cessation and stepwise weaning, including in infants younger than 8 weeks (13.1 against 12.4 percent).",
+            "limitations": "Not peer reviewed; no posting year; adjustment variables limited to age, oxygen and hospital.",
+            "contextTags": [
+              "preprint",
+              "young infants",
+              "conflicting result"
+            ],
+            "notes": "No grade or quality score assigned: unreviewed methods and no posting year."
+          },
+          {
+            "id": "ev-1wclwdq",
+            "relevance": 62,
+            "methodQuality": 50,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Parents found long weaning confusing and wanted to know the criteria for stopping and restarting high flow.",
+            "limitations": "Two wards; conversations held on the ward.",
+            "contextTags": [
+              "family experience",
+              "communication"
+            ]
+          },
+          {
+            "id": "ev-1or3tpx",
+            "relevance": 72,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Scheduled respiratory assessments were missed in 18 percent of night hours against 6 percent of day hours, most often between 02:00 and 05:00.",
+            "limitations": "Three wards; timing study.",
+            "contextTags": [
+              "night staffing",
+              "assessment workload",
+              "balancing"
+            ]
+          },
+          {
+            "id": "ev-1kuoyl9",
+            "relevance": 50,
+            "methodQuality": 38,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Weaning practice varied widely and only 18 percent of hospitalists had a written weaning protocol.",
+            "limitations": "Response rate 44 percent; self-report.",
+            "contextTags": [
+              "practice variation"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a trial of 184 infants, direct cessation of high flow after two stable hours shortened time on high flow without a clear increase in re-escalation.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0yfbrsq"
+            ],
+            "location": "Abstract, results",
+            "passage": "Time on high flow was shorter with direct cessation (median 26 against 44 hours)",
+            "interpretation": "Supports the direct-cessation protocol for most infants; few very young infants were included.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "A ward weaning protocol tested in PDSA cycles was followed by a fall in median time on high flow from 49 to 30 hours, with lower adherence at night.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1ku3nab"
+            ],
+            "location": "Abstract",
+            "passage": "Median time on high flow fell from 49 to 30 hours on the run chart",
+            "interpretation": "The change can be tested and tracked on a single ward in one season; night delivery is the weak point.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Whether direct cessation increases re-escalation in infants younger than 8 weeks is unresolved: one observational study found twice the re-escalation, and an undated, unreviewed analysis found no difference.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-10hn6tn",
+              "ev-1u8g37a"
+            ],
+            "location": "Abstracts of both records",
+            "passage": "Among infants younger than 8 weeks, re-escalation within 48 hours occurred in 24 percent after abrupt discontinuation and 12 percent after stepwise weaning",
+            "interpretation": "Conflicting and confounded evidence; keep stepwise weaning for infants under 8 weeks until local data exist.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c4",
+            "text": "Scheduled respiratory assessments were missed in 18 percent of night hours on pediatric wards.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1or3tpx"
+            ],
+            "location": "Abstract",
+            "passage": "Scheduled assessments were missed in 18 percent of night hours and 6 percent of day hours.",
+            "interpretation": "Two-hourly checks at night need a realistic schedule and a process measure.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Parents wanted to be told the criteria for stopping and restarting high flow.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1wclwdq"
+            ],
+            "location": "Abstract",
+            "passage": "Parents wanted to be told the criteria for stopping and restarting high flow.",
+            "interpretation": "Share the protocol's criteria with parents at the bedside.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. A trial and a ward improvement report agree that direct cessation after a short stable period shortens time on high flow by roughly 18 to 20 hours without a clear rise in re-escalation. For infants younger than 8 weeks the evidence conflicts: a confounded observational study found re-escalation doubled after abrupt discontinuation, while an undated preprint found no difference; neither settles the question. Night assessments are often missed, and parents want clear criteria. The evidence supports testing the protocol locally for infants aged 8 weeks or older with close safety monitoring.",
+        "gradeOverall": "low",
+        "gradeRationale": "One small trial with few young infants, one improvement report and conflicting observational evidence for the youngest infants; low certainty overall, very uncertain for infants under 8 weeks.",
+        "summary": "Seven retrieved records appraised; five claims recorded, one of them with high uncertainty because the evidence conflicts."
+      },
+      "note": "Applied by the appraisal mapper on the production scan path (S13). The preprint's annotation carries methodQuality null and no grade key, so it stays null and 'unrated' without an issue (G4).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[3].grade": "unrated",
+          "scan.items[3].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[3].relevance": 86,
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[2].id": "c3",
+          "scan.claims[2].uncertainty": "high",
+          "scan.claims[2].sourceIds": [
+            "ev-10hn6tn",
+            "ev-1u8g37a"
+          ],
+          "scan.claims[0].uncertainty": "moderate",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unrated",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "180-bed children's hospital, general pediatric ward",
+          "bronchiolitis season November to March",
+          "respiratory therapists 07:00 to 23:00 only",
+          "attending-by-attending weaning practice"
+        ],
+        "reading": "Time on high flow is driven less by the infant than by the weaning habit of the attending on duty. Retrieved evidence supports direct cessation for most infants, but the question that worries the PICU team, safety in infants under 8 weeks, is exactly where the evidence conflicts (claim c3). The night is the weak link: checks are done by nurses alone and are often missed elsewhere (claim c4), which could both delay trials off and delay spotting re-escalation.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Direct-cessation weaning protocol",
+            "kind": "framework",
+            "detail": "Trial off after two stable hours in FiO2 40 percent or less."
+          },
+          {
+            "id": "n2",
+            "label": "Time on high flow",
+            "kind": "outcome",
+            "detail": "Median 52 hours last winter."
+          },
+          {
+            "id": "n3",
+            "label": "Re-escalation and PICU transfer",
+            "kind": "outcome",
+            "detail": "Safety measures."
+          },
+          {
+            "id": "n4",
+            "label": "Trial evidence for direct cessation",
+            "kind": "rct",
+            "detail": "26 against 44 hours (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Conflict on infants under 8 weeks",
+            "kind": "gap",
+            "detail": "Doubled re-escalation in one study, none in an undated preprint (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Night checks by nurses",
+            "kind": "context",
+            "detail": "Often missed elsewhere (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Parents",
+            "kind": "stakeholder",
+            "detail": "Want clear criteria (claim c5)."
+          },
+          {
+            "id": "n8",
+            "label": "PICU team",
+            "kind": "stakeholder",
+            "detail": "Receives infants who deteriorate."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "expected to shorten"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "supports"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "leaves uncertain for young infants"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "limits night delivery of"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "can delay recognition of"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "need explanation of"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "responds to"
+          }
+        ],
+        "summary": "Map links the protocol to time on high flow and safety, with the young-infant conflict and night checks marked."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Safety of direct cessation in infants under 8 weeks is unresolved",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The two relevant sources disagree and one is confounded, the other undated and unreviewed (claim c3).",
+            "opportunity": "Keep stepwise weaning for infants under 8 weeks and collect their outcomes descriptively."
+          },
+          {
+            "id": "g2",
+            "title": "Night delivery of two-hourly checks",
+            "kind": "implementation",
+            "severity": "high",
+            "whyItMatters": "Night checks are done by nurses alone and are often missed elsewhere (claim c4).",
+            "opportunity": "Track trial-off timing and missed checks at night as process measures and adapt between cycles."
+          },
+          {
+            "id": "g3",
+            "title": "Last winter is a weak comparison",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Season severity, viral mix and staffing change from year to year, so a simple before-after comparison could mislead.",
+            "opportunity": "Use weekly run charts with last winter as baseline points and annotate season changes."
+          },
+          {
+            "id": "g4",
+            "title": "Families not told the weaning criteria",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Parents with limited English or low health literacy are least likely to get consistent explanations.",
+            "opportunity": "Give a plain-language criteria card, translated, at the start of high flow."
+          },
+          {
+            "id": "g5",
+            "title": "Readmissions to other hospitals are invisible",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Families living far away may return to a local hospital.",
+            "opportunity": "Ask families at a 7-day phone call whether the infant was seen elsewhere."
+          }
+        ],
+        "errorsFound": [
+          "The papers circulated by the PICU team were read as showing harm in all young infants; one is confounded by ward practice and the other finds no difference."
+        ],
+        "reevaluation": "The gaps favour testing the protocol in improvement cycles for infants aged 8 weeks or older, with safety balancing measures, night process measures and stepwise weaning kept for younger infants.",
+        "summary": "Five gaps: the young-infant conflict, night delivery, a weak historical comparison, family communication and invisible readmissions."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Safety of direct cessation in infants under 8 weeks is unresolved"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "For infants aged 8 weeks or older, the direct-cessation protocol will reduce the weekly median time on high flow from about 52 to 32 hours or less during the 2026 to 2027 season, with re-escalation within 24 hours staying at or below 12 percent.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 85,
+            "feasibility": 80,
+            "parsimony": 85,
+            "rationale": "Supported by a trial and a ward report (claims c1, c2); the age limit follows the unresolved conflict (claim c3).",
+            "risks": "Missed night checks; a severe season could lengthen stays regardless."
+          },
+          {
+            "id": "h2",
+            "statement": "Night-time trials off will lag day-time trials off by more than four hours unless the protocol sets a fixed 22:00 assessment.",
+            "novelty": 45,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Night checks are often missed (claim c4).",
+            "risks": "Adds a scheduled check at a busy time."
+          },
+          {
+            "id": "h3",
+            "statement": "Direct cessation is as safe in infants under 8 weeks as in older infants.",
+            "novelty": 60,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 30,
+            "parsimony": 50,
+            "rationale": "This is the contested question (claim c3), but one ward in one season will see too few young infants on high flow to answer it.",
+            "risks": "Testing it here would expose the youngest infants to an unresolved risk."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected with an age limit, h3 recorded and not pursued on this ward."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[2].feasibility": 30,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "On the general pediatric ward, will a direct-cessation weaning protocol for infants aged 8 weeks or older with bronchiolitis, tested in PDSA cycles from November 2026 to March 2027, reduce the weekly median time on high flow from about 52 to 32 hours or less while re-escalation within 24 hours stays at or below 12 percent?",
+            "framework": "QI-aim",
+            "population": "Infants aged 8 weeks or older with bronchiolitis on high-flow nasal cannula on the ward",
+            "intervention": "Direct-cessation protocol with a trial off after two stable hours in FiO2 40 percent or less",
+            "comparator": "Weekly baseline points from the 2025 to 2026 season",
+            "outcome": "Weekly median hours on high flow; balancing: re-escalation, PICU transfer, 7-day readmission",
+            "time": "November 2026 to March 2027",
+            "setting": "General pediatric ward, 180-bed children's hospital"
+          }
+        ],
+        "finer": "Feasible within staffing and the season; interesting to hospitalists, PICU and families; novel locally; ethical as QI with an age limit and stopping rules; relevant to every winter admission.",
+        "summary": "One SMART QI aim with explicit safety balancing measures."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work (6 of 13 stages): the routing is still unresolved until the Design stage (D2, S11).",
+      "expect": {
+        "store": {
+          "title": "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis on a general pediatric ward",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ],
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "scan.claims[2].uncertainty": "high",
+          "scan.items[3].year": {
+            "isNull": true
+          }
+        },
+        "stage": {
+          "questions": "complete",
+          "design": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis on a general pediatric ward"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-pdsa",
+        "rationale": "The aim is to improve weaning on one ward within one season while adapting the protocol, especially its night-time delivery. Improvement cycles with weekly run charts suit this: the change is supported for infants aged 8 weeks or older (c1, c2), night delivery needs adapting between cycles (c4), and safety is watched with balancing measures. A before-after cohort comparison of two winters was considered and refused because season severity and staffing differ between years and a fixed protocol could not be adapted. The conflicting evidence on younger infants (c3) is handled by keeping stepwise weaning for them. Reporting follows SQUIRE 2.0.",
+        "alternatives": [
+          "Before-after cohort comparison of the 2025 to 2026 and 2026 to 2027 seasons (refused: season severity and staffing confound it, and the protocol could not be adapted)",
+          "Direct cessation for all ages (refused: unresolved safety evidence under 8 weeks, claim c3)",
+          "Leave weaning to individual attendings (the status quo that produces 52-hour medians)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0",
+          "Model for Improvement"
+        ],
+        "whyNotMoreComplex": "A multi-site trial would be needed to settle the young-infant question; this ward's question is local improvement, which run charts and balancing measures can answer in one season.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Introduce the direct-cessation weaning protocol for infants aged 8 weeks or older in PDSA cycles from November 2026 to March 2027, keeping stepwise weaning for younger infants, with a weekly run chart of time on high flow and re-escalation, PICU transfer and 7-day readmission as balancing measures.",
+          "question": "Should the ward adopt a direct-cessation weaning protocol for infants with bronchiolitis, and for which infants?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Direct cessation shortened time on high flow without a clear rise in re-escalation in a trial and a ward report.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Re-escalation within 24 hours among infants aged 8 weeks or older exceeds 15 percent over any four-week period.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Quality committee screening of the protocol as quality improvement",
+              "status": "met",
+              "evidence": "Screening QC-PED-2026-044 dated 2026-09-15, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Sign-off of the weaning protocol by the PICU and ward medical leads",
+              "status": "met",
+              "evidence": "Protocol version 1.2 signed off 2026-09-18, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Before-after cohort comparison of two seasons",
+            "Direct cessation for all ages"
+          ],
+          "note": "Rests on ledger claims c1, c2 and c4 for the change and on c3 (high uncertainty) for the age limit; both gates are met on investigator-supplied records."
+        },
+        "summary": "Quality improvement with PDSA cycles recommended; the design is resolved here, and the decision limits the protocol to infants aged 8 weeks or older."
+      },
+      "note": "The family is resolved at Design: recommended and recommendedFamily qi-pdsa (recommendedFamily and selectionStatus require S11; status text D5).",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-pdsa",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].recommendedFamily": "qi-pdsa",
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: every cited claim is in the ledger and rests on retrieved records (the high-uncertainty claim is cited for the age limit, not as proof of safety) and both gates are met, so accepted and ready; acceptance applies the family (G7; S11 for basis and status fields, D5 for text).",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "family": "qi-pdsa",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Ward-level QI project over the 2026 to 2027 bronchiolitis season: weekly baseline points from the previous season's charts, then three PDSA cycles introducing and refining a direct-cessation weaning protocol for infants aged 8 weeks or older.",
+        "population": "Infants aged 8 weeks or older with bronchiolitis on high-flow nasal cannula on the general pediatric ward; infants under 8 weeks continue stepwise weaning and are followed descriptively.",
+        "exposure": "Once stable for two hours in FiO2 of 40 percent or less, high flow is stopped with a trial off; restart criteria are fixed in protocol version 1.2. A plain-language criteria card is given to parents.",
+        "procedures": "Cycle 1 (November): day shifts only. Cycle 2 (December to January): 24 hours, with a fixed 22:00 assessment added if night trials off lag. Cycle 3 (February to March): refinements from cycle reviews. A bedside log records trial-off time, restarts and missed checks; the weekly run chart is reviewed at the ward huddle; the PICU lead reviews every re-escalation.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Time on high flow",
+            "measure": "Weekly median hours from high-flow start to final stop for infants aged 8 weeks or older",
+            "timing": "Weekly, baseline season and November to March",
+            "why": "The outcome families notice and the protocol targets (claims c1, c2).",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "balancing",
+            "name": "Re-escalation within 24 hours",
+            "measure": "Proportion of trials off followed by restarting high flow within 24 hours",
+            "timing": "Weekly",
+            "why": "The main safety concern.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "PICU transfer or readmission within 7 days",
+            "measure": "Count of PICU transfers within 48 hours of stopping and readmissions within 7 days of discharge",
+            "timing": "Weekly, with a 7-day phone call",
+            "why": "Serious harms the protocol must not increase.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Protocol adherence",
+            "measure": "Proportion of eligible infants with a trial off within two hours of meeting criteria, by day and night",
+            "timing": "Weekly",
+            "why": "Night delivery is the weak link (claim c4).",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "secondary",
+            "name": "Length of stay",
+            "measure": "Weekly median hours from ward admission to discharge",
+            "timing": "Weekly",
+            "why": "Shorter high flow should shorten stays.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 100 to 120 infants on high flow in a season; the bedside log adds under a minute per check; the run chart uses chart data the ward already records.",
+        "biasMitigation": [
+          "Operational definitions of trial off and restart fixed before November",
+          "Run chart annotated with viral season peaks and staffing changes",
+          "Every re-escalation reviewed by the PICU lead",
+          "Infants under 8 weeks followed descriptively as a separate group"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Season severity",
+            "severity": "watch",
+            "note": "A severe season lengthens stays whatever the protocol; annotated on the chart."
+          },
+          {
+            "id": "b2",
+            "label": "Selective use of the protocol",
+            "severity": "watch",
+            "note": "Attendings may exclude sicker infants; exclusions are logged with reasons."
+          },
+          {
+            "id": "b3",
+            "label": "Unmeasured readmissions elsewhere",
+            "severity": "watch",
+            "note": "7-day phone call asks about other hospitals."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "Two safety balancing measures carry the stopping rule"
+          ],
+          "simplestPath": "One protocol, one run chart, safety balancing measures, three cycles."
+        },
+        "theoreticalFramework": "Model for Improvement; no additional framework.",
+        "summary": "Three PDSA cycles with one primary outcome, two safety balancing measures, one process measure and length of stay."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].role": "balancing",
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Weekly run charts of time on high flow with pre-specified rules, plus p-charts and a stopping rule for safety balancing measures.",
+        "sampleSize": "About 5 to 8 infants aged 8 weeks or older start high flow each week in season, about 90 over 20 weeks. Weekly medians from so few infants are noisy, so the chart uses two-week medians when a week has fewer than four infants. A fall from about 52 to 32 hours would give a shift of six or more points below the baseline median within the second cycle. For safety, 90 trials off give a 95 percent upper limit of about 18 percent if 10 percent re-escalate; the stopping rule (more than 15 percent over any four weeks, at least 12 trials off) is reviewed by the PICU lead rather than tested.",
+        "primaryAnalysis": "Run chart of median hours on high flow with the baseline season's median as centre line and shift, trend and runs rules fixed in advance.",
+        "secondaryAnalysis": "p-chart of re-escalation; counts of PICU transfers and 7-day readmissions; run chart of length of stay; adherence by day and night; descriptive outcomes for infants under 8 weeks on stepwise weaning.",
+        "missingData": "Infants with missing stop times are traced in the chart by the ward clerk; any still missing are reported, not imputed.",
+        "multiplicity": "One outcome measure carries the aim; balancing measures drive the stopping rule, not significance tests.",
+        "software": "Spreadsheet run chart template kept by the ward's QI nurse and checked by the hospitalist lead.",
+        "overfittingGuards": [
+          "Run chart and stopping rules fixed before November",
+          "Two-week medians used whenever a week has fewer than four infants",
+          "No subgroup testing beyond the age groups fixed by the protocol"
+        ],
+        "summary": "About 90 infants over the season; run chart rules for the aim and a pre-specified safety stopping rule."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "stopping rule"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "The protocol changes the timing of a routine step; the main risk is re-escalation or deterioration after stopping, mitigated by the age limit, restart criteria, PICU review of every re-escalation and a stopping rule.",
+        "consent": "Screened as quality improvement; parents receive the criteria card and are told the ward is using a new weaning protocol; they can ask for stepwise weaning and the attending may decline a trial off for clinical reasons.",
+        "data": "The bedside log records bed, date, times and restarts; the run chart holds no names; charts are read by ward staff with routine access.",
+        "equity": "PROGRESS-Plus: families with limited English, low health literacy or who live far from the hospital may understand less or return elsewhere; the criteria card is translated into the two most common languages and the 7-day call uses interpreters.",
+        "effectiveness": "Success is a sustained shift in time on high flow for infants aged 8 weeks or older without breaching the safety stopping rule.",
+        "efficiency": "Uses existing staff and chart data; about a minute per check for the log.",
+        "costs": "Printing of criteria cards; staff time within normal shifts.",
+        "grants": "None needed; a multi-site study of infants under 8 weeks would need external funding.",
+        "partnerships": "PICU lead, respiratory therapy supervisor, night nurse representatives and two parents from the family advisory council.",
+        "rebPath": "Screened as quality improvement by the pediatric quality committee (QC-PED-2026-044); publication will follow SQUIRE 2.0 and the journal's QI policy.",
+        "limitations": "Single ward, one season, historical baseline; the young-infant question is not answered.",
+        "summary": "QI with an age limit, a safety stopping rule and translated criteria cards for families."
+      },
+      "expect": {
+        "store": {
+          "ethics.risks": {
+            "includes": "stopping rule"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two parents from the family advisory council review the criteria card; a night nurse and a respiratory therapist join each cycle review; the PICU lead attends monthly.",
+        "socialListening": "No social media listening; the ward's family feedback cards from the last two winters are read for mentions of oxygen or high flow.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Waiting to hold the baby",
+            "quote": "Composite paraphrase: She looked well for a whole day, but every doctor said something different about when the tubes could come off.",
+            "implication": "Give parents the criteria card at the start of high flow.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Night-time trials off",
+            "quote": "Composite paraphrase: At three in the morning with four babies on flow, I am not starting a trial off unless someone tells me to.",
+            "implication": "Measure night adherence and consider a fixed 22:00 assessment.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "PICU caution",
+            "quote": "Composite paraphrase: The tiny ones are the ones who come back to us; I would not stop them cold.",
+            "implication": "Keep stepwise weaning under 8 weeks and review every re-escalation.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Coming back",
+            "quote": "Composite paraphrase: We live an hour away; if he got worse we would go to our local hospital, not back to you.",
+            "implication": "Ask about attendance elsewhere in the 7-day call.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on waiting, night delivery, PICU caution and distance."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].theme": "PICU caution",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis: a ward quality improvement project",
+        "abstract": "Problem: infants with bronchiolitis spent a median of 52 hours on high flow on a general pediatric ward, with weaning varying by attending. Intervention: a direct-cessation protocol for infants aged 8 weeks or older, tested in three PDSA cycles. Measures: weekly median time on high flow, with re-escalation, PICU transfer and 7-day readmission as balancing measures. Results will be reported after the season.",
+        "introduction": "Direct cessation shortened time on high flow in a trial and a ward report, but the evidence for infants younger than 8 weeks conflicts, and night delivery of weaning checks is unreliable.",
+        "methods": "Model for Improvement with the previous season as baseline and three cycles from November 2026 to March 2027. Run chart rules and a safety stopping rule were fixed in advance; infants under 8 weeks continued stepwise weaning and were followed descriptively. The project was screened as quality improvement.",
+        "results": "No data have been collected yet. The report will present the run chart, the balancing measures, night adherence and the descriptive results for infants under 8 weeks.",
+        "discussion": "The discussion will weigh any shift in time on high flow against the safety measures and state what the ward keeps; it will not claim safety for infants under 8 weeks.",
+        "limitations": "Single ward, one season, historical baseline, and small numbers for safety outcomes.",
+        "conclusion": "To be written after the season; limited to infants aged 8 weeks or older on this ward.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE-structured draft with results left empty until the season ends."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.discussion": {
+            "includes": "will not claim safety for infants under 8 weeks"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The young-infant safety question rests on a high-uncertainty claim; do not extend the protocol under 8 weeks without new evidence",
+          "Check whether the undated preprint has been published before the report cites it",
+          "Confirm the bedside log fields with night nurses before November"
+        ],
+        "improvementNotes": "The design stayed unresolved through Questions and was settled at Design on the evidence and the season's constraints. The preprint's year and quality score were left unknown rather than guessed.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the young-infant limit, the undated preprint and the night log."
+      },
+      "note": "The audit stage's own fields fail at 875fe59 because mergeStage overwrites the audit patch (A3 L1.6); they state the correct behaviour.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Status fields are checked in the export; this route shows the audit stage.",
+      "expect": {
+        "store": {
+          "title": "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis on a general pediatric ward",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "qi-pdsa",
+          "design.basis": "explicit",
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.claims[2].uncertainty": "high"
+        },
+        "screen": {
+          "includes": [
+            "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis on a general pediatric ward"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis on a general pediatric ward",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "family": "qi-pdsa",
+          "problem.constraints": "No research funding. The weaning protocol has to start with the winter season in November 2026. Two-hourly checks must fit existing nurse and respiratory therapist staffing, which is thinner at night. Evaluation data must come from the chart plus a short bedside log.",
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Direct-cessation weaning of high-flow nasal cannula for infants with bronchiolitis on a general pediatric ward"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "basis, recommendedFamily, selectionStatus and actionStatus require S11; claims S13. One click, one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "qi-pdsa",
+            "design.basis": "explicit",
+            "design.decisions[-1].recommendedFamily": "qi-pdsa",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "scan.items[3].year": {
+              "isNull": true
+            },
+            "scan.items[3].methodQuality": {
+              "isNull": true
+            },
+            "scan.items[3].grade": "unrated",
+            "scan.claims[2].uncertainty": "high",
+            "scan.gradeOverall": "low"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

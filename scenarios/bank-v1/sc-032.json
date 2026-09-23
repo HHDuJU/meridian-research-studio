@@ -1,6 +1,6 @@
 {
   "id": "sc-032",
-  "version": 1,
+  "version": 2,
   "title": "Children's hospital transition clinic: narrative review of readiness assessment, markdown scan reply refused, cited prediction study corrected",
   "field": "pediatrics",
   "level": 4,
@@ -12,7 +12,8 @@
     "D20",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear narrative review (the need names a narrative review; routing explicit). A fixture search returns eight records. The first scan reply is markdown with bullet points and a table of evidence strengths, not JSON: nothing is applied, an error is shown, the stage stays incomplete and no certainty appears (G5, G1); a reload right after confirms that nothing from the refused reply was stored. A valid second call (shape appraisal) annotates the eight records and records claims c1 to c4. The Design decision rests on claims c1 to c3 and both gates are met, so acceptance is a supported positive (accepted, ready). Immediately afterwards the key findings of the prediction study behind claim c2 are replaced by an author correction that reverses its main finding: the decision must become stale in the store, on screen and after reload (route on Design) and in the export, and the completed stages after Scan are flagged for review; stages drafted later are not. The problem reply restates the typed constraints verbatim (G11 not engaged). Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator: DOI-based for records 1, 2, 4 to 8 (ev-1hhvt97, ev-1e32fnu, ev-13z6qiq, ev-03gr0xa, ev-1hq2lku, ev-0gd7l5a, ev-0segth8) and title and year for record 3 (ev-1po6kms). Requires S13 (appraisal dispatch), S10 (evidence revision covering keyFindings; amendment A3.2 D24), S11 (selectionStatus, actionStatus), D20 ('not assessed' shown for the unassessed scan) and D5 (status text). Catches: markdown treated as a structured reply, anything persisted from a refused reply, and an accepted decision left current after the finding it cites was reversed.",
   "inputs": {
@@ -861,8 +862,8 @@
             "c2",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -871,13 +872,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1379,5 +1425,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-032.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1. Model responses, need and records are unchanged."
 }

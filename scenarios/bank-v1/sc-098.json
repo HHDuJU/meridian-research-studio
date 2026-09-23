@@ -1,6 +1,6 @@
 {
   "id": "sc-098",
-  "version": 1,
+  "version": 2,
   "title": "Hospital network language services: umbrella review of interpreter use, invented landmark lead and invalid lead values",
   "field": "health-services",
   "level": 4,
@@ -11,7 +11,8 @@
     "D1",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on an explicit umbrella review need (overview of reviews named; the need avoids design words for the reviews it mentions). A fixture search returns seven records, six reviews and one methods study; the appraisal (scan call 1) assigns 'low' certainty. The investigator then asks for more leads: the discovery reply (scan call 2) omits certainty, rationale and synthesis, so the appraisal's values stay, and brings five leads. The first is an invented 'landmark' equivalence trial with a DOI under the reserved 10.5555/ prefix, grade high and a 'settles the question' note: it must be stored with origin model, status unverified and no check, and stay so after a reload and in the export; the 'landmark' label is only a model label (G3). Two leads carry refused values: relevance 140 (stored null, 'out-of-range') and year false (stored null, 'invalid-type') (G4). The leads are appended after the seven records, which keep their appraisal (D1). The decision rests on four claims from retrieved records and never on the landmark lead; both gates are met, so the acceptance is a supported positive. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 3, 4, 5, 6 (ev-1i4fr06, ev-1a418qz, ev-18k8ize, ev-1o1sspd, ev-1jvwb43, ev-0mrtczi); the titleYearKey(title, year) hash for record 7 (ev-0la18qi). Requires D1 (leads appended, records kept), S13 (appraisal payload), S11 (selectionStatus, actionStatus) and D5 (status text; badge from provenance per A3 L1.5). Catches: a model 'landmark' label or confident DOI turned into verification, a later discovery reply erasing an appraisal's certainty or records, out-of-range or wrongly typed values stored, and an untraceable study entering a decision.",
   "inputs": {
@@ -1019,13 +1020,60 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1511,5 +1559,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-098.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1. Model responses, need and records are unchanged."
 }

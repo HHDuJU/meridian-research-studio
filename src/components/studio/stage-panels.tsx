@@ -15,7 +15,8 @@ import { toast } from "sonner";
 import { chart } from "@/lib/chart-tokens";
 import { familyOf } from "@/lib/stages";
 import { emptySearchConfirmationValid, scanHasRetrievedRecord, scanMayComplete } from "@/lib/defaults";
-import { evaluateDecision, decisionIsSupported } from "@/lib/evidence/decision";
+import { approvalReview, evaluateDecision, decisionIsSupported } from "@/lib/evidence/decision";
+import { BODY_LABEL, DETERMINATION_GATE, NO_WORK_REASON, type AuthorityBody } from "@/lib/evidence/authority";
 import { checkClaim, localFactEstablished, type LedgerCheckStatus } from "@/lib/evidence/grounding";
 import { checkIdentities, searchLiterature } from "@/lib/evidence-server";
 import type { LiveProvider } from "@/lib/evidence/live";
@@ -623,7 +624,7 @@ function DesignPanel({ study }: { study: Study }) {
                 return (
               <li key={dec.id} data-meridian-decision={dec.id} className="rounded-lg border border-border p-3">
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  {dec.kind} · selection {selection} · action {dec.actionStatus ?? ev.actionStatus} · {dec.actor}
+                  {dec.kind} · selection {selection} · action {ev.actionStatus} · {dec.actor}
                 </p>
                 <p className="mt-1 text-sm leading-relaxed">{dec.statement}</p>
                 {!support.ok ? (
@@ -639,6 +640,7 @@ function DesignPanel({ study }: { study: Study }) {
                 {ev.blockers.length ? (
                   <p className="mt-1 text-xs text-muted-foreground">{ev.blockers.join("; ")}</p>
                 ) : null}
+                <ApprovalPanel study={study} decisionIndex={idx} />
                 {dec.gates.length ? <GateList study={study} decisionIndex={idx} /> : null}
                 {selection === "proposed" || acceptDisabled ? (
                   <div className="mt-2 flex gap-2">
@@ -1187,6 +1189,151 @@ function LiveSearch({ study }: { study: Study }) {
 }
 
 
+/**
+ * D10 / S5: where the decision stands on approvals. The investigator records the research ethics status of
+ * the work (and settles approvals their own facts leave open); the model's statements about approvals are
+ * listed to check and change nothing by themselves.
+ */
+function ApprovalPanel({ study, decisionIndex }: { study: Study; decisionIndex: number }) {
+  const addGate = useStudio((st) => st.addGate);
+  const dec = study.design.decisions[decisionIndex];
+  if (!dec) return null;
+  const review = approvalReview(dec, study);
+  if (!review.ethicsRecordMissing && !review.openItems.length && !review.modelStatements.length) return null;
+  return (
+    <div className="mt-2 space-y-1.5" data-meridian-approvals="">
+      {review.ethicsRecordMissing ? (
+        <div className="rounded-md border border-amber-300 bg-amber-50/40 p-2 text-xs" data-meridian-ethics-record-missing="">
+          <span className="block">
+            Research ethics status of this work: not recorded. Only you or the review board can say whether this work is approved or
+            needs no review.
+          </span>
+          {review.approvalFacts.length ? (
+            <span className="mt-1 block text-muted-foreground" data-meridian-approval-facts="">
+              Your facts about approvals, to check before you record:
+              <span className="block">{review.approvalFacts.map((f) => `"${f}"`).join(" ")}</span>
+            </span>
+          ) : null}
+          <RecordForm study={study} decisionIndex={decisionIndex} body="ethics" suggestion={review.suggestedEthicsRecord} suggestionSource={review.suggestionSource} />
+          {review.leadsToNoWork ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="mt-1"
+              data-meridian-record-no-work=""
+              onClick={() => {
+                const r = addGate(study.id, decisionIndex, DETERMINATION_GATE.ethics, "not-required", NO_WORK_REASON);
+                if (!r.ok) toast.warning(r.reason ?? "Refused");
+              }}
+            >
+              No people, records or practice are involved
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
+      {review.openItems.map((it, k) => (
+        <OpenItemForm key={it.text} study={study} decisionIndex={decisionIndex} text={it.text} index={k} />
+      ))}
+      {review.modelStatements.length ? (
+        <div className="rounded-md border border-border p-2 text-xs" data-meridian-model-statements="">
+          <span className="block text-muted-foreground">
+            The model&apos;s text says the following about approvals and local facts. Check it: it is not a record and changes nothing
+            by itself.
+          </span>
+          <ul className="mt-1 list-disc space-y-0.5 pl-4">
+            {review.modelStatements.map((m) => (
+              <li key={`${m.kind}:${m.text}`} data-meridian-model-statement={m.kind}>
+                {m.text}
+                {m.kind === "authority" ? <span className="text-muted-foreground"> ({m.bodies.map((b) => BODY_LABEL[b]).join(", ")})</span> : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/** One of the investigator's own facts that leaves an approval open: given (with the reference) or not concerning this decision (with the reason). */
+function OpenItemForm({ study, decisionIndex, text, index }: { study: Study; decisionIndex: number; text: string; index: number }) {
+  const settle = useStudio((st) => st.settleOpenItem);
+  const [note, setNote] = useState("");
+  const act = (how: "given" | "aside") => {
+    const r = settle(study.id, decisionIndex, text, how, note);
+    if (!r.ok) toast.warning(r.reason ?? "Refused");
+    else setNote("");
+  };
+  return (
+    <div className="rounded-md border border-amber-300 bg-amber-50/40 p-2 text-xs" data-meridian-open-item={index} data-meridian-open-item-text={text}>
+      <span className="block">Your facts leave this open: &quot;{text}&quot;</span>
+      <span className="mt-1 flex gap-1.5">
+        <input
+          className="w-full rounded border border-border bg-background px-1.5 py-1"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="The reference that shows it was given, or why it does not concern this decision"
+          data-meridian-open-item-input={index}
+        />
+        <Button type="button" size="sm" disabled={!note.trim()} data-meridian-item-given={index} onClick={() => act("given")}>
+          Given
+        </Button>
+        <Button type="button" size="sm" variant="outline" disabled={!note.trim()} data-meridian-item-aside={index} onClick={() => act("aside")}>
+          Not for this decision
+        </Button>
+      </span>
+    </div>
+  );
+}
+
+/** The investigator records, for one kind of body, the approval's reference or why it is not required. */
+function RecordForm({
+  study,
+  decisionIndex,
+  body,
+  suggestion,
+  suggestionSource,
+}: {
+  study: Study;
+  decisionIndex: number;
+  body: AuthorityBody;
+  suggestion?: string;
+  suggestionSource?: "gate" | "fact";
+}) {
+  const addGate = useStudio((st) => st.addGate);
+  const [text, setText] = useState("");
+  const save = (status: "met" | "not-required") => {
+    const r = addGate(study.id, decisionIndex, DETERMINATION_GATE[body], status, text);
+    if (!r.ok) toast.warning(r.reason ?? "Refused");
+    else setText("");
+  };
+  return (
+    <span className="mt-1 block" data-meridian-record-form={body}>
+      <span className="flex gap-1.5">
+        <input
+          className="w-full rounded border border-border bg-background px-1.5 py-1"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder={`${BODY_LABEL[body]}: the approval's reference, or why it is not required`}
+          data-meridian-record-input={body}
+        />
+        <Button type="button" size="sm" disabled={!text.trim()} data-meridian-record-approved={body} onClick={() => save("met")}>
+          Record: approved
+        </Button>
+        <Button type="button" size="sm" variant="outline" disabled={!text.trim()} data-meridian-record-not-required={body} onClick={() => save("not-required")}>
+          Record: not required
+        </Button>
+      </span>
+      {suggestion ? (
+        <button type="button" className="mt-0.5 text-left text-muted-foreground underline" data-meridian-record-suggestion={body} onClick={() => setText(suggestion)}>
+          {suggestionSource === "gate" ? "Use the gate you confirmed (the model's words): " : "Use your fact: "}
+          {suggestion}
+        </button>
+      ) : null}
+    </span>
+  );
+}
+
 /** Gates of one decision. Only the investigator can mark a gate met by hand, with the evidence. */
 function GateList({ study, decisionIndex }: { study: Study; decisionIndex: number }) {
   const setGate = useStudio((st) => st.setGate);
@@ -1206,7 +1353,33 @@ function GateList({ study, decisionIndex }: { study: Study; decisionIndex: numbe
               {g.setBy ? ` (${g.setBy === "investigator" ? "you" : "model"})` : ""}
             </span>
           ) : null}
-          {g.grounding && g.setBy !== "investigator" ? <span className="block text-muted-foreground">{g.grounding}</span> : null}
+          {g.grounding && g.setBy !== "investigator" && !g.proposal ? <span className="block text-muted-foreground">{g.grounding}</span> : null}
+          {g.proposal && g.status === "unknown" && g.setBy !== "investigator" ? (
+            <span className="mt-1 block rounded border border-border bg-background p-1.5" data-meridian-gate-proposal={g.id}>
+              <span className="block">The model proposes this gate is met: {g.proposal.evidence}</span>
+              {g.proposal.supportingFacts.length ? (
+                <span className="block text-muted-foreground">Your fact it points to: {g.proposal.supportingFacts.join(" | ")}</span>
+              ) : (
+                <span className="block text-muted-foreground">None of your local facts or constraints says this.</span>
+              )}
+              {g.proposal.concerns.length ? (
+                <span className="block text-amber-700" data-meridian-gate-concern="">Check before confirming: {g.proposal.concerns.join(" | ")}</span>
+              ) : null}
+              <span className="mt-1 flex gap-1.5">
+                <Button
+                  type="button"
+                  size="sm"
+                  data-meridian-gate-confirm={g.id}
+                  onClick={() => {
+                    const r = setGate(study.id, decisionIndex, g.id, "met", g.proposal!.evidence);
+                    if (!r.ok) toast.warning(r.reason ?? "Refused");
+                  }}
+                >
+                  Confirm: this is met
+                </Button>
+              </span>
+            </span>
+          ) : null}
           {editing?.gateId === g.id ? (
             <span className="mt-1 flex gap-1.5">
               <input

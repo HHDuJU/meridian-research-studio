@@ -1,0 +1,1307 @@
+{
+  "id": "sc-042",
+  "version": 1,
+  "title": "Radiology department: structured reporting for abdominal CT, a lead with its year as text",
+  "field": "radiology",
+  "level": 2,
+  "family": "prospective",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path with a clear prospective observational design and one malformed-looking but valid value. The need names a prospective observational study (routing explicit). A fixture search returns six records with abstracts. A discovery reply adds three model leads, one giving its year as the 4-digit string \"2021\": it is stored as the number 2021, never as text and never replaced by a guess (G4; yearOrNull in contracts.ts). The leads are appended after the retrieved records (D1) and stay unverified model leads (G3); the discovery reply's null certainty assigns nothing (G1). The appraisal (S13) over the six retrieved records records three claims and certainty 'moderate' for completeness gains. The decision rests on c1 to c3 and both gates are met on the investigator's facts (service evaluation determination SE-2026-061 and the registrar's time), so the accepted action is ready. Level 2 ambiguity: two candidate designs (prospective follow-up against a before-after comparison with historic reports), resolved in favour of the prospective study with historic reports as context only. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-0z6e1x4, 3 ev-12yo4st, 4 ev-0ievwep, 6 ev-0gpv5rw), or of titleYearKey(title, year) when there is no DOI (records 2 ev-150rpwn, 5 ev-0g0olt6). Catches: a year string stored as text, dropped or guessed, leads that overwrite retrieved records, and certainty from leads.",
+  "inputs": {
+    "need": "I am a consultant radiologist and the reporting lead at Fenwick Cross Hospital. From 11 January 2027 all abdominal and pelvic CT reports in our department will be written in a structured template with fixed headings and pick-lists for key findings, replacing free-text reports. The department agreed the change after surgeons complained that important findings, such as the appendix diameter or the presence of free gas, were missing or buried in long paragraphs.\n\nI would like to run a prospective observational study over the first six months after the switch to find out whether the template is actually used, whether reports contain the key elements that referrers need for the three commonest questions (suspected appendicitis, bowel obstruction and cancer staging), whether reporting takes longer, and whether surgeons and emergency physicians find the reports easier to act on. We will not assign radiologists to use or not use the template; everyone switches on the same day. I can compare with a sample of free-text reports from the six months before the switch, although those reports were not written with the new checklist in mind.\n\nI would like advice on how to define template use (opened, completed, or completed without free-text overrides), how many reports to sample, how to measure completeness fairly for the old free-text reports, and how to ask referrers for their views without a long questionnaire.",
+    "constraints": "No extra reporting time for radiologists. Data from the reporting system and a short referrer questionnaire only; no patient contact. One radiology registrar has 3 hours a week for the study from January to July 2027.",
+    "localFacts": [
+      "The department reports about 780 abdominal and pelvic CT examinations a month.",
+      "The structured template goes live for all abdominal and pelvic CT on 2027-01-11 (radiology governance minute RG-2026-22).",
+      "The hospital research office classified the evaluation as a service evaluation not requiring ethics review on 2026-09-02 (reference SE-2026-061)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a consultant radiologist and the reporting lead at Fenwick Cross Hospital. From 11 January 2027 all abdominal and pelvic CT reports in our department will be written in a structured template with fixed headings and pick-lists for key findings, replacing free-text reports. The department agreed the change after surgeons complained that important findings, such as the appendix diameter or the presence of free gas, were missing or buried in long paragraphs.\n\nI would like to run a prospective observational study over the first six months after the switch to find out whether the template is actually used, whether reports contain the key elements that referrers need for the three commonest questions (suspected appendicitis, bowel obstruction and cancer staging), whether reporting takes longer, and whether surgeons and emergency physicians find the reports easier to act on. We will not assign radiologists to use or not use the template; everyone switches on the same day. I can compare with a sample of free-text reports from the six months before the switch, although those reports were not written with the new checklist in mind.\n\nI would like advice on how to define template use (opened, completed, or completed without free-text overrides), how many reports to sample, how to measure completeness fairly for the old free-text reports, and how to ask referrers for their views without a long questionnaire.",
+          "problem.constraints": "No extra reporting time for radiologists. Data from the reporting system and a short referrer questionnaire only; no patient contact. One radiology registrar has 3 hours a week for the study from January to July 2027.",
+          "family": "prospective",
+          "completedStages": [],
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a consultant radiologist and the reporting lead"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Adoption of structured reporting for abdominal CT: a prospective observational study of use, completeness, time and referrer views",
+        "subtitle": "First six months after the 2027-01-11 switch, Fenwick Cross Hospital",
+        "family": "prospective",
+        "statement": "On 2027-01-11 the department replaces free-text abdominal and pelvic CT reports with a structured template. Whether radiologists use it as intended, whether reports then contain the key elements referrers need for suspected appendicitis, bowel obstruction and cancer staging, whether reporting takes longer, and whether referrers find reports easier to act on are unknown.",
+        "whoAffected": "Patients having abdominal CT, the radiologists who report about 780 examinations a month, and the surgeons and emergency physicians who act on the reports.",
+        "whatHurts": "Missing or buried key findings delay decisions, for example on appendicitis or obstruction; a template that is overridden or slows reporting would add cost without benefit.",
+        "currentPractice": "Free-text reports of variable structure and length.",
+        "whyNow": "The switch date is fixed, so data collection must be ready before 2027-01-11.",
+        "constraints": "No extra reporting time for radiologists. Data from the reporting system and a short referrer questionnaire only; no patient contact. One radiology registrar has 3 hours a week for the study from January to July 2027.",
+        "patientCenteredGoal": "Every abdominal CT report tells the treating team what it needs to decide, clearly and without delay.",
+        "summary": "Problem framed as a prospective observational study of structured reporting adoption."
+      },
+      "expect": {
+        "store": {
+          "title": "Adoption of structured reporting for abdominal CT: a prospective observational study of use, completeness, time and referrer views",
+          "family": "prospective",
+          "problem.constraints": "No extra reporting time for radiologists. Data from the reporting system and a short referrer questionnaire only; no patient contact. One radiology registrar has 3 hours a week for the study from January to July 2027.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Adoption of structured reporting for abdominal CT: a prospective observational study of use, completeness, time and referrer views"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "structured reporting template abdominal CT adoption report completeness turnaround referrer satisfaction",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Structured templates for abdominal CT reports and completeness of key findings: a multicentre before-after study",
+            "authors": "Achebe-Lindqvist O, Moreno-Hart P, Takeda-Brennan S",
+            "year": 2023,
+            "venue": "Journal of Radiology Reporting",
+            "doi": "10.5555/jrr.2023.0152",
+            "providerType": "journal-article",
+            "abstract": "Six hospitals introduced structured templates for abdominal CT and we compared 2,400 reports from six months before with 2,400 from six months after. The proportion of reports containing all pre-specified key elements for the clinical question rose from 64 to 91 percent. Median time from scan completion to report sign-off increased by 2 minutes. Six months after introduction, 88 percent of eligible reports used the template. Improvements were largest for suspected appendicitis and smallest for oncology staging, where free-text additions remained common."
+          },
+          {
+            "title": "Radiologist adoption of structured reporting: template use over the first year in one department",
+            "authors": "Hollis-Adeyemi R, Sandberg-Oyelaran T",
+            "year": 2020,
+            "venue": "Radiology Practice Management",
+            "providerType": "journal-article",
+            "abstract": "We tracked template use for body CT in one department for twelve months after introduction. The template was opened for 94 percent of reports and fully completed for 71 percent; in 23 percent a radiologist overrode the template with free text for at least one section. Use plateaued after four months. Senior radiologists overrode the template more often than junior staff. Radiologists said overrides were most useful for complex or incidental findings. The authors recommend defining use as completion without override when evaluating adoption."
+          },
+          {
+            "title": "Structured versus free-text radiology reports: a systematic review of report quality and referrer satisfaction",
+            "authors": "Ibanez-Kowalczyk M, Obi-Sorensen L, Grant-Nakamura A",
+            "year": 2021,
+            "venue": "Evidence Reviews in Imaging",
+            "doi": "10.5555/eri.2021.0063",
+            "providerType": "review",
+            "abstract": "We included 32 studies comparing structured with free-text radiology reports. Structured reports were more complete in 27 studies and referrer satisfaction was higher in 9 of the 11 studies that measured it. No study measured patient outcomes. Most studies were before-after comparisons in single departments, and completeness checklists were often designed with the template, which may favour structured reports. We found no evidence that structured reporting increased reporting errors. Few studies reported how often radiologists overrode templates, so adoption could rarely be judged alongside completeness."
+          },
+          {
+            "title": "What referring clinicians want from CT reports for suspected appendicitis: a preference study",
+            "authors": "Varga-Oduya L, Castellanos-Fry D",
+            "year": 2018,
+            "venue": "Emergency Imaging Research",
+            "doi": "10.5555/eir.2018.0029",
+            "providerType": "journal-article",
+            "abstract": "We asked 146 surgeons and emergency physicians to choose between pairs of CT reports for suspected appendicitis that differed in structure, length and content. Clinicians valued an explicit statement of the appendix diameter, the presence or absence of free fluid and gas, and a clear one-line impression. Long reports reduced perceived usefulness even when complete. Emergency physicians valued the impression line more than surgeons did, while surgeons valued explicit measurements more. Responses came from three hospitals with established free-text reporting, so preferences may shift once clinicians are used to structured reports."
+          },
+          {
+            "title": "Measuring completeness of historic free-text reports against a new structured checklist: rater agreement",
+            "authors": "Kristensen-Mbeki H, Duval-Achterberg N",
+            "year": 2022,
+            "venue": "Radiology Practice Management",
+            "providerType": "journal-article",
+            "abstract": "Two radiologists rated 300 free-text abdominal CT reports against a 12-item checklist written for a new structured template. Agreement was good (kappa 0.72). Completeness was underestimated when elements were implied rather than stated, for example when a normal appendix was described without a diameter. Applying a rule that counted an element as present when it was stated or clearly implied raised measured completeness of free-text reports by 9 percentage points. The authors recommend pre-specifying such a rule before any before-after comparison."
+          },
+          {
+            "title": "Reporting time with structured templates in body CT: a time-stamp analysis",
+            "authors": "Petrov-Adair J, Nwachukwu-Holm E",
+            "year": 2025,
+            "venue": "Journal of Radiology Reporting",
+            "doi": "10.5555/jrr.2025.0011",
+            "providerType": "journal-article",
+            "abstract": "We analysed time stamps for 9,800 body CT reports before and after the introduction of structured templates. Median active reporting time increased by 1.4 minutes in the first month and returned to the pre-template level by the fourth month. Oncology staging reports remained about one minute longer throughout. Radiologists who had helped design the template returned to baseline faster. Time stamps do not capture interruptions, so active reporting time may be overestimated. Turnaround from scan to sign-off, which also depends on worklist order, changed less than active reporting time."
+          }
+        ]
+      },
+      "note": "Six records with abstracts; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0z6e1x4",
+            "ev-150rpwn",
+            "ev-12yo4st",
+            "ev-0ievwep",
+            "ev-0g0olt6",
+            "ev-0gpv5rw"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[2].kind": "systematic-review",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Structured templates for abdominal CT reports and completeness of key findings: a multicentre before-after study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "structured reporting template abdominal CT adoption report completeness turnaround referrer satisfaction",
+        "sourcesConsulted": [
+          "model knowledge"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "No certainty is assigned to leads; see the appraisal of the retrieved records.",
+        "synthesis": "Three further leads may be worth checking alongside the retrieved records: a study of pick-list design errors, a study of speech recognition errors in structured reports, and a report on multidisciplinary meeting preparation time.",
+        "items": [
+          {
+            "title": "Pick-list design and selection errors in structured radiology reports",
+            "authors": "Mortensen-Ade K, Liang-Oyelowo S",
+            "year": "2021",
+            "source": "Radiology Informatics Letters",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 55,
+            "relevance": 70,
+            "verification": "verify",
+            "contextTags": [
+              "pick-lists",
+              "errors"
+            ],
+            "keyFindings": "Adjacent pick-list options were selected in error in about 1 in 300 reports until lists were reordered.",
+            "limitations": "One department.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Speech recognition errors in structured and free-text radiology reports",
+            "authors": "Barrow-Nkemelu T",
+            "year": 2019,
+            "source": "Radiology Informatics Letters",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 55,
+            "verification": "ai-lead",
+            "contextTags": [
+              "speech recognition"
+            ],
+            "keyFindings": "Structured reports had fewer dictation errors in the findings section.",
+            "limitations": "Small sample.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Structured reporting and preparation time for multidisciplinary cancer meetings",
+            "authors": "Oakes-Mwangi F, Sato-Lindgren P",
+            "year": 2024,
+            "source": "Oncology Service Reports",
+            "kind": "qi-report",
+            "grade": "very-low",
+            "methodQuality": 40,
+            "relevance": 50,
+            "verification": "ai-lead",
+            "contextTags": [
+              "oncology",
+              "meetings"
+            ],
+            "keyFindings": "Preparation time for staging discussions fell after structured reports were introduced.",
+            "limitations": "Before-after; self-reported time.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Three leads suggested; one gives its year as text."
+      },
+      "note": "Leads are appended after the six retrieved records (D1; at 875fe59 the model items replace the retrieved records). The year string '2021' is a valid 4-digit year and is stored as the number 2021 (G4; holds at 875fe59). The null certainty assigns nothing (G1); the retrieved records keep the stage completable (G2).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 9
+          },
+          "scan.items[0].id": "ev-0z6e1x4",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[6].title": "Pick-list design and selection errors in structured radiology reports",
+          "scan.items[6].year": 2021,
+          "scan.items[6].provenance.origin": "model",
+          "scan.items[6].provenance.status": "unverified",
+          "scan.items[7].year": 2019,
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0z6e1x4",
+            "relevance": 94,
+            "methodQuality": 68,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Across six hospitals, reports containing all key elements rose from 64 to 91 percent after templates; sign-off time rose by a median of 2 minutes; 88 percent template use at six months.",
+            "limitations": "Before-after; checklist designed with the template.",
+            "contextTags": [
+              "multicentre",
+              "completeness",
+              "abdominal CT"
+            ],
+            "notes": "Main planning values."
+          },
+          {
+            "id": "ev-150rpwn",
+            "relevance": 90,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Template opened for 94 percent, fully completed for 71 percent, overridden in 23 percent; use plateaued at four months.",
+            "limitations": "One department.",
+            "contextTags": [
+              "adoption",
+              "overrides"
+            ],
+            "notes": "Defines template use."
+          },
+          {
+            "id": "ev-12yo4st",
+            "relevance": 82,
+            "methodQuality": 64,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Structured reports were more complete in 27 of 32 studies and referrer satisfaction higher in 9 of 11; no patient outcomes measured.",
+            "limitations": "Mostly single-department before-after studies.",
+            "contextTags": [
+              "systematic review"
+            ],
+            "notes": "Consistent direction."
+          },
+          {
+            "id": "ev-0ievwep",
+            "relevance": 76,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Referrers valued appendix diameter, free fluid and gas, and a one-line impression; long reports reduced usefulness.",
+            "limitations": "Hypothetical choices; three hospitals.",
+            "contextTags": [
+              "referrer preferences",
+              "appendicitis"
+            ],
+            "notes": "Informs the key-element checklist."
+          },
+          {
+            "id": "ev-0g0olt6",
+            "relevance": 86,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Kappa 0.72 for rating free-text reports against the new checklist; a stated-or-clearly-implied rule raised measured completeness by 9 points.",
+            "limitations": "Two raters, 300 reports.",
+            "contextTags": [
+              "measurement",
+              "historic comparison"
+            ],
+            "notes": "Needed for a fair historic comparison."
+          },
+          {
+            "id": "ev-0gpv5rw",
+            "relevance": 80,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Active reporting time rose by 1.4 minutes in the first month and returned to baseline by month four; oncology staging stayed about one minute longer.",
+            "limitations": "Time stamps miss interruptions.",
+            "contextTags": [
+              "reporting time"
+            ],
+            "notes": "Balancing measure planning value."
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "After structured templates were introduced in six hospitals, reports containing all key elements rose from 64 to 91 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0z6e1x4"
+            ],
+            "location": "Abstract",
+            "passage": "The proportion of reports containing all pre-specified key elements for the clinical question rose from 64 to 91 percent.",
+            "interpretation": "A large completeness gain is plausible here.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "In one department, the template was fully completed for 71 percent of reports and overridden with free text in 23 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-150rpwn"
+            ],
+            "location": "Abstract",
+            "passage": "fully completed for 71 percent; in 23 percent a radiologist overrode the template with free text for at least one section",
+            "interpretation": "Template use must be defined as completion without override.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Counting elements as present when stated or clearly implied raised measured completeness of free-text reports by 9 percentage points.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0g0olt6"
+            ],
+            "location": "Abstract",
+            "passage": "Applying a rule that counted an element as present when it was stated or clearly implied raised measured completeness of free-text reports by 9 percentage points.",
+            "interpretation": "The historic comparison needs this rule fixed in advance.",
+            "uncertainty": "low"
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level. Structured templates were followed by more complete reports in a multicentre study (64 to 91 percent) and in most studies in a systematic review, with higher referrer satisfaction where measured. Adoption plateaus after about four months, with overrides common among senior radiologists, and reporting time rises briefly before returning to baseline. Historic free-text reports need a stated-or-implied rule to be compared fairly.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "Consistent completeness gains across a multicentre study and a systematic review of 32 studies, downgraded for before-after designs and checklists designed with templates; certainty for reporting time and referrer views is lower.",
+        "summary": "Six retrieved records appraised; three claims recorded; overall certainty moderate for completeness."
+      },
+      "note": "S13 applies annotations and claims to the six retrieved records, still at items 0 to 5 (D1). The leads keep origin model and year 2021. Certainty 'moderate' is assigned over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 9
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[4].keyFindings": {
+            "includes": "stated-or-clearly-implied"
+          },
+          "scan.items[6].year": 2021,
+          "scan.items[6].provenance.status": "unverified",
+          "scan.claims": {
+            "length": 3
+          },
+          "scan.claims[2].sourceIds": [
+            "ev-0g0olt6"
+          ],
+          "scan.gradeOverall": "moderate",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "about 780 abdominal CT reports a month",
+          "switch on 2027-01-11",
+          "no extra reporting time",
+          "registrar 3 hours a week"
+        ],
+        "reading": "The template can only improve decisions if it is used as intended, so adoption is the first link: opened, completed and not overridden. Completeness then determines whether referrers find the elements they need, while reporting time is the cost radiologists pay. Historic free-text reports are a fragile comparison unless implied elements are counted fairly.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Structured template",
+            "kind": "framework",
+            "detail": "Fixed headings and pick-lists."
+          },
+          {
+            "id": "n2",
+            "label": "Completion without override",
+            "kind": "outcome",
+            "detail": "Adoption definition (claim c2)."
+          },
+          {
+            "id": "n3",
+            "label": "Key elements present",
+            "kind": "outcome",
+            "detail": "Primary outcome (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "Active reporting time",
+            "kind": "outcome",
+            "detail": "Balancing measure."
+          },
+          {
+            "id": "n5",
+            "label": "Referring surgeons and emergency physicians",
+            "kind": "stakeholder",
+            "detail": "Judge usefulness."
+          },
+          {
+            "id": "n6",
+            "label": "Historic free-text reports",
+            "kind": "context",
+            "detail": "Need a stated-or-implied rule (claim c3)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "adopted as"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "raises"
+          },
+          {
+            "from": "n1",
+            "to": "n4",
+            "relation": "may lengthen"
+          },
+          {
+            "from": "n3",
+            "to": "n5",
+            "relation": "serves"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "baseline for"
+          }
+        ],
+        "summary": "Map links adoption, completeness, time and referrer views."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 6
+          },
+          "map.edges": {
+            "length": 5
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Template use is not defined",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Opened, completed and overridden give very different adoption figures (claim c2).",
+            "opportunity": "Define use as completed without override and report all three."
+          },
+          {
+            "id": "g2",
+            "title": "Historic comparison could be unfair",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Free-text reports lose 9 points of completeness without an implied-element rule (claim c3).",
+            "opportunity": "Fix the stated-or-clearly-implied rule before rating."
+          },
+          {
+            "id": "g3",
+            "title": "No patient outcome evidence",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "No study measured patient outcomes.",
+            "opportunity": "Keep claims to report quality and referrer views."
+          }
+        ],
+        "errorsFound": [],
+        "reevaluation": "A six-month prospective study with defined adoption and a fair historic reference is sufficient for the department's question.",
+        "summary": "Three gaps: undefined use, unfair historic comparison, and no patient outcomes."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 3
+          },
+          "gaps.errorsFound": {
+            "length": 0
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Template use is not defined"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Six months after the switch, at least 85 percent of abdominal CT reports for the three index questions will contain all key elements, against about 65 percent of historic free-text reports rated with the stated-or-implied rule.",
+            "novelty": 30,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "Planning values from the multicentre study; the department needs its own figure.",
+            "risks": "Historic comparison is not concurrent."
+          },
+          {
+            "id": "h2",
+            "statement": "Active reporting time will return to the pre-switch level within four months.",
+            "novelty": 25,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 90,
+            "parsimony": 85,
+            "rationale": "Radiologists' main concern.",
+            "risks": "Time stamps miss interruptions."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Two hypotheses; h1 selected."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In the six months after the switch to structured templates, what proportion of abdominal and pelvic CT reports for suspected appendicitis, bowel obstruction and cancer staging contain all pre-specified key elements, and how does this compare with free-text reports from the six months before?",
+            "framework": "PICO",
+            "population": "Abdominal and pelvic CT reports for three index questions",
+            "intervention": "Structured template from 2027-01-11",
+            "comparator": "Free-text reports from the six months before, rated with a stated-or-implied rule",
+            "outcome": "All key elements present",
+            "time": "January to July 2027 against July 2026 to January 2027",
+            "setting": "One hospital radiology department"
+          }
+        ],
+        "finer": "Feasible with 3 registrar hours a week; interesting to radiologists and referrers; novel locally; ethical as a service evaluation; relevant to whether the template stays.",
+        "summary": "One PICO question with a historic reference."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "prospective",
+        "rationale": "Everyone switches on the same day, so the natural design is a prospective observational study of the first six months, measuring adoption as completion without override (c2), completeness against a fixed checklist, reporting time and referrer views, with historic free-text reports rated by a pre-specified stated-or-implied rule (c3) as context. The multicentre study (c1) gives planning values.",
+        "alternatives": [
+          "Before-after comparison with historic reports as the main analysis (refused as primary: the historic reports were not written for the checklist; kept as context)",
+          "Stepped introduction by radiologist (refused: the department has already fixed a single switch date)"
+        ],
+        "guidelines": [
+          "STROBE",
+          "SQUIRE 2.0 for the description of the change"
+        ],
+        "whyNotMoreComplex": "A stepped or randomised introduction would need the switch date moved and would not change the department's decision.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a six-month prospective observational study of template use (completion without override), completeness of key elements for three index questions, active reporting time and referrer views after the 2027-01-11 switch, with historic free-text reports rated by a pre-specified stated-or-implied rule as context.",
+          "question": "How should the department evaluate the switch to structured abdominal CT reports?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Completeness gains and adoption patterns elsewhere give usable planning values and definitions.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A fair historic reference can be rated.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research office determination of the evaluation's status",
+              "status": "met",
+              "evidence": "Service evaluation determination SE-2026-061 dated 2026-09-02, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Registrar time for data collection",
+              "status": "met",
+              "evidence": "Investigator constraint: one radiology registrar has 3 hours a week from January to July 2027"
+            }
+          ],
+          "alternatives": [
+            "Before-after comparison with historic reports as the main analysis"
+          ],
+          "note": "Rests on ledger claims c1 to c3; both gates are met on supplied facts."
+        },
+        "summary": "Prospective observational study recommended; both gates met."
+      },
+      "note": "selectionStatus requires S11; claims S13; status text D5. actionStatus is checked after acceptance.",
+      "expect": {
+        "store": {
+          "design.recommended": "prospective",
+          "family": "prospective",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection accepted; both gates met on supplied facts, so the action is ready (G7). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "family": "prospective",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Prospective observational study of structured reporting for abdominal and pelvic CT from 2027-01-11 to 2027-07-11, with a rated sample of free-text reports from the six months before as context.",
+        "population": "Abdominal and pelvic CT reports for suspected appendicitis, bowel obstruction and cancer staging; referring surgeons and emergency physicians for the questionnaire.",
+        "exposure": "The structured template with fixed headings and pick-lists.",
+        "procedures": "Each month the registrar samples 25 reports per index question (75 a month) from the reporting system by random number, extracts template status (opened, completed, overridden) and rates key elements against the checklist. The same checklist is applied to 150 historic free-text reports with the stated-or-implied rule, fixed in advance. Active reporting time comes from system time stamps. A five-item referrer questionnaire is sent at months 3 and 6.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "All key elements present",
+            "measure": "Proportion of sampled reports containing every pre-specified key element for the clinical question",
+            "timing": "Monthly, January to July 2027",
+            "why": "The purpose of the template.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "process",
+            "name": "Template completed without override",
+            "measure": "Proportion of eligible reports",
+            "timing": "Monthly",
+            "why": "Adoption as intended.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Active reporting time",
+            "measure": "Median minutes from opening to sign-off",
+            "timing": "Monthly",
+            "why": "No extra reporting time is available.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "secondary",
+            "name": "Referrer usefulness rating",
+            "measure": "Five-item questionnaire score",
+            "timing": "Months 3 and 6",
+            "why": "Whether reports are easier to act on.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Rating 75 reports a month at about 2 minutes each fits within 3 registrar hours a week.",
+        "biasMitigation": [
+          "Random sampling of reports",
+          "Stated-or-implied rule fixed before historic rating",
+          "Second rater on 10 percent of reports"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Checklist designed with the template",
+            "severity": "watch",
+            "note": "Favours structured reports; historic comparison is context only."
+          },
+          {
+            "id": "b2",
+            "label": "Secular change",
+            "severity": "watch",
+            "note": "No concurrent comparison."
+          }
+        ],
+        "parsimony": {
+          "score": 88,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [],
+          "simplestPath": "Monthly random samples, one checklist, time stamps and a short questionnaire."
+        },
+        "theoreticalFramework": "None; adoption is measured directly.",
+        "summary": "Six-month prospective study with monthly random samples and a fixed checklist."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[2].role": "balancing",
+          "protocol.parsimony.score": 88,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Monthly proportions with confidence intervals and run charts for adoption and completeness; descriptive comparison with the historic reference.",
+        "sampleSize": "To estimate completeness near 90 percent within 5 percentage points (95 percent confidence), about 140 reports per index question are needed over the study (1.96 squared times 0.09 divided by 0.0025, about 138). Sampling 25 per question per month gives 150 per question over six months. The historic reference of 150 reports (50 per question) estimates a completeness near 65 percent within about 13 points per question.",
+        "primaryAnalysis": "Proportion with all key elements over the six months, by index question, with 95 percent confidence intervals; difference from the historic reference described with its interval and caveats.",
+        "secondaryAnalysis": "Monthly run charts of adoption and completeness; median reporting time by month; referrer questionnaire scores.",
+        "missingData": "Reports that cannot be classified are counted and reported.",
+        "multiplicity": "One primary outcome; others descriptive.",
+        "software": "Spreadsheet run charts; R for intervals.",
+        "overfittingGuards": [
+          "Sampling fixed by random number",
+          "Checklist and implied-element rule fixed in advance",
+          "No subgroup testing beyond the three index questions"
+        ],
+        "summary": "150 reports per question over six months give intervals of about 5 points."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "150 per question"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: review of reports already produced; no patient contact.",
+        "consent": "Not required for a service evaluation of report content; referrers complete the questionnaire voluntarily and anonymously.",
+        "data": "Report text is rated inside the reporting system; the study spreadsheet holds report numbers only and is deleted after the evaluation.",
+        "equity": "PROGRESS-Plus: report completeness is checked for examinations of patients with limited English or from outlying hospitals where referral information is thinner; no individual radiologist's performance is reported.",
+        "effectiveness": "Tells the department whether the template works as intended.",
+        "efficiency": "Three registrar hours a week.",
+        "costs": "None beyond registrar time.",
+        "grants": "None.",
+        "partnerships": "Radiology governance group, surgical and emergency department leads.",
+        "rebPath": "Service evaluation determination SE-2026-061 (2026-09-02); no ethics review required. Any publication will describe the determination.",
+        "limitations": "No concurrent comparison; checklist designed with the template.",
+        "summary": "Service evaluation with anonymous referrer views and no individual performance reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "SE-2026-061"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A radiologist, a surgeon and an emergency physician review the checklist before the switch; results are discussed at month 3.",
+        "socialListening": "None.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Finding the answer",
+            "quote": "Composite paraphrase: At three in the morning I need the appendix diameter in the first line, not paragraph four.",
+            "implication": "The impression line and key elements are the outcome.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Complex cases",
+            "quote": "Composite paraphrase: The template is fine for a simple appendix, but a complicated staging scan needs free text.",
+            "implication": "Report overrides by index question.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Waiting",
+            "quote": "Composite paraphrase: I just want the report ready when the surgeon comes round.",
+            "implication": "Reporting time is a balancing measure.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Three composite voices on speed of finding, complex cases and waiting."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Adoption, completeness and reporting time after the introduction of structured abdominal CT reports: a prospective observational study",
+        "abstract": "Objective: to describe adoption of a structured template, completeness of key elements for three index questions, reporting time and referrer views in the six months after introduction. Design: prospective observational study with rated free-text reports from the previous six months as context. Results will follow data collection.",
+        "introduction": "Structured reports are more complete in most studies, but adoption plateaus and overrides are common, and historic comparisons can be unfair to free-text reports.",
+        "methods": "Each month 25 reports per index question are sampled at random and rated against a fixed checklist; template use is recorded as opened, completed and completed without override. Historic free-text reports are rated with a stated-or-clearly-implied rule fixed in advance. Active reporting time comes from system time stamps and referrer views from a five-item questionnaire at months 3 and 6.",
+        "results": "Data collection starts on 2027-01-11. The report will give completeness by index question with intervals, monthly run charts of adoption and reporting time, and referrer scores.",
+        "discussion": "To be written. The comparison with historic reports will be treated as context, not as an effect estimate.",
+        "limitations": "No concurrent comparison; the checklist was designed with the template.",
+        "conclusion": "To be written after six months of data.",
+        "reportingChecklist": "STROBE, with SQUIRE 2.0 items for the description of the change",
+        "summary": "STROBE-structured draft."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "STROBE"
+          },
+          "manuscript.results": {
+            "includes": "Data collection starts on 2027-01-11"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Fix the key-element checklist and the stated-or-implied rule before 2027-01-11",
+          "Check the three scan leads before citing any",
+          "Run identity checks on the six retrieved records"
+        ],
+        "improvementNotes": "Six retrieved records were appraised; the decision rests on three ledger claims and is ready to act on. One lead gave its year as text and was stored as a number.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before the switch."
+      },
+      "note": "audit.openFixes and audit.lastReview FAIL at 875fe59 because of the store defect L1.6, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Adoption of structured reporting for abdominal CT: a prospective observational study of use, completeness, time and referrer views",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "scan.items": {
+            "length": 9
+          },
+          "scan.items[6].year": 2021,
+          "scan.claims": {
+            "length": 3
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Adoption of structured reporting for abdominal CT: a prospective observational study of use, completeness, time and referrer views"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Adoption of structured reporting for abdominal CT: a prospective observational study of use, completeness, time and referrer views",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[0].provenance.origin": "retrieval",
+          "problem.constraints": "No extra reporting time for radiologists. Data from the reporting system and a short referrer questionnaire only; no patient contact. One radiology registrar has 3 hours a week for the study from January to July 2027.",
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Adoption of structured reporting for abdominal CT: a prospective observational study of use, completeness, time and referrer views"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The appended leads require D1; selectionStatus and actionStatus S11; claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items": {
+              "length": 9
+            },
+            "scan.items[6].year": 2021,
+            "scan.items[6].provenance.status": "unverified",
+            "scan.gradeOverall": "moderate",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "problem.rawNeed": "I am a consultant radiologist and the reporting lead at Fenwick Cross Hospital. From 11 January 2027 all abdominal and pelvic CT reports in our department will be written in a structured template with fixed headings and pick-lists for key findings, replacing free-text reports. The department agreed the change after surgeons complained that important findings, such as the appendix diameter or the presence of free gas, were missing or buried in long paragraphs.\n\nI would like to run a prospective observational study over the first six months after the switch to find out whether the template is actually used, whether reports contain the key elements that referrers need for the three commonest questions (suspected appendicitis, bowel obstruction and cancer staging), whether reporting takes longer, and whether surgeons and emergency physicians find the reports easier to act on. We will not assign radiologists to use or not use the template; everyone switches on the same day. I can compare with a sample of free-text reports from the six months before the switch, although those reports were not written with the new checklist in mind.\n\nI would like advice on how to define template use (opened, completed, or completed without free-text overrides), how many reports to sample, how to measure completeness fairly for the old free-text reports, and how to ask referrers for their views without a long questionnaire."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

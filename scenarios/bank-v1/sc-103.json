@@ -1,6 +1,6 @@
 {
   "id": "sc-103",
-  "version": 1,
+  "version": 2,
   "title": "Regional cancer centre: pragmatic trial of automatic palliative care referral triggers, empty searches confirmed and a certainty from leads dropped",
   "field": "palliative-care",
   "level": 3,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "D20",
-    "S11"
+    "S11",
+    "D10"
   ],
   "notes": "Demanding path with nothing retrieved. The need names a pragmatic trial (clinics switching in a staggered order) and gives local volumes, capacity and approval facts; the problem reply restates the investigator's constraints exactly (G11). The first fixture search returns HTTP 200 with zero records, recorded as an event with 0 hits. A discovery reply over those zero records brings five model leads and a certainty 'moderate': the certainty must be dropped with an issue and the Scan stays incomplete with the honest status 'leads only' (G1, G2); the leads are stored as unverified model leads, and the two undated leads keep year and quality null and grade unrated, never 2020, 50 or 'low' (G3, G4). The investigator runs a broader second search, which is recorded and also empty, and then confirms the empty search on screen: only that confirmation completes the Scan, it is stored as an investigator action, and certainty stays unassessed (not assessed on screen and in the export). With no ledger claim, the design decision narrows the proposal to one stepped-wedge trial with one primary outcome; its ethics gate has no evidence and stays unknown, so acceptance gives an accepted selection with a blocked action, which is checked again after a reload on the Design route at 7 of 13 stages. Requires D20 (drop of a certainty over zero records, leads-only status, investigator confirmation record, not assessed on screen), S11 (explicit basis, recommendedFamily, selectionStatus, actionStatus) and D5 (status text). Catches: a certainty assigned or a Scan completed from leads or an empty search, a model or an empty result treated as the investigator's confirmation, invented defaults for unknown values, a gate that becomes met without evidence, an action allowed past an unknown ethics gate, and work lost on reload or reopen.",
   "inputs": {
@@ -790,7 +791,7 @@
           "design.decisions[-1].gates[0].evidence": {
             "absent": true
           },
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
           "design.decisions[-1].recommendedFamily": "pragmatic-trial",
           "design.decisions[-1].selectionStatus": "proposed",
           "design.decisions[-1].actionStatus": "blocked",
@@ -802,7 +803,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -814,6 +816,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1403,5 +1425,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-103.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

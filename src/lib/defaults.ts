@@ -429,7 +429,8 @@ export function migrateStudy(raw: unknown): Study {
         ? ((s.design as DesignStage).decisions).map((d) => ({
             ...d,
             selectionStatus: d.selectionStatus ?? d.status ?? "proposed",
-            actionStatus: d.actionStatus ?? (d.status === "accepted" ? "ready" : "blocked"),
+            // Never "ready" by default: the store re-derives the status from the decision on load.
+            actionStatus: d.actionStatus ?? "blocked",
           }))
         : [],
     },

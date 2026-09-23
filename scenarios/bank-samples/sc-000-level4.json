@@ -1,7 +1,6 @@
 {
   "id": "sc-000-level4",
-  "version": 3,
-  "supersedes": "bank-samples/original-v2/sc-000-level4.json (version 2). Reason: G11: investigator constraints are never erased or replaced by a model response; issue code dropped. Version 2's problem reply reworded the investigator's typed constraints while its expectation allowed no issue and accepted any text containing '18,000'; version 3 expects the typed text exactly, the issue 'dropped' at 'constraints' and a 'kept' warning on screen. The audit step's needsReview check also gains the status text 'review required' on screen.",
+  "version": 4,
   "title": "County health unit: working carbon monoxide and smoke alarms by tenure, adversarial model responses",
   "field": "public-health",
   "level": 4,
@@ -15,7 +14,8 @@
     "S8",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear cross-sectional question. The problem reply rewords the investigator's typed constraints: the typed text must stay stored with issue 'dropped' at 'constraints' and a 'kept' warning (G11). A fixture search returns six records with abstracts. The first scan reply is prose, not JSON: nothing is applied and an error is shown (G5). The second reply (shape discovery) carries five leads: the first echoes the id of the retrieved national survey record (same title and year) but adds the invented DOI 10.5555/invented.1 and a 'landmark' label, so it must be quarantined with issue id-collision while the retrieved record stays unchanged (A2 item 6, D1; the lead stays origin model and never verified, G3); another has methodQuality 140 (stored null, out-of-range) and another a boolean year (stored null, invalid-type); the other leads are appended after the retrieved records, never replacing them (D1). The third reply (shape appraisal, S13) annotates the six records and records claims c1 to c3. The first design reply rests on claim-9, which is not in the ledger: its acceptance must be refused (S1, S8). The revised design reply rests on c1 to c3 and is accepted (selectionStatus accepted; action blocked by the unknown ethics gate). Only then is the cited tenure record's key findings changed through the store: the decision must become stale (S10) in the store, on screen and after reload (checked while the route is on the Design stage, where the decision panel is), and in the export, and the completed stages after Scan are flagged for review. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1, 3, 6: ev-1k96ewq, ev-0a7cyij, ev-0k4b84h) or of titleYearKey(title, year) when there is no DOI (records 2, 4, 5: ev-1xlua6n, ev-1gw2t9d, ev-1jty10q). Catches: a non-JSON reply treated as success, a lead that overwrites or duplicates a retrieved record, out-of-range or wrongly typed values stored, a model label turned into verification, acceptance of an unsupported decision, and a source change that leaves an accepted decision current.",
   "inputs": {
@@ -92,7 +92,13 @@
           "includes": [
             "Working smoke and carbon monoxide alarms by housing tenure in a rural county",
             "constraints",
-            {"anyOf": ["kept", "refused", "not applied"]}
+            {
+              "anyOf": [
+                "kept",
+                "refused",
+                "not applied"
+              ]
+            }
           ]
         }
       },
@@ -1107,7 +1113,8 @@
           ],
           "design.decisions[1].status": "proposed",
           "design.decisions[1].selectionStatus": "proposed",
-          "design.decisions[1].gates[1].status": "met"
+          "design.decisions[1].gates[1].status": "unknown",
+          "design.decisions[1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -1119,6 +1126,26 @@
           "includes": [
             "proposed",
             "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1598,5 +1625,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 3 (kept as bank-samples/original-v3/sc-000-level4.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 13 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

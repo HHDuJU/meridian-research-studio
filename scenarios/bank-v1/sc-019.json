@@ -1,6 +1,6 @@
 {
   "id": "sc-019",
-  "version": 1,
+  "version": 2,
   "title": "Tumour board decision template: long inputs near the context budget, a superseded first decision and a refused acceptance of it",
   "field": "oncology",
   "level": 5,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Expert path: a multi-site design with dependency closure, long inputs and two decisions where the second withdraws the first. Inputs are long by design: a 605-word need (3711 characters), 1328 characters of constraints and 12 local facts of up to 400 characters each (4001 characters). By the generator's estimate, carrying them whole with the nine abstracts gives a Scan appraisal context of about 18,700 characters, and carrying every field the 875fe59 view selects unclipped as well gives a largest context (the manuscript call) of about 31,700 characters, 99 percent of MAX_COMPACT_CHARS (32,000). No call may be refused for size; anything cut to fit must be a model-written field named as cut, never the investigator's text or a source abstract (S4, D6, stated in step notes, not asserted); the stored need, constraints and export stay exactly as typed. Routing is pragmatic-trial (explicit under both classifier rules). The problem reply condenses the constraints: G11 keeps the typed text and records rejected-change (counted under S11, the closest listed entry), a refusal the scenario states. The appraisal of nine records (one undated, kept null) records six claims whose passages and numbers occur in the cited abstracts. The first design reply proposes a parallel cluster comparison (recommended 'rct', gate unknown): the proposal must not change study.family (S11 with D3). The investigator drafts Protocol and Analysis on it; the analysis shows about 40 percent power. The revised design reply proposes a pragmatic stepped-wedge trial on the six-wave schedule and supersedes the first decision (withdrawn, kept), flagging Protocol and Analysis for review (G8). An attempt to accept the withdrawn first decision is refused (A1 item A2), then the second is accepted (accepted, ready, basis explicit); redoing Protocol and Analysis clears the flags. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 3, 4, 5, 6, 7 (ev-0uwsqis, ev-1apyzii, ev-0veejcb, ev-06uylmy, ev-17kagtg, ev-0ul2jhz) and titleYearKey hash for records 2, 8, 9 (ev-1ktt1wv, ev-0mqhpb3, ev-1raixmt). Requires S11, S13 and D5. Catches: clipped or replaced investigator input, a proposal that sets the family, a superseded decision erased or accepted, and stale downstream stages counted complete.",
   "inputs": {
@@ -893,7 +894,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -905,6 +908,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1162,7 +1185,11 @@
             "design",
             "protocol",
             "stats"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete",
@@ -1177,6 +1204,29 @@
             "proposed",
             "withdrawn",
             "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1209,6 +1259,26 @@
       }
     },
     {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "met",
+      "reason": "Research ethics approval covering the evaluation, with every board receiving the template in 2027: Approval REB-CN-2026-118 dated 2026-08-29, supplied by the investigator",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "met",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
       "do": "accept-decision",
       "which": "latest",
       "note": "Supported positive: c1, c3, c4 and c5 rest on retrieved records, the defeating criterion is unknown (a condition to watch, not a block) and both gates are met, so the selection is accepted and the action ready; basis explicit (G7; A1 item A2; S11, S13, D5). Protocol and Analysis stay flagged until redone.",
@@ -1219,7 +1289,7 @@
           },
           "design.decisions[-1].status": "accepted",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].actionStatus": "blocked",
           "design.decisions[-2].selectionStatus": "withdrawn",
           "family": "pragmatic-trial",
           "design.basis": "explicit",
@@ -1231,7 +1301,7 @@
         "screen": {
           "includes": [
             "accepted",
-            "ready",
+            "blocked",
             "withdrawn"
           ]
         }
@@ -1746,7 +1816,7 @@
             "problem.rawNeed": "I am a medical oncologist and chair the tumour board working group of a regional cancer network of six hospitals. Between them the hospitals run 11 multidisciplinary tumour boards (breast, lung, colorectal, upper gastrointestinal, urology, gynaecology, head and neck, skin, haematology, brain and spine, and sarcoma) that discuss about 18,000 cases a year. Each board's decisions are typed into the board software as free text by whoever is minuting that week, and the quality of that text varies enormously from board to board and from week to week.\n\nLast year our working group reviewed 600 randomly sampled case discussions against seven items that any clinician picking up the case should be able to find: the stage used for the decision, performance status, the treatment recommended, the reason when the recommendation departs from the network guideline, whether trial eligibility was considered, the patient's known preferences, and who will tell the patient and by when. Only 54 percent of discussions documented all seven. The weakest items were the patient's preferences (documented in 31 percent) and the reason for departing from the guideline (41 percent). We found cases where the treating team could not tell from the minutes what had been agreed, two complaints from patients who were told different plans by different clinicians, and a clear pattern of longer waits from board to first treatment when the minutes were incomplete.\n\nThe network has agreed to introduce a structured decision template built into the board software, together with a trained board coordinator at each hospital and a short monthly feedback report to each board chair. Because of software licensing and coordinator recruitment, the template cannot go live everywhere at once, and the network's digital team proposes to switch boards on in six waves between February and December 2027. Every board will have the template by the end of 2027, and nobody is willing to hold a board back beyond that.\n\nI would like to use this rollout to run a pragmatic trial that answers two questions: does the template package increase the proportion of case discussions with complete decision documentation, and does it shorten the time from board discussion to first treatment without making meetings longer or reducing the number of cases each board can discuss? I am not sure how to allocate boards to waves, whether 11 boards are enough to answer the question, how to handle boards of very different sizes (the breast board discusses about 60 cases a week, the sarcoma board about 8), or whether the unit of analysis should be the board, the meeting or the case discussion.\n\nThere are practical limits. Our data manager can extract the minutes and treatment dates, but only three days a month. The template can be switched on per board but not per case. Board chairs will know when their board has the template, and so will the coordinators who complete it, so nobody can be blinded. Two hospitals are merging their information systems in the middle of 2027, which may disrupt data extraction for their four boards for about two months. Patient representatives on the network board have asked that patients' own understanding of their treatment plan is measured, not just the paperwork, and board chairs have asked that nothing we add takes more than ten minutes of meeting time.\n\nI need help turning this into a design the network board can approve in November: the allocation, the outcome definitions, the sample size reasoning, the analysis, the ethics route for using minutes and treatment dates without individual consent, and what to measure so that we notice if the template simply produces longer minutes that nobody reads.",
             "problem.constraints": "The template goes live in six waves between February and December 2027 and every board must have it by the end of 2027; no board can be held back longer than that. The data manager has three days a month for extraction of minutes and treatment dates, and there is no research budget beyond the coordinator salaries the network already funds. The template is switched on per board, never per case, and nobody can be blinded to it. Two hospitals merge their information systems in mid-2027, which may interrupt extraction for their four boards for about two months. Any patient-reported measure must take no more than five minutes and be available in the network's four most common languages. Board chairs have asked that the evaluation adds no more than ten minutes to any meeting and that individual clinicians are never named in feedback or reports. The network board meets in November 2026 to approve the design, and a design that needs individual patient consent to use minutes and treatment dates is not workable at this scale. Results go to the network board for each hospital without ranking boards against each other, and the patient representatives must see the questionnaire and its translations before any patient receives it. Any change to the wave dates needs the digital team's agreement at least eight weeks ahead.",
             "design.decisions[-1].selectionStatus": "accepted",
-            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].actionStatus": "blocked",
             "design.decisions[-1].recommendedFamily": "pragmatic-trial",
             "design.decisions[-2].status": "withdrawn",
             "design.decisions[-2].recommendedFamily": "rct",
@@ -1761,5 +1831,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-019.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1); step 13 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (approved) citing the ethics gate the investigator confirmed before accepting decision 2; decision 2 is expected blocked from its acceptance (step 17) on: the investigator's own fact leaves an approval open (\"The network board meets in November 2026 to approve the design\"). Model responses, need and records are unchanged."
 }

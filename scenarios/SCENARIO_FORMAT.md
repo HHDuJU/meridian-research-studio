@@ -1,10 +1,37 @@
-# Full usage scenario format, version 1.2 (coordinating session, 2026-09-22T11:50Z; G11 added 12:50Z; late replies added 20:45Z)
+# Full usage scenario format, version 1.3 (coordinating session, 2026-09-23T19:10Z)
 
-Version 1.2 adds one thing to version 1.1 (kept as `SCENARIO_FORMAT_v1-1_original_2026-09-22T2045Z.md`): the
+Version 1.3 adds one golden rule and three investigator steps to version 1.2 (kept as
+`SCENARIO_FORMAT_v1-2_original_2026-09-23T1910Z.md`), from work order 2 entry D10 (solution contract S5:
+unknown resources and permissions must not become facts):
+
+- G12 (below): a model never sets a gate; every decision is ready only with the investigator's record of the
+  work's research ethics status; approvals the investigator's own facts leave open block until acted on; what
+  the model writes about approvals is shown to check and settles nothing.
+- `confirm-gate`: the investigator confirms gates the model proposed as met.
+- `record-determination`: the investigator records the status of one kind of approval for this work: approved,
+  with its reference, or not required, with the reason.
+- `settle-open-item`: the investigator acts, for one decision, on one of their own facts that leaves an approval
+  open: given (with the reference) or not concerning the decision (with the reason).
+
+Ninety-seven bank scenarios and two samples are amended to version 1.3:
+
+- a confirm-gate step after each Design step whose gates the model proposed and the investigator's facts
+  support (110 steps, 179 gates);
+- a record-determination step before acceptance in 49 bank scenarios and one sample, recording the ethics
+  status: 16 bank scenarios and the sample cite an ethics gate the investigator confirmed, 12 cite the
+  investigator's own fact, 21 are reviews of published literature;
+- settle-open-item steps in 2 scenarios, where the investigator sets aside a fact that does not concern the
+  decision (a board decision the review informs; local data a literature review does not use);
+- 12 scenarios now expect the accepted decision blocked: in 11 the investigator's facts give no ethics status,
+  and in 1 their own fact leaves the board's approval of the design open.
+
+The amendment sheet is `docs/amendments/WORK_ORDER_2_AMENDMENTS_D10_2026-09-23.md`; each amended file names
+its kept version in `supersedes`.
+
+Version 1.2 added to version 1.1 (kept as `SCENARIO_FORMAT_v1-1_original_2026-09-22T2045Z.md`): the
 `late` illuminate step with its `during` actions, the executable form of a G6 late reply (section "Late replies"
-under Steps). Nine bank scenarios that had improvised a held reply are at version 2 in that form; nothing else
-changed. Version 1.1 replaces version 1 (kept as `SCENARIO_FORMAT_v1_original_2026-09-22T1030Z.md`). The changes:
-expected values are defined by the golden rules below, never by the current behaviour of any build; a
+under Steps). Version 1.1 replaces version 1 (kept as `SCENARIO_FORMAT_v1_original_2026-09-22T1030Z.md`). The
+changes: expected values are defined by the golden rules below, never by the current behaviour of any build; a
 recorded retrieval step gives scenarios a genuine synthetic provider-response path; the scan model call has
 two shapes (discovery leads, or appraisal of retrieved records); empty scans are representable; a source
 change is tested only after an accepted, supported decision; screen checks carry status text.
@@ -55,6 +82,25 @@ arms with their own records; a replay run is never reported as either.
   its clearing meaning for model-owned fields (grades, recommendations, alternatives, model-written
   statements). A scenario that tests "explicit null clears a field" uses a model-owned field. (Issue code
   aligned with the owner's implementation on 2026-09-22T13:30Z: `dropped`, not a new enum member.)
+
+- G12 Local facts and approvals are the investigator's (added 2026-09-23, work order 2 entry D10, solution
+  contract S5). (a) A model never sets a gate: a model "met" is stored as the model's proposal, the gate's
+  status stays "unknown" and `proposal.status` is "met" with the model's evidence, the investigator facts it
+  points to and Meridian's concerns; an issue `ungrounded-gate` is recorded only when there is a concern. The
+  investigator confirms on screen (`confirm-gate`), which sets the gate "met" with `setBy` "investigator".
+  (b) Every decision, whatever its kind, has `actionStatus` "ready" only when the investigator has recorded on
+  it the research ethics status of the work (`record-determination`, body `ethics`): approved with the
+  reference, or not required with the reason ("No people, records or practice are involved in this decision."
+  for a decision that leads to no work). Only this explicit record counts; a confirmed ethics gate is offered as
+  its reference. (c) A statement in the investigator's own facts or constraints that leaves an approval,
+  permission, agreement or consent unknown, pending, outstanding, in draft, requested or still needed blocks
+  every decision until the investigator acts on that statement for that decision (`settle-open-item`: given
+  with the reference, or aside with the reason); no record or gate settles it. (d) What the model writes about
+  approvals ("no REB review is needed", "the custodian has approved") is listed for the investigator to check;
+  it settles nothing and blocks nothing by itself. A model claim of kind local-fact (or an assumption, scenario
+  or inference that states a local permission or resource) that a decision rests on blocks until the
+  investigator's facts establish it. Stored decisions are re-derived when a study is loaded; a stored "ready"
+  is never trusted.
 
 ## Files
 
@@ -118,6 +164,9 @@ the run continues unless `stopOnFail` is true. Unknown `do` values are a scenari
 | `confirm-empty-search` | | the investigator confirms on screen that the search was run and returned nothing |
 | `set-field` | `path`, `value` | edit a field through the screen when a control exists, otherwise through the store (the runner records which) |
 | `accept-decision` | `which` ("latest" or a decision index) | the investigator accepts the current design decision |
+| `confirm-gate` | `which`, optional `gates` (ids; all open proposals when absent) | format 1.3: the investigator confirms on screen that gates the model proposed as met are met (G12) |
+| `record-determination` | `which`, `body` (`ethics`, `consent` or `data`), `reason`, optional `status` (`met`: approved, with the reference; `not-required`, the default: with the reason) | format 1.3: the investigator records on the decision the status of this kind of approval for the work (G12) |
+| `settle-open-item` | `which`, `match` (words of the investigator's fact), `how` (`given` or `aside`), `note` (the reference, or why it does not concern the decision) | format 1.3: the investigator acts on one of their own open facts for this decision (G12) |
 | `withdraw-decision` | `which` | the investigator withdraws it |
 | `mark-complete` | `stage` | the investigator marks a stage complete by hand |
 | `change-source` | `record` (match by `title`), `field` (`abstract`, `keyFindings`, `year`, `status`), `value` | change the stored source through the store's own action (never a label edit) |

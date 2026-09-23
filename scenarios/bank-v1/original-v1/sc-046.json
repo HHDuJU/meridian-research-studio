@@ -1,0 +1,1185 @@
+{
+  "id": "sc-046",
+  "version": 1,
+  "title": "Anticoagulation clinic: nomogram or computer-assisted warfarin dosing, empty search confirmed, design deferred and unresolved",
+  "field": "pharmacy",
+  "level": 3,
+  "family": "unresolved",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "D20",
+    "S11"
+  ],
+  "notes": "Demanding path whose correct end state is an unresolved family. The need names two designs with intent cues (a retrospective records comparison and a randomised comparison), so routing is unresolved at create; the problem reply returns family null (issue 'cleared', basis stays unresolved, D2). The recorded fixture search returns HTTP 200 with zero records. The only scan reply (shape discovery, no items) proposes certainty 'moderate' and also carries a key investigatorConfirmsEmptySearch: the certainty is dropped with an issue, the key is dropped with an issue and no confirmation is stored, and the stage stays incomplete ('not assessed', no 'moderate certainty' label; G1, G2, D20). The investigator then confirms the empty search on screen, which completes the stage with certainty still unassessed. The design reply recommends null on purpose: design.recommended stays empty and basis unresolved (D2), and its 'defer' decision rests on no claim (nothing was retrieved) and on one gate met by the investigator's approval ACM-2026-14; acceptance is therefore accepted with the action ready, and no family is set (recommendedFamily null). A reload on the Design route follows the acceptance and a reopen follows the last stage. Unlike an empty search followed by a later successful search, this path never retrieves a record and never assigns certainty. No record ids exist in this scenario (the only search is empty). Requires D2 (null family and null recommendation keep basis unresolved), D20 (no certainty and no completion over zero records, the model confirmation key dropped, investigator confirmation, 'not assessed'), S11 (routing at create, recommendedFamily, selectionStatus, actionStatus) and D5 (decision status text). Catches: a certainty label over an empty search, a model field that confirms an empty search, a null recommendation that leaves a stale family or basis, and a defer decision refused or blocked without reason.",
+  "inputs": {
+    "need": "I am the lead pharmacist for a hospital-run anticoagulation clinic that manages about 1,150 patients on warfarin, most with atrial fibrillation or a mechanical heart valve. Two dosing approaches are in use at the same time. Pharmacists at the main site adjust doses with a paper nomogram based on the latest INR, while the two satellite clinics switched last year to a computer-assisted dosing tool built into the clinic software, which suggests a weekly dose from the last three INR values. Nobody has compared them. Our medical director wants to standardise on one approach by next spring, and the satellite pharmacists are convinced the software keeps patients in range for longer.\n\nI am not sure how to answer this. We could do a retrospective comparison of time in therapeutic range using the clinic records for patients managed under each approach, but the satellite clinics see younger patients with fewer interacting medicines, so the groups are not alike. Or we could plan a randomised comparison where new referrals are allocated to one approach or the other, which would take much longer and needs the pharmacists at the main site to learn the software. I also do not know whether our INR records are complete enough to calculate time in range: results from home testing are sometimes entered late or not at all.\n\nI need help deciding what can honestly be done, what the outcome should be (time in range, or bleeding and clot events), and whether we should settle the design now or check the data first.",
+    "constraints": "No research funding. Pharmacist time for data work is limited to about four hours a week. Patient-identifiable clinic records may not leave the hospital network. Any change to dosing practice needs approval from the anticoagulation committee.",
+    "localFacts": [
+      "The anticoagulation clinic manages about 1,150 patients on warfarin across the main site and two satellite clinics, and receives about 30 new referrals a month.",
+      "The satellite clinics have used the computer-assisted dosing tool since 2025-10-01; the main site uses the paper nomogram.",
+      "The clinic manager approved a four-week profile of INR and dose records for completeness on 2026-09-08 (approval ACM-2026-14).",
+      "Home point-of-care INR results are entered by clerical staff, and the delay between test and entry is not recorded anywhere."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names two designs, each with an intent cue ('do a retrospective comparison', 'plan a randomised comparison'), so routing is unresolved with candidates retrospective and rct. design.basis 'unresolved' at create requires S11 (routing recorded where classifyFamily is called); the family field is not asserted because an unresolved create stores no substantive family.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the lead pharmacist for a hospital-run anticoagulation clinic that manages about 1,150 patients on warfarin, most with atrial fibrillation or a mechanical heart valve. Two dosing approaches are in use at the same time. Pharmacists at the main site adjust doses with a paper nomogram based on the latest INR, while the two satellite clinics switched last year to a computer-assisted dosing tool built into the clinic software, which suggests a weekly dose from the last three INR values. Nobody has compared them. Our medical director wants to standardise on one approach by next spring, and the satellite pharmacists are convinced the software keeps patients in range for longer.\n\nI am not sure how to answer this. We could do a retrospective comparison of time in therapeutic range using the clinic records for patients managed under each approach, but the satellite clinics see younger patients with fewer interacting medicines, so the groups are not alike. Or we could plan a randomised comparison where new referrals are allocated to one approach or the other, which would take much longer and needs the pharmacists at the main site to learn the software. I also do not know whether our INR records are complete enough to calculate time in range: results from home testing are sometimes entered late or not at all.\n\nI need help deciding what can honestly be done, what the outcome should be (time in range, or bleeding and clot events), and whether we should settle the design now or check the data first.",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions": {
+            "length": 0
+          },
+          "scan.items": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the lead pharmacist for a hospital-run anticoagulation clinic"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Paper nomogram or computer-assisted warfarin dosing in a three-site anticoagulation clinic: design deferred until the INR records are profiled",
+        "subtitle": "Design not yet settled: records comparison or randomised comparison",
+        "family": null,
+        "statement": "Two warfarin dosing approaches run side by side in one anticoagulation clinic: a paper nomogram at the main site and a computer-assisted dosing tool at two satellite clinics since October 2025. The medical director wants to standardise by next spring, but the approaches have never been compared, the sites differ in case mix, and it is not known whether the INR records are complete enough to calculate time in therapeutic range. The design question is open: a comparison of existing records may be biased or impossible, and a randomised comparison of new referrals would be slow.",
+        "whoAffected": "About 1,150 adults on warfarin, many older and on interacting medicines, the clinic pharmacists at three sites, and the anticoagulation committee that must approve any change.",
+        "whatHurts": "Time outside the therapeutic range raises the risk of bleeding and of stroke or valve thrombosis; standardising on the wrong approach, or on the right one for the wrong reasons, would affect every patient in the clinic.",
+        "currentPractice": "Main site: dose adjusted from the latest INR with a paper nomogram. Satellites: weekly dose suggested by the dosing tool from the last three INRs and confirmed by the pharmacist. Home test results are entered by clerical staff with unrecorded delay.",
+        "whyNow": "Standardisation is planned for next spring, and the satellite pharmacists' confidence in the software has not been tested against the clinic's own data.",
+        "constraints": "No research funding. Pharmacist time for data work is limited to about four hours a week. Patient-identifiable clinic records may not leave the hospital network. Any change to dosing practice needs approval from the anticoagulation committee.",
+        "patientCenteredGoal": "Every patient spends as much time as possible in the safe INR range with the fewest dose changes and clinic contacts, whichever approach the clinic keeps.",
+        "summary": "Problem framed; the design family is left unresolved because both candidate designs depend on data whose completeness is unknown."
+      },
+      "note": "Explicit null family: the family stays as routed and design.basis stays 'unresolved', with a 'cleared' issue that matches the unresolved value (D2, amendment A1 item A7). The constraints are restated verbatim, so no G11 issue arises.",
+      "expect": {
+        "store": {
+          "title": "Paper nomogram or computer-assisted warfarin dosing in a three-site anticoagulation clinic: design deferred until the INR records are profiled",
+          "problem.constraints": "No research funding. Pharmacist time for data work is limited to about four hours a week. Patient-identifiable clinic records may not leave the hospital network. Any change to dosing practice needs approval from the anticoagulation committee.",
+          "problem.rawNeed": "I am the lead pharmacist for a hospital-run anticoagulation clinic that manages about 1,150 patients on warfarin, most with atrial fibrillation or a mechanical heart valve. Two dosing approaches are in use at the same time. Pharmacists at the main site adjust doses with a paper nomogram based on the latest INR, while the two satellite clinics switched last year to a computer-assisted dosing tool built into the clinic software, which suggests a weekly dose from the last three INR values. Nobody has compared them. Our medical director wants to standardise on one approach by next spring, and the satellite pharmacists are convinced the software keeps patients in range for longer.\n\nI am not sure how to answer this. We could do a retrospective comparison of time in therapeutic range using the clinic records for patients managed under each approach, but the satellite clinics see younger patients with fewer interacting medicines, so the groups are not alike. Or we could plan a randomised comparison where new referrals are allocated to one approach or the other, which would take much longer and needs the pharmacists at the main site to learn the software. I also do not know whether our INR records are complete enough to calculate time in range: results from home testing are sometimes entered late or not at all.\n\nI need help deciding what can honestly be done, what the outcome should be (time in range, or bleeding and clot events), and whether we should settle the design now or check the data first.",
+          "problem.statement": {
+            "includes": "never been compared"
+          },
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Paper nomogram or computer-assisted warfarin dosing in a three-site anticoagulation clinic: design deferred until the INR records are profiled"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "computer-assisted warfarin dosing tool versus paper nomogram time in therapeutic range pharmacist-led anticoagulation clinic",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "An empty search is an observable event: status 'ok' with 0 hits, never a silent empty list. 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "computer-assisted warfarin dosing tool versus paper nomogram time in therapeutic range pharmacist-led anticoagulation clinic",
+        "sourcesConsulted": [
+          "fixture search (0 records)",
+          "model knowledge of anticoagulation dosing literature"
+        ],
+        "gradeOverall": "moderate",
+        "gradeRationale": "Computer-assisted dosing is well established in anticoagulation services, so certainty is moderate.",
+        "synthesis": "The recorded search returned no records. From general knowledge, computer-assisted dosing is often reported to keep patients in range for longer than manual dosing, but no record was retrieved or inspected here.",
+        "items": [],
+        "summary": "No records; the reply nonetheless proposes a certainty and marks the empty search as confirmed.",
+        "investigatorConfirmsEmptySearch": true
+      },
+      "note": "Over zero records the model's certainty is dropped with an issue and the stage stays incomplete (G1, G2; D20). The key investigatorConfirmsEmptySearch is not part of the discovery schema on purpose (the validator warns about it): the confirmation is an investigator screen action recorded in the store, never a model field, so the key is dropped with an issue and no confirmation is stored (sheet A3 D20(a) correction; A3.2 section 1). The sourcesConsulted issue holds at 875fe59. The rationale text may be stored as prose, but no certainty label is rendered.",
+      "expect": {
+        "store": {
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.emptySearchConfirmation": {
+            "absent": true
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "dropped"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "investigatorConfirmsEmptySearch",
+              "code": "dropped"
+            }
+          ],
+          "count": {
+            "min": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ],
+          "excludes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-empty-search",
+      "note": "The investigator confirms on screen that the search was run and returned nothing; only this completes the stage (G2) and certainty stays unassessed (G1). The confirmation record (by 'investigator') is the one named in sheet A3.2 section 1; requires D20.",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.emptySearchConfirmation.by": "investigator"
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ],
+          "excludes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "hospital anticoagulation clinic, three sites",
+          "paper nomogram at the main site",
+          "computer-assisted dosing tool at two satellites since October 2025",
+          "home INR results entered by clerical staff",
+          "recorded search returned no records"
+        ],
+        "reading": "The comparison the director wants runs across sites, so the dosing approach is tangled with site: the satellites see younger patients with fewer interacting medicines, and home testing adds entry delays that may differ by site. Time in therapeutic range can only be calculated where INR records are complete, which is exactly what is unknown. With an empty recorded search and no inspected evidence, the local records are the only source, and their fitness for purpose decides which design is possible.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Paper nomogram dosing",
+            "kind": "context",
+            "detail": "Main site; dose from the latest INR."
+          },
+          {
+            "id": "n2",
+            "label": "Computer-assisted dosing tool",
+            "kind": "context",
+            "detail": "Satellites; weekly dose from the last three INRs."
+          },
+          {
+            "id": "n3",
+            "label": "Time in therapeutic range",
+            "kind": "outcome",
+            "detail": "Needs complete, timely INR records."
+          },
+          {
+            "id": "n4",
+            "label": "Site case mix",
+            "kind": "context",
+            "detail": "Satellites younger, fewer interacting medicines."
+          },
+          {
+            "id": "n5",
+            "label": "Late or missing home INR entries",
+            "kind": "context",
+            "detail": "Delay between test and entry is not recorded."
+          },
+          {
+            "id": "n6",
+            "label": "Empty recorded search",
+            "kind": "gap",
+            "detail": "No records retrieved; the investigator confirmed it empty."
+          },
+          {
+            "id": "n7",
+            "label": "Anticoagulation committee",
+            "kind": "stakeholder",
+            "detail": "Approves any change to dosing practice."
+          },
+          {
+            "id": "n8",
+            "label": "Patients on home testing",
+            "kind": "stakeholder",
+            "detail": "Most exposed to entry delays."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "confounds comparison of"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "influences"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "may make incalculable"
+          },
+          {
+            "from": "n8",
+            "to": "n5",
+            "relation": "generate"
+          },
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "hypothesised to give lower"
+          },
+          {
+            "from": "n6",
+            "to": "n7",
+            "relation": "leaves the decision to local data for"
+          }
+        ],
+        "summary": "Map shows site case mix and record completeness standing between the two dosing approaches and any honest comparison."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "map.nodes[5].kind": "gap",
+          "map.contexts": {
+            "length": 5
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "The recorded search returned no records",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Nothing was retrieved or inspected, so no external estimate can guide the choice and no certainty can be claimed.",
+            "opportunity": "Rerun a broader search before the design is revisited; meanwhile rely only on local data."
+          },
+          {
+            "id": "g2",
+            "title": "Completeness of INR records is unknown",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Time in range cannot be calculated where INRs are missing or entered late; a records comparison might measure data entry rather than dosing.",
+            "opportunity": "Profile INR and dose records at all three clinics for four weeks before choosing a design."
+          },
+          {
+            "id": "g3",
+            "title": "Dosing approach is confounded with site",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Every nomogram patient is at the main site and every tool patient at a satellite, so adjustment can only use recorded case-mix variables.",
+            "opportunity": "Record age, indication, interacting medicines and time on warfarin in the profile, whichever design follows."
+          },
+          {
+            "id": "g4",
+            "title": "Home-testing patients may be missing from the data",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Older patients, rural patients and patients with limited English who test at home are the most likely to have late or missing entries.",
+            "opportunity": "Report completeness by testing mode and language, and do not exclude them silently."
+          },
+          {
+            "id": "g5",
+            "title": "Bleeding and clot events are too rare at clinic scale",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "A clinic of 1,150 patients cannot show a difference in major events within a year.",
+            "opportunity": "Use time in range as the primary outcome and report major events descriptively."
+          }
+        ],
+        "errorsFound": [
+          "The first scan reply assigned a certainty and claimed the empty search was confirmed although no record was retrieved; both were dropped and the investigator confirmed the empty search on screen."
+        ],
+        "reevaluation": "The gaps point to profiling the records before choosing between a records comparison and a randomised comparison.",
+        "summary": "Five gaps; the empty search, unknown record completeness and site confounding are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].title": "Completeness of INR records is unknown",
+          "gaps.items[3].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Completeness of INR records is unknown"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Patients dosed with the computer-assisted tool spend more time in the therapeutic range than patients dosed with the paper nomogram, after accounting for case mix.",
+            "novelty": 30,
+            "need": 85,
+            "practiceChange": 85,
+            "feasibility": 50,
+            "parsimony": 70,
+            "rationale": "The question the director asked; feasibility is uncertain because it depends on record completeness and on a fair comparison across sites.",
+            "risks": "Residual confounding by site; incalculable time in range for home-testing patients."
+          },
+          {
+            "id": "h2",
+            "statement": "INR and dose records are complete enough to calculate time in range for at least 80 percent of patients at each clinic.",
+            "novelty": 20,
+            "need": 80,
+            "practiceChange": 60,
+            "feasibility": 95,
+            "parsimony": 90,
+            "rationale": "A precondition for any records comparison; answerable in four weeks with approved access.",
+            "risks": "Completeness may differ by site, which would itself bias a comparison."
+          },
+          {
+            "id": "h3",
+            "statement": "Any apparent advantage of the tool is explained by the younger, less complex patients at the satellites.",
+            "novelty": 35,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 50,
+            "parsimony": 70,
+            "rationale": "The alternative explanation that must be ruled out before standardising.",
+            "risks": "Cannot be separated from h1 without allocation or rich case-mix data."
+          }
+        ],
+        "selectedId": "h2",
+        "summary": "h2 selected because its answer decides which design can test h1 and h3."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h2",
+          "hypotheses.items[1].feasibility": 95,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "At each of the three clinics, for what proportion of patients on warfarin can time in therapeutic range be calculated from the INR and dose records over a four-week profile, and how does completeness differ by testing mode?",
+            "framework": "PCC",
+            "population": "All patients on warfarin managed by the clinic during the profile window",
+            "outcome": "",
+            "concept": "Completeness and timeliness of INR and dose records sufficient to calculate time in range",
+            "context": "Main site with paper nomogram and two satellites with the dosing tool"
+          },
+          {
+            "id": "q2",
+            "text": "Among adults on warfarin managed by the clinic, does dosing with the computer-assisted tool, compared with the paper nomogram, increase time in therapeutic range over 26 weeks?",
+            "framework": "PICO",
+            "population": "Adults on warfarin managed by the anticoagulation clinic",
+            "intervention": "Computer-assisted dosing tool",
+            "comparator": "Paper nomogram",
+            "outcome": "Time in therapeutic range",
+            "time": "26 weeks",
+            "setting": "Three-site anticoagulation clinic"
+          }
+        ],
+        "finer": "q1 is feasible within four hours a week and approval ACM-2026-14 and decides whether q2 can be answered from records; q2 is interesting and relevant to standardisation but its feasibility depends on q1.",
+        "summary": "A records-profile question first, and the comparison question it gates."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PCC",
+          "questions.items[1].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": null,
+        "rationale": "Neither candidate design can be chosen honestly yet. A comparison of existing records depends on INR data whose completeness is unknown and is confounded by site; a randomised comparison of new referrals avoids confounding but needs about 17 months of referrals and training of main-site pharmacists on the software. The recorded search returned nothing to guide the choice. The simplest honest step is a four-week profile of the records, already approved, after which the design is revisited with a fixed rule.",
+        "alternatives": [
+          "Records comparison of time in range adjusted for case mix (only if the profile shows calculable time in range for most patients at every clinic)",
+          "Randomised comparison of new referrals between the two approaches (if the records are unfit or confounding cannot be handled)",
+          "Standardise on the software now without a local comparison (refused: no retrieved evidence and no local data)"
+        ],
+        "guidelines": [
+          "RECORD, if the records comparison is chosen",
+          "CONSORT, if the randomised comparison is chosen"
+        ],
+        "whyNotMoreComplex": "Designing both comparisons in full now would spend pharmacist time on a plan the data may not support; the profile is small, approved and decisive.",
+        "decision": {
+          "kind": "defer",
+          "statement": "Defer the choice between a records comparison and a randomised comparison until a four-week profile of INR and dose records shows whether time in range can be calculated at all three clinics.",
+          "question": "Which design, if any, should compare the paper nomogram with the computer-assisted dosing tool?",
+          "claimIds": [],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "The profile shows time in range calculable for most patients at every clinic, with completeness similar across sites.",
+              "role": "justifies",
+              "status": "unknown",
+              "claimIds": []
+            },
+            {
+              "id": "k2",
+              "text": "The anticoagulation committee standardises on one approach before the profile is complete.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Clinic manager approval to profile INR and dose records for completeness",
+              "status": "met",
+              "evidence": "Approval ACM-2026-14 dated 2026-09-08, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Standardise on the software now without a local comparison",
+            "Start the records comparison immediately and accept the risk of incomplete data"
+          ],
+          "note": "No ledger claim exists because the recorded search returned no records and the investigator confirmed it empty; the decision rests on the investigator's local facts. The recommendation is null on purpose: the family stays unresolved until the profile is done."
+        },
+        "summary": "No design recommended yet; the decision defers the choice to a four-week records profile with an approval already in place."
+      },
+      "note": "Explicit null recommendation: design.recommended stays empty and design.basis 'unresolved' (D2 test design_null_recommended_is_unresolved), with a 'cleared' issue. The decision's recommendedFamily is null (S11). selectionStatus requires S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "defer",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].recommendedFamily": {
+            "isNull": true
+          },
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.alternatives": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "recommended",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The deferral cites no claim (nothing was retrieved) and none of its text is contradicted, so the selection is acceptable (A2 item 9, G7); its only gate is met on the investigator's approval, so the action (the profile) is ready. With a null recommendedFamily, acceptance changes no family and design.basis stays 'unresolved' (sheet A1 item A2). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].recommendedFamily": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "design.recommended": ""
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: the accepted deferral, the unresolved basis and the unassessed certainty must all survive. Requires S11 and D5 for the status fields and text.",
+      "expect": {
+        "store": {
+          "title": "Paper nomogram or computer-assisted warfarin dosing in a three-site anticoagulation clinic: design deferred until the INR records are profiled",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "needsReview": [],
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready"
+        },
+        "screen": {
+          "includes": [
+            "Paper nomogram or computer-assisted warfarin dosing in a three-site anticoagulation clinic: design deferred until the INR records are profiled",
+            "accepted"
+          ],
+          "excludes": [
+            "no recorded response",
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Two-step plan. Step 1 (October 2026): a four-week profile of INR and dose records at the three clinics to establish whether time in therapeutic range can be calculated. Step 2 (from January 2027, only after the design decision is revisited): either a records comparison adjusted for case mix or a randomised comparison of new referrals, with the primary outcome fixed now so that it cannot drift with the design.",
+        "population": "Step 1: every patient on warfarin managed by the clinic during the profile window (about 1,150). Step 2: adults starting or continuing clinic-dosed warfarin at any site, excluding patients who self-manage their dose at home.",
+        "exposure": "Dose adjustment with the paper nomogram (main site) or with the computer-assisted dosing tool (satellites).",
+        "procedures": "Step 1: a pharmacist extracts, for each patient, the dates of INR tests, the dates of entry where known, the doses recorded, the testing mode (clinic or home) and four case-mix variables (age, indication, interacting medicines, time on warfarin), inside the hospital network. Time in range is counted as calculable when no gap between INRs exceeds 56 days. Step 2 is specified after the decision is revisited against criterion k1.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Time in therapeutic range",
+            "measure": "Percentage of days with INR in the target range, by linear interpolation between consecutive INRs, per patient",
+            "timing": "26 weeks from the start of step 2",
+            "why": "The standard measure of dosing quality that either design can use; fixed before the design is chosen.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Major bleeding or thromboembolic event",
+            "measure": "Hospital attendance for major bleeding, stroke or systemic embolism",
+            "timing": "26 weeks from the start of step 2",
+            "why": "The outcome patients care about; too rare to power at clinic scale, so reported descriptively.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Calculability of time in range",
+            "measure": "Proportion of patients with no INR gap longer than 56 days, by clinic and testing mode",
+            "timing": "Step 1, four weeks",
+            "why": "Decides whether the records comparison is possible (criterion k1).",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Pharmacist time per dosing decision",
+            "measure": "Minutes per dosing decision timed on 40 decisions per approach",
+            "timing": "Step 1",
+            "why": "Standardising must not add workload the clinic cannot absorb.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Step 1 needs about 16 hours of pharmacist time over four weeks, within the four hours a week available, under approval ACM-2026-14; the feasibility of step 2 depends on the design chosen after the profile.",
+        "biasMitigation": [
+          "Primary outcome and case-mix variables fixed before any data are seen",
+          "Same extraction rules at all three clinics",
+          "The design choice is made on calculability, never on time-in-range values seen in step 1"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by site case mix",
+            "severity": "high",
+            "note": "Approach and site coincide; only a randomised comparison removes it."
+          },
+          {
+            "id": "b2",
+            "label": "Missing or late home INR entries",
+            "severity": "high",
+            "note": "May make time in range incalculable for the patients most at risk."
+          },
+          {
+            "id": "b3",
+            "label": "Learning curve for pharmacists new to the software",
+            "severity": "watch",
+            "note": "Relevant only if step 2 is randomised."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 4,
+          "flags": [
+            "Step 2 left unspecified until the profile is complete",
+            "Four case-mix variables fixed now"
+          ],
+          "simplestPath": "Profile the records, then choose the simpler design the data allow."
+        },
+        "theoreticalFramework": "None; a data-quality profile followed by a comparative design chosen on a pre-stated rule.",
+        "summary": "Records profile first, with the comparison's primary outcome fixed in advance; the design stays open by decision."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].patientCentered": true,
+          "protocol.outcomes[2].role": "process",
+          "protocol.parsimony.covariateCount": 4,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Step 1 is descriptive. Step 2 has two candidate analyses, both specified now so the design choice cannot change them.",
+        "sampleSize": "Step 1 includes every patient in the four-week window (about 1,150); if 70 percent have calculable time in range, the 95 percent confidence interval is about plus or minus 2.6 percentage points, precise enough to apply criterion k1 at each clinic. For step 2, with a between-patient standard deviation of time in range of about 20 percentage points, detecting a 5-point difference with 80 percent power at two-sided alpha 0.05 needs about 252 patients per approach in a randomised comparison, about 17 months of the clinic's 30 new referrals a month. A records comparison could include about 600 patients per approach at once, but its precision would not protect it from confounding by site.",
+        "primaryAnalysis": "Step 1: proportion of patients with calculable time in range by clinic and testing mode, with Wilson 95 percent intervals. Step 2, records comparison: linear regression of time in range on approach adjusted for the four case-mix variables. Step 2, randomised comparison: difference in mean time in range with a 95 percent confidence interval.",
+        "secondaryAnalysis": "Major bleeding and thromboembolic events per 100 patient-years by approach, descriptive only; distribution of test-to-entry delay where recorded; minutes per dosing decision by approach.",
+        "missingData": "Patients without calculable time in range are counted and described by clinic and testing mode, never imputed; any step 2 analysis restricted to calculable patients reports the restriction and its size.",
+        "multiplicity": "One primary outcome per step; secondary outcomes are descriptive and are not tested.",
+        "software": "R, with extraction rules and analysis code archived before step 1 starts.",
+        "overfittingGuards": [
+          "Outcome and case-mix variables fixed before any data are seen",
+          "Design chosen on calculability only, never on observed time-in-range values",
+          "Step 2 sample size fixed from the planning values stated here"
+        ],
+        "summary": "Step 1 estimates calculability to about 2.6 points; a randomised step 2 would need about 252 patients per approach."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "252 patients per approach"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Step 1 carries minimal risk: a review of existing clinic records by clinic pharmacists inside the hospital network. Step 2 risks depend on the design; a randomised comparison changes how new patients are dosed and carries the usual risks of either approach.",
+        "consent": "Step 1 uses records already held for care and needs no individual consent under the clinic's service evaluation approval. If step 2 is randomised, new referrals give written consent to allocation and may decline without any change to their care.",
+        "data": "Extraction stays inside the hospital network; the analysis file holds a study number, clinic, testing mode, INR dates and values, doses and the four case-mix variables, with no names or health numbers.",
+        "equity": "PROGRESS-Plus: older and rural patients, patients with limited English and patients with cognitive impairment are more likely to test at home and to have late or missing entries. Completeness is reported by testing mode and preferred language, and no design will quietly exclude patients whose records are incomplete.",
+        "effectiveness": "The profile is worth doing if it decides the design; a finding that records are unfit is a useful answer that prevents a misleading comparison.",
+        "efficiency": "About 16 pharmacist hours for step 1; step 2 costs are estimated only after the design is chosen.",
+        "costs": "Pharmacist time within existing roles; no software or licence costs for step 1.",
+        "grants": "None for step 1; a randomised step 2 could seek a regional pharmacy practice grant.",
+        "partnerships": "Satellite and main-site pharmacists, the clinic manager, clerical staff who enter home results, and two patients who test at home.",
+        "rebPath": "Step 1 is a service evaluation of record completeness under clinic approval ACM-2026-14; the hospital research office will be asked to confirm in writing that it needs no REB review. Step 2 requires REB review whichever design is chosen, following ICH-GCP principles.",
+        "limitations": "The profile describes four weeks only and cannot show whether either approach is better; completeness may change once staff know it is being measured.",
+        "summary": "Minimal-risk records profile with equity reporting by testing mode and language; REB review deferred to the chosen step 2 design."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "ACM-2026-14"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patients who test at home and one satellite pharmacist review the profile's reporting categories before extraction; the clerical team explains how home results reach the record.",
+        "socialListening": "No social media listening; comment cards from the clinic waiting rooms over the last year are read for mentions of dose changes and home testing.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Results that go missing",
+            "quote": "Composite paraphrase: I phone my result in on Monday and sometimes nobody calls back with a dose until Thursday.",
+            "implication": "Record test-to-entry delay in the profile where it can be found, and report it by testing mode.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Trust in the software",
+            "quote": "Composite paraphrase (satellite pharmacist): The tool is steadier than my own guesses, but I still override it for the patients who are ill or just back from hospital.",
+            "implication": "Count overrides if step 2 compares the approaches.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Learning a new system",
+            "quote": "Composite paraphrase (main-site pharmacist): If we have to learn the software in the middle of a busy clinic, the first months will not be a fair test.",
+            "implication": "Plan a run-in period before any randomised comparison.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Fewer changes, fewer mistakes",
+            "quote": "Composite paraphrase: Every new dose means a new pill pattern for my father, and that is when he gets it wrong.",
+            "implication": "Report the number of dose changes alongside time in range.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on delayed results, overrides, learning curves and dose-change burden."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].source": "patient",
+          "voices.items[3].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Can warfarin dosing approaches be compared from clinic records? A pre-specified records profile and decision rule in a three-site anticoagulation clinic",
+        "abstract": "Background: a paper nomogram and a computer-assisted dosing tool are used side by side in one anticoagulation clinic, and standardisation is planned. Methods: a four-week profile of INR and dose records at three clinics, with a pre-specified rule for choosing between a records comparison and a randomised comparison, and a primary outcome fixed in advance. Results and conclusions will be written after the profile.",
+        "introduction": "Standardising dosing practice without local evidence risks choosing on enthusiasm. A recorded search for comparisons of these approaches in pharmacist-led clinics returned no records, and the clinic's own records have never been checked for completeness.",
+        "methods": "All patients on warfarin in a four-week window; extraction of INR dates, entry dates where known, doses, testing mode and four case-mix variables inside the hospital network; calculability defined as no INR gap longer than 56 days; decision rule stated before extraction.",
+        "results": "No data have been collected yet. The report will present calculability by clinic and testing mode, entry delays where recorded, and the design chosen under the pre-stated rule.",
+        "discussion": "The discussion will state whether a records comparison is defensible, what the profile implies for patients who test at home, and what a randomised comparison would require.",
+        "limitations": "Four weeks of data; completeness may improve while it is being measured; no comparison of dosing quality is made in this step.",
+        "conclusion": "To be written after the profile; it will report fitness of the records and the design chosen, not which approach is better.",
+        "reportingChecklist": "RECORD (for the records profile)",
+        "summary": "Draft report of the records profile and decision rule, with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "RECORD (for the records profile)",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The recorded search returned no records and was confirmed empty; rerun a broader search before the design decision is revisited",
+          "The design family is unresolved by decision; revisit it against criterion k1 when the profile is complete",
+          "Ask the hospital research office to confirm in writing that the records profile needs no REB review"
+        ],
+        "improvementNotes": "The first scan reply proposed a moderate certainty and an empty-search confirmation over zero records; both were dropped and the investigator confirmed the empty search on screen. No certainty was assigned. The design stage returned no recommendation on purpose, and the accepted decision defers the choice.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: a broader search, the deferred design and the research office confirmation."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour; at 875fe59 the audit patch is overwritten by store.ts mergeStage (the L1.6 defect in sheet A3), not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list; the empty search, its confirmation, the unassessed certainty and the unresolved design must all come back.",
+      "expect": {
+        "store": {
+          "title": "Paper nomogram or computer-assisted warfarin dosing in a three-site anticoagulation clinic: design deferred until the INR records are profiled",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.emptySearchConfirmation.by": "investigator",
+          "design.recommended": "",
+          "design.basis": "unresolved",
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Paper nomogram or computer-assisted warfarin dosing in a three-site anticoagulation clinic: design deferred until the INR records are profiled"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click, one file equal to the store (G10). gradeOverall '' after the model proposed a certainty and the confirmation record require D20; recommendedFamily, selectionStatus and actionStatus S11; the unresolved basis after a null recommendation D2.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.gradeOverall": "",
+            "scan.items": {
+              "length": 0
+            },
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.emptySearchConfirmation.by": "investigator",
+            "design.recommended": "",
+            "design.basis": "unresolved",
+            "design.decisions[-1].kind": "defer",
+            "design.decisions[-1].recommendedFamily": {
+              "isNull": true
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "problem.constraints": "No research funding. Pharmacist time for data work is limited to about four hours a week. Patient-identifiable clinic records may not leave the hospital network. Any change to dosing practice needs approval from the anticoagulation committee."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "id": "sc-004",
-  "version": 1,
+  "version": 2,
   "title": "Regional commissioning: budget impact of extended pharmacy hours, meta-analysis withdrawn for a two-strand mixed-methods review",
   "field": "health-economics",
   "level": 5,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Expert path. A commissioning economist asks for a systematic review of extended community pharmacy opening in two parts that must not be merged (routing explicit systematic-review; the need avoids naming any other design). A fixture search returns eight budget and practice records; the appraisal records six claims. The first design decision (a meta-analysis of budget impact, resting on c1 and c2) is accepted with its one gate met; the analysis stage then shows that pooling two or three incompatible budget estimates is not defensible, the investigator withdraws the accepted decision (kept as withdrawn), and a revised design reply proposes a convergent segregated mixed-methods systematic review resting on c1, c3, c4 and c5 with one gate met and a data governance gate unknown (accepted selection, blocked action). The design change after Protocol and Analysis were completed flags both for review (G8), and both are redone: the revised protocol has one primary outcome per strand (budget impact for the payer, and synthesised practice findings, patient-centred) with a process and a balancing outcome, and an outcome with the invalid role 'cost-driver' that must be dropped with invalid-enum and dropped issues rather than demoted. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 5, 7 (ev-1cvugeb, ev-09c44mm, ev-1l5ehvn, ev-1jy7fry, ev-0uuyulh); titleYearKey hash for records 2, 6, 8 (ev-1hod7pl, ev-0wssqfd, ev-1kh3m6o). Requires S11 (selectionStatus, actionStatus, withdrawal, basis), S13 (appraisal) and D5 (status text, review required). Catches: a pooled figure forced from incompatible estimates, an accepted decision erased instead of withdrawn, downstream stages left current after the design changes, two strand-specific primary outcomes collapsed into one, and an invalid outcome role silently relabelled.",
   "inputs": {
@@ -92,7 +93,13 @@
           "includes": [
             "Extended community pharmacy opening hours: budget impact and how the service works in practice",
             "constraints",
-            {"anyOf": ["kept", "refused", "not applied"]}
+            {
+              "anyOf": [
+                "kept",
+                "refused",
+                "not applied"
+              ]
+            }
           ]
         }
       }
@@ -858,7 +865,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -870,6 +879,74 @@
           "includes": [
             "proposed"
           ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "settle-open-item",
+      "which": "latest",
+      "match": "The board will decide on the extended opening hours scheme",
+      "how": "aside",
+      "note": "The board's decision on the scheme is what this review informs; the review itself needs no approval from the board.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].settledItems": {
+            "length": 1
+          }
+        }
+      }
+    },
+    {
+      "do": "settle-open-item",
+      "which": "latest",
+      "match": "requires the data governance lead's approval",
+      "how": "aside",
+      "note": "This decision is a review of published studies; it uses none of the authority's activity data.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].settledItems": {
+            "length": 2
+          }
         }
       }
     },
@@ -1170,7 +1247,9 @@
             "design",
             "protocol",
             "stats"
-          ]
+          ],
+          "design.decisions[1].gates[0].status": "unknown",
+          "design.decisions[1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete",
@@ -1185,6 +1264,26 @@
             "proposed",
             "withdrawn",
             "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1738,5 +1837,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-004.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1); step 15 (g1)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1; the investigator sets aside, for decision 1, their fact \"The board will decide on the extended opening hours scheme\" (the board's decision on the scheme is what this review informs; the review itself needs no approval from the board); the investigator sets aside, for decision 1, their fact \"requires the data governance lead's approval\" (this decision is a review of published studies; it uses none of the authority's activity data). Model responses, need and records are unchanged."
 }

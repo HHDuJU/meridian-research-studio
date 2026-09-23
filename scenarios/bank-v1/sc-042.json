@@ -1,6 +1,6 @@
 {
   "id": "sc-042",
-  "version": 1,
+  "version": 2,
   "title": "Radiology department: structured reporting for abdominal CT, a lead with its year as text",
   "field": "radiology",
   "level": 2,
@@ -11,7 +11,8 @@
     "D1",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary path with a clear prospective observational design and one malformed-looking but valid value. The need names a prospective observational study (routing explicit). A fixture search returns six records with abstracts. A discovery reply adds three model leads, one giving its year as the 4-digit string \"2021\": it is stored as the number 2021, never as text and never replaced by a guess (G4; yearOrNull in contracts.ts). The leads are appended after the retrieved records (D1) and stay unverified model leads (G3); the discovery reply's null certainty assigns nothing (G1). The appraisal (S13) over the six retrieved records records three claims and certainty 'moderate' for completeness gains. The decision rests on c1 to c3 and both gates are met on the investigator's facts (service evaluation determination SE-2026-061 and the registrar's time), so the accepted action is ready. Level 2 ambiguity: two candidate designs (prospective follow-up against a before-after comparison with historic reports), resolved in favour of the prospective study with historic reports as context only. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-0z6e1x4, 3 ev-12yo4st, 4 ev-0ievwep, 6 ev-0gpv5rw), or of titleYearKey(title, year) when there is no DOI (records 2 ev-150rpwn, 5 ev-0g0olt6). Catches: a year string stored as text, dropped or guessed, leads that overwrite retrieved records, and certainty from leads.",
   "inputs": {
@@ -794,8 +795,8 @@
             "c2",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -804,13 +805,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "The hospital research office classified the evaluation as a service evaluation not requiring ethics review on 2026-09-02 (reference SE-2026-061).",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1303,5 +1349,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-042.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) citing the investigator's own fact before accepting decision 1. Model responses, need and records are unchanged."
 }

@@ -1,6 +1,6 @@
 {
   "id": "sc-033",
-  "version": 1,
+  "version": 2,
   "title": "Chest pain unit: rapid review of a one-hour troponin rule-out pathway, with a grade withdrawn on re-appraisal",
   "field": "cardiology",
   "level": 2,
@@ -11,7 +11,8 @@
     "D2",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary path with one explicit null on a model-owned field. The need names a rapid review; a fixture search with few hits returns five records (years 2019 to 2025). The first appraisal grades a conference abstract 'moderate'. The investigator asks for a re-appraisal and the second appraisal call sends the same annotations and claims except that the conference abstract's grade is null (and its limitations explain why): the explicit null must clear that record's grade to 'unrated' with one 'cleared' issue, leave every other grade, the four claims and the overall certainty 'moderate' unchanged, and must not be read as omission (D2, work-order test clear_explicit_null_grade; at 875fe59 the null is logged 'cleared' but the old grade stays, a false cleared log). The null is on a model-owned grade, never on investigator text (G11); the problem reply omits constraints (omitKeys), so the typed constraints stay as entered. The decision (kind narrow) rests on claims c1, c3 and c4 from fully reported records and both gates are met, so acceptance gives accepted and ready. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator: DOI-based for records 1, 3, 4 (ev-0vzr5m5, ev-1iswvrr, ev-0fba4if); title and year for records 2 and 5 (ev-1yix4sd, ev-0joc6ty). Requires D2 (null clears the grade), S13 (appraisal dispatch), S11 (routing basis, selectionStatus, actionStatus) and D5 (decision status text). Catches: an explicit null ignored or treated as omission, a false 'cleared' log, a re-appraisal that wipes other annotations or the ledger, and certainty changed by an ungraded record.",
   "inputs": {
@@ -906,8 +907,8 @@
             "c3",
             "c4"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -916,13 +917,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1436,5 +1482,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-033.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1. Model responses, need and records are unchanged."
 }

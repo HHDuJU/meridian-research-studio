@@ -1,6 +1,6 @@
 {
   "id": "sc-075",
-  "version": 1,
+  "version": 2,
   "title": "Regional cancer centre: rapid review of pharmacist support for oral anticancer agents, unusual outcome roles, partial search",
   "field": "oncology",
   "level": 5,
@@ -11,7 +11,8 @@
     "D5",
     "S5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Expert level 5 path with inputs near the compact budget (a need of 556 words, 1272 characters of typed constraints, 12 local facts) and an evidence question with economic content and unusual outcome roles. The need names a rapid review and avoids every phrase the router reads as a second design (no economic-evaluation wording), so classifyFamily routes it to \"rapid-review\". Refusals: (1) the problem reply returns constraints null: the typed text stays and a rejected-change issue at \"constraints\" is recorded and shown (G11; S5), with no false \"cleared\" issue. (2) The fixture search reports 19 hits but returns 8 records: the retrieval event is \"partial\" with resultCount 19 (retrieve.ts at 875fe59), Scan still completes on the 8 retrieved records (G2), and the decision's gate on retrieving the remaining hits stays unknown, so acceptance gives selectionStatus accepted with actionStatus blocked (G7; A2 item 9). (3) The first Protocol reply labels the cost outcome with the role \"economic\", which is not a role: the outcome is refused (invalid-enum, then dropped), never relabelled; the investigator re-runs Protocol (call 2) and the corrected reply records the cost outcome as secondary beside a primary harm outcome, a balancing dose-intensity outcome and a process time outcome. Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3, 5 and 6; titleYearKey for records 2, 4, 7 and 8): ev-04yrncg, ev-0vmg0yz, ev-0aafkqn, ev-127t7j1, ev-058h7ve, ev-1mkryek, ev-1nccl10, ev-1q0tzdl. Requires S5 (rejected-change), S13 (appraisal path), S11 (selection and action status) and D5 (status text); the partial event and the refused role hold at 875fe59. Catches: a model null erasing investigator constraints, a partial search shown as complete coverage, an invalid outcome role coerced to a valid one, and costs merged into the adherence result.",
   "inputs": {
@@ -97,7 +98,13 @@
         "screen": {
           "includes": [
             "Pharmacist-led follow-up for patients starting oral anticancer agents: a rapid review for a funding decision",
-            {"anyOf": ["kept", "refused", "not applied"]},
+            {
+              "anyOf": [
+                "kept",
+                "refused",
+                "not applied"
+              ]
+            },
             "no single summary figure combining them"
           ]
         }
@@ -879,7 +886,11 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -891,6 +902,29 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1543,5 +1577,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-075.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

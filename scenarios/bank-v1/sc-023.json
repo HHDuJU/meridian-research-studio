@@ -1,6 +1,6 @@
 {
   "id": "sc-023",
-  "version": 1,
+  "version": 2,
   "title": "Primary care network: umbrella review of link worker social prescribing, out-of-range score, boolean year, retracted review after acceptance",
   "field": "primary-care",
   "level": 4,
@@ -13,7 +13,8 @@
     "D5",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear umbrella review. (1) The problem reply returns a shortened paraphrase of the investigator's constraints (it drops the rule that no new patient data may be collected): by G11 the typed constraints stay unchanged and a 'rejected-change' issue is recorded at 'constraints' (the problem stage is otherwise applied). (2) The appraisal of seven retrieved records sends methodQuality 140 for the economic review: stored null with issue 'out-of-range' (holds at 875fe59 in applyAppraisal), while the rest of that annotation applies. (3) A later discovery reply recalls three leads, one with year true: stored null with 'invalid-type'; the leads are appended after the seven retrieved records and never replace them (D1), stay origin model and unverified, and the reply omits gradeOverall so the appraisal's certainty stands. (4) The design decision rests on ledger claims c1 to c3 and both gates are met, so acceptance is a supported positive (accepted, ready). (5) Then the abstract of the review behind claim c1 is replaced by a retraction notice through the store: the decision must become stale in the store, on screen and after reload (route on Design), and in the export, with the stages after Scan flagged for review. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator: DOI-based for records 1, 2, 3, 5, 6, 7 (ev-1yzpr3n, ev-0ezh23o, ev-1k4gcoi, ev-1qjqfi4, ev-15ni2el, ev-12aqit7) and title and year for record 4 (ev-0t6d9we). Requires D1 (leads appended; EvidenceItem.abstract as the changed field), D2 (the rejected-change checkpoint: the null and overwrite matrix extended by G11 to investigator text; no separate work-order entry is named for G11 yet), S10 (evidence revision covering source text), S11 (selectionStatus, actionStatus), S13 (appraisal dispatch) and D5 (status text). Catches: a model rewriting investigator constraints, an out-of-range score or a boolean year stored as a value, leads overwriting retrieved records, and an accepted decision left current after its source was retracted.",
   "inputs": {
@@ -924,8 +925,8 @@
             "c2",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -934,7 +935,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -946,6 +949,63 @@
           "includes": [
             "proposed"
           ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "settle-open-item",
+      "which": "latest",
+      "match": "The ICB commissioning board will consider link worker funding",
+      "how": "aside",
+      "note": "The board's funding decision is what this review informs; the review itself needs no approval from the board.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].settledItems": {
+            "length": 1
+          }
         }
       }
     },
@@ -1454,5 +1514,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-023.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1; the investigator sets aside, for decision 1, their fact \"The ICB commissioning board will consider link worker funding\" (the board's funding decision is what this review informs; the review itself needs no approval from the board). Model responses, need and records are unchanged."
 }

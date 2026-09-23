@@ -1,6 +1,6 @@
 {
   "id": "sc-050",
-  "version": 2,
+  "version": 3,
   "title": "School dental programme: lean redesign of silver diamine fluoride pathway, two strands, late Analysis reply refused after an edit",
   "field": "dentistry",
   "level": 5,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Expert path on a lean redesign across 23 school clinics (routing explicit qi-lean from 'use lean methods' and 'value stream'; the need describes two kinds of evidence without naming any other design). A fixture search returns eight records; the appraisal records five claims; the decision (kind implementation) rests on c1 to c4 with the combined-form gate unknown, so acceptance gives selection accepted and action blocked. The protocol keeps two strands with one primary outcome each (the proportion treated within a window, and acceptability from structured conversations; parsimony primaryOutcomeCount 2), plus process and balancing measures. Late reply: the investigator clicks Illuminate on the Analysis stage and, while the reply is pending, widens the primary measure's window from 28 to 42 days (set-field on protocol.outcomes[0].measure). Because the format has no field for request timing, the pending request is encoded as the illuminate step that immediately follows the set-field, and both notes state that the runner dispatches its request before the edit and delivers the reply after it. That reply was produced against the earlier studyRevision and analyses the 28-day measure, so it must be refused (G6): nothing applied, stage incomplete, refusal shown and logged ('refused' in the newest audit entry, as the 875fe59 store logs it). A reload on the Analysis route checks that the edit persists and the refused reply does not reappear; stats call 2 then analyses the 42-day measure and is applied. The guard is the 875fe59 store's mergeStageIfRevision used by the screen per sheet A3 item L1.2 (corrected in A3.1 item 1), so it needs no work-order entry. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 2, 4, 5, 8 (ev-13x3j1l, ev-07la10p, ev-1idebrc, ev-1fkqvnj, ev-0uhljw2); titleYearKey hash for records 3, 6, 7 (ev-1rdin30, ev-1rvhznl, ev-0b3kuvy). Requires S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a late reply merged over the investigator's edit, strands blended into one primary outcome, and an edit lost on reload.",
   "inputs": {
@@ -875,13 +876,40 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1504,5 +1532,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-050.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-050.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

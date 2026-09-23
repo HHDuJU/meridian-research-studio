@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { applyDecision, decisionIsSupported, evaluateDecision, evidenceRevision, studyRevision } from "../src/lib/evidence/decision";
+import { DETERMINATION_GATE } from "../src/lib/evidence/authority";
 import { ingestRecords } from "../src/lib/evidence/records";
 import { createStudy } from "../src/lib/defaults";
 import { useStudio } from "../src/lib/store";
@@ -74,6 +75,8 @@ test("accept_supported_decision_sets_selection_accepted_and_action_ready", () =>
   assert.equal(applied.decision!.selectionStatus, "proposed");
   assert.equal(applied.decision!.actionStatus, "blocked");
   S().mergeStage(s0.id, "design", { decisions: [applied.decision!] });
+  // D10 / S5: a decision that leads to work needs the investigator's record of its ethics status.
+  assert.equal(S().addGate(s0.id, "latest", DETERMINATION_GATE.ethics, "met", "REB-2026-001 approved the trial").ok, true);
   const r = S().acceptDecision(s0.id, "latest");
   assert.equal(r.ok, true);
   const s = S().studies.find((x) => x.id === s0.id)!;

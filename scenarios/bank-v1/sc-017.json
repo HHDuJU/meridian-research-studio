@@ -1,6 +1,6 @@
 {
   "id": "sc-017",
-  "version": 1,
+  "version": 2,
   "title": "Coastal town after fluoridation ended: a decision citing a non-existent claim refused, qualitative design accepted, cited abstract replaced after acceptance",
   "field": "public-health",
   "level": 4,
@@ -14,7 +14,8 @@
     "S8",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear qualitative question (routing qualitative, explicit under both classifier rules): a dental public health consultant studies how families and professionals see the end of water fluoridation. A fixture search returns seven records; the appraisal records five claims whose passages and numbers occur in the cited abstracts. The first design reply rests only on 'c6', which is not in the ledger, and on a figure (decay doubled) that no record or local fact reports: the id is dropped with an issue, the decision is left with no claim, and the investigator's acceptance must be refused (G7; S1, S8). The investigator withdraws it, and the revised reply rests on c3 to c5 with the ethics gate unknown and the budget gate met on the investigator's own constraint; acceptance is a supported positive with the action blocked. While still on Design, the journal's corrected abstract for the parent survey cited by c3 reverses its key figure: the decision must become stale and blocked, completed stages after Scan are flagged, and this survives reload and appears in the export. The change uses field 'abstract', which D1 adds; the scenario does not assert the abstract's stored representation. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 2, 3, 4, 6, 7 (ev-18pbfql, ev-0cq2ez1, ev-024im1i, ev-0qopbqo, ev-0dfumpb, ev-1vd798v) and titleYearKey hash for record 5 (ev-1bpruyv). Requires S1 and S8 (refusal), S10 (revision covers source text), S11, S13, D1 and D5. Catches: acceptance of a decision resting on an invented claim, a refused decision erased instead of withdrawn, and an accepted decision left current after its cited source text is corrected.",
   "inputs": {
@@ -915,7 +916,7 @@
             "c5"
           ],
           "design.decisions[1].gates[0].status": "unknown",
-          "design.decisions[1].gates[1].status": "met",
+          "design.decisions[1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -924,7 +925,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -936,6 +938,26 @@
           "includes": [
             "proposed",
             "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1462,5 +1484,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-017.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 12 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

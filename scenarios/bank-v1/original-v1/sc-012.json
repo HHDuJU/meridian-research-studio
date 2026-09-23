@@ -1,0 +1,1572 @@
+{
+  "id": "sc-012",
+  "version": 1,
+  "title": "Chemotherapy day unit: weekly symptom reporting, two candidate designs, the investigator withdraws the trial and chooses mixed methods",
+  "field": "oncology",
+  "level": 2,
+  "family": "mixed-methods",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary ambiguity: two candidate designs, and the investigator chooses one. A clinical nurse specialist names both a pragmatic trial and interviews, so routing at create is unresolved (family null, basis unresolved; the 875fe59 classifier and the A1-B evidence-mention rule agree). The problem reply omits family (omitKeys) and repeats the constraints word for word, so nothing changes and no issue arises. A fixture search returns seven records (years 2016 to 2024); the appraisal records six source-derived claims whose passages and numbers occur in the cited abstracts, with certainty moderate. The first design reply proposes a pragmatic trial resting on c1 and c5 with two unknown gates; the proposal must not set study.family (S11 with D3), which stays null. The investigator withdraws it (the rollout committee's decision RC-2026-06 removes equipoise) and the revised reply proposes an explanatory sequential mixed methods evaluation resting on c2, c3, c4 and c6 with both gates met on the investigator's approval records; acceptance is a supported positive (selection accepted, action ready) and only then does family become mixed-methods with basis explicit. The withdrawn decision is kept and exported. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 3, 4, 5, 7 (ev-0e4joc7, ev-1s3ozft, ev-0vq2bzi, ev-0pod5nb, ev-12cag00) and titleYearKey hash for records 2, 6 (ev-0drtzay, ev-16j6bhd). Requires S11 (routing at create, recommendedFamily, selectionStatus, actionStatus, family unchanged by a proposal, basis explicit on acceptance), S13 (appraisal on the production scan path) and D5 (decision status text). Catches: a proposal silently setting the family, a withdrawn decision erased or re-accepted, a default family substituted for an unresolved one, and a choice lost on reload.",
+  "inputs": {
+    "need": "I am a clinical nurse specialist in the chemotherapy day unit of a regional cancer centre. In March 2026 the breast and colorectal clinics started weekly electronic symptom reporting between cycles: patients answer a short set of questions on a tablet or phone, and severe answers (fever, uncontrolled vomiting, diarrhoea more than six times a day, chest pain) send an alert to the triage nurse. The lung and head-and-neck clinics are due to start in January 2027. Eight months in, completion is patchy. In the breast clinic most expected weekly reports come in during the first month and far fewer by the fourth cycle; nurses say some alerts sit unanswered over weekends; and I keep hearing from older patients that they stopped because nobody seemed to read the answers.\n\nI am weighing two designs and would value help choosing between them. We could run a pragmatic trial in the two clinics that have not started yet, giving weekly reporting to half of the new patients and usual telephone triage to the rest, and compare emergency visits and admissions during chemotherapy. Or we could combine the completion and alert data we already hold with interviews with patients who stopped reporting and with the triage nurses, to understand who drops out, why, and what happens to alerts. The centre's rollout committee has already decided that every patient starting chemotherapy will be offered weekly reporting by mid-2027, and I have no research funding beyond one protected day a week.\n\nWhat I need is a design that tells us whether the programme is working for the people it is meant to help, what to change before the next two clinics start, and how to measure completion and alert response properly.",
+    "constraints": "No research funding; the nurse specialist has one protected day a week until December 2027. Interviews must happen during clinic hours or by telephone. The reporting platform cannot be reconfigured before the vendor update in June 2027.",
+    "localFacts": [
+      "Weekly electronic symptom reporting started in the breast and colorectal clinics in March 2026; the lung and head-and-neck clinics start in January 2027.",
+      "The rollout committee decided on 2026-06-18 that every patient starting chemotherapy will be offered weekly reporting by mid-2027 (minute RC-2026-06).",
+      "The research ethics board approved an evaluation of the rollout, including interviews with patients and triage nurses, on 2026-09-02 (approval REB-ONC-2026-044).",
+      "The platform vendor provides a monthly export of completed reports and alert timestamps under data agreement DA-2026-17."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names a pragmatic trial and interviews, so routing is unresolved at create (875fe59 classifier and the A1-B rule agree): family null, basis unresolved. basis requires S11 (routing recorded at create).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a clinical nurse specialist in the chemotherapy day unit of a regional cancer centre. In March 2026 the breast and colorectal clinics started weekly electronic symptom reporting between cycles: patients answer a short set of questions on a tablet or phone, and severe answers (fever, uncontrolled vomiting, diarrhoea more than six times a day, chest pain) send an alert to the triage nurse. The lung and head-and-neck clinics are due to start in January 2027. Eight months in, completion is patchy. In the breast clinic most expected weekly reports come in during the first month and far fewer by the fourth cycle; nurses say some alerts sit unanswered over weekends; and I keep hearing from older patients that they stopped because nobody seemed to read the answers.\n\nI am weighing two designs and would value help choosing between them. We could run a pragmatic trial in the two clinics that have not started yet, giving weekly reporting to half of the new patients and usual telephone triage to the rest, and compare emergency visits and admissions during chemotherapy. Or we could combine the completion and alert data we already hold with interviews with patients who stopped reporting and with the triage nurses, to understand who drops out, why, and what happens to alerts. The centre's rollout committee has already decided that every patient starting chemotherapy will be offered weekly reporting by mid-2027, and I have no research funding beyond one protected day a week.\n\nWhat I need is a design that tells us whether the programme is working for the people it is meant to help, what to change before the next two clinics start, and how to measure completion and alert response properly.",
+          "problem.constraints": "No research funding; the nurse specialist has one protected day a week until December 2027. Interviews must happen during clinic hours or by telephone. The reporting platform cannot be reconfigured before the vendor update in June 2027.",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a clinical nurse specialist in the chemotherapy day unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "family"
+      ],
+      "response": {
+        "title": "Weekly electronic symptom reporting during chemotherapy: who stops reporting, why, and what happens to alerts",
+        "subtitle": "Two candidate designs: a pragmatic trial in the clinics yet to start, or a mixed methods evaluation of the rollout",
+        "statement": "Weekly electronic symptom reporting between chemotherapy cycles started in two clinics in March 2026 and reaches two more in January 2027. Completion is patchy, some severe-symptom alerts wait over weekends, and older patients report stopping because nobody seemed to read their answers. The centre needs to know whether the programme reaches the patients it is meant to help, who stops reporting and why, and how alerts are handled, before it is extended; the design is not yet chosen.",
+        "whoAffected": "Adults receiving chemotherapy in the regional cancer centre, especially older patients, people without home internet and those needing an interpreter; triage nurses who read alerts; families who support reporting at home.",
+        "whatHurts": "Severe symptoms that go unanswered, patients who give up on a service meant to protect them, and nurses handling alert volumes without a weekend rota.",
+        "currentPractice": "Weekly questions on a tablet or phone with automatic alerts to the triage nurse on weekdays; usual telephone triage in the clinics not yet started; no routine measure of completion or alert response time.",
+        "whyNow": "Two more clinics start in January 2027, the rollout committee has committed to offering reporting to every patient by mid-2027, and the platform can only be reconfigured at the June 2027 update.",
+        "constraints": "No research funding; the nurse specialist has one protected day a week until December 2027. Interviews must happen during clinic hours or by telephone. The reporting platform cannot be reconfigured before the vendor update in June 2027.",
+        "patientCenteredGoal": "Every patient who reports a severe symptom gets a timely response, and patients who cannot or will not report electronically still have a safe route.",
+        "summary": "Problem framed around completion and alert response in routine care; the choice between a trial and a mixed methods evaluation is left to the design stage."
+      },
+      "note": "The reply omits family (listed in omitKeys), so the unresolved routing stands without an issue; it repeats the investigator's constraints word for word, so G11 raises nothing.",
+      "expect": {
+        "store": {
+          "title": "Weekly electronic symptom reporting during chemotherapy: who stops reporting, why, and what happens to alerts",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "problem.constraints": "No research funding; the nurse specialist has one protected day a week until December 2027. Interviews must happen during clinic hours or by telephone. The reporting platform cannot be reconfigured before the vendor update in June 2027.",
+          "problem.statement": {
+            "includes": "who stops reporting and why"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Weekly electronic symptom reporting during chemotherapy: who stops reporting, why, and what happens to alerts"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "weekly electronic patient-reported symptom monitoring chemotherapy completion alert response emergency visits",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Weekly web-based symptom reporting during outpatient chemotherapy and emergency department visits: a randomised trial",
+            "authors": "Halvorsen-Mbatha K, Duarte-Whitfield R, Oyelaran-Szabo T",
+            "year": 2017,
+            "venue": "Journal of Supportive Oncology Practice",
+            "doi": "10.5555/jsop.2017.0231",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomised 612 adults starting outpatient chemotherapy at two centres to weekly web-based symptom reporting with nurse alerts or to usual care, in which patients telephoned the unit when concerned. Over six months, 34 percent of patients in the reporting group and 41 percent in the usual care group had at least one emergency department visit. Health-related quality of life declined less in the reporting group. Completion of expected weekly reports was 83 percent in the first month and 71 percent by month six. Patients over 75 and those without home internet access were underrepresented, and both centres had a dedicated nurse reading alerts."
+          },
+          {
+            "title": "Completion of weekly electronic symptom reports after routine rollout in a comprehensive cancer centre",
+            "authors": "Sorensen-Adeyemi L, Tan-Holbrook G",
+            "year": 2022,
+            "venue": "Oncology Nursing Informatics",
+            "providerType": "journal-article",
+            "abstract": "We describe completion of weekly electronic symptom reports in the first year after routine rollout to 1,480 patients receiving chemotherapy. Completion of expected reports was 78 percent in the first month of treatment and 46 percent by month six. Completion was lower in patients aged 75 or over (odds ratio 0.52) and in those living in the most deprived areas (odds ratio 0.61). Patients who received a nurse call after their first severe alert completed more of their later reports. The study could not tell whether falling completion reflected improving symptoms or disengagement from the programme."
+          },
+          {
+            "title": "Why patients stop reporting symptoms electronically during chemotherapy: an interview study",
+            "authors": "Nkemelu-Varga A, Pereira-Lindholm C, Watanabe-Osei J",
+            "year": 2021,
+            "venue": "Cancer Care Experience",
+            "doi": "10.5555/cce.2021.0109",
+            "providerType": "journal-article",
+            "abstract": "We interviewed 31 adults who had stopped weekly electronic symptom reporting before finishing chemotherapy. Three reasons recurred: feeling that nobody read the answers, questions that did not fit their symptoms, and difficulty with the tablet or phone. Several participants said that they stopped after reporting a severe symptom and receiving no call within the day. Participants valued a named nurse and the option of reporting on paper. Interviews were held at one urban centre, and most participants spoke the majority language, so the views of patients who needed an interpreter are missing."
+          },
+          {
+            "title": "Alert burden and response times after introducing electronic symptom monitoring in a chemotherapy day unit",
+            "authors": "Gallagher-Otieno F, Brandt-Moreau S",
+            "year": 2023,
+            "venue": "Journal of Oncology Nursing Operations",
+            "doi": "10.5555/jono.2023.0077",
+            "providerType": "journal-article",
+            "abstract": "We measured alert volume and nurse response time for 12 months after a chemotherapy day unit introduced weekly electronic symptom reports. The unit received a median of 38 severe-symptom alerts per week. The median time from alert to nurse contact was 3.1 hours on weekdays and 19.5 hours at weekends, when no triage nurse was rostered to read alerts. Nurses reported that 29 percent of alerts concerned symptoms already known to the team. The unit added a weekend review rota in month nine, and the evaluation ended before its effect could be measured."
+          },
+          {
+            "title": "Electronic patient-reported outcome monitoring during systemic cancer treatment: a systematic review of randomised trials",
+            "authors": "Achterberg-Kimura E, Fitzgerald-Nwosu P, Lemaire-Castellano D",
+            "year": 2020,
+            "venue": "Supportive Care Evidence Reviews",
+            "doi": "10.5555/scer.2020.0418",
+            "providerType": "journal-article",
+            "abstract": "We searched four databases to 2019 for randomised trials of electronic symptom monitoring during chemotherapy or immunotherapy. In all, 14 trials with 5,210 patients met the inclusion criteria. Emergency department visits were reduced in 6 of the 9 trials that measured them, and quality of life favoured monitoring in 8 of 11. Effects on survival were reported in two trials. Adherence to reporting was described inconsistently, and no trial reported outcomes separately for patients who stopped reporting. Risk of bias was moderate to high because neither patients nor staff could be blinded."
+          },
+          {
+            "title": "Tablet versus paper symptom questionnaires among adults aged 75 and over receiving chemotherapy: a cross-sectional comparison",
+            "authors": "Moreno-Achebe I, Lindqvist-Rao H",
+            "year": 2016,
+            "venue": "Geriatric Oncology Letters",
+            "providerType": "journal-article",
+            "abstract": "We offered 204 adults aged 75 and over receiving chemotherapy a symptom questionnaire either on paper or on a tablet at the same clinic visit. In all, 57 percent chose paper. Those who chose the tablet completed it in a median of 6 minutes and those who chose paper in 4 minutes. Among tablet users, 18 percent needed help from staff to finish. Choosing paper was associated with living alone and with having no internet access at home. The authors recommend keeping a paper route whenever electronic reporting is introduced for older adults."
+          },
+          {
+            "title": "Integrating completion data and patient interviews to evaluate electronic symptom reporting: a mixed methods evaluation in a regional cancer network",
+            "authors": "Okafor-Lindgren B, Castaneda-Hughes M, Yilmaz-Fraser D",
+            "year": 2024,
+            "venue": "Implementation in Cancer Care",
+            "doi": "10.5555/icc.2024.0062",
+            "providerType": "journal-article",
+            "abstract": "We combined 12 months of report completion data from three regional centres with interviews with 24 patients and 11 nurses, and integrated the two strands in a joint display. Completion fell most steeply after the first missed nurse response to a severe alert. Interviews explained the pattern: patients read an unanswered alert as a sign that reporting did not matter. Centres that introduced a same-day response standard recovered completion within three months. The evaluation was not designed to estimate effects on emergency visits, and the centres chose themselves to take part."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0e4joc7",
+            "ev-0drtzay",
+            "ev-1s3ozft",
+            "ev-0vq2bzi",
+            "ev-0pod5nb",
+            "ev-16j6bhd",
+            "ev-12cag00"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[1].provenance.access": "abstract",
+          "scan.items[2].grade": "unrated",
+          "scan.items[2].relevance": {
+            "isNull": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Why patients stop reporting symptoms electronically during chemotherapy: an interview study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0e4joc7",
+            "relevance": 78,
+            "methodQuality": 72,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Emergency department visits over six months in 34 percent with weekly reporting against 41 percent with usual care; completion 83 percent in month one and 71 percent by month six.",
+            "limitations": "Two centres with a dedicated alert nurse; older patients and those without home internet underrepresented.",
+            "contextTags": [
+              "randomised",
+              "emergency visits",
+              "trial conditions"
+            ]
+          },
+          {
+            "id": "ev-0drtzay",
+            "relevance": 90,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In routine care for 1,480 patients, completion fell from 78 percent in month one to 46 percent by month six; lower at age 75 or over (odds ratio 0.52) and in the most deprived areas (odds ratio 0.61).",
+            "limitations": "One centre; cannot separate improving symptoms from disengagement.",
+            "contextTags": [
+              "routine rollout",
+              "completion",
+              "age",
+              "deprivation"
+            ]
+          },
+          {
+            "id": "ev-1s3ozft",
+            "relevance": 88,
+            "methodQuality": 60,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "The 31 patients who stopped reporting cited unread answers, ill-fitting questions and device difficulty; several stopped after a severe report got no call within the day.",
+            "limitations": "One urban centre; patients who needed an interpreter are missing.",
+            "contextTags": [
+              "interviews",
+              "disengagement",
+              "alert response"
+            ]
+          },
+          {
+            "id": "ev-0vq2bzi",
+            "relevance": 84,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Median 38 severe alerts a week; median time to nurse contact 3.1 hours on weekdays and 19.5 hours at weekends; 29 percent of alerts concerned known symptoms.",
+            "limitations": "One unit; the weekend rota's effect was not measured.",
+            "contextTags": [
+              "nurse workload",
+              "response time",
+              "weekends"
+            ]
+          },
+          {
+            "id": "ev-0pod5nb",
+            "relevance": 70,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Fourteen trials with 5,210 patients; emergency visits reduced in 6 of the 9 trials measuring them; quality of life favoured monitoring in 8 of 11.",
+            "limitations": "Unblinded trials; adherence poorly reported; no outcomes for patients who stopped reporting.",
+            "contextTags": [
+              "systematic review",
+              "randomised trials",
+              "adherence gap"
+            ]
+          },
+          {
+            "id": "ev-16j6bhd",
+            "relevance": 62,
+            "methodQuality": 48,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Of 204 adults aged 75 and over, 57 percent chose paper; 18 percent of tablet users needed staff help.",
+            "limitations": "Single visit; no follow-up of continued reporting.",
+            "contextTags": [
+              "older adults",
+              "paper route",
+              "digital access"
+            ]
+          },
+          {
+            "id": "ev-12cag00",
+            "relevance": 86,
+            "methodQuality": 57,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across three centres, completion fell most steeply after the first missed nurse response to a severe alert; centres with a same-day response standard recovered completion within three months.",
+            "limitations": "Centres chose to take part; not designed to estimate effects on emergency visits.",
+            "contextTags": [
+              "mixed methods",
+              "joint display",
+              "response standard"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a randomised trial of 612 adults starting chemotherapy, 34 percent with weekly reporting and 41 percent with usual care had at least one emergency department visit over six months.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0e4joc7"
+            ],
+            "location": "Abstract, results",
+            "passage": "Over six months, 34 percent of patients in the reporting group and 41 percent in the usual care group had at least one emergency department visit.",
+            "interpretation": "Weekly reporting can reduce emergency visits under trial conditions with a dedicated alert nurse.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "After routine rollout to 1,480 patients, completion of expected weekly reports fell from 78 percent in the first month to 46 percent by month six.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0drtzay"
+            ],
+            "location": "Abstract, results",
+            "passage": "Completion of expected reports was 78 percent in the first month of treatment and 46 percent by month six.",
+            "interpretation": "In routine care the programme loses many patients by mid-treatment; completion is a measure that needs defining and tracking.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Some patients stopped reporting after a severe symptom report received no call within the day.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1s3ozft"
+            ],
+            "location": "Abstract, results",
+            "passage": "Several participants said that they stopped after reporting a severe symptom and receiving no call within the day.",
+            "interpretation": "Alert response is a likely driver of dropout and belongs in the evaluation.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "In one day unit the median time from alert to nurse contact was 3.1 hours on weekdays and 19.5 hours at weekends, when no triage nurse read alerts.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0vq2bzi"
+            ],
+            "location": "Abstract, results",
+            "passage": "The median time from alert to nurse contact was 3.1 hours on weekdays and 19.5 hours at weekends, when no triage nurse was rostered to read alerts.",
+            "interpretation": "Weekend alert response must be measured separately.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Across 14 randomised trials, emergency department visits were reduced in 6 of the 9 trials that measured them.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0pod5nb"
+            ],
+            "location": "Abstract, results",
+            "passage": "Emergency department visits were reduced in 6 of the 9 trials that measured them",
+            "interpretation": "The effectiveness question has randomised answers already; the local question is delivery.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c6",
+            "text": "Across three regional centres, completion fell most steeply after the first missed nurse response to a severe alert.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-12cag00"
+            ],
+            "location": "Abstract, results",
+            "passage": "Completion fell most steeply after the first missed nurse response to a severe alert.",
+            "interpretation": "Linking completion to alert response over time is the key analysis for the local evaluation.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Randomised trials and a review of 14 trials show that weekly electronic reporting can reduce emergency visits and protect quality of life under trial conditions with a dedicated alert nurse. In routine care, completion falls steeply by mid-treatment (78 to 46 percent in one centre), more among older and more deprived patients, and qualitative and mixed methods work links stopping to unanswered alerts, with weekend response particularly slow. Older adults often prefer paper. The effectiveness question has randomised answers; the unanswered question is how the programme is delivered and who it loses.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "Randomised trials and a review support a benefit on emergency visits (moderate certainty, lowered for lack of blinding and trial staffing); evidence on routine-care completion and its causes is observational and qualitative from single centres (low).",
+        "summary": "Seven retrieved records appraised; six source-derived claims with passages; overall certainty moderate for benefit, low for routine delivery."
+      },
+      "note": "Appraisal of the seven retrieved records (S13). Certainty moderate is the appraisal's own value over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items[0].grade": "moderate",
+          "scan.items[0].kind": "rct",
+          "scan.items[1].relevance": 90,
+          "scan.items[2].kind": "qualitative",
+          "scan.items[4].kind": "systematic-review",
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-0drtzay"
+          ],
+          "scan.claims[5].sourceIds": [
+            "ev-12cag00"
+          ],
+          "scan.gradeOverall": "moderate",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional cancer centre, chemotherapy day unit",
+          "breast and colorectal clinics reporting since March 2026",
+          "lung and head-and-neck clinics from January 2027",
+          "no weekend alert rota"
+        ],
+        "reading": "The benefit of weekly reporting depends on a loop: a patient reports, a nurse responds, the patient keeps reporting. The retrieved trials show the benefit when the loop is staffed; routine-care evidence shows the loop breaking at the response step, with completion falling after unanswered alerts, especially at weekends and among older and more deprived patients. The local question sits on that loop, not on whether the intervention can work.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Weekly symptom report",
+            "kind": "context",
+            "detail": "Tablet or phone questions between cycles."
+          },
+          {
+            "id": "n2",
+            "label": "Severe-symptom alert",
+            "kind": "context",
+            "detail": "Sent to the triage nurse; weekday only."
+          },
+          {
+            "id": "n3",
+            "label": "Nurse response time",
+            "kind": "outcome",
+            "detail": "3.1 hours weekdays, 19.5 hours weekends elsewhere (claim c4)."
+          },
+          {
+            "id": "n4",
+            "label": "Report completion over time",
+            "kind": "outcome",
+            "detail": "78 to 46 percent by month six in routine care (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Randomised trial of weekly reporting",
+            "kind": "rct",
+            "detail": "Fewer emergency visits with a dedicated alert nurse (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Interviews with patients who stopped",
+            "kind": "qualitative",
+            "detail": "Unanswered alerts as a reason to stop (claim c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Older and more deprived patients",
+            "kind": "stakeholder",
+            "detail": "Lower completion; many prefer paper."
+          },
+          {
+            "id": "n8",
+            "label": "Triage nurses",
+            "kind": "stakeholder",
+            "detail": "Alert volume without a weekend rota."
+          },
+          {
+            "id": "n9",
+            "label": "No local measure of completion or response",
+            "kind": "gap",
+            "detail": "Neither is tracked today."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "triggers"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "waits for"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "shapes"
+          },
+          {
+            "from": "n5",
+            "to": "n1",
+            "relation": "shows benefit of"
+          },
+          {
+            "from": "n6",
+            "to": "n4",
+            "relation": "explains fall in"
+          },
+          {
+            "from": "n7",
+            "to": "n4",
+            "relation": "lower in"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "determine"
+          },
+          {
+            "from": "n9",
+            "to": "n4",
+            "relation": "leaves unmeasured"
+          }
+        ],
+        "summary": "Map centres the report-response-report loop and where it breaks in routine care."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[8].kind": "gap",
+          "map.reading": {
+            "includes": "breaking at the response step"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local measure of completion or alert response",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The centre cannot say who is dropping out or how long alerts wait, although both are the likely failure points (claims c2 and c4).",
+            "opportunity": "Define completion per patient and time to nurse contact from the platform export and report them monthly."
+          },
+          {
+            "id": "g2",
+            "title": "Why patients stop is known only from other centres",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Reasons for stopping (claim c3) may differ here, where older and rural patients are common.",
+            "opportunity": "Interview patients who stopped, sampled by age, deprivation and clinic."
+          },
+          {
+            "id": "g3",
+            "title": "Patients needing an interpreter are missing from the evidence",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "The interview study had almost no participants needing an interpreter.",
+            "opportunity": "Offer interviews with professional interpreters and report completion by preferred language."
+          },
+          {
+            "id": "g4",
+            "title": "Weekend alert handling",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Slow weekend response may drive dropout (claims c4 and c6).",
+            "opportunity": "Analyse completion after weekday and weekend alerts separately."
+          },
+          {
+            "id": "g5",
+            "title": "Falling completion may partly mean improving symptoms",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Not every missed report is disengagement.",
+            "opportunity": "Ask patients who stopped whether symptoms had settled, and compare with their last reported scores."
+          }
+        ],
+        "errorsFound": [
+          "The need asks whether the programme is working; the retrieved trials already answer whether it can work, so a new local trial would repeat that question rather than answer the delivery question."
+        ],
+        "reevaluation": "The gaps point to measuring and explaining delivery (completion, alert response, reasons for stopping) rather than re-estimating effectiveness.",
+        "summary": "Five gaps; the missing local measures and the unexplained dropout are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[2].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No local measure of completion or alert response"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Weekly report completion in the week after an unanswered severe alert is lower than in the week after an answered one, and the difference is larger for patients aged 75 or over.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "Directly tests the mechanism suggested by claims c3 and c6 with data the platform already records; the answer changes the response standard.",
+            "risks": "Alerts left unanswered may cluster in sicker patients who stop for other reasons."
+          },
+          {
+            "id": "h2",
+            "statement": "Offering weekly reporting to new patients in the two remaining clinics reduces emergency visits over three cycles compared with usual telephone triage.",
+            "novelty": 20,
+            "need": 50,
+            "practiceChange": 40,
+            "feasibility": 35,
+            "parsimony": 55,
+            "rationale": "The effectiveness question is already answered by trials (claims c1 and c5), and the rollout decision removes equipoise.",
+            "risks": "No funding, no equipoise, and too few patients in two clinics."
+          },
+          {
+            "id": "h3",
+            "statement": "Patients living in the most deprived areas stop reporting earlier than others, and a paper route closes most of the gap.",
+            "novelty": 40,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Completion is lower in deprived areas (claim c2) and paper is often preferred by older patients.",
+            "risks": "A paper route cannot be added to the platform before June 2027."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the delivery mechanism to test, h2 kept visible as the trial question."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[1].feasibility": 35,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among patients receiving chemotherapy in the breast and colorectal clinics from March 2026 to February 2027, what proportion of expected weekly symptom reports is completed over the first 12 weeks of treatment, and is completion lower in the week after an unanswered severe alert?",
+            "framework": "PECO",
+            "population": "Adults receiving chemotherapy in the breast and colorectal clinics, March 2026 to February 2027",
+            "intervention": "Unanswered severe alert in the previous week (exposure)",
+            "comparator": "Answered alert or no alert",
+            "outcome": "Weekly report completed",
+            "time": "First 12 weeks of chemotherapy",
+            "setting": "Regional cancer centre day unit"
+          },
+          {
+            "id": "q2",
+            "text": "How do patients who stopped reporting, and the triage nurses who read alerts, explain stopping and alert handling?",
+            "framework": "SPIDER",
+            "population": "Patients who stopped reporting before finishing chemotherapy; triage nurses",
+            "intervention": "Weekly electronic reporting as delivered",
+            "comparator": "",
+            "outcome": "Reasons for stopping and ways alerts are handled",
+            "time": "Interviews from March to May 2027",
+            "setting": "Same centre"
+          }
+        ],
+        "finer": "Feasible with platform exports and one protected day a week; interesting to the rollout committee and nurses; novel locally; ethical under the approved evaluation; relevant because two clinics start in January 2027.",
+        "summary": "One quantitative question on completion and alert response, one qualitative question on reasons."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[1].framework": "SPIDER",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "pragmatic-trial",
+        "rationale": "The strongest answer to whether weekly reporting reduces emergency visits in this centre would come from allocating new patients in the two clinics that have not started. Trials elsewhere (claims c1 and c5) suggest a benefit, and a pragmatic trial would test it in routine conditions with the centre's own staffing.",
+        "alternatives": [
+          "Explanatory sequential mixed methods evaluation of the rollout in the two running clinics",
+          "Before-after comparison of emergency visits in the breast and colorectal clinics"
+        ],
+        "guidelines": [
+          "CONSORT extension for pragmatic trials"
+        ],
+        "whyNotMoreComplex": "A cluster design across all four clinics would need more clinics than the centre has.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Randomise patients starting chemotherapy in the lung and head-and-neck clinics from January 2027 to weekly reporting or usual telephone triage for their first three cycles, with emergency visits and admissions as the primary outcome.",
+          "question": "Does weekly electronic symptom reporting reduce emergency visits and admissions in this centre's routine care?",
+          "claimIds": [
+            "c1",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Weekly reporting reduced emergency visits in randomised trials.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c5"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The centre has already committed to offering weekly reporting to every patient, leaving no equipoise for withholding it.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics approval for allocating new patients to delayed weekly reporting",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "Rollout committee agreement to withhold weekly reporting from control patients for three cycles",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Mixed methods evaluation of the rollout in the breast and colorectal clinics",
+            "Before-after comparison of emergency visits"
+          ],
+          "note": "Rests on ledger claims c1 and c5; both gates are unknown."
+        },
+        "summary": "Pragmatic trial proposed; both gates are unknown."
+      },
+      "note": "The model proposes the trial. Under S11 (with D3) a proposed recommendation does not set study.family, which stays null until the investigator accepts a decision; at 875fe59 applyAiResult writes studyPatch.family and this check fails. recommendedFamily, selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "pragmatic-trial",
+          "family": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[0].status": "proposed",
+          "design.decisions[0].selectionStatus": "proposed",
+          "design.decisions[0].actionStatus": "blocked",
+          "design.decisions[0].recommendedFamily": "pragmatic-trial",
+          "design.decisions[0].claimIds": [
+            "c1",
+            "c5"
+          ],
+          "design.decisions[0].gates[1].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "withdraw-decision",
+      "which": "latest",
+      "note": "The investigator chooses against the trial: the rollout committee's decision (RC-2026-06) removes equipoise, and the question the centre needs answered is delivery, not effectiveness. The withdrawn record is kept, never erased; family stays null because nothing was accepted. selectionStatus requires S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[0].status": "withdrawn",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "design.decisions[0].claimIds": [
+            "c1",
+            "c5"
+          ],
+          "family": {
+            "isNull": true
+          }
+        },
+        "screen": {
+          "includes": [
+            "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 2,
+      "response": {
+        "recommended": "mixed-methods",
+        "rationale": "The investigator's choice fits the evidence: the effectiveness question has randomised answers (claims c1 and c5), while the local unknowns are who stops reporting (claim c2), why (claim c3) and how alert response shapes it (claims c4 and c6). An explanatory sequential design first measures completion and alert response for every patient in the two running clinics, then interviews patients who stopped and triage nurses to explain the patterns, and integrates both strands in a joint display. Reporting follows GRAMMS.",
+        "alternatives": [
+          "Pragmatic trial in the lung and head-and-neck clinics (withdrawn by the investigator: no equipoise after the rollout decision)",
+          "Completion data alone (refused: cannot explain why patients stop)",
+          "Interviews alone (refused: cannot show who stops or how often)"
+        ],
+        "guidelines": [
+          "GRAMMS (Good Reporting of A Mixed Methods Study)",
+          "COREQ for the interview strand"
+        ],
+        "whyNotMoreComplex": "A convergent design with a comparison clinic would add nothing the timeline allows; the sequential design lets the quantitative findings choose whom to interview.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Evaluate the rollout with an explanatory sequential mixed methods design: completion and alert response data for all patients in the breast and colorectal clinics from March 2026 to February 2027, then interviews with patients who stopped reporting and with triage nurses, integrated in a joint display before the lung and head-and-neck clinics start.",
+          "question": "Who stops weekly symptom reporting, why, and how are alerts handled, before the programme reaches the remaining clinics?",
+          "claimIds": [
+            "c2",
+            "c3",
+            "c4",
+            "c6"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Completion falls steeply in routine care and the fall follows unanswered alerts.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2",
+                "c6"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Patients link stopping to unanswered alerts, and weekend response is slow.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The rollout committee needs a local effectiveness estimate before offering weekly reporting to all patients.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics approval covering interviews with patients and triage nurses",
+              "status": "met",
+              "evidence": "REB approval REB-ONC-2026-044 dated 2026-09-02, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Access to completion and alert timestamps from the reporting platform",
+              "status": "met",
+              "evidence": "Vendor data agreement DA-2026-17, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Pragmatic trial of weekly reporting in the lung and head-and-neck clinics (withdrawn by the investigator)",
+            "Completion data only, without interviews"
+          ],
+          "note": "Rests on ledger claims c2, c3, c4 and c6 from retrieved records; both gates rest on the investigator's approval records."
+        },
+        "summary": "Explanatory sequential mixed methods recommended; the decision rests on four ledger claims and both gates are met on the investigator's records."
+      },
+      "note": "Revised reply after the investigator's steer. The withdrawn first decision stays withdrawn; the new one is proposed. family stays null until acceptance (S11). selectionStatus and recommendedFamily require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "mixed-methods",
+          "family": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].status": "withdrawn",
+          "design.decisions[1].status": "proposed",
+          "design.decisions[1].selectionStatus": "proposed",
+          "design.decisions[1].recommendedFamily": "mixed-methods",
+          "design.decisions[1].claimIds": [
+            "c2",
+            "c3",
+            "c4",
+            "c6"
+          ],
+          "design.decisions[1].gates[0].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: claims c2, c3, c4 and c6 exist and rest on retrieved records, the defeating criterion is unmet and both gates are met, so selection is accepted and action is ready (G7). Acceptance sets study.family from recommendedFamily and basis 'explicit' (A1 item A2; S11). Status text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[1].status": "accepted",
+          "design.decisions[1].selectionStatus": "accepted",
+          "design.decisions[1].actionStatus": "ready",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "family": "mixed-methods",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route right after the choice: both decision records and the family survive (G7, G10 precondition). selectionStatus requires S11; the status text D5.",
+      "expect": {
+        "store": {
+          "title": "Weekly electronic symptom reporting during chemotherapy: who stops reporting, why, and what happens to alerts",
+          "family": "mixed-methods",
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "design.decisions[1].selectionStatus": "accepted",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "needsReview": []
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "withdrawn"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Explanatory sequential mixed methods evaluation of weekly electronic symptom reporting in the breast and colorectal clinics: a quantitative strand on completion and alert response for all patients treated from March 2026 to February 2027, followed by a qualitative strand of interviews with patients who stopped reporting and with triage nurses, integrated in a joint display.",
+        "population": "Quantitative: every adult who started chemotherapy in the two clinics between 1 March 2026 and 28 February 2027 and was offered weekly reporting (about 420 patients). Qualitative: 20 to 24 patients who stopped reporting before finishing treatment, sampled by age, deprivation and preferred language, and 10 to 12 triage nurses.",
+        "exposure": "Weekly reporting as delivered; for the mechanism analysis, an unanswered severe alert (no nurse contact recorded within 24 hours) in the previous week.",
+        "procedures": "Monthly platform exports under DA-2026-17 give expected and completed reports and alert timestamps; the triage log gives nurse contact times. Interviews run from March to May 2027 by telephone or in clinic, with interpreters where needed, using a topic guide informed by the quantitative results. Integration uses a joint display that sets each quantitative pattern beside the interview themes that explain or contradict it.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Report completion over the first 12 weeks",
+            "measure": "Completed divided by expected weekly reports per patient",
+            "timing": "Weeks 1 to 12 of chemotherapy",
+            "why": "Completion is the precondition for any benefit and the quantity falling in routine care (claim c2).",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "process",
+            "name": "Time from severe alert to nurse contact",
+            "measure": "Hours from alert timestamp to first recorded contact, weekday and weekend separately",
+            "timing": "Every alert",
+            "why": "The step where the loop breaks (claim c4).",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Emergency visits or unplanned admissions",
+            "measure": "Any emergency department visit or unplanned admission during the first 12 weeks, described by completion group",
+            "timing": "Weeks 1 to 12",
+            "why": "The outcome patients and the centre care about, described without a causal claim.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "secondary",
+            "name": "Reasons for stopping and ways alerts are handled",
+            "measure": "Themes from interviews with patients and triage nurses",
+            "timing": "March to May 2027",
+            "why": "Explains the quantitative patterns (claim c3).",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Triage nurse time spent on alerts",
+            "measure": "Minutes per week logged on alert handling",
+            "timing": "Monthly",
+            "why": "Changes to the response standard must not overwhelm nurses.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Exports already exist; one protected day a week covers the analysis and 30 to 36 interviews over three months.",
+        "biasMitigation": [
+          "Completion defined before exports are examined",
+          "Mechanism analysis adjusts for the severity of the previous report",
+          "Purposive sampling that includes older, more deprived and interpreter-dependent patients",
+          "A second coder for a quarter of transcripts"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by illness severity",
+            "severity": "high",
+            "note": "Sicker patients both trigger unanswered alerts and stop reporting; severity of the last report is adjusted for."
+          },
+          {
+            "id": "b2",
+            "label": "Interviewer is a clinical colleague",
+            "severity": "watch",
+            "note": "Nurses may soften criticism; interviews with nurses are done by a researcher outside the unit."
+          },
+          {
+            "id": "b3",
+            "label": "Stopping because symptoms settled",
+            "severity": "watch",
+            "note": "Asked directly in interviews."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 4,
+          "flags": [
+            "One primary outcome for the quantitative strand; the qualitative strand is reported as themes"
+          ],
+          "simplestPath": "Two clinics, one completion measure, one mechanism analysis, one round of interviews."
+        },
+        "theoreticalFramework": "COM-B to organise reasons for stopping (capability, opportunity, motivation) in the interview guide and the joint display; no other framework.",
+        "summary": "Sequential mixed methods: completion and alert response for about 420 patients, then 30 to 36 interviews, integrated in a joint display."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[2].patientCentered": true,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Quantitative strand: descriptive completion estimates and a longitudinal model of weekly completion; qualitative strand: reflexive thematic analysis; integration by joint display.",
+        "sampleSize": "All eligible patients are included, about 420. For an overall completion near 60 percent, 420 patients give a 95 percent confidence interval of about plus or minus 4.7 percentage points (square root of 0.24 over 420, times 1.96). About 420 patients over 12 weeks give about 5,000 patient-weeks, which supports a model of weekly completion with five pre-specified terms. The interview sample of 20 to 24 patients and 10 to 12 nurses is set by information power: a focused aim, purposive sampling across age, deprivation and language, and an analysis of patterns already found in the data.",
+        "primaryAnalysis": "Proportion of expected reports completed over weeks 1 to 12 with 95 percent confidence intervals, by clinic, age group (under 75, 75 or over) and deprivation quintile. Mechanism: mixed-effects logistic regression of weekly completion on an unanswered severe alert in the previous week, adjusted for the severity score of the previous report, age group, deprivation quintile and treatment week, with a random intercept for patient.",
+        "secondaryAnalysis": "Median time to nurse contact after alerts, weekday against weekend; emergency visits and unplanned admissions described by completion tertile without causal inference; interview themes coded with COM-B and set against the quantitative patterns in a joint display.",
+        "missingData": "A missing report is the outcome, not missing data; patients who die or stop chemotherapy leave the denominator at that week; missing alert contact times are reported and treated as unanswered only in a sensitivity analysis.",
+        "multiplicity": "One primary estimate and one pre-specified mechanism model; subgroup estimates are descriptive.",
+        "software": "R (lme4) for the quantitative strand; NVivo for coding; the joint display in a shared spreadsheet.",
+        "overfittingGuards": [
+          "Five model terms fixed before exports are examined",
+          "No stepwise selection",
+          "Subgroups limited to age, deprivation and clinic"
+        ],
+        "summary": "About 420 patients give a completion estimate within about 4.7 points; about 5,000 patient-weeks support the mechanism model; interviews sized by information power."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "information power"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low. Interviews may touch on distressing symptoms or on feeling ignored; interviewers can pause, and a triage nurse is available if a current symptom is disclosed. Nurses may fear blame for slow responses, so results are reported by shift pattern, never by named nurse.",
+        "consent": "Written or recorded verbal consent for interviews, with information in the patient's preferred language; platform and triage data are used under the approved evaluation, and patients can ask for their data to be excluded.",
+        "data": "Exports are pseudonymised by the informatics lead before analysis; interview recordings are transcribed, de-identified and deleted after checking; data stay on the centre's research drive under REB-ONC-2026-044 and DA-2026-17.",
+        "equity": "PROGRESS-Plus: older patients, people in the most deprived areas, those without home internet and those needing an interpreter are the groups most likely to stop reporting and the least heard in the evidence. The sample deliberately includes them, interviews use professional interpreters, and completion is reported by age, deprivation and preferred language.",
+        "effectiveness": "The evaluation shows where the reporting loop breaks and for whom; it does not re-estimate effectiveness, which trials have addressed.",
+        "efficiency": "Uses existing exports and one protected day a week; interviews by telephone limit travel for patients on treatment.",
+        "costs": "Interpreter fees and transcription, met from the unit's education budget; no other costs.",
+        "grants": "None needed; the joint display could support a later bid to test a response standard across the network.",
+        "partnerships": "Triage nurses, the rollout committee, the platform's informatics lead and two patient partners who stopped reporting during their own treatment.",
+        "rebPath": "Approved by the research ethics board on 2026-09-02 (REB-ONC-2026-044), covering platform data and interviews; any change to the interview guide goes back as an amendment.",
+        "limitations": "Two clinics; confounding by illness severity in the mechanism analysis; interview views may not transfer to the lung and head-and-neck clinics.",
+        "summary": "Approved low-risk evaluation with deliberate inclusion of the patients most likely to stop reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "REB-ONC-2026-044"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "ethics.consent": {
+            "includes": "preferred language"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners who stopped reporting during their own treatment co-design the interview guide and review the joint display; triage nurses comment on the alert analysis before it is shared with the rollout committee.",
+        "socialListening": "No social media listening; the centre's patient feedback forms from 2026 are read for comments on the reporting programme.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Answers nobody reads",
+            "quote": "Composite paraphrase: I put a nine for the sickness on a Saturday and nobody rang until Tuesday, so why would I keep filling it in?",
+            "implication": "Measure weekend response and link it to later completion.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "The tablet is the barrier",
+            "quote": "Composite paraphrase: My granddaughter set it up, and when she went back to university that was the end of it.",
+            "implication": "Record who needed help and keep a paper or telephone route.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Alert volume",
+            "quote": "Composite paraphrase: Monday morning there are forty alerts waiting and half are things we already know about.",
+            "implication": "Report nurse time on alerts as a balancing measure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Reporting for someone else",
+            "quote": "Composite paraphrase: I did Dad's answers for him, but he never agreed with how I scored his tiredness.",
+            "implication": "Ask who completed the report and treat proxy answers separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "partner",
+            "theme": "Language",
+            "quote": "Composite paraphrase: The questions come only in English, so our members just stop.",
+            "implication": "Report completion by preferred language and use interpreters in interviews.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on unanswered alerts, device help, alert volume, proxy reporting and language."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[3].source": "family",
+          "voices.items[0].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Who stops weekly electronic symptom reporting during chemotherapy, and why: an explanatory sequential mixed methods evaluation",
+        "abstract": "Objective: to describe completion of weekly electronic symptom reports and alert response in routine chemotherapy care, and to explain why patients stop reporting. Design: explanatory sequential mixed methods in two clinics of a regional cancer centre, March 2026 to May 2027. Methods: completion and alert timestamps for about 420 patients, a longitudinal model linking unanswered alerts to later completion, and interviews with patients who stopped and with triage nurses, integrated in a joint display. Results and conclusions will follow the analysis.",
+        "introduction": "Randomised trials show that weekly electronic symptom reporting can reduce emergency visits when alerts are answered promptly, but in routine care many patients stop reporting within months. Why they stop, and how alert response contributes, has rarely been studied in the same patients.",
+        "methods": "All patients offered weekly reporting in the breast and colorectal clinics are included. Completion over the first 12 weeks is the primary quantitative outcome; a mixed-effects model links unanswered severe alerts to completion the following week. Interviews with purposively sampled patients and triage nurses explore reasons, and a joint display integrates the strands.",
+        "results": "No data have been analysed yet. The report will present completion by clinic, age, deprivation and language, alert response times by weekday and weekend, the mechanism model, the interview themes, and the joint display.",
+        "discussion": "The discussion will relate the local patterns to the trial evidence, set out the changes to the response standard and the paper route before the remaining clinics start, and state what the evaluation cannot show about effectiveness.",
+        "limitations": "Two clinics; confounding by illness severity; interview findings may not transfer to other tumour groups.",
+        "conclusion": "To be written after integration; it will not claim that weekly reporting reduced emergency visits in this centre.",
+        "reportingChecklist": "GRAMMS, with COREQ for the interview strand",
+        "summary": "GRAMMS-structured draft with results left empty until analysis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "GRAMMS, with COREQ for the interview strand",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Define an unanswered alert (no recorded contact within 24 hours) with the triage lead before the first export is analysed",
+          "Run identity checks on the seven retrieved records before the report cites them",
+          "Confirm interpreter availability for interviews in the two most common non-majority languages"
+        ],
+        "improvementNotes": "The model first proposed a pragmatic trial; the investigator withdrew it because the rollout decision leaves no equipoise and the local question is delivery. The accepted mixed methods decision rests on four ledger claims from retrieved records, and the withdrawn trial decision is kept on record.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before analysis; the design choice and the withdrawn alternative are recorded."
+      },
+      "note": "audit.openFixes and audit.lastReview fail at 875fe59 because of the L1.6 store defect (mergeStage overwrites the audit patch), not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "withdrew it"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Weekly electronic symptom reporting during chemotherapy: who stops reporting, why, and what happens to alerts",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "mixed-methods",
+          "design.decisions": {
+            "length": 2
+          },
+          "scan.claims": {
+            "length": 6
+          },
+          "audit.openFixes": {
+            "length": 3
+          },
+          "problem.constraints": "No research funding; the nurse specialist has one protected day a week until December 2027. Interviews must happen during clinic hours or by telephone. The reporting platform cannot be reconfigured before the vendor update in June 2027."
+        },
+        "screen": {
+          "includes": [
+            "Weekly electronic symptom reporting during chemotherapy: who stops reporting, why, and what happens to alerts"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus, actionStatus and recommendedFamily require S11; scan.claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "mixed-methods",
+            "design.basis": "explicit",
+            "design.decisions[0].status": "withdrawn",
+            "design.decisions[0].selectionStatus": "withdrawn",
+            "design.decisions[0].recommendedFamily": "pragmatic-trial",
+            "design.decisions[1].status": "accepted",
+            "design.decisions[1].selectionStatus": "accepted",
+            "design.decisions[1].actionStatus": "ready",
+            "scan.gradeOverall": "moderate",
+            "scan.claims": {
+              "length": 6
+            },
+            "scan.items[1].provenance.status": "retrieved",
+            "problem.rawNeed": "I am a clinical nurse specialist in the chemotherapy day unit of a regional cancer centre. In March 2026 the breast and colorectal clinics started weekly electronic symptom reporting between cycles: patients answer a short set of questions on a tablet or phone, and severe answers (fever, uncontrolled vomiting, diarrhoea more than six times a day, chest pain) send an alert to the triage nurse. The lung and head-and-neck clinics are due to start in January 2027. Eight months in, completion is patchy. In the breast clinic most expected weekly reports come in during the first month and far fewer by the fourth cycle; nurses say some alerts sit unanswered over weekends; and I keep hearing from older patients that they stopped because nobody seemed to read the answers.\n\nI am weighing two designs and would value help choosing between them. We could run a pragmatic trial in the two clinics that have not started yet, giving weekly reporting to half of the new patients and usual telephone triage to the rest, and compare emergency visits and admissions during chemotherapy. Or we could combine the completion and alert data we already hold with interviews with patients who stopped reporting and with the triage nurses, to understand who drops out, why, and what happens to alerts. The centre's rollout committee has already decided that every patient starting chemotherapy will be offered weekly reporting by mid-2027, and I have no research funding beyond one protected day a week.\n\nWhat I need is a design that tells us whether the programme is working for the people it is meant to help, what to change before the next two clinics start, and how to measure completion and alert response properly.",
+            "problem.constraints": "No research funding; the nurse specialist has one protected day a week until December 2027. Interviews must happen during clinic hours or by telephone. The reporting platform cannot be reconfigured before the vendor update in June 2027."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

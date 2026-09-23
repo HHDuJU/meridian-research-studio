@@ -1,0 +1,1446 @@
+{
+  "id": "sc-101",
+  "version": 1,
+  "title": "Inpatient hospice: rapid review of strategies that raise uptake of bereavement follow-up",
+  "field": "palliative-care",
+  "level": 1,
+  "family": "rapid-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Routine path with clean inputs, one recorded fixture search, an appraisal call and one clear design (rapid review). The need names the design explicitly and gives local figures (71 of 412 eligible families took up support), constraints and approval facts. The problem reply restates the investigator's constraints exactly, so G11 has nothing to reject. The fixture search returns seven well-formed records with abstracts, years 2016 to 2025; the appraisal (shape \"appraisal\") annotates all seven by id and records four source-derived claims whose passages are exact substrings of the abstracts and whose numbers all appear in them; certainty \"low\" is the appraisal's own value over inspected records. The design decision (pursue a rapid review) rests on ledger claims c1, c3 and c4, both gates are met on investigator-supplied records, and acceptance is a supported positive (selectionStatus accepted, actionStatus ready). Record ids are not typed by hand: each is stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59 by the generator, that is 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1, 2, 4, 5, 6: ev-0d28ndz, ev-098pwhp, ev-17pon5z, ev-1126ilq, ev-1l9tw9s) or, without a DOI, of titleYearKey(title, year) (records 3 and 7: ev-01jmcsq, ev-1jcuoer). Requires S11 (explicit basis at create and on acceptance, selectionStatus, actionStatus), S13 (appraisal payload dispatched on the production scan path) and D5 (decision status text on screen). Catches: certainty or completion without retrieval, an appraisal that cannot reach the ledger, a supported decision that cannot be accepted or is left blocked with every gate met, investigator constraints rewritten by the model, work lost on reload or reopen, and an export that differs from the store. At 875fe59 the audit step also catches the L1.6 store defect.",
+  "inputs": {
+    "need": "I coordinate the bereavement service at a 24-bed inpatient hospice that also runs a community palliative care team. After every death we send a condolence card at two weeks, and a volunteer phones the main contact person at six weeks to offer a place in our monthly bereavement support group or one-to-one support with our social worker. Last year 412 families were eligible. Our volunteers reached 239 of them by phone, and only 71 took up any support. Men, families who needed an interpreter and families living more than an hour from the hospice almost never took up the offer.\n\nOur board has asked me to redesign the follow-up programme by the end of the year. Colleagues have strong opinions: some want to phone at two weeks instead of six, some want to send text messages, and some want to screen every family with a bereavement risk tool and focus our small team on people at high risk of prolonged grief. I do not want to redesign the service on opinions. I would like to do a rapid review of what is known about strategies that increase uptake of bereavement follow-up offered by palliative care services, looking at the timing of the offer, the way it is made, risk-based targeting, and outreach to the groups who rarely take up support.\n\nI need help setting the review question, deciding which shortcuts are acceptable in a rapid review, choosing what to extract, and presenting the findings to the board without overstating weak evidence. I have about eight weeks, a hospice librarian for two days, and our social worker can act as second reviewer for part of the screening.",
+    "constraints": "Eight weeks until the board meeting on 9 December 2026. No funding for the review; the hospice librarian for two working days and the social worker as second reviewer for about 20 percent of screening. English-language sources only.",
+    "localFacts": [
+      "Of 412 families eligible for bereavement follow-up in 2025, volunteers reached 239 by phone at six weeks and 71 took up any support.",
+      "The hospice board meets on 9 December 2026 and has asked for a redesign proposal for the bereavement programme at that meeting.",
+      "The hospice director approved two librarian days and part of the social worker's time for the review (memo HD-2026-031, dated 2026-09-15).",
+      "The hospice has no bereavement risk screening at present; the social worker sees about six bereaved clients one-to-one each month."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names one design (rapid review); 'uptake' is only a cue, so classifyFamily in src/lib/stages.ts at 875fe59 routes it as explicit rapid-review. design.basis 'explicit' at create requires S11 (routing recorded where classifyFamily is called).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I coordinate the bereavement service at a 24-bed inpatient hospice that also runs a community palliative care team. After every death we send a condolence card at two weeks, and a volunteer phones the main contact person at six weeks to offer a place in our monthly bereavement support group or one-to-one support with our social worker. Last year 412 families were eligible. Our volunteers reached 239 of them by phone, and only 71 took up any support. Men, families who needed an interpreter and families living more than an hour from the hospice almost never took up the offer.\n\nOur board has asked me to redesign the follow-up programme by the end of the year. Colleagues have strong opinions: some want to phone at two weeks instead of six, some want to send text messages, and some want to screen every family with a bereavement risk tool and focus our small team on people at high risk of prolonged grief. I do not want to redesign the service on opinions. I would like to do a rapid review of what is known about strategies that increase uptake of bereavement follow-up offered by palliative care services, looking at the timing of the offer, the way it is made, risk-based targeting, and outreach to the groups who rarely take up support.\n\nI need help setting the review question, deciding which shortcuts are acceptable in a rapid review, choosing what to extract, and presenting the findings to the board without overstating weak evidence. I have about eight weeks, a hospice librarian for two days, and our social worker can act as second reviewer for part of the screening.",
+          "family": "rapid-review",
+          "design.basis": "explicit",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I coordinate the bereavement service at a 24-bed inpatient hospice"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Strategies to increase uptake of bereavement follow-up offered by a palliative care service: a rapid review",
+        "subtitle": "Rapid review to inform the redesign of a hospice bereavement programme",
+        "family": "rapid-review",
+        "statement": "The hospice offers bereavement follow-up to every family after a death, but in 2025 only 71 of 412 eligible families took up any support, and uptake was lowest among men, families who needed an interpreter and families living far from the hospice. The board has asked for a redesigned programme by December 2026. A rapid review will summarise what is known about strategies that increase uptake of bereavement follow-up offered by palliative care services, so that the redesign rests on evidence rather than opinion.",
+        "whoAffected": "Bereaved family members of patients who die in the hospice or under the community team, especially men, families who need an interpreter and families living more than an hour away; the volunteers and social worker who deliver follow-up; and the board that decides the redesign.",
+        "whatHurts": "Most families receive a card and at most one call, and few take up support. Families who might benefit most may never hear an offer they can accept, while the small team's time goes to routine calls that many families decline.",
+        "currentPractice": "Condolence card at two weeks; volunteer phone call at six weeks offering a monthly support group or one-to-one support with the social worker; no risk screening; no interpreter-supported or text-based offer.",
+        "whyNow": "The board requires a redesign proposal on 9 December 2026, colleagues disagree about timing, text messages and risk screening, and the hospice director has approved librarian and reviewer time for a short evidence review.",
+        "constraints": "Eight weeks until the board meeting on 9 December 2026. No funding for the review; the hospice librarian for two working days and the social worker as second reviewer for about 20 percent of screening. English-language sources only.",
+        "patientCenteredGoal": "Every bereaved family receives a clear, timely offer of support in a form they can take up, and families at higher risk of prolonged grief are not missed.",
+        "summary": "Problem framed as a rapid review of strategies that increase uptake of bereavement follow-up, to inform a board decision in December 2026."
+      },
+      "note": "The reply restates the investigator's constraints exactly as typed, so nothing is rejected under G11 and no issue is recorded; rawNeed is investigator text and stays as entered.",
+      "expect": {
+        "store": {
+          "title": "Strategies to increase uptake of bereavement follow-up offered by a palliative care service: a rapid review",
+          "subtitle": "Rapid review to inform the redesign of a hospice bereavement programme",
+          "family": "rapid-review",
+          "problem.statement": {
+            "includes": "71 of 412 eligible families"
+          },
+          "problem.constraints": "Eight weeks until the board meeting on 9 December 2026. No funding for the review; the hospice librarian for two working days and the social worker as second reviewer for about 20 percent of screening. English-language sources only.",
+          "problem.rawNeed": {
+            "includes": "rapid review"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Strategies to increase uptake of bereavement follow-up offered by a palliative care service: a rapid review"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "bereavement follow-up uptake palliative care hospice strategies timing proactive outreach risk screening",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Timing of the first bereavement follow-up call and acceptance of support after deaths in two inpatient hospices",
+            "authors": "Marchetti-Oyelaran P, Lindqvist-Obi A, Ferreira-Nakamura J",
+            "year": 2016,
+            "venue": "Journal of Hospice Family Care",
+            "doi": "10.5555/jhfc.2016.0213",
+            "providerType": "journal-article",
+            "abstract": "Two inpatient hospices compared the timing of the first follow-up telephone call to bereaved relatives over 18 months. One hospice called at two weeks after the death and the other at six weeks; both offered a support group and individual support. Of 388 relatives called at two weeks, 21 percent accepted support, compared with 34 percent of 402 relatives called at six weeks. Relatives called at two weeks more often said they were still busy with practical matters and asked to be called later. Acceptance was lower among men at both sites. The hospices differed in size and staffing, so the comparison may be confounded by site."
+          },
+          {
+            "title": "Proactive telephone outreach compared with a written invitation for bereavement support after expected deaths: a controlled before-after study",
+            "authors": "Oduya-Castellanos R, Brandt-Mensah L",
+            "year": 2019,
+            "venue": "Palliative Services Review",
+            "doi": "10.5555/psr.2019.0447",
+            "providerType": "journal-article",
+            "abstract": "A community palliative care service replaced its written invitation to bereavement support with a proactive telephone call by a trained volunteer, while a neighbouring service kept the letter. Over 12 months before and 12 months after the change, uptake of any bereavement support rose from 18 percent to 37 percent in the intervention service and was unchanged at 16 percent in the comparison service. Most of the additional uptake was for one-to-one support rather than groups. Volunteers reported that calls lasted a median of 11 minutes. Families were not asked about their experience of the call, and the two services served different populations."
+          },
+          {
+            "title": "Bereavement risk screening at the time of death and targeted follow-up: uptake by assessed risk level in a regional palliative care network",
+            "authors": "Nakashima-Holt E, Adeyemi-Varga S, Petit-Lorenz K",
+            "year": 2021,
+            "venue": "Grief and Palliative Practice",
+            "providerType": "journal-article",
+            "abstract": "Five palliative care services in one region introduced a brief bereavement risk screen completed by the nurse at the time of death. Relatives rated high risk were offered a proactive call from a social worker, and other relatives were sent a letter. Among 1,146 screened relatives, 19 percent were rated high risk. Uptake of support was 52 percent among high-risk relatives and 13 percent among the others. Screening was completed for 71 percent of deaths and less often for deaths at night. The study did not assess whether the risk screen predicted later prolonged grief, and relatives rated low risk who later asked for help were not counted."
+          },
+          {
+            "title": "Who takes up hospice bereavement support? Differences by sex, language and distance in five years of service records",
+            "authors": "Whitfield-Achebe D, Szabo-Moreau I",
+            "year": 2018,
+            "venue": "Journal of Hospice Family Care",
+            "doi": "10.5555/jhfc.2018.0088",
+            "providerType": "journal-article",
+            "abstract": "We examined five years of bereavement service records at one hospice, covering 2,034 relatives who were offered support. Overall uptake was 22 percent. Uptake was 14 percent among men and 27 percent among women, 9 percent among relatives who needed an interpreter, and 12 percent among relatives living more than 50 kilometres from the hospice. Relatives of patients who died at home took up support less often than relatives of patients who died in the inpatient unit. The records did not capture support obtained elsewhere, so low uptake may partly reflect support from family, faith communities or primary care."
+          },
+          {
+            "title": "Interventions to increase uptake of bereavement support offered by palliative care services: a systematic review",
+            "authors": "Castellanos-Reid M, Obi-Lindgren T, Haddad-Pierce A, Mwangi-Stroud L",
+            "year": 2023,
+            "venue": "Palliative Care Evidence Reviews",
+            "doi": "10.5555/pcer.2023.0152",
+            "providerType": "journal-article",
+            "abstract": "We searched four databases to March 2022 for studies of strategies to increase uptake of bereavement support offered by specialist palliative care services. After screening, 14 studies met the inclusion criteria: nine before-after studies, three comparisons between services and two small trials. Proactive personal contact was the strategy most consistently followed by higher uptake. Evidence on timing was mixed, and no included study tested text messages or interpreter-supported outreach. Most studies were at serious risk of bias, and outcome definitions varied from accepting an offer to attending at least one session, which prevented pooling."
+          },
+          {
+            "title": "Text message invitations to bereavement follow-up in a community palliative care service: response by age group",
+            "authors": "Rasmussen-Adu K, Villanueva-Grey H",
+            "year": 2025,
+            "venue": "Community Palliative Care Notes",
+            "doi": "10.5555/cpcn.2025.0031",
+            "providerType": "journal-article",
+            "abstract": "A community palliative care service sent a text message invitation to bereavement follow-up to relatives with a mobile number on record, followed by a telephone call to those who did not reply within a week. Of 296 relatives, 41 percent replied to the text message and 29 percent took up support, compared with 22 percent uptake after letters in the previous year. Replies were most frequent among relatives under 60 years of age. Relatives over 75 more often took up support only after the follow-up call. Relatives without a mobile number on record were not invited by text and were analysed separately."
+          },
+          {
+            "title": "Why bereaved relatives decline hospice follow-up: a thematic analysis of free-text feedback forms",
+            "authors": "Linwood-Tanaka C, Okafor-Brennan J",
+            "year": 2020,
+            "venue": "Bereavement Care Practice",
+            "providerType": "journal-article",
+            "abstract": "We analysed free-text answers from 263 feedback forms returned by bereaved relatives who had declined an offer of hospice bereavement support. The most common reasons were feeling well supported by family and friends, the offer coming at a time when they were not ready, not knowing what the support involved, and practical barriers such as travel and working hours. Several men wrote that a support group did not suit them and that they would have accepted a one-to-one conversation. Forms were returned by a minority of the relatives who declined, so the reasons may not represent the whole group."
+          }
+        ]
+      },
+      "note": "Seven well-formed records with abstracts. Record ids are stableRecordId values from src/lib/evidence/records.ts (DOI hash for records 1, 2, 4, 5, 6; title and year hash for records 3 and 7). Before appraisal the records carry no grade, scores or certainty (G1, G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0d28ndz",
+            "ev-098pwhp",
+            "ev-01jmcsq",
+            "ev-17pon5z",
+            "ev-1126ilq",
+            "ev-1l9tw9s",
+            "ev-1jcuoer"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-0d28ndz",
+          "scan.items[0].doi": "10.5555/jhfc.2016.0213",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.items[2].id": "ev-01jmcsq",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.items[6].id": "ev-1jcuoer",
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Proactive telephone outreach compared with a written invitation for bereavement support after expected deaths: a controlled before-after study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0d28ndz",
+            "relevance": 86,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Relatives called at six weeks accepted support more often than relatives called at two weeks (34 percent against 21 percent); relatives called early often asked to be called later.",
+            "limitations": "Two hospices of different size and staffing, so timing is confounded by site; no grief outcomes.",
+            "contextTags": [
+              "timing",
+              "inpatient hospice",
+              "telephone follow-up"
+            ]
+          },
+          {
+            "id": "ev-098pwhp",
+            "relevance": 92,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Replacing a written invitation with a proactive volunteer call was followed by a rise in uptake from 18 percent to 37 percent, while the comparison service stayed at 16 percent.",
+            "limitations": "Controlled before-after design; the two services served different populations; family experience of the call was not measured.",
+            "contextTags": [
+              "proactive outreach",
+              "community palliative care",
+              "controlled before-after"
+            ]
+          },
+          {
+            "id": "ev-01jmcsq",
+            "relevance": 84,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "With a brief risk screen at the time of death, 19 percent of relatives were rated high risk; uptake was 52 percent among high-risk relatives offered a social worker call and 13 percent among others sent a letter.",
+            "limitations": "Risk level and outreach method changed together, so their effects cannot be separated; screening was completed for 71 percent of deaths; prediction of prolonged grief not assessed.",
+            "contextTags": [
+              "risk screening",
+              "targeted outreach",
+              "regional network"
+            ]
+          },
+          {
+            "id": "ev-17pon5z",
+            "relevance": 80,
+            "methodQuality": 48,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Uptake was 22 percent overall, 14 percent among men against 27 percent among women, 9 percent among relatives who needed an interpreter and 12 percent among relatives living more than 50 kilometres away.",
+            "limitations": "One hospice; service records only; support obtained elsewhere was not captured.",
+            "contextTags": [
+              "equity",
+              "men",
+              "interpreter",
+              "distance"
+            ]
+          },
+          {
+            "id": "ev-1126ilq",
+            "relevance": 90,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 14 studies, mostly before-after designs, proactive personal contact was the strategy most consistently followed by higher uptake; evidence on timing was mixed and no study tested text messages or interpreter-supported outreach.",
+            "limitations": "Search ended in March 2022; most included studies at serious risk of bias; outcome definitions varied and prevented pooling.",
+            "contextTags": [
+              "systematic review",
+              "proactive contact",
+              "evidence gap"
+            ]
+          },
+          {
+            "id": "ev-1l9tw9s",
+            "relevance": 78,
+            "methodQuality": 42,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "A text message invitation with a follow-up call gave 41 percent replies and 29 percent uptake, against 22 percent uptake after letters the previous year; relatives over 75 more often took up support only after the call.",
+            "limitations": "Historical comparison in one service; relatives without a mobile number on record were not invited by text.",
+            "contextTags": [
+              "text messages",
+              "mode of offer",
+              "age"
+            ]
+          },
+          {
+            "id": "ev-1jcuoer",
+            "relevance": 72,
+            "methodQuality": 40,
+            "kind": "qualitative",
+            "grade": "very-low",
+            "keyFindings": "Relatives who declined most often felt supported by family and friends, were not ready when the offer came, did not know what support involved, or faced travel and working-hours barriers; several men would have accepted one-to-one support rather than a group.",
+            "limitations": "Forms returned by a minority of those who declined, so the reasons may not represent the whole group.",
+            "contextTags": [
+              "reasons for declining",
+              "men",
+              "timing"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a controlled before-after comparison, replacing a written invitation with a proactive telephone call was followed by a rise in uptake of bereavement support from 18 percent to 37 percent, while uptake in the comparison service stayed at 16 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-098pwhp"
+            ],
+            "location": "Abstract, results",
+            "passage": "uptake of any bereavement support rose from 18 percent to 37 percent in the intervention service and was unchanged at 16 percent in the comparison service",
+            "interpretation": "Proactive personal contact has the clearest signal; the design is not randomised, so the size of the change is a planning value only.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "In a comparison between two hospices, relatives called at six weeks after the death accepted support more often than relatives called at two weeks (34 percent against 21 percent).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0d28ndz"
+            ],
+            "location": "Abstract",
+            "passage": "Of 388 relatives called at two weeks, 21 percent accepted support, compared with 34 percent of 402 relatives called at six weeks.",
+            "interpretation": "Earlier calls may not raise uptake; the comparison is confounded by site.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "A systematic review of 14 studies searched to March 2022 found proactive personal contact to be the strategy most consistently followed by higher uptake, with mixed evidence on timing and no study of text messages or interpreter-supported outreach.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1126ilq"
+            ],
+            "location": "Abstract",
+            "passage": "Proactive personal contact was the strategy most consistently followed by higher uptake. Evidence on timing was mixed, and no included study tested text messages or interpreter-supported outreach.",
+            "interpretation": "An update from March 2022 onward can add newer studies of text messages and targeted outreach.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "At one hospice, uptake of bereavement support was 14 percent among men against 27 percent among women, and 9 percent among relatives who needed an interpreter.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-17pon5z"
+            ],
+            "location": "Abstract",
+            "passage": "Uptake was 14 percent among men and 27 percent among women, 9 percent among relatives who needed an interpreter",
+            "interpretation": "The review should extract uptake by sex, language and distance wherever it is reported.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Proactive personal contact was followed by higher uptake of bereavement support in a controlled before-after comparison (18 to 37 percent) and was the most consistent signal in a systematic review of 14 studies searched to March 2022. Evidence on timing is mixed: one two-hospice comparison favoured a first call at six weeks over two weeks, but site differences confound it. Risk screening concentrated uptake among relatives rated high risk, and a text message invitation with a follow-up call was followed by higher uptake than letters in one service. Men, relatives who need an interpreter and relatives living far away take up support less often. No record measured grief outcomes. The evidence supports a rapid review that updates the 2023 review from March 2022 and extracts results by sex, language and distance.",
+        "gradeOverall": "low",
+        "gradeRationale": "Non-randomised comparisons from single services, a systematic review whose included studies were mostly at serious risk of bias, and descriptive service records; the direction for proactive contact is consistent, but risk of bias is serious and uptake definitions differ.",
+        "summary": "Seven retrieved records appraised; four source-derived claims recorded with passages; overall certainty low."
+      },
+      "note": "Appraisal of the seven retrieved records: every annotation id and claim sourceId is a retrieved record id, and each claim passage is an exact substring of the cited abstract. Annotations and claims reach the store only through the appraisal mapper on the production scan path (S13). The certainty 'low' is the appraisal's own value over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].id": "ev-098pwhp",
+          "scan.items[1].grade": "low",
+          "scan.items[1].methodQuality": 55,
+          "scan.items[1].relevance": 92,
+          "scan.items[1].kind": "observational",
+          "scan.items[1].keyFindings": {
+            "includes": "18 percent to 37 percent"
+          },
+          "scan.items[1].provenance.origin": "retrieval",
+          "scan.items[1].provenance.status": "retrieved",
+          "scan.items[4].kind": "systematic-review",
+          "scan.items[5].grade": "very-low",
+          "scan.items[6].kind": "qualitative",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].id": "c1",
+          "scan.claims[0].kind": "source-derived",
+          "scan.claims[0].sourceIds": [
+            "ev-098pwhp"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-0d28ndz"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-1126ilq"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-17pon5z"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.synthesis": {
+            "includes": "Seven retrieved records"
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "24-bed inpatient hospice with a community palliative care team",
+          "condolence card at two weeks and volunteer call at six weeks",
+          "board decision on 9 December 2026",
+          "no bereavement risk screening at present"
+        ],
+        "reading": "Uptake is shaped at three points: whether the offer reaches the family, when it arrives, and whether its form suits the person. The retrieved records link proactive personal contact to higher uptake, leave timing unsettled, and show that risk screening and text messages change who takes up support rather than simply how many. Men, families who need an interpreter and families living far away sit at the edge of every current offer. The rapid review has to be organised around these decision points so the board can see which change addresses which gap.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Volunteer call at six weeks",
+            "kind": "context",
+            "detail": "Current offer; reached 239 of 412 eligible families in 2025."
+          },
+          {
+            "id": "n2",
+            "label": "Uptake of bereavement support",
+            "kind": "outcome",
+            "detail": "Accepting an offer, and attending at least one session."
+          },
+          {
+            "id": "n3",
+            "label": "Proactive personal contact",
+            "kind": "observational",
+            "detail": "Uptake rose from 18 to 37 percent in a controlled before-after comparison (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "Timing of the first offer",
+            "kind": "observational",
+            "detail": "Six weeks favoured over two weeks in a confounded comparison (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Systematic review searched to March 2022",
+            "kind": "systematic-review",
+            "detail": "Proactive contact the most consistent signal; no text message studies (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Men, interpreter needs and distance",
+            "kind": "stakeholder",
+            "detail": "Lowest uptake in service records (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Bereavement risk screening",
+            "kind": "context",
+            "detail": "Concentrates uptake among relatives rated high risk; not used locally."
+          },
+          {
+            "id": "n8",
+            "label": "Hospice board",
+            "kind": "stakeholder",
+            "detail": "Decides the redesign in December 2026."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "currently yields low"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "associated with higher"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "may shift"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "summarises evidence for"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "has the lowest"
+          },
+          {
+            "from": "n7",
+            "to": "n6",
+            "relation": "may redirect effort toward or away from"
+          },
+          {
+            "from": "n2",
+            "to": "n8",
+            "relation": "informs the decision of"
+          }
+        ],
+        "summary": "Map links uptake to reach, timing and form of the offer, the retrieved evidence for each, and the groups the current offer misses."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.contexts": {
+            "length": 4
+          },
+          "map.nodes[1].kind": "outcome",
+          "map.nodes[4].kind": "systematic-review",
+          "map.reading": {
+            "includes": "decision points"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "The most recent review searched only to March 2022",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Studies of text messages and targeted outreach published since then are missing from the only synthesis (claim c3).",
+            "opportunity": "Update the search from January 2022, overlapping the review's end date, and add its included studies."
+          },
+          {
+            "id": "g2",
+            "title": "Timing evidence is confounded",
+            "kind": "evidence",
+            "severity": "moderate",
+            "whyItMatters": "The only direct comparison of two and six weeks compared two different hospices (claim c2), yet colleagues want to move the call earlier.",
+            "opportunity": "Extract timing as reported with the design, and state that the direction is uncertain."
+          },
+          {
+            "id": "g3",
+            "title": "Uptake is defined in different ways",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Accepting an offer and attending a session are different outcomes and cannot be compared as one number.",
+            "opportunity": "Fix accepting an offer and attending at least one session as two separately extracted definitions."
+          },
+          {
+            "id": "g4",
+            "title": "Groups who rarely take up support are barely studied",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "Men, relatives who need an interpreter and relatives living far away have the lowest uptake (claim c4), and no retrieved study tested outreach adapted for them.",
+            "opportunity": "Extract results by sex, language and distance wherever reported and report their absence as a finding."
+          },
+          {
+            "id": "g5",
+            "title": "Rapid review shortcuts can miss studies",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Single-reviewer screening and an English-language limit can omit relevant service evaluations.",
+            "opportunity": "Verify a random 20 percent of screening decisions and report every shortcut with its likely effect."
+          }
+        ],
+        "errorsFound": [
+          "The need assumes an earlier first call would raise uptake; the retrieved comparison favoured six weeks over two weeks, although site differences confound it."
+        ],
+        "reevaluation": "The gaps confirm a rapid review that updates the 2023 synthesis, keeps two uptake definitions apart, extracts results for the groups with the lowest uptake, and reports its shortcuts openly.",
+        "summary": "Five gaps: an out-of-date synthesis, confounded timing evidence, inconsistent outcome definitions, understudied groups, and shortcut bias."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "The most recent review searched only to March 2022"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Proactive personal contact by telephone or in person is associated with higher uptake of bereavement follow-up than a written invitation across palliative care services.",
+            "novelty": 25,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 90,
+            "parsimony": 88,
+            "rationale": "The retrieved evidence points this way (claims c1 and c3), and the answer decides whether the hospice keeps or expands its volunteer calls; novelty is low, which suits a rapid review that informs a local choice.",
+            "risks": "Evidence is mostly before-after; publication bias toward positive service evaluations."
+          },
+          {
+            "id": "h2",
+            "statement": "Risk-screened targeting raises uptake among relatives at high risk without lowering uptake among others.",
+            "novelty": 45,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 70,
+            "parsimony": 60,
+            "rationale": "One regional network reported high uptake among relatives rated high risk, but outreach method changed at the same time.",
+            "risks": "Few studies; screening completeness varies by time of death."
+          },
+          {
+            "id": "h3",
+            "statement": "Offering support at six weeks rather than two weeks increases uptake.",
+            "novelty": 35,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 85,
+            "parsimony": 75,
+            "rationale": "Colleagues disagree about timing, and one confounded comparison favoured six weeks.",
+            "risks": "Likely too few comparable studies to answer."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three review-level hypotheses; h1 selected as the main question, with timing and risk targeting extracted as secondary questions."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].feasibility": 90,
+          "hypotheses.items[1].parsimony": 60,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In bereaved relatives offered follow-up by specialist palliative care services, which strategies (proactive personal contact, timing of the first offer, mode of the offer, risk-based targeting, and outreach adapted for men, interpreter needs or distance) are associated with higher uptake of bereavement support than a written invitation or a single call?",
+            "framework": "PICO",
+            "population": "Bereaved relatives or close friends offered follow-up by inpatient hospice, community or hospital palliative care services",
+            "intervention": "Strategies to increase uptake: proactive personal contact, timing, mode of offer, risk-based targeting, adapted outreach",
+            "comparator": "Written invitation, a single call, or another strategy",
+            "outcome": "Uptake of bereavement support, extracted as accepting an offer and as attending at least one session",
+            "time": "Studies published from 2012 to October 2026; uptake up to 13 months after the death",
+            "setting": "Specialist palliative care services in any country, English-language reports"
+          }
+        ],
+        "finer": "Feasible in eight weeks with the approved librarian and reviewer time; interesting to the board, volunteers and social worker; novel as an update since March 2022; ethical as a literature review; relevant because it decides the programme redesign.",
+        "summary": "One PICO review question with two pre-specified uptake definitions."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "questions.items[0].outcome": {
+            "includes": "attending at least one session"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "rapid-review",
+        "rationale": "The board needs an answer by 9 December 2026, and the evidence base is small, mostly service evaluations, with a systematic review searched to March 2022 (c3). A rapid review with declared shortcuts can update that synthesis, add newer studies of text messages and risk-targeted outreach, and present each strategy with its design and certainty. The retrieved records already show a signal for proactive contact (c1) and wide differences in uptake between groups (c4), so extraction by sex, language and distance is planned from the start.",
+        "alternatives": [
+          "Full systematic review with duplicate screening and extraction (refused: cannot finish before the board meeting with the approved time)",
+          "Rely on the 2023 systematic review alone (refused: its search ended in March 2022 and it found no study of text messages or interpreter-supported outreach)",
+          "Test a new call schedule locally without a review (deferred: the review should decide which change is worth testing)"
+        ],
+        "guidelines": [
+          "PRISMA 2020, with each rapid review shortcut reported",
+          "SWiM (synthesis without meta-analysis)"
+        ],
+        "whyNotMoreComplex": "A full systematic review would add duplicate screening and extraction but would not change a decision that must be made in December on evidence that is mostly before-after; the shortcuts are declared so the board can judge what may have been missed.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct an eight-week rapid review of strategies that increase uptake of bereavement follow-up, updating the 2023 systematic review from March 2022 and extracting results by sex, language and distance, and present it to the board on 9 December 2026.",
+          "question": "Should the hospice base the redesign of its bereavement programme on a rapid review of strategies that increase uptake?",
+          "claimIds": [
+            "c1",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "At least one strategy has a consistent signal for higher uptake, and the latest synthesis stopped in March 2022, so an update can add newer studies.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A current synthesis covering text messages, risk targeting and interpreter-supported outreach already exists.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Hospice director approval of librarian and second-reviewer time for the review",
+              "status": "met",
+              "evidence": "Memo HD-2026-031 dated 2026-09-15, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Board agenda time for the redesign proposal",
+              "status": "met",
+              "evidence": "Board meeting of 9 December 2026 with the redesign on the agenda, stated in the investigator's local facts"
+            }
+          ],
+          "alternatives": [
+            "Rely on the 2023 systematic review alone",
+            "Test a six-week proactive call schedule locally without a review"
+          ],
+          "note": "Rests on ledger claims c1, c3 and c4, each from a retrieved record, and on the investigator's approval records for both gates."
+        },
+        "summary": "Rapid review recommended; the decision rests on three ledger claims from retrieved records and both gates are met on investigator-supplied records."
+      },
+      "note": "The decision cites ledger claims c1, c3 and c4, which exist only if S13 applied the appraisal. Both gates carry investigator-supplied evidence. selectionStatus and actionStatus require S11; the status text 'proposed' in the decision panel requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "rapid-review",
+          "family": "rapid-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].criteria[0].claimIds": [
+            "c1",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: the cited claims exist in the ledger and rest on retrieved records, no defeating criterion holds and both gates are met, so the selection is accepted and the action is ready (G7). selectionStatus, actionStatus and design.basis 'explicit' on acceptance require S11; the ledger claims require S13; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3",
+            "c4"
+          ],
+          "design.basis": "explicit",
+          "family": "rapid-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Rapid review reported with PRISMA 2020 and SWiM, updating the 2023 systematic review from January 2022 and synthesising strategies that increase uptake of bereavement follow-up offered by palliative care services, with every shortcut declared.",
+        "population": "Bereaved relatives or close friends offered bereavement follow-up by inpatient hospice, community or hospital palliative care services; studies in any country published in English from 2012 to October 2026.",
+        "exposure": "Strategies intended to increase uptake: proactive personal contact, timing of the first offer, mode of the offer (telephone, text message, letter, in person), risk-based targeting, and outreach adapted for men, interpreter needs, distance or cultural groups.",
+        "procedures": "The librarian searches three bibliographic databases and two grey-literature sources from January 2022 to October 2026 and checks the references of the 2023 review. One reviewer screens titles and abstracts; the social worker independently screens a random 20 percent, and disagreements are discussed. One reviewer screens full texts and a second checks every exclusion. One reviewer extracts design, setting, strategy, comparator, both uptake definitions and results by sex, language and distance; the second checks every uptake figure. Risk of bias uses a short checklist matched to design, and certainty is rated per strategy with GRADE.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Uptake of bereavement support",
+            "measure": "Proportion of relatives offered follow-up who accepted support, and proportion who attended at least one session, extracted separately",
+            "timing": "As reported, up to 13 months after the death",
+            "why": "The service outcome the board must decide on, and the outcome the current programme fails.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Grief and wellbeing of bereaved relatives",
+            "measure": "Any validated grief or wellbeing scale reported by included studies, summarised without pooling",
+            "timing": "6 to 13 months after the death, as reported",
+            "why": "Uptake matters only if support helps; the review records whether any study measured it.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Reach of the first contact",
+            "measure": "Proportion of eligible relatives reached by the first offer",
+            "timing": "As reported",
+            "why": "Separates a strategy that reaches more families from one that persuades more of those reached.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Distress or complaints about unsolicited contact",
+            "measure": "Reported complaints, requests to stop contact or distress linked to proactive or text contact",
+            "timing": "As reported",
+            "why": "Proactive contact can intrude on grief; the board needs to know whether this was measured.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Week 1 protocol and search, weeks 2 to 4 screening, weeks 5 and 6 extraction and appraisal, week 7 synthesis, week 8 board report; two librarian days and about 20 percent of screening by the social worker, as approved.",
+        "biasMitigation": [
+          "Strategy groups and both uptake definitions fixed in the protocol before screening",
+          "Random 20 percent of title and abstract decisions screened independently by a second reviewer",
+          "Every uptake figure checked by a second reviewer",
+          "Shortcuts reported with their likely effect on the findings"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Single-reviewer screening",
+            "severity": "watch",
+            "note": "Partly checked by the 20 percent sample; reported as a limitation."
+          },
+          {
+            "id": "b2",
+            "label": "English-language limit",
+            "severity": "watch",
+            "note": "May miss service evaluations in other languages."
+          },
+          {
+            "id": "b3",
+            "label": "Publication bias toward positive service evaluations",
+            "severity": "watch",
+            "note": "Grey literature search and a statement of the direction this bias would push."
+          }
+        ],
+        "parsimony": {
+          "score": 86,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "One primary outcome with two pre-specified definitions; one process and one balancing measure"
+          ],
+          "simplestPath": "Update one existing synthesis, extract one outcome in two definitions, and group studies by five strategies."
+        },
+        "theoreticalFramework": "None beyond PRISMA 2020 and SWiM; a behavioural framework would not change what is extracted in eight weeks.",
+        "summary": "Eight-week rapid review updating the 2023 synthesis; one primary outcome in two definitions, one secondary, one process and one balancing measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": false,
+          "protocol.outcomes[1].patientCentered": true,
+          "protocol.outcomes[3].role": "balancing",
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "protocol.parsimony.score": 86,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Structured synthesis without meta-analysis, grouped by strategy, with an effect direction plot; pooling only if at least three studies report the same uptake definition against a comparable comparator.",
+        "sampleSize": "No sample size calculation applies; the unit is the included study. The 2023 review included 14 studies to March 2022, and the pre-search found one primary study published after that date, so about 18 to 25 included studies are expected. Where fewer than three comparable studies report a strategy, results are described study by study and not pooled.",
+        "primaryAnalysis": "For each strategy, tabulate uptake in intervention and comparison groups with the definition used, the design, the risk of bias and the setting, and show effect direction in a plot. Vote counting by statistical significance is not used.",
+        "secondaryAnalysis": "Uptake by sex, language needs and distance where reported; grief and wellbeing outcomes summarised narratively; certainty per strategy with GRADE.",
+        "missingData": "Missing uptake denominators are recorded as not reported; authors are not contacted within the eight weeks; studies without extractable uptake are listed but not synthesised.",
+        "multiplicity": "One primary outcome in two definitions; comparisons between strategies are descriptive and not tested.",
+        "software": "Reference manager for deduplication, a shared spreadsheet for screening and extraction, and R for the effect direction plot.",
+        "overfittingGuards": [
+          "Strategy groups and uptake definitions fixed before screening",
+          "No post hoc subgroup claims beyond sex, language and distance",
+          "Certainty stated per strategy, never as one overall verdict",
+          "Shortcuts and their likely effect reported in the board summary"
+        ],
+        "summary": "Synthesis without meta-analysis by strategy; the number of studies, not a power calculation, limits what can be concluded."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "unit is the included study"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No participants are involved; the main risk is overstating weak evidence and redesigning the programme on it.",
+        "consent": "Not applicable to the review. Any later change that contacts families proactively will give a clear way to decline further contact.",
+        "data": "Only published and publicly available reports are used; no family or patient records are accessed for the review.",
+        "equity": "PROGRESS-Plus: men, families who need an interpreter, families living far from the hospice and relatives of patients who died at home take up support less often. Results are extracted for these groups wherever reported, and the absence of evidence for them is reported as a finding rather than hidden.",
+        "effectiveness": "The review tells the board which strategies have evidence of higher uptake, how certain that evidence is, and which groups it leaves out.",
+        "efficiency": "Two librarian days and part of one reviewer's time; the review replaces a redesign based on opinion.",
+        "costs": "Staff time within existing roles; no direct costs.",
+        "grants": "None needed; an evaluation of the redesigned programme could later seek a small charitable grant.",
+        "partnerships": "Hospice librarian, the social worker as second reviewer, and two bereaved relatives from the hospice family advisory group who comment on the review question and the board summary.",
+        "rebPath": "A literature review needs no research ethics review. If the redesigned programme is later evaluated with feedback from families, the hospice's ethics screening will decide whether that is service evaluation or research.",
+        "limitations": "Rapid review shortcuts, the English-language limit, and evidence mostly from non-randomised service evaluations.",
+        "summary": "No participants; the ethical weight lies in honest reporting of weak evidence and in attention to the groups with the lowest uptake."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "needs no research ethics review"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two bereaved relatives from the family advisory group review the question before searching and the board summary before it is sent; one volunteer caller and the social worker comment on which strategies the hospice could deliver.",
+        "socialListening": "No social media listening; comments from the last year of family feedback cards that mention bereavement follow-up are read for themes.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Timing of the offer",
+            "quote": "Composite paraphrase: At two weeks I was still dealing with the funeral and the bank; if someone had rung a month later I might have said yes.",
+            "implication": "Extract timing carefully and do not assume earlier is better.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "A group is not for everyone",
+            "quote": "Composite paraphrase: I am not a talking-in-a-circle person, but a cup of tea with one person who knew her would have helped.",
+            "implication": "Separate uptake of group and one-to-one support where studies report both.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Volunteer calls",
+            "quote": "Composite paraphrase: Half my calls go to voicemail, and I never know whether to try again or leave them in peace.",
+            "implication": "Extract reach of the first contact and any rules for repeat attempts.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Language and trust",
+            "quote": "Composite paraphrase: Families in our community would come if the offer came from someone who speaks their language and knows the customs around mourning.",
+            "implication": "Look for studies of interpreter-supported or community-partnered outreach and report their absence if none exist.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on timing, format, reach and language."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].verification": "ai-lead",
+          "voices.items[1].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "voices.items[3].source": "partner",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Strategies to increase uptake of bereavement follow-up offered by palliative care services: a rapid review",
+        "abstract": "Background: uptake of bereavement follow-up offered by palliative care services is low and unequal. Aim: to update a 2023 systematic review and summarise strategies associated with higher uptake. Methods: rapid review with declared shortcuts, searching from January 2022, grouping studies by strategy and reporting uptake as accepting an offer and as attending at least one session. Results and conclusions will be written after the review is complete.",
+        "introduction": "Bereaved relatives are offered follow-up by most palliative care services, yet few take it up, and uptake is lowest among men, relatives who need an interpreter and relatives living far away. A 2023 review found proactive personal contact the most consistent signal but searched only to March 2022.",
+        "methods": "Three databases and two grey-literature sources searched from January 2022 to October 2026, plus the studies in the 2023 review. Single-reviewer screening with independent screening of a random 20 percent; extraction checked for every uptake figure; synthesis without meta-analysis by strategy; certainty per strategy with GRADE.",
+        "results": "No review data have been extracted yet. The report will present the study flow, a table of strategies with uptake by definition, an effect direction plot, and results for men, relatives who need an interpreter and relatives living far away.",
+        "discussion": "The discussion will state which strategies have evidence of higher uptake, how certain it is, which groups remain unstudied, and what the hospice will change and evaluate.",
+        "limitations": "Rapid review shortcuts; English-language reports only; mostly before-after service evaluations; uptake defined in different ways.",
+        "conclusion": "To be written after the review; it will be limited to uptake and will not claim effects on grief outcomes that no study measured adequately.",
+        "reportingChecklist": "PRISMA 2020 with rapid review shortcuts reported; SWiM",
+        "summary": "PRISMA-structured rapid review draft with results left empty until extraction is complete."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRISMA 2020 with rapid review shortcuts reported; SWiM",
+          "manuscript.results": {
+            "includes": "No review data have been extracted yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Confirm the two uptake definitions with the social worker before screening starts",
+          "Run an identity check on the seven retrieved records before the board summary cites them",
+          "Record each rapid review shortcut in the report as it is used"
+        ],
+        "improvementNotes": "Seven records came from a recorded search and were appraised at abstract level; the decision rests on three ledger claims with passages from those abstracts. No record has an identity check yet, and certainty is low because the evidence is mostly before-after.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before screening; the evidence is retrieved and appraised at abstract level but not yet identity-checked."
+      },
+      "note": "audit.openFixes, audit.improvementNotes and audit.lastReview state the correct behaviour and FAIL at 875fe59 because of a store defect, not a missing work-order entry: store.ts mergeStage (lines 131 to 139) writes 'audit: { ...s.audit, entries }' after '[stage]: { ...current, ...patch }', so the Audit stage's patch is overwritten (A3 item L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "three ledger claims"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Audit route; decision statuses are checked in the export because the decision panel is not on this route. audit.openFixes fails at 875fe59 for the L1.6 store defect named in the audit step.",
+      "expect": {
+        "store": {
+          "title": "Strategies to increase uptake of bereavement follow-up offered by a palliative care service: a rapid review",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "Eight weeks until the board meeting on 9 December 2026. No funding for the review; the hospice librarian for two working days and the social worker as second reviewer for about 20 percent of screening. English-language sources only.",
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Strategies to increase uptake of bereavement follow-up offered by a palliative care service: a rapid review"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "As for reload.",
+      "expect": {
+        "store": {
+          "title": "Strategies to increase uptake of bereavement follow-up offered by a palliative care service: a rapid review",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "protocol.outcomes": {
+            "length": 4
+          }
+        },
+        "screen": {
+          "includes": [
+            "Strategies to increase uptake of bereavement follow-up offered by a palliative care service: a rapid review"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; scan.claims requires S13. One click gives one file whose bytes equal the stored study (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents[0].recordIds": [
+              "ev-0d28ndz",
+              "ev-098pwhp",
+              "ev-01jmcsq",
+              "ev-17pon5z",
+              "ev-1126ilq",
+              "ev-1l9tw9s",
+              "ev-1jcuoer"
+            ],
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 4
+            },
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c3",
+              "c4"
+            ],
+            "problem.constraints": "Eight weeks until the board meeting on 9 December 2026. No funding for the review; the hospice librarian for two working days and the social worker as second reviewer for about 20 percent of screening. English-language sources only.",
+            "problem.rawNeed": "I coordinate the bereavement service at a 24-bed inpatient hospice that also runs a community palliative care team. After every death we send a condolence card at two weeks, and a volunteer phones the main contact person at six weeks to offer a place in our monthly bereavement support group or one-to-one support with our social worker. Last year 412 families were eligible. Our volunteers reached 239 of them by phone, and only 71 took up any support. Men, families who needed an interpreter and families living more than an hour from the hospice almost never took up the offer.\n\nOur board has asked me to redesign the follow-up programme by the end of the year. Colleagues have strong opinions: some want to phone at two weeks instead of six, some want to send text messages, and some want to screen every family with a bereavement risk tool and focus our small team on people at high risk of prolonged grief. I do not want to redesign the service on opinions. I would like to do a rapid review of what is known about strategies that increase uptake of bereavement follow-up offered by palliative care services, looking at the timing of the offer, the way it is made, risk-based targeting, and outreach to the groups who rarely take up support.\n\nI need help setting the review question, deciding which shortcuts are acceptable in a rapid review, choosing what to extract, and presenting the findings to the board without overstating weak evidence. I have about eight weeks, a hospice librarian for two days, and our social worker can act as second reviewer for part of the screening."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

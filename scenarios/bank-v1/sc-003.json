@@ -1,6 +1,6 @@
 {
   "id": "sc-003",
-  "version": 2,
+  "version": 3,
   "title": "Hospital infection prevention: real-time hand hygiene feedback trial, out-of-range score, boolean year, cited trial corrected after acceptance",
   "field": "infectious-disease",
   "level": 4,
@@ -12,7 +12,8 @@
     "D5",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear ward-randomised question (routing explicit rct from 'cluster randomised trial'). A fixture search returns eight records. The first scan reply (shape discovery) adds four model leads, which must be appended after the retrieved records (D1): one is labelled 'landmark' with a DOI and must stay unverified (G3), one gives its year as the boolean true and must be stored with year null and issue invalid-type (G4), and its explicit null certainty stays unassessed. The second scan reply (shape appraisal, S13) annotates the eight records; one annotation gives methodQuality 140, which must be stored null with issue out-of-range, never clamped. The first design reply rests on claims c1 to c3, both gates are met, and its acceptance is a supported positive (accepted, ready). Then, with the route still on the Design stage, the abstract of the trial cited by c1 is replaced by the authors' correction notice through the store's own action: the decision must become stale with its action blocked (S10), in the store, on screen, after reload, after reopen (as 'review required' in the stage list) and in the export, and Map to Design are flagged for review (G8). Protocol to Audit are drafted afterwards with the planning basis flagged. Record ids are stableRecordId values computed as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 6, 7 (ev-0kih00p, ev-03bep8c, ev-00v1xdk, ev-1ej54gc, ev-0nj3ms6); titleYearKey hash for records 2, 5, 8 (ev-1jmjmnm, ev-08smxep, ev-1u98koa). Requires D1 (leads appended, abstract field), D5 (status text), S10 (source text in the evidence revision), S11 (selectionStatus, actionStatus) and S13 (appraisal on the production scan path). Catches: leads replacing retrieved records, a model label turned into verification, a boolean year or an out-of-range score stored as a value, and an accepted decision that stays current after its cited source changes meaning.",
   "inputs": {
@@ -1023,8 +1024,8 @@
             "c2",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -1033,13 +1034,38 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1056,7 +1082,7 @@
         "store": {
           "design.decisions[-1].status": "accepted",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].actionStatus": "blocked",
           "design.decisions[-1].claimIds": [
             "c1",
             "c2",
@@ -1068,7 +1094,7 @@
         "screen": {
           "includes": [
             "accepted",
-            "ready"
+            "blocked"
           ]
         }
       }
@@ -1606,5 +1632,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-003.json), superseded 2026-09-22T20:50Z: golden error under S1 (D8), the appraisal reply stated 'Two surgical wards; questionnaire response 65 percent.' where the cited abstract states 'Two surgical wards; questionnaire returned by 61 of 94 nursing staff.'; 'with about 3 events a month and wide intervals' where the cited abstract states 'with 3.1 events a month and wide intervals', an undeclared derivation or approximation that the application must quarantine; the recorded model output now states the source values, so the expected issue count stands."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-003.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Decision 1 is expected blocked from its acceptance (step 12) on: the investigator's facts give no research ethics status. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

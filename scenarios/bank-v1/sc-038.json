@@ -1,6 +1,6 @@
 {
   "id": "sc-038",
-  "version": 1,
+  "version": 2,
   "title": "Community mental health service: systematic review of measurement-based care uptake, reopened after the protocol",
   "field": "psychiatry",
   "level": 3,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Demanding path for a systematic review. The need names a systematic review (routing explicit). The preliminary fixture search reports 212 hits and returns the first 8 records, so the retrieval event is 'partial' with resultCount 212 (runSearch at 875fe59: total greater than records ingested); a partial event still counts as retrieval (G2). One record is a conference report with no year; the appraisal (S13) gives it relevance but leaves method quality and grade null, so it stays 'not assessed' and 'unrated' (G4; the explicit null grade logs 'cleared' to the unresolved value, which is 'unrated' already). Five claims are recorded; two show that effects fade after support ends. The design decision rests on c1, c2 and c4; the second reviewer's release is unknown in the investigator's facts, so the gate stays unknown and the accepted selection stays blocked to the end (G7), while the librarian gate is met on a supplied fact. The investigator reopens after the protocol stage (8 of 13 stages) and then finishes; the reopened study must show every completed stage, the unknowns and the decision intact. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-0h4ytj9, 2 ev-0464zop, 3 ev-178w7wz, 6 ev-0edibal, 7 ev-1k3qnkp), or of titleYearKey(title, year) when there is no DOI (records 4 ev-0bwzxyx, 5 ev-12yv0rm, 8 ev-0bnodet). Catches: a partial search treated as complete or as empty, a guessed year or a default score, an unknown gate turned met, and work lost on reopen.",
   "inputs": {
@@ -824,7 +825,7 @@
             "c4"
           ],
           "design.decisions[-1].gates[0].status": "unknown",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -833,7 +834,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -845,6 +847,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1363,5 +1385,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-038.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

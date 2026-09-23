@@ -1,6 +1,6 @@
 {
   "id": "sc-009",
-  "version": 1,
+  "version": 2,
   "title": "Inner-city hospital social work: housing-first referrals, mixed methods study accepted with one gate met and one unmet",
   "field": "social-work",
   "level": 2,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary ambiguity on an explicit mixed methods need: an inclusion health social work lead wants to know what happens to inpatients referred to housing first and why referrals fail. A fixture search with few hits returns five records; the appraisal records five claims. One null field: the model leaves a hypothesis novelty score unjudged and it must stay null. The design decision (convergent mixed methods, one primary outcome per strand) rests on claims c1 to c4 and carries two gates: the ethics approval is met on the investigator's record, and the data-sharing agreement is unmet because the provider's board rejected the first proposal. The acceptance is the feature under test: the selection is accepted while the action stays blocked, and neither the acceptance nor any later step turns the unmet gate into met. The study is reopened after eleven stages and finished, then reloaded and exported. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 2, 4, 5 (ev-1vg71v0, ev-10w7ufb, ev-1trek27, ev-18s8igy); titleYearKey hash for record 3 (ev-1eexazh). Requires S11 (selectionStatus, actionStatus, basis), S13 (appraisal) and D5 (status text). Catches: an unmet gate averaged away or ignored at acceptance, acceptance refused because a gate is unmet, a null score replaced by a default, and partial work lost on reopen.",
   "inputs": {
@@ -757,7 +758,7 @@
           "design.decisions[-1].gates": {
             "length": 2
           },
-          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
           "design.decisions[-1].gates[1].status": "unmet",
           "design.decisions[-1].claimIds": [
             "c1",
@@ -773,7 +774,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -785,6 +787,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1299,5 +1321,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-009.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

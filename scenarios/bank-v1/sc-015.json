@@ -1,6 +1,6 @@
 {
   "id": "sc-015",
-  "version": 1,
+  "version": 2,
   "title": "Hospital cardiac rehabilitation: remote versus centre-based completion, a score of 140 and a boolean year refused, cited source corrected after acceptance",
   "field": "cardiology",
   "level": 4,
@@ -12,7 +12,8 @@
     "D5",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear retrospective question (routing retrospective, explicit under both classifier rules). Refusals: the problem reply sends constraints as an empty string, which G11 refuses (stored text unchanged, rejected-change; counted under S11 as the closest listed entry); a second scan call (shape discovery, after the appraisal) gives a lead's year as the boolean false (stored null, invalid-type) and its four leads must be appended after the seven retrieved records, never replacing them or their annotations (D1); a hypothesis carries feasibility 140 (stored null, out-of-range, never clamped). The appraisal records four source-derived claims whose passages and numbers occur in the cited abstracts. The design decision rests on c1 to c3 with both gates met on the investigator's approvals, and its acceptance is a supported positive (accepted, ready). After protocol, analysis and ethics are completed, the record cited by c1 receives an author correction to its key findings: the decision must become stale in the store, blocked for action, and every completed stage after Scan flagged for review. The route is on Ethics at the change, so the screen shows 'review required'; the investigator then opens Design from the stage list (set-field currentStage) where 'stale' shows, a reload on Design keeps it, and the export carries it. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 2, 3, 4, 6 (ev-17tmqo8, ev-1n3joew, ev-0iyss7e, ev-1h7dri1, ev-11f5pxk) and titleYearKey hash for records 5, 7 (ev-0rszo7j, ev-1m9ojqf). Requires S10 (revision covers key findings; WO D24), S11, S13, D1 and D5. Catches: investigator text blanked by a model, a guessed year, a clamped score, leads that overwrite retrieved records, and an accepted decision that stays current after its cited source is corrected late in the workflow.",
   "inputs": {
@@ -958,13 +959,60 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "met",
+      "reason": "The research ethics board granted a waiver of consent for secondary use of the programme records on 2026-09-15 (REB-2026-331).",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "met",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1553,5 +1601,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-015.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (approved) citing the investigator's own fact before accepting decision 1. Model responses, need and records are unchanged."
 }

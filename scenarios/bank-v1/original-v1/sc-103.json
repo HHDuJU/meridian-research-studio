@@ -1,0 +1,1407 @@
+{
+  "id": "sc-103",
+  "version": 1,
+  "title": "Regional cancer centre: pragmatic trial of automatic palliative care referral triggers, empty searches confirmed and a certainty from leads dropped",
+  "field": "palliative-care",
+  "level": 3,
+  "family": "pragmatic-trial",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D20",
+    "S11"
+  ],
+  "notes": "Demanding path with nothing retrieved. The need names a pragmatic trial (clinics switching in a staggered order) and gives local volumes, capacity and approval facts; the problem reply restates the investigator's constraints exactly (G11). The first fixture search returns HTTP 200 with zero records, recorded as an event with 0 hits. A discovery reply over those zero records brings five model leads and a certainty 'moderate': the certainty must be dropped with an issue and the Scan stays incomplete with the honest status 'leads only' (G1, G2); the leads are stored as unverified model leads, and the two undated leads keep year and quality null and grade unrated, never 2020, 50 or 'low' (G3, G4). The investigator runs a broader second search, which is recorded and also empty, and then confirms the empty search on screen: only that confirmation completes the Scan, it is stored as an investigator action, and certainty stays unassessed (not assessed on screen and in the export). With no ledger claim, the design decision narrows the proposal to one stepped-wedge trial with one primary outcome; its ethics gate has no evidence and stays unknown, so acceptance gives an accepted selection with a blocked action, which is checked again after a reload on the Design route at 7 of 13 stages. Requires D20 (drop of a certainty over zero records, leads-only status, investigator confirmation record, not assessed on screen), S11 (explicit basis, recommendedFamily, selectionStatus, actionStatus) and D5 (status text). Catches: a certainty assigned or a Scan completed from leads or an empty search, a model or an empty result treated as the investigator's confirmation, invented defaults for unknown values, a gate that becomes met without evidence, an action allowed past an unknown ethics gate, and work lost on reload or reopen.",
+  "inputs": {
+    "need": "I am a palliative medicine physician at a regional cancer centre that sees about 1,900 new patients with advanced solid tumours each year across eight disease-site clinics. Referral to our specialist palliative care clinic depends on the treating oncologist, and it comes late: last year the median time from the first palliative care visit to death was 34 days, and a third of patients who died under our care were never seen by palliative care at all.\n\nWe would like to test automatic referral triggers built into the electronic health record. A referral would be generated when a patient meets any of a small set of criteria (for example a new diagnosis of stage IV lung, pancreatic or gastric cancer, the start of second-line chemotherapy, two unplanned admissions within 60 days, or a documented performance status of 3 or worse) unless the oncologist opts the patient out. Usual care would stay as it is now, with referral at the oncologist's discretion.\n\nWe are thinking of a pragmatic trial in which the clinics switch from usual care to the triggers in a staggered order over about 18 months, so that every clinic eventually gets the triggers. The main questions are whether triggers bring the first palliative care visit earlier, whether patients spend more days at home in their last months, and whether our palliative care team can cope with the extra referrals. Some oncologists worry that automatic referrals will upset patients who are not ready and will swamp the palliative care clinic.\n\nI need help with the choice of primary outcome, the trigger criteria, how many clinics and patients we need, how to handle clinics that switch at different times, and the ethics of automatic referral with an opt-out.",
+    "constraints": "The palliative care team can add 0.5 full-time equivalent nurse time and no physician time. Trigger rules can be built in the electronic health record from the first quarter of 2027. Outcomes must come from routinely collected data; no extra questionnaires for patients who are very unwell.",
+    "localFacts": [
+      "The centre sees about 1,900 new patients with advanced solid tumours a year across eight disease-site clinics.",
+      "In 2025 the median time from the first specialist palliative care visit to death was 34 days, and 33 percent of patients who died under the centre's care had no palliative care visit.",
+      "The palliative care outpatient clinic can see about 30 new patients a week.",
+      "The medical oncology division agreed on 2026-09-10 to take part with opt-out automatic referral in all eight clinics (division minutes MO-2026-09-10).",
+      "The research ethics board has not yet reviewed the proposal."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names one design (pragmatic trial) and avoids other design words, so classifyFamily in src/lib/stages.ts at 875fe59 routes it as explicit pragmatic-trial. design.basis 'explicit' at create requires S11.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a palliative medicine physician at a regional cancer centre that sees about 1,900 new patients with advanced solid tumours each year across eight disease-site clinics. Referral to our specialist palliative care clinic depends on the treating oncologist, and it comes late: last year the median time from the first palliative care visit to death was 34 days, and a third of patients who died under our care were never seen by palliative care at all.\n\nWe would like to test automatic referral triggers built into the electronic health record. A referral would be generated when a patient meets any of a small set of criteria (for example a new diagnosis of stage IV lung, pancreatic or gastric cancer, the start of second-line chemotherapy, two unplanned admissions within 60 days, or a documented performance status of 3 or worse) unless the oncologist opts the patient out. Usual care would stay as it is now, with referral at the oncologist's discretion.\n\nWe are thinking of a pragmatic trial in which the clinics switch from usual care to the triggers in a staggered order over about 18 months, so that every clinic eventually gets the triggers. The main questions are whether triggers bring the first palliative care visit earlier, whether patients spend more days at home in their last months, and whether our palliative care team can cope with the extra referrals. Some oncologists worry that automatic referrals will upset patients who are not ready and will swamp the palliative care clinic.\n\nI need help with the choice of primary outcome, the trigger criteria, how many clinics and patients we need, how to handle clinics that switch at different times, and the ethics of automatic referral with an opt-out.",
+          "family": "pragmatic-trial",
+          "design.basis": "explicit",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a palliative medicine physician at a regional cancer centre"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Automatic referral triggers for early specialist palliative care in outpatient oncology: a pragmatic stepped-wedge trial",
+        "subtitle": "Eight disease-site clinics switching from usual referral to opt-out triggers",
+        "family": "pragmatic-trial",
+        "statement": "At a regional cancer centre, referral to specialist palliative care depends on the treating oncologist and comes late: in 2025 the median time from the first palliative care visit to death was 34 days, and a third of patients who died under the centre's care were never seen. The centre proposes automatic referral triggers in the electronic health record, with oncologist opt-out, and wants to test them against usual referral in a pragmatic trial in which its eight clinics switch to triggers in a staggered order.",
+        "whoAffected": "Adults with advanced solid tumours and their families, the oncologists who would receive automatic referrals, and the palliative care team whose clinic capacity is limited.",
+        "whatHurts": "Late or absent palliative care means that symptom support, care planning and family support arrive in the last weeks of life or not at all, and many patients spend their final month in hospital.",
+        "currentPractice": "Referral at the oncologist's discretion, without criteria; no trigger or prompt in the electronic health record.",
+        "whyNow": "Trigger rules can be built from early 2027, the medical oncology division has agreed to take part, and the palliative care team can add nurse time.",
+        "constraints": "The palliative care team can add 0.5 full-time equivalent nurse time and no physician time. Trigger rules can be built in the electronic health record from the first quarter of 2027. Outcomes must come from routinely collected data; no extra questionnaires for patients who are very unwell.",
+        "patientCenteredGoal": "Patients with advanced cancer spend more of their remaining time at home, with symptom support and care planning offered early enough to use.",
+        "summary": "Problem framed as a pragmatic stepped-wedge trial of opt-out automatic referral triggers across eight clinics."
+      },
+      "note": "The reply restates the investigator's constraints exactly as typed (G11: nothing to reject).",
+      "expect": {
+        "store": {
+          "title": "Automatic referral triggers for early specialist palliative care in outpatient oncology: a pragmatic stepped-wedge trial",
+          "family": "pragmatic-trial",
+          "problem.statement": {
+            "includes": "median time from the first palliative care visit to death was 34 days"
+          },
+          "problem.constraints": "The palliative care team can add 0.5 full-time equivalent nurse time and no physician time. Trigger rules can be built in the electronic health record from the first quarter of 2027. Outcomes must come from routinely collected data; no extra questionnaires for patients who are very unwell.",
+          "problem.rawNeed": {
+            "includes": "pragmatic trial"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Automatic referral triggers for early specialist palliative care in outpatient oncology: a pragmatic stepped-wedge trial"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "stepped-wedge trial automated electronic health record triggers early specialist palliative care referral advanced solid tumours",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "An empty search is an observable event, never a silent empty list: event status 'ok' with 0 hits. The Scan cannot complete from it without the investigator's confirmation (G2). 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "stepped-wedge trial automated electronic health record triggers early specialist palliative care referral advanced solid tumours",
+        "sourcesConsulted": [
+          "model knowledge of the palliative oncology literature"
+        ],
+        "gradeOverall": "moderate",
+        "gradeRationale": "Several trials report benefits of early palliative care, so certainty is moderate.",
+        "synthesis": "The recorded search returned no records, so the five items below are leads recalled by the model, not retrieved records, and none has been checked. The leads suggest that palliative care from diagnosis reduces hospital use at the end of life, that trigger-based consultation raises consultation among inpatients, and that automated criteria agree only partly with oncologists' judgement. Days at home in the last month of life has been proposed as a trial outcome. No lead tests opt-out automatic referral in outpatient oncology.",
+        "items": [
+          {
+            "title": "Integrated palliative care from diagnosis in advanced thoracic cancers: effects on hospital use in the last month of life",
+            "authors": "Achterberg-Oyelaran M, Whitcombe-Diallo R, Castellanos-Pike J",
+            "year": 2019,
+            "source": "Journal of Supportive Oncology Practice",
+            "kind": "rct",
+            "grade": "moderate",
+            "methodQuality": 68,
+            "relevance": 72,
+            "verification": "verify",
+            "contextTags": [
+              "integrated palliative care",
+              "thoracic cancer",
+              "end-of-life hospital use"
+            ],
+            "keyFindings": "Patients offered palliative care from diagnosis spent fewer days in hospital in the last month of life than patients receiving usual oncology care, with similar survival.",
+            "limitations": "Thoracic cancers at one centre; enrolment by clinicians; not a trigger design.",
+            "notes": "Recalled as a lead; not retrieved by the recorded search."
+          },
+          {
+            "title": "Trigger-based palliative care consultation for hospitalised patients with advanced cancer: a before-after study",
+            "authors": "Nakamura-Obi S, Lindgren-Faure K",
+            "year": 2021,
+            "source": "Hospital Palliative Medicine Reports",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 45,
+            "relevance": 85,
+            "verification": "verify",
+            "contextTags": [
+              "triggers",
+              "inpatients",
+              "consultation rate"
+            ],
+            "keyFindings": "Consultation among admitted patients who met trigger criteria roughly doubled after the triggers started, and readmission within 30 days fell modestly.",
+            "limitations": "Inpatients only; before-after design; triggers applied by a nurse, not automatically.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Automated referral criteria for outpatient palliative care: agreement with oncologists' judgement",
+            "authors": "Moreau-Adeyemi T, Haddad-Lindholm C",
+            "year": null,
+            "source": "Oncology Informatics preprint server",
+            "kind": "preprint",
+            "grade": null,
+            "methodQuality": null,
+            "relevance": 80,
+            "verification": "ai-lead",
+            "contextTags": [
+              "automated criteria",
+              "agreement",
+              "outpatients"
+            ],
+            "keyFindings": "Automated criteria flagged about a quarter more patients than oncologists judged ready for referral, and oncologists agreed with most flags after review.",
+            "limitations": "Not peer reviewed; no publication year in the listing; agreement measured after the fact.",
+            "notes": "Recalled as a lead; undated and ungraded."
+          },
+          {
+            "title": "Days at home in the last 30 days of life as a palliative care trial outcome: validation against family-reported quality of dying",
+            "authors": "Brandt-Mwangi L, Oduya-Hale P",
+            "year": 2020,
+            "source": "Palliative Outcomes Methods",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 58,
+            "relevance": 76,
+            "verification": "verify",
+            "contextTags": [
+              "outcome measurement",
+              "days at home",
+              "routine data"
+            ],
+            "keyFindings": "More days at home in the last month of life went with better family-reported quality of dying in a regional group of decedents.",
+            "limitations": "Decedents only; a correlation, not responsiveness to an intervention.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Stepped-wedge designs for service-level palliative care interventions: a methods overview",
+            "authors": "Kaplan-Ferreira D",
+            "year": null,
+            "source": "Trial Methods Notes",
+            "kind": "expert",
+            "methodQuality": null,
+            "relevance": 62,
+            "verification": "ai-lead",
+            "contextTags": [
+              "stepped-wedge",
+              "methods",
+              "time trends"
+            ],
+            "keyFindings": "Stepped-wedge designs suit service changes that every site will receive, but they need adjustment for time trends and enough steps to separate them from the intervention effect.",
+            "limitations": "Methods commentary; no year in the listing.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Five unchecked leads recalled after an empty search; two are undated and have no quality rating."
+      },
+      "note": "A discovery reply over zero retrieved records that carries a certainty ('moderate'): the certainty must be dropped with an issue and the stage stays incomplete, because leads never assign certainty or complete the Scan (G1, G2; D20 with A3.2 section 1: a leads-only scan shows 'leads only' and stays incomplete). At 875fe59 'moderate' is stored and the stage completes. The five leads are stored with provenance origin 'model', status 'unverified', access 'unknown' (G3); the two undated leads keep year and methodQuality null and grade unrated (G4; holds at 875fe59). The sourcesConsulted text is dropped (holds at 875fe59).",
+      "expect": {
+        "store": {
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[0].provenance.access": "unknown",
+          "scan.items[1].year": 2021,
+          "scan.items[2].year": {
+            "isNull": true
+          },
+          "scan.items[2].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[2].grade": "unrated",
+          "scan.items[2].relevance": 80,
+          "scan.items[4].year": {
+            "isNull": true
+          },
+          "scan.items[4].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[4].grade": "unrated",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "dropped"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": {
+            "min": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed",
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "opt-out automatic palliative care referral electronic trigger outpatient oncology",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "The investigator broadens the query once; the second search is recorded and also returns nothing. The leads stay as leads, and the Scan is still incomplete.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 0,
+          "scan.retrievalEvents[1].query": "opt-out automatic palliative care referral electronic trigger outpatient oncology",
+          "scan.retrievalEvents[1].recordIds": [],
+          "scan.items": {
+            "length": 5
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-empty-search",
+      "note": "The investigator confirms on screen that the search was run and returned nothing; only this completes the Scan (G2), and certainty stays unassessed (G1). The confirmation is a store record written by the screen action, never a model field (A3.2 section 1: scan.emptySearchConfirmation with by 'investigator'); requires D20.",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.emptySearchConfirmation.by": "investigator",
+          "scan.items": {
+            "length": 5
+          },
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[1].resultCount": 0
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional cancer centre with eight disease-site clinics",
+          "about 1,900 new patients with advanced solid tumours a year",
+          "palliative care clinic capacity of about 30 new patients a week",
+          "two recorded searches returned no records"
+        ],
+        "reading": "Referral now depends on one decision by a busy oncologist; triggers move that decision into the record, with the oncologist able to opt out. The expected effect runs through an earlier first visit to symptom control, care planning and fewer admissions at the end of life, but clinic capacity limits how many extra referrals can be absorbed. Both recorded searches were empty, so every evidence node here is an unchecked lead.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Oncologist-initiated referral",
+            "kind": "context",
+            "detail": "Current practice; median 34 days from first visit to death."
+          },
+          {
+            "id": "n2",
+            "label": "Automatic trigger with opt-out",
+            "kind": "context",
+            "detail": "Generated by the record when a criterion is met."
+          },
+          {
+            "id": "n3",
+            "label": "First palliative care visit",
+            "kind": "outcome",
+            "detail": "Process step the triggers act on."
+          },
+          {
+            "id": "n4",
+            "label": "Days alive and out of hospital",
+            "kind": "outcome",
+            "detail": "Patient-centred outcome from routine data."
+          },
+          {
+            "id": "n5",
+            "label": "Palliative care clinic capacity",
+            "kind": "context",
+            "detail": "About 30 new patients a week plus 0.5 nurse time."
+          },
+          {
+            "id": "n6",
+            "label": "Lead: palliative care from diagnosis in thoracic cancers",
+            "kind": "rct",
+            "detail": "Unchecked lead; fewer hospital days at the end of life."
+          },
+          {
+            "id": "n7",
+            "label": "Lead: trigger-based inpatient consultation",
+            "kind": "observational",
+            "detail": "Unchecked lead; consultation roughly doubled."
+          },
+          {
+            "id": "n8",
+            "label": "Empty recorded searches",
+            "kind": "gap",
+            "detail": "Both fixture searches returned no records."
+          },
+          {
+            "id": "n9",
+            "label": "Patients, families and oncologists",
+            "kind": "stakeholder",
+            "detail": "Can decline or opt out; worried about readiness."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "often delays"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "expected to bring forward"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "may increase"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "limits"
+          },
+          {
+            "from": "n6",
+            "to": "n4",
+            "relation": "reports fewer hospital days for"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "suggests the workability of"
+          },
+          {
+            "from": "n8",
+            "to": "n9",
+            "relation": "leaves the decision to local data for"
+          },
+          {
+            "from": "n9",
+            "to": "n2",
+            "relation": "may opt out of"
+          }
+        ],
+        "summary": "Map shows referral moving from one oncologist decision to an automatic trigger, the outcome chain it acts on, the capacity limit, and an evidence base of unchecked leads only."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[7].kind": "gap",
+          "map.nodes[5].kind": "rct",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "The recorded searches returned no records",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Nothing was retrieved, so nothing was appraised; the leads are unchecked and two are undated, so no certainty can be claimed.",
+            "opportunity": "Retrieve and check the leads by identifier before citing any, and let the trial answer the local question."
+          },
+          {
+            "id": "g2",
+            "title": "Trigger criteria have not been checked against local data",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "The number of patients meeting a trigger drives both power and palliative care workload, and it is not known.",
+            "opportunity": "Run the trigger rules silently on 2025 records to count eligible patients per clinic and month before the first step."
+          },
+          {
+            "id": "g3",
+            "title": "Palliative care clinic capacity",
+            "kind": "implementation",
+            "severity": "high",
+            "whyItMatters": "About 30 new patients a week is the ceiling; if triggers add more, waits rise for everyone referred.",
+            "opportunity": "Switch clinics in pairs, monitor waiting time monthly, and let an oversight group slow the rollout."
+          },
+          {
+            "id": "g4",
+            "title": "Patients an automatic referral may miss or distress",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Patients far from the centre, patients who need an interpreter and patients from communities where palliative care is linked with giving up may respond differently to an unrequested call.",
+            "opportunity": "Use interpreters and telehealth, record declines with reasons, and report results by distance, language and area deprivation."
+          },
+          {
+            "id": "g5",
+            "title": "An earlier first visit is a process, not the benefit",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Counting earlier visits as success could hide no change for patients.",
+            "opportunity": "Make days alive and out of hospital the primary outcome and keep the first visit as a process measure."
+          }
+        ],
+        "errorsFound": [
+          "The scan reply rated certainty moderate over a search that returned no records; the rating was dropped and certainty stays unassessed.",
+          "The need counts an earlier first palliative care visit as the benefit; it is a process step, and the benefit to patients needs its own outcome."
+        ],
+        "reevaluation": "With nothing retrieved, the gaps favour a trial that measures patient-centred outcomes from routine data, checks the trigger volume first, and treats capacity as a balancing measure.",
+        "summary": "Five gaps; the empty searches, the unknown trigger volume and clinic capacity are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].kind": "evidence",
+          "gaps.items[2].severity": "high",
+          "gaps.errorsFound": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "The recorded searches returned no records"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Opt-out automatic referral triggers increase days alive and out of hospital in the 90 days after trigger eligibility by at least 5 days compared with usual referral.",
+            "novelty": 55,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 70,
+            "parsimony": 80,
+            "rationale": "Need is high given the late referrals; novelty is moderate because no lead tests outpatient opt-out triggers; feasibility depends on trigger volume and capacity.",
+            "risks": "Clinic capacity may blunt the effect; eight clinics limit power for small differences."
+          },
+          {
+            "id": "h2",
+            "statement": "Triggers increase the proportion of eligible patients with a first specialist palliative care visit within 12 weeks.",
+            "novelty": 40,
+            "need": 70,
+            "practiceChange": 70,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "The direct process effect of the triggers.",
+            "risks": "A process gain can occur without patient benefit."
+          },
+          {
+            "id": "h3",
+            "statement": "Triggers lengthen the wait for a new palliative care clinic appointment beyond 3 weeks.",
+            "novelty": 30,
+            "need": 60,
+            "practiceChange": 50,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "The main harm oncologists and the palliative care team fear.",
+            "risks": "Waiting times also move with staffing changes."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 as the primary question, h2 as the process question and h3 as the balancing question."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].novelty": 55,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults with advanced solid tumours in the centre's eight clinics who meet a trigger criterion, do opt-out automatic referral triggers, compared with usual referral, increase days alive and out of hospital in the 90 days after trigger eligibility?",
+            "framework": "PICO",
+            "population": "Adults with advanced solid tumours in the eight clinics who meet at least one trigger criterion",
+            "intervention": "Automatic referral to specialist palliative care with oncologist opt-out",
+            "comparator": "Usual referral at the oncologist's discretion",
+            "outcome": "Days alive and out of hospital in the 90 days after the first trigger",
+            "time": "90 days after the first trigger; trial periods from the second quarter of 2027",
+            "setting": "Regional cancer centre, eight disease-site clinics"
+          },
+          {
+            "id": "q2",
+            "text": "Do triggers increase the proportion with a first specialist palliative care visit within 12 weeks, and how do they change the wait for a new palliative care appointment?",
+            "framework": "PICO",
+            "population": "Same as q1",
+            "intervention": "Same as q1",
+            "comparator": "Same as q1",
+            "outcome": "First visit within 12 weeks; days from referral to first appointment",
+            "time": "12 weeks after the first trigger; waiting time by month",
+            "setting": "Same as q1"
+          }
+        ],
+        "finer": "Feasible with routine data, existing clinics and the added nurse time; interesting to oncology, palliative care and families; novel for outpatient opt-out triggers; ethical subject to the board's decision on consent; relevant because referral timing is a known local problem.",
+        "summary": "One primary PICO question and one process and balancing question."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "PICO",
+          "questions.items[0].outcome": "Days alive and out of hospital in the 90 days after the first trigger",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "pragmatic-trial",
+        "rationale": "Every clinic will receive the triggers, the intervention changes how referral happens, and the outcomes can come from routine records, so a pragmatic stepped-wedge trial in the eight clinics answers the question under real conditions. Randomising the order in which pairs of clinics switch protects against the clinic differences a before-after comparison would carry, and period effects are modelled. Nothing was retrieved, so the design rests on the investigator's local facts and on stated assumptions rather than on appraised evidence.",
+        "alternatives": [
+          "Before-after comparison across the centre (refused: changes in referral practice over time would be confounded with the triggers)",
+          "Parallel cluster trial with four clinics kept on usual care throughout (refused: the division agreed to triggers in all eight clinics, and a stepped rollout protects clinic capacity)",
+          "Individually randomised trial (refused: triggers act at the clinic level, and patients of the same oncologist would contaminate each other)"
+        ],
+        "guidelines": [
+          "CONSORT extension for stepped-wedge cluster randomised trials",
+          "TIDieR"
+        ],
+        "whyNotMoreComplex": "A trial with patient-reported outcomes would add questionnaires that the constraints exclude for very unwell patients; routine outcomes answer the main question, and patient experience can be studied later in a small subset.",
+        "decision": {
+          "kind": "narrow",
+          "statement": "Narrow the proposal to one pragmatic stepped-wedge trial of opt-out automatic referral triggers in the eight clinics, with days alive and out of hospital in the 90 days after trigger eligibility as the single primary outcome and palliative care waiting time as a balancing measure, and do not start until the research ethics board has decided on consent for automatic referral.",
+          "question": "Should the centre test automatic palliative care referral triggers, and in what form?",
+          "claimIds": [],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Enough patients meet a trigger (about 120 a month) to give a useful estimate.",
+              "role": "justifies",
+              "status": "unknown",
+              "claimIds": []
+            },
+            {
+              "id": "k2",
+              "text": "The palliative care clinic cannot absorb the extra referrals within the added nurse time.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics board decision on the trial, including consent for opt-out automatic referral",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "Medical oncology division agreement to opt-out automatic referral in all eight clinics",
+              "status": "met",
+              "evidence": "Division minutes MO-2026-09-10, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Before-after comparison across the centre",
+            "Triggers in two clinics only as a first step"
+          ],
+          "note": "No ledger claim exists because both recorded searches returned no records; the decision rests on the confirmed empty searches and the investigator's local facts. The ethics gate stays unknown until the board decides."
+        },
+        "summary": "Pragmatic stepped-wedge trial recommended; the decision narrows the proposal to one primary outcome and waits for the ethics board."
+      },
+      "note": "No claim is cited because nothing was retrieved. The ethics gate has no evidence and stays 'unknown'; the division gate is met on the investigator's minutes. recommendedFamily, selectionStatus and actionStatus require S11 (the unknown gate keeps the action blocked, A2 item 9); the status text requires D5. design.recommended, the gates and status 'proposed' hold at 875fe59.",
+      "expect": {
+        "store": {
+          "design.recommended": "pragmatic-trial",
+          "family": "pragmatic-trial",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "narrow",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].evidence": {
+            "absent": true
+          },
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].recommendedFamily": "pragmatic-trial",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Conditional acceptance: the decision cites no claim (nothing was retrieved and the empty searches were confirmed) and none of its text is contradicted, so the selection is acceptable, while the unknown ethics gate keeps the action blocked (G7; A2 item 9). S11 for basis, selectionStatus and actionStatus; D5 for the status text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.basis": "explicit",
+          "family": "pragmatic-trial"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route after partial work (7 of 13 stages): the accepted selection, the blocked action and the unknown gate must survive, and the decision panel shows them.",
+      "expect": {
+        "store": {
+          "title": "Automatic referral triggers for early specialist palliative care in outpatient oncology: a pragmatic stepped-wedge trial",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "needsReview": [],
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 5
+          }
+        },
+        "stage": {
+          "design": "complete",
+          "protocol": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Pragmatic stepped-wedge trial in the eight disease-site clinics: after a 3-month baseline, pairs of clinics switch from usual referral to opt-out automatic referral triggers every 3 months, in an order randomised by the trial statistician, until all eight use triggers after 15 months; outcomes come from routine records with 90 days of follow-up.",
+        "population": "Adults aged 18 and over with an advanced solid tumour under the care of one of the eight clinics who meet at least one trigger criterion during the trial periods; the first trigger per patient defines entry. Patients already known to specialist palliative care or enrolled in hospice care are excluded.",
+        "exposure": "An automatic referral to the specialist palliative care clinic generated by the electronic health record when a trigger is met (new stage IV lung, pancreatic or gastric cancer; start of second-line systemic therapy; two unplanned admissions within 60 days; documented performance status 3 or worse), sent unless the oncologist opts the patient out within 5 working days; compared with usual referral at the oncologist's discretion.",
+        "procedures": "Informatics builds and tests the trigger rules before the first step and runs them silently in usual-care periods, so eligible patients are identified the same way in both conditions. In trigger periods the palliative care nurse calls each referred patient to explain the referral and offer an appointment; the patient may decline. Opt-outs and declines are recorded with a reason. Outcomes are extracted from admission, clinic and death records by an analyst who does not see the step schedule until the analysis.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Days alive and out of hospital in 90 days",
+            "measure": "90 minus days in hospital minus days after death, from admission and death records",
+            "timing": "90 days after the first trigger",
+            "why": "Time at home is what patients and families value, and it is available for every eligible patient from routine data.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "process",
+            "name": "First specialist palliative care visit within 12 weeks",
+            "measure": "Proportion of trigger-eligible patients with a first visit within 12 weeks",
+            "timing": "12 weeks after the first trigger",
+            "why": "The direct effect of the triggers; shows whether a null result reflects no change in referral.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Aggressive care at the end of life",
+            "measure": "Among patients who die within 12 months of entry: systemic therapy in the last 14 days, intensive care in the last 30 days, or more than one emergency visit in the last 30 days",
+            "timing": "Last 30 days of life",
+            "why": "Care that patients with advanced cancer often do not want.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Waiting time for a new palliative care appointment",
+            "measure": "Days from referral to first appointment for all referrals, by month",
+            "timing": "Monthly",
+            "why": "Extra referrals could lengthen waits for patients who need care most.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "The trigger volume (planned at about 120 patients a month) is confirmed on 2025 records before the first step; the clinic sees about 30 new patients a week, and the added nurse time covers calls and triage; waiting time is reviewed monthly by an oversight group that can slow the rollout.",
+        "biasMitigation": [
+          "Order of clinic switching randomised by the trial statistician",
+          "Period included in every model",
+          "Eligible patients identified by the same silent rules in both conditions",
+          "Outcome extraction blind to the step schedule"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Time trends in referral practice",
+            "severity": "high",
+            "note": "Handled by period effects in the model and by randomising the switching order."
+          },
+          {
+            "id": "b2",
+            "label": "Contamination before a clinic switches",
+            "severity": "watch",
+            "note": "Oncologists may learn the criteria early; referral rates in usual-care periods are monitored."
+          },
+          {
+            "id": "b3",
+            "label": "Identification of eligible patients",
+            "severity": "ok",
+            "note": "The same silent rules identify eligible patients in both conditions."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 3,
+          "flags": [
+            "Three pre-specified covariates plus period",
+            "One balancing measure monitored monthly"
+          ],
+          "simplestPath": "One primary outcome from routine data, one pre-specified mixed model, and eight clinics in four steps."
+        },
+        "theoreticalFramework": "None; the question is the effectiveness of a referral change under usual conditions. An implementation framework is left to a later process evaluation.",
+        "summary": "Stepped-wedge trial in eight clinics over five periods; one primary outcome, one secondary, one process and one balancing measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].role": "process",
+          "protocol.outcomes[1].patientCentered": false,
+          "protocol.biasFlags[2].severity": "ok",
+          "protocol.parsimony.covariateCount": 3,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cross-sectional stepped-wedge cluster trial: eight clinics, four steps of two clinics, five 3-month periods, patients nested in clinic-periods.",
+        "sampleSize": "About 120 patients a month are expected to meet a trigger (an assumption from the centre's volumes, to confirm on 2025 records), about 45 per clinic in each 3-month period and about 1,800 in total. For days alive and out of hospital in 90 days the planning values are a standard deviation of 24 days and an intracluster correlation of 0.03. With eight clinics switching in four pairs over five periods, a standard stepped-wedge calculation with exchangeable correlation gives about 80 percent power at two-sided alpha 0.05 to detect a difference of about 5.5 days. A smaller difference would need more clinics rather than more patients per clinic, because the clinic-level correlation limits the gain from larger clusters; a correlation that decays over time would lower power and is examined as a sensitivity calculation.",
+        "primaryAnalysis": "Linear mixed model for days alive and out of hospital with fixed effects for period and condition (triggers versus usual referral) and random intercepts for clinic and clinic-period, adjusted for age, tumour group and trigger type; the effect is a mean difference in days with a 95 percent confidence interval, analysed by the condition of the clinic when the patient first met a trigger.",
+        "secondaryAnalysis": "Mixed logistic model for a first palliative care visit within 12 weeks; aggressive end-of-life care among patients who die within 12 months; waiting time described by month; opt-out and decline rates by clinic.",
+        "missingData": "Outcomes come from linked records and are expected to be complete for admissions and deaths within the region; patients who move away are censored at last contact, and their number is reported by condition.",
+        "multiplicity": "One primary outcome; secondary, process and balancing outcomes reported with confidence intervals and labelled as such.",
+        "software": "R with the lme4 package; the sample size recalculated with a stepped-wedge calculator once the 2025 trigger volume is known.",
+        "overfittingGuards": [
+          "Primary outcome, covariates and model fixed in a statistical analysis plan before the first step",
+          "Period effects always in the model",
+          "No subgroup claims beyond tumour group and trigger type",
+          "Sample size assumptions checked on 2025 records before the first step"
+        ],
+        "summary": "About 1,800 patients in eight clinics give about 80 percent power for a 5.5-day difference in days alive and out of hospital."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 5.5 days"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "An unrequested referral may distress patients who are not ready to hear about palliative care, and extra referrals may lengthen waits for patients already referred; the trial adds no procedures.",
+        "consent": "The trigger changes how referral is offered, and every patient can decline the appointment when the palliative care nurse calls. The research ethics board will be asked to approve an alteration of consent for the referral process and a waiver for routinely collected outcome data, with information posters in every clinic.",
+        "data": "Outcome data are extracted within the hospital's secure environment; the analysis file carries study identifiers only; clinic results are shared with oncologists without naming individual clinicians.",
+        "equity": "PROGRESS-Plus: patients who live far from the centre, patients who need an interpreter, patients from communities where palliative care is associated with giving up, and patients with low health literacy may respond differently to an automatic referral. Calls use interpreters, telehealth appointments are offered, and uptake and outcomes are reported by distance, language and area deprivation.",
+        "effectiveness": "The trial shows whether triggers change time at home and end-of-life care, not only when referral happens.",
+        "efficiency": "Routine data and existing staff plus the added nurse time; the trigger build is a one-time informatics task.",
+        "costs": "Added nurse time and the informatics build within the centre's budget; no payments to participants.",
+        "grants": "A regional cancer research grant could fund the analysis and a later process evaluation; the trial can run without it.",
+        "partnerships": "Medical oncology division, informatics, two patient partners with experience of advanced cancer, a family caregiver partner and the community hospice.",
+        "rebPath": "Full research ethics board review of a stepped-wedge cluster trial with an alteration of consent for automatic referral and a waiver for routine outcome data, following ICH-GCP and the Declaration of Helsinki. The board has not yet reviewed the proposal, so the gate stays unknown and no trigger goes live before its decision.",
+        "limitations": "Eight clusters limit power for small effects; oncologists may change behaviour before their clinic switches; routine data miss symptom burden and quality of life.",
+        "summary": "Minimal added risk, an opt-out referral with the right to decline, consent alteration to be decided by the board, and equity reporting by distance, language and deprivation."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "alteration of consent"
+          },
+          "ethics.rebPath": {
+            "includes": "gate stays unknown"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners and a family caregiver review the call script and the information posters before the first step; oncologists from two clinics and the palliative care nurse join the oversight group that reviews waiting times monthly.",
+        "socialListening": "No social media listening; the centre's patient feedback forms from the last year are read for comments about palliative care referral.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "What palliative care means",
+            "quote": "Composite paraphrase: I thought palliative care was for the last days; nobody told me it could help while I was still on chemotherapy.",
+            "implication": "The nurse's call explains that palliative care runs alongside treatment.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Who starts the conversation",
+            "quote": "Composite paraphrase: I do not want a computer telling my patient they are dying before I have had that conversation myself.",
+            "implication": "Keep the opt-out window and let oncologists add a note to the referral.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Meeting the team too late",
+            "quote": "Composite paraphrase: We met the palliative team a week before he died; they were wonderful, and we wished we had met them months earlier.",
+            "implication": "Report end-of-life care among patients who die, not only visit timing.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Capacity",
+            "quote": "Composite paraphrase: If thirty extra referrals arrive in one week, the people who need us most will wait longest.",
+            "implication": "Monitor waiting time monthly as a balancing measure and allow the rollout to slow.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "partner",
+            "theme": "Community follow-through",
+            "quote": "Composite paraphrase: Earlier referral only helps if the community team hears about the patient before the crisis.",
+            "implication": "Share the referral with the community hospice when the patient agrees.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on meaning, ownership of the conversation, timing, capacity and community follow-through."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[1].source": "clinician",
+          "voices.items[2].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Opt-out automatic referral triggers for early specialist palliative care in outpatient oncology: protocol and results of a pragmatic stepped-wedge trial",
+        "abstract": "Background: referral to specialist palliative care is late at a regional cancer centre. Design: pragmatic stepped-wedge trial in eight clinics switching in randomised pairs from usual referral to opt-out automatic referral triggers over five 3-month periods. Primary outcome: days alive and out of hospital in the 90 days after trigger eligibility, from routine records. Results and conclusions will be written after the trial.",
+        "introduction": "Palliative care delivered alongside oncology treatment is associated with less aggressive end-of-life care in recalled studies, but referral depends on individual oncologists and is often late. Automatic triggers could make referral systematic; two recorded searches found no evaluation of outpatient opt-out triggers.",
+        "methods": "Eligible patients are identified by the same electronic rules in both conditions. Referrals in trigger periods are sent unless the oncologist opts out within 5 working days. A linear mixed model with period and clinic effects estimates the difference in days alive and out of hospital.",
+        "results": "No data have been collected yet. The report will present clinic flow by period, trigger volume, opt-outs and declines, the primary estimate with its confidence interval, the process, secondary and balancing outcomes, and results by distance, language and deprivation.",
+        "discussion": "The discussion will interpret the estimate against time trends and capacity, compare it with the literature once it has been retrieved and checked, and state what the centre will do with the triggers.",
+        "limitations": "Eight clusters; possible contamination before switching; routine data without symptom or quality-of-life measures; evidence base not yet retrieved.",
+        "conclusion": "To be written after the trial; it will be limited to the outcomes measured and will not claim effects on quality of life that were not measured.",
+        "reportingChecklist": "CONSORT extension for stepped-wedge cluster randomised trials; TIDieR",
+        "summary": "CONSORT-structured draft with results left empty until the trial ends."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "CONSORT extension for stepped-wedge cluster randomised trials; TIDieR",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The research ethics board decision is unknown; the action stays blocked and no trigger goes live",
+          "Both recorded searches returned no records; retrieve and check the five leads, two of them undated, before citing any",
+          "Confirm on 2025 records that about 120 patients a month meet a trigger before fixing the sample size"
+        ],
+        "improvementNotes": "The scan reply assigned a moderate certainty over a search that returned nothing; the rating was dropped, a second search also returned nothing, and the investigator confirmed the empty searches, so certainty stays unassessed. The decision rests on local facts, not on retrieved evidence, and waits for the ethics board.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the ethics gate, the unchecked leads and the trigger volume."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour and FAIL at 875fe59 because of the store defect named in A3 item L1.6, not a missing work-order entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Final reload on the Audit route; statuses are checked in the export because the Scan and Design panels are not on this route.",
+      "expect": {
+        "store": {
+          "title": "Automatic referral triggers for early specialist palliative care in outpatient oncology: a pragmatic stepped-wedge trial",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "The palliative care team can add 0.5 full-time equivalent nurse time and no physician time. Trigger rules can be built in the electronic health record from the first quarter of 2027. Outcomes must come from routinely collected data; no extra questionnaires for patients who are very unwell.",
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[2].year": {
+            "isNull": true
+          },
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Automatic referral triggers for early specialist palliative care in outpatient oncology: a pragmatic stepped-wedge trial"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Automatic referral triggers for early specialist palliative care in outpatient oncology: a pragmatic stepped-wedge trial",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 5
+          },
+          "scan.retrievalEvents[1].resultCount": 0,
+          "design.decisions": {
+            "length": 1
+          },
+          "stats.sampleSize": {
+            "includes": "1,800"
+          }
+        },
+        "screen": {
+          "includes": [
+            "Automatic referral triggers for early specialist palliative care in outpatient oncology: a pragmatic stepped-wedge trial"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "scan.gradeOverall '' after the model's 'moderate' over zero records, and the investigator's confirmation record, require D20; selectionStatus and actionStatus require S11. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.gradeOverall": "",
+            "scan.emptySearchConfirmation.by": "investigator",
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.retrievalEvents[1].resultCount": 0,
+            "scan.items[0].provenance.status": "unverified",
+            "scan.items[2].year": {
+              "isNull": true
+            },
+            "scan.items[2].grade": "unrated",
+            "design.decisions[-1].gates[0].status": "unknown",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "problem.rawNeed": "I am a palliative medicine physician at a regional cancer centre that sees about 1,900 new patients with advanced solid tumours each year across eight disease-site clinics. Referral to our specialist palliative care clinic depends on the treating oncologist, and it comes late: last year the median time from the first palliative care visit to death was 34 days, and a third of patients who died under our care were never seen by palliative care at all.\n\nWe would like to test automatic referral triggers built into the electronic health record. A referral would be generated when a patient meets any of a small set of criteria (for example a new diagnosis of stage IV lung, pancreatic or gastric cancer, the start of second-line chemotherapy, two unplanned admissions within 60 days, or a documented performance status of 3 or worse) unless the oncologist opts the patient out. Usual care would stay as it is now, with referral at the oncologist's discretion.\n\nWe are thinking of a pragmatic trial in which the clinics switch from usual care to the triggers in a staggered order over about 18 months, so that every clinic eventually gets the triggers. The main questions are whether triggers bring the first palliative care visit earlier, whether patients spend more days at home in their last months, and whether our palliative care team can cope with the extra referrals. Some oncologists worry that automatic referrals will upset patients who are not ready and will swamp the palliative care clinic.\n\nI need help with the choice of primary outcome, the trigger criteria, how many clinics and patients we need, how to handle clinics that switch at different times, and the ethics of automatic referral with an opt-out."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

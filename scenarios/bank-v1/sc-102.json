@@ -1,6 +1,6 @@
 {
   "id": "sc-102",
-  "version": 1,
+  "version": 2,
   "title": "Academic radiology department: narrative review of incidental finding follow-up tracking, invented landmark lead and unsupported first decision",
   "field": "radiology",
   "level": 4,
@@ -13,7 +13,8 @@
     "S1",
     "S8",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear narrative review question. A fixture search returns seven records with abstracts (years 2016 to 2025). A discovery reply then adds four model leads; the first presents itself as a landmark national benchmark (112 hospitals, completion 36 and 61 percent) with the invented DOI 10.5555/jnis.2017.0419. It must be stored as a lead (origin model, status unverified, access unknown, no checks) and stay unverified in the store and the export; the landmark label is a model label, not verification (G3). The leads are appended after the retrieved records, which keep their retrieval provenance (D1); an undated lead keeps year and quality null (G4). An appraisal of the seven retrieved records records claims c1 to c4 with exact passages. The first design reply rests on 'c5', which is not in the ledger, and quotes the unverified lead's figures: the id is dropped with an issue, the action is blocked, and acceptance must be refused (S1, S8). The revised design reply rests on c1 to c4, supersedes the first (withdrawn, not erased), and is accepted with both gates met (selectionStatus accepted, actionStatus ready). The problem reply restates the investigator's constraints exactly (G11). Record ids are stableRecordId(record) imported by the generator from src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 5 and 7 (ev-02xuc7a, ev-0yywy7d, ev-1eq8w2l, ev-0en9vqy, ev-0dfpj0a) and titleYearKey hash for records 2 and 6 (ev-0le5u1k, ev-0f55znl). Requires D1 (leads appended, retrieved records kept), S13 (appraisal path), S1 and S8 (refusal of the unsupported selection), S11 (selectionStatus, actionStatus, basis) and D5 (status text). Catches: a landmark label or DOI turned into verification, leads overwriting retrieved records, a decision accepted on a claim the ledger does not hold or on figures from an unverified lead, a refused decision erased instead of withdrawn, and work lost on reload or reopen.",
   "inputs": {
@@ -962,7 +963,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -982,6 +985,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1100,8 +1123,11 @@
           ],
           "design.decisions[1].status": "proposed",
           "design.decisions[1].selectionStatus": "proposed",
-          "design.decisions[1].gates[1].status": "met",
-          "family": "narrative-review"
+          "design.decisions[1].gates[1].status": "unknown",
+          "family": "narrative-review",
+          "design.decisions[1].gates[0].status": "unknown",
+          "design.decisions[1].gates[0].proposal.status": "met",
+          "design.decisions[1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -1113,6 +1139,49 @@
           "includes": [
             "proposed",
             "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1665,5 +1734,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-102.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1); step 13 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 2. Model responses, need and records are unchanged."
 }

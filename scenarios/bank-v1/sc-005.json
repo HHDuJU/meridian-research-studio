@@ -1,6 +1,6 @@
 {
   "id": "sc-005",
-  "version": 2,
+  "version": 3,
   "title": "Five-hospital sepsis network: a brief vague request becomes a multi-site qualitative study of bundle delivery",
   "field": "implementation-science",
   "level": 2,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary ambiguity from a brief, vague need of 52 words with no constraints and no local facts (the brief-need input class of A3.2 section 3; the validator's 120-word floor predates that rule). 'Uptake' is a design cue, so routing is inferred implementation at create; the problem response frames the problem and states the missing role, figures and resources as unknown instead of inventing them. The investigator then supplies the constraints on the Problem screen (set-field), and a reload confirms they persist. A fixture search with few hits returns four records; the appraisal records four claims with moderate certainty. The Design stage chooses between two candidate designs and recommends a qualitative study; the decision rests on c1 to c3 with one gate met on the investigator's own constraint and two unknown, so acceptance gives an accepted selection with a blocked action, and the family becomes qualitative only on acceptance. One null field: a process outcome's patientCentered is null and must stay null. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4 (ev-115zvxb, ev-1onft85, ev-18h365g) and titleYearKey hash for record 2 (ev-02h9hc8). Requires S11 (inferred basis at create, recommendedFamily, selectionStatus, actionStatus), S13 (appraisal) and D5 (status text). Catches: invented facts filling a vague request, an inferred family treated as settled, an investigator edit lost on reload, a null boolean coerced to false, and an action allowed past unknown gates.",
   "inputs": {
@@ -756,7 +757,7 @@
           "design.decisions[-1].status": "proposed",
           "design.decisions[-1].selectionStatus": "proposed",
           "design.decisions[-1].actionStatus": "blocked",
-          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
           "design.decisions[-1].gates[1].status": "unknown",
           "design.decisions[-1].gates[2].status": "unknown",
           "design.decisions[-1].criteria[1].status": "unmet",
@@ -768,7 +769,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -780,6 +782,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1251,5 +1273,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-005.json), superseded 2026-09-22T20:40Z: golden error GE-1, the problem reply's constraints text was expected applied into the empty investigator field; under G11 the field is investigator-only and the model text is refused with a dropped issue."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-005.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

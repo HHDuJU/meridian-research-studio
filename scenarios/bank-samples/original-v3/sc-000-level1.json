@@ -1,0 +1,1445 @@
+{
+  "id": "sc-000-level1",
+  "version": 3,
+  "supersedes": "bank-samples/original-v2/sc-000-level1.json (version 2). Reason: G11: investigator constraints are never erased or replaced by a model response; issue code dropped. Version 2's problem reply reworded the investigator's typed constraints while its expectation allowed no issue; version 3's reply repeats the typed constraints exactly, so no issue is recorded and the expectation of zero issues holds.",
+  "title": "Acute medical ward: structured bedside handoff checklist and missed medication reconciliation items",
+  "field": "nursing",
+  "level": 1,
+  "family": "qi-pdsa",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Routine path with clean inputs, a recorded search and one clear design (quality improvement with PDSA cycles and run charts). The fixture search returns seven records with abstracts; the appraisal call (shape \"appraisal\") annotates all seven by id and records four source-derived claims whose passages are exact substrings of the abstracts; certainty \"low\" is the appraisal's own value over inspected records, never a default. The design decision rests on ledger claims c1 to c3, its gates are met on investigator-supplied approval records, and the investigator's acceptance is a supported positive (selectionStatus accepted, actionStatus ready). Record ids are not typed by hand: each is stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, that is 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1, 3, 4, 6: ev-1iszc5g, ev-09g3r66, ev-1omdeda, ev-05uh926) or, when there is no DOI, of titleYearKey(title, year) (records 2, 5, 7: ev-1kt4l30, ev-07z485i, ev-0j00nsx). Requires S13 (appraisal payload dispatched on the production scan path), S11 (selectionStatus, actionStatus, acceptance) and D5 (decision status text on screen). Catches: certainty or completion without retrieval, an appraisal that cannot reach the ledger, a decision accepted without ledger support, work lost on reload or reopen, and an export that differs from the store. At 875fe59 it also catches a store defect: mergeStage overwrites the Audit stage's patch (see the audit step's note).",
+  "inputs": {
+    "need": "I am the clinical nurse educator on Ward 6B, a 32-bed acute medical ward at a regional hospital. Right now our nursing shift handoff is verbal, done at the nurses' station at 07:00 and 19:00, and the medicines part is whatever the outgoing nurse remembers. Last month our medication safety nurse compared 60 handoff sheets with the medication administration record and 23 of them missed at least one reconciliation item: a held dose nobody mentioned, a new anticoagulant not flagged, or a change made on the ward round that never reached the night nurse. We also had two near misses in August, both doses that were stopped on the day shift and then given again at night.\n\nWe want to run a quality improvement project using PDSA cycles to test a structured bedside handoff checklist. The checklist would be done at the bedside with the patient when they are awake and would have a short medicines section: held doses, new high-alert medicines, changes made today, and anything still pending from pharmacy. We plan to start with the day-to-night handoff on one side of the ward and spread it if it works.\n\nWhat I need help with is framing this properly: a clear aim statement, a sensible measure for missed reconciliation items, the balancing measures we should watch (handoff length, overtime, patients being woken at night), and how to show the data on a run chart without overclaiming. We have no research funding and this is not meant to be a trial. The nurse manager wants something we can run within normal shifts over about three months, and the ward pharmacist has offered to help with checking the sheets.",
+    "constraints": "No research funding; all work happens within normal shifts. The night shift has two registered nurses per side, so the checklist must take under two minutes per patient. No changes to the electronic record build are possible before 2027.",
+    "localFacts": [
+      "The hospital research ethics office screened the project on 2026-08-19 as quality improvement not requiring REB review (screening record QIS-2026-118).",
+      "The Ward 6B nurse manager approved 10 minutes of the 07:00 and 19:00 huddles for PDSA debriefs from September to December 2026 (approval WM-6B-2026-09).",
+      "The medication safety nurse can review 20 handoff sheets per week against the medication administration record."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical nurse educator on Ward 6B, a 32-bed acute medical ward at a regional hospital. Right now our nursing shift handoff is verbal, done at the nurses' station at 07:00 and 19:00, and the medicines part is whatever the outgoing nurse remembers. Last month our medication safety nurse compared 60 handoff sheets with the medication administration record and 23 of them missed at least one reconciliation item: a held dose nobody mentioned, a new anticoagulant not flagged, or a change made on the ward round that never reached the night nurse. We also had two near misses in August, both doses that were stopped on the day shift and then given again at night.\n\nWe want to run a quality improvement project using PDSA cycles to test a structured bedside handoff checklist. The checklist would be done at the bedside with the patient when they are awake and would have a short medicines section: held doses, new high-alert medicines, changes made today, and anything still pending from pharmacy. We plan to start with the day-to-night handoff on one side of the ward and spread it if it works.\n\nWhat I need help with is framing this properly: a clear aim statement, a sensible measure for missed reconciliation items, the balancing measures we should watch (handoff length, overtime, patients being woken at night), and how to show the data on a run chart without overclaiming. We have no research funding and this is not meant to be a trial. The nurse manager wants something we can run within normal shifts over about three months, and the ward pharmacist has offered to help with checking the sheets.",
+          "family": "qi-pdsa",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical nurse educator on Ward 6B"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Structured bedside handoff checklist and missed medication reconciliation items on an acute medical ward",
+        "subtitle": "QI project with PDSA cycles and run charts, Ward 6B",
+        "family": "qi-pdsa",
+        "statement": "On Ward 6B, nursing shift handoff is verbal and held at the nurses' station, and the medicines content depends on what the outgoing nurse recalls. A local check of 60 handoff sheets against the medication administration record found 23 (38 percent) with at least one missed reconciliation item, and two near misses in August involved doses stopped on the day shift and given again at night. The project will test whether a structured bedside handoff checklist with a short medicines section reduces the proportion of handoffs with a missed reconciliation item.",
+        "whoAffected": "Adult inpatients on Ward 6B (32 beds, mostly older adults with several regular medicines), the registered nurses handing over and receiving care, and the ward pharmacist who resolves discrepancies on the morning round.",
+        "whatHurts": "Held doses, new high-alert medicines and same-day prescription changes are not passed on reliably, so a dose can be repeated, omitted or given against a changed plan. Patients and families rarely hear what changed, and night nurses spend time reconstructing the day's decisions from the record.",
+        "currentPractice": "Verbal handoff at the nurses' station at 07:00 and 19:00 using a free-text handoff sheet with no medicines prompt. Reconciliation discrepancies are found by the ward pharmacist on the morning round, usually after at least one dose has been affected.",
+        "whyNow": "Two near misses in August, a local baseline showing 38 percent of handoffs missing at least one reconciliation item, and a nurse manager willing to protect huddle time for improvement work this autumn.",
+        "constraints": "No research funding; all work happens within normal shifts. The night shift has two registered nurses per side, so the checklist must take under two minutes per patient. No changes to the electronic record build are possible before 2027.",
+        "patientCenteredGoal": "Every patient on Ward 6B receives the right doses across the shift change, and patients who are awake know what changed in their medicines today.",
+        "summary": "Problem framed as a ward-level QI project: reduce missed medication reconciliation items at nursing handoff with a structured bedside checklist tested in PDSA cycles."
+      },
+      "expect": {
+        "store": {
+          "title": "Structured bedside handoff checklist and missed medication reconciliation items on an acute medical ward",
+          "subtitle": "QI project with PDSA cycles and run charts, Ward 6B",
+          "family": "qi-pdsa",
+          "problem.statement": {
+            "includes": "structured bedside handoff checklist"
+          },
+          "problem.rawNeed": {
+            "includes": "PDSA cycles"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Structured bedside handoff checklist and missed medication reconciliation items on an acute medical ward"
+          ]
+        }
+      },
+      "note": "G11: the reply repeats the investigator's constraints exactly as typed, so nothing is dropped and the step expects no issue. A reply that changed or cleared them would leave the typed text stored with an issue 'dropped' at 'constraints' and a 'kept' warning on screen."
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "structured bedside handoff checklist medication reconciliation omissions nursing",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "A medicines prompt in structured nursing handoff and omitted medication information: a before-after study on two medical wards",
+            "authors": "Okonkwo-Hale R, Brandt-Oyelaran L, Szabo-Merritt A",
+            "year": 2021,
+            "venue": "Journal of Ward Handover Practice",
+            "doi": "10.5555/jwhp.2021.0142",
+            "providerType": "journal-article",
+            "abstract": "Background: medication content is the part of nursing shift handoff most often omitted. Methods: we added a four-line medicines prompt (held doses, new high-alert medicines, same-day changes, pending pharmacy items) to the handoff sheet on two medical wards and compared 16 weeks before and after, reviewing 30 handoff sheets per ward per fortnight against the medication administration record. Results: handoffs with at least one omitted medication item fell from 41 percent to 22 percent. The change was similar for day-to-night and night-to-day handoffs. Median handoff duration rose by 40 seconds per patient. Conclusions: a short medicines prompt was followed by fewer omissions; a controlled evaluation is needed."
+          },
+          {
+            "title": "Bedside versus station handoff and pharmacist-found medication discrepancies: an interrupted time series",
+            "authors": "Varga-Lindholm E, Adeyemi-Castro T",
+            "year": 2019,
+            "venue": "Tarnvale Nursing Review",
+            "providerType": "journal-article",
+            "abstract": "We moved nursing handoff from the station to the bedside on one medical ward and compared monthly counts of medication discrepancies found by the morning pharmacist over 14 months before and 10 months after the change, with a second ward as a comparison series. Discrepancy counts fell by about one third after the change, with no change in the pre-existing trend on the comparison ward. In observed bedside handoffs, patients corrected a nurse's statement about their medicines in 6 percent of cases. A new electronic medication record was introduced on the intervention ward during the same period."
+          },
+          {
+            "title": "Structured handoff tools in inpatient nursing: a systematic review of effects on information omissions",
+            "authors": "Castellanos-Reid M, Pohl-Mensah D, Nakashima-Grey Y, Oduya-Berg F",
+            "year": 2022,
+            "venue": "Clinical Transitions Quarterly",
+            "doi": "10.5555/ctq.2022.0311",
+            "providerType": "journal-article",
+            "abstract": "We searched five bibliographic databases to 2021 for studies of structured nursing handoff tools that measured omitted information. Nineteen studies met the inclusion criteria; 15 reported fewer omissions with a structured tool, and medication content was the category most often improved. Only three studies had a concurrent control group and one measured adverse events. Effects were larger when the tool was combined with audit and feedback. Outcome definitions were too heterogeneous to pool, and most studies were at high risk of bias."
+          },
+          {
+            "title": "Controlled evaluation of a handoff checklist on six medical wards: effects at three and seven months",
+            "authors": "Ferreira-Holt J, Mbeki-Larsen S, Quist-Adebayo P",
+            "year": 2023,
+            "venue": "Northfold Quality in Care",
+            "doi": "10.5555/nqc.2023.0077",
+            "providerType": "journal-article",
+            "abstract": "Three medical wards introduced a bedside handoff checklist with fortnightly audit feedback and three comparable wards continued usual handoff; wards were allocated by manager preference. At three months, checklist wards had 18 percent fewer handoffs with a missed medication item than comparison wards. Audit feedback stopped after the fourth month, and by seven months the difference was no longer visible. Checklist completion fell from 85 percent to 52 percent over the same period."
+          },
+          {
+            "title": "Night-time disturbance from bedside handoff: what patients on medical wards say about being woken",
+            "authors": "Linwood-Achebe C, Ruiz-Tanaka H",
+            "year": 2020,
+            "venue": "Medication Safety Letters",
+            "providerType": "journal-article",
+            "abstract": "We held structured conversations with 24 adult inpatients on two medical wards about bedside handoff. Patients valued hearing about their medicines and described the 19:00 handoff at the bedside as rarely a problem. The 07:00 handoff was sometimes felt to be intrusive, and several patients asked to be skipped when asleep. Conversations were held by ward staff, which may have discouraged criticism."
+          },
+          {
+            "title": "Measuring missed medication reconciliation at nursing handoff: agreement between handoff sheet review and direct observation",
+            "authors": "Dembele-Short K, Osei-Warwick N, Halvorsen-Idowu B",
+            "year": 2024,
+            "venue": "Journal of Ward Handover Practice",
+            "doi": "10.5555/jwhp.2024.0019",
+            "providerType": "journal-article",
+            "abstract": "We compared two ways of detecting missed medication reconciliation items at nursing handoff on one medical ward: review of the written handoff sheet against the medication administration record, and direct observation of the handoff by a trained observer. Sheet review identified 81 percent of the missed items found by direct observation. Agreement between two sheet reviewers was good (kappa 0.78), and sheet review took about three minutes per handoff."
+          },
+          {
+            "title": "Patient participation in bedside handoff among older adults with hearing or cognitive impairment: an observational study",
+            "authors": "Mwangi-Lorenz A, Petit-Oduya S",
+            "year": 2022,
+            "venue": "Tarnvale Nursing Review",
+            "providerType": "journal-article",
+            "abstract": "We observed 312 bedside handoffs on three medical wards and recorded whether the patient took part in the medicines discussion. Patients with hearing impairment took part in 31 percent of handoffs and patients with cognitive impairment in 18 percent, compared with 64 percent of other awake patients. An interpreter was used in 2 of 21 handoffs for patients with limited English. The authors recommend reporting outcomes separately for patients who cannot take part."
+          }
+        ]
+      },
+      "note": "Record ids are stableRecordId values (see notes). Before any appraisal the records carry no certainty and no grade (G1, G4); the screen shows them as unrated.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1iszc5g",
+            "ev-1kt4l30",
+            "ev-09g3r66",
+            "ev-1omdeda",
+            "ev-07z485i",
+            "ev-05uh926",
+            "ev-0j00nsx"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-1iszc5g",
+          "scan.items[0].doi": "10.5555/jwhp.2021.0142",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].id": "ev-1kt4l30",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[6].id": "ev-0j00nsx",
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "A medicines prompt in structured nursing handoff and omitted medication information: a before-after study on two medical wards"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1iszc5g",
+            "relevance": 88,
+            "methodQuality": 48,
+            "kind": "qi-report",
+            "grade": "low",
+            "keyFindings": "A four-line medicines prompt was followed by a fall in handoffs with an omitted medication item from 41 to 22 percent over 16 weeks on two medical wards. Handoff took about 40 seconds longer per patient.",
+            "limitations": "Uncontrolled before-after comparison on two wards of one hospital; reviewers knew the period; no measure of patient harm.",
+            "contextTags": [
+              "acute medical ward",
+              "nursing handoff",
+              "medication omissions",
+              "before-after"
+            ]
+          },
+          {
+            "id": "ev-1kt4l30",
+            "relevance": 80,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Moving handoff to the bedside was followed by about one third fewer pharmacist-found discrepancies, with no change on a comparison ward. Patients corrected a nurse's statement about their medicines in 6 percent of observed bedside handoffs.",
+            "limitations": "One intervention ward; counts depend on pharmacist workload; a new electronic medication record arrived at the same time.",
+            "contextTags": [
+              "bedside handoff",
+              "patient involvement",
+              "interrupted time series"
+            ]
+          },
+          {
+            "id": "ev-09g3r66",
+            "relevance": 70,
+            "methodQuality": 62,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Fifteen of 19 studies found fewer omissions with a structured tool, most often in medication content. Effects were larger with audit and feedback; only three studies had a concurrent control.",
+            "limitations": "Heterogeneous outcomes prevented pooling; most included studies at high risk of bias; search ended in 2021.",
+            "contextTags": [
+              "systematic review",
+              "handoff tools",
+              "audit and feedback"
+            ]
+          },
+          {
+            "id": "ev-1omdeda",
+            "relevance": 74,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Checklist wards had 18 percent fewer handoffs with a missed medication item at three months, but the difference disappeared by seven months after feedback stopped, while completion fell from 85 to 52 percent.",
+            "limitations": "Allocation by manager preference; unblinded outcome assessment; wide interval around a ward-level difference.",
+            "contextTags": [
+              "concurrent control",
+              "sustainability",
+              "checklist completion"
+            ]
+          },
+          {
+            "id": "ev-07z485i",
+            "relevance": 58,
+            "methodQuality": 40,
+            "kind": "qualitative",
+            "grade": "very-low",
+            "keyFindings": "Patients valued hearing about their medicines; the 07:00 bedside handoff was sometimes intrusive and some asked to be skipped when asleep.",
+            "limitations": "24 patients from one hospital; conversations held by ward staff.",
+            "contextTags": [
+              "patient experience",
+              "night shift",
+              "balancing measure"
+            ]
+          },
+          {
+            "id": "ev-05uh926",
+            "relevance": 84,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Handoff sheet review against the medication administration record found 81 percent of the missed items seen by direct observation, with good agreement between reviewers.",
+            "limitations": "One ward and one observer pair.",
+            "contextTags": [
+              "measurement",
+              "operational definition",
+              "handoff sheet"
+            ]
+          },
+          {
+            "id": "ev-0j00nsx",
+            "relevance": 66,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Patients with hearing impairment took part in 31 percent and patients with cognitive impairment in 18 percent of bedside medicines discussions, against 64 percent of other awake patients.",
+            "limitations": "Three wards of one hospital; participation judged by observers who knew the aim.",
+            "contextTags": [
+              "equity",
+              "patient participation",
+              "hearing impairment",
+              "cognitive impairment"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "On two medical wards, handoffs with at least one omitted medication item fell from 41 percent to 22 percent after a four-line medicines prompt was added to the handoff sheet.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1iszc5g"
+            ],
+            "location": "Abstract, results",
+            "passage": "handoffs with at least one omitted medication item fell from 41 percent to 22 percent",
+            "interpretation": "Supports a medicines section in the checklist; the design is uncontrolled, so the size of change is a planning value only.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "In a controlled evaluation on medical wards, the reduction in missed medication items was no longer visible at seven months once audit feedback had stopped.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1omdeda"
+            ],
+            "location": "Abstract",
+            "passage": "Audit feedback stopped after the fourth month, and by seven months the difference was no longer visible.",
+            "interpretation": "Feedback belongs in the change package and checklist completion should be tracked.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Review of written handoff sheets against the medication administration record found 81 percent of the missed items seen by direct observation.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-05uh926"
+            ],
+            "location": "Abstract",
+            "passage": "Sheet review identified 81 percent of the missed items found by direct observation.",
+            "interpretation": "Sheet review is a workable data source for the run chart and misses about one item in five.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Patients with hearing or cognitive impairment took part in bedside medicines discussions far less often than other awake patients.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0j00nsx"
+            ],
+            "location": "Abstract",
+            "passage": "Patients with hearing impairment took part in 31 percent of handoffs and patients with cognitive impairment in 18 percent, compared with 64 percent of other awake patients.",
+            "interpretation": "Report missed items separately for patients who cannot take part at the bedside.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. A medicines prompt in structured handoff was followed by fewer omitted medication items in a before-after study (41 to 22 percent), a time series and most studies in a systematic review, but the only concurrently controlled evaluation lost its effect by seven months once audit feedback stopped. Handoff sheet review against the medication administration record is a workable measurement method that misses about one item in five. Patients with hearing or cognitive impairment take part in bedside medicines discussions far less often. No study measured adverse drug events with adequate power. The evidence supports testing a checklist locally with run charts, feedback and balancing measures rather than assuming an effect size.",
+        "gradeOverall": "low",
+        "gradeRationale": "Mostly uncontrolled or non-randomised comparisons from single sites, one review of heterogeneous studies at high risk of bias, and one controlled evaluation whose effect did not last; consistent direction but serious risk of bias. Certainty that a checklist reduces missed items is low; certainty about harm reduction is very low.",
+        "summary": "Seven retrieved records appraised; four source-derived claims recorded with passages; overall certainty low."
+      },
+      "note": "Annotations and claims are applied by the production scan path only when it dispatches an appraisal payload to the appraisal mapper (S13; F5's test appraisal_contract_supported_by_live_scan_mapper). At 875fe59 applyAiResult treats this payload as a discovery reply: gradeOverall, gradeRationale and synthesis are stored and annotations and claims are ignored. Certainty is expected here because it is assigned over seven retrieved records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-1iszc5g",
+          "scan.items[0].grade": "low",
+          "scan.items[0].methodQuality": 48,
+          "scan.items[0].relevance": 88,
+          "scan.items[0].kind": "qi-report",
+          "scan.items[0].keyFindings": {
+            "includes": "41 to 22 percent"
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[2].grade": "moderate",
+          "scan.items[4].grade": "very-low",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].id": "c1",
+          "scan.claims[0].kind": "source-derived",
+          "scan.claims[0].sourceIds": [
+            "ev-1iszc5g"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-1omdeda"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-0j00nsx"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.synthesis": {
+            "includes": "Seven retrieved records"
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "Ward 6B acute medicine, 32 beds",
+          "07:00 and 19:00 nursing handoff",
+          "ward pharmacist morning round",
+          "no electronic record changes before 2027"
+        ],
+        "reading": "Missed reconciliation items arise where the free-text handoff sheet meets same-day prescription changes: the information exists in the medication administration record but is not pulled into the conversation. The retrieved evidence links a medicines prompt and bedside delivery to fewer omissions, while durability depends on audit feedback and checklist completion. Patients are both a safety check (they correct errors) and the group that pays a cost (disturbance at handoff), and patients with hearing or cognitive impairment take part far less. The ward pharmacist is the downstream detector and a natural partner for measurement.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Free-text handoff sheet without a medicines prompt",
+            "kind": "context",
+            "detail": "Current practice at 07:00 and 19:00 at the nurses' station."
+          },
+          {
+            "id": "n2",
+            "label": "Same-day prescription changes and held doses",
+            "kind": "context",
+            "detail": "The content most often missed in the local check."
+          },
+          {
+            "id": "n3",
+            "label": "Structured bedside handoff checklist",
+            "kind": "framework",
+            "detail": "Change idea tested through PDSA cycles."
+          },
+          {
+            "id": "n4",
+            "label": "Before-after report with a medicines prompt",
+            "kind": "qi-report",
+            "detail": "Omissions fell from 41 to 22 percent (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Controlled evaluation on six wards",
+            "kind": "observational",
+            "detail": "Effect gone by seven months after feedback stopped (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Missed reconciliation items per handoff",
+            "kind": "outcome",
+            "detail": "Outcome measure for the run chart."
+          },
+          {
+            "id": "n7",
+            "label": "Patients and families at the bedside",
+            "kind": "stakeholder",
+            "detail": "Can correct errors; may be disturbed at 07:00."
+          },
+          {
+            "id": "n8",
+            "label": "Ward pharmacist",
+            "kind": "stakeholder",
+            "detail": "Finds discrepancies on the morning round; partner for measurement."
+          },
+          {
+            "id": "n9",
+            "label": "Audit and feedback every two weeks",
+            "kind": "context",
+            "detail": "Associated with sustained checklist use."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "fails to surface"
+          },
+          {
+            "from": "n3",
+            "to": "n6",
+            "relation": "expected to reduce"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "supports"
+          },
+          {
+            "from": "n5",
+            "to": "n9",
+            "relation": "shows dependence on"
+          },
+          {
+            "from": "n7",
+            "to": "n6",
+            "relation": "detects errors that affect"
+          },
+          {
+            "from": "n8",
+            "to": "n6",
+            "relation": "measures downstream"
+          },
+          {
+            "from": "n9",
+            "to": "n3",
+            "relation": "sustains use of"
+          }
+        ],
+        "summary": "Map joins the missed items to the handoff format, the retrieved evidence for a medicines prompt, and the feedback loop that keeps a checklist in use."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.contexts": {
+            "length": 4
+          },
+          "map.nodes[2].kind": "framework",
+          "map.reading": {
+            "includes": "ward pharmacist"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local weekly series of missed reconciliation items",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The August check is one snapshot of 60 handoffs; without weekly baseline points a run chart cannot show whether a later fall is a real shift or ordinary variation.",
+            "opportunity": "Collect eight weekly baseline points of 20 handoff sheets each before the first PDSA cycle."
+          },
+          {
+            "id": "g2",
+            "title": "Effects fade when feedback stops",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "The only controlled evaluation lost its effect within seven months once feedback ended (claim c2), so a short project could overstate what the ward keeps.",
+            "opportunity": "Build fortnightly feedback at the huddle into the change and track checklist completion as a process measure."
+          },
+          {
+            "id": "g3",
+            "title": "Patient harm is not measured in the retrieved evidence",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Missed items are a process measure; adverse drug events are too rare on one ward to show a change in three months.",
+            "opportunity": "Report pharmacist-found discrepancies that reached the patient as a descriptive count, without claiming an effect on harm."
+          },
+          {
+            "id": "g4",
+            "title": "Patients with hearing or cognitive impairment take part far less",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Bedside involvement helps patients who can take part and bypasses those who cannot (claim c4), widening differences in who is protected.",
+            "opportunity": "Record whether the patient took part in the bedside medicines check and report missed items separately for patients who could not."
+          },
+          {
+            "id": "g5",
+            "title": "Reviewer knowledge of the period may bias sheet review",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Sheet review finds about four in five missed items (claim c3) but is not blind; a reviewer who expects improvement may code borderline items leniently.",
+            "opportunity": "Use a written operational definition with examples and have the pharmacist double-review a random 10 percent of sheets each fortnight."
+          }
+        ],
+        "errorsFound": [
+          "The need implies the checklist will prevent harm; the retrieved evidence supports fewer missed items, not fewer adverse drug events."
+        ],
+        "reevaluation": "The gaps point to a measurement-first QI project: establish a weekly baseline, test the checklist in small cycles with fortnightly feedback, report participation by impairment, and keep harm claims out of the aim.",
+        "summary": "Five gaps: missing baseline series, fading effects without feedback, no harm data, unequal participation, and measurement bias."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No local weekly series of missed reconciliation items"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "A structured bedside handoff checklist with a four-line medicines section will reduce the weekly proportion of handoffs with at least one missed reconciliation item on Ward 6B from about 38 percent to 20 percent or less within 12 weeks.",
+            "novelty": 30,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 88,
+            "rationale": "Need is high given two near misses and a 38 percent baseline; novelty is low because similar tools exist, which suits local improvement; feasibility and parsimony are high because the change uses existing huddles and sheets.",
+            "risks": "Checklist fatigue on nights, completion falling after the project, and reviewer bias in sheet review."
+          },
+          {
+            "id": "h2",
+            "statement": "Adding a pharmacy-pending line to the checklist will reduce missed items more than the medicines prompt alone.",
+            "novelty": 45,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 60,
+            "parsimony": 50,
+            "rationale": "Items awaiting pharmacist review are a plausible source of misses, but separating their effect needs more cycles than the ward can run this autumn.",
+            "risks": "Adds length to the checklist and depends on pharmacy documentation that is not always current."
+          },
+          {
+            "id": "h3",
+            "statement": "Using the checklist at the 19:00 handoff only will achieve most of the reduction with half the workload.",
+            "novelty": 35,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Both near misses crossed the day-to-night change, but the local check found misses on both handoffs.",
+            "risks": "Leaves the 07:00 handoff unimproved and complicates the run chart."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses ranked; h1 selected as the simplest test of the full checklist."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].feasibility": 85,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "four-line medicines section"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "On Ward 6B, does a structured bedside handoff checklist with a medicines section, tested in PDSA cycles from October to December 2026, reduce the weekly proportion of nursing handoffs with at least one missed medication reconciliation item from about 38 percent to 20 percent or less?",
+            "framework": "QI-aim",
+            "population": "Nursing shift handoffs at 07:00 and 19:00 for adult inpatients on Ward 6B",
+            "intervention": "Structured bedside handoff checklist with a four-line medicines section and fortnightly feedback at the huddle",
+            "comparator": "Eight-week baseline of the current verbal station handoff",
+            "outcome": "Weekly proportion of handoffs with at least one missed reconciliation item on handoff sheet review against the medication administration record",
+            "time": "Eight baseline weeks, then 12 weeks of PDSA cycles",
+            "setting": "Ward 6B, 32-bed acute medical ward"
+          }
+        ],
+        "finer": "Feasible within approved huddle time and existing sheets; interesting to nursing and pharmacy; novel only locally, which suits QI; ethical under the QI screening determination; relevant because of two recent near misses.",
+        "summary": "One SMART QI aim with a time-bound target and a run-chart outcome."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-pdsa",
+        "rationale": "The aim is local improvement of a care process with rapid learning, not a generalisable estimate of effect. PDSA cycles with weekly run charts fit the ward's scale (about 20 reviewed handoffs per week), let the team revise the checklist between cycles, and use run chart rules to separate a real shift from noise. The retrieved evidence supports the change idea (c1), the need for feedback (c2) and the measurement method (c3). Reporting follows SQUIRE 2.0.",
+        "alternatives": [
+          "Cluster randomised comparison across medical wards (refused: one ward, no funding, and the question is local improvement)",
+          "Before-after comparison of two audit snapshots (refused: cannot separate change from ordinary variation)",
+          "Monthly audit feedback on the current handoff without a checklist"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0",
+          "Model for Improvement"
+        ],
+        "whyNotMoreComplex": "A controlled or randomised design would need several wards and months of stable delivery to estimate an effect the ward does not need to generalise; the run chart answers whether this ward improved and keeps the checklist adaptable between cycles.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Test the structured bedside handoff checklist on Ward 6B in PDSA cycles from October to December 2026, with weekly run charts of missed reconciliation items from handoff sheet review and fortnightly feedback at the huddle.",
+          "question": "Should Ward 6B test a structured bedside handoff checklist to reduce missed medication reconciliation items?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A medicines prompt has been followed by fewer omitted medication items elsewhere, and handoff sheet review can measure missed items weekly.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Another change project on Ward 6B targets handoff or medication reconciliation during the same months.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics office determination that the project is quality improvement not requiring REB review",
+              "status": "met",
+              "evidence": "Screening record QIS-2026-118 dated 2026-08-19, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Nurse manager approval of 10 minutes of huddle time for PDSA debriefs",
+              "status": "met",
+              "evidence": "Huddle time approval WM-6B-2026-09 for September to December 2026, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Monthly audit feedback on the current handoff without a checklist",
+            "Checklist at the 19:00 handoff only"
+          ],
+          "note": "Rests on ledger claims c1 to c3, each from a retrieved record, and on the investigator's approval records for the two gates."
+        },
+        "summary": "QI with PDSA cycles and run charts recommended; the decision rests on three ledger claims from retrieved records and both gates are met on investigator-supplied records."
+      },
+      "note": "The decision cites ledger claims c1 to c3 from the appraisal; they exist only when S13 applied the appraisal (at 875fe59 the three ids are dropped with issue 'dropped' and the decision is unsupported). selectionStatus requires S11; the status text 'proposed' in the decision panel requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-pdsa",
+          "family": "qi-pdsa",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].criteria[0].claimIds": [
+            "c1",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: the claims exist in the ledger and rest on retrieved records, both gates are met, so selection is accepted and action is ready (G7). selectionStatus, actionStatus and design.basis 'explicit' on acceptance require S11 (amendment A1 item A2); the claims check requires S13; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "qi-pdsa"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "A ward-level QI project on Ward 6B using the Model for Improvement: eight weekly baseline points, then three PDSA cycles of about four weeks each that test and refine a structured bedside handoff checklist with a four-line medicines section, supported by fortnightly feedback at the huddle.",
+        "population": "All nursing shift handoffs at 07:00 and 19:00 for adult inpatients on Ward 6B from September to December 2026; weekly measurement samples 20 handoff sheets chosen by a fixed rota of bed numbers.",
+        "exposure": "Structured bedside handoff checklist: identity and situation, then medicines (held doses, new high-alert medicines, changes made today, items pending from pharmacy), then pending tasks. Done at the bedside with the patient when awake; for sleeping patients the medicines section is completed at the station.",
+        "procedures": "Cycle 1 (October): one side of the ward, 19:00 handoff only, paper checklist. Cycle 2 (November): both handoffs on the same side, wording revised from cycle 1 debriefs. Cycle 3 (December): whole ward. At each huddle debrief the team reviews the run chart and two example sheets. The medication safety nurse reviews 20 sheets per week against the medication administration record using a written operational definition; the ward pharmacist double-reviews a random 10 percent.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Handoffs with at least one missed reconciliation item",
+            "measure": "Weekly proportion of sampled handoff sheets missing a held dose, a new high-alert medicine, a same-day change or a pending pharmacy item that is recorded in the medication administration record",
+            "timing": "Weekly; 8 baseline and 12 intervention weeks",
+            "why": "Directly measures the failure the checklist targets and matches the local baseline definition.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "process",
+            "name": "Checklist completion",
+            "measure": "Proportion of sampled handoffs with every checklist section completed",
+            "timing": "Weekly during PDSA cycles",
+            "why": "Effects fade when completion falls; separates a failed idea from failed delivery.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Patient participation in the bedside medicines check",
+            "measure": "Proportion of sampled handoffs in which an awake patient took part, reported separately for patients with hearing or cognitive impairment",
+            "timing": "Weekly during PDSA cycles",
+            "why": "Tracks the bedside element and who is left out of it.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Handoff duration",
+            "measure": "Minutes per patient, timed on two handoffs per week",
+            "timing": "Weekly, baseline and intervention",
+            "why": "The night shift cannot absorb more than about two extra minutes per patient.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Patients reporting being woken by handoff",
+            "measure": "Yes or no question at the morning medicines round for patients in sampled beds",
+            "timing": "Weekly during PDSA cycles",
+            "why": "Disturbance is the main cost of bedside delivery to patients.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Uses the approved 10 minutes of huddle time, the existing handoff sheets and about one hour per week of the medication safety nurse's time for 20 sheets. No electronic record changes are needed.",
+        "biasMitigation": [
+          "Written operational definition of a missed item, with examples, fixed before baseline",
+          "Fixed rota of bed numbers for sampling instead of reviewer choice",
+          "Pharmacist double review of a random 10 percent of sheets each fortnight",
+          "Annotated run chart recording co-interventions such as staffing changes"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Reviewer expectation",
+            "severity": "watch",
+            "note": "The reviewer knows the period; double review and a fixed definition limit drift."
+          },
+          {
+            "id": "b2",
+            "label": "Secular trend",
+            "severity": "watch",
+            "note": "Other hospital safety work could lower misses; annotate the chart and compare with pharmacist-found discrepancies."
+          },
+          {
+            "id": "b3",
+            "label": "Selection of sheets",
+            "severity": "ok",
+            "note": "Rota-based sampling avoids choosing easy or complete sheets."
+          }
+        ],
+        "parsimony": {
+          "score": 86,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 0,
+          "covariateCount": 0,
+          "flags": [
+            "Two process and two balancing measures; no secondary effect claims"
+          ],
+          "simplestPath": "One ward, one outcome measure on a run chart, three short cycles, existing sheets and huddles."
+        },
+        "theoreticalFramework": "Model for Improvement with PDSA cycles; SEIPS only to name work-system factors (tasks, tools, environment) when revising the checklist between cycles.",
+        "summary": "Three PDSA cycles over 12 weeks after an 8-week baseline; one outcome measure, two process and two balancing measures."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": false,
+          "protocol.outcomes[2].patientCentered": true,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "protocol.parsimony.score": 86,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Time-ordered weekly measurement on a run chart, with a p-chart as a secondary display: 8 baseline points, then 12 points during three PDSA cycles.",
+        "sampleSize": "Twenty handoff sheets per week is what the medication safety nurse can review in about an hour. With a baseline near 38 percent, a p-chart with subgroups of 20 has 3-sigma limits about 33 percentage points either side of the centre line, so it would flag only very large single-week changes; the run chart rules are more sensitive to sustained change. A fall to about 20 percent held for six consecutive weeks meets the shift rule (6 or more consecutive points below the baseline median), and that is the smallest change the team considers worth keeping. Eight baseline points give a usable median; 12 intervention points allow the shift rule to trigger during cycle 2 or 3.",
+        "primaryAnalysis": "Run chart of the weekly proportion with the baseline median as centre line, judged by pre-specified rules: a shift (6 or more consecutive points on one side of the median), a trend (5 or more consecutive increases or decreases), too many or too few runs, and an astronomical point agreed by the team. The median is frozen after baseline and recalculated only after a sustained shift.",
+        "secondaryAnalysis": "p-chart of the same data with 3-sigma limits for context; run charts of checklist completion, patient participation, handoff duration and patients reporting being woken. Missed items are described separately for patients who could not take part in the bedside check.",
+        "missingData": "Weeks with fewer than 20 reviewable sheets are plotted with their actual subgroup size and annotated; missing sheets are counted and reported, never imputed.",
+        "multiplicity": "One outcome measure carries the aim; process and balancing measures are descriptive and are not tested for significance.",
+        "software": "Spreadsheet run chart template kept by the medication safety nurse; charts checked by the ward pharmacist.",
+        "overfittingGuards": [
+          "Run chart rules fixed before baseline",
+          "Baseline median frozen until a sustained shift",
+          "No subgroup testing beyond the pre-specified participation split",
+          "Changes between cycles are marked on the chart before the next points are examined"
+        ],
+        "summary": "Run chart with pre-specified rules; 20 sheets per week; sample size set by review capacity and the smallest change worth keeping."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "shift rule"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: the checklist changes the format of an existing handoff. Risks are disturbance for patients, longer handoffs for nurses, and blame if individual sheets are singled out; review results are reported at ward level only.",
+        "consent": "Patients are told at admission and at the bedside that the ward is testing a new handoff checklist and may ask not to be woken or included in the bedside part; the handoff itself continues as usual care. Staff take part as part of normal work, and no individual performance data leave the ward.",
+        "data": "Sheet review records bed number, date, shift and missed item categories; no names or record numbers enter the run chart spreadsheet, which is kept on the ward's restricted drive and deleted after the SQUIRE report.",
+        "equity": "PROGRESS-Plus: patients with limited English, hearing loss or cognitive impairment are less able to take part at the bedside. Interpreter phones are used when available, family members may take part with the patient's agreement, and missed items are reported separately for patients who could not take part, so the change does not protect only those who can speak up.",
+        "effectiveness": "Success means a sustained shift in missed reconciliation items with stable handoff duration and few patients reporting being woken; a failed balancing measure leads to a revised cycle, not to a claim of success.",
+        "efficiency": "About one hour of review per week and 10 minutes of huddle time; no new staff or software.",
+        "costs": "Printing of checklists and staff time within normal shifts; no additional budget.",
+        "grants": "None needed; a hospital QI award could later fund spread to other medical wards.",
+        "partnerships": "Ward pharmacist (measurement and double review), nurse manager (huddle time), and two patient partners from the hospital's patient experience group (checklist wording and night rules).",
+        "rebPath": "Screened by the research ethics office as quality improvement not requiring REB review (QIS-2026-118). A later publication follows SQUIRE 2.0 and the journal's QI policy; no additional data collection is planned for publication.",
+        "limitations": "Single ward, unblinded sheet review, and an outcome measure that is a process step rather than patient harm.",
+        "summary": "Minimal-risk QI with ward-level reporting, a bedside opt-out, an equity split for patients unable to take part, and a completed QI screening."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "QIS-2026-118"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners review the checklist wording before cycle 1 and the night rules before cycle 2; one night-shift nurse and the ward pharmacist join the huddle debrief each fortnight.",
+        "socialListening": "No social media listening; the ward's patient comment cards from the last six months are read for mentions of medicines at shift change.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Hearing what changed",
+            "quote": "Composite paraphrase: Nobody told me the blood thinner had been stopped until the night nurse came round with it again.",
+            "implication": "Name same-day stopped medicines explicitly in the medicines section.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Being included at the bedside",
+            "quote": "Composite paraphrase: I sit with my father every evening and I would have caught that, if anyone had said it out loud.",
+            "implication": "Invite a family member who is present to the bedside check when the patient agrees.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Time on nights",
+            "quote": "Composite paraphrase: Two of us for sixteen patients; if it takes more than a couple of minutes each it will stop after the first week.",
+            "implication": "Keep the checklist under two minutes and track duration as a balancing measure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Pharmacy follow-up",
+            "quote": "Composite paraphrase: Half of what I chase in the morning was already known at seven in the evening; it just was not passed on.",
+            "implication": "Add items pending from pharmacy to the medicines section and use pharmacist-found discrepancies as a cross-check.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices shaping the checklist content, the night rule and the measurement cross-check."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].verification": "ai-lead",
+          "voices.items[0].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A structured bedside handoff checklist to reduce missed medication reconciliation items on an acute medical ward: a quality improvement project",
+        "abstract": "Problem: on a 32-bed acute medical ward, 38 percent of nursing handoff sheets missed at least one medication reconciliation item. Intervention: a structured bedside handoff checklist with a four-line medicines section, tested in three PDSA cycles with fortnightly feedback. Measures: weekly proportion of sampled handoffs with a missed item on a run chart, with checklist completion, patient participation, handoff duration and disturbance as process and balancing measures. Results and conclusions will be written after 20 weekly points.",
+        "introduction": "Omitted medication information at nursing handoff allows held, stopped or changed doses to be given in error. Structured handoff tools reduce omissions in single-ward reports, but effects fade without feedback and patient harm is rarely measured. This project tests a checklist on one ward to improve local practice.",
+        "methods": "Model for Improvement with three PDSA cycles from October to December 2026 after an 8-week baseline. Twenty handoff sheets per week, chosen by a fixed bed rota, are reviewed against the medication administration record using a written definition, with pharmacist double review of 10 percent. Run chart rules were fixed before baseline. The project was screened as quality improvement not requiring REB review.",
+        "results": "No data have been collected yet. The report will present the annotated run chart, the p-chart, the process and balancing measure charts, and missed items for patients who could not take part at the bedside.",
+        "discussion": "The discussion will interpret any shift against the run chart rules and recorded co-interventions, compare the size and durability of change with the retrieved before-after and controlled reports, and state what the ward will keep.",
+        "limitations": "Single ward; unblinded sheet review; the outcome is a process measure; sheet review missed about one in five items found by direct observation in the retrieved validation study.",
+        "conclusion": "To be written after the final cycle; it will be limited to this ward's missed reconciliation items and will not claim an effect on adverse drug events.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE-structured draft with results left empty until data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Confirm the operational definition of a missed item with the ward pharmacist before baseline starts",
+          "Run an identity check on the seven retrieved records before the SQUIRE report cites them",
+          "Add the date of each checklist revision to the run chart template"
+        ],
+        "improvementNotes": "Seven records came from a recorded search and were appraised at abstract level; the decision rests on three ledger claims with passages from those abstracts. No record has an identity check yet, and the aim makes no claim about adverse drug events.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before baseline; the evidence is retrieved and appraised at abstract level but not yet identity-checked."
+      },
+      "note": "audit.openFixes, audit.lastReview and audit.improvementNotes state the correct behaviour and FAIL at 875fe59 because of a store defect, not a missing work-order entry: store.ts mergeStage (lines 131 to 139) writes the key 'audit: { ...s.audit, entries }' after '[stage]: { ...current, ...patch }', so for the audit stage the model's patch is overwritten and never stored. No test in tests/ merges the audit stage.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "ledger claims"
+          },
+          "audit.entries": {
+            "min": 13
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "audit.openFixes fails at 875fe59 because of the audit merge defect named in the audit step's note; scan.claims needs S13. Statuses are checked in the export, because the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Structured bedside handoff checklist and missed medication reconciliation items on an acute medical ward",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Structured bedside handoff checklist and missed medication reconciliation items on an acute medical ward"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "As for reload.",
+      "expect": {
+        "store": {
+          "title": "Structured bedside handoff checklist and missed medication reconciliation items on an acute medical ward",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Structured bedside handoff checklist and missed medication reconciliation items on an acute medical ward"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; scan.claims requires S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 4
+            },
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c2",
+              "c3"
+            ],
+            "problem.rawNeed": "I am the clinical nurse educator on Ward 6B, a 32-bed acute medical ward at a regional hospital. Right now our nursing shift handoff is verbal, done at the nurses' station at 07:00 and 19:00, and the medicines part is whatever the outgoing nurse remembers. Last month our medication safety nurse compared 60 handoff sheets with the medication administration record and 23 of them missed at least one reconciliation item: a held dose nobody mentioned, a new anticoagulant not flagged, or a change made on the ward round that never reached the night nurse. We also had two near misses in August, both doses that were stopped on the day shift and then given again at night.\n\nWe want to run a quality improvement project using PDSA cycles to test a structured bedside handoff checklist. The checklist would be done at the bedside with the patient when they are awake and would have a short medicines section: held doses, new high-alert medicines, changes made today, and anything still pending from pharmacy. We plan to start with the day-to-night handoff on one side of the ward and spread it if it works.\n\nWhat I need help with is framing this properly: a clear aim statement, a sensible measure for missed reconciliation items, the balancing measures we should watch (handoff length, overtime, patients being woken at night), and how to show the data on a run chart without overclaiming. We have no research funding and this is not meant to be a trial. The nurse manager wants something we can run within normal shifts over about three months, and the ward pharmacist has offered to help with checking the sheets."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "id": "sc-058",
-  "version": 2,
+  "version": 3,
   "title": "Regional Lean catheter project across four hospitals: protocol revision flags analysis and ethics, late audit reply refused",
   "field": "infectious-disease",
   "level": 5,
@@ -11,7 +11,8 @@
     "D5",
     "D27",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Expert path on a multi-site Lean project. Seven fixture records are appraised into six claims; the decision (kind implementation) rests on c1, c2, c3, c4 and c6, with the council gate met and Hospital D's data sharing gate unknown, so it is accepted with the action blocked. Dependency closure across stages (G8): the first protocol reply ignores two investigator facts (one Lean coach, one hospital at a time; Hospital D on paper), Analysis and Ethics are drafted on it, then the investigator re-runs Protocol (call 2); both completed downstream stages are flagged for review, Analysis is redone (call 2) and leaves the list, and Ethics is re-reviewed and marked complete by hand, so the closure ends with needsReview empty. Late reply (G6): after an applied audit call (positive control), the investigator requests a re-audit and edits the audit notes while it is pending; the reply for audit call 2 must be refused with nothing applied. The format has no step for a pending request, so this scenario represents it as audit call 1, a set-field on audit.improvementNotes (the request is sent at that step, before the edit is saved) and audit call 2 as the late reply; the runner must send the request before executing the set-field and deliver the reply after it. Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 3, 5, 7 (ev-1nyhpv9, ev-0abegw1, ev-1bdpaih, ev-03gnd4n) and titleYearKey-based for records 2, 4, 6 (ev-1s4dbl6, ev-0jtvr38, ev-107rvsr). Requires D27 (substantive audit content in studyRevision; at 875fe59 the audit object is excluded, so the late reply would overwrite the investigator's notes), S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text, review required). Catches: downstream stages left complete after an upstream revision, a flag that never clears after re-review, a late model reply overwriting investigator text, and a refused reply that still changes the store.",
   "inputs": {
@@ -841,7 +842,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -853,6 +856,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1689,5 +1712,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-058.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-058.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

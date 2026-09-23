@@ -1,6 +1,6 @@
 {
   "id": "sc-037",
-  "version": 1,
+  "version": 2,
   "title": "State tobacco control unit: retailer density near schools and youth smoking, a graded reply over an empty search",
   "field": "public-health",
   "level": 3,
@@ -11,7 +11,8 @@
     "D5",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Demanding path on a clear cross-sectional question. The first recorded fixture search is too narrow and returns HTTP 200 with zero records. The scan reply that follows (shape discovery) brings five model leads and a certainty 'moderate' with a rationale: over zero retrieved records the certainty must be dropped with an issue, the leads are stored as unverified model leads (one with no year, no method score and no grade: null, null, 'unrated'), and the stage stays incomplete, shown as leads only and not assessed (G1 to G4; D20). A second, broader search returns seven records, appended after the leads, and an appraisal (S13) over them records four claims, two of which conflict about confounding by deprivation; certainty 'low' is the appraisal's value over inspected records. The design decision rests on c1 to c3; the survey custodian's approval is unknown (no application made), so the accepted selection stays blocked to the end (G7). Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-1phr3qi, 2 ev-1lq1qq4, 3 ev-1w64a5z, 4 ev-06szwl0, 6 ev-1uribuh, 7 ev-0fmvxls), or of titleYearKey(title, year) when there is no DOI (records 5 ev-1lowmfr). Catches: certainty over an empty search, completion from leads, a lead promoted to verified, a gate turned met without evidence, and an action allowed before data access exists.",
   "inputs": {
@@ -967,7 +968,7 @@
           "design.decisions[-1].gates[0].evidence": {
             "absent": true
           },
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -976,7 +977,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -988,6 +990,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1497,5 +1519,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-037.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

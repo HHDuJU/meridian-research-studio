@@ -1,6 +1,6 @@
 {
   "id": "sc-066",
-  "version": 1,
+  "version": 2,
   "title": "City TB program: Lean redesign of contact evaluation, two undated reports kept unrated and a reopen after the decision",
   "field": "infectious-disease",
   "level": 3,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Demanding Lean improvement path. The fixture search returns seven records; two undated program reports (year null) receive explicit null relevance and methodQuality and no grade from the appraisal, so they are stored with null scores and grade 'unrated' with no issue (G4), and they stay so through reopen, reload and export. One of them carries a high-uncertainty equity claim (c5) that sits only in the decision's defeating criterion. The decision rests on c1 to c4 from dated, rated records; both gates are met on investigator-supplied approvals, so it is accepted and ready. The investigator then leaves and reopens the study from the home list after 7 of 13 stages, before the protocol, and finishes the workflow. The problem reply omits the constraints key (G11). Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 3, 5, 7 (ev-1vb2ccd, ev-0pbvxxl, ev-0o55l4j, ev-1xjqrs7), titleYearKey-based for records 2, 4, 6 (ev-00nirxj, ev-1vajgde, ev-0h005b9). Requires S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: null scores turned into 0 or a default, a guessed year, a decision relying on unratable sources, and work or the decision record lost on reopen mid-workflow.",
   "inputs": {
@@ -807,8 +808,8 @@
           "design.decisions[-1].criteria[1].claimIds": [
             "c5"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -817,13 +818,38 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -840,14 +866,14 @@
         "store": {
           "design.decisions[-1].status": "accepted",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].actionStatus": "blocked",
           "design.basis": "explicit",
           "family": "qi-lean"
         },
         "screen": {
           "includes": [
             "accepted",
-            "ready"
+            "blocked"
           ]
         }
       }
@@ -1356,7 +1382,7 @@
             "scan.items[3].grade": "unrated",
             "scan.gradeOverall": "low",
             "design.decisions[-1].selectionStatus": "accepted",
-            "design.decisions[-1].actionStatus": "ready"
+            "design.decisions[-1].actionStatus": "blocked"
           }
         },
         "downloads": {
@@ -1364,5 +1390,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-066.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Decision 1 is expected blocked from its acceptance (step 11) on: the investigator's facts give no research ethics status. Model responses, need and records are unchanged."
 }

@@ -1,6 +1,6 @@
 {
   "id": "sc-008",
-  "version": 1,
+  "version": 2,
   "title": "Hip fracture trauma unit: early physiotherapy and prolonged stay, conflicting evidence and a reopen after partial work",
   "field": "physiotherapy",
   "level": 3,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Demanding path on an explicit case-control need: a physiotherapy lead wants to know whether mobilisation within 24 hours of hip fracture surgery goes with shorter stays, with exposure only in paper notes. A fixture search returns seven records that conflict: a randomised trial in selected patients finds stays 2.3 days shorter, a registry analysis finds no difference after adjustment, and a review finds heterogeneous results. The appraisal records the conflict honestly as claim c3, an inference resting on the three records with uncertainty 'high', alongside source-derived claims with exact passages; certainty is low. The decision (kind narrow) rests on c3, c4 and c5; the ethics gate is unknown, so acceptance gives an accepted selection and a blocked action. The study is reopened after the Protocol stage (eight of 13 stages): completed work, the high-uncertainty claim and the decision must be intact and the later stages incomplete. The remaining five stages are then finished, followed by reload and export. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 5, 7 (ev-019gs0m, ev-0bu9ox0, ev-0xo0saw, ev-0go084z, ev-1p5a657); titleYearKey hash for records 2 and 6 (ev-1lrsu2p, ev-005ikon). Requires S13 (appraisal and ledger), S11 (selectionStatus, actionStatus, basis) and D5 (status text). Catches: conflicting evidence flattened into a confident claim, an uncertainty label changed on reload, partial work lost or stages wrongly marked complete on reopen, and an action allowed past an unknown gate.",
   "inputs": {
@@ -821,7 +822,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -833,6 +836,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1342,5 +1365,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-008.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

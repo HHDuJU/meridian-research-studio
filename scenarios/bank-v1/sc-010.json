@@ -1,6 +1,6 @@
 {
   "id": "sc-010",
-  "version": 1,
+  "version": 2,
   "title": "Regional pneumonia registry: five-year outcomes cohort, certainty over an empty search dropped, linkage gate still unknown",
   "field": "epidemiology",
   "level": 3,
@@ -11,7 +11,8 @@
     "D5",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Demanding path on an explicit registry-based cohort need. The first, narrow fixture search returns zero records (status ok, 0 hits). The first scan reply (shape discovery, no items) nevertheless proposes the certainty 'very-low': it must be dropped with issue 'dropped' at gradeOverall, the certainty stays unassessed ('not assessed' on screen, no certainty label) and the stage stays incomplete (G1, G2; D20). A reload on the Scan route checks that the dropped label does not come back. A broader second search then returns six records, the empty first event stays in the history, and the appraisal (scan call 2) assigns 'low' certainty over inspected records and completes the stage. This differs from an empty search confirmed by the investigator: here the scan completes through records retrieved by a later search. The decision rests on claims c1 to c3; its linkage gate has no evidence and stays unknown through every later stage, so the accepted selection keeps a blocked action to the export. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 5, 6 (ev-0t1dbpg, ev-0kczf5q, ev-07v2hhu, ev-03e92rw, ev-0md02sb); titleYearKey hash for record 2 (ev-1rmmxbv). Requires D20 (no certainty and no completion over zero records, 'not assessed'), S11 (selectionStatus, actionStatus, basis), S13 (appraisal) and D5 (status text). Catches: a certainty label invented over an empty search, a stage completed without records, a dropped label restored on reload, an empty search erased from the history, and an unknown gate treated as met.",
   "inputs": {
@@ -913,7 +914,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -925,6 +928,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1403,5 +1426,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-010.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 12 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

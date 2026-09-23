@@ -1,0 +1,1368 @@
+{
+  "id": "sc-066",
+  "version": 1,
+  "title": "City TB program: Lean redesign of contact evaluation, two undated reports kept unrated and a reopen after the decision",
+  "field": "infectious-disease",
+  "level": 3,
+  "family": "qi-lean",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding Lean improvement path. The fixture search returns seven records; two undated program reports (year null) receive explicit null relevance and methodQuality and no grade from the appraisal, so they are stored with null scores and grade 'unrated' with no issue (G4), and they stay so through reopen, reload and export. One of them carries a high-uncertainty equity claim (c5) that sits only in the decision's defeating criterion. The decision rests on c1 to c4 from dated, rated records; both gates are met on investigator-supplied approvals, so it is accepted and ready. The investigator then leaves and reopens the study from the home list after 7 of 13 stages, before the protocol, and finishes the workflow. The problem reply omits the constraints key (G11). Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 3, 5, 7 (ev-1vb2ccd, ev-0pbvxxl, ev-0o55l4j, ev-1xjqrs7), titleYearKey-based for records 2, 4, 6 (ev-00nirxj, ev-1vajgde, ev-0h005b9). Requires S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: null scores turned into 0 or a default, a guessed year, a decision relying on unratable sources, and work or the decision record lost on reopen mid-workflow.",
+  "inputs": {
+    "need": "I manage the tuberculosis program at a city public health unit that serves about 900,000 people. Each year we notify about 110 cases of pulmonary TB, and our nurses identify roughly 1,300 contacts who need evaluation: a symptom check, an interferon-gamma release assay or skin test, and a chest X-ray if anything is positive. Last year only 71 percent of identified contacts completed evaluation within 60 days, against a provincial target of 90 percent, and completion was lowest for household contacts who work shifts, contacts living in shelters, and contacts who need an interpreter.\n\nThe pathway has a lot of steps and handoffs: the case nurse visits the case and lists contacts, a second nurse phones each contact, the contact goes to one of three clinics for blood work, results come back to a central office, positives are booked for X-ray at the hospital, and then someone has to close the loop. People fall out at every step. We want to use Lean methods: map the value stream from case notification to completed contact evaluation, measure where the time and the drop-outs are, and redesign the flow, for example by drawing blood at the first home visit, sending results straight to the case nurse, and booking the X-ray at the same visit.\n\nI need help deciding what to measure and how often, how to show real change with only about 110 cases a year, how to avoid making things worse for the contacts who are already hardest to reach, and how to get the data out of our case management system without months of manual abstraction.",
+    "constraints": "No new staff. The case management system can export monthly reports; ad hoc queries need the data steward's approval. Contact names must stay within the TB program.",
+    "localFacts": [
+      "The TB program notified 108 pulmonary cases in 2025 and identified 1,294 contacts; 71 percent completed evaluation within 60 days.",
+      "The medical officer of health approved the Lean project and two mapping days on 2026-09-01 (memo MOH-TB-2026-05).",
+      "The data steward approved a monthly de-identified extract of contact evaluation dates from the case management system on 2026-09-12 (approval DS-114).",
+      "Three community clinics draw blood for contact testing; results reach the central TB office by fax or courier."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I manage the tuberculosis program at a city public health unit that serves about 900,000 people. Each year we notify about 110 cases of pulmonary TB, and our nurses identify roughly 1,300 contacts who need evaluation: a symptom check, an interferon-gamma release assay or skin test, and a chest X-ray if anything is positive. Last year only 71 percent of identified contacts completed evaluation within 60 days, against a provincial target of 90 percent, and completion was lowest for household contacts who work shifts, contacts living in shelters, and contacts who need an interpreter.\n\nThe pathway has a lot of steps and handoffs: the case nurse visits the case and lists contacts, a second nurse phones each contact, the contact goes to one of three clinics for blood work, results come back to a central office, positives are booked for X-ray at the hospital, and then someone has to close the loop. People fall out at every step. We want to use Lean methods: map the value stream from case notification to completed contact evaluation, measure where the time and the drop-outs are, and redesign the flow, for example by drawing blood at the first home visit, sending results straight to the case nurse, and booking the X-ray at the same visit.\n\nI need help deciding what to measure and how often, how to show real change with only about 110 cases a year, how to avoid making things worse for the contacts who are already hardest to reach, and how to get the data out of our case management system without months of manual abstraction.",
+          "problem.constraints": "No new staff. The case management system can export monthly reports; ad hoc queries need the data steward's approval. Contact names must stay within the TB program.",
+          "family": "qi-lean",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I manage the tuberculosis program at a city public health unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Tuberculosis contact evaluation completion: a Lean redesign of the contact pathway",
+        "subtitle": "Value stream mapping and flow redesign from case notification to completed evaluation",
+        "family": "qi-lean",
+        "statement": "Only 71 percent of about 1,300 contacts of pulmonary tuberculosis cases completed evaluation within 60 days in 2025, against a provincial target of 90 percent. Completion was lowest for shift-working household contacts, contacts in shelters and contacts needing an interpreter. The pathway has many handoffs between nurses, clinics, the central office and the hospital, and contacts are lost at each. The program wants to map the value stream and redesign the flow.",
+        "whoAffected": "Contacts of about 110 people with pulmonary tuberculosis a year, especially people in shelters, shift workers and people who need interpreters; TB nurses, clinic staff and the central office.",
+        "whatHurts": "A contact with infection who is never evaluated can develop active disease and transmit it; delays mean repeated calls, lost samples and anxious families.",
+        "currentPractice": "Case nurse lists contacts, a second nurse phones them, blood is drawn at three clinics, results go to the central office by fax or courier, and positives are booked for hospital chest X-ray.",
+        "whyNow": "A completion rate far below target, approval for two mapping days and a monthly data extract newly approved.",
+        "patientCenteredGoal": "Every contact is evaluated quickly and conveniently, whatever their housing, working hours or language.",
+        "summary": "Problem framed as a Lean redesign of a multi-handoff public health pathway."
+      },
+      "note": "Constraints key omitted; the investigator's text stays (G11).",
+      "expect": {
+        "store": {
+          "title": "Tuberculosis contact evaluation completion: a Lean redesign of the contact pathway",
+          "family": "qi-lean",
+          "problem.constraints": "No new staff. The case management system can export monthly reports; ad hoc queries need the data steward's approval. Contact names must stay within the TB program.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Tuberculosis contact evaluation completion: a Lean redesign of the contact pathway"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "tuberculosis contact investigation completion evaluation cascade lean process redesign",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "The contact evaluation cascade for pulmonary tuberculosis in a metropolitan health department",
+            "authors": "Oyelaran-Whitfield J, Castellanos-Mbeki R, Lindahl-Osei P",
+            "year": 2021,
+            "venue": "Journal of Tuberculosis Program Practice",
+            "doi": "10.5555/jtpp.2021.0133",
+            "providerType": "journal-article",
+            "abstract": "Of 3,120 contacts identified for 262 pulmonary tuberculosis cases in one metropolitan health department, 88 percent were located, 79 percent had a test, and 68 percent completed evaluation. The largest losses occurred between a positive test and the chest radiograph, and among contacts living in shelters or working night shifts. Median time from contact identification to completed evaluation was 38 days. Contacts evaluated at home completed more often than those referred to clinics. The authors recommend reporting every step of the cascade rather than a single completion figure."
+          },
+          {
+            "title": "Blood draw at the first home visit for tuberculosis contacts: a program report",
+            "authors": "City tuberculosis control program, Brackenmoor health unit",
+            "year": null,
+            "venue": "Public health program report series",
+            "providerType": "report",
+            "abstract": "The program began drawing blood for interferon-gamma release assays at the first home visit instead of referring contacts to a clinic. The report states that completion of testing rose from 74 to 91 percent after the change, and that nurses spent more time per visit. It gives no dates for the before and after periods, no denominators by contact type and no information on whether chest radiographs were completed. Staff comments describe fewer lost samples once courier pickup was arranged."
+          },
+          {
+            "title": "Lean redesign of latent tuberculosis evaluation in a public health clinic",
+            "authors": "Nakamura-Holt S, Achebe-Fairweather T",
+            "year": 2019,
+            "venue": "Lean Methods in Public Health",
+            "doi": "10.5555/lmph.2019.0058",
+            "providerType": "journal-article",
+            "abstract": "A public health clinic mapped the value stream of contact evaluation and found 11 handoffs between identification and completed evaluation. After redesign (same-day testing, results routed to the case nurse, radiograph booked at the result visit), median days from contact identification to completed evaluation fell from 41 to 19, and completion within 60 days rose from 66 to 82 percent over 12 months. Nurse time per contact rose slightly, and staff reported fewer calls chasing results. The comparison was before and after, with no concurrent control."
+          },
+          {
+            "title": "Interpreter use and completion of tuberculosis contact evaluation: an internal review",
+            "authors": "Community health nursing quality group",
+            "year": null,
+            "venue": "Internal quality review",
+            "providerType": "report",
+            "abstract": "This internal review of one year of contact investigations found that contacts who needed an interpreter completed evaluation in 58 percent of cases, against 77 percent of other contacts. Telephone interpreters were used for most phone calls, but not at clinic visits for blood draws. The review does not give its year, and it did not adjust for household status, shelter residence or distance to the clinic. It recommends booking interpreters for every step, not only the first call, and recording each contact's preferred language at the first contact."
+          },
+          {
+            "title": "Interventions to improve completion of tuberculosis contact investigation: a systematic review",
+            "authors": "Rasmussen-Oduya E, Petit-Kowalczyk M, Sato-Brennan L, Varga-Okafor D",
+            "year": 2023,
+            "venue": "Tuberculosis Evidence Reviews",
+            "doi": "10.5555/ter.2023.0091",
+            "providerType": "review",
+            "abstract": "We included 22 studies of interventions to improve completion of contact investigation, including home-based testing, incentives, text reminders and case management. Home-based testing and incentives raised completion by a median of 12 percentage points compared with usual care, while reminders alone had small effects. Most studies were before-and-after comparisons. Few studies reported outcomes for people experiencing homelessness or for contacts needing an interpreter, the groups with the lowest completion in most programs. Studies of testing in shelters were small and short, and none followed contacts beyond 90 days."
+          },
+          {
+            "title": "Measuring contact evaluation completion from case management systems: a data quality study",
+            "authors": "Brandt-Mensah K, Tanaka-Laurent A",
+            "year": 2025,
+            "venue": "Public Health Informatics Reports",
+            "providerType": "journal-article",
+            "abstract": "We compared case management system records with paper files for 600 tuberculosis contacts. Evaluation dates were missing for 14 percent of evaluations in the system but present on paper, most often chest radiograph dates entered by hospital staff. Completion estimated from the system alone was 9 percentage points lower than from paper files. A monthly extract with a data dictionary and a missing-date check reduced the gap to 2 points within three months. The check took about two hours of staff time a month."
+          },
+          {
+            "title": "Statistical process control for public health programs with small monthly counts",
+            "authors": "Halvorsen-Quist B, Obi-Lindgren C, Reid-Nakashima V",
+            "year": 2017,
+            "venue": "Improvement Science Methods",
+            "doi": "10.5555/ism.2017.0104",
+            "providerType": "journal-article",
+            "abstract": "Public health programs often chart outcomes with small monthly subgroups. We show that p-charts with monthly subgroups under 30 give wide, unstable limits, while grouping contacts into cohorts by the month the index case was notified and charting completion at a fixed interval gives stable subgroups of about 100 in a mid-sized program. Run chart rules detected a sustained 12-point improvement within five to six monthly cohorts in simulations. Cohorts must be closed only after the full follow-up interval has passed."
+          }
+        ]
+      },
+      "note": "Two program reports carry no year (G4); their ids come from titleYearKey with '?' for the year.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1vb2ccd",
+            "ev-00nirxj",
+            "ev-0pbvxxl",
+            "ev-1vajgde",
+            "ev-0o55l4j",
+            "ev-0h005b9",
+            "ev-1xjqrs7"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.items[3].grade": "unrated",
+          "scan.items[1].provenance.access": "abstract",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Blood draw at the first home visit for tuberculosis contacts: a program report"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1vb2ccd",
+            "relevance": 92,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Of 3,120 contacts, 88 percent were located, 79 percent tested and 68 percent completed evaluation; the largest loss was between a positive test and the radiograph.",
+            "limitations": "One health department; descriptive cascade.",
+            "contextTags": [
+              "cascade",
+              "losses",
+              "shelters"
+            ]
+          },
+          {
+            "id": "ev-00nirxj",
+            "relevance": null,
+            "methodQuality": null,
+            "kind": "qi-report",
+            "keyFindings": "Reports testing completion rising from 74 to 91 percent after blood draw at the first home visit.",
+            "limitations": "No dates, no denominators by contact type, no radiograph completion.",
+            "contextTags": [
+              "home blood draw",
+              "program report"
+            ],
+            "notes": "Relevance and method quality are left unknown: an undated report without denominators cannot be rated."
+          },
+          {
+            "id": "ev-0pbvxxl",
+            "relevance": 94,
+            "methodQuality": 52,
+            "kind": "qi-report",
+            "grade": "low",
+            "keyFindings": "Value stream mapping found 11 handoffs; redesign cut median days to completed evaluation from 41 to 19 and raised 60-day completion from 66 to 82 percent.",
+            "limitations": "Before-and-after in one clinic; no concurrent control.",
+            "contextTags": [
+              "lean",
+              "value stream map",
+              "handoffs"
+            ]
+          },
+          {
+            "id": "ev-1vajgde",
+            "relevance": null,
+            "methodQuality": null,
+            "kind": "grey",
+            "keyFindings": "Contacts needing an interpreter completed evaluation in 58 percent against 77 percent of others.",
+            "limitations": "No year; unadjusted; one program.",
+            "contextTags": [
+              "interpreters",
+              "equity"
+            ],
+            "notes": "Relevance and method quality are left unknown: undated internal review with no adjustment."
+          },
+          {
+            "id": "ev-0o55l4j",
+            "relevance": 80,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 22 studies, home-based testing and incentives raised completion by a median of 12 percentage points; few studies reported homeless or interpreter-needing contacts.",
+            "limitations": "Mostly before-and-after studies.",
+            "contextTags": [
+              "systematic review",
+              "home testing",
+              "incentives"
+            ]
+          },
+          {
+            "id": "ev-0h005b9",
+            "relevance": 85,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Evaluation dates were missing for 14 percent of system records, lowering system-based completion by 9 points; a monthly extract with checks cut the gap to 2 points.",
+            "limitations": "One system; 600 contacts.",
+            "contextTags": [
+              "data quality",
+              "case management system"
+            ]
+          },
+          {
+            "id": "ev-1xjqrs7",
+            "relevance": 75,
+            "methodQuality": 62,
+            "kind": "expert",
+            "grade": "low",
+            "keyFindings": "Cohorts by index-case month give stable subgroups of about 100; run rules detected a sustained 12-point improvement within five to six cohorts in simulations.",
+            "limitations": "Simulation-based methods paper.",
+            "contextTags": [
+              "statistical process control",
+              "cohort charts"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Of 3,120 contacts identified in a metropolitan health department, 68 percent completed evaluation, with the largest losses between a positive test and the chest radiograph.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1vb2ccd"
+            ],
+            "location": "Abstract",
+            "passage": "The largest losses occurred between a positive test and the chest radiograph",
+            "interpretation": "Map and measure every step of the cascade, not only overall completion.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "A Lean redesign of contact evaluation cut median days to completed evaluation from 41 to 19 and raised completion within 60 days from 66 to 82 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0pbvxxl"
+            ],
+            "location": "Abstract, results",
+            "passage": "median days from contact identification to completed evaluation fell from 41 to 19, and completion within 60 days rose from 66 to 82 percent over 12 months",
+            "interpretation": "A comparable redesign is plausible here; the size of change is a planning value.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Across 22 studies, home-based testing and incentives raised contact investigation completion by a median of 12 percentage points.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0o55l4j"
+            ],
+            "location": "Abstract",
+            "passage": "Home-based testing and incentives raised completion by a median of 12 percentage points compared with usual care",
+            "interpretation": "Home blood draw is the change with the strongest support.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Evaluation dates were missing for 14 percent of evaluations in case management system records, lowering system-based completion by 9 percentage points.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0h005b9"
+            ],
+            "location": "Abstract",
+            "passage": "Evaluation dates were missing for 14 percent of evaluations in the system but present on paper",
+            "interpretation": "Add a missing-date check to the monthly extract before trusting the baseline.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "An undated internal review found that contacts needing an interpreter completed evaluation in 58 percent of cases against 77 percent of other contacts.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1vajgde"
+            ],
+            "location": "Abstract",
+            "passage": "contacts who needed an interpreter completed evaluation in 58 percent of cases, against 77 percent of other contacts",
+            "interpretation": "Report interpreter-needing contacts separately; the source cannot be rated.",
+            "uncertainty": "high"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level; two undated program reports keep unknown relevance and method quality and stay unrated. Contact cascades lose most people between a positive test and the radiograph and among people in shelters or on night shifts. A Lean redesign elsewhere halved the time to completed evaluation and raised 60-day completion from 66 to 82 percent, and home-based testing is the best supported single change. System data miss evaluation dates unless checked. Cohort charts by index-case month suit a program of this size.",
+        "gradeOverall": "low",
+        "gradeRationale": "Before-and-after improvement reports, a review of mostly uncontrolled studies and two unratable program reports; consistent direction, low certainty on effect size.",
+        "summary": "Seven records appraised; two undated reports keep null scores and stay unrated; five claims."
+      },
+      "note": "For the two undated reports the annotations send explicit nulls for relevance and methodQuality (stored null, no issue: a null score is unknown, never 0 or 50) and leave the grade out, so it stays 'unrated' (G4). Applying the appraisal requires S13.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[1].kind": "qi-report",
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.items[3].relevance": {
+            "isNull": true
+          },
+          "scan.items[3].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[3].grade": "unrated",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[4].sourceIds": [
+            "ev-1vajgde"
+          ],
+          "scan.claims[4].uncertainty": "high",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "city public health unit, about 900,000 people",
+          "about 110 pulmonary cases and 1,300 contacts a year",
+          "three community clinics and a hospital radiology department",
+          "fax and courier result routing"
+        ],
+        "reading": "Each handoff in the pathway (case nurse, second nurse, clinic, central office, hospital) is a queue where contacts wait and some are lost. The biggest leak elsewhere is between a positive test and the radiograph, and the hardest-to-reach contacts leak most. Moving the blood draw into the first home visit and routing results to the case nurse remove two handoffs. Measurement depends on a system that misses dates unless checked.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Case notification and interview",
+            "kind": "context",
+            "detail": "Contacts listed by the case nurse."
+          },
+          {
+            "id": "n2",
+            "label": "Phone contact by a second nurse",
+            "kind": "context",
+            "detail": "First handoff."
+          },
+          {
+            "id": "n3",
+            "label": "Clinic blood draw and result routing",
+            "kind": "context",
+            "detail": "Fax or courier to the central office."
+          },
+          {
+            "id": "n4",
+            "label": "Positive test to chest X-ray",
+            "kind": "gap",
+            "detail": "Largest loss elsewhere (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Completed evaluation within 60 days",
+            "kind": "outcome",
+            "detail": "71 percent in 2025."
+          },
+          {
+            "id": "n6",
+            "label": "Home blood draw and same-visit X-ray booking",
+            "kind": "framework",
+            "detail": "Countermeasures (claims c2, c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Contacts in shelters, on shift work or needing interpreters",
+            "kind": "stakeholder",
+            "detail": "Lowest completion (claim c5)."
+          },
+          {
+            "id": "n8",
+            "label": "Case management system extract",
+            "kind": "context",
+            "detail": "Missing dates unless checked (claim c4)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "hands off to"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "refers to"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "feeds"
+          },
+          {
+            "from": "n4",
+            "to": "n5",
+            "relation": "limits"
+          },
+          {
+            "from": "n6",
+            "to": "n3",
+            "relation": "removes handoffs in"
+          },
+          {
+            "from": "n7",
+            "to": "n5",
+            "relation": "lowest in"
+          },
+          {
+            "from": "n8",
+            "to": "n5",
+            "relation": "measures"
+          }
+        ],
+        "summary": "Map lays out the handoffs as queues and marks where redesign acts."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.nodes[3].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No step-level data on where contacts are lost",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The program knows only the overall 71 percent.",
+            "opportunity": "Measure each cascade step from the monthly extract and map two weeks of cases by hand."
+          },
+          {
+            "id": "g2",
+            "title": "Missing dates in the system",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "System data can understate completion by several points (claim c4).",
+            "opportunity": "Add a missing-date check and a data dictionary before freezing the baseline."
+          },
+          {
+            "id": "g3",
+            "title": "Hardest-to-reach contacts may lose out",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "Home-based changes may help housed contacts and miss people in shelters or needing interpreters (claim c5).",
+            "opportunity": "Report completion separately for shelter, shift-working and interpreter-needing contacts, and book interpreters for every step."
+          },
+          {
+            "id": "g4",
+            "title": "Nurse time per contact may rise",
+            "kind": "implementation",
+            "severity": "watch",
+            "whyItMatters": "Home blood draw lengthens visits.",
+            "opportunity": "Track nurse hours per case as a balancing measure."
+          }
+        ],
+        "errorsFound": [
+          "The two undated program reports cannot be rated; their figures are kept as unrated information, not planning values."
+        ],
+        "reevaluation": "The gaps confirm a Lean redesign with step-level measurement, a data quality check and equity reporting.",
+        "summary": "Four gaps; step-level data, data quality and equity are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[2].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Redesigning the contact pathway (blood draw at the first home visit, results routed to the case nurse, X-ray booked at the result visit) raises completion within 60 days from 71 percent to at least 85 percent within 12 months, without lower completion for shelter, shift-working or interpreter-needing contacts.",
+            "novelty": 30,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "A comparable redesign achieved a similar change (c2) and home testing is the best supported element (c3); the equity condition follows c5.",
+            "risks": "Nurse workload; hospital radiology booking outside the program's control."
+          },
+          {
+            "id": "h2",
+            "statement": "Median days from contact identification to completed evaluation falls below 25.",
+            "novelty": 30,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Time fell from 41 to 19 days elsewhere.",
+            "risks": "Radiograph waits."
+          },
+          {
+            "id": "h3",
+            "statement": "Most remaining losses occur between a positive test and the radiograph.",
+            "novelty": 35,
+            "need": 60,
+            "practiceChange": 60,
+            "feasibility": 85,
+            "parsimony": 70,
+            "rationale": "The retrieved cascade found its largest loss there (c1).",
+            "risks": "Descriptive only."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 is the improvement aim with an equity condition."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Will a Lean redesign of the TB contact pathway, introduced from January 2027, raise the proportion of contacts completing evaluation within 60 days from 71 to at least 85 percent by December 2027, with no fall for shelter, shift-working or interpreter-needing contacts?",
+            "framework": "QI-aim",
+            "population": "Contacts of pulmonary tuberculosis cases notified by the city public health unit",
+            "intervention": "Value stream mapping and redesign: home blood draw, direct result routing, same-visit X-ray booking",
+            "comparator": "Twelve monthly baseline cohorts from 2026",
+            "outcome": "Completion of evaluation within 60 days, charted by index-case month",
+            "time": "January to December 2027",
+            "setting": "City public health unit TB program"
+          }
+        ],
+        "finer": "Feasible within existing staff and the approved extract; interesting to the program and the province; novel locally; ethical with equity reporting; relevant to a completion rate far below target.",
+        "summary": "One improvement aim with an equity condition."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-lean",
+        "rationale": "The problem is flow through a pathway with many handoffs, which is what Lean value stream mapping and redesign address. Completion charted by index-case month cohorts gives stable subgroups of about 100 contacts (the retrieved methods paper), so change can be separated from noise within a year. Reporting follows SQUIRE 2.0.",
+        "alternatives": [
+          "Randomised comparison of home and clinic testing (refused: one program, and home testing is already the best supported change)",
+          "Reminders only (refused: small effects elsewhere)",
+          "PDSA cycles without mapping (refused: the handoff structure is the problem)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0"
+        ],
+        "whyNotMoreComplex": "A controlled study would need several health units; the program needs to fix its own flow and show it on its own data.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Map the contact pathway value stream and redesign it from January 2027 (home blood draw, results routed to the case nurse, X-ray booked at the result visit), because losses concentrate between test and radiograph (c1), a comparable Lean redesign raised 60-day completion (c2) and home testing is the best supported change (c3), charting completion by index-case month from a checked monthly extract (c4).",
+          "question": "Should the TB program redesign its contact pathway with Lean methods, and how should it measure the result?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Losses concentrate at handoffs that the redesign removes, and a comparable redesign improved completion.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Completion falls for contacts in shelters or needing interpreters after the redesign.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c5"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Medical officer of health approval of the Lean project and mapping days",
+              "status": "met",
+              "evidence": "Memo MOH-TB-2026-05 dated 2026-09-01, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Data steward approval of the monthly de-identified extract",
+              "status": "met",
+              "evidence": "Approval DS-114 dated 2026-09-12, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Text reminders to contacts without redesign",
+            "Incentives for completed evaluation"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from dated, rated records; the interpreter claim c5 from an unrated report is carried only in the defeating criterion. Both gates are met on investigator-supplied approvals."
+        },
+        "summary": "Lean redesign recommended; both gates met."
+      },
+      "note": "Claims require S13; selectionStatus S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-lean",
+          "family": "qi-lean",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].criteria[1].claimIds": [
+            "c5"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive with both gates met: accepted and ready (G7). S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "qi-lean"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work (7 of 13 stages, with the decision just accepted): the investigator returns to the home list and opens the study again before writing the protocol. The decision record and the unknowns survive; statuses are checked again in the export.",
+      "expect": {
+        "store": {
+          "title": "Tuberculosis contact evaluation completion: a Lean redesign of the contact pathway",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "needsReview": [],
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].relevance": {
+            "isNull": true
+          },
+          "scan.items[3].methodQuality": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "protocol.outcomes": {
+            "length": 0
+          }
+        },
+        "stage": {
+          "design": "complete",
+          "protocol": "incomplete",
+          "audit": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Tuberculosis contact evaluation completion: a Lean redesign of the contact pathway"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Lean improvement project in the TB program: two value stream mapping days in November 2026 with nurses, clinic staff, the central office and hospital radiology, then redesign introduced in steps from January 2027, with completion charted by index-case month cohorts through December 2027.",
+        "population": "All contacts of pulmonary tuberculosis cases notified by the program; baseline cohorts from January to December 2026, improvement cohorts from January to December 2027.",
+        "exposure": "Redesigned pathway: blood draw at the first home visit (with courier pickup), results routed directly to the case nurse, chest X-ray booked at the result visit, interpreters booked for every step, and a standard work checklist for closing each contact.",
+        "procedures": "A mapping team of two nurses, a clinic phlebotomist, a central office clerk and a radiology booker maps the current state with ten recent cases, then the future state. Changes are introduced one at a time, each tested with a small group of cases before spreading. The monthly extract (DS-114) includes identification, test, result, radiograph and closure dates; a missing-date check is run before each chart update.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Completion of evaluation within 60 days",
+            "measure": "Proportion of contacts in each index-case month cohort with a completed evaluation within 60 days",
+            "timing": "Monthly cohorts, charted 60 days after cohort close",
+            "why": "The program's target measure.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "process",
+            "name": "Days from identification to completed evaluation",
+            "measure": "Median per cohort",
+            "timing": "Monthly",
+            "why": "Shows whether waits shrink.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Loss at each cascade step",
+            "measure": "Proportion located, tested, positive with radiograph, closed",
+            "timing": "Monthly",
+            "why": "Locates remaining losses (claim c1).",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Nurse hours per case",
+            "measure": "Nursing time recorded per index case",
+            "timing": "Monthly",
+            "why": "Home blood draw lengthens visits.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Completion for hardest-to-reach contacts",
+            "measure": "60-day completion for shelter, shift-working and interpreter-needing contacts, reported separately",
+            "timing": "Quarterly",
+            "why": "The redesign must not widen gaps.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Existing nurses and clinic staff; two mapping days approved; the extract is monthly; courier pickup uses the existing contract.",
+        "biasMitigation": [
+          "Missing-date check before each chart update",
+          "Cohorts closed only after the full 60 days",
+          "Baseline frozen after the data check",
+          "Equity groups reported separately"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Data completeness",
+            "severity": "watch",
+            "note": "Missing radiograph dates entered by hospital staff."
+          },
+          {
+            "id": "b2",
+            "label": "Secular change in case mix",
+            "severity": "watch",
+            "note": "An outbreak in a shelter would change the contact mix; annotated on the chart."
+          }
+        ],
+        "parsimony": {
+          "score": 82,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 0,
+          "covariateCount": 0,
+          "flags": [
+            "Two process and two balancing measures"
+          ],
+          "simplestPath": "One cohort chart of 60-day completion with changes marked."
+        },
+        "theoreticalFramework": "Lean value stream mapping and standard work.",
+        "summary": "Lean redesign with cohort charts of 60-day completion and equity as a balancing measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[4].role": "balancing",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Run chart and p-chart of 60-day completion by index-case month cohort: 12 baseline cohorts (2026) and 12 improvement cohorts (2027).",
+        "sampleSize": "About 1,300 contacts a year give cohorts of about 100 contacts per index-case month. With a baseline near 71 percent, p-chart limits for cohorts of 100 are about 14 points either side, so single cohorts can show only large changes, but run chart rules detect a sustained 12-point improvement within five to six cohorts (retrieved simulation). A rise to 85 percent held for six cohorts would meet the shift rule by mid-2027. Equity subgroups (about 15 to 25 contacts a month each) are charted quarterly and described, not tested.",
+        "primaryAnalysis": "Run chart of cohort completion with the baseline median; shift, trend and runs rules fixed in advance; p-chart with 3-sigma limits alongside.",
+        "secondaryAnalysis": "Median days to completed evaluation per cohort; cascade losses per step; nurse hours per case; quarterly completion for shelter, shift-working and interpreter-needing contacts.",
+        "missingData": "Cohorts are charted only after the missing-date check; contacts with a missing closure date after checking are counted as not completed and the number is reported.",
+        "multiplicity": "One aim measure; the rest are descriptive.",
+        "software": "Spreadsheet chart template maintained by the program epidemiologist.",
+        "overfittingGuards": [
+          "Rules and baseline fixed before the first change",
+          "Cohorts closed only after 60 days",
+          "No re-baselining until a sustained shift"
+        ],
+        "summary": "Monthly cohorts of about 100 contacts; a sustained 12-point change detectable within about six cohorts."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "cohorts of about 100 contacts"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: changes to how an existing public health service is delivered. Home blood draw carries the usual small risks of venepuncture; privacy risk if contact information leaves the program.",
+        "consent": "Contact evaluation is a public health service; contacts consent to each test as now. Program evaluation uses de-identified extracts under the data steward's approval.",
+        "data": "Contact names stay in the case management system; the extract (DS-114) holds dates and contact type only.",
+        "equity": "PROGRESS-Plus: people in shelters, shift workers, people needing interpreters and people without a phone are the least likely to complete evaluation. The redesign books interpreters for every step, offers evening home visits and shelter-based blood draws, and reports completion for these groups separately each quarter.",
+        "effectiveness": "Success is a sustained rise to at least 85 percent with no fall for the hardest-to-reach contacts.",
+        "efficiency": "Removes two handoffs and repeated calls; nurse visit time rises.",
+        "costs": "Courier pickups within the existing contract; staff time.",
+        "grants": "None needed.",
+        "partnerships": "Shelter staff, a community interpreter service, hospital radiology booking and two people who went through contact evaluation last year.",
+        "rebPath": "Program evaluation under the medical officer of health's approval (MOH-TB-2026-05) with de-identified data; not research requiring REB review, and a publication would follow SQUIRE 2.0.",
+        "limitations": "Before-and-after within one program; radiology booking outside program control.",
+        "summary": "Low-risk service redesign with de-identified evaluation data and equity reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two people who went through contact evaluation last year and a shelter worker review the future-state map and the letters to contacts.",
+        "socialListening": "No social media listening; comments from the program's contact satisfaction cards are read.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "public",
+            "theme": "Taking time off work",
+            "quote": "Composite paraphrase: I work nights; getting to the clinic for blood and then again for the X-ray meant losing two shifts.",
+            "implication": "Offer evening home visits and same-visit booking.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "partner",
+            "theme": "Shelter residents",
+            "quote": "Composite paraphrase: By the time the letter comes, half the people it is for have moved to another shelter.",
+            "implication": "Draw blood in shelters on the first visit.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Lost results",
+            "quote": "Composite paraphrase: The fax goes to the central office, and nobody tells me for a week that my contact was positive.",
+            "implication": "Route results directly to the case nurse.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Language",
+            "quote": "Composite paraphrase: The nurse on the phone had an interpreter, but at the clinic nobody could explain the blood test to my mother.",
+            "implication": "Book interpreters for every step, not only the first call.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on work shifts, shelters, lost results and language."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A Lean redesign of tuberculosis contact evaluation in a city public health program",
+        "abstract": "Problem: 71 percent of contacts completed evaluation within 60 days against a 90 percent target. Intervention: value stream mapping and redesign (home blood draw, direct result routing, same-visit X-ray booking, interpreters at every step). Measures: 60-day completion by index-case month cohort, time to completion, cascade losses, nurse hours and completion for hardest-to-reach contacts. Results will be written after December 2027.",
+        "introduction": "Contact evaluation for tuberculosis loses people at every handoff, most often between a positive test and the radiograph. Lean redesign and home testing improved completion in other programs.",
+        "methods": "Two mapping days produced a future-state map, and changes were introduced one at a time. Completion was charted by index-case month cohort from a checked monthly extract, with rules fixed before the first change.",
+        "results": "No data have been collected yet. The report will show cohort charts with changes marked, cascade losses by step, nurse hours per case and quarterly completion for the hardest-to-reach contacts.",
+        "discussion": "The discussion will relate chart signals to the changes and report equity groups separately. It will state which changes the program keeps.",
+        "limitations": "This is a single program with a before-and-after design. Radiology booking lies outside program control.",
+        "conclusion": "To be written after the last cohort closes. It will report whether the 85 percent aim was met without widening gaps.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE draft; results empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Run the missing-date check on the 2026 extract before freezing the baseline",
+          "Two retrieved program reports are undated and unrated; do not cite their figures as planning values",
+          "Agree evening and shelter visit rules with the nursing team before the first change"
+        ],
+        "improvementNotes": "The study was reopened after the decision was accepted and finished without loss; the two undated reports kept unknown scores throughout.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before the first change."
+      },
+      "note": "Audit fields fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Tuberculosis contact evaluation completion: a Lean redesign of the contact pathway",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[3].relevance": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Tuberculosis contact evaluation completion: a Lean redesign of the contact pathway"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "Unknowns stay null and unrated in the export (G4); S11 for the decision fields; one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items[1].year": {
+              "isNull": true
+            },
+            "scan.items[1].relevance": {
+              "isNull": true
+            },
+            "scan.items[1].methodQuality": {
+              "isNull": true
+            },
+            "scan.items[1].grade": "unrated",
+            "scan.items[3].year": {
+              "isNull": true
+            },
+            "scan.items[3].grade": "unrated",
+            "scan.gradeOverall": "low",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

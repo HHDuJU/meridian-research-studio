@@ -1,6 +1,6 @@
 {
   "id": "sc-022",
-  "version": 1,
+  "version": 2,
   "title": "Hospital headache clinic diaries: two candidate questions, the investigator selects the costing hypothesis over the model's effectiveness pick",
   "field": "neurology",
   "level": 2,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary ambiguity: two candidate questions, and the investigator chooses one at the Hypotheses stage. The need names no design; the single cue 'cost' gives an inferred economic family at create (basis inferred). The retrieved evidence (seven records, one undated and kept null) shows that diary completeness already has a randomised answer, while the costs of the switch do not. The Hypotheses reply offers h1 (completeness, leading towards a comparative study) and h2 (costs and the preventive budget) and selects h1; the investigator selects h2 through the screen (set-field hypotheses.selectedId), which must change the stored selection and flag nothing because no later stage is complete. Questions, Design and the decision follow h2: a cost-consequence analysis with a budget impact estimate, resting on c1 to c4 with both gates met; acceptance is a supported positive and turns the inferred basis into explicit. Claim passages and numbers occur in the cited abstracts; claim c4 carries high uncertainty because it rests on a projection. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 2, 3, 5, 6 (ev-0jym8nd, ev-1j6lhsp, ev-0l7s4zc, ev-0mgm1i4, ev-12ochyc) and titleYearKey hash for records 4, 7 (ev-0a92y8p, ev-0zzzcu5, the latter with year null). Requires S11 (inferred basis at create, explicit on acceptance, decision fields), S13 and D5. Catches: an investigator's selection overwritten or lost on reload, an inferred family treated as explicit before acceptance, a guessed year, and a design that ignores the selected hypothesis.",
   "inputs": {
@@ -808,13 +809,60 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "The hospital's research office classified an evaluation of the switch as a service evaluation on 2026-09-09 (reference SE-NEU-2026-15).",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1310,5 +1358,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-022.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) citing the investigator's own fact before accepting decision 1. Model responses, need and records are unchanged."
 }

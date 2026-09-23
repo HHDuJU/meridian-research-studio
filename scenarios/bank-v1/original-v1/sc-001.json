@@ -1,0 +1,1515 @@
+{
+  "id": "sc-001",
+  "version": 1,
+  "title": "Small-animal clinic group: highest-priority antimicrobial prescribing reduced through PDSA cycles and weekly run charts",
+  "field": "veterinary",
+  "level": 1,
+  "family": "qi-pdsa",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Routine path with clean inputs: a clinical director of four small-animal clinics plans a QI project to cut highest-priority critically important antimicrobial (HPCIA) prescribing. The need names quality improvement and PDSA cycles, so routing is explicit qi-pdsa at create. A fixture search returns seven well-formed records with abstracts (years 2018 to 2024); the appraisal call (shape appraisal) annotates all seven by id and records five source-derived claims whose passages are exact substrings of the abstracts; certainty 'low' is the appraisal's own value over inspected records. The design decision (kind pursue) rests on ledger claims c1 to c3, both gates are met on investigator-supplied records, and the acceptance is a supported positive (selectionStatus accepted, actionStatus ready). Reopen then reload then export after the last stage. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the same rule: the base-36 FNV-1a hash of the normalised DOI for records 1, 3, 4, 6 (ev-0fn6471, ev-1ol309e, ev-193gru4, ev-08d7t6q) and of titleYearKey(title, year) for records 2, 5, 7 without a DOI (ev-1u155gy, ev-1id0a0b, ev-06axgvi). Requires S13 (appraisal dispatched on the production scan path), S11 (selectionStatus, actionStatus, basis on acceptance) and D5 (decision status text on screen). Catches: certainty or completion without retrieval, an appraisal that never reaches the ledger, a decision accepted without ledger support, a balancing measure lost from the protocol, work lost on reopen or reload, and an export that differs from the store.",
+  "inputs": {
+    "need": "I am the clinical director of a group of four small-animal clinics with 19 veterinary surgeons and about 38,000 consultations a year. Our practice management system shows that in the last quarter 27 percent of systemic antimicrobial prescriptions for dogs and cats were highest-priority critically important antimicrobials (HPCIAs), mostly long-acting cefovecin injections for cats and fluoroquinolones for dogs with diarrhoea or a suspected urinary infection. Only 9 percent of the dogs and cats treated for a suspected urinary infection had a urine culture submitted first. Our clinical guideline already says HPCIAs should be kept for cases with a culture and sensitivity result, but nobody measures whether we follow it, and several vets say owners expect an injection and will not come back for tablets.\n\nWe would like to run a quality improvement project with PDSA cycles across the four clinics over about four months. Ideas so far: a one-page prescribing guide in each consult room, a prompt in the practice management system when an HPCIA is selected that asks for the culture result or a reason, free in-house urine culture for suspected cystitis in October and November, and a monthly anonymised feedback email showing each clinic's HPCIA share against the group.\n\nI need help with a clear aim, a measure of HPCIA use that our practice manager can pull every week without reading case notes, balancing measures (re-consultation within seven days for the same problem, owner complaints, and whether vets simply switch to other broad-spectrum drugs such as amoxicillin-clavulanate), and how to show the data on run charts without claiming more than they can show. We are not changing any treatment standard, since the guideline already exists, and we have no external funding. Our head nurse has offered to run short sessions showing owners how to give tablets to cats.",
+    "constraints": "No external funding; all work happens in normal clinic hours. Weekly measures must come from practice management system reports without reading clinical notes. One prescribing prompt can be added by our software administrator; no other changes to the practice management system before 2027.",
+    "localFacts": [
+      "The group's clinical governance committee classified the project as quality improvement not requiring ethical review on 2026-09-08 (record CGC-2026-031).",
+      "The four clinic partners approved a 20-minute monthly feedback slot in each clinic's team meeting from October 2026 to January 2027 (partners' minute PM-2026-09-04).",
+      "The practice management system report builder exports weekly counts of prescriptions by drug, species and clinic.",
+      "Free in-house urine culture is budgeted for October and November 2026 only."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical director of a group of four small-animal clinics with 19 veterinary surgeons and about 38,000 consultations a year. Our practice management system shows that in the last quarter 27 percent of systemic antimicrobial prescriptions for dogs and cats were highest-priority critically important antimicrobials (HPCIAs), mostly long-acting cefovecin injections for cats and fluoroquinolones for dogs with diarrhoea or a suspected urinary infection. Only 9 percent of the dogs and cats treated for a suspected urinary infection had a urine culture submitted first. Our clinical guideline already says HPCIAs should be kept for cases with a culture and sensitivity result, but nobody measures whether we follow it, and several vets say owners expect an injection and will not come back for tablets.\n\nWe would like to run a quality improvement project with PDSA cycles across the four clinics over about four months. Ideas so far: a one-page prescribing guide in each consult room, a prompt in the practice management system when an HPCIA is selected that asks for the culture result or a reason, free in-house urine culture for suspected cystitis in October and November, and a monthly anonymised feedback email showing each clinic's HPCIA share against the group.\n\nI need help with a clear aim, a measure of HPCIA use that our practice manager can pull every week without reading case notes, balancing measures (re-consultation within seven days for the same problem, owner complaints, and whether vets simply switch to other broad-spectrum drugs such as amoxicillin-clavulanate), and how to show the data on run charts without claiming more than they can show. We are not changing any treatment standard, since the guideline already exists, and we have no external funding. Our head nurse has offered to run short sessions showing owners how to give tablets to cats.",
+          "family": "qi-pdsa",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical director of a group of four small-animal clinics"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Highest-priority critically important antimicrobial prescribing in four small-animal clinics",
+        "subtitle": "QI project with PDSA cycles and weekly run charts across a veterinary group",
+        "family": "qi-pdsa",
+        "statement": "In a group of four small-animal clinics, 27 percent of systemic antimicrobial prescriptions for dogs and cats last quarter were highest-priority critically important antimicrobials (HPCIAs), mainly long-acting cefovecin injections in cats and fluoroquinolones in dogs, although the group's own guideline reserves them for cases with a culture and sensitivity result. Only 9 percent of animals treated for a suspected urinary infection had a urine culture first. The project will test whether a change package of a prescribing prompt, a consult-room guide, time-limited free urine culture and monthly clinic feedback reduces the weekly HPCIA share.",
+        "whoAffected": "Dogs and cats treated in the four clinics, their owners, the 19 veterinary surgeons who prescribe, the nursing team who dispense and collect urine samples, and the wider community that relies on HPCIAs staying effective for animals and people.",
+        "whatHurts": "HPCIA use without culture exposes animals to broad-spectrum drugs they may not need and selects for resistance that can pass between pets and the people they live with. Cats with idiopathic cystitis may receive an antimicrobial that cannot help them, and the options left for animals with resistant infections shrink.",
+        "currentPractice": "Prescribing follows individual habit; the written guideline is not measured; cultures are rarely submitted for suspected urinary infections; long-acting injections are chosen for cats that are hard to give tablets to.",
+        "whyNow": "A measured baseline of 27 percent HPCIA use, partners willing to protect monthly meeting time for feedback, and two months of budgeted free urine culture this autumn.",
+        "constraints": "No external funding; all work happens in normal clinic hours. Weekly measures must come from practice management system reports without reading clinical notes. One prescribing prompt can be added by our software administrator; no other changes to the practice management system before 2027.",
+        "patientCenteredGoal": "Every dog and cat that needs an antimicrobial receives the narrowest effective one, guided by culture where it matters, and owners understand why and can give it at home.",
+        "summary": "Problem framed as a group-level QI project to reduce HPCIA prescribing with a change package tested in PDSA cycles."
+      },
+      "expect": {
+        "store": {
+          "title": "Highest-priority critically important antimicrobial prescribing in four small-animal clinics",
+          "subtitle": "QI project with PDSA cycles and weekly run charts across a veterinary group",
+          "family": "qi-pdsa",
+          "problem.statement": {
+            "includes": "27 percent of systemic antimicrobial prescriptions"
+          },
+          "problem.constraints": "No external funding; all work happens in normal clinic hours. Weekly measures must come from practice management system reports without reading clinical notes. One prescribing prompt can be added by our software administrator; no other changes to the practice management system before 2027.",
+          "problem.rawNeed": {
+            "includes": "PDSA cycles"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Highest-priority critically important antimicrobial prescribing in four small-animal clinics"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "highest-priority critically important antimicrobials companion animal practice prescribing prompt feedback urine culture",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Practice management system prompts and highest-priority critically important antimicrobial use in small-animal clinics: a before-after study",
+            "authors": "Lindqvist-Oduya M, Farrant-Achebe J, Tomasz-Reyes K",
+            "year": 2021,
+            "venue": "Companion Animal Stewardship Journal",
+            "doi": "10.5555/casj.2021.0114",
+            "providerType": "journal-article",
+            "abstract": "Background: highest-priority critically important antimicrobials (HPCIAs) are often prescribed in companion animal practice without culture. Methods: three first-opinion small-animal clinics added a prompt to their practice management system that appeared whenever an HPCIA was selected and asked for a culture result or a recorded reason. We compared weekly prescribing for 20 weeks before and 20 weeks after the change. Results: the share of systemic antimicrobial prescriptions that were HPCIAs fell from 24 to 13 percent. The share of amoxicillin-clavulanate rose by 4 percentage points. Re-consultation within seven days for the same problem did not change (8.1 against 8.4 percent). Reasons entered in the prompt were often brief, such as owner cannot give tablets. Conclusions: a prescribing prompt was followed by lower HPCIA use without a rise in re-consultation; substitution towards other broad-spectrum drugs should be monitored."
+          },
+          {
+            "title": "Monthly benchmarking feedback on antimicrobial prescribing to veterinary practices: a controlled before-after comparison",
+            "authors": "Ashworth-Mensah P, Kowalczyk-Idris H",
+            "year": 2019,
+            "venue": "Veterinary Prescribing Review",
+            "providerType": "journal-article",
+            "abstract": "We sent monthly feedback letters to 24 companion animal practices showing each practice's share of prescriptions that were highest-priority critically important antimicrobials against the anonymised distribution of all participating practices; 26 practices that did not receive letters served as a comparison group. Over six months the HPCIA share fell by a relative 18 percent in practices receiving feedback and by 3 percent in comparison practices. The fall was larger in practices with a named stewardship lead. Practices chose whether to take part, and those receiving feedback had higher baseline HPCIA use, so part of the fall may be regression to the mean. No clinical outcomes were measured."
+          },
+          {
+            "title": "Stewardship interventions for highest-priority antimicrobials in first-opinion companion animal practice: a systematic review of fourteen evaluations",
+            "authors": "Nakagawa-Pryce R, Obuya-Lindberg T, Castell-Moreau A",
+            "year": 2023,
+            "venue": "Pellmoor Small Animal Quality Reports",
+            "doi": "10.5555/sapqr.2023.0207",
+            "providerType": "journal-article",
+            "abstract": "We searched four bibliographic databases and two veterinary conference archives to 2022 for evaluations of stewardship interventions in first-opinion companion animal practice. Fourteen studies met the inclusion criteria. Twelve used before-after designs and two had a concurrent comparison group. Guidelines combined with audit and feedback were followed by lower use of highest-priority critically important antimicrobials in nine of ten studies that measured it; guidelines alone showed little change. Only four studies reported re-consultation or treatment failure, and none reported owner-reported outcomes. Heterogeneous indicators prevented pooling. Most studies were at serious risk of bias from secular trends and from practices choosing to take part."
+          },
+          {
+            "title": "Urine culture before antimicrobial treatment in dogs and cats with lower urinary tract signs: submission rates and culture results in first-opinion practice",
+            "authors": "Ferreira-Dunmore L, Haugen-Adeyemi S",
+            "year": 2020,
+            "venue": "Clinical Urology in Companion Animals",
+            "doi": "10.5555/cuca.2020.0056",
+            "providerType": "journal-article",
+            "abstract": "We reviewed consultations for lower urinary tract signs in 1,240 cats and 860 dogs across eleven first-opinion clinics over two years. A urine culture was submitted for 11 percent of cats and 19 percent of dogs before an antimicrobial was prescribed. Of cats with lower urinary tract signs that had a urine culture, 27 percent grew bacteria, compared with 62 percent of cultured dogs. Most cats whose culture grew nothing had already received an antimicrobial on the day of the consultation. Culture cost was the reason most often recorded when owners declined. The authors suggest that routine culture in cats with lower urinary tract signs could avoid many unnecessary prescriptions."
+          },
+          {
+            "title": "Owner expectations of antimicrobials and satisfaction after companion animal consultations: a questionnaire study",
+            "authors": "Whitcombe-Osei D, Marchetti-Lund F",
+            "year": 2022,
+            "venue": "Companion Animal Stewardship Journal",
+            "providerType": "journal-article",
+            "abstract": "We asked 412 dog and cat owners after first-opinion consultations whether they had expected an antimicrobial and how satisfied they were with the visit. Thirty-eight percent had expected an antimicrobial. Satisfaction was similar among owners who received an antimicrobial and those who did not when the veterinary surgeon explained the diagnosis and gave a recheck plan. Owners who expected an antimicrobial, did not receive one and were given no explanation reported the lowest satisfaction. Owners of cats were more likely than owners of dogs to say that giving tablets at home would be difficult. Responses came from four clinics in one region, and the response rate was 46 percent."
+          },
+          {
+            "title": "Weekly extraction of antimicrobial prescribing indicators from practice management systems: agreement with case-note review",
+            "authors": "Dahl-Okafor B, Pennington-Sato M, Iyer-Walsh C",
+            "year": 2024,
+            "venue": "Clinical Veterinary Audit Quarterly",
+            "doi": "10.5555/cvaq.2024.0033",
+            "providerType": "journal-article",
+            "abstract": "We compared antimicrobial prescribing indicators extracted automatically each week from the practice management systems of six small-animal clinics with manual review of the case notes for a random sample of 600 prescriptions. Automated extraction correctly identified the drug class, including highest-priority critically important antimicrobials, for 94 percent of prescriptions. Only 61 percent of prescriptions carried a coded reason, so indicators restricted to a clinical indication, such as suspected urinary infection, needed a free-text search that missed about one case in five. Weekly extraction took about 15 minutes per clinic once the report was built. We recommend drug-class indicators for routine monitoring and periodic manual sampling for indication-specific measures."
+          },
+          {
+            "title": "Why veterinary surgeons choose long-acting cephalosporin injections for cats: a focus group study in first-opinion practice",
+            "authors": "Okonjo-Hartley E, Brandvold-Kaur S",
+            "year": 2018,
+            "venue": "Veterinary Prescribing Review",
+            "providerType": "journal-article",
+            "abstract": "We held six focus groups with 31 veterinary surgeons from first-opinion practices to explore why long-acting cephalosporin injections are chosen for cats. Participants described difficulty giving tablets to cats, doubts about whether owners would complete a course, short consultation times and a fear that owners would move to another practice if sent home with tablets. Several said an injection felt kinder to the cat. Participants suggested that a practical handout on giving tablets, a nurse appointment to demonstrate it and a follow-up telephone call would make them more comfortable prescribing oral first-line drugs. Participants were volunteers who may have held stronger views than their colleagues."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values (see notes). Before any appraisal the records carry no grade and no scores (G1, G4) and are shown as unrated.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0fn6471",
+            "ev-1u155gy",
+            "ev-1ol309e",
+            "ev-193gru4",
+            "ev-1id0a0b",
+            "ev-08d7t6q",
+            "ev-06axgvi"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-0fn6471",
+          "scan.items[0].doi": "10.5555/casj.2021.0114",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].id": "ev-1u155gy",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[6].id": "ev-06axgvi",
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Practice management system prompts and highest-priority critically important antimicrobial use in small-animal clinics: a before-after study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0fn6471",
+            "relevance": 90,
+            "methodQuality": 50,
+            "kind": "qi-report",
+            "grade": "low",
+            "keyFindings": "A prescribing prompt was followed by a fall in the HPCIA share from 24 to 13 percent over 20 weeks in three clinics, with amoxicillin-clavulanate up 4 points and no change in 7-day re-consultation.",
+            "limitations": "Uncontrolled before-after comparison in three clinics; no adjustment for season; reasons entered were brief.",
+            "contextTags": [
+              "prescribing prompt",
+              "before-after",
+              "small-animal clinics",
+              "substitution"
+            ]
+          },
+          {
+            "id": "ev-1u155gy",
+            "relevance": 82,
+            "methodQuality": 56,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Monthly benchmarking letters were followed by a relative 18 percent fall in the HPCIA share against 3 percent in comparison practices, larger where a named stewardship lead existed.",
+            "limitations": "Self-selected practices with higher baseline use; regression to the mean possible; no clinical outcomes.",
+            "contextTags": [
+              "audit and feedback",
+              "benchmarking",
+              "controlled before-after"
+            ]
+          },
+          {
+            "id": "ev-1ol309e",
+            "relevance": 78,
+            "methodQuality": 64,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Guidelines combined with audit and feedback were followed by lower HPCIA use in nine of ten studies that measured it; guidelines alone showed little change.",
+            "limitations": "Twelve of fourteen studies were before-after designs at serious risk of bias; indicators too heterogeneous to pool; search ended in 2022.",
+            "contextTags": [
+              "systematic review",
+              "stewardship",
+              "feedback"
+            ]
+          },
+          {
+            "id": "ev-193gru4",
+            "relevance": 76,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Cultures were submitted for 11 percent of cats and 19 percent of dogs with lower urinary tract signs; 27 percent of cultured cats and 62 percent of cultured dogs grew bacteria.",
+            "limitations": "Clinics self-selected; reasons for not culturing recorded inconsistently.",
+            "contextTags": [
+              "urine culture",
+              "feline lower urinary tract signs",
+              "diagnostic stewardship"
+            ]
+          },
+          {
+            "id": "ev-1id0a0b",
+            "relevance": 60,
+            "methodQuality": 42,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Owner satisfaction did not depend on receiving an antimicrobial when the diagnosis was explained and a recheck plan given; cat owners more often expected difficulty giving tablets.",
+            "limitations": "Single region, 46 percent response, self-reported expectations after the visit.",
+            "contextTags": [
+              "owner expectations",
+              "communication",
+              "balancing measure"
+            ]
+          },
+          {
+            "id": "ev-08d7t6q",
+            "relevance": 86,
+            "methodQuality": 63,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Weekly drug-class indicators extracted from practice management systems matched case-note review for 94 percent of prescriptions; indication-specific indicators were unreliable because only 61 percent had a coded reason.",
+            "limitations": "Six clinics using two software systems; one reviewer per note.",
+            "contextTags": [
+              "measurement",
+              "operational definition",
+              "practice management system"
+            ]
+          },
+          {
+            "id": "ev-06axgvi",
+            "relevance": 70,
+            "methodQuality": 52,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Veterinary surgeons chose long-acting injections for cats because tablets are hard to give, courses may not be completed, consultations are short and owners might leave; they wanted tablet-giving support from nurses.",
+            "limitations": "Volunteer participants; one country; no owner perspective.",
+            "contextTags": [
+              "prescriber behaviour",
+              "cats",
+              "nurse support"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In three small-animal clinics, the share of systemic antimicrobial prescriptions that were HPCIAs fell from 24 to 13 percent over 20 weeks after a prescribing prompt was introduced.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0fn6471"
+            ],
+            "location": "Abstract, results",
+            "passage": "the share of systemic antimicrobial prescriptions that were HPCIAs fell from 24 to 13 percent",
+            "interpretation": "Supports the prompt as the first change idea; uncontrolled, so the size of change is a planning value only.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Practices receiving monthly benchmarking feedback reduced their HPCIA share by a relative 18 percent over six months, against 3 percent in comparison practices.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1u155gy"
+            ],
+            "location": "Abstract",
+            "passage": "Over six months the HPCIA share fell by a relative 18 percent in practices receiving feedback and by 3 percent in comparison practices.",
+            "interpretation": "Supports monthly clinic feedback as part of the change package.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Drug-class indicators extracted weekly from practice management systems matched case-note review for 94 percent of prescriptions.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-08d7t6q"
+            ],
+            "location": "Abstract",
+            "passage": "Automated extraction correctly identified the drug class, including highest-priority critically important antimicrobials, for 94 percent of prescriptions.",
+            "interpretation": "The weekly HPCIA share can be measured without reading notes; indication-specific measures need manual sampling.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c4",
+            "text": "Among cats with lower urinary tract signs that were cultured, only 27 percent grew bacteria.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-193gru4"
+            ],
+            "location": "Abstract, results",
+            "passage": "Of cats with lower urinary tract signs that had a urine culture, 27 percent grew bacteria, compared with 62 percent of cultured dogs.",
+            "interpretation": "Free culture in cats is likely to show that many treated cats had no bacterial infection.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Veterinary surgeons chose long-acting injections for cats because of tablet difficulty, doubts about course completion, short consultations and fear of losing clients.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-06axgvi"
+            ],
+            "location": "Abstract",
+            "passage": "Participants described difficulty giving tablets to cats, doubts about whether owners would complete a course, short consultation times and a fear that owners would move to another practice if sent home with tablets.",
+            "interpretation": "Tablet-giving support for owners belongs in the change package.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. A prescribing prompt (24 to 13 percent) and monthly benchmarking feedback (relative fall of 18 against 3 percent) were each followed by lower HPCIA use, and a review of fourteen mostly uncontrolled studies found guidelines work mainly when combined with feedback. Weekly drug-class indicators can be extracted reliably from practice software, while indication-specific indicators cannot. Most cultured cats with urinary signs grew nothing. Prescribers choose injections for cats largely because tablets are hard to give, and owners stay satisfied when the reason for not prescribing is explained. No record measured clinical outcomes beyond re-consultation, and substitution towards amoxicillin-clavulanate was seen after a prompt.",
+        "gradeOverall": "low",
+        "gradeRationale": "Consistent direction across a before-after report, a controlled before-after comparison and a review of mostly uncontrolled studies, but serious risk of bias from secular trends and self-selection and no clinical outcome data. Certainty that the change package lowers HPCIA use is low; certainty about effects on animal outcomes is very low.",
+        "summary": "Seven retrieved records appraised; five source-derived claims recorded with passages; overall certainty low."
+      },
+      "note": "Annotations and claims reach the store only when the production scan path dispatches the appraisal payload to the appraisal mapper (S13). Certainty is the appraisal's own value over seven retrieved records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].relevance": 90,
+          "scan.items[0].methodQuality": 50,
+          "scan.items[0].kind": "qi-report",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[4].grade": "very-low",
+          "scan.items[5].grade": "moderate",
+          "scan.items[5].keyFindings": {
+            "includes": "94 percent"
+          },
+          "scan.items[6].kind": "qualitative",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].id": "c1",
+          "scan.claims[0].kind": "source-derived",
+          "scan.claims[0].sourceIds": [
+            "ev-0fn6471"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-08d7t6q"
+          ],
+          "scan.claims[2].uncertainty": "low",
+          "scan.claims[4].sourceIds": [
+            "ev-06axgvi"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.synthesis": {
+            "includes": "Seven retrieved records"
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "four small-animal clinics, 19 veterinary surgeons",
+          "practice management system with a report builder",
+          "group guideline reserving HPCIAs for cultured cases",
+          "free urine culture budgeted for October and November 2026"
+        ],
+        "reading": "HPCIA use sits where a hard-to-tablet cat, a short consultation and an owner's expectation meet a prescribing screen that asks nothing. The retrieved evidence links a prescribing prompt and monthly benchmarking feedback to lower HPCIA use and shows that drug-class indicators can be extracted weekly while indication-specific ones cannot. Culture matters most in cats, where most cultured cases grow nothing. The main risks are substitution towards amoxicillin-clavulanate and owners who cannot give tablets; nurses are part of the mechanism, not bystanders.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Long-acting cefovecin injections for cats",
+            "kind": "context",
+            "detail": "Largest single source of HPCIA prescriptions."
+          },
+          {
+            "id": "n2",
+            "label": "Fluoroquinolones for diarrhoea and suspected urinary infection in dogs",
+            "kind": "context",
+            "detail": "Second source of HPCIA prescriptions."
+          },
+          {
+            "id": "n3",
+            "label": "Change package: prompt, guide, free culture, monthly feedback",
+            "kind": "framework",
+            "detail": "Tested and revised in PDSA cycles."
+          },
+          {
+            "id": "n4",
+            "label": "Before-after report on a prescribing prompt",
+            "kind": "qi-report",
+            "detail": "HPCIA share 24 to 13 percent (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Controlled comparison of benchmarking feedback",
+            "kind": "observational",
+            "detail": "Relative fall of 18 against 3 percent (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Weekly HPCIA share of systemic antimicrobial prescriptions",
+            "kind": "outcome",
+            "detail": "Outcome measure for the run chart (claim c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Owners who find tablets hard to give",
+            "kind": "stakeholder",
+            "detail": "Drive the choice of injections (claim c5)."
+          },
+          {
+            "id": "n8",
+            "label": "Veterinary nurses",
+            "kind": "stakeholder",
+            "detail": "Demonstrate tablet giving and collect urine samples."
+          },
+          {
+            "id": "n9",
+            "label": "Amoxicillin-clavulanate share",
+            "kind": "outcome",
+            "detail": "Substitution to watch as a balancing measure."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n6",
+            "relation": "raises"
+          },
+          {
+            "from": "n2",
+            "to": "n6",
+            "relation": "raises"
+          },
+          {
+            "from": "n3",
+            "to": "n6",
+            "relation": "expected to lower"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "supports the prompt in"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "supports the feedback in"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "drives choice of"
+          },
+          {
+            "from": "n8",
+            "to": "n7",
+            "relation": "can support"
+          },
+          {
+            "from": "n3",
+            "to": "n9",
+            "relation": "may raise"
+          }
+        ],
+        "summary": "Map joins HPCIA prescribing to the consultation pressures behind it, the retrieved evidence for a prompt and feedback, and the substitution risk."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.contexts": {
+            "length": 4
+          },
+          "map.nodes[2].kind": "framework",
+          "map.nodes[3].kind": "qi-report",
+          "map.reading": {
+            "includes": "amoxicillin-clavulanate"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No weekly baseline of the HPCIA share",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The 27 percent figure is one quarter's total; without weekly points a run chart cannot separate a real shift from ordinary variation or seasonal change.",
+            "opportunity": "Extract the previous 12 weeks from the report builder before cycle 1 as the baseline series."
+          },
+          {
+            "id": "g2",
+            "title": "Indication-specific measures cannot be extracted reliably",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Only about six in ten prescriptions carry a coded reason (claim c3), so a weekly culture-before-treatment measure would be biased.",
+            "opportunity": "Keep the drug-class share as the outcome measure and sample 30 urinary consultations per clinic each month by hand."
+          },
+          {
+            "id": "g3",
+            "title": "Substitution towards other broad-spectrum drugs",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "After a prompt, amoxicillin-clavulanate use rose, so a fall in HPCIA use could hide a shift rather than better prescribing.",
+            "opportunity": "Track the amoxicillin-clavulanate share weekly as a balancing measure."
+          },
+          {
+            "id": "g4",
+            "title": "Owners who cannot afford culture or cannot give tablets",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Culture cost is the commonest reason owners decline it, and older or disabled owners may be unable to give tablets to a cat, so the change could push costs or failure onto them.",
+            "opportunity": "Offer free culture during the cycles, nurse tablet-giving appointments, and report culture uptake by clinic."
+          },
+          {
+            "id": "g5",
+            "title": "Season and other stewardship campaigns",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Urinary and gastrointestinal presentations vary by season and a professional campaign could lower HPCIA use regardless of the project.",
+            "opportunity": "Annotate the run chart and compare with the same months of last year."
+          }
+        ],
+        "errorsFound": [
+          "The need implies that lower HPCIA use means better outcomes for animals; the retrieved evidence shows lower use without more re-consultation, not improved clinical outcomes."
+        ],
+        "reevaluation": "The gaps point to a measurement-first QI project: a retrospective weekly baseline, a drug-class outcome measure, substitution tracked as a balancing measure, and support for owners who cannot give tablets.",
+        "summary": "Five gaps: missing baseline series, unreliable indication coding, substitution, owner cost and capability, and secular change."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No weekly baseline of the HPCIA share"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "The change package will reduce the weekly group HPCIA share of systemic antimicrobial prescriptions from about 27 percent to 15 percent or less by the end of January 2027 without raising 7-day re-consultation.",
+            "novelty": 25,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 88,
+            "parsimony": 84,
+            "rationale": "Need is high because the guideline is not followed; novelty is low, which suits local improvement; feasibility and parsimony are high because the measure comes from an existing report and the changes use existing meetings and staff.",
+            "risks": "Substitution towards amoxicillin-clavulanate, brief prompt reasons that change nothing, and a fall in use after the free culture period."
+          },
+          {
+            "id": "h2",
+            "statement": "Free in-house urine culture will raise culture submission before treatment for suspected urinary infection in cats from about 9 percent to 40 percent or more while it is offered.",
+            "novelty": 35,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Culture cost is the commonest recorded reason for not culturing, and most cultured cats grow nothing (claim c4).",
+            "risks": "Needs manual sampling to measure; effect may end when culture is charged again."
+          },
+          {
+            "id": "h3",
+            "statement": "Monthly clinic feedback alone, without the prescribing prompt, would achieve most of the reduction.",
+            "novelty": 40,
+            "need": 50,
+            "practiceChange": 55,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Feedback was followed by a relative fall of 18 percent in one controlled comparison (claim c2).",
+            "risks": "Separating the components would need more cycles and clinics than the group has."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses ranked; h1 selected as the simplest test of the whole change package."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].feasibility": 88,
+          "hypotheses.items[1].need": 70,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "27 percent to 15 percent or less"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Across the four clinics, does a change package of a prescribing prompt, a consult-room guide, free urine culture in October and November, owner tablet-giving support and monthly clinic feedback, tested in PDSA cycles from October 2026 to January 2027, reduce the weekly share of systemic antimicrobial prescriptions that are HPCIAs from about 27 percent to 15 percent or less?",
+            "framework": "QI-aim",
+            "population": "Systemic antimicrobial prescriptions for dogs and cats in the four clinics",
+            "intervention": "Prescribing prompt, consult-room guide, free urine culture for two months, nurse tablet-giving appointments and monthly clinic feedback",
+            "comparator": "Twelve-week baseline extracted from the practice management system",
+            "outcome": "Weekly HPCIA share of systemic antimicrobial prescriptions from the report builder",
+            "time": "Twelve baseline weeks, then 16 weeks of PDSA cycles",
+            "setting": "Four first-opinion small-animal clinics"
+          }
+        ],
+        "finer": "Feasible within existing reports, meetings and staff; interesting to the partners and nurses; novel only locally, which suits QI; ethical under the governance classification; relevant because the guideline is not followed.",
+        "summary": "One SMART QI aim with a time-bound target and a weekly run-chart measure."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "questions.items[0].comparator": "Twelve-week baseline extracted from the practice management system",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-pdsa",
+        "rationale": "The aim is local improvement of prescribing with rapid learning, not a generalisable effect estimate. PDSA cycles with a weekly run chart fit the group's volume (about 90 systemic antimicrobial prescriptions a week), let the team revise the prompt wording and the guide between cycles, and use run chart rules to separate a real shift from noise. The retrieved evidence supports the prompt (c1) and feedback (c2) as change ideas and the drug-class measure (c3). Reporting follows SQUIRE 2.0.",
+        "alternatives": [
+          "Stepped introduction across the four clinics with a formal comparison (refused: four clinics give no usable comparison and the aim is local)",
+          "Monthly feedback only without the prompt (kept as a fallback if the prompt is unworkable)",
+          "Comparing two annual totals before and after (refused: cannot separate change from season)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0",
+          "Model for Improvement"
+        ],
+        "whyNotMoreComplex": "A controlled or cluster design would need many more practices to estimate an effect the group does not need to generalise; the run chart answers whether these clinics improved and keeps the change package adaptable.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run the stewardship change package in PDSA cycles across the four clinics from October 2026 to January 2027, measuring the weekly HPCIA share from the report builder on a run chart with amoxicillin-clavulanate share and 7-day re-consultation as balancing measures.",
+          "question": "Should the group run a QI project to reduce HPCIA prescribing with a prompt, a guide, free culture and monthly feedback?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A prescribing prompt and monthly feedback have each been followed by lower HPCIA use in comparable practices.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The outcome can be measured weekly from practice software without reading notes.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "A national or regional stewardship campaign is running in the same months and would make local change impossible to read.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Clinical governance classification of the project as quality improvement",
+              "status": "met",
+              "evidence": "Record CGC-2026-031 dated 2026-09-08, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Partners' approval of a monthly feedback slot in each clinic's team meeting",
+              "status": "met",
+              "evidence": "Partners' minute PM-2026-09-04 for October 2026 to January 2027, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Monthly feedback only without the prompt",
+            "Prompt only in the two clinics with the highest HPCIA share"
+          ],
+          "note": "Rests on ledger claims c1 to c3, each from a retrieved record, and on the investigator's governance and partners' records for the two gates."
+        },
+        "summary": "QI with PDSA cycles and weekly run charts recommended; the decision rests on three ledger claims from retrieved records and both gates are met on investigator-supplied records."
+      },
+      "note": "The decision cites ledger claims c1 to c3, which exist only when the appraisal was applied (S13). selectionStatus requires S11; the status text 'proposed' in the decision panel requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-pdsa",
+          "family": "qi-pdsa",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].criteria[0].claimIds": [
+            "c1",
+            "c2"
+          ],
+          "design.decisions[-1].criteria[1].claimIds": [
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: the claims exist in the ledger and rest on retrieved records, and both gates are met on investigator-supplied records, so the selection is accepted and the action is ready (G7). selectionStatus, actionStatus and basis 'explicit' on acceptance require S11; the claims require S13; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "qi-pdsa"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "A group-level QI project using the Model for Improvement: a 12-week retrospective weekly baseline from the report builder, then four PDSA cycles of about four weeks each that introduce and refine the prescribing prompt, the consult-room guide, free urine culture and monthly clinic feedback.",
+        "population": "All systemic antimicrobial prescriptions for dogs and cats in the four clinics from July 2026 to January 2027; topical and ophthalmic products are excluded.",
+        "exposure": "Change package: a prompt when an HPCIA is selected (culture result or a reason from a pick-list plus free text), a one-page guide in each consult room, free in-house urine culture for suspected cystitis in October and November, nurse tablet-giving appointments for cat owners, and a monthly anonymised feedback email with each clinic's HPCIA share against the group.",
+        "procedures": "Cycle 1 (October): prompt and guide in the two clinics with the highest baseline share. Cycle 2 (November): all four clinics, prompt reasons reviewed and the pick-list revised. Cycle 3 (December): nurse tablet-giving appointments added. Cycle 4 (January): feedback continues after free culture ends. The practice manager runs the weekly report every Monday; the head nurse samples 30 urinary consultations per clinic each month by hand.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "HPCIA share",
+            "measure": "Weekly number of systemic antimicrobial prescriptions that are HPCIAs (third-generation cephalosporins including cefovecin, fluoroquinolones, polymyxins) divided by all systemic antimicrobial prescriptions for dogs and cats, from the report builder",
+            "timing": "Weekly; 12 baseline and 16 intervention weeks",
+            "why": "Directly measures the prescribing the guideline restricts and is extractable without reading notes (claim c3).",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "process",
+            "name": "Culture before treatment for urinary signs",
+            "measure": "Monthly manual sample of 30 consultations per clinic with lower urinary tract signs: proportion with a urine culture submitted before any antimicrobial",
+            "timing": "Monthly, September to January",
+            "why": "Shows whether the free culture change was used.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Prompt reasons recorded",
+            "measure": "Proportion of HPCIA prescriptions with a culture result or pick-list reason entered",
+            "timing": "Weekly during cycles",
+            "why": "Separates a failed idea from a prompt that is clicked through.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Amoxicillin-clavulanate share",
+            "measure": "Weekly amoxicillin-clavulanate prescriptions divided by all systemic antimicrobial prescriptions",
+            "timing": "Weekly, baseline and intervention",
+            "why": "Substitution towards another broad-spectrum drug would hide a shift rather than better prescribing.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Re-consultation within 7 days",
+            "measure": "Proportion of consultations for diarrhoea or lower urinary tract signs followed by a re-consultation for the same problem within 7 days",
+            "timing": "Monthly",
+            "why": "Animals left untreated or given a narrower drug must not do worse.",
+            "patientCentered": true
+          },
+          {
+            "id": "o6",
+            "role": "balancing",
+            "name": "Owner complaints about prescribing",
+            "measure": "Count of complaints mentioning antimicrobials or injections logged by reception",
+            "timing": "Monthly",
+            "why": "Owner acceptance is part of whether the change can last.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 15 minutes a week of practice manager time for the report, about two hours a month of head nurse time for sampling, the approved 20-minute monthly feedback slot and one prompt configured by the software administrator.",
+        "biasMitigation": [
+          "Fixed list of HPCIA products and a written operational definition before the baseline is extracted",
+          "Same report run every Monday by the same person",
+          "Random selection of sampled urinary consultations from the week's list",
+          "Annotated run chart recording cycle changes, staffing changes and outside campaigns"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Secular and seasonal change",
+            "severity": "watch",
+            "note": "Compare with the same months last year and annotate the chart."
+          },
+          {
+            "id": "b2",
+            "label": "Substitution",
+            "severity": "watch",
+            "note": "Tracked through the amoxicillin-clavulanate share."
+          },
+          {
+            "id": "b3",
+            "label": "Coding drift in the report",
+            "severity": "ok",
+            "note": "Drug-class extraction does not depend on coded reasons."
+          }
+        ],
+        "parsimony": {
+          "score": 84,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 0,
+          "covariateCount": 0,
+          "flags": [
+            "Two process and three balancing measures; no effect claims beyond the aim"
+          ],
+          "simplestPath": "One outcome measure from an existing report, four short cycles, existing meetings and staff."
+        },
+        "theoreticalFramework": "Model for Improvement with PDSA cycles; no additional framework is needed.",
+        "summary": "Four PDSA cycles after a 12-week retrospective baseline; one outcome measure, two process and three balancing measures."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 6
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": false,
+          "protocol.outcomes[3].role": "balancing",
+          "protocol.outcomes[4].patientCentered": true,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "protocol.parsimony.score": 84,
+          "protocol.biasFlags": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Weekly group run chart of the HPCIA share with the baseline median as centre line, a p-chart as a secondary display, and monthly per-clinic charts for feedback.",
+        "sampleSize": "The group writes about 90 systemic antimicrobial prescriptions a week, so a weekly group point rests on about 90 prescriptions. With a baseline near 27 percent, a p-chart with subgroups of 90 has 3-sigma limits about 14 percentage points either side of the centre line; weekly points per clinic (about 22 prescriptions) would have limits near 28 points, too wide for feedback, so clinic feedback uses monthly points (about 95 prescriptions each). A fall to 15 percent held for six consecutive weeks triggers the shift rule, which is the smallest change the partners consider worth keeping; 12 baseline and 16 intervention points allow it to trigger during cycle 2 or 3.",
+        "primaryAnalysis": "Run chart of the weekly group HPCIA share judged by pre-specified rules: a shift of six or more consecutive points below the baseline median, a trend of five or more consecutive decreases, too few runs, or an astronomical point agreed by the team. The median is frozen after baseline and recalculated only after a sustained shift.",
+        "secondaryAnalysis": "p-chart of the same data; run charts of the amoxicillin-clavulanate share and prompt reasons; monthly charts of culture before treatment, 7-day re-consultation and owner complaints; monthly per-clinic HPCIA charts for feedback only.",
+        "missingData": "Weeks with a report failure are re-run the same day; if a week cannot be extracted it is left as a gap on the chart and annotated, never imputed.",
+        "multiplicity": "One outcome measure carries the aim; process and balancing measures are descriptive and are not tested for significance.",
+        "software": "Spreadsheet run chart template kept by the practice manager; charts checked by the clinical director.",
+        "overfittingGuards": [
+          "Run chart rules and HPCIA product list fixed before the baseline is extracted",
+          "Baseline median frozen until a sustained shift",
+          "No per-clinic significance testing",
+          "Cycle changes marked on the chart before later points are examined"
+        ],
+        "summary": "Weekly group run chart with pre-specified rules; about 90 prescriptions per point; clinic feedback monthly because weekly clinic points are too noisy."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "14 percentage points"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: the project measures adherence to an existing guideline and changes how prescribing choices are prompted and discussed. The main risks are an animal that needs an HPCIA being delayed, which the prompt avoids by allowing any documented reason, and blame if clinic or individual data are shared; feedback is by clinic and anonymised.",
+        "consent": "Owners are told through consult-room notices that the clinics are working to use antimicrobials more carefully; treatment decisions remain with the veterinary surgeon and the owner. Staff take part as part of normal work and no individual prescribing data are shown to others.",
+        "data": "Weekly counts by drug class, species and clinic only; manual samples record consultation date, clinic and culture submission without owner names; data are kept on the group's restricted drive and deleted after the SQUIRE report.",
+        "equity": "PROGRESS-Plus: owners on low incomes are most affected by culture cost, and older owners or owners with disabilities may be unable to give tablets to a cat. Free culture during the cycles, nurse tablet-giving appointments and an injection option with a recorded reason protect these owners, and culture uptake is reported by clinic because the clinics serve areas with different incomes.",
+        "effectiveness": "Success means a sustained shift in the HPCIA share with a stable amoxicillin-clavulanate share and no rise in 7-day re-consultation; a failed balancing measure leads to a revised cycle, not a claim of success.",
+        "efficiency": "About 15 minutes of report time a week, two hours of sampling a month and existing meeting time; free culture is already budgeted.",
+        "costs": "Free culture for two months within the existing budget, printing of guides, and staff time within normal hours.",
+        "grants": "None needed; a veterinary stewardship award could fund spread to partner practices.",
+        "partnerships": "Practice manager (weekly report), head nurse (sampling and tablet-giving appointments), software administrator (prompt), and two owner representatives from the clinics' client panel (wording of notices and handouts).",
+        "rebPath": "Classified by the group's clinical governance committee as quality improvement not requiring ethical review (CGC-2026-031); no animal undergoes any procedure outside normal care, so no animal ethics committee review is needed. A later publication follows SQUIRE 2.0.",
+        "limitations": "Four clinics in one group, no concurrent comparison, and an outcome measure that is a prescribing process rather than animal health.",
+        "summary": "Minimal-risk QI with clinic-level feedback, protection for owners facing cost or tablet difficulty, and a completed governance classification."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "CGC-2026-031"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two owner representatives review the consult-room notice and the tablet-giving handout before cycle 1; the head nurse and one veterinary surgeon per clinic join the monthly feedback review.",
+        "socialListening": "No social media listening; the clinics' own review pages and complaint log from the last year are read for comments on injections, tablets and antibiotics.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Giving tablets to a cat",
+            "quote": "Composite paraphrase: I cannot get a tablet into her without being scratched; the injection was the only thing that worked for us.",
+            "implication": "Offer nurse tablet-giving appointments and keep an injection option with a recorded reason.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Being told why",
+            "quote": "Composite paraphrase: I did not mind leaving without antibiotics once the vet explained the diarrhoea should settle and told me when to come back.",
+            "implication": "Put an explanation and a recheck plan in the consult-room guide.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Time in the consultation",
+            "quote": "Composite paraphrase: At ten minutes a consult, a pop-up that needs a paragraph will just get owner request typed into it.",
+            "implication": "Use a short pick-list of reasons with optional free text and review the reasons each cycle.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Nursing time",
+            "quote": "Composite paraphrase: If we are the ones showing owners how to give tablets, we need an appointment slot, not five minutes at the desk.",
+            "implication": "Schedule nurse tablet-giving appointments from cycle 3.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "partner",
+            "theme": "Keeping the measure stable",
+            "quote": "Composite paraphrase: I can pull the weekly report in a quarter of an hour, but only if the drug list is fixed before we start.",
+            "implication": "Fix the HPCIA product list in the operational definition before the baseline.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices shaping tablet support, owner explanation, the prompt design, nursing time and the fixed measure."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[0].source": "family",
+          "voices.items[0].verification": "ai-lead",
+          "voices.items[4].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Reducing highest-priority critically important antimicrobial prescribing in four small-animal clinics: a quality improvement project",
+        "abstract": "Problem: in a group of four small-animal clinics, 27 percent of systemic antimicrobial prescriptions for dogs and cats were highest-priority critically important antimicrobials, against a guideline that reserves them for cultured cases. Intervention: a prescribing prompt, a consult-room guide, time-limited free urine culture, owner tablet-giving support and monthly clinic feedback, tested in four PDSA cycles. Measures: weekly HPCIA share on a run chart, with amoxicillin-clavulanate share, 7-day re-consultation and owner complaints as balancing measures. Results and conclusions will be written after 16 intervention weeks.",
+        "introduction": "HPCIAs are prescribed in companion animal practice more often than guidelines advise, often without culture and often as long-acting injections for cats. Prompts and feedback have been followed by lower use in single-practice and small controlled reports, but substitution and clinical outcomes are rarely measured.",
+        "methods": "Model for Improvement with four PDSA cycles from October 2026 to January 2027 after a 12-week retrospective baseline. The weekly HPCIA share comes from the practice management system report builder using a fixed product list; run chart rules were fixed before the baseline was extracted. Culture before treatment is sampled by hand monthly. The project was classified as quality improvement by the group's clinical governance committee.",
+        "results": "No data have been collected yet. The report will present the annotated weekly run chart, the p-chart, the balancing and process measure charts, and prompt reasons by cycle.",
+        "discussion": "The discussion will interpret any shift against the run chart rules and recorded co-interventions, compare its size with the retrieved prompt and feedback reports, examine substitution, and state what the group will keep after free culture ends.",
+        "limitations": "Four clinics in one group; no concurrent comparison; an outcome measure of prescribing rather than animal health; indication-specific measures rest on monthly samples.",
+        "conclusion": "To be written after the final cycle; it will be limited to prescribing in these clinics and will not claim effects on resistance or animal outcomes.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE-structured draft with results left empty until data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Fix the HPCIA product list and the operational definition with the practice manager before the baseline is extracted",
+          "Run an identity check on the seven retrieved records before the SQUIRE report cites them",
+          "Add the date of each prompt and guide revision to the run chart template"
+        ],
+        "improvementNotes": "Seven records came from a recorded search and were appraised at abstract level; the decision rests on three ledger claims with passages from those abstracts. No record has an identity check yet, and the aim makes no claim about resistance or animal outcomes.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before the baseline; evidence retrieved and appraised at abstract level but not yet identity-checked."
+      },
+      "note": "audit.openFixes, audit.lastReview and audit.improvementNotes state the correct behaviour; at 875fe59 they fail because store.ts mergeStage writes 'audit: { ...s.audit, entries }' after the stage patch, so the audit stage's own patch is overwritten (A3 L1.6, a store defect rather than a work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "three ledger claims"
+          },
+          "audit.entries": {
+            "min": 13
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen from the home list after all 13 stages; statuses are checked in the export because the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Highest-priority critically important antimicrobial prescribing in four small-animal clinics",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "protocol.outcomes": {
+            "length": 6
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "complete"
+        },
+        "screen": {
+          "includes": [
+            "Highest-priority critically important antimicrobial prescribing in four small-animal clinics"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Browser reload on the same route after the reopen; the persisted study must be unchanged.",
+      "expect": {
+        "store": {
+          "title": "Highest-priority critically important antimicrobial prescribing in four small-animal clinics",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.retrievalEvents[0].resultCount": 7,
+          "design.decisions": {
+            "length": 1
+          },
+          "voices.items": {
+            "length": 5
+          }
+        },
+        "screen": {
+          "includes": [
+            "Highest-priority critically important antimicrobial prescribing in four small-animal clinics"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; scan.claims requires S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "needsReview": [],
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents[0].recordIds": [
+              "ev-0fn6471",
+              "ev-1u155gy",
+              "ev-1ol309e",
+              "ev-193gru4",
+              "ev-1id0a0b",
+              "ev-08d7t6q",
+              "ev-06axgvi"
+            ],
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 5
+            },
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c2",
+              "c3"
+            ],
+            "protocol.outcomes[0].role": "primary",
+            "problem.rawNeed": "I am the clinical director of a group of four small-animal clinics with 19 veterinary surgeons and about 38,000 consultations a year. Our practice management system shows that in the last quarter 27 percent of systemic antimicrobial prescriptions for dogs and cats were highest-priority critically important antimicrobials (HPCIAs), mostly long-acting cefovecin injections for cats and fluoroquinolones for dogs with diarrhoea or a suspected urinary infection. Only 9 percent of the dogs and cats treated for a suspected urinary infection had a urine culture submitted first. Our clinical guideline already says HPCIAs should be kept for cases with a culture and sensitivity result, but nobody measures whether we follow it, and several vets say owners expect an injection and will not come back for tablets.\n\nWe would like to run a quality improvement project with PDSA cycles across the four clinics over about four months. Ideas so far: a one-page prescribing guide in each consult room, a prompt in the practice management system when an HPCIA is selected that asks for the culture result or a reason, free in-house urine culture for suspected cystitis in October and November, and a monthly anonymised feedback email showing each clinic's HPCIA share against the group.\n\nI need help with a clear aim, a measure of HPCIA use that our practice manager can pull every week without reading case notes, balancing measures (re-consultation within seven days for the same problem, owner complaints, and whether vets simply switch to other broad-spectrum drugs such as amoxicillin-clavulanate), and how to show the data on run charts without claiming more than they can show. We are not changing any treatment standard, since the guideline already exists, and we have no external funding. Our head nurse has offered to run short sessions showing owners how to give tablets to cats."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

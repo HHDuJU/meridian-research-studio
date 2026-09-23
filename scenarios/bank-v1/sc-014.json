@@ -1,6 +1,6 @@
 {
   "id": "sc-014",
-  "version": 1,
+  "version": 2,
   "title": "Telephone day 3 review during spinal cord stimulator trials: a cost-consequence analysis of a pain service pathway change",
   "field": "pain-medicine",
   "level": 1,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Routine path with clean inputs and one clear design: a regional pain service evaluates the costs and consequences of replacing the in-person day 3 visit during spinal cord stimulator trials with a structured nurse telephone review. The need names an economic evaluation, so routing at create is economic (explicit under the 875fe59 classifier and under the A1-B evidence-mention rule). The problem reply repeats the investigator's constraints word for word, so no G11 issue arises. A fixture search returns seven records with abstracts (years 2016 to 2025); the appraisal (shape \"appraisal\") annotates all seven by id and records five source-derived claims whose passages are exact substrings of the abstracts and whose numbers all occur in the cited abstracts; certainty \"low\" is the appraisal's own value over inspected records. The design reply recommends a cost-consequence analysis (economic) resting on claims c1 to c4 with both gates met on investigator-supplied records (determination SE-2026-077, costing memo FIN-PM-2026-14), and the investigator's acceptance is a supported positive (selection accepted, action ready). Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59 (never typed by hand): the base-36 FNV-1a hash of the normalised DOI for records 1, 3, 4, 5, 7 (ev-1d0pe5j, ev-09n8ner, ev-1dc8ca4, ev-189dw0v, ev-1w405zu) and of titleYearKey(title, year) for records 2, 6 (ev-1utcca0, ev-10ki04l). Requires S13 (appraisal payload on the production scan path), S11 (recommendedFamily, selectionStatus, actionStatus, basis explicit on acceptance) and D5 (decision status text). The audit step's fields fail at 875fe59 because of the L1.6 store defect, not a missing entry. Catches: certainty or completion without retrieval, an appraisal that cannot reach the ledger, a decision accepted without ledger support, a consequence folded away, work lost on reload or reopen, and an export that differs from the store.",
   "inputs": {
@@ -877,8 +878,8 @@
             "c1",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -887,13 +888,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "The hospital research office classified the evaluation as a service evaluation of routinely collected data on 2026-09-10 (determination SE-2026-077).",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1477,5 +1523,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-014.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) citing the investigator's own fact before accepting decision 1. Model responses, need and records are unchanged."
 }

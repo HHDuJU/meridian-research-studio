@@ -1,0 +1,1462 @@
+{
+  "id": "sc-081",
+  "version": 1,
+  "title": "Heart failure service: nurse-led titration clinic decided on existing evidence, no study family chosen",
+  "field": "cardiology",
+  "level": 1,
+  "family": "unresolved",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Level 1 routine path whose correct end point is no study family. The need describes a service question without naming a design or a design cue, so routing is unresolved at create (family null, design.basis 'unresolved'); the problem reply omits family (listed in omitKeys) and echoes the typed constraints byte for byte, so no issue arises (G11). A fixture search returns seven well-formed records with abstracts; the appraisal call annotates all seven and records five source-derived claims whose passages are exact substrings of the abstracts; certainty 'moderate' is the appraisal's value over inspected records. The design reply omits 'recommended' (omitKeys) because the clear decision is 'implementation': set the clinic up as a service with monitoring, since randomised and pooled evidence (c1, c2) already answers the effectiveness question. That decision rests on c1 to c3 and on three gates met on investigator-supplied records, so acceptance is a supported positive (selectionStatus accepted, actionStatus ready) and, with recommendedFamily null, sets no family: the scenario's family is 'unresolved' because the correct path chooses no research design, not because routing failed. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 2, 4, 6, 7 (ev-0xxmkbn, ev-0psz5vm, ev-0lqsdkj, ev-031sn4b, ev-0i7gyo6) and titleYearKey-keyed for records 3 and 5 (ev-0cojlit, ev-01weuum). Requires S11 (unresolved routing at create, recommendedFamily, selectionStatus, actionStatus), S13 (appraisal payload on the production scan path) and D5 (decision status text). Catches: a substituted default family, a family invented from an omitted recommendation, certainty without appraisal, an unsupported acceptance, loss of work on reload or reopen, and an export that differs from the store.",
+  "inputs": {
+    "need": "I am the lead nurse for the heart failure service at a 380-bed district general hospital. We follow about 540 patients with heart failure with reduced ejection fraction, and most of them are not on the target doses of the four medicine groups the guideline recommends: a beta blocker, an ARNI or ACE inhibitor, a mineralocorticoid receptor antagonist and an SGLT2 inhibitor. When we checked the clinic list in June, only 61 of 214 patients seen in the previous six months were on at least half the target dose of every medicine they could take. Doses are changed at cardiology appointments every four to six months, so titration takes a year or more, and several patients were readmitted while still on starting doses.\n\nOur two heart failure specialist nurses are independent prescribers and have asked to run a nurse-led titration clinic: fortnightly visits or telephone calls, blood tests before each change, and a written protocol agreed with the consultants for when to increase, hold or refer. The cardiologists support it but want to know whether it is worth setting up as a service or whether we first need to study it ourselves.\n\nWhat I need help with is deciding this honestly: what the published evidence already shows about nurse-led titration, whether anything about our setting means we cannot rely on it, what we should measure once the clinic runs (doses reached, safety events such as high potassium, low blood pressure and kidney function changes, readmissions, patient experience), and how to present this to the directorate without overclaiming. We have no research funding and do not want to create extra work for patients or staff that does not help them.",
+    "constraints": "No research funding. The two nurse prescribers can give up to 6 clinic hours per week between them. Any new clinic must fit the existing heart failure service staffing and the trust's non-medical prescribing policy.",
+    "localFacts": [
+      "Both heart failure specialist nurses are independent prescribers under the trust's non-medical prescribing policy NMP-04.",
+      "The cardiology clinical lead signed off the draft titration protocol on 2026-09-08 (sign-off HF-TP-2026-03).",
+      "The clinical governance office registered the clinic's monitoring plan as a service evaluation on 2026-09-15 (registration SE-2026-044).",
+      "Potassium and kidney function tests can be taken at the clinic or at three community phlebotomy sites."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names no study design and no design cue, so routing is unresolved: family null and design.basis 'unresolved' (S11 routing record; L1.4 undetermined state, never a substituted family).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the lead nurse for the heart failure service at a 380-bed district general hospital. We follow about 540 patients with heart failure with reduced ejection fraction, and most of them are not on the target doses of the four medicine groups the guideline recommends: a beta blocker, an ARNI or ACE inhibitor, a mineralocorticoid receptor antagonist and an SGLT2 inhibitor. When we checked the clinic list in June, only 61 of 214 patients seen in the previous six months were on at least half the target dose of every medicine they could take. Doses are changed at cardiology appointments every four to six months, so titration takes a year or more, and several patients were readmitted while still on starting doses.\n\nOur two heart failure specialist nurses are independent prescribers and have asked to run a nurse-led titration clinic: fortnightly visits or telephone calls, blood tests before each change, and a written protocol agreed with the consultants for when to increase, hold or refer. The cardiologists support it but want to know whether it is worth setting up as a service or whether we first need to study it ourselves.\n\nWhat I need help with is deciding this honestly: what the published evidence already shows about nurse-led titration, whether anything about our setting means we cannot rely on it, what we should measure once the clinic runs (doses reached, safety events such as high potassium, low blood pressure and kidney function changes, readmissions, patient experience), and how to present this to the directorate without overclaiming. We have no research funding and do not want to create extra work for patients or staff that does not help them.",
+          "problem.constraints": "No research funding. The two nurse prescribers can give up to 6 clinic hours per week between them. Any new clinic must fit the existing heart failure service staffing and the trust's non-medical prescribing policy.",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the lead nurse for the heart"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Nurse-led titration clinic for heart failure medicines in a district general hospital",
+        "subtitle": "Service decision with a monitoring plan; no study family chosen yet",
+        "statement": "Most of the 540 patients with heart failure with reduced ejection fraction followed by the service are below the target doses of guideline medicines: in the six months to June, 61 of 214 patients seen were on at least half the target dose of every medicine they could take. Titration happens at cardiology appointments every four to six months, so optimisation takes a year or more. The service has to decide whether to set up a nurse-led titration clinic run by its two nurse prescribers as a routine service or to study it first, and what to monitor once it runs.",
+        "whoAffected": "Adults with heart failure with reduced ejection fraction under the hospital's heart failure service, especially those recently discharged, older patients and patients living far from the hospital; the two nurse prescribers; the cardiologists whose clinics carry the titration work now.",
+        "whatHurts": "Patients spend months on starting doses of medicines that reduce admissions and deaths at target doses, and some are readmitted before the next cardiology appointment. Doses change rarely because each change waits for a consultant slot.",
+        "currentPractice": "Dose changes at cardiology clinic every four to six months; the specialist nurses see patients for symptoms and education but do not titrate; blood tests are arranged ad hoc.",
+        "whyNow": "A June clinic check showed 61 of 214 patients at half target dose or more, the nurses are ready to prescribe, the cardiology lead has signed off a draft protocol, and SGLT2 inhibitors have added a fourth class to titrate.",
+        "constraints": "No research funding. The two nurse prescribers can give up to 6 clinic hours per week between them. Any new clinic must fit the existing heart failure service staffing and the trust's non-medical prescribing policy.",
+        "patientCenteredGoal": "Patients reach the best doses they can tolerate within months rather than a year, with few blood tests and visits that fit their lives, and without harm from high potassium, low blood pressure or kidney injury.",
+        "summary": "Problem framed as a service decision about a nurse-led titration clinic; no study design is assumed."
+      },
+      "omitKeys": [
+        "family"
+      ],
+      "note": "The reply omits family (no design is named), so the stored family stays null and nothing is logged; constraints are echoed byte for byte, so no rejected-change issue arises (G11).",
+      "expect": {
+        "store": {
+          "title": "Nurse-led titration clinic for heart failure medicines in a district general hospital",
+          "family": {
+            "isNull": true
+          },
+          "problem.statement": {
+            "includes": "nurse-led titration clinic"
+          },
+          "problem.rawNeed": "I am the lead nurse for the heart failure service at a 380-bed district general hospital. We follow about 540 patients with heart failure with reduced ejection fraction, and most of them are not on the target doses of the four medicine groups the guideline recommends: a beta blocker, an ARNI or ACE inhibitor, a mineralocorticoid receptor antagonist and an SGLT2 inhibitor. When we checked the clinic list in June, only 61 of 214 patients seen in the previous six months were on at least half the target dose of every medicine they could take. Doses are changed at cardiology appointments every four to six months, so titration takes a year or more, and several patients were readmitted while still on starting doses.\n\nOur two heart failure specialist nurses are independent prescribers and have asked to run a nurse-led titration clinic: fortnightly visits or telephone calls, blood tests before each change, and a written protocol agreed with the consultants for when to increase, hold or refer. The cardiologists support it but want to know whether it is worth setting up as a service or whether we first need to study it ourselves.\n\nWhat I need help with is deciding this honestly: what the published evidence already shows about nurse-led titration, whether anything about our setting means we cannot rely on it, what we should measure once the clinic runs (doses reached, safety events such as high potassium, low blood pressure and kidney function changes, readmissions, patient experience), and how to present this to the directorate without overclaiming. We have no research funding and do not want to create extra work for patients or staff that does not help them.",
+          "problem.constraints": "No research funding. The two nurse prescribers can give up to 6 clinic hours per week between them. Any new clinic must fit the existing heart failure service staffing and the trust's non-medical prescribing policy.",
+          "design.basis": "unresolved",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Nurse-led titration clinic for heart failure medicines in a district general hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "nurse-led titration heart failure reduced ejection fraction target dose hospitalisation safety",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Nurse-led titration of heart failure medicines versus usual cardiology follow-up: a randomised comparison in two hospital clinics",
+            "authors": "Achterberg-Moyo L, Castellane-Idris P, Rhee-Okafor D",
+            "year": 2019,
+            "venue": "Journal of Heart Failure Nursing",
+            "doi": "10.5555/jhfn.2019.0231",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "Background: many patients with heart failure with reduced ejection fraction remain on starting doses of guideline medicines. Methods: in two hospital clinics we randomly allocated 262 patients to titration by heart failure nurses with fortnightly visits and a written protocol, or to usual cardiology follow-up every three to four months. Results: at 6 months, 58 percent of patients in nurse-led titration and 31 percent in usual follow-up were on at least half the target dose of both a beta blocker and a renin-angiotensin system inhibitor. Hospitalisation for heart failure within 12 months occurred in 9 percent and 16 percent (hazard ratio 0.54, 95 percent CI 0.30 to 0.97). Potassium above 6.0 mmol/L occurred in 3 percent of patients in each group. Conclusions: nurse-led titration reached higher doses sooner without more hyperkalaemia."
+          },
+          {
+            "title": "Nurse-led titration clinics for heart failure with reduced ejection fraction: a systematic review and meta-analysis",
+            "authors": "Vasquez-Holm R, Oduya-Pritchard K, Lindqvist-Amadi S, Tanaka-Browne E",
+            "year": 2022,
+            "venue": "Cardiovascular Nursing Reviews",
+            "doi": "10.5555/cvnr.2022.0107",
+            "providerType": "systematic review",
+            "abstract": "We searched four bibliographic databases to March 2021 for studies comparing titration led by nurses with physician-led titration in adults with heart failure with reduced ejection fraction. In total, 11 studies with 2,480 patients met the criteria, seven of them randomised. Nurse-led titration increased the proportion of patients reaching target doses (risk ratio 1.62, 95 percent CI 1.31 to 2.00) and reduced all-cause hospitalisation (risk ratio 0.78, 95 percent CI 0.66 to 0.93). The effect on mortality was imprecise (risk ratio 0.88, 95 percent CI 0.70 to 1.10). Protocols differed in visit frequency and in the medicines titrated, and no included study titrated SGLT2 inhibitors. Risk of bias was moderate in most randomised studies because outcome assessment was not blinded."
+          },
+          {
+            "title": "Titrating four medicine classes in a nurse-led heart failure clinic after SGLT2 inhibitors became available: a service evaluation",
+            "authors": "Bramwell-Osei T, Kowalski-Njoroge M",
+            "year": 2023,
+            "venue": "Heart Failure Service Reports",
+            "providerType": "journal-article",
+            "abstract": "We describe the first 176 patients treated in a nurse-led titration clinic that titrates a beta blocker, a renin-angiotensin system inhibitor or ARNI, a mineralocorticoid receptor antagonist and an SGLT2 inhibitor. Visits were fortnightly, alternating clinic and telephone, with blood tests before each dose change. The median time to the best tolerated regimen was 14 weeks. At 6 months, 71 percent of patients were taking all four classes and 52 percent were on at least half the target dose of each. Potassium above 5.5 mmol/L led to a mineralocorticoid receptor antagonist being held in 11 percent of patients, and eGFR fell by more than 30 percent in 4 percent. There was no comparison group, and patients who declined referral were not followed."
+          },
+          {
+            "title": "Patients' experience of telephone and clinic visits for heart failure medicine titration: an interview study",
+            "authors": "Moreau-Kinsella A, Obi-Lindgren H",
+            "year": 2020,
+            "venue": "Journal of Cardiovascular Care Experience",
+            "doi": "10.5555/jcce.2020.0412",
+            "providerType": "qualitative research",
+            "abstract": "We interviewed 22 patients who had completed medicine titration in a nurse-led heart failure clinic. Patients valued seeing or speaking to the same nurse and understanding why each dose changed. Frequent blood tests were the main burden, especially for those who relied on others for transport. Several patients aged over 80 preferred clinic visits to telephone calls because they found it hard to describe dizziness over the phone. Patients who had been admitted during titration often linked the admission to a dose change, whether or not the change was the cause. The findings suggest offering a choice of visit type and explaining in advance how many blood tests titration will need."
+          },
+          {
+            "title": "Safety of rapid up-titration of heart failure medicines in the 90 days after discharge from a district general hospital",
+            "authors": "Farouk-Dunmore S, Ahlberg-Chukwu O, Pereira-Nash J",
+            "year": 2024,
+            "venue": "District Cardiology Practice",
+            "providerType": "observational study",
+            "abstract": "We reviewed 140 consecutive patients discharged after a heart failure admission who started nurse-supported up-titration within two weeks. Over 90 days, symptomatic hypotension that led to a dose reduction occurred in 7 percent, potassium above 6.0 mmol/L in 2 percent and a fall in eGFR of more than 30 percent in 5 percent. No death was judged related to titration by two reviewing cardiologists. Readmission for any cause within 90 days occurred in 18 percent. Patients aged 80 or over had more dose reductions for hypotension. The study had no comparison group and relied on hospital results, so tests done in primary care may have been missed."
+          },
+          {
+            "title": "Competences for non-medical prescribers who titrate heart failure medicines: a consensus framework",
+            "authors": "Heart Failure Nurse Prescribing Working Group",
+            "year": 2017,
+            "venue": "Northgate Heart Failure Practice Notes",
+            "doi": "10.5555/nhfpn.2017.0033",
+            "providerType": "practice guideline",
+            "abstract": "A working group of heart failure nurses, pharmacists and cardiologists agreed by a two-round consensus process the competences a non-medical prescriber needs before titrating heart failure medicines without a doctor's review of each change. The framework lists 18 competences in four domains: assessment of congestion and blood pressure, interpretation of potassium and kidney function results, dose adjustment rules for each medicine class, and referral thresholds. It recommends a written titration protocol signed off by a named cardiologist, supervised practice for the first 20 patients, and a review of safety events every six months. The framework does not report outcomes and predates the routine use of SGLT2 inhibitors."
+          },
+          {
+            "title": "Deprivation, travel distance and missed titration visits in a heart failure nurse service",
+            "authors": "Ncube-Harrington P, Solberg-Adeyemi F",
+            "year": 2025,
+            "venue": "Health Equity in Cardiology",
+            "doi": "10.5555/heic.2025.0016",
+            "providerType": "cohort study",
+            "abstract": "We examined 612 patients referred to a heart failure nurse titration service over three years. Missed titration visits were more common in the most deprived fifth of neighbourhoods (24 percent of scheduled visits) than in the least deprived fifth (9 percent). Patients living more than 20 miles from the clinic missed more visits and took longer to reach their best tolerated regimen. After the service added telephone visits with blood tests at community sites, the gap in missed visits between the most and least deprived fifths narrowed from 15 to 6 percentage points. Patients who needed an interpreter were under-represented among referrals compared with the local heart failure population."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values (see notes). No certainty and no grade before appraisal (G1, G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0xxmkbn",
+            "ev-0psz5vm",
+            "ev-0cojlit",
+            "ev-0lqsdkj",
+            "ev-01weuum",
+            "ev-031sn4b",
+            "ev-0i7gyo6"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-0xxmkbn",
+          "scan.items[0].doi": "10.5555/jhfn.2019.0231",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.items[2].id": "ev-0cojlit",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.items[4].id": "ev-01weuum",
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Nurse-led titration of heart failure medicines versus usual cardiology follow-up: a randomised comparison in two hospital clinics"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0xxmkbn",
+            "relevance": 92,
+            "methodQuality": 74,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "58 percent versus 31 percent reached at least half the target dose of a beta blocker and a renin-angiotensin system inhibitor at 6 months; heart failure hospitalisation within 12 months 9 versus 16 percent; potassium above 6.0 mmol/L in 3 percent of each group.",
+            "limitations": "Two clinics; outcome assessment not blinded; only two medicine classes titrated; no SGLT2 inhibitors.",
+            "contextTags": [
+              "randomised comparison",
+              "nurse-led titration",
+              "hospital clinic"
+            ],
+            "notes": "Closest direct evidence on doses reached and admissions."
+          },
+          {
+            "id": "ev-0psz5vm",
+            "relevance": 88,
+            "methodQuality": 70,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Across 11 studies with 2,480 patients, nurse-led titration increased the proportion at target dose (risk ratio 1.62) and reduced all-cause hospitalisation (risk ratio 0.78); the effect on mortality was imprecise.",
+            "limitations": "Heterogeneous protocols; no included study titrated SGLT2 inhibitors; unblinded outcome assessment in most trials; search ended in 2021.",
+            "contextTags": [
+              "systematic review",
+              "pooled estimate"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0cojlit",
+            "relevance": 84,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "At 6 months 71 percent took all four classes and 52 percent were on at least half the target dose of each; potassium above 5.5 mmol/L led to a mineralocorticoid receptor antagonist hold in 11 percent.",
+            "limitations": "No comparison group; patients who declined referral not followed; one service.",
+            "contextTags": [
+              "four-class titration",
+              "SGLT2 inhibitors",
+              "service evaluation"
+            ],
+            "notes": "Most similar to the planned clinic."
+          },
+          {
+            "id": "ev-0lqsdkj",
+            "relevance": 70,
+            "methodQuality": 55,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Patients valued continuity with one nurse; frequent blood tests were the main burden; several patients aged over 80 preferred clinic visits to telephone calls.",
+            "limitations": "22 patients from one clinic; interviews after titration was complete.",
+            "contextTags": [
+              "patient experience",
+              "telephone visits",
+              "older adults"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-01weuum",
+            "relevance": 80,
+            "methodQuality": 48,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Over 90 days after discharge, symptomatic hypotension led to dose reduction in 7 percent, potassium above 6.0 mmol/L occurred in 2 percent and eGFR fell by more than 30 percent in 5 percent.",
+            "limitations": "Consecutive series without comparison; primary care results not captured.",
+            "contextTags": [
+              "post-discharge",
+              "safety events",
+              "district hospital"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-031sn4b",
+            "relevance": 62,
+            "methodQuality": 40,
+            "kind": "guideline",
+            "grade": "very-low",
+            "keyFindings": "Consensus framework of 18 competences; recommends a signed-off written protocol, supervised practice for the first 20 patients and a six-monthly safety review.",
+            "limitations": "Consensus without outcome data; predates SGLT2 inhibitors.",
+            "contextTags": [
+              "prescribing governance",
+              "competences"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0i7gyo6",
+            "relevance": 76,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Missed visits were 24 percent of scheduled visits in the most deprived fifth versus 9 percent in the least deprived; telephone visits with community blood tests narrowed the gap from 15 to 6 percentage points.",
+            "limitations": "One service; visit data only; interpreter need recorded inconsistently.",
+            "contextTags": [
+              "equity",
+              "deprivation",
+              "travel distance"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0xxmkbn"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "In a randomised comparison in two hospital clinics, 58 percent of patients in nurse-led titration and 31 percent in usual follow-up were on at least half the target dose of a beta blocker and a renin-angiotensin system inhibitor at 6 months.",
+            "passage": "at 6 months, 58 percent of patients in nurse-led titration and 31 percent in usual follow-up were on at least half the target dose",
+            "interpretation": "Nurse-led titration with fortnightly visits reaches higher doses sooner than consultant clinic intervals; directly relevant to the proposed clinic."
+          },
+          {
+            "id": "c2",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0psz5vm"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "Across 11 studies with 2,480 patients, nurse-led titration increased the proportion reaching target doses (risk ratio 1.62, 95 percent CI 1.31 to 2.00) and reduced all-cause hospitalisation (risk ratio 0.78, 95 percent CI 0.66 to 0.93).",
+            "passage": "Nurse-led titration increased the proportion of patients reaching target doses (risk ratio 1.62, 95 percent CI 1.31 to 2.00)",
+            "interpretation": "The effectiveness question is answered across settings; a local comparative study would repeat it."
+          },
+          {
+            "id": "c3",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0cojlit"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "In a nurse-led clinic titrating four medicine classes, potassium above 5.5 mmol/L led to a mineralocorticoid receptor antagonist being held in 11 percent of patients.",
+            "passage": "Potassium above 5.5 mmol/L led to a mineralocorticoid receptor antagonist being held in 11 percent of patients",
+            "interpretation": "Four-class titration needs potassium monitoring before each change and a hold rule in the protocol."
+          },
+          {
+            "id": "c4",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0i7gyo6"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Missed titration visits were more common in the most deprived fifth of neighbourhoods (24 percent) than in the least deprived fifth (9 percent).",
+            "passage": "Missed titration visits were more common in the most deprived fifth of neighbourhoods (24 percent of scheduled visits) than in the least deprived fifth (9 percent).",
+            "interpretation": "Offer telephone visits with community blood tests from the start and report missed visits by deprivation."
+          },
+          {
+            "id": "c5",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-01weuum"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Among 140 patients up-titrated after discharge, symptomatic hypotension led to a dose reduction in 7 percent and potassium above 6.0 mmol/L occurred in 2 percent over 90 days.",
+            "passage": "symptomatic hypotension that led to a dose reduction occurred in 7 percent, potassium above 6.0 mmol/L in 2 percent",
+            "interpretation": "Sets expected rates for the clinic's balancing measures."
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. A randomised comparison and a systematic review of 11 studies agree that nurse-led titration raises the proportion of patients reaching target doses and lowers hospitalisation; the pooled studies predate SGLT2 inhibitors. Two service reports from district settings describe four-class and post-discharge titration with potassium-related holds and dose reductions but few serious events, without comparison groups. Patients value continuity and dislike frequent blood tests, and missed visits are commoner in deprived areas, a gap that telephone visits narrowed. The effectiveness question is answered well enough to act on; local safety with four classes and equitable access are what remain to monitor.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "Randomised and pooled evidence with a consistent direction for doses reached and hospitalisation, downgraded for unblinded outcome assessment and for indirectness to four-class titration with SGLT2 inhibitors. Safety and access findings come from uncontrolled service data and are low certainty on their own.",
+        "summary": "Seven retrieved records appraised; five source-derived claims recorded with passages; overall certainty moderate."
+      },
+      "note": "Appraisal of the seven retrieved records (S13 dispatches the payload to applyAppraisal). Certainty 'moderate' is the appraisal's own value over inspected records (G1); identity and provenance stay as retrieved.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[0].methodQuality": 74,
+          "scan.items[0].relevance": 92,
+          "scan.items[0].kind": "rct",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[1].kind": "systematic-review",
+          "scan.items[5].grade": "very-low",
+          "scan.items[6].keyFindings": {
+            "includes": "15 to 6 percentage points"
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].id": "c1",
+          "scan.claims[0].sourceIds": [
+            "ev-0xxmkbn"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-0psz5vm"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0cojlit"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-0i7gyo6"
+          ],
+          "scan.gradeOverall": "moderate",
+          "scan.synthesis": {
+            "includes": "Seven retrieved records"
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "District general hospital heart failure service",
+          "Two nurse prescribers, up to 6 clinic hours per week",
+          "Consultant clinics every four to six months",
+          "Community phlebotomy at three sites"
+        ],
+        "reading": "Doses stall because every change waits for a consultant slot, while the retrieved evidence shows that nurse-led titration with fortnightly contact moves doses faster and reduces admissions. The fourth medicine class raises the monitoring load: potassium and kidney function must be checked before changes, which is where the community blood test sites matter. Access is unequal: missed visits cluster in deprived neighbourhoods and among patients far from the hospital, and patients over 80 may need face-to-face visits. Governance rests on the signed-off protocol and the prescribing policy.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Consultant clinic intervals of four to six months",
+            "kind": "context",
+            "detail": "Current rate-limiting step for dose changes."
+          },
+          {
+            "id": "n2",
+            "label": "Nurse-led titration clinic",
+            "kind": "framework",
+            "detail": "Fortnightly visits or calls under a written protocol."
+          },
+          {
+            "id": "n3",
+            "label": "Randomised comparison in two clinics",
+            "kind": "rct",
+            "detail": "58 versus 31 percent at half target dose (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "Systematic review of 11 studies",
+            "kind": "systematic-review",
+            "detail": "More patients at target dose, fewer admissions (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Four-class titration service report",
+            "kind": "observational",
+            "detail": "Potassium holds in 11 percent (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Patients at half target dose or more of all indicated classes",
+            "kind": "outcome",
+            "detail": "Primary service measure."
+          },
+          {
+            "id": "n7",
+            "label": "Potassium, blood pressure and kidney function checks",
+            "kind": "context",
+            "detail": "Before each change; community sites."
+          },
+          {
+            "id": "n8",
+            "label": "Patients in deprived areas or far from hospital",
+            "kind": "stakeholder",
+            "detail": "Miss more visits (claim c4)."
+          },
+          {
+            "id": "n9",
+            "label": "Cardiology clinical lead",
+            "kind": "stakeholder",
+            "detail": "Signed off the protocol; referral point."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n6",
+            "relation": "slows progress on"
+          },
+          {
+            "from": "n2",
+            "to": "n6",
+            "relation": "expected to raise"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "supports"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "supports"
+          },
+          {
+            "from": "n5",
+            "to": "n7",
+            "relation": "shows need for"
+          },
+          {
+            "from": "n8",
+            "to": "n2",
+            "relation": "at risk of missing"
+          },
+          {
+            "from": "n9",
+            "to": "n2",
+            "relation": "governs"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "gates each change in"
+          }
+        ],
+        "summary": "Map links the consultant-interval bottleneck, the evidence for nurse-led titration, monitoring needs of four-class titration and unequal access."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[1].kind": "framework",
+          "map.contexts": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No monthly local series of doses reached",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The June check is one snapshot (61 of 214); without a baseline series the service cannot tell whether the clinic changed anything or the case mix did.",
+            "opportunity": "Build a monthly count of patients at half target dose or more of all indicated classes from the clinic list, starting with the six months before the clinic opens."
+          },
+          {
+            "id": "g2",
+            "title": "Safety of four-class titration is known only from uncontrolled reports",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Potassium holds and kidney function falls are reported from service data without comparison (claims c3, c5), and the pooled trials did not titrate SGLT2 inhibitors.",
+            "opportunity": "Track potassium above 6.0 mmol/L, symptomatic hypotension and eGFR falls above 30 percent as balancing measures reviewed monthly by the clinical lead."
+          },
+          {
+            "id": "g3",
+            "title": "Missed visits concentrate in deprived and distant neighbourhoods",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "A clinic that works for patients who can travel may widen the gap in doses reached (claim c4).",
+            "opportunity": "Offer telephone visits with community blood tests from the start and report doses reached and missed visits by deprivation fifth."
+          },
+          {
+            "id": "g4",
+            "title": "Blood test burden for patients who depend on others for transport",
+            "kind": "implementation",
+            "severity": "watch",
+            "whyItMatters": "Frequent tests were the main burden reported by patients and may cause drop-out.",
+            "opportunity": "Tell patients in advance how many tests titration needs and use the nearest community site."
+          }
+        ],
+        "errorsFound": [
+          "The request asks whether to study nurse-led titration before offering it; the retrieved randomised and pooled evidence already answers the effectiveness question, so a new comparative study would repeat it rather than add to it."
+        ],
+        "reevaluation": "The gaps are about local monitoring, safety and access, not about whether nurse-led titration works; they call for a service with a monitoring plan rather than a new study.",
+        "summary": "Four gaps: no baseline series, safety known only from uncontrolled reports, unequal access and blood test burden."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[2].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No monthly local series of doses reached"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Within 6 months of referral to the clinic, at least 60 percent of eligible patients will be on at least half the target dose of every indicated medicine class, against about 29 percent in the June check.",
+            "novelty": 20,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 85,
+            "parsimony": 90,
+            "rationale": "Need and practice change are high because most patients are under-dosed; novelty is low by design, since the effect is established elsewhere; the measure uses the clinic list and needs no new data collection.",
+            "risks": "Case mix of referred patients may differ from the June list; four-class titration may take longer than two-class titration in the trials."
+          },
+          {
+            "id": "h2",
+            "statement": "Offering telephone visits with community blood tests will keep missed visits in the most deprived fifth within 5 percentage points of the least deprived fifth.",
+            "novelty": 35,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "A retrieved service report found the gap narrowed when telephone visits were added; the local population has similar deprivation.",
+            "risks": "Small numbers per fifth in the first year; deprivation assigned by postcode."
+          },
+          {
+            "id": "h3",
+            "statement": "Potassium above 6.0 mmol/L will occur in no more than 3 percent of titrated patients.",
+            "novelty": 25,
+            "need": 70,
+            "practiceChange": 60,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "Randomised and post-discharge series reported 2 to 3 percent; the protocol holds the antagonist above 5.5 mmol/L.",
+            "risks": "Tests taken in primary care may be missed."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three service expectations; h1 is the main measure, h2 and h3 guard equity and safety."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].novelty": 20,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults with heart failure with reduced ejection fraction referred to the new nurse-led titration clinic from November 2026, will at least 60 percent be on at least half the target dose of every indicated medicine class within 6 months of referral, without potassium above 6.0 mmol/L in more than 3 percent?",
+            "framework": "QI-aim",
+            "population": "Adults with heart failure with reduced ejection fraction referred to the clinic",
+            "intervention": "Nurse-led titration under the signed-off protocol, fortnightly clinic or telephone visits",
+            "comparator": "Six-month baseline from the clinic list before the clinic opened",
+            "outcome": "Proportion at half target dose or more of all indicated classes at 6 months",
+            "time": "6 months from referral; first review after 12 months of operation",
+            "setting": "District general hospital heart failure service"
+          }
+        ],
+        "finer": "Feasible within 6 nurse hours per week and existing data; interesting to the directorate; not novel by design, because the service applies established evidence; ethical as a registered service evaluation; relevant because most patients are under-dosed.",
+        "summary": "One time-bound service aim with a safety limit."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "rationale": "No research design is recommended because no new study is proposed. The effectiveness of nurse-led titration on doses reached and hospitalisation is established by a randomised comparison (c1) and a systematic review of 11 studies (c2). What the service still needs to know is local: whether its patients reach target doses, whether four-class titration stays safe (c3) and whether access is equitable. That is answered by a registered service evaluation with pre-specified measures and a monthly review, not by a comparative study.",
+        "alternatives": [
+          "Randomised comparison of nurse-led and consultant titration in this hospital (refused: repeats a settled question and delays treatment for the comparison group)",
+          "Before-after research study of doses reached with a formal hypothesis test (refused: adds analysis burden without changing the decision)",
+          "Keep titration in consultant clinics and add extra clinic slots (considered: fewer changes per year and no nurse capacity used)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0 for any written report of the service evaluation"
+        ],
+        "whyNotMoreComplex": "A local trial would need a comparison group kept on slower titration for months, which the retrieved evidence gives no reason to accept; monitoring with pre-specified measures answers the local questions.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Set up the nurse-led titration clinic as a routine service under the signed-off protocol and monitor it against pre-specified measures of doses reached, safety events and missed visits; do not run a new comparative study.",
+          "question": "Should the heart failure service set up a nurse-led titration clinic now, or study nurse-led titration first?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Nurse-led titration has increased the proportion of patients at target doses in a randomised comparison and in pooled studies.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Local safety events exceed those reported, with potassium above 6.0 mmol/L in more than 5 percent of titrated patients.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Titration protocol signed off by the cardiology clinical lead",
+              "status": "met",
+              "evidence": "Sign-off HF-TP-2026-03 dated 2026-09-08, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Monitoring plan registered with clinical governance as a service evaluation",
+              "status": "met",
+              "evidence": "Registration SE-2026-044 dated 2026-09-15, supplied by the investigator"
+            },
+            {
+              "id": "g3",
+              "requirement": "Both nurses registered as independent prescribers",
+              "status": "met",
+              "evidence": "Non-medical prescribing policy NMP-04 register entries, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Extra consultant clinic slots for titration",
+            "Nurse-led titration for recently discharged patients only"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; all gates rest on investigator-supplied records."
+        },
+        "summary": "No new study: implement the clinic as a service with monitoring; the decision rests on three ledger claims and all gates are met."
+      },
+      "omitKeys": [
+        "recommended"
+      ],
+      "note": "The reply omits 'recommended' because no research family applies to an implementation decision; the study family stays null and the routing stays unresolved (no substituted family). recommendedFamily, selectionStatus and actionStatus require S11; the status text requires D5; the ledger claims exist only when S13 applied the appraisal.",
+      "expect": {
+        "store": {
+          "design.recommended": "",
+          "family": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].recommendedFamily": {
+            "isNull": true
+          },
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].criteria[0].claimIds": [
+            "c1",
+            "c2"
+          ],
+          "design.decisions[-1].gates": {
+            "length": 3
+          },
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[2].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: claims c1 to c3 exist in the ledger and rest on retrieved records, and every gate is met on investigator-supplied records, so selection is accepted and action is ready (G7). With recommendedFamily null, acceptance sets no family (A1 A2). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].recommendedFamily": {
+            "isNull": true
+          },
+          "family": {
+            "isNull": true
+          }
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Service protocol and monitoring plan for a nurse-led heart failure titration clinic, registered as a service evaluation; one main measure, one secondary measure and three balancing measures reviewed monthly.",
+        "population": "Adults with heart failure with reduced ejection fraction under the hospital service who are below target doses of any indicated class, referred by a cardiologist or at discharge; patients under palliative care or with eGFR below 20 are excluded from titration.",
+        "exposure": "Fortnightly clinic or telephone visits by a nurse prescriber, alternating where the patient wishes, with potassium and kidney function checked before each change at the clinic or a community site; dose changes follow the signed-off protocol for four classes with hold and referral rules.",
+        "procedures": "Referral by cardiologist or at discharge; first visit within 2 weeks; one dose change per visit; potassium above 5.5 mmol/L holds the antagonist; systolic blood pressure below 95 mmHg with symptoms holds the next increase; eGFR fall above 30 percent triggers review with the cardiologist. Monthly measures are drawn from the clinic list and the laboratory system by the lead nurse and reviewed with the clinical lead.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Patients at half target dose or more of all indicated classes",
+            "measure": "Proportion of patients 6 months after referral on at least half the target dose of every indicated class",
+            "timing": "Monthly cohorts, 6 months after referral",
+            "why": "The measure the clinic exists to change; comparable with the June baseline.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Heart failure hospitalisation",
+            "measure": "Admissions with heart failure as primary diagnosis within 12 months of referral, described without comparison",
+            "timing": "12 months",
+            "why": "Patient-important consequence; described, not tested.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Hyperkalaemia",
+            "measure": "Potassium above 6.0 mmol/L during titration",
+            "timing": "Each visit",
+            "why": "Main safety risk of four-class titration.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Symptomatic hypotension or kidney function fall",
+            "measure": "Dose reduction for symptomatic hypotension or eGFR fall above 30 percent",
+            "timing": "Each visit",
+            "why": "Harms that would outweigh faster titration.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Missed titration visits by deprivation fifth",
+            "measure": "Missed scheduled visits divided by scheduled visits, by postcode deprivation fifth",
+            "timing": "Monthly",
+            "why": "Checks that the clinic does not widen access gaps.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Fits 6 nurse hours per week for about 12 active patients at a time; about 120 patients in the first year; data come from the clinic list and laboratory results already held.",
+        "biasMitigation": [
+          "Measure definitions fixed before the clinic opens",
+          "Baseline from the six months before opening, using the same definition",
+          "Every referred patient counted, including those who stop attending"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Referral selection",
+            "severity": "watch",
+            "note": "Cardiologists may refer patients most likely to tolerate titration; report referral numbers against the clinic list."
+          },
+          {
+            "id": "b2",
+            "label": "Tests outside the hospital",
+            "severity": "watch",
+            "note": "Primary care results may be missed; ask at each visit."
+          }
+        ],
+        "parsimony": {
+          "score": 88,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "Descriptive monitoring only; no adjusted models"
+          ],
+          "simplestPath": "One main measure against a baseline, three balancing measures and one access measure, reviewed monthly."
+        },
+        "theoreticalFramework": "None beyond the service protocol; the competence framework informs supervision of the first 20 patients.",
+        "summary": "Service protocol with one main measure, one secondary, two balancing and one access measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[2].role": "balancing",
+          "protocol.outcomes[1].patientCentered": true,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Descriptive monitoring of a new service against a pre-opening baseline; no hypothesis test.",
+        "sampleSize": "All referred patients are included; about 120 patients are expected in the first year at 6 nurse hours per week. At 120 patients, a proportion of 60 percent has a 95 percent confidence interval half-width of about 9 percentage points, enough to see whether the clinic is far from the baseline of about 29 percent. No sample size calculation is needed because no comparison is tested.",
+        "primaryAnalysis": "Proportion at half target dose or more of all indicated classes at 6 months after referral, with a 95 percent Wilson interval, reported by monthly referral cohort and against the pre-opening baseline.",
+        "secondaryAnalysis": "Counts and rates of hyperkalaemia, symptomatic hypotension and eGFR falls per 100 patients titrated; missed visits by deprivation fifth; heart failure admissions within 12 months, described.",
+        "missingData": "Patients without a 6-month dose record are counted as not at target and reported separately; no imputation.",
+        "multiplicity": "One main measure; other measures are descriptive.",
+        "software": "Spreadsheet kept by the lead nurse; figures checked by the clinical lead.",
+        "overfittingGuards": [
+          "Definitions fixed before opening",
+          "No subgroup claims beyond deprivation fifth",
+          "Every referred patient in the denominator"
+        ],
+        "summary": "Descriptive monitoring with confidence intervals; about 120 patients in year one."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "9 percentage points"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Clinical risks of titration (hyperkalaemia, hypotension, kidney injury) managed by the protocol's hold and referral rules; no research procedures are added.",
+        "consent": "Patients consent to treatment in the usual clinical way; monitoring uses routine clinical data under the registered service evaluation, with an information leaflet describing the measures.",
+        "data": "Measures are held in the service's restricted spreadsheet without names; monthly reports show counts only.",
+        "equity": "PROGRESS-Plus: deprivation, distance, age over 80, language and hearing are expected to affect attendance. Telephone and clinic visits are both offered, blood tests can be taken at community sites, interpreters are booked for visits, and missed visits and doses reached are reported by deprivation fifth.",
+        "effectiveness": "Success is at least 60 percent at half target dose or more at 6 months with balancing measures within the expected rates.",
+        "efficiency": "Uses existing nurse prescriber time; reduces titration-only consultant appointments.",
+        "costs": "Nurse time within the service establishment; blood tests already funded.",
+        "grants": "None needed.",
+        "partnerships": "Cardiology clinical lead, community phlebotomy service, primary care practices for shared results, two patient partners from the heart failure support group.",
+        "rebPath": "Registered with clinical governance as a service evaluation (SE-2026-044); no research ethics review is required under the trust's policy because no research question is tested and no extra data are collected.",
+        "limitations": "No comparison group; referral selection; tests done in primary care may be missed.",
+        "summary": "Routine clinical consent, a registered service evaluation, and equity measures built into visit options and reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "SE-2026-044"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners from the heart failure support group review the patient leaflet and the visit options before opening, and join the six-month service review.",
+        "socialListening": "No social media listening; the service reads its patient comment cards for mentions of medicines and visits.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Waiting for changes",
+            "quote": "Composite paraphrase: I was told the dose would go up at my next appointment, and that was five months away.",
+            "implication": "Show patients the titration plan and the date of the next change at the first visit.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Blood tests and transport",
+            "quote": "Composite paraphrase: Every test means a day off for me to drive him in.",
+            "implication": "Offer community phlebotomy sites and tell families how many tests to expect.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Nurse confidence",
+            "quote": "Composite paraphrase: I can prescribe, but I want the hold rules written down before I change four medicines.",
+            "implication": "Keep hold and referral thresholds explicit in the protocol and supervised practice for the first 20 patients.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "patient",
+            "theme": "Telephone or face to face",
+            "quote": "Composite paraphrase: On the phone I say I am fine; it is when you see me stand up that you notice the dizziness.",
+            "implication": "Let patients over 80 or with dizziness choose clinic visits.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on waiting, test burden, nurse confidence and visit type."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[1].source": "family",
+          "voices.items[0].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A nurse-led titration clinic for heart failure medicines in a district general hospital: service evaluation plan",
+        "abstract": "Aim: to raise the proportion of patients with heart failure with reduced ejection fraction on at least half the target dose of every indicated class from about 29 percent to 60 percent within 6 months of referral. Setting: a district general hospital heart failure service. Intervention: fortnightly nurse-led titration under a signed-off protocol. Measures: doses reached, hyperkalaemia, hypotension and kidney function falls, missed visits by deprivation. Results will be reported after 12 months of operation.",
+        "introduction": "Randomised and pooled evidence shows that nurse-led titration raises doses and reduces admissions. The local question is whether a new clinic reaches these results safely and equitably, not whether nurse-led titration works.",
+        "methods": "Registered service evaluation. All referred patients are counted; measures are defined before opening and reported monthly with 95 percent intervals against a six-month baseline from the clinic list.",
+        "results": "No data have been collected yet. The report will present monthly cohorts, balancing measures and missed visits by deprivation fifth.",
+        "discussion": "The discussion will compare local results with the retrieved randomised and service reports and state what the service changes next.",
+        "limitations": "No comparison group; referral selection; primary care results may be missed.",
+        "conclusion": "To be written after 12 months; it will describe the service and will not claim a causal effect.",
+        "reportingChecklist": "SQUIRE 2.0 (service evaluation)",
+        "summary": "Service evaluation report structure with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0 (service evaluation)",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Build the six-month baseline from the clinic list with the fixed definition before the clinic opens",
+          "Run an identity check on the seven retrieved records before any report cites them",
+          "Agree with primary care how potassium results taken outside the hospital reach the clinic"
+        ],
+        "improvementNotes": "The decision rests on three ledger claims from retrieved records appraised at abstract level; no new study is proposed and no study family has been chosen. The monitoring plan is registered as a service evaluation.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before opening; evidence retrieved and appraised but not yet identity-checked."
+      },
+      "note": "audit.openFixes, lastReview and improvementNotes state the correct behaviour; at 875fe59 they FAIL because store.ts mergeStage overwrites the audit patch (L1.6, a store defect, not a work-order entry).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "no study family has been chosen"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Nurse-led titration clinic for heart failure medicines in a district general hospital",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": {
+            "isNull": true
+          },
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "problem.constraints": "No research funding. The two nurse prescribers can give up to 6 clinic hours per week between them. Any new clinic must fit the existing heart failure service staffing and the trust's non-medical prescribing policy."
+        },
+        "screen": {
+          "includes": [
+            "Nurse-led titration clinic for heart failure medicines in a district general hospital"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Nurse-led titration clinic for heart failure medicines in a district general hospital",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": {
+            "isNull": true
+          },
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Nurse-led titration clinic for heart failure medicines in a district general hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus, actionStatus and recommendedFamily require S11; the claims require S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": {
+              "isNull": true
+            },
+            "design.recommended": "",
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "moderate",
+            "scan.claims": {
+              "length": 5
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].recommendedFamily": {
+              "isNull": true
+            },
+            "problem.constraints": "No research funding. The two nurse prescribers can give up to 6 clinic hours per week between them. Any new clinic must fit the existing heart failure service staffing and the trust's non-medical prescribing policy.",
+            "problem.rawNeed": "I am the lead nurse for the heart failure service at a 380-bed district general hospital. We follow about 540 patients with heart failure with reduced ejection fraction, and most of them are not on the target doses of the four medicine groups the guideline recommends: a beta blocker, an ARNI or ACE inhibitor, a mineralocorticoid receptor antagonist and an SGLT2 inhibitor. When we checked the clinic list in June, only 61 of 214 patients seen in the previous six months were on at least half the target dose of every medicine they could take. Doses are changed at cardiology appointments every four to six months, so titration takes a year or more, and several patients were readmitted while still on starting doses.\n\nOur two heart failure specialist nurses are independent prescribers and have asked to run a nurse-led titration clinic: fortnightly visits or telephone calls, blood tests before each change, and a written protocol agreed with the consultants for when to increase, hold or refer. The cardiologists support it but want to know whether it is worth setting up as a service or whether we first need to study it ourselves.\n\nWhat I need help with is deciding this honestly: what the published evidence already shows about nurse-led titration, whether anything about our setting means we cannot rely on it, what we should measure once the clinic runs (doses reached, safety events such as high potassium, low blood pressure and kidney function changes, readmissions, patient experience), and how to present this to the directorate without overclaiming. We have no research funding and do not want to create extra work for patients or staff that does not help them."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "id": "sc-071",
-  "version": 1,
+  "version": 2,
   "title": "Adult epilepsy clinic: scoping review of self-management app engagement, invented claim refused, Questions revised",
   "field": "neurology",
   "level": 4,
@@ -13,7 +13,8 @@
     "S5",
     "S8",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial level 4 path on a clear scoping design. (1) The problem reply rewrites the investigator's constraints and adds an approval nobody gave (\"research ethics approval already obtained for a linked questionnaire of clinic patients\") while the typed text says the review will not involve clinic patients: the stored constraints stay exactly as typed and a rejected-change issue at \"constraints\" is recorded and shown (G11; S5, the entry that keeps model text from acquiring investigator authority). (2) A fixture search returns seven records; the appraisal annotates all seven and records claims c1 to c4 with exact passages. (3) The first design reply rests its decision on \"c6\", which is not in the ledger, and on an effect no record reports: the id is dropped with an issue and acceptance is refused (status stays proposed, action blocked; S1, S8). (4) The revised design reply rests on c1 to c4, supersedes the first decision (withdrawn, not erased) and is accepted with both gates met on investigator-supplied approvals (ready). (5) After Protocol and Stats are complete, Questions is run again (call 2) with a revised response that reframes the effect question (PICO) as a mapping question (PCC): Design, Protocol and Stats are flagged for review (G8) and shown as review required; the investigator marks Design complete after review, and Protocol and Stats are re-run (call 2), clearing the flags in order. Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3, 5 and 7; titleYearKey for records 2, 4 and 6): ev-1mdio8r, ev-0ee7fyz, ev-03isa4q, ev-18kfksu, ev-1dz8q1r, ev-1iw9qfi, ev-16ad7vy. Requires S5 (rejected-change), S1 and S8 (refused acceptance), S13 (appraisal path), S11 (selection and action status) and D5 (status text). Catches: model text replacing investigator constraints, an invented approval stored as a fact, acceptance of a decision resting on a missing claim, a superseded decision erased, and a revised upstream stage that leaves downstream stages counted as complete.",
   "inputs": {
@@ -95,7 +96,13 @@
         "screen": {
           "includes": [
             "Engagement with epilepsy self-management apps: a scoping review to inform clinic support",
-            {"anyOf": ["kept", "refused", "not applied"]},
+            {
+              "anyOf": [
+                "kept",
+                "refused",
+                "not applied"
+              ]
+            },
             "the review will not involve clinic patients"
           ]
         }
@@ -775,7 +782,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -795,6 +804,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -904,7 +933,11 @@
           ],
           "design.decisions[1].status": "proposed",
           "design.decisions[1].selectionStatus": "proposed",
-          "design.recommended": "scoping-review"
+          "design.recommended": "scoping-review",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -916,6 +949,49 @@
           "includes": [
             "proposed",
             "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1644,5 +1720,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-071.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1); step 12 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 2. Model responses, need and records are unchanged."
 }

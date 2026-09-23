@@ -1,6 +1,6 @@
 {
   "id": "sc-069",
-  "version": 1,
+  "version": 2,
   "title": "Three regional emergency departments: frequent attender case management, single-site decision withdrawn for a multi-site case-control design",
   "field": "emergency-medicine",
   "level": 5,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Expert level 5 path with two decisions where the second withdraws the first, and dependency closure across Protocol and Stats in a multi-site design. The need names a matched case-control study and no other design, so classifyFamily routes it to \"case-control\"; the problem reply repeats the typed constraints (G11). A fixture search returns seven records; the appraisal records six claims with exact passages, certainty \"low\". Design call 1 follows the investigator's stated preference and proposes a single-site case-control study at the tertiary ED on claims c1, c2, c3 and c5 with both gates met on investigator-supplied approvals; it is accepted (ready). Protocol and Stats are completed for that design, and the Analysis stage shows the single site gives only about 62 percent power (about 189 cases against 277 needed). Design call 2 proposes a three-site design with controls matched within site; because Design changed after Protocol and Stats were complete, both are flagged for review (G8). The first decision is not superseded automatically because it was accepted: the investigator withdraws it (withdraw-decision 0), then accepts the second (ready). A reload on the Design route checks that withdrawn, accepted and review required survive. Protocol call 2 carries an outcome with role \"co-primary\", which must be refused (invalid-enum, then dropped, never demoted to secondary); re-running Protocol and then Stats clears the flags in order. Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3, 5 and 7; titleYearKey for records 2, 4 and 6): ev-0gip543, ev-1ggs445, ev-0nr15we, ev-1fmp8sh, ev-0myglbn, ev-0wlu13s, ev-0gln17e. Requires S13 (appraisal path), S11 (selection and action status, withdrawal) and D5 (status text); the refused role and the review flags hold at 875fe59. Catches: an accepted decision silently replaced or erased, two decisions accepted at once, stale downstream stages counted as complete, and an invalid outcome role coerced.",
   "inputs": {
@@ -805,13 +806,60 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "met",
+      "reason": "Research ethics approval for the case-control protocol: Approval REB-EM-2026-112 dated 2026-08-28, supplied by the investigator",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "met",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1064,7 +1112,11 @@
           "needsReview": [
             "protocol",
             "stats"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete",
@@ -1079,6 +1131,29 @@
             "proposed",
             "accepted",
             "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1099,6 +1174,26 @@
         "screen": {
           "includes": [
             "withdrawn",
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "met",
+      "reason": "Research ethics approval covering all three emergency departments: Approval REB-EM-2026-112 dated 2026-08-28 covers all three sites, supplied by the investigator",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "met",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
             "proposed"
           ]
         }
@@ -1678,5 +1773,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-069.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2); step 14 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (approved) citing the ethics gate the investigator confirmed before accepting decision 1; the investigator records the ethics status (approved) citing the ethics gate the investigator confirmed before accepting decision 2. Model responses, need and records are unchanged."
 }

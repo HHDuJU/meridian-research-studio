@@ -1,6 +1,6 @@
 {
   "id": "sc-087",
-  "version": 1,
+  "version": 2,
   "title": "Regional heat-health plan: economic decision withdrawn after a constraint change, narrative review accepted",
   "field": "public-health",
   "level": 5,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Level 5 with two decisions where the second withdraws the first, and an economic protocol with unusual outcome roles. The need asks for a narrative review (routing explicit); the problem reply omits constraints (omitKeys), so nothing is logged. Seven fixture records are appraised (five claims, the threshold claim with high uncertainty). Design call 1 recommends an economic evaluation; proposed, it does not change the family (D3 under S11); the investigator accepts it (supported; action blocked by an unknown cost-data gate), and the family becomes 'economic'. Its protocol has a cost ratio as primary outcome and an outcome with the invalid role 'cost-input', dropped with invalid-enum and dropped. The investigator then edits the constraints on screen after the board rules out a costing exercise (G11 allows investigator edits): because constraints are part of the evidence revision, accepted decision 1 becomes stale and all completed stages after Problem are flagged (G7, G8). Questions and Design are re-run; decision 2 (a narrative review, resting on c1, c3, c4, c5 with its gate met on the edited constraints) is proposed; the investigator withdraws decision 1 (kept as history) and accepts decision 2, and the family becomes 'narrative-review'. The review protocol replaces the economic one, and the remaining flagged stages are marked complete by hand, closing the dependency. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 3, 4, 5, 7 (ev-0d4mjsn, ev-0epr2gc, ev-1u21m8h, ev-0vme59v, ev-02pqzlt) and titleYearKey-keyed for records 2 and 6 (ev-1amcw3a, ev-0odgdwh). Requires S11 (no family change before acceptance, selectionStatus, actionStatus, recommendedFamily, withdrawal status), S13 (appraisal payload) and D5 (status text). The stale status after the constraint edit, the invalid-role drop and the review flags hold at 875fe59. Catches: a proposed recommendation applied early, a stale decision left current after the investigator changes constraints, a superseded decision erased rather than withdrawn, an invalid outcome role demoted, and flagged stages counted complete.",
   "inputs": {
@@ -1093,14 +1094,15 @@
             "c4",
             "c5"
           ],
-          "design.decisions[1].gates[0].status": "met",
+          "design.decisions[1].gates[0].status": "unknown",
           "needsReview": [
             "scan",
             "map",
             "gaps",
             "hypotheses",
             "protocol"
-          ]
+          ],
+          "design.decisions[1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete",
@@ -1112,6 +1114,26 @@
         "screen": {
           "includes": [
             "stale",
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
             "proposed"
           ]
         }
@@ -1134,6 +1156,26 @@
         "screen": {
           "includes": [
             "withdrawn",
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
             "proposed"
           ]
         }
@@ -1726,5 +1768,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-087.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 14 (g1)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 2. Model responses, need and records are unchanged."
 }

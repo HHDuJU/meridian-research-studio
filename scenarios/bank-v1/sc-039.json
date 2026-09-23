@@ -1,6 +1,6 @@
 {
   "id": "sc-039",
-  "version": 1,
+  "version": 2,
   "title": "Regional health authority: narrative review of symptom checker referral accuracy, bad lead values and an invented claim",
   "field": "digital-health",
   "level": 4,
@@ -13,7 +13,8 @@
     "S1",
     "S8",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear narrative review. A fixture search returns six records. A discovery reply then adds four model leads: one with methodQuality 140 (stored null, issue out-of-range) and one with year true (stored null, issue invalid-type); the leads are appended after the six retrieved records and never replace them (D1), and they stay unverified model leads (G3). The discovery reply's null certainty assigns nothing; certainty 'low' comes only from the appraisal (S13) over the six retrieved records, which records four claims. The first design reply rests its decision on claim 'c6', which is not in the ledger, and on a 95 percent figure no record reports: the id is dropped with an issue, the decision has no supporting claim, and the investigator's attempt to accept it must be refused (G7; S1, S8). The revised design reply rests on c1 to c3; it supersedes the refused decision, which becomes withdrawn, and its acceptance succeeds with both gates met on the investigator's facts, so the action is ready. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-1s3of74, 2 ev-1hd00l4, 4 ev-19jm5vc, 5 ev-0pbibi3), or of titleYearKey(title, year) when there is no DOI (records 3 ev-1v90uiv, 6 ev-1yb21yw). Catches: out-of-range scores or boolean years stored as values, leads that overwrite retrieved records, acceptance of a decision resting on an invented claim, and an unsupported figure reaching the committee.",
   "inputs": {
@@ -859,7 +860,11 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -877,6 +882,29 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -982,8 +1010,10 @@
           ],
           "design.decisions[1].status": "proposed",
           "design.decisions[1].selectionStatus": "proposed",
-          "design.decisions[1].gates[0].status": "met",
-          "design.decisions[1].gates[1].status": "met"
+          "design.decisions[1].gates[0].status": "unknown",
+          "design.decisions[1].gates[1].status": "unknown",
+          "design.decisions[1].gates[0].proposal.status": "met",
+          "design.decisions[1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -995,6 +1025,49 @@
           "includes": [
             "proposed",
             "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1515,5 +1588,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-039.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2); step 13 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 2. Model responses, need and records are unchanged."
 }

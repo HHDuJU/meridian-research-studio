@@ -1,6 +1,6 @@
 {
   "id": "sc-090",
-  "version": 2,
+  "version": 3,
   "title": "Intensive care follow-up clinic: narrative review of family-led diaries and post-intensive care syndrome",
   "field": "critical-care",
   "level": 1,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Routine path with clean inputs and one clear design: an ICU follow-up clinic lead asks explicitly for a narrative review, so routing is explicit at create. A recorded fixture search returns seven well-formed records with abstracts (years 2017 to 2024); the appraisal call (shape \"appraisal\") annotates all seven by id and records four source-derived claims whose passages are exact substrings of the abstracts and whose numbers appear in them; certainty \"low\" is the appraisal's own value over inspected records. The design decision (kind pursue) rests on claims c1 to c4, both gates are met on investigator-supplied approval records, and the acceptance is a supported positive (selectionStatus accepted, actionStatus ready). A reload on the Design route checks that the accepted and ready statuses survive on screen. The problem reply restates the typed constraints unchanged, so no investigator text is replaced (G11). No adversarial content. Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 4, 6, 7 (ev-1b0dn1x, ev-1u7wssb, ev-13h7bxm, ev-1pp7kkz, ev-0j3df4o); the titleYearKey(title, year) hash for records 3, 5 (ev-01p6w24, ev-0syv4f2). Requires S13 (appraisal payload on the production scan path), S11 (selectionStatus, actionStatus, basis explicit on acceptance) and D5 (decision status text on screen). Catches: certainty or completion without retrieval, an appraisal that never reaches the ledger, a decision accepted without ledger support, statuses lost on reload, work lost on reopen, and an export that differs from the store.",
   "inputs": {
@@ -869,8 +870,8 @@
             "c1",
             "c2"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -879,13 +880,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1431,5 +1477,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-090.json), superseded 2026-09-22T20:50Z: golden error under S1 (D8), the appraisal reply stated 'about 40 percent non-response' where the cited abstract states 'questionnaire response 61 percent before and 58 percent after', an undeclared derivation or approximation that the application must quarantine; the recorded model output now states the source values, so the expected issue count stands."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-090.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

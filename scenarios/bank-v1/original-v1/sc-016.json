@@ -1,0 +1,1528 @@
+{
+  "id": "sc-016",
+  "version": 1,
+  "title": "Primary care network dashboard redesign: an invented landmark lead kept unverified, prose reply refused, cited record found to be a different work",
+  "field": "implementation-science",
+  "level": 4,
+  "family": "cohort",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on a clear cohort question (routing cohort, explicit under both classifier rules): a primary care network evaluates a redesigned audit and feedback dashboard across a staggered rollout. A fixture search returns seven records. The first scan call (shape discovery) adds five leads, the first an invented 'landmark' cluster trial with the DOI 10.5555/jpci.2018.0001 and a confident note: it must be stored as an unverified model lead with unknown access and no checks, in the store, after reload and in the export (G3), and all leads are appended after the retrieved records (D1). The appraisal (call 2) annotates only the retrieved records and records four claims whose passages and numbers occur in the cited abstracts. The first Gaps reply is prose that leans on the landmark lead; it is refused with the error shown and nothing applied (G5), and the rerun applies. The decision rests on c1 to c3 with both gates met, and its acceptance is a supported positive. Then, on the Design route, an identity check changes the patient-list study's status to mismatch (its DOI resolves to a different work): the decision becomes stale and blocked, completed stages after Scan are flagged, and all of this survives reload and appears in the export. The status-driven stale holds at 875fe59 because evidenceRevision hashes provenance status; the fields selectionStatus and actionStatus need S11. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 2, 3, 4, 5, 7 (ev-1rp1o2o, ev-1r55j8b, ev-1wm4yr5, ev-0xjbvao, ev-07kywg2, ev-1bovm97) and titleYearKey hash for record 6 (ev-0ofly90). Requires D1, S11, S13 and D5. Catches: a model label turned into verification, leads that replace retrieved records, a prose reply treated as success, and an accepted decision left current after its cited source proves to be a different work.",
+  "inputs": {
+    "need": "I lead implementation support for a primary care network of 31 general practices. In 2024 we launched a dashboard that shows each practice the proportion of its patients with type 2 diabetes who had both an eGFR and a urine albumin-to-creatinine ratio in the past 15 months, as the national kidney screening guideline recommends. Adherence has hovered around 58 percent, and practice managers tell us the dashboard is a page of percentages that nobody opens after the first month.\n\nWe have redesigned it. Version 2 adds a comparison with similar practices, a network target of 75 percent and, most importantly, a list of the patients who are due or overdue, which a practice can print for its recall clerk. Because of the IT migration schedule, 16 practices get version 2 in March 2026 and the other 15 in September 2026. I would like to follow a cohort of patients with type 2 diabetes across all 31 practices from March to September 2026, compare the proportion who complete both tests in the practices that already have version 2 with those still on version 1, and see which dashboard features practices actually use.\n\nI need help with the comparison (the two groups of practices were set by the migration schedule, not chosen by us), how to account for practices that already did well, which outcome to use given that a test ordered is not a test done, and what else to measure so that we do not simply push repeat tests onto people who were tested elsewhere. We have extracts from the practice systems and the dashboard's own usage logs, and no budget beyond my time.",
+    "constraints": "No budget beyond the implementation lead's time; practice system extracts and dashboard usage logs only; the migration schedule cannot be changed; no contact with patients.",
+    "localFacts": [
+      "Sixteen practices receive dashboard version 2 on 2026-03-02 and fifteen on 2026-09-07, set by the IT migration schedule.",
+      "The network data sharing agreement DSA-PCN-2025-07 covers pseudonymised extracts of diabetes monitoring data from all 31 practices.",
+      "The network clinical governance group approved use of the extracts and dashboard logs for evaluation on 2026-01-20 (minute CGG-2026-02).",
+      "In December 2025, 58 percent of 9,870 patients with type 2 diabetes had both kidney tests within 15 months."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I lead implementation support for a primary care network of 31 general practices. In 2024 we launched a dashboard that shows each practice the proportion of its patients with type 2 diabetes who had both an eGFR and a urine albumin-to-creatinine ratio in the past 15 months, as the national kidney screening guideline recommends. Adherence has hovered around 58 percent, and practice managers tell us the dashboard is a page of percentages that nobody opens after the first month.\n\nWe have redesigned it. Version 2 adds a comparison with similar practices, a network target of 75 percent and, most importantly, a list of the patients who are due or overdue, which a practice can print for its recall clerk. Because of the IT migration schedule, 16 practices get version 2 in March 2026 and the other 15 in September 2026. I would like to follow a cohort of patients with type 2 diabetes across all 31 practices from March to September 2026, compare the proportion who complete both tests in the practices that already have version 2 with those still on version 1, and see which dashboard features practices actually use.\n\nI need help with the comparison (the two groups of practices were set by the migration schedule, not chosen by us), how to account for practices that already did well, which outcome to use given that a test ordered is not a test done, and what else to measure so that we do not simply push repeat tests onto people who were tested elsewhere. We have extracts from the practice systems and the dashboard's own usage logs, and no budget beyond my time.",
+          "problem.constraints": "No budget beyond the implementation lead's time; practice system extracts and dashboard usage logs only; the migration schedule cannot be changed; no contact with patients.",
+          "family": "cohort",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I lead implementation support for a primary care network"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Dashboard version 2 and completed kidney testing in type 2 diabetes: a cohort across a staggered practice rollout",
+        "subtitle": "Cohort study using a staggered rollout across 31 practices",
+        "family": "cohort",
+        "statement": "About 58 percent of 9,870 patients with type 2 diabetes in the network had both recommended kidney tests within 15 months, and the current dashboard is rarely opened. A redesigned dashboard with peer comparison, a target and a list of patients due reaches 16 practices in March 2026 and 15 in September 2026. The network needs to know whether the redesign increases completed testing, which features practices use, and whether it causes duplicate testing.",
+        "whoAffected": "People with type 2 diabetes whose kidney disease may go undetected; practice recall clerks, nurses and managers; people tested in hospital clinics who may be recalled needlessly.",
+        "whatHurts": "Missed early kidney disease and the treatment that could slow it, alongside wasted appointments and blood tests for people already tested elsewhere.",
+        "currentPractice": "A dashboard of practice percentages with no patient list, peer comparison or target; recall is organised differently in each practice.",
+        "whyNow": "The migration schedule creates six months in which half the practices have the new dashboard and half do not.",
+        "constraints": "No budget beyond the implementation lead's time; practice system extracts and dashboard usage logs only; the migration schedule cannot be changed; no contact with patients.",
+        "patientCenteredGoal": "People with diabetes have their kidneys checked when they are due, once, and act on the result.",
+        "summary": "Problem framed as a cohort comparison across a staggered rollout, with completed tests as the outcome."
+      },
+      "expect": {
+        "store": {
+          "title": "Dashboard version 2 and completed kidney testing in type 2 diabetes: a cohort across a staggered practice rollout",
+          "family": "cohort",
+          "problem.constraints": "No budget beyond the implementation lead's time; practice system extracts and dashboard usage logs only; the migration schedule cannot be changed; no contact with patients.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Dashboard version 2 and completed kidney testing in type 2 diabetes: a cohort across a staggered practice rollout"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "audit and feedback dashboard patient list peer comparison diabetes kidney monitoring primary care",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Audit and feedback: effects on professional practice and healthcare outcomes, an updated systematic review",
+            "authors": "Ivarsson-Moore N, Adewale-Grimm K, Tanaka-Holbrook E, Perez-Lindqvist S",
+            "year": 2017,
+            "venue": "Implementation Evidence Reviews",
+            "doi": "10.5555/ier.2017.0140",
+            "providerType": "journal-article",
+            "abstract": "We updated a systematic review of randomised trials of audit and feedback directed at health professionals. We included 146 trials. The median absolute improvement in compliance with desired practice was 4.3 percentage points (interquartile range 0.5 to 16). Effects were larger when baseline performance was low, when feedback was given more than once, when it was delivered by a supervisor or colleague, and when it included explicit targets and an action plan. Few trials reported patient outcomes or unintended effects, and the design of the feedback itself was rarely described in enough detail to reproduce."
+          },
+          {
+            "title": "Actionable patient lists in primary care dashboards: a controlled before-after study of overdue monitoring",
+            "authors": "Mahlangu-Frost D, Okeke-Sandberg R",
+            "year": 2020,
+            "venue": "Primary Care Quality Reports",
+            "doi": "10.5555/pcqr.2020.0266",
+            "providerType": "journal-article",
+            "abstract": "We compared 12 general practices that received a dashboard with a printable list of patients overdue for chronic disease monitoring with 12 practices that received the same dashboard without the list. Over nine months, the proportion of patients up to date with monitoring rose by 9 percentage points in practices given the list and by 2 percentage points in comparison practices. Practices with a recall clerk used the list most. Allocation was by practice preference, and baseline performance was higher in the comparison practices."
+          },
+          {
+            "title": "Peer comparison feedback to general practices: a cluster randomised trial of prescribing and monitoring indicators",
+            "authors": "Hollander-Achebe T, Watts-Nakamura J, Silva-Brennan P",
+            "year": 2022,
+            "venue": "Journal of Primary Care Improvement",
+            "doi": "10.5555/jpci.2022.0198",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomised 146 general practices to quarterly feedback that compared each practice with its peers or to usual feedback without comparison. After 12 months, peer comparison increased completion of recommended monitoring by 3.1 percentage points (95 percent confidence interval 0.9 to 5.3). The effect was concentrated in practices in the lowest third of baseline performance. There was no change in prescribing indicators. Practice staff reported that comparisons with dissimilar practices felt unfair. Practices in the highest third of baseline performance showed no change, and a few practices stopped reading the reports after the second quarter."
+          },
+          {
+            "title": "Dashboard use declines after launch: usage log analysis in 58 general practices",
+            "authors": "Koenig-Mensah A, Rahman-Olsen D",
+            "year": 2019,
+            "venue": "Health Informatics in Practice",
+            "doi": "10.5555/hip.2019.0053",
+            "providerType": "journal-article",
+            "abstract": "We analysed dashboard usage logs from 58 general practices for 18 months after a performance dashboard was launched. Log-ins fell by 71 percent within three months of launch. Practices that assigned the dashboard to a named staff member kept using it. Views of patient-level lists were strongly associated with later improvement in the indicators, while views of summary charts were not. Usage logs cannot show what staff did after viewing the dashboard. Practices without a named owner stopped opening the dashboard within weeks, and few staff in any practice used the summary charts."
+          },
+          {
+            "title": "Kidney testing in type 2 diabetes: test ordered versus test completed in primary care records",
+            "authors": "Petrossian-Oduya L, Grant-Varela H",
+            "year": 2024,
+            "venue": "Diabetes Care in Practice",
+            "doi": "10.5555/dcip.2024.0087",
+            "providerType": "journal-article",
+            "abstract": "We examined primary care records of 6,420 people with type 2 diabetes to compare kidney tests ordered with tests completed. In total, 18 percent of ordered urine albumin tests were not completed within three months, compared with 6 percent of ordered eGFR tests. Non-completion was highest among people of working age and those living in the most deprived areas. Indicators based on tests ordered would overstate adherence to the screening guideline. Most uncompleted urine tests had been ordered at a routine review and needed the patient to return a sample later."
+          },
+          {
+            "title": "Overtesting after feedback: duplicate kidney function tests in patients also monitored by hospital clinics",
+            "authors": "Lindahl-Owusu C, Farrow-Tanaka M",
+            "year": 2016,
+            "venue": "Laboratory Use Letters",
+            "providerType": "journal-article",
+            "abstract": "After a practice feedback programme on diabetes monitoring, we looked for duplicate testing among 3,115 patients who were also seen in hospital renal or diabetes clinics. In the six months after feedback began, 11 percent had a kidney function test in primary care within 30 days of a hospital test, compared with 5 percent in the six months before. Duplicate tests were rarely acted on. Practices could not see hospital results in their own records, which the authors identify as the cause."
+          },
+          {
+            "title": "Staggered rollout as a natural experiment for evaluating practice-level interventions: methods guidance",
+            "authors": "Network Evaluation Methods Group",
+            "year": 2025,
+            "venue": "Health Services Methods Notes",
+            "doi": "10.5555/hsmn.2025.0012",
+            "providerType": "report",
+            "abstract": "This guidance describes how to evaluate an intervention introduced to groups of practices at different times for administrative reasons. When the timing is set by an external schedule, practices that start later can serve as concurrent comparisons, provided the schedule is not related to performance. The guidance recommends adjusting for baseline performance, checking pre-rollout trends, and analysing at the level of the patient with practice as a random effect. It warns that small numbers of practices give imprecise estimates and that spillover between practices sharing staff can dilute differences."
+          }
+        ]
+      },
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1rp1o2o",
+            "ev-1r55j8b",
+            "ev-1wm4yr5",
+            "ev-0xjbvao",
+            "ev-07kywg2",
+            "ev-0ofly90",
+            "ev-1bovm97"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].provenance.status": "retrieved",
+          "scan.items[5].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Actionable patient lists in primary care dashboards: a controlled before-after study of overdue monitoring"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "audit and feedback dashboard patient list peer comparison diabetes kidney monitoring primary care",
+        "sourcesConsulted": [
+          "model knowledge",
+          "the landmark FEEDBACK-GP trial report"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "Certainty is left to the appraisal of the retrieved records.",
+        "synthesis": "Five further studies are suggested, led by the landmark FEEDBACK-GP trial, which is described as the definitive evidence that practice dashboards work.",
+        "items": [
+          {
+            "title": "Dashboard audit and feedback across 412 general practices: the landmark cluster randomised FEEDBACK-GP trial",
+            "authors": "Harrington-Sole P, Nyberg-Okafor A, Castellanos-Webb T",
+            "year": 2018,
+            "source": "Journal of Primary Care Improvement",
+            "kind": "rct",
+            "grade": "high",
+            "methodQuality": 92,
+            "relevance": 95,
+            "verification": "landmark",
+            "doi": "10.5555/jpci.2018.0001",
+            "contextTags": [
+              "dashboard",
+              "cluster trial",
+              "landmark"
+            ],
+            "keyFindings": "Monitoring completion rose by 14 percentage points in dashboard practices compared with control practices after one year.",
+            "limitations": "None reported.",
+            "notes": "Landmark trial and the definitive evidence for practice dashboards."
+          },
+          {
+            "title": "Where clinicians look on performance dashboards: an eye-tracking study",
+            "authors": "Ngata-Lorenz F, Obi-Carlsson M",
+            "year": 2021,
+            "source": "Health Informatics in Practice",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 60,
+            "verification": "verify",
+            "contextTags": [
+              "dashboard design",
+              "attention"
+            ],
+            "keyFindings": "Clinicians spent most viewing time on patient lists and very little on trend charts.",
+            "limitations": "Laboratory setting with 24 clinicians.",
+            "notes": "Suggested as a lead."
+          },
+          {
+            "title": "Recall clerks and patient lists: how practices act on monitoring feedback",
+            "authors": "Delgado-Whitaker S, Osei-Fournier R",
+            "year": 2023,
+            "source": "Primary Care Organisation Studies",
+            "kind": "qualitative",
+            "grade": "low",
+            "methodQuality": 55,
+            "relevance": 70,
+            "verification": "ai-lead",
+            "contextTags": [
+              "recall",
+              "practice organisation"
+            ],
+            "keyFindings": "Practices turned feedback into action when a named clerk owned the recall list.",
+            "limitations": "Eight practices in one region.",
+            "notes": "Suggested as a lead."
+          },
+          {
+            "title": "Targets in audit and feedback: a meta-regression of trial characteristics",
+            "authors": "Blomqvist-Ade A, Kurosawa-Hale T",
+            "year": 2020,
+            "source": "Implementation Evidence Reviews",
+            "kind": "systematic-review",
+            "grade": "low",
+            "methodQuality": 60,
+            "relevance": 58,
+            "verification": "verify",
+            "contextTags": [
+              "targets",
+              "meta-regression"
+            ],
+            "keyFindings": "Feedback with explicit targets was associated with larger effects than feedback without targets.",
+            "limitations": "Ecological analysis of trial-level characteristics.",
+            "notes": "Suggested as a lead."
+          },
+          {
+            "title": "Unintended consequences of monitoring targets in diabetes care",
+            "authors": "Ferris-Mbeki J, Holm-Adeyemi K",
+            "year": 2017,
+            "source": "Diabetes Care in Practice",
+            "kind": "observational",
+            "grade": "very-low",
+            "methodQuality": 40,
+            "relevance": 55,
+            "verification": "ai-lead",
+            "contextTags": [
+              "targets",
+              "overtesting"
+            ],
+            "keyFindings": "Target-driven monitoring increased repeat testing without changes in management.",
+            "limitations": "Descriptive; no comparison group.",
+            "notes": "Suggested as a lead."
+          }
+        ],
+        "summary": "Five leads; the first is presented as a landmark trial with a DOI."
+      },
+      "note": "The first lead is invented for this scenario: a 'landmark' label and a 10.5555 DOI, but no retrieval event and no SourceCheck. It must be stored as a model lead, unverified, access unknown, with no checks (G3); a landmark label is a model label, not verification (L1.5 derives the badge from provenance). All five leads are appended after the seven retrieved records (D1; at 875fe59 they replace them). The retrieved records keep the stage completable (G2); certainty stays unassessed until the appraisal (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 12
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[1].provenance.status": "retrieved",
+          "scan.items[7].title": "Dashboard audit and feedback across 412 general practices: the landmark cluster randomised FEEDBACK-GP trial",
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[7].provenance.access": "unknown",
+          "scan.items[7].provenance.checks": {
+            "length": 0
+          },
+          "scan.items[7].doi": "10.5555/jpci.2018.0001",
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": {
+            "min": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1rp1o2o",
+            "relevance": 80,
+            "methodQuality": 72,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "In 146 trials the median absolute improvement was 4.3 percentage points (interquartile range 0.5 to 16); larger effects with low baseline, repeated feedback, explicit targets and action plans.",
+            "limitations": "Feedback design poorly described; few patient outcomes or unintended effects reported.",
+            "contextTags": [
+              "audit and feedback",
+              "effect size",
+              "modifiers"
+            ]
+          },
+          {
+            "id": "ev-1r55j8b",
+            "relevance": 92,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Practices given a printable overdue list improved by 9 percentage points against 2 in practices with the same dashboard without the list, over nine months in 12 plus 12 practices.",
+            "limitations": "Allocation by practice preference; higher baseline in comparison practices.",
+            "contextTags": [
+              "patient lists",
+              "controlled before-after",
+              "recall"
+            ]
+          },
+          {
+            "id": "ev-1wm4yr5",
+            "relevance": 78,
+            "methodQuality": 74,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Peer comparison raised monitoring completion by 3.1 percentage points (95 percent confidence interval 0.9 to 5.3), mostly in the lowest third of practices at baseline.",
+            "limitations": "Staff found comparisons with dissimilar practices unfair.",
+            "contextTags": [
+              "peer comparison",
+              "cluster randomised"
+            ]
+          },
+          {
+            "id": "ev-0xjbvao",
+            "relevance": 74,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Log-ins fell by 71 percent within three months in 58 practices; views of patient-level lists, not summary charts, preceded improvement.",
+            "limitations": "Logs cannot show what staff did after viewing.",
+            "contextTags": [
+              "usage logs",
+              "engagement"
+            ]
+          },
+          {
+            "id": "ev-07kywg2",
+            "relevance": 86,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Among 6,420 people, 18 percent of ordered urine albumin tests and 6 percent of ordered eGFR tests were not completed within three months.",
+            "limitations": "One record system; reasons for non-completion unknown.",
+            "contextTags": [
+              "outcome definition",
+              "ordered versus completed",
+              "deprivation"
+            ]
+          },
+          {
+            "id": "ev-0ofly90",
+            "relevance": 70,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Duplicate kidney testing within 30 days of a hospital test rose from 5 to 11 percent after feedback began, among 3,115 patients also seen in hospital clinics.",
+            "limitations": "Before-after comparison; one area.",
+            "contextTags": [
+              "overtesting",
+              "balancing measure"
+            ]
+          },
+          {
+            "id": "ev-1bovm97",
+            "relevance": 76,
+            "methodQuality": 55,
+            "kind": "grey",
+            "grade": "low",
+            "keyFindings": "Later-starting practices can serve as concurrent comparisons if the schedule is unrelated to performance; adjust for baseline and check pre-rollout trends.",
+            "limitations": "Methods guidance, not an evaluation.",
+            "contextTags": [
+              "staggered rollout",
+              "methods"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Across 146 trials of audit and feedback, the median absolute improvement in compliance with desired practice was 4.3 percentage points.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1rp1o2o"
+            ],
+            "location": "Abstract, results",
+            "passage": "The median absolute improvement in compliance with desired practice was 4.3 percentage points (interquartile range 0.5 to 16).",
+            "interpretation": "Sets a realistic expectation for any dashboard effect: a few percentage points.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Practices given a printable list of overdue patients improved monitoring by 9 percentage points against 2 in practices with the same dashboard but no list.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1r55j8b"
+            ],
+            "location": "Abstract, results",
+            "passage": "the proportion of patients up to date with monitoring rose by 9 percentage points in practices given the list and by 2 percentage points in comparison practices",
+            "interpretation": "The patient list is the feature most likely to matter.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "In primary care records, 18 percent of ordered urine albumin tests were not completed within three months.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-07kywg2"
+            ],
+            "location": "Abstract, results",
+            "passage": "In total, 18 percent of ordered urine albumin tests were not completed within three months, compared with 6 percent of ordered eGFR tests.",
+            "interpretation": "The outcome must be completed tests, not orders.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Dashboard log-ins fell by 71 percent within three months of launch.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0xjbvao"
+            ],
+            "location": "Abstract, results",
+            "passage": "Log-ins fell by 71 percent within three months of launch.",
+            "interpretation": "Feature use should be measured from the logs over time.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Audit and feedback yields small average improvements (median 4.3 percentage points), larger with low baselines, repeated feedback, targets and action plans. A controlled before-after study and usage logs point to patient-level lists as the feature that turns feedback into action, and peer comparison adds a few points in low performers. Ordered tests overstate completion, especially for urine albumin, and feedback can increase duplicate testing. A staggered rollout can be evaluated with later practices as concurrent comparisons if the schedule is unrelated to performance. The five discovery leads, including one presented as a landmark trial, are unchecked and are not appraised here.",
+        "gradeOverall": "low",
+        "gradeRationale": "One review of randomised trials and one cluster trial support small effects of feedback in general; the evidence on patient lists is a single non-randomised comparison; outcome and overtesting evidence is observational.",
+        "summary": "Seven retrieved records appraised; four source-derived claims; overall certainty low."
+      },
+      "note": "Appraisal of the seven retrieved records only (S13); the leads are untouched and the landmark lead stays unverified. Certainty low over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 12
+          },
+          "scan.items[1].grade": "low",
+          "scan.items[2].kind": "rct",
+          "scan.items[0].grade": "moderate",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-1r55j8b"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.items[7].provenance.status": "unverified",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "31 practices in a primary care network",
+          "dashboard version 2 in two waves",
+          "recall organised by clerks",
+          "hospital tests invisible to practices"
+        ],
+        "reading": "The route from feedback to a completed test runs through a person who acts on a list: the retrieved evidence places the effect in patient-level lists and named owners, not in charts. The outcome sits downstream of orders that are often not completed, and the same feedback can produce duplicate tests where hospital results are invisible. The staggered rollout gives a concurrent comparison if the schedule is unrelated to performance.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Dashboard version 2",
+            "kind": "framework",
+            "detail": "Peer comparison, target, patient list."
+          },
+          {
+            "id": "n2",
+            "label": "Patient list used by a recall clerk",
+            "kind": "context",
+            "detail": "The feature most linked to improvement (claim c2)."
+          },
+          {
+            "id": "n3",
+            "label": "Completed eGFR and urine albumin tests",
+            "kind": "outcome",
+            "detail": "Primary outcome; orders overstate it (claim c3)."
+          },
+          {
+            "id": "n4",
+            "label": "Duplicate tests after hospital testing",
+            "kind": "outcome",
+            "detail": "Balancing measure."
+          },
+          {
+            "id": "n5",
+            "label": "Review of audit and feedback trials",
+            "kind": "systematic-review",
+            "detail": "Median 4.3-point improvement (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Usage log analysis",
+            "kind": "observational",
+            "detail": "Log-ins fell 71 percent within three months (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Unchecked landmark lead",
+            "kind": "gap",
+            "detail": "Presented as definitive; not retrieved or checked."
+          },
+          {
+            "id": "n8",
+            "label": "Practices with low baseline",
+            "kind": "stakeholder",
+            "detail": "Likely to gain most."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "provides"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "expected to raise"
+          },
+          {
+            "from": "n1",
+            "to": "n4",
+            "relation": "may raise"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "sets expectations for"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "measures use of"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "gain most in"
+          }
+        ],
+        "summary": "Map of the feedback-to-test pathway with the unchecked landmark lead shown as a gap."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "map.nodes[6].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "responseText": "The main gaps are the lack of a completed-test outcome, the risk of duplicate testing and the uncertainty about whether the rollout schedule is related to performance. The landmark FEEDBACK-GP trial already shows that dashboards work, so the main remaining gap is local uptake. I can list these as structured gap items with severity ratings if you would like.",
+      "note": "Prose instead of JSON: extractJson finds no braces and returns 'The model did not return JSON.'; nothing is applied, the stage stays incomplete and the error is shown (G5; holds at 875fe59). The prose also leans on the unchecked landmark lead.",
+      "expect": {
+        "error": {
+          "shown": true,
+          "includes": "did not return JSON"
+        },
+        "store": {
+          "gaps.items": {
+            "length": 0
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "gaps": "incomplete"
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 2,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No completed-test outcome in the current dashboard",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "Orders overstate completion, especially for urine albumin (claim c3).",
+            "opportunity": "Define the outcome as both tests resulted within the window from laboratory results in the extract."
+          },
+          {
+            "id": "g2",
+            "title": "Rollout schedule may relate to performance",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "If early practices differ systematically, the comparison is biased.",
+            "opportunity": "Compare pre-rollout trends and baseline adherence between waves and adjust for baseline."
+          },
+          {
+            "id": "g3",
+            "title": "Duplicate testing of patients seen in hospital",
+            "kind": "error",
+            "severity": "moderate",
+            "whyItMatters": "Feedback has increased duplicate tests elsewhere.",
+            "opportunity": "Measure tests within 30 days of a hospital result as a balancing measure."
+          },
+          {
+            "id": "g4",
+            "title": "People in deprived areas and of working age",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "They complete ordered tests least often.",
+            "opportunity": "Report completion by deprivation quintile and age band."
+          },
+          {
+            "id": "g5",
+            "title": "The landmark trial is an unchecked lead",
+            "kind": "evidence",
+            "severity": "watch",
+            "whyItMatters": "It is presented as definitive but has no retrieval or identity check.",
+            "opportunity": "Search for it by identifier before anyone cites it; do not plan around its effect size."
+          }
+        ],
+        "errorsFound": [
+          "The first gaps reply was prose, not JSON, and relied on the unchecked landmark lead; it was not applied."
+        ],
+        "reevaluation": "The cohort comparison stands, with completed tests as the outcome, baseline adjustment, a balancing measure and equity reporting.",
+        "summary": "Five gaps; outcome definition and schedule bias are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[4].kind": "evidence",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No completed-test outcome in the current dashboard"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Patients in practices with dashboard version 2 are more likely to complete both kidney tests between March and September 2026 than patients in practices still on version 1, after adjustment for practice baseline.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "Uses the concurrent comparison the schedule provides; the patient list is the feature most likely to act (claim c2).",
+            "risks": "Imprecision with 31 practices; schedule bias."
+          },
+          {
+            "id": "h2",
+            "statement": "The effect is concentrated in practices that open the patient list at least monthly.",
+            "novelty": 55,
+            "need": 70,
+            "practiceChange": 70,
+            "feasibility": 75,
+            "parsimony": 65,
+            "rationale": "List views precede improvement in usage logs (claim c4).",
+            "risks": "Use is not randomised; a dose-response is descriptive."
+          },
+          {
+            "id": "h3",
+            "statement": "Version 2 increases duplicate kidney testing in patients tested in hospital clinics.",
+            "novelty": 45,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "Feedback raised duplicate testing elsewhere.",
+            "risks": "Hospital results may be incompletely linked."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected, h2 and h3 as pre-specified secondary and balancing questions."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among patients with type 2 diabetes due for kidney testing in the 31 network practices between March and September 2026, are those in practices with dashboard version 2 more likely to complete both tests than those in practices still on version 1, adjusting for practice baseline?",
+            "framework": "PECO",
+            "population": "Patients with type 2 diabetes due or overdue for kidney testing in the 31 practices",
+            "intervention": "Practice on dashboard version 2 from March 2026 (exposure)",
+            "comparator": "Practice on version 1 until September 2026",
+            "outcome": "Both eGFR and urine albumin-to-creatinine ratio resulted within the window",
+            "time": "2 March to 6 September 2026",
+            "setting": "Primary care network, 31 practices"
+          }
+        ],
+        "finer": "Feasible with existing extracts and logs; interesting to the network and practices; novel in testing the patient list feature; ethical as evaluation of routine care under governance approval; relevant before the second wave.",
+        "summary": "One PECO question on completed testing across the staggered rollout."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "cohort",
+        "rationale": "The schedule creates concurrent exposed and unexposed practices for six months, so a cohort of patients due for testing, analysed with practice as a random effect and adjusted for baseline, uses the natural comparison without changing anyone's care. The expected effect is a few percentage points (claim c1), the patient list is the feature most likely to act (claim c2), and the outcome must be completed tests (claim c3). The landmark lead is unchecked and is not used.",
+        "alternatives": [
+          "Before-after comparison of network adherence (refused: cannot separate the dashboard from secular change)",
+          "Cluster randomised trial (refused: the schedule is fixed by IT migration)"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "A stepped-wedge analysis would add nothing with two fixed waves; a cohort with a concurrent comparison and baseline adjustment answers the question.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Evaluate dashboard version 2 with a cohort of patients with type 2 diabetes in all 31 practices from March to September 2026, comparing completion of both kidney tests between the 16 early and 15 late practices, adjusting for each practice's December 2025 baseline, with duplicate testing as a balancing measure.",
+          "question": "Does dashboard version 2, with its patient list, increase completed kidney testing in type 2 diabetes?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Feedback with a patient-level list plausibly raises completed monitoring by more than feedback alone.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Completed tests, not orders, can be measured from the extracts.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The migration schedule is related to practice performance.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Data sharing agreement covering pseudonymised extracts from all 31 practices",
+              "status": "met",
+              "evidence": "Agreement DSA-PCN-2025-07, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Clinical governance approval to use extracts and usage logs for evaluation",
+              "status": "met",
+              "evidence": "Governance minute CGG-2026-02 dated 2026-01-20, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Report network-wide adherence before and after September 2026 only",
+            "Evaluate usage logs without outcome data"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; the landmark lead is an unchecked model suggestion and is not used."
+        },
+        "summary": "Cohort across the staggered rollout recommended; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "selectionStatus and recommendedFamily require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "cohort",
+          "family": "cohort",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].recommendedFamily": "cohort",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The supported positive predecessor: c1 to c3 exist and rest on retrieved records; both gates are met; so the selection is accepted and the action ready (G7; S11, S13, D5).",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "cohort"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "change-source",
+      "record": "Actionable patient lists in primary care dashboards: a controlled before-after study of overdue monitoring",
+      "field": "status",
+      "value": "mismatch",
+      "note": "An identity check finds that the DOI of the patient-list study (cited by claim c2 and criterion k1) resolves to a different work: its status becomes mismatch through the store's own action, while the route is on Design. The decision rests on a claim whose source is now a mismatch, so it becomes stale and blocked (G7). evidenceRevision hashes provenance status at 875fe59, so status 'stale' holds there; selectionStatus and actionStatus require S11; the status text D5. Completed stages after Scan are flagged (G8).",
+      "expect": {
+        "store": {
+          "scan.items[1].provenance.status": "mismatch",
+          "scan.items[1].title": "Actionable patient lists in primary care dashboards: a controlled before-after study of overdue monitoring",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "scan": "complete",
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "mismatch",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: stale and mismatch survive (G7).",
+      "expect": {
+        "store": {
+          "title": "Dashboard version 2 and completed kidney testing in type 2 diabetes: a cohort across a staggered practice rollout",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "scan.items[1].provenance.status": "mismatch",
+          "scan.items[7].provenance.status": "unverified",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ],
+          "excludes": [
+            "no recorded response"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Cohort study of patients with type 2 diabetes due for kidney testing across 31 practices, using the staggered rollout of dashboard version 2 (16 practices from March 2026, 15 from September 2026) as a concurrent comparison.",
+        "population": "All patients with type 2 diabetes registered on 2 March 2026 who are due or become due for kidney testing before 6 September 2026 (about 4,900 of 9,870).",
+        "exposure": "Registration with a practice on dashboard version 2 during the window; feature use from usage logs.",
+        "procedures": "Pseudonymised extracts under DSA-PCN-2025-07 give due dates, test results and hospital results where linked; usage logs give list views, chart views and log-ins per practice. Pre-rollout trends from 2024 and 2025 are compared between waves before outcome data for 2026 are examined.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Both kidney tests completed",
+            "measure": "eGFR and urine albumin-to-creatinine ratio both resulted within the window, among patients due",
+            "timing": "2 March to 6 September 2026",
+            "why": "The guideline's aim; completed tests, not orders (claim c3).",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Urine albumin test completed",
+            "measure": "Urine albumin-to-creatinine ratio resulted",
+            "timing": "Same window",
+            "why": "The test most often not completed.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "balancing",
+            "name": "Duplicate kidney testing",
+            "measure": "Kidney test in primary care within 30 days of a hospital result",
+            "timing": "Same window",
+            "why": "Feedback can cause duplicate testing.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Patient list use",
+            "measure": "Practice-level list views per month from usage logs",
+            "timing": "Monthly",
+            "why": "Shows whether the feature expected to act was used (claim c4).",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Extracts and logs exist; the analysis fits within the lead's time over three months after September 2026.",
+        "biasMitigation": [
+          "Pre-rollout trends compared between waves before outcomes are examined",
+          "Adjustment for practice baseline adherence",
+          "Practice as a random effect",
+          "Outcome from laboratory results, not orders"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Schedule related to performance",
+            "severity": "high",
+            "note": "Checked with pre-rollout trends; defeating criterion k3 stays unknown until then."
+          },
+          {
+            "id": "b2",
+            "label": "Spillover between practices sharing staff",
+            "severity": "watch",
+            "note": "Shared staff are identified and a sensitivity analysis excludes those practices."
+          },
+          {
+            "id": "b3",
+            "label": "Incomplete hospital linkage",
+            "severity": "watch",
+            "note": "Duplicate testing may be undercounted."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 3,
+          "flags": [
+            "Three adjustment variables fixed in advance"
+          ],
+          "simplestPath": "One exposure, one primary outcome, one mixed model with baseline adjustment."
+        },
+        "theoreticalFramework": "Clinical Performance Feedback Intervention Theory is used only to name the feedback features being compared.",
+        "summary": "Cohort across a staggered rollout with completed tests as the primary outcome and duplicate testing as the balancing measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[2].role": "balancing",
+          "protocol.parsimony.covariateCount": 3,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Patient-level cohort with practice as a random effect, concurrent comparison of two rollout waves.",
+        "sampleSize": "About 4,900 patients are due in the window, about 159 per practice. With an intraclass correlation of 0.05 the design effect is about 8.9 (1 plus 158 times 0.05), leaving about 277 effective patients per wave, enough to detect about 12 percentage points from a baseline of 58 percent with 80 percent power. If baseline adjustment reduces the residual intraclass correlation to about 0.02, the design effect falls to about 4.2 and the detectable difference to about 8 points. The expected effect of feedback is a few points (claim c1), so the study is informative mainly for a large effect of the patient list and will report its estimate with an interval rather than a verdict.",
+        "primaryAnalysis": "Mixed-effects logistic regression of both tests completed on practice wave, with practice random intercept and adjustment for practice baseline adherence in December 2025, patient age band and deprivation quintile; results as an adjusted risk difference with a 95 percent interval.",
+        "secondaryAnalysis": "Same model for urine albumin completion and duplicate testing; list use by practice described against practice-level change; pre-rollout trend comparison between waves.",
+        "missingData": "Patients who deregister are censored at deregistration; missing deprivation is a separate category; missing hospital linkage is reported by practice.",
+        "multiplicity": "One primary comparison; secondary and balancing results reported with intervals and no significance claims.",
+        "software": "R (lme4); code archived before 2026 outcomes are extracted.",
+        "overfittingGuards": [
+          "Three adjustment variables fixed in advance",
+          "No selection of practices after seeing outcomes",
+          "Pre-rollout trend check done blind to 2026 outcomes"
+        ],
+        "summary": "About 4,900 patients in 31 practices; detectable difference 8 to 12 points depending on the residual intraclass correlation."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "design effect is about 8.9"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal for patients: no contact and pseudonymised data. The risk for practices is blame from comparison; results are shared with each practice first and published only by wave.",
+        "consent": "No individual consent for pseudonymised extracts under the data sharing agreement and governance approval; practices consent to the use of their usage logs through the governance group.",
+        "data": "Pseudonymised extracts under DSA-PCN-2025-07 held on the network's secure analysis server; usage logs keyed by practice, never by staff member.",
+        "equity": "PROGRESS-Plus: people of working age and those in the most deprived areas complete ordered tests least often; completion is reported by age band and deprivation quintile, and the dashboard list is checked for whether it prompts outreach to these groups.",
+        "effectiveness": "The evaluation estimates whether version 2 raises completed testing and whether it causes duplicate tests.",
+        "efficiency": "Existing data and the lead's time only.",
+        "costs": "None beyond staff time.",
+        "grants": "None needed.",
+        "partnerships": "Practice managers, recall clerks from both waves, the network's patient panel and the hospital renal clinic.",
+        "rebPath": "Evaluation of routine care under governance approval CGG-2026-02; no research ethics review is required under the network's policy, and the approval is recorded in the report.",
+        "limitations": "Non-random timing; imprecision with 31 practices; incomplete hospital linkage.",
+        "summary": "Minimal-risk evaluation with non-punitive reporting and equity breakdowns."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "CGG-2026-02"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Recall clerks from both waves and two members of the network's patient panel review the outcome definition and the dashboard list wording.",
+        "socialListening": "No social media listening; practice manager meeting notes from 2025 are summarised for comments on the dashboard.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Percentages without names",
+            "quote": "Composite paraphrase: Knowing we are at 58 percent tells me nothing about who to ring on Monday.",
+            "implication": "Measure list use, not log-ins.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "partner",
+            "theme": "The recall clerk",
+            "quote": "Composite paraphrase: Give me a list I can print and I will get them in; a chart I cannot use.",
+            "implication": "Record whether each practice has a named list owner.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Tested twice",
+            "quote": "Composite paraphrase: The hospital took my bloods in May and the surgery called me in for the same thing in June.",
+            "implication": "Keep duplicate testing as the balancing measure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "patient",
+            "theme": "Time off work",
+            "quote": "Composite paraphrase: The urine pot sits on my kitchen table because I cannot get to the surgery before it closes.",
+            "implication": "Report completion by age band and deprivation.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on actionable lists, recall work, duplicate testing and access."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A redesigned practice dashboard with patient lists and completed kidney testing in type 2 diabetes: a cohort study across a staggered rollout",
+        "abstract": "Objective: to estimate whether a redesigned dashboard with peer comparison, a target and a patient list increases completed kidney testing in type 2 diabetes. Design: cohort of about 4,900 patients due for testing in 31 practices, comparing 16 practices that received the dashboard in March 2026 with 15 that received it in September 2026. Outcome: both tests resulted within the window. Results and conclusions will follow the analysis.",
+        "introduction": "Audit and feedback produces small average improvements, and patient-level lists may be the feature that turns feedback into action. Ordered tests overstate completion and feedback can cause duplicate testing, so both are measured.",
+        "methods": "Pseudonymised extracts and usage logs; mixed-effects logistic regression with practice random intercept and baseline adjustment; pre-rollout trends compared between waves; duplicate testing as a balancing measure.",
+        "results": "No data have been analysed yet. The report will present pre-rollout trends, completion by wave, the adjusted risk difference, list use and duplicate testing.",
+        "discussion": "The discussion will compare the estimate with the retrieved feedback literature and state whether the patient list should be kept, changed or dropped. One cited comparison of patient lists was later found to carry an identifier for a different work and must be re-checked before the report cites it.",
+        "limitations": "Non-random timing; imprecision; incomplete hospital linkage.",
+        "conclusion": "To be written after analysis; it will not cite unchecked leads.",
+        "reportingChecklist": "STROBE",
+        "summary": "STROBE-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The accepted decision is stale: the patient-list study's identifier resolved to a different work; find the correct record or remove claim c2 and decide again",
+          "The landmark FEEDBACK-GP lead is unchecked and must not be cited or used as a planning value",
+          "Map, gaps, hypotheses, questions and design are flagged for review after the source change"
+        ],
+        "improvementNotes": "A gaps reply in prose was refused and the stage was rerun. The discovery reply's landmark lead stayed an unverified model lead throughout.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the stale decision, the unchecked landmark lead and the flagged stages."
+      },
+      "note": "audit fields fail at 875fe59 because of the L1.6 store defect, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "After reopen the stage list shows the flagged stages (G8, D5).",
+      "expect": {
+        "store": {
+          "title": "Dashboard version 2 and completed kidney testing in type 2 diabetes: a cohort across a staggered practice rollout",
+          "design.decisions[-1].selectionStatus": "stale",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "scan.items[7].provenance.status": "unverified"
+        },
+        "stage": {
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; the appended leads D1. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "design.decisions[-1].status": "stale",
+            "design.decisions[-1].selectionStatus": "stale",
+            "design.decisions[-1].actionStatus": "blocked",
+            "scan.items[1].provenance.status": "mismatch",
+            "scan.items[7].provenance.origin": "model",
+            "scan.items[7].provenance.status": "unverified",
+            "scan.items[7].provenance.checks": {
+              "length": 0
+            },
+            "scan.items": {
+              "length": 12
+            },
+            "scan.claims": {
+              "length": 4
+            },
+            "needsReview": [
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design"
+            ],
+            "problem.constraints": "No budget beyond the implementation lead's time; practice system extracts and dashboard usage logs only; the migration schedule cannot be changed; no contact with patients."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

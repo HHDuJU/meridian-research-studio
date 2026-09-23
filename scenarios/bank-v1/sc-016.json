@@ -1,6 +1,6 @@
 {
   "id": "sc-016",
-  "version": 1,
+  "version": 2,
   "title": "Primary care network dashboard redesign: an invented landmark lead kept unverified, prose reply refused, cited record found to be a different work",
   "field": "implementation-science",
   "level": 4,
@@ -11,7 +11,8 @@
     "D1",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear cohort question (routing cohort, explicit under both classifier rules): a primary care network evaluates a redesigned audit and feedback dashboard across a staggered rollout. A fixture search returns seven records. The first scan call (shape discovery) adds five leads, the first an invented 'landmark' cluster trial with the DOI 10.5555/jpci.2018.0001 and a confident note: it must be stored as an unverified model lead with unknown access and no checks, in the store, after reload and in the export (G3), and all leads are appended after the retrieved records (D1). The appraisal (call 2) annotates only the retrieved records and records four claims whose passages and numbers occur in the cited abstracts. The first Gaps reply is prose that leans on the landmark lead; it is refused with the error shown and nothing applied (G5), and the rerun applies. The decision rests on c1 to c3 with both gates met, and its acceptance is a supported positive. Then, on the Design route, an identity check changes the patient-list study's status to mismatch (its DOI resolves to a different work): the decision becomes stale and blocked, completed stages after Scan are flagged, and all of this survives reload and appears in the export. The status-driven stale holds at 875fe59 because evidenceRevision hashes provenance status; the fields selectionStatus and actionStatus need S11. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 2, 3, 4, 5, 7 (ev-1rp1o2o, ev-1r55j8b, ev-1wm4yr5, ev-0xjbvao, ev-07kywg2, ev-1bovm97) and titleYearKey hash for record 6 (ev-0ofly90). Requires D1, S11, S13 and D5. Catches: a model label turned into verification, leads that replace retrieved records, a prose reply treated as success, and an accepted decision left current after its cited source proves to be a different work.",
   "inputs": {
@@ -973,13 +974,40 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -996,14 +1024,14 @@
         "store": {
           "design.decisions[-1].status": "accepted",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].actionStatus": "blocked",
           "design.basis": "explicit",
           "family": "cohort"
         },
         "screen": {
           "includes": [
             "accepted",
-            "ready"
+            "blocked"
           ]
         }
       }
@@ -1524,5 +1552,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-016.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Decision 1 is expected blocked from its acceptance (step 13) on: the investigator's facts give no research ethics status. Model responses, need and records are unchanged."
 }

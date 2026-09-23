@@ -1,7 +1,6 @@
 {
   "id": "sc-000-level1",
-  "version": 3,
-  "supersedes": "bank-samples/original-v2/sc-000-level1.json (version 2). Reason: G11: investigator constraints are never erased or replaced by a model response; issue code dropped. Version 2's problem reply reworded the investigator's typed constraints while its expectation allowed no issue; version 3's reply repeats the typed constraints exactly, so no issue is recorded and the expectation of zero issues holds.",
+  "version": 4,
   "title": "Acute medical ward: structured bedside handoff checklist and missed medication reconciliation items",
   "field": "nursing",
   "level": 1,
@@ -11,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Routine path with clean inputs, a recorded search and one clear design (quality improvement with PDSA cycles and run charts). The fixture search returns seven records with abstracts; the appraisal call (shape \"appraisal\") annotates all seven by id and records four source-derived claims whose passages are exact substrings of the abstracts; certainty \"low\" is the appraisal's own value over inspected records, never a default. The design decision rests on ledger claims c1 to c3, its gates are met on investigator-supplied approval records, and the investigator's acceptance is a supported positive (selectionStatus accepted, actionStatus ready). Record ids are not typed by hand: each is stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, that is 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1, 3, 4, 6: ev-1iszc5g, ev-09g3r66, ev-1omdeda, ev-05uh926) or, when there is no DOI, of titleYearKey(title, year) (records 2, 5, 7: ev-1kt4l30, ev-07z485i, ev-0j00nsx). Requires S13 (appraisal payload dispatched on the production scan path), S11 (selectionStatus, actionStatus, acceptance) and D5 (decision status text on screen). Catches: certainty or completion without retrieval, an appraisal that cannot reach the ledger, a decision accepted without ledger support, work lost on reload or reopen, and an export that differs from the store. At 875fe59 it also catches a store defect: mergeStage overwrites the Audit stage's patch (see the audit step's note).",
   "inputs": {
@@ -859,8 +859,8 @@
             "c1",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -869,13 +869,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Research ethics office determination that the project is quality improvement not requiring REB review: Screening record QIS-2026-118 dated 2026-08-19, supplied by the investigator",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1441,5 +1486,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 3 (kept as bank-samples/original-v3/sc-000-level1.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) citing the ethics gate the investigator confirmed before accepting decision 1. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

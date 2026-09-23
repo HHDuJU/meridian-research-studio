@@ -1,6 +1,6 @@
 {
   "id": "sc-054",
-  "version": 1,
+  "version": 2,
   "title": "Community falls prevention classes: adherence support pragmatic trial, failed search, leads-only scan kept incomplete, two hits",
   "field": "geriatrics",
   "level": 2,
@@ -12,7 +12,8 @@
     "D19",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary path with a thin evidence trail (routing explicit pragmatic-trial from 'We want to run a pragmatic trial'; allocation is described as 'by chance' so no second design word routes the need). The first fixture search is rate limited (HTTP 429): the application records a failed event (status error, count null, no records). The first scan reply (shape discovery) brings five model leads after that failure and an explicit null certainty: the leads are stored as unverified model leads, one undated with methodQuality null (G3, G4), the certainty stays unassessed, and the Scan stays incomplete with the status 'leads only' (G1, G2; D20). The investigator then tries to mark the Scan complete by hand; the attempt is refused (G2; D19, D20). A reload on the Scan route checks the leads-only state. A broader second search returns only two hits (status ok, 2 of 2); the records are added beside the leads (assumed appended at items[5] and items[6]) and the appraisal (scan call 2) annotates both, records claims c1 to c3 and assigns certainty 'low' over the two inspected records, which completes the Scan. The decision rests on c1 to c3 with the ethics gate unknown (accepted, blocked). Unlike an empty search that is later followed by a fuller one, the first channel here fails outright, the leads arrive while there is nothing to confirm, and the successful search finds only two records. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for record 1 (ev-1fe58bk); titleYearKey hash for record 2 (ev-0j5ycdf). Requires D20 and D19 (no completion over leads only, manual completion refused), S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a failed channel shown as an empty search, leads that complete the Scan or earn a certainty, a manual completion bypass, and leads lost when records arrive.",
   "inputs": {
@@ -883,13 +884,35 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1381,5 +1404,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-054.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 13 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

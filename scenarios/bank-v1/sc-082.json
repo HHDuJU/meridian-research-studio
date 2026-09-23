@@ -1,6 +1,6 @@
 {
   "id": "sc-082",
-  "version": 3,
+  "version": 4,
   "title": "Cardiac surgery network: remote monitoring cost and effect, four-centre cohort, late audit reply refused",
   "field": "health-economics",
   "level": 5,
@@ -13,7 +13,8 @@
     "S5",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Level 5 expert path: a multi-site design, a family change only on acceptance, dependency closure between protocol and stats, and a late audit reply refused after an investigator edit. The need asks for a cost-effectiveness analysis (routing explicit 'economic'). The problem reply sends constraints null: under G11 the typed constraints stay and the attempt is recorded as rejected-change (S5). Seven fixture records are appraised (five claims, one of high uncertainty). The design reply recommends 'cohort' because the missing input for the economic question is a fair effect estimate; the proposed recommendation does not change the family (D3 under S11), and acceptance of the supported decision sets family 'cohort' with basis 'explicit' while the unknown centre D cost gate keeps the action blocked. After Protocol, Stats and Ethics are complete, protocol call 2 revises the comparison period for a contaminated comparison centre; Stats and Ethics are flagged 'review required' (G8); stats call 2 clears Stats and the investigator marks Ethics complete by hand. At the Audit stage, the first reply is held while the investigator edits the audit notes and is then refused (G6): encoded as illuminate (request sent, reply held) then set-field then wait (reply delivered), because the format has no field for a held reply. A fresh audit call is applied and omits improvementNotes, so the investigator's note stays. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 3, 4, 5, 6 (ev-0gdg3o5, ev-0p8nj5i, ev-0fos45w, ev-0f46h0m, ev-0xbcx1h) and titleYearKey-keyed for records 2 and 7 (ev-1wngjtj, ev-1w2yv8t). Requires S5 (rejected-change), S11 (no family change before acceptance, selectionStatus, actionStatus, recommendedFamily), S13 (appraisal payload), D5 (status text), and S10 with D27 (substantive audit content in studyRevision so the held reply is refused). The audit patch itself needs L1.6 (store defect at 875fe59). Catches: a model null erasing investigator constraints, a proposed family applied early, downstream stages left current after an upstream change, and a stale audit reply overwriting the investigator's notes.",
   "inputs": {
@@ -831,7 +832,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -843,6 +846,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1656,5 +1679,5 @@
       }
     }
   ],
-  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-082.json), superseded 2026-09-22T20:50Z: golden error under S1 (D8), the appraisal reply stated '32 participants from one programme.' where the cited abstract states '20 patients and 12 carers from one programme.', an undeclared derivation or approximation that the application must quarantine; the recorded model output now states the source values, so the expected issue count stands. Earlier: version 1 (kept as bank-v1/original-v1/sc-082.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
+  "supersedes": "version 3 (kept as bank-v1/original-v3/sc-082.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

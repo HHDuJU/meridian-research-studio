@@ -1,6 +1,6 @@
 {
   "id": "sc-092",
-  "version": 2,
+  "version": 3,
   "title": "Regional referral intake: lean redesign with structured templates, empty first search confirmed, conflicting evidence",
   "field": "health-services",
   "level": 3,
@@ -11,7 +11,8 @@
     "D5",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Demanding path on an explicit lean need (value stream mapping and A3 named). A narrow first search for the intake's own combination returns zero records; the investigator confirms on screen that it was run and empty, which completes the stage with certainty unassessed (G1, G2; an investigator record, A3.2). A broader second search then returns six records; the empty event stays in the history. The records conflict on the outcome that matters most: an uncontrolled before-after study reports triage time halving while a stepped introduction across 48 practices finds no difference. The appraisal records claim c3 as an inference over both records with uncertainty 'high', and declines one overall rating with an explicit null on the model-owned gradeOverall (issue 'cleared'), so certainty stays unassessed through the export. The decision cites the conflicting claims and states the conflict; both gates are met on investigator-supplied records, so the acceptance is a supported positive with a ready action. A reopen after ten stages checks the history is kept. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 4, 6 (ev-1fkbpja, ev-1qoekf8, ev-0fxopuo, ev-1i9wli1); the titleYearKey(title, year) hash for records 3, 5 (ev-14m5911, ev-16af51q). Requires D20 (empty search, investigator confirmation, 'not assessed'), S13 (appraisal payload), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a certainty label invented over an empty search or over conflicting evidence the model declined to rate, an empty event erased when a later search succeeds, a high-uncertainty claim softened or dropped, and work lost on reopen or reload.",
   "inputs": {
@@ -879,8 +880,8 @@
             "c5"
           ],
           "design.decisions[-1].criteria[1].status": "unknown",
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -889,13 +890,38 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -912,7 +938,7 @@
         "store": {
           "design.decisions[-1].status": "accepted",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].actionStatus": "blocked",
           "design.decisions[-1].claimIds": [
             "c1",
             "c2",
@@ -926,7 +952,7 @@
         "screen": {
           "includes": [
             "accepted",
-            "ready"
+            "blocked"
           ]
         }
       }
@@ -1437,7 +1463,7 @@
               "ev-1qoekf8"
             ],
             "design.decisions[-1].selectionStatus": "accepted",
-            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].actionStatus": "blocked",
             "design.decisions[-1].claimIds": [
               "c1",
               "c2",
@@ -1453,5 +1479,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-092.json), superseded 2026-09-22T20:40Z: golden error GE-3, the Scan stage was expected to stay complete after a broader second search invalidated the investigator's empty-search confirmation; under D26 the completion is withdrawn and the appraisal at the next step completes the stage."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-092.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Decision 1 is expected blocked from its acceptance (step 13) on: the investigator's facts give no research ethics status. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

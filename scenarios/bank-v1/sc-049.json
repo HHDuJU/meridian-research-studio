@@ -1,6 +1,6 @@
 {
   "id": "sc-049",
-  "version": 1,
+  "version": 2,
   "title": "Medical wards: protected night repositioning rounds for pressure injuries, landmark lead unverified, renamed record quarantined",
   "field": "nursing",
   "level": 4,
@@ -12,7 +12,8 @@
     "D5",
     "S1",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear QI question (routing explicit qi-pdsa from 'quality improvement project using PDSA cycles' and 'run charts'). A fixture search returns seven records with abstracts. The first scan reply (shape discovery) carries three leads: a model-labelled 'landmark' ratio study with the invented DOI 10.5555/nsj.2018.0777, which is appended and must stay unverified with no checks (G3); a lead that reuses the id of retrieved record 2 (ev-1ihlm0s) but renames the uncontrolled before-after report as a multicentre controlled trial that 'eliminated' injuries, which must be quarantined with issue id-collision while record 2 keeps its title, provenance, missing DOI and label (A2 item 6; D1, S1); and a sensor report appended as a lead with methodQuality null. The reply's certainty is an explicit null, so certainty stays unassessed until the appraisal. The second scan reply (shape appraisal) annotates the seven records, again tries to retitle record 2 (the title key is dropped with an issue, the stored title unchanged) and records claims c1 to c4; certainty 'low'. The design decision rests on c1 to c3 only; the float nurse gate is unknown, so acceptance gives selection accepted and action blocked. Reload and reopen follow the last stage. Unlike a lead that echoes a retrieved record with an invented DOI, here the colliding lead changes the record's title and design, and the landmark lead is a separate, non-colliding invention. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 3, 5, 6 (ev-0bok56v, ev-0uhk5zi, ev-0aphgus, ev-0ekr4am); titleYearKey hash for records 2, 4, 7 (ev-1ihlm0s, ev-0clsgbr, ev-1tyuu4i). Requires D1 and S1 (append and quarantine), S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a lead that renames or overwrites a retrieved record, a model label or DOI treated as verification, identity edits through the appraisal, and a decision resting on unretrieved leads.",
   "inputs": {
@@ -943,13 +944,35 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1494,5 +1517,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-049.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

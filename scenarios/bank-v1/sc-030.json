@@ -1,6 +1,6 @@
 {
   "id": "sc-030",
-  "version": 1,
+  "version": 2,
   "title": "Anaesthesia department: difficult airway alert system, a landmark-labelled lead that stays unverified, and a mismatched source after acceptance",
   "field": "anesthesia",
   "level": 4,
@@ -11,7 +11,8 @@
     "D1",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear retrospective design (the need names a retrospective study; routing explicit). A fixture search returns seven records. A discovery reply then recalls three leads; the first presents the investigator's untraced national figure as a 'landmark' survey with the invented identifier 10.5555/jas.2015.0404 and grade 'high'. It must be stored as a model lead appended after the retrieved records (D1), provenance origin model and status unverified with no checks, whatever its label (G3), and stay unverified on screen, after reload and reopen, and in the export. The appraisal of the seven records also carries an annotation keyed to 'ev-nsaa2015', an identifier that exists nowhere in the study: it is dropped with an issue (holds at 875fe59 in applyAppraisal), so the lead gains no appraisal. The first decision rests on claims c1 to c3 and both gates are met: accepted, ready. After protocol and stats are drafted, an identity check sets the record behind claim c1 to 'mismatch' through the store: the decision becomes stale and blocked (evidenceRevision at 875fe59 already covers provenance status), and every completed stage after Scan is flagged. The investigator re-runs Design; the new decision rests on c2 to c4, is accepted and ready, while the old one stays stale in the history; Design leaves the review list, the other flagged stages stay flagged. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator; all seven records carry DOIs (ev-07tncvr, ev-0xz7bs2, ev-0de9zjp, ev-0z3z6ig, ev-04dpbpv, ev-08q6nfo, ev-12x9zs1). Requires D1 (leads appended, never replacing records), S13 (appraisal dispatch), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a landmark label or an identifier treated as verification, appraisal of a record that does not exist, an accepted decision left current on a misattributed source, and a stale decision overwritten instead of kept.",
   "inputs": {
@@ -914,8 +915,8 @@
             "c2",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -924,13 +925,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "The trust research office classified the study as a retrospective service evaluation on 9 September 2026 (reference RSE-26-044).",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1254,7 +1300,11 @@
             "questions",
             "protocol",
             "stats"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete",
@@ -1266,6 +1316,29 @@
         "screen": {
           "includes": [
             "stale",
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
             "proposed"
           ]
         }
@@ -1298,6 +1371,26 @@
             "stale",
             "proposed",
             "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "The trust research office classified the study as a retrospective service evaluation on 9 September 2026 (reference RSE-26-044).",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1585,5 +1678,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-030.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2); step 16 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) citing the investigator's own fact before accepting decision 1; the investigator records the ethics status (review not required) citing the investigator's own fact before accepting decision 2. Model responses, need and records are unchanged."
 }

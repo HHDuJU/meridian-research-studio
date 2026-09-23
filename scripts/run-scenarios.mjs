@@ -143,6 +143,7 @@ const WORK_ORDER_PATHS = [
   [/^design\.routing(\.|$)/, "S11"],
   [/^design\.basis$/, "S11"],
   [/(^|\.)resourcesAssumed(\[|\.|$)/, "D10"],
+  [/\.gates\[-?\d+\]\.proposal(\.|$)/, "D10"],
   [/(^|\.)legacyScores(\.|$)/, "M6"],
   [/^scan\.comparisons(\[|\.|$)/, "S9"],
 ];
@@ -390,7 +391,8 @@ async function loadLib() {
   const fixture = await import(pathToFileURL(path.join(ROOT, "src/lib/evidence/fixture-adapter.ts")).href);
   const transport = await import(pathToFileURL(path.join(ROOT, "src/lib/evidence/transport.ts")).href);
   const runtime = await import(pathToFileURL(path.join(ROOT, "src/lib/model-runtime.ts")).href);
-  return { store, defaults, stages, decision, apply, exp, runtime, retrieve, fixture, transport };
+  const authority = await import(pathToFileURL(path.join(ROOT, "src/lib/evidence/authority.ts")).href);
+  return { store, defaults, stages, decision, apply, exp, runtime, retrieve, fixture, transport, authority };
 }
 
 function listScenarios(dir) {
@@ -572,6 +574,32 @@ async function runStore(scenario, lib) {
       } else if (step.do === "accept-decision") {
         actionRoutes.push({ do: step.do, route: "store-fallback" });
         S().acceptDecision(studyId, step.which ?? "latest");
+      } else if (step.do === "confirm-gate") {
+        // D10: the investigator confirms gates the model proposed as met (all proposals, or the listed ids).
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        const decs = study().design.decisions ?? [];
+        const idx = (step.which ?? "latest") === "latest" ? decs.length - 1 : Number(step.which);
+        for (const g of decs[idx]?.gates ?? []) {
+          if (!g.proposal || g.status !== "unknown" || g.setBy === "investigator") continue;
+          if (Array.isArray(step.gates) && !step.gates.includes(g.id)) continue;
+          S().setGate(studyId, idx, g.id, "met", g.proposal.evidence);
+        }
+      } else if (step.do === "record-determination") {
+        // D10: the investigator records a board's determination for one kind of body, with the reason.
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        const decs = study().design.decisions ?? [];
+        const idx = (step.which ?? "latest") === "latest" ? decs.length - 1 : Number(step.which);
+        const r = S().addGate(studyId, idx, lib.authority.DETERMINATION_GATE[step.body], step.status === "met" ? "met" : "not-required", step.reason);
+        if (!r.ok) checkpoints.push(checkpoint({ step: n, action: step, check: "record-determination", expected: true, observed: false, ok: false, reason: r.reason || "refused" }));
+      } else if (step.do === "settle-open-item") {
+        // D10: the investigator acts on one of their own facts that leaves an approval open, for one decision.
+        actionRoutes.push({ do: step.do, route: "store-fallback" });
+        const s = study();
+        const decs = s.design.decisions ?? [];
+        const idx = (step.which ?? "latest") === "latest" ? decs.length - 1 : Number(step.which);
+        const item = decs[idx] ? lib.decision.approvalReview(decs[idx], s).openItems.find((it) => it.text.includes(step.match)) : undefined;
+        const r = item ? S().settleOpenItem(studyId, idx, item.text, step.how, step.note) : { ok: false, reason: "no open item matches" };
+        if (!r.ok) checkpoints.push(checkpoint({ step: n, action: step, check: "settle-open-item", expected: true, observed: false, ok: false, reason: r.reason || "refused" }));
       } else if (step.do === "withdraw-decision") {
         actionRoutes.push({ do: step.do, route: "store-fallback" });
         S().withdrawDecision(studyId, step.which ?? "latest");
@@ -597,7 +625,8 @@ async function runStore(scenario, lib) {
           checkpoints.push(checkpoint({ step: n, action: step, check: "reload.storage", expected: "persisted bytes", observed: 0, ok: false, reason: "storage empty after writes; reload cannot roundtrip" }));
           store.useStudio.setState({ studies: [] });
         } else {
-          const persisted = parsePersistedStudio(raw).map((x) => lib.defaults.migrateStudy(x));
+          // As the app loads a study: migrate, then re-derive every decision's status (never trust a stored "ready").
+          const persisted = parsePersistedStudio(raw).map((x) => lib.decision.refreshDecisionStatuses(lib.defaults.migrateStudy(x)));
           store.useStudio.setState({ studies: persisted, hydrated: true });
         }
       } else if (step.do === "reopen") {
@@ -606,7 +635,7 @@ async function runStore(scenario, lib) {
         if (!raw) {
           checkpoints.push(checkpoint({ step: n, action: step, check: "reopen.storage", expected: "persisted bytes", observed: 0, ok: false, reason: "storage empty; reopen cannot roundtrip" }));
         } else {
-          const persisted = parsePersistedStudio(raw).map((x) => lib.defaults.migrateStudy(x));
+          const persisted = parsePersistedStudio(raw).map((x) => lib.decision.refreshDecisionStatuses(lib.defaults.migrateStudy(x)));
           store.useStudio.setState({ studies: persisted, hydrated: true });
           const found = persisted.find((x) => x.id === studyId);
           if (!found) checkpoints.push(checkpoint({ step: n, action: step, check: "reopen.study", expected: studyId, observed: null, ok: false, reason: "study missing after storage reopen" }));
@@ -1009,7 +1038,7 @@ async function runUi(scenario, lib, url) {
     for (let i = 0; i < scenario.steps.length; i++) {
       const step = scenario.steps[i];
       const n = i + 1;
-      const consequential = ["create", "illuminate", "retrieve", "confirm-empty-search", "accept-decision", "withdraw-decision", "change-source", "reload", "reopen", "export", "set-field", "mark-complete"].includes(step.do);
+      const consequential = ["create", "illuminate", "retrieve", "confirm-empty-search", "accept-decision", "confirm-gate", "record-determination", "settle-open-item", "withdraw-decision", "change-source", "reload", "reopen", "export", "set-field", "mark-complete"].includes(step.do);
       try {
         if (step.do === "create") {
           actionRoutes.push({ do: step.do, route: "ui" });
@@ -1134,6 +1163,84 @@ async function runUi(scenario, lib, url) {
               await page.waitForTimeout(150);
               await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 4000 }).catch(() => undefined);
             }
+          }
+        } else if (step.do === "confirm-gate") {
+          await gotoStage(page, "design");
+          await page.locator("[data-meridian-decision]").first().waitFor({ timeout: 5000 }).catch(() => undefined);
+          const cards = page.locator("[data-meridian-decision]");
+          const count = await cards.count();
+          if (count === 0) {
+            unsupported(checkpoints, step, n, "Confirm control not on screen: no decision cards", actionRoutes);
+          } else {
+            const which = step.which ?? "latest";
+            const idx = which === "latest" ? count - 1 : Number(which);
+            const card = cards.nth(Number.isFinite(idx) ? idx : count - 1);
+            const wanted = Array.isArray(step.gates) ? step.gates : null;
+            actionRoutes.push({ do: step.do, route: "ui" });
+            for (let guard = 0; guard < 20; guard++) {
+              const btns = card.locator("[data-meridian-gate-confirm]");
+              const k = await btns.count();
+              let target = null;
+              for (let j = 0; j < k; j++) {
+                const gid = await btns.nth(j).getAttribute("data-meridian-gate-confirm");
+                if (!wanted || wanted.includes(gid)) {
+                  target = btns.nth(j);
+                  break;
+                }
+              }
+              if (!target) break;
+              await target.click();
+              await page.waitForTimeout(150);
+            }
+            await page.waitForFunction((key) => !!localStorage.getItem(key), PERSIST_KEY, { timeout: 4000 }).catch(() => undefined);
+          }
+        } else if (step.do === "record-determination") {
+          // D10: fill the record field for this kind of body on the decision card and record it.
+          await gotoStage(page, "design");
+          await page.locator("[data-meridian-decision]").first().waitFor({ timeout: 5000 }).catch(() => undefined);
+          const cards = page.locator("[data-meridian-decision]");
+          const count = await cards.count();
+          const which = step.which ?? "latest";
+          const idx = which === "latest" ? count - 1 : Number(which);
+          const card = cards.nth(Number.isFinite(idx) ? idx : count - 1);
+          const form = card.locator(`[data-meridian-record-form="${step.body}"]`).first();
+          if (count === 0 || (await form.count()) === 0) {
+            unsupported(checkpoints, step, n, "Record control not on screen: the decision asks for no record of this kind of body", actionRoutes);
+          } else {
+            actionRoutes.push({ do: step.do, route: "ui" });
+            await form.locator(`[data-meridian-record-input="${step.body}"]`).fill(step.reason);
+            const button = step.status === "met" ? `[data-meridian-record-approved="${step.body}"]` : `[data-meridian-record-not-required="${step.body}"]`;
+            await form.locator(button).click();
+            await page.waitForFunction((key) => !!localStorage.getItem(key), PERSIST_KEY, { timeout: 4000 }).catch(() => undefined);
+            await page.waitForTimeout(150);
+          }
+        } else if (step.do === "settle-open-item") {
+          // D10: act on one of the investigator's own open facts on the decision card.
+          await gotoStage(page, "design");
+          await page.locator("[data-meridian-decision]").first().waitFor({ timeout: 5000 }).catch(() => undefined);
+          const cards = page.locator("[data-meridian-decision]");
+          const count = await cards.count();
+          const which = step.which ?? "latest";
+          const idx = which === "latest" ? count - 1 : Number(which);
+          const card = cards.nth(Number.isFinite(idx) ? idx : count - 1);
+          const items = card.locator("[data-meridian-open-item]");
+          const k = await items.count();
+          let target = null;
+          for (let j = 0; j < k; j++) {
+            const t = (await items.nth(j).getAttribute("data-meridian-open-item-text")) ?? "";
+            if (t.includes(step.match)) {
+              target = items.nth(j);
+              break;
+            }
+          }
+          if (!target) {
+            unsupported(checkpoints, step, n, "Open item not on screen: no open fact matches", actionRoutes);
+          } else {
+            actionRoutes.push({ do: step.do, route: "ui" });
+            await target.locator("[data-meridian-open-item-input]").fill(step.note);
+            await target.locator(step.how === "given" ? "[data-meridian-item-given]" : "[data-meridian-item-aside]").click();
+            await page.waitForFunction((key) => !!localStorage.getItem(key), PERSIST_KEY, { timeout: 4000 }).catch(() => undefined);
+            await page.waitForTimeout(150);
           }
         } else if (step.do === "withdraw-decision") {
           await gotoStage(page, "design");

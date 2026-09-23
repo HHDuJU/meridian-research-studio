@@ -1,6 +1,6 @@
 {
   "id": "sc-018",
-  "version": 1,
+  "version": 2,
   "title": "Dental practice network: recall intervals and recorded risk, two candidate designs, the investigator chooses cross-sectional before the scan",
   "field": "dentistry",
   "level": 2,
@@ -11,7 +11,8 @@
     "D2",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary ambiguity: two candidate designs, and the investigator chooses one before the evidence stages. The need names a cross-sectional record study and a two-year cohort, so routing at create is unresolved (both classifier rules agree). The problem reply sends family null, which keeps the family null and basis unresolved with issue 'cleared' (A1 item A7; D2). The investigator then chooses the cross-sectional design with the family control shown for an undetermined family (A3 L1.4), recorded as explicit investigator intent (S11). A fixture search returns eight records, one without a year (kept null, never guessed); the appraisal records four claims whose passages and numbers occur in the cited abstracts. A reopen after six stages keeps the choice. The design reply agrees with the investigator's choice; the decision rests on c1, c2 and c4, with one gate met on the governance note and one unmet (three practices have not signed data release agreements), so acceptance gives an accepted selection with a blocked action. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 3, 4, 5, 6, 7 (ev-1nxpm5j, ev-0dcw0v2, ev-00dbui0, ev-1nijvo6, ev-12uaz01, ev-0prgjcq) and titleYearKey hash for records 2, 8 (ev-0sa115j, ev-0da50w3, the latter with year null). Requires D2, S11, S13 and D5. Catches: a default family substituted for an unresolved one, an investigator choice not recorded as explicit or lost on reopen, a guessed year, and an unmet gate treated as met at acceptance.",
   "inputs": {
@@ -859,7 +860,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -871,6 +874,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1332,5 +1355,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-018.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

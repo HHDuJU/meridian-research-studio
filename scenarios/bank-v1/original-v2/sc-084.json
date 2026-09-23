@@ -1,0 +1,1395 @@
+{
+  "id": "sc-084",
+  "version": 2,
+  "title": "Mixed ICU: missed early mobilisation and weakness, case-control with unusual outcome roles, late audit reply refused",
+  "field": "critical-care",
+  "level": 5,
+  "family": "case-control",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D27",
+    "S10",
+    "S11",
+    "S13"
+  ],
+  "notes": "Level 5 with unusual outcome roles and a refused late audit reply. The need names a nested case-control study (routing explicit) and two secondary questions from the ICU director, one diagnostic (the day-3 mobility scale as an early marker) and one economic (extra ICU days). Seven fixture records are appraised (four claims; certainty 'moderate' over inspected records). The supported decision is accepted with both gates met. The protocol reply keeps the economic outcome in the valid role 'secondary', gives the diagnostic accuracy outcome the invalid role 'diagnostic-accuracy' (dropped with invalid-enum and dropped, never demoted), and sends patientCentered as the string \"yes\" (stored null with malformed-boolean). At the Audit stage the first reply is held while the investigator writes the open fixes by hand and is then refused because the substantive audit content changed (G6); the investigator completes the Audit stage by hand, so the stored open fixes are the investigator's. The held reply is encoded as illuminate (request sent, reply held), set-field, then wait (reply delivered), because the format has no field for a held reply. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 2, 4, 5, 6 (ev-1hh7ext, ev-07jifyb, ev-0cg689z, ev-1h87rx7, ev-17g4z1n) and titleYearKey-keyed for records 3 and 7 (ev-1g2xtiq, ev-0q50jqt). Requires S13 (appraisal payload), S11 (selectionStatus, actionStatus, basis), D5 (status text) and S10 with D27 (substantive audit content in studyRevision). The outcome-role and boolean checks hold at 875fe59. Catches: an invalid outcome role demoted instead of dropped, a string coerced to a boolean, and a stale model audit reply overwriting the investigator's own open fixes.",
+  "inputs": {
+    "need": "I am a critical care physiotherapist and research lead in a 28-bed mixed medical and surgical intensive care unit. Eighteen months ago we introduced an early mobilisation bundle: daily screening for readiness, mobilisation to sitting or standing within 72 hours when safe, and recording the ICU Mobility Scale every day. Adherence is patchy: when we checked last spring, only 46 percent of eligible patient-days had mobilisation documented. At the same time we measure muscle strength with the MRC sum score at ICU discharge for every patient ventilated for more than 48 hours, and about a quarter leave the unit with ICU-acquired weakness, a score below 48.\n\nWe plan a case-control study nested in our ICU clinical information system: cases would be patients discharged with ICU-acquired weakness since the bundle started, controls patients without it, and the exposure would be the number of days in the first five eligible days on which mobilisation was missed. The ICU director also wants to know two other things: whether the ICU Mobility Scale on day 3 could flag patients at risk early, and how many extra ICU days weakness adds.\n\nI need help defining cases and controls, matching or adjusting for illness severity, sedation and length of ventilation, handling the fact that sicker patients are both less mobilised and weaker, the number of cases we need, and how to stop the director's extra questions from taking over the study. We have a research nurse two days a week and no external funding.",
+    "constraints": "No external funding. Research nurse 2 days per week until August 2027. Data only from the ICU clinical information system and hospital discharge summaries; no new measurements on patients.",
+    "localFacts": [
+      "The mobilisation bundle started in March 2025; daily mobilisation status and the ICU Mobility Scale are recorded in the ICU clinical information system.",
+      "The MRC sum score is recorded at ICU discharge for every patient ventilated for more than 48 hours; about 25 percent score below 48.",
+      "A check in spring 2026 found mobilisation documented on 46 percent of eligible patient-days.",
+      "The research ethics board approved a waiver of consent for this chart-based study on 2026-09-16 (approval REB-2026-0931).",
+      "The ICU director approved release of the clinical information system extract on 2026-09-18 (approval ICU-DIR-2026-12)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a critical care physiotherapist and research lead in a 28-bed mixed medical and surgical intensive care unit. Eighteen months ago we introduced an early mobilisation bundle: daily screening for readiness, mobilisation to sitting or standing within 72 hours when safe, and recording the ICU Mobility Scale every day. Adherence is patchy: when we checked last spring, only 46 percent of eligible patient-days had mobilisation documented. At the same time we measure muscle strength with the MRC sum score at ICU discharge for every patient ventilated for more than 48 hours, and about a quarter leave the unit with ICU-acquired weakness, a score below 48.\n\nWe plan a case-control study nested in our ICU clinical information system: cases would be patients discharged with ICU-acquired weakness since the bundle started, controls patients without it, and the exposure would be the number of days in the first five eligible days on which mobilisation was missed. The ICU director also wants to know two other things: whether the ICU Mobility Scale on day 3 could flag patients at risk early, and how many extra ICU days weakness adds.\n\nI need help defining cases and controls, matching or adjusting for illness severity, sedation and length of ventilation, handling the fact that sicker patients are both less mobilised and weaker, the number of cases we need, and how to stop the director's extra questions from taking over the study. We have a research nurse two days a week and no external funding.",
+          "problem.constraints": "No external funding. Research nurse 2 days per week until August 2027. Data only from the ICU clinical information system and hospital discharge summaries; no new measurements on patients.",
+          "family": "case-control",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a critical care physiotherapist and research"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Missed early mobilisation and ICU-acquired weakness in a mixed intensive care unit: a nested case-control study",
+        "subtitle": "Bundle adherence as exposure; ICU-acquired weakness as case status",
+        "family": "case-control",
+        "statement": "Eighteen months after an early mobilisation bundle began in a 28-bed mixed intensive care unit, mobilisation is documented on 46 percent of eligible patient-days and about a quarter of patients ventilated for more than 48 hours leave with ICU-acquired weakness. The unit wants to know whether missed mobilisation in the first five eligible days is associated with weakness at ICU discharge, using cases and controls from its clinical information system, while two secondary questions from the director (early identification on day 3 and extra ICU days) must not distort the main study.",
+        "whoAffected": "Adults ventilated for more than 48 hours in the unit, their families, bedside nurses, physiotherapists and intensivists.",
+        "whatHurts": "ICU-acquired weakness delays recovery and independence for months; missed mobilisation may contribute, but sicker patients are both less mobilised and weaker, which makes the association hard to read.",
+        "currentPractice": "A bundle with daily readiness screening and mobilisation within 72 hours when safe; documentation spread across several places.",
+        "whyNow": "Eighteen months of bundle data exist, adherence is poor, and the director wants evidence before investing in more physiotherapy staffing.",
+        "constraints": "No external funding. Research nurse 2 days per week until August 2027. Data only from the ICU clinical information system and hospital discharge summaries; no new measurements on patients.",
+        "patientCenteredGoal": "Patients leave intensive care strong enough to recover function, and mobilisation is offered whenever it is safe.",
+        "summary": "Problem framed as a nested case-control study with two contained secondary questions."
+      },
+      "note": "Constraints are echoed byte for byte, so no rejected-change issue arises (G11).",
+      "expect": {
+        "store": {
+          "title": "Missed early mobilisation and ICU-acquired weakness in a mixed intensive care unit: a nested case-control study",
+          "family": "case-control",
+          "problem.statement": {
+            "includes": "first five eligible days"
+          },
+          "problem.rawNeed": "I am a critical care physiotherapist and research lead in a 28-bed mixed medical and surgical intensive care unit. Eighteen months ago we introduced an early mobilisation bundle: daily screening for readiness, mobilisation to sitting or standing within 72 hours when safe, and recording the ICU Mobility Scale every day. Adherence is patchy: when we checked last spring, only 46 percent of eligible patient-days had mobilisation documented. At the same time we measure muscle strength with the MRC sum score at ICU discharge for every patient ventilated for more than 48 hours, and about a quarter leave the unit with ICU-acquired weakness, a score below 48.\n\nWe plan a case-control study nested in our ICU clinical information system: cases would be patients discharged with ICU-acquired weakness since the bundle started, controls patients without it, and the exposure would be the number of days in the first five eligible days on which mobilisation was missed. The ICU director also wants to know two other things: whether the ICU Mobility Scale on day 3 could flag patients at risk early, and how many extra ICU days weakness adds.\n\nI need help defining cases and controls, matching or adjusting for illness severity, sedation and length of ventilation, handling the fact that sicker patients are both less mobilised and weaker, the number of cases we need, and how to stop the director's extra questions from taking over the study. We have a research nurse two days a week and no external funding.",
+          "problem.constraints": "No external funding. Research nurse 2 days per week until August 2027. Data only from the ICU clinical information system and hospital discharge summaries; no new measurements on patients.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Missed early mobilisation and ICU-acquired weakness in a mixed intensive care unit: a nested case-control study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "early mobilisation adherence ICU-acquired weakness case-control confounding severity sedation",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Early mobilisation in mechanically ventilated adults and ICU-acquired weakness: a randomised trial",
+            "authors": "Brennan-Adeyemi C, Solberg-Mwangi T, Iqbal-Fontaine R",
+            "year": 2019,
+            "venue": "Journal of Critical Care Rehabilitation",
+            "doi": "10.5555/jccr.2019.0152",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomly allocated 200 adults expected to be ventilated for more than 48 hours to early mobilisation led by physiotherapists from the first day of stability, or to usual care with mobilisation when clinicians judged it appropriate. ICU-acquired weakness at ICU discharge, defined as an MRC sum score below 48, occurred in 27 percent with early mobilisation and 41 percent with usual care. Functional independence at hospital discharge was 52 percent and 38 percent. Adverse events during mobilisation occurred in 1 percent of sessions, none serious. The trial was at two centres with experienced physiotherapy teams."
+          },
+          {
+            "title": "Early mobilisation in critically ill adults: a systematic review and meta-analysis of muscle strength and function",
+            "authors": "Takahashi-Oyelaran M, Delgado-Hurst P, Nkemelu-Strand A",
+            "year": 2022,
+            "venue": "Intensive Care Evidence Reviews",
+            "doi": "10.5555/icer.2022.0209",
+            "providerType": "meta-analysis",
+            "abstract": "We included 16 randomised trials of early mobilisation in critically ill adults. Early mobilisation reduced ICU-acquired weakness (risk ratio 0.70, 95 percent CI 0.55 to 0.89) and improved function at discharge, with no difference in mortality. Trials varied widely in the timing and dose of mobilisation, and most compared an enhanced programme with little mobilisation rather than with partial adherence to a protocol. Adverse events were rare and none was fatal. Certainty was moderate for weakness and low for function, and no trial reported outcomes beyond hospital discharge."
+          },
+          {
+            "title": "Barriers to mobilisation in intensive care: a multicentre point-prevalence study",
+            "authors": "Vasquez-Lindqvist J, Okafor-Barnes E",
+            "year": 2021,
+            "venue": "Critical Care Practice Reports",
+            "providerType": "cross-sectional study",
+            "abstract": "On two survey days, 38 intensive care units recorded whether each patient was mobilised and the main reason if not. Patients were mobilised on 36 percent of patient-days. Sedation was the most common barrier, recorded on 42 percent of days without mobilisation, followed by haemodynamic instability and staff availability. Units with a dedicated physiotherapist and a daily sedation interruption protocol mobilised more patients. Barrier recording depended on staff judgement and may have been inconsistent between units, and weekend days were not sampled."
+          },
+          {
+            "title": "Illness severity and the association between immobility and ICU-acquired weakness: a cohort analysis",
+            "authors": "Haddad-Kowalski S, Ferreira-Nnamdi O, Lund-Achebe K",
+            "year": 2018,
+            "venue": "Critical Care Epidemiology",
+            "doi": "10.5555/cce.2018.0073",
+            "providerType": "cohort study",
+            "abstract": "In 640 ventilated adults, we examined the association between days without mobilisation in the first week and ICU-acquired weakness at discharge. The crude odds ratio was 3.1 per three days without mobilisation, which fell to 1.4 (95 percent CI 0.9 to 2.2) after adjustment for illness severity score, days of deep sedation, sepsis and corticosteroid use. Sicker patients were both less often mobilised and more often weak. The authors conclude that observational estimates are strongly confounded by severity and recommend restriction to patients eligible for mobilisation on each day."
+          },
+          {
+            "title": "The ICU Mobility Scale on day 3 as a marker of later ICU-acquired weakness: a diagnostic accuracy study",
+            "authors": "Olsen-Ubah R, Castellanos-Reid D",
+            "year": 2024,
+            "venue": "Critical Care Measurement",
+            "doi": "10.5555/ccm.2024.0038",
+            "providerType": "diagnostic accuracy study",
+            "abstract": "We assessed whether the ICU Mobility Scale on day 3 identified 312 ventilated adults who would have ICU-acquired weakness at discharge. The area under the receiver operating characteristic curve was 0.71. At a threshold below 3, sensitivity was 68 percent and specificity 64 percent. Patients who were sedated on day 3 could not be scored and were excluded, which may have inflated accuracy. The authors suggest the scale is too inaccurate on its own to target interventions but may add to a risk score."
+          },
+          {
+            "title": "Length of stay attributable to ICU-acquired weakness: a matched analysis",
+            "authors": "Grant-Sato M, Mahlaba-Pryce J",
+            "year": 2020,
+            "venue": "Intensive Care Health Services Research",
+            "doi": "10.5555/ichsr.2020.0117",
+            "providerType": "observational study",
+            "abstract": "We matched 220 patients with ICU-acquired weakness to 220 without it on age, admission diagnosis, illness severity and days of ventilation. Weakness was associated with 4.2 additional ICU days and 9 additional hospital days. Costs were not reported directly, but the authors note that ICU days are the most expensive part of an admission. Matching could not remove differences in sedation practice, and patients who died in the ICU were excluded, so the attributable stay may be overestimated. The analysis did not examine mobilisation."
+          },
+          {
+            "title": "Nurses' and physiotherapists' views of early mobilisation in intensive care: a focus group study",
+            "authors": "Whitaker-Oduya L, Benedetti-Kariuki S",
+            "year": 2016,
+            "venue": "Nursing in Critical Care Research",
+            "providerType": "qualitative research",
+            "abstract": "We held focus groups with 26 nurses and physiotherapists in three intensive care units. Staff supported early mobilisation but feared dislodging lines and tubes, particularly at night and at weekends when fewer physiotherapists were present. Responsibility for deciding that a patient was ready to mobilise was often unclear. Staff described documentation of mobilisation as incomplete because it was recorded in several places. Participants suggested a single daily readiness decision recorded by the bedside nurse, with the physiotherapist confirming the plan at the morning round."
+          }
+        ]
+      },
+      "note": "Seven records; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1hh7ext",
+            "ev-07jifyb",
+            "ev-1g2xtiq",
+            "ev-0cg689z",
+            "ev-1h87rx7",
+            "ev-17g4z1n",
+            "ev-0q50jqt"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.items[4].kind": "grey",
+          "scan.items[0].kind": "rct",
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Illness severity and the association between immobility and ICU-acquired weakness: a cohort analysis"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1hh7ext",
+            "relevance": 90,
+            "methodQuality": 74,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "ICU-acquired weakness at discharge in 27 percent with early mobilisation versus 41 percent with usual care; functional independence 52 versus 38 percent.",
+            "limitations": "Two centres with experienced teams.",
+            "contextTags": [
+              "randomised",
+              "weakness",
+              "early mobilisation"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-07jifyb",
+            "relevance": 86,
+            "methodQuality": 72,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Across 16 trials, early mobilisation reduced weakness (risk ratio 0.70, 95 percent CI 0.55 to 0.89); dose and timing varied widely.",
+            "limitations": "Compares enhanced programmes with little mobilisation, not partial adherence.",
+            "contextTags": [
+              "meta-analysis",
+              "dose"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1g2xtiq",
+            "relevance": 70,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Mobilised on 36 percent of patient-days; sedation was the barrier on 42 percent of days without mobilisation.",
+            "limitations": "Two survey days; barrier recording by judgement.",
+            "contextTags": [
+              "barriers",
+              "sedation"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0cg689z",
+            "relevance": 94,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "The crude odds ratio of 3.1 fell to 1.4 (95 percent CI 0.9 to 2.2) after adjustment for severity, deep sedation, sepsis and corticosteroids.",
+            "limitations": "Single cohort; residual confounding possible.",
+            "contextTags": [
+              "confounding by severity",
+              "eligibility"
+            ],
+            "notes": "The key design warning."
+          },
+          {
+            "id": "ev-1h87rx7",
+            "relevance": 72,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Day-3 ICU Mobility Scale: area under the curve 0.71; sensitivity 68 percent and specificity 64 percent below 3.",
+            "limitations": "Sedated patients excluded.",
+            "contextTags": [
+              "diagnostic accuracy",
+              "early marker"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-17g4z1n",
+            "relevance": 68,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Weakness associated with 4.2 additional ICU days and 9 additional hospital days after matching.",
+            "limitations": "ICU deaths excluded; sedation practice unmatched.",
+            "contextTags": [
+              "length of stay",
+              "resource use"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0q50jqt",
+            "relevance": 60,
+            "methodQuality": 52,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "26 staff feared dislodging lines, especially at night and weekends; responsibility for readiness was unclear; documentation incomplete.",
+            "limitations": "Older study; three units.",
+            "contextTags": [
+              "staff views",
+              "documentation"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1hh7ext"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "In a randomised trial of 200 ventilated adults, ICU-acquired weakness at discharge occurred in 27 percent with early mobilisation and 41 percent with usual care.",
+            "passage": "occurred in 27 percent with early mobilisation and 41 percent with usual care",
+            "interpretation": "Mobilisation plausibly prevents weakness; the local question is about partial adherence."
+          },
+          {
+            "id": "c2",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-07jifyb"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Across 16 randomised trials, early mobilisation reduced ICU-acquired weakness (risk ratio 0.70, 95 percent CI 0.55 to 0.89).",
+            "passage": "Early mobilisation reduced ICU-acquired weakness (risk ratio 0.70, 95 percent CI 0.55 to 0.89)",
+            "interpretation": "Establishes the effect of mobilising versus not; says little about missed days within a bundle."
+          },
+          {
+            "id": "c3",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0cg689z"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "In a cohort of 640 ventilated adults, the association between days without mobilisation and weakness fell from an odds ratio of 3.1 to 1.4 (95 percent CI 0.9 to 2.2) after adjustment for severity, deep sedation, sepsis and corticosteroids.",
+            "passage": "which fell to 1.4 (95 percent CI 0.9 to 2.2) after adjustment for illness severity score, days of deep sedation, sepsis and corticosteroid use",
+            "interpretation": "Count missed days only when the patient was eligible, and adjust for severity and sedation."
+          },
+          {
+            "id": "c4",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1h87rx7"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "The day-3 ICU Mobility Scale had an area under the curve of 0.71 for later ICU-acquired weakness.",
+            "passage": "The area under the receiver operating characteristic curve was 0.71.",
+            "interpretation": "The director's early-marker question has a modest answer already; it should stay secondary."
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Randomised trials show that early mobilisation reduces ICU-acquired weakness, but they compare mobilising with not mobilising, not partial adherence to a bundle. An observational cohort shows the crude association between immobility and weakness is largely explained by illness severity and sedation, which is the central threat for a case-control design; counting only days when a patient was eligible helps. The day-3 mobility scale is a modest marker, and weakness is associated with about four more ICU days. Barriers and staff views point to sedation and unclear responsibility.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "Moderate certainty that mobilisation prevents weakness from randomised evidence; low certainty for the observational associations that the local study will extend.",
+        "summary": "Seven retrieved records appraised; four claims; certainty moderate for the effect of mobilisation."
+      },
+      "note": "Appraisal of seven retrieved records (S13); certainty 'moderate' over inspected records (G1). The diagnostic accuracy record ingested as kind 'grey' (its provider label maps to no safe kind) is annotated as observational.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[3].relevance": 94,
+          "scan.items[4].kind": "observational",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[2].sourceIds": [
+            "ev-0cg689z"
+          ],
+          "scan.gradeOverall": "moderate",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "28-bed mixed ICU",
+          "Bundle since March 2025",
+          "MRC sum score at discharge for ventilation over 48 hours",
+          "Research nurse 2 days per week"
+        ],
+        "reading": "Missed mobilisation and weakness share a common cause in illness severity and deep sedation, so the exposure must be defined on eligible days and severity must be handled by matching or adjustment. The director's two extra questions, early identification and extra ICU days, are real but belong at the edge of the study.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Missed mobilisation on eligible days",
+            "kind": "context",
+            "detail": "Exposure."
+          },
+          {
+            "id": "n2",
+            "label": "ICU-acquired weakness at discharge",
+            "kind": "outcome",
+            "detail": "Case definition."
+          },
+          {
+            "id": "n3",
+            "label": "Illness severity and deep sedation",
+            "kind": "context",
+            "detail": "Confounders (claim c3)."
+          },
+          {
+            "id": "n4",
+            "label": "Randomised evidence for mobilisation",
+            "kind": "rct",
+            "detail": "27 versus 41 percent (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Day-3 mobility scale",
+            "kind": "context",
+            "detail": "Area under the curve 0.71 (claim c4)."
+          },
+          {
+            "id": "n6",
+            "label": "Extra ICU days",
+            "kind": "outcome",
+            "detail": "Secondary, descriptive."
+          },
+          {
+            "id": "n7",
+            "label": "Bedside nurses and physiotherapists",
+            "kind": "stakeholder",
+            "detail": "Deliver the bundle."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "increases"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "increases"
+          },
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "hypothesised to increase"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "supports concern about"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "weakly predicts"
+          },
+          {
+            "from": "n2",
+            "to": "n6",
+            "relation": "associated with"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "determine"
+          }
+        ],
+        "summary": "Map shows confounding by severity and sedation and places the director's questions at the edge."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Confounding by severity and sedation",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "The crude association largely disappears after adjustment (claim c3).",
+            "opportunity": "Count only eligible days, match on ventilation duration, adjust for severity score and deep sedation days."
+          },
+          {
+            "id": "g2",
+            "title": "No evidence on partial adherence",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Trials compare mobilising with not mobilising (claims c1, c2), not missed days within a bundle.",
+            "opportunity": "Estimate the association per missed eligible day."
+          },
+          {
+            "id": "g3",
+            "title": "Secondary questions may take over",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "The director's day-3 marker and extra ICU days are different questions with different designs.",
+            "opportunity": "Keep them secondary and descriptive; do not let them change case or control definitions."
+          },
+          {
+            "id": "g4",
+            "title": "Night and weekend mobilisation",
+            "kind": "equity",
+            "severity": "watch",
+            "whyItMatters": "Patients admitted before weekends may miss more mobilisation.",
+            "opportunity": "Record day of week for missed days."
+          }
+        ],
+        "errorsFound": [],
+        "reevaluation": "A nested case-control design with eligible-day exposure and severity handling remains appropriate; secondary questions are contained.",
+        "summary": "Four gaps; confounding and partial adherence are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[0].title": "Confounding by severity and sedation",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Each missed eligible mobilisation day in the first five eligible days is associated with higher odds of ICU-acquired weakness at discharge (adjusted odds ratio of at least 1.3 per day).",
+            "novelty": 55,
+            "need": 85,
+            "practiceChange": 75,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Partial adherence has not been studied; the data exist.",
+            "risks": "Residual confounding by severity."
+          },
+          {
+            "id": "h2",
+            "statement": "The day-3 mobility scale adds little to a severity score for identifying later weakness.",
+            "novelty": 40,
+            "need": 50,
+            "practiceChange": 45,
+            "feasibility": 70,
+            "parsimony": 60,
+            "rationale": "Accuracy reported as modest.",
+            "risks": "Sedated patients cannot be scored."
+          },
+          {
+            "id": "h3",
+            "statement": "Missed days cluster at weekends.",
+            "novelty": 35,
+            "need": 60,
+            "practiceChange": 65,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "Staff describe fewer physiotherapists at weekends.",
+            "risks": "Documentation gaps at weekends."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 is the study's question."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults ventilated for more than 48 hours in the unit since March 2025, is the number of missed mobilisation days among the first five eligible days associated with ICU-acquired weakness at ICU discharge, after accounting for illness severity and deep sedation?",
+            "framework": "PECO",
+            "population": "Adults ventilated over 48 hours with an MRC sum score at discharge",
+            "intervention": "Missed mobilisation on eligible days (exposure)",
+            "comparator": "Mobilisation on all eligible days",
+            "outcome": "ICU-acquired weakness (MRC sum score below 48)",
+            "time": "First five eligible days; weakness at ICU discharge",
+            "setting": "28-bed mixed ICU"
+          }
+        ],
+        "finer": "Feasible from the clinical information system with the research nurse's time; interesting to the unit and director; novel for partial adherence; ethical with an approved waiver; relevant to staffing decisions.",
+        "summary": "One PECO question for the nested case-control study."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "case-control",
+        "rationale": "Weakness is common enough for a cohort but the exposure must be reconstructed day by day from records, so a case-control design nested in the clinical information system is efficient: all cases and two matched controls each, with exposure counted only on eligible days (c3). Randomised evidence (c1, c2) shows mobilisation matters, but not how partial adherence relates to weakness. The director's day-3 marker (c4) and extra ICU days are kept as secondary descriptive analyses.",
+        "alternatives": [
+          "Full cohort of all ventilated patients (refused: day-by-day exposure extraction for every patient exceeds the research nurse's time)",
+          "Diagnostic accuracy study of the day-3 scale as the main study (refused: a different question with a modest answer already)",
+          "Cost analysis of weakness (refused as a main aim: attributable stay would be confused with the effect of mobilisation)"
+        ],
+        "guidelines": [
+          "STROBE for case-control studies with the RECORD extension"
+        ],
+        "whyNotMoreComplex": "A trial of adherence strategies would need the association first; the case-control study uses existing records to provide it.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a case-control study nested in the ICU clinical information system: cases with ICU-acquired weakness at discharge since March 2025, two controls each matched on ventilation duration, exposure as missed mobilisation on eligible days among the first five, adjusted for severity and deep sedation, with the day-3 marker and extra ICU days as secondary descriptive analyses.",
+          "question": "How should the unit estimate whether missed early mobilisation is associated with ICU-acquired weakness?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Mobilisation reduces weakness in trials, so missed mobilisation is a plausible exposure.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Confounding by severity can be reduced by counting eligible days and adjusting.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics approval with a waiver of consent",
+              "status": "met",
+              "evidence": "Approval REB-2026-0931 dated 2026-09-16, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Release of the clinical information system extract",
+              "status": "met",
+              "evidence": "ICU director approval ICU-DIR-2026-12 dated 2026-09-18, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Full cohort of ventilated patients",
+            "Diagnostic accuracy study of the day-3 scale"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; both gates rest on investigator-supplied approvals."
+        },
+        "summary": "Nested case-control study recommended; decision rests on three ledger claims; gates met."
+      },
+      "note": "selectionStatus and recommendedFamily require S11; claims S13; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "case-control",
+          "family": "case-control",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: c1 to c3 rest on retrieved records; both gates met (G7). Requires S11, S13, D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "case-control"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Case-control study nested in the ICU clinical information system, March 2025 to June 2027, with a primary association, one secondary resource outcome, a balancing measure and a process measure; the day-3 marker is proposed as an accuracy outcome.",
+        "population": "Adults ventilated for more than 48 hours with an MRC sum score at ICU discharge. Cases: score below 48. Controls: score 48 or more, two per case, matched on ventilation duration band and admission quarter.",
+        "exposure": "Number of missed mobilisation days among the first five days on which the patient met the bundle's readiness criteria.",
+        "procedures": "The research nurse extracts daily readiness, mobilisation status, ICU Mobility Scale, severity score, deep sedation days, sepsis and corticosteroid use, blind to case status where the extract allows.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Association of missed mobilisation with ICU-acquired weakness",
+            "measure": "Adjusted odds ratio for weakness (MRC sum score below 48 at discharge) per missed eligible day",
+            "timing": "First five eligible days; weakness at ICU discharge",
+            "why": "The study question.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Excess ICU days in cases",
+            "measure": "Difference in ICU length of stay between cases and matched controls, valued at the ICU day rate",
+            "timing": "ICU discharge",
+            "why": "The director's resource question, reported descriptively.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "diagnostic-accuracy",
+            "name": "Day-3 ICU Mobility Scale as an early marker",
+            "measure": "Area under the receiver operating characteristic curve for weakness",
+            "timing": "Day 3",
+            "why": "The director's early identification question.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Adverse events during mobilisation",
+            "measure": "Line or tube dislodgement, falls and desaturation during sessions",
+            "timing": "First five eligible days",
+            "why": "Mobilisation must be safe.",
+            "patientCentered": "yes"
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Documentation completeness",
+            "measure": "Eligible days with a recorded mobilisation status",
+            "timing": "First five eligible days",
+            "why": "Missing documentation could be mistaken for missed mobilisation.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 150 cases and 300 controls by June 2027; extraction of five eligible days per patient fits two research nurse days per week.",
+        "biasMitigation": [
+          "Exposure counted on eligible days only",
+          "Matching on ventilation duration band",
+          "Adjustment for severity and deep sedation",
+          "Extraction blind to case status where possible"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by severity",
+            "severity": "high",
+            "note": "Central threat; eligibility restriction and adjustment."
+          },
+          {
+            "id": "b2",
+            "label": "Documentation as exposure",
+            "severity": "watch",
+            "note": "Undocumented days are reported separately, not assumed missed."
+          }
+        ],
+        "parsimony": {
+          "score": 72,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 4,
+          "flags": [
+            "Two secondary questions from the director",
+            "Four adjustment variables"
+          ],
+          "simplestPath": "One exposure, one case definition, one adjusted odds ratio."
+        },
+        "theoreticalFramework": "None beyond the causal diagram of severity, sedation, mobilisation and weakness.",
+        "summary": "Nested case-control protocol with the director's questions as secondary outcomes."
+      },
+      "note": "Unusual outcome roles. The excess ICU days outcome (the director's economic question) is kept in the valid role 'secondary'. The day-3 accuracy outcome carries the role 'diagnostic-accuracy', which is not an outcome role: it is dropped with issues invalid-enum and dropped, never demoted to 'secondary' (apply-ai.ts at 875fe59). The balancing outcome's patientCentered is the string \"yes\": stored null with issue malformed-boolean, never coerced to true (G4, G5 contract).",
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].role": "secondary",
+          "protocol.outcomes[1].name": "Excess ICU days in cases",
+          "protocol.outcomes[2].role": "balancing",
+          "protocol.outcomes[2].patientCentered": {
+            "isNull": true
+          },
+          "protocol.outcomes[3].role": "process",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "outcomes[2].role",
+              "code": "invalid-enum"
+            },
+            {
+              "path": "outcomes[2]",
+              "code": "dropped"
+            },
+            {
+              "path": "outcomes[3].patientCentered",
+              "code": "malformed-boolean"
+            }
+          ],
+          "count": 3
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Nested case-control study with two controls per case matched on ventilation duration band and admission quarter; conditional logistic regression.",
+        "sampleSize": "About 25 percent of about 300 eligible patients a year have weakness, so about 150 cases are expected from March 2025 to June 2027. With two controls per case and 40 percent of controls missing at least two eligible days, about 100 cases give 80 percent power at two-sided alpha 0.05 to detect an odds ratio of 2.0, and about 140 cases an odds ratio of 1.8, before allowing for adjustment. The study is therefore sized for moderate associations only, and a null result will be reported with its interval.",
+        "primaryAnalysis": "Conditional logistic regression of case status on missed eligible days, adjusted for severity score, deep sedation days, sepsis and corticosteroid use.",
+        "secondaryAnalysis": "Difference in ICU days between cases and matched controls, described with a bootstrap interval and valued at the ICU day rate; area under the curve for the day-3 scale among patients who could be scored; missed days by day of week.",
+        "missingData": "Days without documentation are analysed as a separate category and in a sensitivity analysis as missed; no imputation of case status.",
+        "multiplicity": "One primary association; secondary analyses descriptive.",
+        "software": "R (survival package for conditional logistic regression).",
+        "overfittingGuards": [
+          "Four adjustment variables fixed in advance",
+          "No data-driven threshold for the day-3 scale",
+          "Secondary analyses labelled descriptive"
+        ],
+        "summary": "About 150 cases and 300 controls; sized for odds ratios of about 1.8 or more."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "odds ratio of 1.8"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: secondary use of clinical records; no contact with patients.",
+        "consent": "Waiver of consent approved by the research ethics board (REB-2026-0931) for chart-based data.",
+        "data": "Extract held on the hospital research server with study numbers; no names leave the ICU information system.",
+        "equity": "PROGRESS-Plus: patients admitted at weekends or with language barriers may be mobilised less; day of week and interpreter need are recorded and reported.",
+        "effectiveness": "A clear association would support investment in weekend physiotherapy and sedation practice.",
+        "efficiency": "Existing records and two research nurse days per week.",
+        "costs": "Within existing staff time.",
+        "grants": "None needed.",
+        "partnerships": "ICU director, bedside nurse educators, two ICU survivors from the unit's follow-up clinic.",
+        "rebPath": "Approved with a waiver of consent (REB-2026-0931) under TCPS 2.",
+        "limitations": "Residual confounding; documentation quality; single unit.",
+        "summary": "Approved minimal-risk chart-based study."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "REB-2026-0931"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two ICU survivors from the follow-up clinic review the plain-language summary; a bedside nurse educator reviews the eligibility rules.",
+        "socialListening": "No social media listening.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Weakness after ICU",
+            "quote": "Composite paraphrase: I could not lift a cup when I left intensive care, and nobody had told me that might happen.",
+            "implication": "Report weakness as a patient-centred outcome.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Fear of lines",
+            "quote": "Composite paraphrase: At night, with one nurse to two patients, I am not sitting someone up with three lines in.",
+            "implication": "Record day and time of missed mobilisation.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Seeing progress",
+            "quote": "Composite paraphrase: The day she sat in the chair was the day we believed she would come home.",
+            "implication": "Include families' views in the summary.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Director's questions",
+            "quote": "Composite paraphrase: I want the extra bed-days number for the budget meeting.",
+            "implication": "Keep the ICU-days analysis descriptive and separate from causal claims.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on weakness, safety at night, family hope and budget pressure."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Missed early mobilisation and ICU-acquired weakness: a nested case-control study in a mixed intensive care unit",
+        "abstract": "Objective: to estimate the association between missed mobilisation on eligible days and ICU-acquired weakness at discharge. Design: case-control study nested in the ICU clinical information system with matched controls. Results will follow analysis.",
+        "introduction": "Trials show early mobilisation reduces weakness, but adherence to bundles is partial and observational associations are confounded by severity.",
+        "methods": "Cases with MRC sum score below 48 at discharge, two matched controls each, exposure on eligible days, conditional logistic regression.",
+        "results": "No data have been analysed yet.",
+        "discussion": "The discussion will interpret the association in light of confounding and the trial evidence.",
+        "limitations": "Residual confounding; documentation; single unit.",
+        "conclusion": "To be written after analysis.",
+        "reportingChecklist": "STROBE (case-control) with RECORD",
+        "summary": "Case-control report structure with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE (case-control) with RECORD",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Report the extra ICU days as a cost of missed mobilisation in the executive summary"
+        ],
+        "improvementNotes": "Model note: the study is ready; the director's cost figure can lead the report.",
+        "lastReview": "2026-09-22",
+        "summary": "One open fix."
+      },
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Held reply (G6): the runner sends this audit request, captures studyRevision, holds the reply while the next step (the investigator's edit of the open fixes) runs, and releases it at the release after that. Nothing is applied yet. After the release: The held reply, produced against the earlier revision, is refused: the investigator's open fixes are not replaced by the model's list, nothing else is applied, and the refusal is shown and logged (G6). At 875fe59 studyRevision excludes the audit object, so the reply would be accepted; requires D27 (under S10).",
+      "expect": {
+        "store": {
+          "audit.openFixes": [
+            "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
+            "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
+            "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
+          ],
+          "audit.lastReview": {
+            "absent": true
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ],
+          "audit.improvementNotes": "",
+          "audit.entries[0].summary": {
+            "includes": "refused"
+          }
+        },
+        "stage": {
+          "audit": "incomplete"
+        },
+        "error": {
+          "shown": true,
+          "includes": "changed since the request"
+        }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "audit.openFixes",
+          "value": [
+            "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
+            "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
+            "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
+          ],
+          "note": "The investigator writes the audit's open fixes by hand while the request is pending; with D27 substantive audit content is part of studyRevision. Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "audit.openFixes": [
+                "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
+                "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
+                "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
+              ]
+            },
+            "stage": {
+              "audit": "incomplete"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "do": "mark-complete",
+      "stage": "audit",
+      "note": "The investigator completes the Audit stage by hand with the open fixes they wrote; no model reply is applied to it.",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "audit.openFixes": [
+            "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
+            "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
+            "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Missed early mobilisation and ICU-acquired weakness in a mixed intensive care unit: a nested case-control study",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[2].patientCentered": {
+            "isNull": true
+          },
+          "audit.openFixes": [
+            "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
+            "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
+            "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
+          ],
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Missed early mobilisation and ICU-acquired weakness in a mixed intensive care unit: a nested case-control study"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Missed early mobilisation and ICU-acquired weakness in a mixed intensive care unit: a nested case-control study",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "audit.openFixes": [
+            "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
+            "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
+            "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
+          ],
+          "audit.improvementNotes": "",
+          "family": "case-control"
+        },
+        "screen": {
+          "includes": [
+            "Missed early mobilisation and ICU-acquired weakness in a mixed intensive care unit: a nested case-control study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; the refused audit reply D27. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "protocol.outcomes": {
+              "length": 4
+            },
+            "protocol.outcomes[1].name": "Excess ICU days in cases",
+            "protocol.outcomes[2].patientCentered": {
+              "isNull": true
+            },
+            "audit.openFixes": [
+              "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
+              "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
+              "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
+            ],
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "family": "case-control",
+            "scan.gradeOverall": "moderate"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-084.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
+}

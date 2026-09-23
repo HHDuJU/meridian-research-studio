@@ -1,6 +1,6 @@
 {
   "id": "sc-056",
-  "version": 2,
+  "version": 3,
   "title": "Children's hospital asthma pathway: action plan completeness and 90-day emergency revisits, accepted with one gate met and one unmet",
   "field": "pediatrics",
   "level": 2,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary path on a clearly stated cohort question. The fixture search returns seven records with abstracts; the appraisal (shape appraisal) annotates all seven and records five source-derived claims whose passages are exact substrings of the abstracts, with certainty 'low' as the appraisal's own value. The design decision rests on claims c1, c2, c3 and c5; its ethics gate is met on the investigator's REB approval record and its data sharing gate is unmet (the custodian returned the draft unsigned), so acceptance succeeds (selectionStatus accepted) while the action stays blocked (actionStatus blocked), in the store, on screen and in the export (G7; A2 item 9). The problem reply omits the constraints key, so the investigator's constraints stay as typed (G11). Record ids are not typed by hand: each is stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1, 3, 4, 6: ev-0lz2pd5, ev-1dlrmal, ev-0i10rm2, ev-04pzwqi) or, without a DOI, of titleYearKey(title, year) (records 2, 5, 7: ev-0nqmzqb, ev-0bs8ux6, ev-1w4t8sp). Requires S13 (appraisal payload applied on the production scan path), S11 (selectionStatus, actionStatus, basis on acceptance) and D5 (decision status text on screen). Catches: an unmet gate treated as met or ignored at acceptance, acceptance refused because a gate is unresolved, an action shown as ready while a gate is unmet, and export or reload that loses the gate statuses. The audit checks fail at 875fe59 because of the audit merge defect (A3 L1.6).",
   "inputs": {
@@ -869,7 +870,7 @@
             "c1",
             "c2"
           ],
-          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
           "design.decisions[-1].gates[1].status": "unmet",
           "completedStages": [
             "problem",
@@ -879,7 +880,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -891,6 +893,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1446,5 +1468,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-056.json), superseded 2026-09-22T20:50Z: golden error under S1 (D8), the appraisal reply stated 'about 200 discharges per period' where the cited abstract states '210 and 196 discharges in the two periods', an undeclared derivation or approximation that the application must quarantine; the recorded model output now states the source values, so the expected issue count stands."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-056.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

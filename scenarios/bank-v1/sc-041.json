@@ -1,6 +1,6 @@
 {
   "id": "sc-041",
-  "version": 1,
+  "version": 2,
   "title": "Hospital pharmacy: substitution errors during drug shortages, two empty searches confirmed, privacy decision pending",
   "field": "pharmacy",
   "level": 3,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "D20",
-    "S11"
+    "S11",
+    "D10"
   ],
   "notes": "Demanding path with nothing retrieved. The need names a retrospective review (routing explicit). The first recorded fixture search returns HTTP 200 with zero records. A scan reply (shape discovery, certainty keys omitted) offers four model leads, one with no year, no method score and no grade: they are stored as unverified leads with unknowns kept unknown, and the stage stays incomplete, shown as leads only (G1 to G4). A second, broader search is also empty. The investigator then confirms on screen that the search was run and returned nothing; only this completes the stage, recorded as an investigator action tied to the query (D20; A3.2 part 1 and D26), and certainty stays unassessed ('not assessed') because nothing was inspected. With no appraisal there are no ledger claims, so the design decision is a claimless 'narrow' decision (no text contradicted, acceptable as a selection) whose privacy gate stays unknown to the end: the action stays blocked (G7; A2 item 9). A second protocol reply removes the theoretical framework with an explicit null: a model-owned field is cleared to '' with issue 'cleared' (the investigator's constraints are never the target, G11). No record is retrieved, so no record ids exist in this scenario. Catches: certainty or completion over empty searches, a model field that completes the stage, invented defaults for unknown lead values, a gate met without evidence, and an explicit null that fails to clear a model-owned field.",
   "inputs": {
@@ -653,7 +654,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -665,6 +668,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1240,5 +1263,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-041.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

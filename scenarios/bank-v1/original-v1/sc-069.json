@@ -1,0 +1,1682 @@
+{
+  "id": "sc-069",
+  "version": 1,
+  "title": "Three regional emergency departments: frequent attender case management, single-site decision withdrawn for a multi-site case-control design",
+  "field": "emergency-medicine",
+  "level": 5,
+  "family": "case-control",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Expert level 5 path with two decisions where the second withdraws the first, and dependency closure across Protocol and Stats in a multi-site design. The need names a matched case-control study and no other design, so classifyFamily routes it to \"case-control\"; the problem reply repeats the typed constraints (G11). A fixture search returns seven records; the appraisal records six claims with exact passages, certainty \"low\". Design call 1 follows the investigator's stated preference and proposes a single-site case-control study at the tertiary ED on claims c1, c2, c3 and c5 with both gates met on investigator-supplied approvals; it is accepted (ready). Protocol and Stats are completed for that design, and the Analysis stage shows the single site gives only about 62 percent power (about 189 cases against 277 needed). Design call 2 proposes a three-site design with controls matched within site; because Design changed after Protocol and Stats were complete, both are flagged for review (G8). The first decision is not superseded automatically because it was accepted: the investigator withdraws it (withdraw-decision 0), then accepts the second (ready). A reload on the Design route checks that withdrawn, accepted and review required survive. Protocol call 2 carries an outcome with role \"co-primary\", which must be refused (invalid-enum, then dropped, never demoted to secondary); re-running Protocol and then Stats clears the flags in order. Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3, 5 and 7; titleYearKey for records 2, 4 and 6): ev-0gip543, ev-1ggs445, ev-0nr15we, ev-1fmp8sh, ev-0myglbn, ev-0wlu13s, ev-0gln17e. Requires S13 (appraisal path), S11 (selection and action status, withdrawal) and D5 (status text); the refused role and the review flags hold at 875fe59. Catches: an accepted decision silently replaced or erased, two decisions accepted at once, stale downstream stages counted as complete, and an invalid outcome role coerced.",
+  "inputs": {
+    "need": "I am an emergency physician and research lead for three emergency departments in one health region: our tertiary centre and two community hospitals. Since March 2023 our tertiary ED has run a case management program for frequent attenders, defined as eight or more ED visits in 12 months. A social worker or nurse case manager builds a care plan with the patient, their family doctor and community services, and the plan is flagged in the ED record. The two community EDs started the same program in 2024.\n\nThe health authority wants to know whether the program should continue. Visit counts are the obvious measure, but frequent attendance tends to fall on its own after a peak, so a simple before-after comparison would flatter the program. What matters more to us is whether enrolled patients are less likely to die or be admitted to intensive care. Deaths and ICU admissions are fairly rare in this group, and working out each patient's exposure to case management means reading the case management files by hand, so I think a matched case-control study is the efficient design: cases are frequent attenders who died or were admitted to ICU, and controls are frequent attenders who did not, matched on age, sex and time.\n\nI would prefer to start at our own ED, where the program has run longest and the files are complete, and add the two community EDs later if needed. We need help with how to match, how to define exposure (ever enrolled, time since enrolment, number of case manager contacts), how to handle the fact that sicker patients are enrolled first, and how many cases we need. The regional ethics board and all three sites have already approved data access. Two research assistants can read files for about 15 hours a week each until June 2027.",
+    "constraints": "Two research assistants for about 15 hours a week each until June 2027; file reading must fit that time. No contact with patients or families. Data leave each site only as de-identified extracts under the regional data-sharing agreement. The health authority expects a report by September 2027.",
+    "localFacts": [
+      "The regional research ethics board approved the case-control protocol for all three emergency departments on 2026-08-28 (REB-EM-2026-112).",
+      "The three emergency departments signed a data-sharing agreement for de-identified extracts on 2026-08-30 (DSA-2026-044).",
+      "The tertiary ED's program has enrolled about 420 frequent attenders since March 2023; the two community EDs have enrolled about 230 since 2024.",
+      "About 1,900 people a year meet the frequent attender definition across the three EDs, about 1,050 of them at the tertiary ED.",
+      "Reading a case management file takes a research assistant about 45 minutes; confirming that a control has no file takes about 15 minutes."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "problem.constraints holds the typed text from the create form (A3 receipt); family from classifyFamily at 875fe59.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am an emergency physician and research lead for three emergency departments in one health region: our tertiary centre and two community hospitals. Since March 2023 our tertiary ED has run a case management program for frequent attenders, defined as eight or more ED visits in 12 months. A social worker or nurse case manager builds a care plan with the patient, their family doctor and community services, and the plan is flagged in the ED record. The two community EDs started the same program in 2024.\n\nThe health authority wants to know whether the program should continue. Visit counts are the obvious measure, but frequent attendance tends to fall on its own after a peak, so a simple before-after comparison would flatter the program. What matters more to us is whether enrolled patients are less likely to die or be admitted to intensive care. Deaths and ICU admissions are fairly rare in this group, and working out each patient's exposure to case management means reading the case management files by hand, so I think a matched case-control study is the efficient design: cases are frequent attenders who died or were admitted to ICU, and controls are frequent attenders who did not, matched on age, sex and time.\n\nI would prefer to start at our own ED, where the program has run longest and the files are complete, and add the two community EDs later if needed. We need help with how to match, how to define exposure (ever enrolled, time since enrolment, number of case manager contacts), how to handle the fact that sicker patients are enrolled first, and how many cases we need. The regional ethics board and all three sites have already approved data access. Two research assistants can read files for about 15 hours a week each until June 2027.",
+          "problem.constraints": "Two research assistants for about 15 hours a week each until June 2027; file reading must fit that time. No contact with patients or families. Data leave each site only as de-identified extracts under the regional data-sharing agreement. The health authority expects a report by September 2027.",
+          "family": "case-control",
+          "currentStage": "problem",
+          "completedStages": [],
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am an emergency physician and research lead for three emergency departments"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Case management for frequent emergency department attenders and 12-month death or intensive care admission",
+        "subtitle": "Matched case-control evaluation of a regional case management program",
+        "family": "case-control",
+        "statement": "A case management program for adults with eight or more ED visits in 12 months has run at the tertiary ED since March 2023 and at two community EDs since 2024. Visit counts fall after a peak regardless of the program, so the health authority needs an evaluation on outcomes that matter: death or intensive care admission within 12 months. Because these outcomes are rare and exposure must be read from case management files, a matched case-control design is proposed.",
+        "whoAffected": "Adults who frequently attend the region's EDs, many with chronic illness, mental health needs, addiction or housing instability; their families; ED staff and case managers; and the health authority deciding on funding.",
+        "whatHurts": "Frequent attenders die or are admitted to intensive care at high rates, and a program judged on visit counts could be kept or stopped for the wrong reasons.",
+        "currentPractice": "Case managers build care plans for enrolled patients; the program is monitored by visit counts only.",
+        "whyNow": "The health authority's funding review, and approvals and data-sharing already in place at all three sites.",
+        "constraints": "Two research assistants for about 15 hours a week each until June 2027; file reading must fit that time. No contact with patients or families. Data leave each site only as de-identified extracts under the regional data-sharing agreement. The health authority expects a report by September 2027.",
+        "patientCenteredGoal": "People who frequently need the ED are kept alive and out of intensive care by support that reaches them early.",
+        "summary": "Problem framed as a matched case-control evaluation of case management on death or ICU admission."
+      },
+      "note": "The typed constraints return unchanged, so G11 records nothing.",
+      "expect": {
+        "store": {
+          "title": "Case management for frequent emergency department attenders and 12-month death or intensive care admission",
+          "family": "case-control",
+          "problem.constraints": "Two research assistants for about 15 hours a week each until June 2027; file reading must fit that time. No contact with patients or families. Data leave each site only as de-identified extracts under the regional data-sharing agreement. The health authority expects a report by September 2027.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Case management for frequent emergency department attenders and 12-month death or intensive care admission"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "frequent emergency department attenders case management mortality intensive care case-control exposure measurement",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Case management for frequent emergency department users: a systematic review of effects on visits and costs",
+            "authors": "Harrington-Oyelaran P, Veld-Nakamura S, Castaneda-Boateng R",
+            "year": 2019,
+            "venue": "Emergency Medicine Reviews",
+            "doi": "10.5555/emr.2019.0712",
+            "providerType": "review",
+            "abstract": "We identified 31 studies of case management for adults who frequently attend emergency departments, 5 of them randomised trials. Most reported fewer emergency visits after enrolment, but the before-after studies could not separate the programme from regression to the mean, and the randomised trials found smaller reductions (median 12 percent). Only 6 studies reported mortality or intensive care admission, with inconsistent results. Programme content, caseloads and definitions of frequent use varied widely. The authors call for evaluations of hard outcomes that account for regression to the mean."
+          },
+          {
+            "title": "Mortality and intensive care admission among frequent emergency department attenders: a regional linkage study",
+            "authors": "Ferreira-Lindahl M, Oduro-Kaspar J",
+            "year": 2021,
+            "venue": "Journal of Emergency Care Outcomes",
+            "providerType": "journal-article",
+            "abstract": "Linking regional emergency department and hospital data for 8,900 adults with eight or more visits in a year, we found 12-month mortality of 3.4 percent and intensive care admission of 2.9 percent, together affecting 6.0 percent of frequent attenders. Risk was highest among those with heart failure, chronic lung disease or alcohol dependence, and among people with no family doctor. Frequent attenders were younger than other patients with the same outcomes. The authors suggest that services for frequent attenders should be judged on these outcomes, not only on visit counts."
+          },
+          {
+            "title": "Case management enrolment and 12-month death or intensive care admission in frequent attenders: a matched case-control study at one urban emergency department",
+            "authors": "Nwankwo-Stead L, Bergmann-Achebe T, Iyer-Fontaine C",
+            "year": 2023,
+            "venue": "Acute and Emergency Care",
+            "doi": "10.5555/aec.2023.0438",
+            "providerType": "journal-article",
+            "abstract": "We identified 64 frequent attenders who died or were admitted to intensive care within 12 months of an index visit and matched four controls to each on age, sex and index month. Case management enrolment before the index date was less common among cases (odds ratio 0.62, 95 percent CI 0.38 to 1.01) after adjustment for prior visits and comorbidity. The estimate was imprecise because of the small number of cases, and enrolment favoured patients with social rather than medical needs. The authors recommend a multi-site study with more cases."
+          },
+          {
+            "title": "Confounding by indication in evaluations of case management: enrolment favours the most complex patients",
+            "authors": "Kowalczyk-Amadi R, Thorsen-Mbeki E",
+            "year": 2018,
+            "venue": "Health Services Methods Notes",
+            "providerType": "journal-article",
+            "abstract": "Using data from four case management programmes, we compared patients enrolled with eligible patients not enrolled. Enrolled patients had more emergency visits in the previous year (median 14 against 10), more mental health diagnoses and more housing instability. Without adjustment for these factors, enrolment appeared to double the risk of death; after adjustment for prior visit count and a comorbidity index, the association reversed. The authors recommend matching or adjusting on prior utilisation and measuring exposure only before the outcome date."
+          },
+          {
+            "title": "Measuring exposure to case management from care plan files: agreement between two abstractors",
+            "authors": "Solberg-Nnamdi A, Pereira-Hollis D",
+            "year": 2020,
+            "venue": "Journal of Care Management Research",
+            "doi": "10.5555/jcmr.2020.0156",
+            "providerType": "journal-article",
+            "abstract": "Two trained abstractors independently read 150 case management files to record enrolment date, number of case manager contacts and care plan content. Agreement on enrolment date within 14 days was excellent (kappa 0.81), but agreement on the number of contacts was moderate (weighted kappa 0.58) because contacts were recorded in several places. Reading a file took a median of 44 minutes. The authors recommend using enrolment date as the main exposure and treating contact counts as a secondary exposure with a written abstraction guide."
+          },
+          {
+            "title": "Variation in frequent attender case management across community and tertiary emergency departments",
+            "authors": "Mbatha-Laurent J, Okafor-Sandvik H",
+            "year": 2024,
+            "venue": "Emergency Services Research",
+            "providerType": "journal-article",
+            "abstract": "We compared case management programmes for frequent attenders at 12 emergency departments. Caseloads ranged from 35 to 80 patients per case manager, and community departments more often relied on nurses than social workers. Enrolment criteria differed: 8 departments used a visit threshold alone and 4 added clinical judgement. Median time from eligibility to enrolment was 3 weeks at tertiary and 9 weeks at community departments. The authors suggest that multi-site evaluations match or stratify by site because programme intensity differs."
+          },
+          {
+            "title": "Incidence density sampling of controls for time-varying programme exposure",
+            "authors": "Lindqvist-Obi F, Marchetti-Ansah K",
+            "year": 2016,
+            "venue": "Epidemiological Methods Letters",
+            "doi": "10.5555/eml.2016.0033",
+            "providerType": "journal-article",
+            "abstract": "When exposure to a programme changes over time, controls sampled from people who never had the outcome can bias a case-control estimate. We show with simulated data that sampling controls from those still at risk at each case's event date (incidence density sampling) recovers the true rate ratio, whereas sampling from survivors to the end of follow-up overstated a protective effect by up to 30 percent. Exposure must be measured before each matched set's index date. The approach applies directly to enrolment in case management and similar programmes."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0gip543",
+            "ev-1ggs445",
+            "ev-0nr15we",
+            "ev-1fmp8sh",
+            "ev-0myglbn",
+            "ev-0wlu13s",
+            "ev-0gln17e"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[2].id": "ev-0nr15we",
+          "scan.items[2].grade": "unrated",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Confounding by indication in evaluations of case management: enrolment favours the most complex patients"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0gip543",
+            "relevance": 80,
+            "methodQuality": 62,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 31 studies, visits fell after enrolment, but trials found smaller reductions (median 12 percent); only 6 studies reported mortality or ICU admission.",
+            "limitations": "Heterogeneous programmes; before-after studies dominated.",
+            "contextTags": [
+              "case management",
+              "visits",
+              "regression to the mean"
+            ]
+          },
+          {
+            "id": "ev-1ggs445",
+            "relevance": 78,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Among 8,900 frequent attenders, 12-month death or ICU admission affected 6.0 percent.",
+            "limitations": "Another region; outcome coding from linked data.",
+            "contextTags": [
+              "outcome frequency",
+              "frequent attenders"
+            ]
+          },
+          {
+            "id": "ev-0nr15we",
+            "relevance": 95,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "With 64 cases and four matched controls each, enrolment had an odds ratio of 0.62 (0.38 to 1.01) for death or ICU admission.",
+            "limitations": "Single site; few cases; enrolment favoured social needs.",
+            "contextTags": [
+              "case-control",
+              "single site",
+              "imprecise"
+            ]
+          },
+          {
+            "id": "ev-1fmp8sh",
+            "relevance": 90,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Enrolled patients had more prior visits and complexity; unadjusted, enrolment appeared to double death risk, and the association reversed after adjustment.",
+            "limitations": "Four programmes; adjustment set limited.",
+            "contextTags": [
+              "confounding by indication",
+              "prior utilisation"
+            ]
+          },
+          {
+            "id": "ev-0myglbn",
+            "relevance": 85,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Abstractors agreed on enrolment date (kappa 0.81) but only moderately on contact counts (0.58); a file took 44 minutes.",
+            "limitations": "150 files at one programme.",
+            "contextTags": [
+              "exposure measurement",
+              "abstraction"
+            ]
+          },
+          {
+            "id": "ev-0wlu13s",
+            "relevance": 82,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Caseloads ranged from 35 to 80 per case manager and enrolment took 3 weeks at tertiary against 9 weeks at community departments.",
+            "limitations": "Descriptive comparison of 12 departments.",
+            "contextTags": [
+              "site variation",
+              "programme intensity"
+            ]
+          },
+          {
+            "id": "ev-0gln17e",
+            "relevance": 88,
+            "methodQuality": 70,
+            "kind": "grey",
+            "grade": "moderate",
+            "keyFindings": "Incidence density sampling recovered the rate ratio; sampling from end-of-follow-up survivors overstated protection by up to 30 percent.",
+            "limitations": "Simulation study.",
+            "contextTags": [
+              "control sampling",
+              "time-varying exposure"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "A single-site matched case-control study with 64 cases found an odds ratio of 0.62 for death or ICU admission with case management enrolment, with an interval that included 1.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0nr15we"
+            ],
+            "location": "Abstract, results",
+            "passage": "Case management enrolment before the index date was less common among cases (odds ratio 0.62, 95 percent CI 0.38 to 1.01)",
+            "interpretation": "A planning value; a single site gave an imprecise estimate.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Without adjustment for prior visits and comorbidity, case management enrolment appeared to double the risk of death; after adjustment the association reversed.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1fmp8sh"
+            ],
+            "location": "Abstract",
+            "passage": "Without adjustment for these factors, enrolment appeared to double the risk of death; after adjustment for prior visit count and a comorbidity index, the association reversed.",
+            "interpretation": "Match or adjust on prior utilisation and comorbidity.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Abstractors agreed well on enrolment date but only moderately on the number of case manager contacts.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0myglbn"
+            ],
+            "location": "Abstract",
+            "passage": "Agreement on enrolment date within 14 days was excellent (kappa 0.81)",
+            "interpretation": "Use enrolment before the index date as the main exposure.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c4",
+            "text": "Case management caseloads ranged from 35 to 80 patients per case manager across 12 emergency departments.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0wlu13s"
+            ],
+            "location": "Abstract",
+            "passage": "Caseloads ranged from 35 to 80 patients per case manager",
+            "interpretation": "Programme intensity differs by site; match or stratify by site.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Sampling controls from survivors to the end of follow-up overstated a protective effect by up to 30 percent, whereas incidence density sampling did not.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0gln17e"
+            ],
+            "location": "Abstract",
+            "passage": "sampling from survivors to the end of follow-up overstated a protective effect by up to 30 percent",
+            "interpretation": "Sample controls from those at risk on each case's event date.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c6",
+            "text": "Among frequent attenders, death or ICU admission within 12 months affected 6.0 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1ggs445"
+            ],
+            "location": "Abstract",
+            "passage": "together affecting 6.0 percent of frequent attenders",
+            "interpretation": "Planning value for the number of cases.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Case management reduces visits less than before-after studies suggest, and hard outcomes are rarely evaluated. One single-site case-control study found a protective but imprecise association with death or ICU admission. Confounding by indication can reverse the apparent effect unless prior utilisation and comorbidity are handled, exposure is best measured as enrolment date, controls must be sampled by incidence density, and programme intensity differs between tertiary and community sites. Death or ICU admission affects about 6 percent of frequent attenders a year.",
+        "gradeOverall": "low",
+        "gradeRationale": "One imprecise case-control study on the outcome of interest and supporting methods evidence; low certainty for any effect on death or ICU admission.",
+        "summary": "Seven retrieved records appraised; six claims with passages; certainty low."
+      },
+      "note": "Applied through the appraisal mapper on the production scan path (S13); certainty over seven inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0nr15we"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-0gln17e"
+          ],
+          "scan.items[2].grade": "low",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "tertiary ED program since March 2023",
+          "two community ED programs since 2024",
+          "case management files read by hand",
+          "health authority funding review"
+        ],
+        "reading": "Enrolment is not random: the most complex frequent attenders are enrolled first, so a naive comparison makes the program look harmful (claim c2). Death and ICU admission are rare enough that a case-control design is efficient, provided controls are sampled from those still at risk (claim c5) and exposure is measured as enrolment before the index date (claim c3). Programme intensity differs between tertiary and community sites (claim c4), which matters as soon as more than one site is included.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Case management enrolment",
+            "kind": "context",
+            "detail": "Exposure, measured from files before the index date."
+          },
+          {
+            "id": "n2",
+            "label": "Death or ICU admission within 12 months",
+            "kind": "outcome",
+            "detail": "About 6 percent a year (claim c6)."
+          },
+          {
+            "id": "n3",
+            "label": "Prior visits and complexity",
+            "kind": "context",
+            "detail": "Drive both enrolment and outcome (claim c2)."
+          },
+          {
+            "id": "n4",
+            "label": "Single-site case-control study",
+            "kind": "observational",
+            "detail": "OR 0.62, interval includes 1 (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Incidence density sampling",
+            "kind": "framework",
+            "detail": "Avoids overstating protection (claim c5)."
+          },
+          {
+            "id": "n6",
+            "label": "Site differences in program intensity",
+            "kind": "context",
+            "detail": "Caseloads 35 to 80 (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Frequent attenders",
+            "kind": "stakeholder",
+            "detail": "Chronic illness, mental health needs, housing instability."
+          },
+          {
+            "id": "n8",
+            "label": "Case managers",
+            "kind": "stakeholder",
+            "detail": "Social workers at the tertiary ED, nurses in community EDs."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "increases"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "increases"
+          },
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "hypothesised to reduce"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "estimates association of"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "should govern control sampling for"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "changes the meaning of"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "deliver"
+          }
+        ],
+        "summary": "Map of confounding by complexity, time-varying exposure and site differences around enrolment and death or ICU admission."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Hard outcomes rarely evaluated",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Only a handful of evaluations report death or ICU admission, and the one case-control estimate is imprecise (claim c1).",
+            "opportunity": "Estimate the association with death or ICU admission with enough cases for a useful interval."
+          },
+          {
+            "id": "g2",
+            "title": "Confounding by indication",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Complex patients are enrolled first and the unadjusted association can reverse (claim c2).",
+            "opportunity": "Match on age, sex and calendar time and adjust for prior visits, comorbidity, mental health and housing."
+          },
+          {
+            "id": "g3",
+            "title": "Time-varying exposure and control sampling",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Sampling controls from end-of-follow-up survivors overstates protection (claim c5).",
+            "opportunity": "Use incidence density sampling and measure enrolment before each index date."
+          },
+          {
+            "id": "g4",
+            "title": "Program intensity differs by site",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Community programs use nurses, have different caseloads and enrol later (claim c4).",
+            "opportunity": "If more than one site is included, match controls within site and report site-specific estimates."
+          },
+          {
+            "id": "g5",
+            "title": "People without a family doctor or stable housing",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "They carry the highest risk and may be enrolled late or lost from records.",
+            "opportunity": "Report estimates by family doctor attachment and housing status."
+          }
+        ],
+        "errorsFound": [
+          "The program is monitored by visit counts, which fall after a peak whether or not the program works."
+        ],
+        "reevaluation": "The gaps confirm a matched case-control design with incidence density sampling and careful confounder control; the number of sites is the open choice.",
+        "summary": "Five gaps: hard outcomes, confounding, control sampling, site differences and equity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[3].kind": "implementation",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Confounding by indication"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Enrolment in case management before the index date is associated with lower odds of death or ICU admission within 12 months (odds ratio 0.6 or lower) after matching on age, sex and calendar time and adjustment for prior visits and comorbidity.",
+            "novelty": 55,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "Decides the program's future on outcomes that matter; the single-site estimate (claim c1) sets the planning value.",
+            "risks": "Residual confounding; too few cases at one site."
+          },
+          {
+            "id": "h2",
+            "statement": "The association is stronger with longer time since enrolment.",
+            "novelty": 45,
+            "need": 60,
+            "practiceChange": 55,
+            "feasibility": 70,
+            "parsimony": 65,
+            "rationale": "A dose-response pattern would support a real effect.",
+            "risks": "Few cases with long exposure."
+          },
+          {
+            "id": "h3",
+            "statement": "The association differs between tertiary and community sites.",
+            "novelty": 50,
+            "need": 55,
+            "practiceChange": 60,
+            "feasibility": 50,
+            "parsimony": 55,
+            "rationale": "Program intensity differs (claim c4).",
+            "risks": "Community sites contribute fewer cases."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the primary association."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults who frequently attend the region's emergency departments, is enrolment in case management before an index date associated with lower odds of death or intensive care admission within 12 months?",
+            "framework": "PECO",
+            "population": "Adults with eight or more ED visits in 12 months at the region's EDs",
+            "intervention": "Case management enrolment before the index date (exposure)",
+            "comparator": "No enrolment before the index date",
+            "outcome": "Death or ICU admission within 12 months (case definition)",
+            "time": "Index dates from program start to December 2025",
+            "setting": "Tertiary ED, with the two community EDs if needed"
+          }
+        ],
+        "finer": "Feasible with approvals in place and two research assistants; interesting to the health authority; novel on hard outcomes; ethical with de-identified extracts; relevant to the funding review.",
+        "summary": "One PECO question stated for the region, so that it holds whether one or three sites are used."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "case-control",
+        "rationale": "Death or ICU admission is uncommon (c6) and exposure must be read from files, so a matched case-control design with incidence density sampling is efficient (c5). Following the investigator's preference, the study starts at the tertiary ED, where files are complete and the program has run longest; enrolment date is the main exposure (c3), and prior visits and comorbidity are handled by matching and adjustment (c2). The single-site estimate elsewhere (c1) shows the precision risk. Reporting follows STROBE.",
+        "alternatives": [
+          "Add the two community EDs from the start (deferred: the investigator prefers to begin where files are complete)",
+          "Before-after comparison of visit counts (refused: regression to the mean)",
+          "Following every frequent attender with file reading for all (refused: about 3,000 files)"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "A trial of case management is not possible for a program already running; a single-site case-control study is the simplest credible start.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a matched case-control study at the tertiary ED: cases are frequent attenders who died or were admitted to ICU within 12 months of an index date from March 2023 to December 2025, with four controls per case sampled from those still at risk on the case's event date and matched on age, sex and calendar month, and enrolment before the index date read from the files.",
+          "question": "How should the case management program's association with death or ICU admission be estimated?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Hard outcomes are rare and exposure needs file reading, so a matched case-control design with incidence density sampling is efficient.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3",
+                "c5"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The tertiary ED alone yields too few cases for a useful estimate.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c1"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics approval for the case-control protocol",
+              "status": "met",
+              "evidence": "Approval REB-EM-2026-112 dated 2026-08-28, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Data-sharing agreement for de-identified extracts",
+              "status": "met",
+              "evidence": "Agreement DSA-2026-044 dated 2026-08-30, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Add the two community EDs from the start",
+            "Before-after comparison of visit counts"
+          ],
+          "note": "Rests on ledger claims c1, c2, c3 and c5; both gates are met on investigator-supplied records. Whether one site gives enough cases is left to the Analysis stage."
+        },
+        "summary": "Single-site matched case-control study recommended at the tertiary ED; the precision question is left open."
+      },
+      "note": "Claims exist only when S13 applied the appraisal; selectionStatus requires S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "case-control",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c5"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "First supported positive: ledger claims from retrieved records and both gates met; accepted and ready (G7). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "case-control"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Matched case-control study at the tertiary ED with incidence density sampling of four controls per case.",
+        "population": "Adults meeting the frequent attender definition at the tertiary ED with an index date from March 2023 to December 2025.",
+        "exposure": "Case management enrolment before the index date, read from the case management file; time since enrolment and contact count as secondary exposures.",
+        "procedures": "Cases are identified from linked ED, hospital and death data. For each case, four controls are sampled from frequent attenders at risk on the case's event date, matched on age band, sex and calendar month. Research assistants read files with a written abstraction guide; 10 percent are read twice.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Odds ratio for death or ICU admission with enrolment",
+            "measure": "Conditional odds ratio for enrolment before the index date, cases against matched controls",
+            "timing": "12 months after index",
+            "why": "The association the health authority needs.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Time since enrolment",
+            "measure": "Odds ratios by time since enrolment category",
+            "timing": "At index",
+            "why": "Dose-response.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Abstractor agreement",
+            "measure": "Kappa for enrolment date on a 10 percent double-read sample",
+            "timing": "During abstraction",
+            "why": "Exposure measurement quality (claim c3).",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 945 files at the tertiary ED fit within the research assistants' time.",
+        "biasMitigation": [
+          "Incidence density sampling",
+          "Matching on age, sex and calendar month",
+          "Adjustment for prior visits and comorbidity"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by indication",
+            "severity": "high",
+            "note": "Complex patients enrolled first (claim c2)."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 5,
+          "flags": [
+            "Five adjustment covariates"
+          ],
+          "simplestPath": "One site, one exposure, one outcome definition."
+        },
+        "theoreticalFramework": "None beyond the case-control framework.",
+        "summary": "Single-site matched case-control protocol."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "protocol.overview": {
+            "includes": "tertiary ED"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Conditional logistic regression on matched sets from the tertiary ED.",
+        "sampleSize": "At the tertiary ED about 1,050 people a year meet the definition and about 6 percent die or are admitted to ICU within 12 months (claim c6), giving about 189 cases for index dates from March 2023 to December 2025. With four controls per case and enrolment in about 21 percent of controls, 189 cases give about 62 percent power at two-sided alpha 0.05 to detect an odds ratio of 0.6; 80 percent power needs about 277 cases. The single site is therefore underpowered for the effect the program would need to show.",
+        "primaryAnalysis": "Conditional logistic regression for enrolment before the index date, adjusted for prior-year visits, comorbidity index, mental health diagnosis, housing instability and family doctor attachment.",
+        "secondaryAnalysis": "Time since enrolment categories.",
+        "missingData": "Files that cannot be found are reported; multiple imputation for missing housing status.",
+        "multiplicity": "One primary association.",
+        "software": "R with the survival package.",
+        "overfittingGuards": [
+          "Five covariates fixed in advance"
+        ],
+        "summary": "About 189 cases at one site give only about 62 percent power for an odds ratio of 0.6; 277 cases are needed."
+      },
+      "note": "The Analysis stage exposes the single-site design's weakness; it is completed as written, and the Design stage is revisited next.",
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 62 percent power"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 2,
+      "response": {
+        "recommended": "case-control",
+        "rationale": "The Analysis stage showed the tertiary ED alone gives too few cases for a useful estimate, as the earlier single-site study also found (c1). All three EDs are covered by the ethics approval and the data-sharing agreement, so cases are drawn from all three sites and controls are matched within site, because program intensity differs between tertiary and community sites (c4). Incidence density sampling (c5), enrolment date as exposure (c3) and adjustment for complexity (c2) are kept. Reporting follows STROBE.",
+        "alternatives": [
+          "Keep the single-site design (refused: underpowered for the effect that matters)",
+          "Pool sites without matching on site (refused: program intensity differs by site)",
+          "Before-after comparison of visit counts (refused: regression to the mean)"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "Three sites with within-site matching is the smallest design that gives a useful estimate; adding sites outside the region would need new approvals.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Extend the matched case-control study to all three emergency departments, drawing cases from each site and matching four controls per case within site on age, sex and calendar month by incidence density sampling, because a single site gives too few cases and program intensity differs between sites.",
+          "question": "How should the case management program's association with death or ICU admission be estimated?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A single-site estimate would be too imprecise to inform the funding review.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Program content differs so much between sites that enrolment means different exposures.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c4"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics approval covering all three emergency departments",
+              "status": "met",
+              "evidence": "Approval REB-EM-2026-112 dated 2026-08-28 covers all three sites, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Data-sharing agreement signed by all three emergency departments",
+              "status": "met",
+              "evidence": "Agreement DSA-2026-044 dated 2026-08-30, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Keep the single-site design",
+            "Pool sites without matching on site"
+          ],
+          "note": "Rests on ledger claims c1 to c5 and on investigator-supplied approvals that cover all three sites. It replaces the single-site decision, which the investigator withdraws."
+        },
+        "summary": "Three-site matched case-control study recommended; the single-site decision is to be withdrawn."
+      },
+      "note": "Design changes after Protocol and Stats were completed, so both are flagged for review (G8; mergeStage at 875fe59). The first decision was accepted, so it is not superseded automatically and stays accepted until the investigator withdraws it. selectionStatus requires S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].status": "accepted",
+          "design.decisions[0].selectionStatus": "accepted",
+          "design.decisions[1].status": "proposed",
+          "design.decisions[1].selectionStatus": "proposed",
+          "design.decisions[1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "needsReview": [
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "design": "complete",
+          "protocol": "needs-review",
+          "stats": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "accepted",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "withdraw-decision",
+      "which": 0,
+      "note": "The second decision withdraws the first: the investigator withdraws the accepted single-site decision (kept in the history, never erased). Requires S11 for selectionStatus and D5 for the text.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].status": "withdrawn",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "design.decisions[1].status": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "withdrawn",
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Second supported positive: ledger claims from retrieved records and gates met for all three sites; accepted and ready while the first stays withdrawn, so only one decision is accepted (G7). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "family": "case-control",
+          "needsReview": [
+            "protocol",
+            "stats"
+          ]
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready",
+            "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: the withdrawn and accepted decisions and the review flags must survive (G7, G8). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "title": "Case management for frequent emergency department attenders and 12-month death or intensive care admission",
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "design.decisions[1].selectionStatus": "accepted",
+          "needsReview": [
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "protocol": "needs-review",
+          "stats": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "withdrawn",
+            "accepted",
+            "review required"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 2,
+      "response": {
+        "overview": "Three-site matched case-control study: cases from the tertiary ED (index dates March 2023 to December 2025) and the two community EDs (from each program's start in 2024), with four controls per case sampled by incidence density within the same site.",
+        "population": "Adults meeting the frequent attender definition at any of the three EDs, with index dates from each site's program start to December 2025.",
+        "exposure": "Case management enrolment before the index date, read from the site's case management files; time since enrolment and contact count (with a written guide, because agreement on contacts is only moderate) as secondary exposures.",
+        "procedures": "Cases are identified from regional linked ED, hospital and death data. For each case, four controls are sampled from frequent attenders at the same site still at risk on the case's event date, matched on age band, sex and calendar month. The two research assistants read files at all three sites with one abstraction guide; 10 percent of files at each site are read twice. Site extracts are de-identified before leaving the site.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Odds ratio for death or ICU admission with enrolment",
+            "measure": "Conditional odds ratio for enrolment before the index date, cases against within-site matched controls",
+            "timing": "12 months after the index date",
+            "why": "The association the health authority needs.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "co-primary",
+            "name": "Odds ratio for death alone",
+            "measure": "Conditional odds ratio restricted to cases who died",
+            "timing": "12 months after the index date",
+            "why": "Death is the most important component.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Time since enrolment",
+            "measure": "Odds ratios by time since enrolment (under 6 months, 6 to 12, over 12)",
+            "timing": "At the index date",
+            "why": "Dose-response.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "secondary",
+            "name": "Site-specific associations",
+            "measure": "Odds ratios by site with a test of heterogeneity",
+            "timing": "12 months after the index date",
+            "why": "Program intensity differs by site (claim c4).",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "process",
+            "name": "Abstractor agreement by site",
+            "measure": "Kappa for enrolment date on the double-read sample at each site",
+            "timing": "During abstraction",
+            "why": "Exposure measurement quality (claim c3).",
+            "patientCentered": false
+          },
+          {
+            "id": "o6",
+            "role": "process",
+            "name": "Unavailable or incomplete files by site",
+            "measure": "Proportion of sampled patients whose file cannot be found or is incomplete",
+            "timing": "During abstraction",
+            "why": "Differential missingness by site would bias the estimate.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 291 cases and 1,164 controls: about 290 enrolled files at 45 minutes and about 1,165 checks at 15 minutes, roughly 510 research-assistant hours of the 1,080 available to June 2027.",
+        "biasMitigation": [
+          "Incidence density sampling within site",
+          "Matching on age band, sex and calendar month within site",
+          "Adjustment for prior visits, comorbidity, mental health diagnosis, housing instability and family doctor attachment",
+          "One abstraction guide and double reading at every site"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by indication",
+            "severity": "high",
+            "note": "Complex patients enrolled first (claim c2); matching and adjustment limit but do not remove it."
+          },
+          {
+            "id": "b2",
+            "label": "Site differences in files",
+            "severity": "watch",
+            "note": "Community sites started later and use nurses; unavailable files are reported by site."
+          },
+          {
+            "id": "b3",
+            "label": "Control sampling",
+            "severity": "ok",
+            "note": "Incidence density sampling within site (claim c5)."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 3,
+          "covariateCount": 5,
+          "flags": [
+            "One primary outcome; death alone is a secondary component, not a second primary"
+          ],
+          "simplestPath": "Three sites, within-site matching, one exposure, one outcome definition."
+        },
+        "theoreticalFramework": "Case-control design with incidence density sampling; no further framework.",
+        "summary": "Three-site protocol with within-site matching; one primary outcome, site-specific secondary estimates and abstraction quality measures."
+      },
+      "note": "The outcome with role 'co-primary' is not a valid role: it is refused (invalid-enum at the role, then dropped), never demoted to secondary (apply-ai at 875fe59). Re-running Protocol clears its flag; Stats stays flagged (G8).",
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].name": "Time since enrolment",
+          "protocol.outcomes[1].role": "secondary",
+          "protocol.overview": {
+            "includes": "Three-site"
+          },
+          "needsReview": [
+            "stats"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "stats": "needs-review"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "outcomes[1].role",
+              "code": "invalid-enum"
+            },
+            {
+              "path": "outcomes[1]",
+              "code": "dropped"
+            }
+          ],
+          "count": 2
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 2,
+      "response": {
+        "designSummary": "Conditional logistic regression on within-site matched sets from three emergency departments.",
+        "sampleSize": "At 6 percent a year (claim c6), the tertiary ED gives about 189 cases (March 2023 to December 2025) and the two community EDs about 102 (2024 to 2025), about 291 cases in all. With four controls per case and enrolment in about 21 percent of controls, 291 cases give about 82 percent power at two-sided alpha 0.05 for an odds ratio of 0.6, against 62 percent for the tertiary ED alone. Site-specific estimates will be imprecise, especially at the community sites, and are reported as secondary.",
+        "primaryAnalysis": "Conditional logistic regression on matched sets (matching within site on age band, sex and calendar month) for enrolment before the index date, adjusted for prior-year visits, comorbidity index, mental health diagnosis, housing instability and family doctor attachment.",
+        "secondaryAnalysis": "Odds ratios by time since enrolment; death alone as a component; site-specific odds ratios with a test of heterogeneity; estimates by family doctor attachment and housing status; contact count as a secondary exposure.",
+        "missingData": "Unavailable files are reported by site; missing housing status is handled by multiple imputation with 20 imputations; a sensitivity analysis excludes matched sets with any unavailable file.",
+        "multiplicity": "One primary association; secondary and site-specific estimates reported with intervals and labelled as secondary.",
+        "software": "R with the survival package; analysis plan filed with the ethics board before abstraction.",
+        "overfittingGuards": [
+          "Five adjustment covariates fixed before abstraction",
+          "About 58 cases per covariate",
+          "No data-driven site pooling decisions",
+          "Analysis plan filed before abstraction"
+        ],
+        "summary": "About 291 cases across three sites give about 82 percent power for an odds ratio of 0.6; site estimates are secondary."
+      },
+      "note": "Re-running Stats clears the last flag: the dependency chain from Design through Protocol to Stats is consistent again (G8).",
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "291 cases"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete",
+          "protocol": "complete",
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No contact with patients or families. Risks are privacy harm from linking ED, hospital, death and case management data for a stigmatised group, and misuse of findings to cut support; extracts are de-identified at each site and results are reported only in aggregate.",
+        "consent": "Waiver of individual consent for secondary use of records, approved by the regional ethics board; public notice through each hospital's research transparency page.",
+        "data": "Site extracts carry study numbers only; linkage keys stay with the regional data custodian; the analysis file is held on the health authority's research server for seven years.",
+        "equity": "PROGRESS-Plus: frequent attenders include people experiencing homelessness, people with mental illness or addiction, Indigenous people and people without a family doctor. Estimates are reported by family doctor attachment and housing status, community partners review the interpretation, and no subgroup finding is used to exclude people from the program.",
+        "effectiveness": "The study informs whether case management protects against death and ICU admission; a precise null result is a valid answer for the funding review.",
+        "efficiency": "Uses existing records and two research assistants; within-site sampling keeps file reading to about 510 hours.",
+        "costs": "Research assistant time within the approved allocation; data custodian linkage within existing agreements.",
+        "grants": "None needed; a positive result could support an application to evaluate the program's content.",
+        "partnerships": "Case managers at the three sites, the regional data custodian, a community organisation serving people experiencing homelessness, and two people with lived knowledge of frequent ED use as advisors.",
+        "rebPath": "Approved by the regional research ethics board for all three sites on 2026-08-28 (REB-EM-2026-112); data sharing under DSA-2026-044.",
+        "limitations": "Residual confounding by indication; site differences in files; community sites contribute fewer cases.",
+        "summary": "Records-only study with a consent waiver, de-identified site extracts and equity reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "all three sites"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two advisors with lived knowledge of frequent ED use and a community organisation review the outcome definitions and the interpretation; case managers from each site review the abstraction guide.",
+        "socialListening": "No social media listening; the health authority's patient relations summaries about ED care for frequent attenders are read for themes.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Being known",
+            "quote": "Composite paraphrase: Once there was a plan, the ED stopped starting from zero with me every time.",
+            "implication": "Read care plan flags in the files as part of exposure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Who gets enrolled",
+            "quote": "Composite paraphrase: We enrol the people who scare us most, so of course they look worse on paper.",
+            "implication": "Keep complexity adjustment and report it plainly.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Community sites",
+            "quote": "Composite paraphrase: Our nurses carry twice the caseload and see people later; do not judge us by the city program.",
+            "implication": "Match within site and report site estimates separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Outcomes that matter",
+            "quote": "Composite paraphrase: Counting visits misses the point; what I care about is that my brother is still alive.",
+            "implication": "Keep death or ICU admission as the primary outcome.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on being known, enrolment selection, community sites and outcomes."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Case management for frequent emergency department attenders and death or intensive care admission: a three-site matched case-control study",
+        "abstract": "Objective: to estimate the association between case management enrolment and death or intensive care admission within 12 months among frequent emergency department attenders. Design: matched case-control study at three emergency departments with incidence density sampling of four controls per case within site. Exposure: enrolment before the index date from case management files. Results will be written after abstraction.",
+        "introduction": "Case management reduces visits less than before-after studies suggest, and its effect on hard outcomes is uncertain; the only case-control estimate came from one site and was imprecise.",
+        "methods": "Cases and controls were drawn from all three sites, with controls matched within site on age band, sex and calendar month. Conditional logistic regression adjusted for complexity. The single-site plan was withdrawn after the sample size calculation showed it was underpowered.",
+        "results": "No data have been abstracted yet. The report will present matched sets by site, exposure distributions, the adjusted odds ratio and site-specific estimates.",
+        "discussion": "The discussion will weigh the estimate against confounding by indication and site differences.",
+        "limitations": "Residual confounding; exposure read from files of varying completeness; fewer community cases.",
+        "conclusion": "To be written after analysis.",
+        "reportingChecklist": "STROBE (case-control)",
+        "summary": "STROBE-structured draft; the methods record the withdrawn single-site plan."
+      },
+      "expect": {
+        "store": {
+          "manuscript.methods": {
+            "includes": "single-site plan was withdrawn"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The single-site decision is withdrawn and kept in the history; cite the three-site decision only",
+          "The Protocol reply tried to add a second primary outcome with the role co-primary; it was refused, and death alone stays a secondary component",
+          "Write the abstraction guide before reading starts at the community sites"
+        ],
+        "improvementNotes": "The Analysis stage showed the first design was underpowered; Design was revised, and Protocol and Stats were re-run so that the chain from decision to sample size is consistent.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the withdrawn decision, the refused outcome role and the abstraction guide."
+      },
+      "note": "The audit stage's own fields fail at 875fe59 because mergeStage overwrites the audit patch (A3 L1.6); they state the correct behaviour.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Status fields are checked in the export; this route shows the audit stage.",
+      "expect": {
+        "store": {
+          "title": "Case management for frequent emergency department attenders and 12-month death or intensive care admission",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "design.decisions": {
+            "length": 2
+          },
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "stats.sampleSize": {
+            "includes": "291 cases"
+          }
+        },
+        "screen": {
+          "includes": [
+            "Case management for frequent emergency department attenders and 12-month death or intensive care admission"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Case management for frequent emergency department attenders and 12-month death or intensive care admission",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "Two research assistants for about 15 hours a week each until June 2027; file reading must fit that time. No contact with patients or families. Data leave each site only as de-identified extracts under the regional data-sharing agreement. The health authority expects a report by September 2027."
+        },
+        "screen": {
+          "includes": [
+            "Case management for frequent emergency department attenders and 12-month death or intensive care admission"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus, actionStatus and the withdrawal require S11; claims S13. One click, one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "needsReview": [],
+            "design.decisions[0].status": "withdrawn",
+            "design.decisions[0].selectionStatus": "withdrawn",
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "protocol.outcomes": {
+              "length": 5
+            },
+            "protocol.parsimony.primaryOutcomeCount": 1
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

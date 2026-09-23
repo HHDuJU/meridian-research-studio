@@ -106,6 +106,8 @@ export function markUnknownIds(text: string, known: Set<string>): { text: string
       return `⟦unresolved:${id}⟧`;
     },
   );
+  // NUL marks the held spans; it cannot occur in typed text.
+  // eslint-disable-next-line no-control-regex
   next = next.replace(/\u0000WRAP(\d+)\u0000/g, (_, n) => held[Number(n)] ?? "");
   return { text: next, unknown: [...new Set(unknown)] };
 }
@@ -123,6 +125,8 @@ export function resolveAlias(study: Study, id: string): string | undefined {
 const QUOTED_KEYS = new Set([
   "passage", "quote", "abstract", "contentVersions", "documents",
   "kind", "status", "uncertainty", "grade", "origin", "severity", "selectionStatus", "actionStatus",
+  // The investigator's own sentences copied into a gate proposal, and sentences they dismissed (D10).
+  "supportingFacts", "settledItems", "factsRevision",
 ]);
 
 function collectPatchIds(value: unknown, into: Set<string>) {

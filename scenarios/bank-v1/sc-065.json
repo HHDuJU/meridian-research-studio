@@ -1,6 +1,6 @@
 {
   "id": "sc-065",
-  "version": 1,
+  "version": 2,
   "title": "Colorectal surgical site infection bundle: out-of-range score and boolean year refused, cited record fails its identity check after acceptance",
   "field": "surgery",
   "level": 4,
@@ -11,7 +11,8 @@
     "D1",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on an explicitly named prospective observational study. Seven fixture records are retrieved. A discovery reply appends three model leads after them (D1); the first lead gives its year as the boolean true, which is refused (stored null, invalid-type at items[0].year). The appraisal gives one record a methodQuality of 140, which is refused (stored null, out-of-range), while the rest of that annotation applies; certainty 'low' comes only from the appraisal (G1). The decision rests on claims c1 to c4 from retrieved records with both gates met, so the investigator's acceptance is a supported positive (accepted, ready). Then an identity check of the cited multicentre study resolves its DOI to a different work: the record's provenance status becomes 'mismatch' through the store's own action, and the decision must become stale with its action blocked in the store, on screen (Design route) and after reload, and in the export, with the completed stages after Scan flagged for review (G7, G8). This variant uses the status field: at 875fe59 evidenceRevision already includes provenance status, so the stored status 'stale' holds there when the change goes through mergeStage (checked with the library in the author's generator), while selectionStatus and actionStatus need S11. The problem reply omits the constraints key (G11). Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 3, 4, 6 (ev-1028sd0, ev-1jzz52x, ev-0v3s6ze, ev-159pd3s), titleYearKey-based for records 2, 5, 7 (ev-0ctljzc, ev-1cc6ja2, ev-0a7r05t). Requires D1, S13, S11 and D5. Catches: a boolean year or an out-of-range score stored as a value, leads replacing retrieved records, and an accepted decision that stays current or actionable after its key source fails identity.",
   "inputs": {
@@ -905,8 +906,8 @@
             "c3",
             "c4"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -915,13 +916,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "REB determination for the study with publication permitted: Exemption REB-EX-26-311 dated 2026-09-10, supplied by the investigator",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1403,5 +1449,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-065.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) citing the ethics gate the investigator confirmed before accepting decision 1. Model responses, need and records are unchanged."
 }

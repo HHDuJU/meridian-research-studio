@@ -1,0 +1,1519 @@
+{
+  "id": "sc-039",
+  "version": 1,
+  "title": "Regional health authority: narrative review of symptom checker referral accuracy, bad lead values and an invented claim",
+  "field": "digital-health",
+  "level": 4,
+  "family": "narrative-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S1",
+    "S8",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on a clear narrative review. A fixture search returns six records. A discovery reply then adds four model leads: one with methodQuality 140 (stored null, issue out-of-range) and one with year true (stored null, issue invalid-type); the leads are appended after the six retrieved records and never replace them (D1), and they stay unverified model leads (G3). The discovery reply's null certainty assigns nothing; certainty 'low' comes only from the appraisal (S13) over the six retrieved records, which records four claims. The first design reply rests its decision on claim 'c6', which is not in the ledger, and on a 95 percent figure no record reports: the id is dropped with an issue, the decision has no supporting claim, and the investigator's attempt to accept it must be refused (G7; S1, S8). The revised design reply rests on c1 to c3; it supersedes the refused decision, which becomes withdrawn, and its acceptance succeeds with both gates met on the investigator's facts, so the action is ready. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-1s3of74, 2 ev-1hd00l4, 4 ev-19jm5vc, 5 ev-0pbibi3), or of titleYearKey(title, year) when there is no DOI (records 3 ev-1v90uiv, 6 ev-1yb21yw). Catches: out-of-range scores or boolean years stored as values, leads that overwrite retrieved records, acceptance of a decision resting on an invented claim, and an unsupported figure reaching the committee.",
+  "inputs": {
+    "need": "I advise the digital health committee of the Wendmere Regional Health Authority. Two companies have asked for their symptom checker apps to be listed on the authority's patient website. The apps ask people about their symptoms and then advise them to call an ambulance, go to an emergency department, see a doctor the same day, book a routine appointment, or look after themselves at home. The committee is worried about two kinds of error: telling someone with a serious problem to stay at home, and sending large numbers of people to emergency departments that are already full.\n\nThe committee has asked me for a narrative review of what is known about how accurately symptom checker apps assign these urgency levels, written so that lay members can follow it, by the middle of February. I have about 80 hours and the authority's librarian can help with the search. Most studies seem to test apps with written clinical vignettes rather than real patients, a few compare app advice with what a nurse or doctor decided for the same person, and the apps change every few months, so results may date quickly.\n\nI want the review to say clearly what kind of evidence exists, how much of it applies to real patients, whether accuracy differs for older people, children or people with limited English, and what the committee should ask the two companies to show before any listing. I do not need a formal quality score for every study, but I do need the review to be honest about how weak the evidence is.",
+    "constraints": "About 80 hours of my time and 12 hours of librarian time. Report due to the committee by 2027-02-15, readable by lay members. No contact with the two companies during the review.",
+    "localFacts": [
+      "The digital health committee requested the review on 2026-09-08 and meets on 2027-02-22 (committee minute DHC-2026-31).",
+      "The authority librarian confirmed 12 hours of search support in October 2026 (email of 2026-09-15)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I advise the digital health committee of the Wendmere Regional Health Authority. Two companies have asked for their symptom checker apps to be listed on the authority's patient website. The apps ask people about their symptoms and then advise them to call an ambulance, go to an emergency department, see a doctor the same day, book a routine appointment, or look after themselves at home. The committee is worried about two kinds of error: telling someone with a serious problem to stay at home, and sending large numbers of people to emergency departments that are already full.\n\nThe committee has asked me for a narrative review of what is known about how accurately symptom checker apps assign these urgency levels, written so that lay members can follow it, by the middle of February. I have about 80 hours and the authority's librarian can help with the search. Most studies seem to test apps with written clinical vignettes rather than real patients, a few compare app advice with what a nurse or doctor decided for the same person, and the apps change every few months, so results may date quickly.\n\nI want the review to say clearly what kind of evidence exists, how much of it applies to real patients, whether accuracy differs for older people, children or people with limited English, and what the committee should ask the two companies to show before any listing. I do not need a formal quality score for every study, but I do need the review to be honest about how weak the evidence is.",
+          "problem.constraints": "About 80 hours of my time and 12 hours of librarian time. Report due to the committee by 2027-02-15, readable by lay members. No contact with the two companies during the review.",
+          "family": "narrative-review",
+          "completedStages": [],
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I advise the digital health committee"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "How accurately do symptom checker apps assign urgency? A narrative review for a regional health authority",
+        "subtitle": "Vignette and real-patient evidence for a listing decision",
+        "family": "narrative-review",
+        "statement": "Two symptom checker apps have asked to be listed on the health authority's patient website. The digital health committee needs a readable account of how accurately such apps assign urgency levels, distinguishing vignette studies from studies with real patients, noting groups for whom accuracy may be worse, and listing what the companies should be asked to show before any listing.",
+        "whoAffected": "People using the authority's website to decide where to seek care, emergency departments and telephone advice lines, and the committee that endorses tools.",
+        "whatHurts": "Under-triage can delay care for serious illness; over-triage adds to crowded emergency departments; an endorsed app that performs worse for older people, children or people with limited English would widen inequities.",
+        "currentPractice": "The authority lists no symptom checker; committee members have no summary of the evidence.",
+        "whyNow": "Two listing requests are pending and the committee meets on 2027-02-22.",
+        "constraints": "About 80 hours of my time and 12 hours of librarian time. Report due to the committee by 2027-02-15, readable by lay members. No contact with the two companies during the review.",
+        "patientCenteredGoal": "People who use an endorsed tool are directed to the right level of care, and no group is directed less safely than others.",
+        "summary": "Problem framed as a narrative review for a lay committee deciding on app listing."
+      },
+      "expect": {
+        "store": {
+          "title": "How accurately do symptom checker apps assign urgency? A narrative review for a regional health authority",
+          "family": "narrative-review",
+          "problem.constraints": "About 80 hours of my time and 12 hours of librarian time. Report due to the committee by 2027-02-15, readable by lay members. No contact with the two companies during the review.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "How accurately do symptom checker apps assign urgency? A narrative review for a regional health authority"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "symptom checker app triage urgency advice accuracy vignettes real patients emergency",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Triage accuracy of twelve symptom checker apps tested with 200 clinical vignettes",
+            "authors": "Lindahl-Osei M, Carrington-Mbatha J, Varga-Holt S",
+            "year": 2022,
+            "venue": "Journal of Digital Triage",
+            "doi": "10.5555/jdt.2022.0061",
+            "providerType": "journal-article",
+            "abstract": "We entered 200 clinical vignettes, written by emergency physicians and covering five urgency levels, into twelve publicly available symptom checker apps. Apps assigned the correct urgency level in 49 percent of vignettes on average, ranging from 33 to 71 percent between apps. Emergency vignettes were correctly advised to seek emergency care in 78 percent of cases. Over-triage was common: 41 percent of self-care vignettes were advised to see a doctor or attend an emergency department. Results varied more between apps than between vignette types. Vignettes were entered by researchers, not by patients."
+          },
+          {
+            "title": "Symptom checker advice compared with nurse telephone triage for the same callers: a prospective comparison",
+            "authors": "Okafor-Lindgren T, Beaulieu-Asante R",
+            "year": 2024,
+            "venue": "Emergency Access Research",
+            "doi": "10.5555/ear.2024.0137",
+            "providerType": "journal-article",
+            "abstract": "Callers to a regional telephone advice line were invited to use a symptom checker app before speaking to a triage nurse; 1,210 callers completed both. App and nurse urgency levels agreed for 61 percent of callers. The app advised a lower urgency than the nurse for 11 percent of callers, including 3 of the 46 callers whom the nurse sent to an emergency department. Agreement was lower for callers aged over 70 (52 percent). The nurse was not blinded to the app's advice in the first month of the study."
+          },
+          {
+            "title": "Do symptom checkers work for children? A vignette study of paediatric presentations",
+            "authors": "Marsden-Achieng P, Ruiz-Takahashi L",
+            "year": 2021,
+            "venue": "Paediatric Digital Health",
+            "providerType": "journal-article",
+            "abstract": "We tested eight symptom checker apps with 90 paediatric vignettes written by paediatric emergency physicians. Apps correctly identified the need for emergency care in 64 percent of emergency vignettes and assigned the correct urgency level overall in 42 percent. Three of the eight apps were not designed for children but gave advice when a child's age was entered. Fever in infants under three months was under-triaged by five apps. Parents did not enter the vignettes, so real-world accuracy may differ."
+          },
+          {
+            "title": "Vignette-based evaluation of digital triage tools: a methodological critique",
+            "authors": "Hughes-Ndiaye C, Moreau-Kristiansen A, Tan-Oyelaran F",
+            "year": 2019,
+            "venue": "Journal of Digital Triage",
+            "doi": "10.5555/jdt.2019.0012",
+            "providerType": "journal-article",
+            "abstract": "Most evaluations of symptom checkers enter vignettes written by clinicians in textbook language. We rewrote 60 vignettes in the words lay users chose when describing the same scenarios, and entered both versions into five apps. Accuracy for the correct urgency level was 12 percentage points lower with lay-worded vignettes. Differences were largest for chest pain and abdominal pain scenarios, where lay users described location and timing less precisely. We argue that clinician-written vignettes overstate real-world accuracy and that studies with real users are needed before endorsement."
+          },
+          {
+            "title": "App version changes and the stability of triage accuracy over 18 months",
+            "authors": "Ferreira-Blackwood N, Adeyemi-Strand O",
+            "year": 2025,
+            "venue": "Digital Health Evaluation",
+            "doi": "10.5555/dhe.2025.0048",
+            "providerType": "journal-article",
+            "abstract": "We re-tested three symptom checker apps with the same 120 vignettes every six months for 18 months. Over this period each app released between four and seven updates. Accuracy for the correct urgency level varied by up to 14 percentage points between versions of the same app. One app's advice for emergency vignettes improved from 70 to 85 percent correct, while another's declined from 81 to 69 percent. Developers did not publish what had changed. We recommend that any endorsement be tied to a version and re-tested."
+          },
+          {
+            "title": "Language, health literacy and symptom checker use: an observational study in an urgent care waiting room",
+            "authors": "Nwosu-Harrington E, Castellanos-Pike D",
+            "year": 2020,
+            "venue": "Emergency Access Research",
+            "providerType": "journal-article",
+            "abstract": "We invited 312 patients waiting in an urgent care centre to use a symptom checker app before being seen. Patients with limited English or low health literacy abandoned the app before receiving advice more often than other patients (29 against 9 percent). When they completed it, they more often received advice of lower urgency than the clinician's assessment. Translated versions of the app were available but rarely chosen, often because the language setting was hard to find. The study was conducted in one centre over three months."
+          }
+        ]
+      },
+      "note": "Six records with abstracts; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1s3of74",
+            "ev-1hd00l4",
+            "ev-1v90uiv",
+            "ev-19jm5vc",
+            "ev-0pbibi3",
+            "ev-1yb21yw"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Vignette-based evaluation of digital triage tools: a methodological critique"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "symptom checker app triage urgency advice accuracy vignettes real patients emergency",
+        "sourcesConsulted": [
+          "model knowledge",
+          "regulatory notices (described, not searched)"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "Certainty will come from appraisal of the retrieved records, not from these leads.",
+        "synthesis": "Four further studies are suggested as leads to check alongside the six retrieved records: a population analysis of emergency attendance, a comparison of regulatory approaches, a study in older adults and a study of user trust.",
+        "items": [
+          {
+            "title": "Symptom checker use and emergency department attendance: a population analysis",
+            "authors": "Engstrom-Adebayo K, Sutherland-Iwu M",
+            "year": 2023,
+            "source": "Health Services Access Journal",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 140,
+            "relevance": 72,
+            "verification": "verify",
+            "contextTags": [
+              "emergency attendance",
+              "population data"
+            ],
+            "keyFindings": "Regions with higher app use showed no change in emergency department attendance after two years.",
+            "limitations": "Ecological design.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Regulating digital triage tools: a comparison of three jurisdictions",
+            "authors": "Policy Review Unit",
+            "year": true,
+            "source": "Regulatory policy report",
+            "kind": "grey",
+            "grade": "very-low",
+            "methodQuality": 40,
+            "relevance": 55,
+            "verification": "ai-lead",
+            "contextTags": [
+              "regulation"
+            ],
+            "keyFindings": "Only one of three jurisdictions required real-patient validation before endorsement.",
+            "limitations": "Descriptive policy comparison.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Clinician triage versus app advice in adults aged over 75",
+            "authors": "Petrakis-Owusu L, Grant-Moreno J",
+            "year": 2022,
+            "source": "Journal of Ageing and Digital Care",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 55,
+            "relevance": 68,
+            "verification": "verify",
+            "contextTags": [
+              "older adults"
+            ],
+            "keyFindings": "App advice matched clinician triage for 48 percent of adults over 75.",
+            "limitations": "Small sample.",
+            "notes": "Recalled as a lead."
+          },
+          {
+            "title": "Why users trust or ignore symptom checker advice: a qualitative study",
+            "authors": "Aldana-Fitzroy S",
+            "year": 2021,
+            "source": "Digital Health Perspectives",
+            "kind": "qualitative",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 50,
+            "verification": "ai-lead",
+            "contextTags": [
+              "trust",
+              "user behaviour"
+            ],
+            "keyFindings": "Users followed advice that matched their own expectation and ignored advice to stay at home when worried.",
+            "limitations": "Interviews with 24 users.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Four leads suggested; certainty left to the appraisal."
+      },
+      "note": "Leads are appended after the six retrieved records and never replace them (D1; at 875fe59 the model items replace the retrieved records). methodQuality 140 is stored null with issue out-of-range and year true null with issue invalid-type (hold at 875fe59). The null certainty assigns nothing (G1). The retrieved records keep the stage completable (G2).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[0].id": "ev-1s3of74",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[5].id": "ev-1yb21yw",
+          "scan.items[6].title": "Symptom checker use and emergency department attendance: a population analysis",
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[6].provenance.origin": "model",
+          "scan.items[6].provenance.status": "unverified",
+          "scan.items[7].year": {
+            "isNull": true
+          },
+          "scan.gradeOverall": "",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "items[0].methodQuality",
+              "code": "out-of-range"
+            },
+            {
+              "path": "items[1].year",
+              "code": "invalid-type"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": {
+            "min": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1s3of74",
+            "relevance": 90,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Twelve apps assigned the correct urgency level for 49 percent of 200 vignettes (33 to 71 percent by app); emergency vignettes were correctly escalated in 78 percent; 41 percent of self-care vignettes were over-triaged.",
+            "limitations": "Clinician-written vignettes entered by researchers.",
+            "contextTags": [
+              "vignettes",
+              "twelve apps"
+            ],
+            "notes": "Largest vignette study."
+          },
+          {
+            "id": "ev-1hd00l4",
+            "relevance": 95,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "App and nurse agreed for 61 percent of 1,210 real callers; the app advised lower urgency for 11 percent, including 3 of 46 callers sent to an emergency department; agreement 52 percent over age 70.",
+            "limitations": "Nurse not blinded in the first month; one advice line.",
+            "contextTags": [
+              "real patients",
+              "nurse triage",
+              "older adults"
+            ],
+            "notes": "The only real-patient comparison retrieved."
+          },
+          {
+            "id": "ev-1v90uiv",
+            "relevance": 80,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Apps identified emergencies in 64 percent of paediatric vignettes; fever in infants under three months was under-triaged by five of eight apps.",
+            "limitations": "Vignettes not entered by parents.",
+            "contextTags": [
+              "children"
+            ],
+            "notes": "Children need separate consideration."
+          },
+          {
+            "id": "ev-19jm5vc",
+            "relevance": 85,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Accuracy fell by 12 percentage points when vignettes were worded as lay users describe symptoms.",
+            "limitations": "Five apps; 60 vignettes.",
+            "contextTags": [
+              "method",
+              "lay wording"
+            ],
+            "notes": "Explains why vignette accuracy overstates real-world accuracy."
+          },
+          {
+            "id": "ev-0pbibi3",
+            "relevance": 82,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Accuracy changed by up to 14 points between versions of the same app over 18 months, in both directions.",
+            "limitations": "Three apps.",
+            "contextTags": [
+              "version drift"
+            ],
+            "notes": "Supports version-specific endorsement."
+          },
+          {
+            "id": "ev-1yb21yw",
+            "relevance": 78,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Patients with limited English or low health literacy abandoned the app more often (29 against 9 percent) and more often received lower-urgency advice.",
+            "limitations": "One centre, three months.",
+            "contextTags": [
+              "language",
+              "health literacy",
+              "equity"
+            ],
+            "notes": "Equity concern for listing."
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Across twelve apps tested with clinician-written vignettes, the correct urgency level was assigned in about half of cases, and emergencies were correctly escalated in 78 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1s3of74"
+            ],
+            "location": "Abstract",
+            "passage": "Apps assigned the correct urgency level in 49 percent of vignettes on average, ranging from 33 to 71 percent between apps.",
+            "interpretation": "Vignette accuracy is moderate at best and varies widely between apps.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "With real callers, an app advised lower urgency than a triage nurse for 11 percent of callers, including 3 of 46 callers the nurse sent to an emergency department.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1hd00l4"
+            ],
+            "location": "Abstract",
+            "passage": "The app advised a lower urgency than the nurse for 11 percent of callers, including 3 of the 46 callers whom the nurse sent to an emergency department.",
+            "interpretation": "Under-triage of emergencies occurs with real users.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Accuracy was 12 percentage points lower when vignettes used the words lay users choose.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-19jm5vc"
+            ],
+            "location": "Abstract",
+            "passage": "Accuracy for the correct urgency level was 12 percentage points lower with lay-worded vignettes.",
+            "interpretation": "Clinician-written vignette studies overstate real-world accuracy.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Accuracy of the same app varied by up to 14 percentage points between versions over 18 months.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0pbibi3"
+            ],
+            "location": "Abstract",
+            "passage": "Accuracy for the correct urgency level varied by up to 14 percentage points between versions of the same app.",
+            "interpretation": "Any endorsement should be tied to a version and re-tested.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level. Vignette studies show apps assigning the correct urgency level in about half of cases, with wide variation between apps, frequent over-triage and poorer performance for infants with fever. Lay wording lowers accuracy further, and accuracy drifts between versions. The only real-patient comparison found under-triage of some emergencies and lower agreement for older callers, and people with limited English or low health literacy were served worse. No study supports a claim that apps identify emergencies almost always.",
+        "gradeOverall": "low",
+        "gradeRationale": "Mostly vignette studies with indirectness to real use, one real-patient comparison with partial blinding, small single-site equity data; consistent concerns, low certainty.",
+        "summary": "Six retrieved records appraised; four claims recorded; overall certainty low."
+      },
+      "note": "The appraisal annotates the six retrieved records, which D1 kept at items 0 to 5, and records claims on them (S13). Certainty 'low' is assigned over inspected records (G1); the four leads keep origin model and status unverified (G3).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[1].grade": "low",
+          "scan.items[1].relevance": 95,
+          "scan.items[6].provenance.status": "unverified",
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-1hd00l4"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional health authority patient website",
+          "two listing requests",
+          "lay committee meeting 2027-02-22",
+          "crowded emergency departments"
+        ],
+        "reading": "The evidence sits on a ladder from clinician-written vignettes to real users, and accuracy falls at each rung: lay wording lowers it, real callers reveal under-triage, and some groups fare worse. Version drift means any number describes one release of one app. The committee's decision turns less on a pooled accuracy figure than on what the two companies can show with real users and current versions.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Clinician-written vignette studies",
+            "kind": "observational",
+            "detail": "About half correct (claim c1)."
+          },
+          {
+            "id": "n2",
+            "label": "Lay-worded vignettes",
+            "kind": "observational",
+            "detail": "12 points lower (claim c3)."
+          },
+          {
+            "id": "n3",
+            "label": "Real-caller comparison with nurse triage",
+            "kind": "observational",
+            "detail": "Under-triage of some emergencies (claim c2)."
+          },
+          {
+            "id": "n4",
+            "label": "Correct urgency level",
+            "kind": "outcome",
+            "detail": "Review outcome."
+          },
+          {
+            "id": "n5",
+            "label": "Version drift",
+            "kind": "gap",
+            "detail": "Up to 14 points between versions (claim c4)."
+          },
+          {
+            "id": "n6",
+            "label": "Older adults, children, limited English",
+            "kind": "stakeholder",
+            "detail": "Lower agreement or more abandonment."
+          },
+          {
+            "id": "n7",
+            "label": "Digital health committee",
+            "kind": "stakeholder",
+            "detail": "Decides on listing."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n4",
+            "relation": "estimates, optimistically"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "estimates lower"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "estimates with real users"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "makes unstable"
+          },
+          {
+            "from": "n6",
+            "to": "n4",
+            "relation": "experience lower"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "should require"
+          }
+        ],
+        "summary": "Map arranges the evidence from vignettes to real users and shows where accuracy falls."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Almost no real-patient evidence",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Only one retrieved study compared app advice with clinician triage for the same real people (claim c2).",
+            "opportunity": "Ask each company for a real-user comparison of the listed version."
+          },
+          {
+            "id": "g2",
+            "title": "Accuracy drifts between versions",
+            "kind": "evidence",
+            "severity": "moderate",
+            "whyItMatters": "Published figures may not describe the version that would be listed (claim c4).",
+            "opportunity": "Tie any listing to a version with re-testing after major updates."
+          },
+          {
+            "id": "g3",
+            "title": "Groups served worse",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "Older callers, infants with fever and people with limited English received less accurate advice.",
+            "opportunity": "Report accuracy for these groups separately and ask the companies for it."
+          },
+          {
+            "id": "g4",
+            "title": "Vignettes overstate accuracy",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Lay wording lowers accuracy by 12 points (claim c3).",
+            "opportunity": "Present vignette and real-user results separately to the committee."
+          }
+        ],
+        "errorsFound": [
+          "A figure of 95 percent for correct emergency advice circulates informally; no retrieved record supports it."
+        ],
+        "reevaluation": "The review should lead with the absence of real-user evidence and give the committee concrete requests for the companies.",
+        "summary": "Four gaps: no real-user evidence, version drift, groups served worse, and optimistic vignettes."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[2].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Almost no real-patient evidence"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Published evidence will not support listing either app without version-specific real-user data, because vignette accuracy overstates real-world accuracy and real-user data show under-triage of some emergencies.",
+            "novelty": 40,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "Directly answers the committee; the retrieved evidence already points this way.",
+            "risks": "The review may miss unpublished company data."
+          },
+          {
+            "id": "h2",
+            "statement": "Accuracy will be lower for older adults, children and people with limited English than for other users.",
+            "novelty": 45,
+            "need": 80,
+            "practiceChange": 75,
+            "feasibility": 70,
+            "parsimony": 75,
+            "rationale": "Three records point in this direction.",
+            "risks": "Few studies report subgroups."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Two review propositions; h1 selected."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "What is known about how accurately symptom checker apps assign urgency levels, compared with clinician triage, in vignette studies and in studies with real users, and for which groups is accuracy lower?",
+            "framework": "SPIDER",
+            "population": "Studies of symptom checker apps used by the public",
+            "intervention": "Urgency advice from symptom checker apps",
+            "comparator": "Clinician or nurse triage, or vignette reference urgency",
+            "outcome": "Correct urgency level; under-triage of emergencies; over-triage of self-care",
+            "time": "Studies from the last ten years",
+            "setting": "Public-facing digital triage"
+          }
+        ],
+        "finer": "Feasible in 80 hours with librarian support; interesting and relevant to a pending listing decision; ethical as a review; novel in presenting vignette and real-user evidence separately for a lay committee.",
+        "summary": "One broad review question in SPIDER form."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "SPIDER",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "narrative-review",
+        "rationale": "A narrative review suits a lay committee and a heterogeneous body of vignette studies. The evidence is strong enough to recommend listing: symptom checkers identify emergencies correctly 95 percent of the time.",
+        "alternatives": [
+          "Systematic review with meta-analysis (refused: heterogeneous vignette methods and 80 hours)"
+        ],
+        "guidelines": [
+          "SANRA"
+        ],
+        "whyNotMoreComplex": "Pooling vignette studies would give a misleadingly precise figure.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Write the narrative review and advise the committee to list both apps, because symptom checkers identify emergencies correctly 95 percent of the time (c6).",
+          "question": "Should the authority list the two symptom checker apps?",
+          "claimIds": [
+            "c6"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Apps identify emergencies correctly 95 percent of the time.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c6"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Committee request for the review",
+              "status": "met",
+              "evidence": "Committee minute DHC-2026-31 of 2026-09-08, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Librarian search support",
+              "status": "met",
+              "evidence": "Librarian email of 2026-09-15 confirming 12 hours in October 2026, supplied by the investigator"
+            }
+          ],
+          "alternatives": [],
+          "note": "Rests on claim c6."
+        },
+        "summary": "Narrative review recommended; the decision cites claim c6."
+      },
+      "note": "The decision rests on 'c6', which is not in the ledger (claims are c1 to c4), and on a 95 percent figure that no record reports (the records report 78 and 64 percent). The id is dropped with issue 'dropped' at 'decision.claimIds' (holds at 875fe59), leaving a 'pursue' decision with no supporting claim, so the action is blocked. selectionStatus and actionStatus require S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "narrative-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].criteria[0].claimIds": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "decision.claimIds",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Refusal: the decision's only claim does not exist in the ledger and its statement rests on a figure no record supports, so the selection is unsupported and acceptance is refused; the decision stays proposed (G7; A2 item 9, a block from S1 and S8 on the decision's own claims and text). At 875fe59 nothing refuses. selectionStatus and actionStatus require S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 2,
+      "response": {
+        "recommended": "narrative-review",
+        "rationale": "A narrative review suits a lay committee and a heterogeneous, mostly vignette-based evidence base where pooling would mislead. It should present vignette results (c1) separately from the single real-user comparison (c2), explain why vignettes overstate accuracy (c3), and ground its advice to the committee in what the companies must show.",
+        "alternatives": [
+          "Systematic review with meta-analysis (refused: heterogeneous vignette methods, version drift and 80 hours)",
+          "Commissioned real-user evaluation of both apps (refused for now: beyond the time and budget before February; recommended to the committee as a condition)"
+        ],
+        "guidelines": [
+          "SANRA"
+        ],
+        "whyNotMoreComplex": "A pooled accuracy figure across vignette studies and app versions would look precise and describe no app the committee would list.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Write a narrative review for the committee that reports vignette and real-user evidence separately, states that no retrieved study supports listing an app without version-specific real-user data, and lists what the two companies should be asked to show.",
+          "question": "What review should the committee receive before deciding on listing the two apps?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Vignette evidence shows moderate and variable accuracy and real-user evidence shows under-triage of some emergencies.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Vignette studies can be distinguished from real-user studies in the reporting.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Committee request and deadline for the review",
+              "status": "met",
+              "evidence": "Committee minute DHC-2026-31 of 2026-09-08, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Librarian search support",
+              "status": "met",
+              "evidence": "Librarian email of 2026-09-15 confirming 12 hours in October 2026, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Commissioned real-user evaluation of both apps as a listing condition"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; replaces the earlier proposal that rested on a claim not in the ledger."
+        },
+        "summary": "Narrative review recommended on three ledger claims; both gates met on the investigator's facts."
+      },
+      "note": "The revised decision rests on c1 to c3 (they exist only if S13 applied the appraisal). The refused first decision, still proposed, is superseded and becomes withdrawn, not erased (875fe59 behaviour; it would be 'accepted' at 875fe59 only because nothing refused it, which is S1 and S8). selectionStatus requires S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].status": "withdrawn",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "design.decisions[1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[1].status": "proposed",
+          "design.decisions[1].selectionStatus": "proposed",
+          "design.decisions[1].gates[0].status": "met",
+          "design.decisions[1].gates[1].status": "met"
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: c1 to c3 exist and rest on retrieved records; both gates are met on supplied facts, so the action is ready (G7). Requires S11 (selectionStatus, actionStatus, basis), S13 (claims), S1 and S8 (the withdrawn first decision), D5 (status text).",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[0].status": "withdrawn",
+          "family": "narrative-review",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Narrative review of the accuracy of symptom checker urgency advice, written for a lay committee, presenting vignette and real-user evidence separately and ending with requests for the two companies.",
+        "population": "Studies from the last ten years that report urgency advice from publicly available symptom checker apps against a clinician or vignette reference.",
+        "exposure": "Urgency advice from symptom checker apps, recorded by app and, where reported, by version.",
+        "procedures": "The librarian searches three bibliographic databases and two sources of grey literature in October 2026. The investigator screens and extracts; the librarian checks a random 20 percent of screening decisions. Each study is classified as clinician-written vignette, lay-worded vignette or real-user, and results are tabulated by class. No company is contacted.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Correct urgency level",
+            "measure": "Proportion of cases where app advice matched the reference urgency, reported by evidence class",
+            "timing": "As reported",
+            "why": "The committee's main question.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Under-triage of emergencies",
+            "measure": "Proportion of emergency cases advised a lower urgency",
+            "timing": "As reported",
+            "why": "The most dangerous error.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Over-triage of self-care cases",
+            "measure": "Proportion of self-care cases advised to seek care",
+            "timing": "As reported",
+            "why": "Drives demand on crowded services.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Evidence class",
+            "measure": "Number of studies per class and with subgroup results for older adults, children and limited English",
+            "timing": "At extraction",
+            "why": "Shows how thin the real-user evidence is.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 80 hours of the investigator's time and 12 librarian hours fit an expected 25 to 40 included studies.",
+        "biasMitigation": [
+          "Evidence classes kept separate",
+          "Librarian double-checks 20 percent of screening",
+          "No pooling across classes or versions",
+          "Company materials excluded unless published"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Single reviewer",
+            "severity": "watch",
+            "note": "Partly mitigated by the librarian's check."
+          },
+          {
+            "id": "b2",
+            "label": "Version drift",
+            "severity": "high",
+            "note": "Every figure is tied to an app version where reported."
+          }
+        ],
+        "parsimony": {
+          "score": 85,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [],
+          "simplestPath": "Three evidence classes, one table each, one page of requests for the companies."
+        },
+        "theoreticalFramework": "None; an evidence ladder from vignettes to real users organises the review.",
+        "summary": "Narrative review protocol with evidence classes and a single reviewer checked by the librarian."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[1].name": "Under-triage of emergencies",
+          "protocol.biasFlags": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Narrative synthesis without pooling, organised by evidence class, with ranges and medians.",
+        "sampleSize": "No sample size applies. An estimated 25 to 40 studies are expected; results are summarised as ranges and medians within each evidence class because vignette sets, apps and versions differ too much for pooling.",
+        "primaryAnalysis": "Tables of the proportion with correct urgency by evidence class, app and version; median and range within class; the single real-user comparison presented on its own.",
+        "secondaryAnalysis": "Under-triage of emergencies and over-triage of self-care by class; subgroup results for older adults, children and people with limited English where reported.",
+        "missingData": "Studies that do not report a needed proportion are described without it; no values are estimated from figures.",
+        "multiplicity": "Not applicable; no statistical tests.",
+        "software": "Spreadsheet tables.",
+        "overfittingGuards": [
+          "No pooled accuracy figure",
+          "No ranking of apps from vignette results",
+          "Subgroups reported only as published"
+        ],
+        "summary": "Descriptive synthesis by evidence class, no pooling."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "No sample size applies"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No participants; the ethical risk is an endorsement that directs people to unsafe advice.",
+        "consent": "Not applicable.",
+        "data": "Published and grey literature only.",
+        "equity": "PROGRESS-Plus: age (older adults and children), language and health literacy are reported separately wherever studies allow, because listing an app that serves these groups worse would widen inequities.",
+        "effectiveness": "Gives the committee an honest basis for its decision.",
+        "efficiency": "80 hours and 12 librarian hours.",
+        "costs": "Staff time only.",
+        "grants": "None.",
+        "partnerships": "Committee lay members review a draft summary for readability.",
+        "rebPath": "No research ethics review is needed for a review of published literature; conflicts of interest are declared, and no contact with the companies occurs during the review.",
+        "limitations": "Single reviewer; rapidly changing apps; little real-user evidence.",
+        "summary": "No ethics review needed; equity reporting and independence from the companies are the ethical safeguards."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "health literacy"
+          },
+          "ethics.rebPath": {
+            "includes": "no contact with the companies"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two lay committee members read the draft summary; an emergency physician and a telephone triage nurse review the evidence classes.",
+        "socialListening": "Public app-store reviews of the two apps are read for reports of wrong advice, labelled as unverified anecdotes.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "public",
+            "theme": "Reassurance",
+            "quote": "Composite paraphrase: It told me to rest at home and I felt better knowing that, but I would still have gone in if it got worse.",
+            "implication": "Report what users do with advice, not only the advice.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Crowding",
+            "quote": "Composite paraphrase: Every over-cautious app sends us people who needed a pharmacist.",
+            "implication": "Report over-triage prominently.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Infants",
+            "quote": "Composite paraphrase: The app did not seem to know how serious a fever is in a newborn.",
+            "implication": "Report paediatric results separately.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "social",
+            "theme": "Language",
+            "quote": "Composite paraphrase: The questions used words my grandmother does not use.",
+            "implication": "Ask companies for results in users with limited English.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on reassurance, crowding, infants and language."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[3].source": "social",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Symptom checker apps and urgency advice: a narrative review of accuracy for a regional listing decision",
+        "abstract": "This review summarises what is known about how accurately symptom checker apps assign urgency levels, distinguishing studies that use clinician-written vignettes from studies with real users, and sets out what a health authority should ask of companies seeking endorsement. Findings will be reported after screening.",
+        "introduction": "Health authorities are asked to endorse digital triage tools for their patient websites. Most evidence comes from vignettes written by clinicians, which may overstate accuracy, and the apps change every few months.",
+        "methods": "The authority librarian searches three bibliographic databases and two grey literature sources. One reviewer screens and extracts, with the librarian checking a random fifth of screening decisions. Studies are classified as clinician-written vignette, lay-worded vignette or real-user studies, and results are tabulated by class and app version without pooling.",
+        "results": "Screening has not started. The report will present each evidence class in its own table, with under-triage of emergencies and over-triage of self-care cases alongside overall accuracy.",
+        "discussion": "The discussion will focus on the gap between vignette and real-user evidence and on version drift. It will end with the questions the committee should put to the two companies.",
+        "limitations": "Single reviewer; rapidly changing apps; little real-user evidence.",
+        "conclusion": "To be written after screening. It will not recommend listing on vignette evidence alone.",
+        "reportingChecklist": "SANRA",
+        "summary": "Narrative review draft structured for SANRA."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SANRA",
+          "manuscript.results": {
+            "includes": "Screening has not started"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Remove the unsupported 95 percent figure from any committee material; no retrieved record reports it",
+          "Check the four unverified scan leads before any is cited",
+          "Run identity checks on the six retrieved records"
+        ],
+        "improvementNotes": "The first design proposal rested on a claim that was not in the ledger and was refused; the accepted decision rests on claims c1 to c3. Two leads carried impossible values that were stored as unknown.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes; the accepted decision is ready."
+      },
+      "note": "audit.openFixes and audit.lastReview FAIL at 875fe59 because of the store defect L1.6, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Statuses are checked in the export; the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "How accurately do symptom checker apps assign urgency? A narrative review for a regional health authority",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 10
+          },
+          "scan.items[7].year": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 2
+          },
+          "scan.claims": {
+            "length": 4
+          }
+        },
+        "screen": {
+          "includes": [
+            "How accurately do symptom checker apps assign urgency? A narrative review for a regional health authority"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "How accurately do symptom checker apps assign urgency? A narrative review for a regional health authority",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "scan.items[6].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "design.decisions[1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "problem.constraints": "About 80 hours of my time and 12 hours of librarian time. Report due to the committee by 2027-02-15, readable by lay members. No contact with the two companies during the review."
+        },
+        "screen": {
+          "includes": [
+            "How accurately do symptom checker apps assign urgency? A narrative review for a regional health authority"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The appended leads require D1; the withdrawn first decision S1 and S8; selectionStatus and actionStatus S11; claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items": {
+              "length": 10
+            },
+            "scan.items[6].methodQuality": {
+              "isNull": true
+            },
+            "scan.items[7].year": {
+              "isNull": true
+            },
+            "scan.items[6].provenance.status": "unverified",
+            "scan.gradeOverall": "low",
+            "design.decisions[0].status": "withdrawn",
+            "design.decisions[0].claimIds": [],
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "problem.rawNeed": "I advise the digital health committee of the Wendmere Regional Health Authority. Two companies have asked for their symptom checker apps to be listed on the authority's patient website. The apps ask people about their symptoms and then advise them to call an ambulance, go to an emergency department, see a doctor the same day, book a routine appointment, or look after themselves at home. The committee is worried about two kinds of error: telling someone with a serious problem to stay at home, and sending large numbers of people to emergency departments that are already full.\n\nThe committee has asked me for a narrative review of what is known about how accurately symptom checker apps assign these urgency levels, written so that lay members can follow it, by the middle of February. I have about 80 hours and the authority's librarian can help with the search. Most studies seem to test apps with written clinical vignettes rather than real patients, a few compare app advice with what a nurse or doctor decided for the same person, and the apps change every few months, so results may date quickly.\n\nI want the review to say clearly what kind of evidence exists, how much of it applies to real patients, whether accuracy differs for older people, children or people with limited English, and what the committee should ask the two companies to show before any listing. I do not need a formal quality score for every study, but I do need the review to be honest about how weak the evidence is."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

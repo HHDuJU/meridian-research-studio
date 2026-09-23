@@ -1,0 +1,1336 @@
+{
+  "id": "sc-018",
+  "version": 1,
+  "title": "Dental practice network: recall intervals and recorded risk, two candidate designs, the investigator chooses cross-sectional before the scan",
+  "field": "dentistry",
+  "level": 2,
+  "family": "cross-sectional",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary ambiguity: two candidate designs, and the investigator chooses one before the evidence stages. The need names a cross-sectional record study and a two-year cohort, so routing at create is unresolved (both classifier rules agree). The problem reply sends family null, which keeps the family null and basis unresolved with issue 'cleared' (A1 item A7; D2). The investigator then chooses the cross-sectional design with the family control shown for an undetermined family (A3 L1.4), recorded as explicit investigator intent (S11). A fixture search returns eight records, one without a year (kept null, never guessed); the appraisal records four claims whose passages and numbers occur in the cited abstracts. A reopen after six stages keeps the choice. The design reply agrees with the investigator's choice; the decision rests on c1, c2 and c4, with one gate met on the governance note and one unmet (three practices have not signed data release agreements), so acceptance gives an accepted selection with a blocked action. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 3, 4, 5, 6, 7 (ev-1nxpm5j, ev-0dcw0v2, ev-00dbui0, ev-1nijvo6, ev-12uaz01, ev-0prgjcq) and titleYearKey hash for records 2, 8 (ev-0sa115j, ev-0da50w3, the latter with year null). Requires D2, S11, S13 and D5. Catches: a default family substituted for an unresolved one, an investigator choice not recorded as explicit or lost on reopen, a guessed year, and an unmet gate treated as met at acceptance.",
+  "inputs": {
+    "need": "I coordinate a practice-based research network of 14 general dental practices. National guidance says that recall intervals should be set between 3 and 24 months according to each patient's risk of decay and gum disease, but my impression is that almost everyone is still recalled every six months, and that the risk assessment in the record is often blank or copied forward from the last visit. The commissioners want to know whether risk-based recall is actually happening before they change the dental contracts in 2028.\n\nI can see two ways to answer this. The first option is to do a cross-sectional study: take a sample of adult patients from each practice's records in a single month and compare the recall interval set at their last examination with the risk category recorded, and with markers of risk such as recent fillings, smoking and diabetes. The second option is to follow a cohort of patients over two years to see whether those given longer intervals develop more decay. That would tell us more about safety, but I have funding for only six months of a part-time research dentist and no way to pay practices for follow-up data.\n\nI would like help choosing between these, deciding what counts as a risk-based interval, how many records to sample in each practice, and how to handle practices where the risk field is missing. Our practices serve very different areas, from a university town to former mining villages, and I want to know whether adults from deprived areas are recalled differently.",
+    "constraints": "Six months of a part-time research dentist (two days a week) from February 2027; no payments to practices for follow-up data; records only, with no patient contact.",
+    "localFacts": [
+      "The network has 14 general dental practices with about 96,000 registered adult patients.",
+      "All 14 practices use one of two record systems, both of which store the recall interval and a risk category field.",
+      "The network governance group confirmed on 2026-07-30 that record-based studies using anonymised extracts do not need research ethics review (note PBRN-GOV-2026-11).",
+      "Eleven of the 14 practices had signed data release agreements by 2026-09-15."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names a cross-sectional study and a cohort, so routing is unresolved (both classifier rules agree): family null, basis unresolved (S11).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I coordinate a practice-based research network of 14 general dental practices. National guidance says that recall intervals should be set between 3 and 24 months according to each patient's risk of decay and gum disease, but my impression is that almost everyone is still recalled every six months, and that the risk assessment in the record is often blank or copied forward from the last visit. The commissioners want to know whether risk-based recall is actually happening before they change the dental contracts in 2028.\n\nI can see two ways to answer this. The first option is to do a cross-sectional study: take a sample of adult patients from each practice's records in a single month and compare the recall interval set at their last examination with the risk category recorded, and with markers of risk such as recent fillings, smoking and diabetes. The second option is to follow a cohort of patients over two years to see whether those given longer intervals develop more decay. That would tell us more about safety, but I have funding for only six months of a part-time research dentist and no way to pay practices for follow-up data.\n\nI would like help choosing between these, deciding what counts as a risk-based interval, how many records to sample in each practice, and how to handle practices where the risk field is missing. Our practices serve very different areas, from a university town to former mining villages, and I want to know whether adults from deprived areas are recalled differently.",
+          "problem.constraints": "Six months of a part-time research dentist (two days a week) from February 2027; no payments to practices for follow-up data; records only, with no patient contact.",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I coordinate a practice-based research network of 14 general dental practices"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Are dental recall intervals risk-based? A cross-sectional study of records in a practice-based research network",
+        "subtitle": "The design is the investigator's choice: cross-sectional record study or two-year cohort",
+        "family": null,
+        "statement": "National guidance asks for recall intervals set between 3 and 24 months by each patient's risk, but in the network's 14 practices most adults appear to be recalled every six months and risk fields are often blank or copied forward. Commissioners want to know whether risk-based recall happens before contracts change in 2028. Two designs are possible: a cross-sectional record study of how intervals are set now, or a two-year cohort of decay by interval; the resources favour the first but the choice is the investigator's.",
+        "whoAffected": "Adults registered with the 14 practices, especially those in deprived areas; dentists and practice managers; commissioners.",
+        "whatHurts": "High-risk patients who may be seen too rarely, low-risk patients using appointments they do not need, and access lost for people waiting to register.",
+        "currentPractice": "Mostly six-month recall with a risk field that is often blank or copied forward.",
+        "whyNow": "Contract changes are planned for 2028 and the commissioners want a baseline.",
+        "constraints": "Six months of a part-time research dentist (two days a week) from February 2027; no payments to practices for follow-up data; records only, with no patient contact.",
+        "patientCenteredGoal": "Each patient is recalled at an interval that matches their risk and is told why.",
+        "summary": "Problem framed; the family is left for the investigator to choose between two designs."
+      },
+      "note": "family null keeps the family unresolved: study.family stays null and design.basis 'unresolved', with issue 'cleared' at 'family' (A1 item A7; D2). The constraints are repeated word for word, so G11 raises nothing.",
+      "expect": {
+        "store": {
+          "title": "Are dental recall intervals risk-based? A cross-sectional study of records in a practice-based research network",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "problem.constraints": "Six months of a part-time research dentist (two days a week) from February 2027; no payments to practices for follow-up data; records only, with no patient contact.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Are dental recall intervals risk-based? A cross-sectional study of records in a practice-based research network"
+          ]
+        }
+      }
+    },
+    {
+      "do": "set-field",
+      "path": "family",
+      "value": "cross-sectional",
+      "note": "The investigator chooses the cross-sectional design with the family control shown while the family is undetermined (A3 L1.4): six months of research time and no money for follow-up rule out the cohort. It is an investigator action, so it is recorded as explicit intent (S11) and no model value can override it later.",
+      "expect": {
+        "store": {
+          "family": "cross-sectional",
+          "design.basis": "explicit",
+          "problem.constraints": "Six months of a part-time research dentist (two days a week) from February 2027; no payments to practices for follow-up data; records only, with no patient contact."
+        },
+        "screen": {
+          "includes": [
+            "Cross-sectional"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "dental recall interval risk-based adults records six-month recall deprivation risk assessment",
+      "response": {
+        "status": 200,
+        "total": 8,
+        "records": [
+          {
+            "title": "Risk-based versus fixed six-month dental recall in adults: a multicentre randomised trial",
+            "authors": "Oyelaran-MacLeod S, Brandt-Ishikawa P, Nystrom-Achebe K",
+            "year": 2020,
+            "venue": "Journal of Dental Practice Research",
+            "doi": "10.5555/jdpr.2020.0233",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomised 2,380 adults attending 51 general dental practices to recall intervals set by an individual risk assessment or to fixed six-month recall, and followed them for four years. Caries increment did not differ between groups (mean difference 0.1 decayed, missing or filled surfaces). In the risk-based group, 41 percent of adults were assigned intervals of 12 months or longer. Gum health and patient satisfaction were similar. Practices found the risk assessment took about two minutes per patient once staff were trained."
+          },
+          {
+            "title": "How dentists set recall intervals: a cross-sectional analysis of 12,000 patient records",
+            "authors": "Kowalski-Adebayo J, Hartley-Nguyen L",
+            "year": 2017,
+            "venue": "Community Dental Practice",
+            "providerType": "journal-article",
+            "abstract": "We examined the most recent examination records of 12,000 adults in 30 general dental practices. In all, 81 percent of adults had a six-month recall interval regardless of their recorded risk category, and the risk field was completed in 64 percent of records. Adults recorded as low risk were as likely to receive six-month recall as those recorded as high risk. Practices paid per course of treatment set shorter intervals than salaried services. The analysis could not tell whether dentists assessed risk without recording it."
+          },
+          {
+            "title": "Completeness of caries risk assessment in dental records: an audit across 40 practices",
+            "authors": "Mbatha-Lindgren C, Fitzroy-Okafor D",
+            "year": 2022,
+            "venue": "Dental Records and Governance",
+            "doi": "10.5555/drg.2022.0118",
+            "providerType": "journal-article",
+            "abstract": "We audited 4,000 adult dental records from 40 practices for the presence and currency of a caries risk assessment. The risk field was blank in 29 percent of records. Among patients with two assessments, the second was copied forward unchanged in 47 percent, even when new fillings had been placed between visits. Practices using structured templates had fewer blank fields. The audit did not examine whether recall intervals followed the recorded risk. Blank fields were more common in the records of patients who attended irregularly."
+          },
+          {
+            "title": "Recall intervals between routine dental examinations: national clinical guideline",
+            "authors": "National Dental Guidance Committee",
+            "year": 2015,
+            "venue": "National Clinical Guideline Series",
+            "doi": "10.5555/ncgs.2015.0019",
+            "providerType": "guideline",
+            "abstract": "The committee recommends that the interval between routine dental examinations is set for each patient between 3 and 24 months for adults, based on an assessment of disease risk at each examination, and that the interval is reviewed at every visit. The evidence for particular intervals was judged to be of low certainty, and the recommendation rests largely on expert consensus. The committee asked for research on how intervals are set in practice and on the views of patients. It also advises that patients are told the reason for the interval chosen."
+          },
+          {
+            "title": "Patients' views on longer dental recall intervals: an interview study",
+            "authors": "Rossi-Achterberg N, Oduya-Winter H",
+            "year": 2019,
+            "venue": "Oral Health Perspectives",
+            "doi": "10.5555/ohp.2019.0077",
+            "providerType": "journal-article",
+            "abstract": "We interviewed 28 adults who had been offered a recall interval longer than six months. Most accepted the longer interval once the reason was explained, but several worried that problems would be missed or that they would lose their place at the practice. Participants who paid for treatment welcomed fewer visits, while those exempt from charges valued regular contact. Few participants knew that a risk assessment had been done. Some said they would prefer to agree the interval together with the dentist."
+          },
+          {
+            "title": "Deprivation and recall intervals in general dental practice: an analysis of routine records",
+            "authors": "Tanaka-Whitlock E, Mensah-Carlsson R",
+            "year": 2024,
+            "venue": "Community Dental Practice",
+            "doi": "10.5555/cdp.2024.0102",
+            "providerType": "journal-article",
+            "abstract": "We analysed routine records of 38,500 adults in 22 practices by area deprivation. Adults in the most deprived quintile were more likely to have no recall interval recorded (19 percent against 7 percent in the least deprived quintile). Where an interval was recorded, adults in the most deprived quintile were slightly more often given six months. Missed appointments were more common in deprived areas and often led to the interval being left blank. The analysis had no clinical measure of risk."
+          },
+          {
+            "title": "Caries increment by recall interval in low-risk adults: a practice-based cohort",
+            "authors": "Leclerc-Bamidele A, Sorensen-Pike J",
+            "year": 2021,
+            "venue": "Journal of Dental Practice Research",
+            "doi": "10.5555/jdpr.2021.0310",
+            "providerType": "journal-article",
+            "abstract": "We followed 1,640 adults assessed as low risk for three years in 18 practices that had adopted risk-based recall. Adults recalled at 12 to 24 months had a similar caries increment to those recalled at six months (0.4 against 0.3 surfaces over three years). Adults who missed two consecutive recalls had the largest increment. Follow-up data were incomplete for 23 percent of adults who changed practice. The authors conclude that longer intervals appear safe for low-risk adults who keep attending, and that missed recalls matter more than the interval itself."
+          },
+          {
+            "title": "Recall interval setting under activity-based dental contracts: a commissioning briefing",
+            "authors": "Regional Dental Commissioning Unit",
+            "year": null,
+            "venue": "Commissioning briefing series",
+            "providerType": "report",
+            "abstract": "This briefing describes how activity-based dental contracts can discourage longer recall intervals, because each examination counts towards contracted activity. It summarises local audits suggesting that most adults are recalled at six months and proposes that commissioners measure the distribution of recall intervals by recorded risk before changing contracts. The briefing gives no publication date and its local audits are not referenced in detail. It suggests that practices serving deprived areas face the greatest tension between access targets and longer intervals."
+          }
+        ]
+      },
+      "note": "Eight records; record 8 has no year (null, never guessed; G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 8,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1nxpm5j",
+            "ev-0sa115j",
+            "ev-0dcw0v2",
+            "ev-00dbui0",
+            "ev-1nijvo6",
+            "ev-12uaz01",
+            "ev-0prgjcq",
+            "ev-0da50w3"
+          ],
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[7].year": {
+            "isNull": true
+          },
+          "scan.items[7].grade": "unrated",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "How dentists set recall intervals: a cross-sectional analysis of 12,000 patient records"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1nxpm5j",
+            "relevance": 70,
+            "methodQuality": 74,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Among 2,380 adults over four years, caries increment did not differ between risk-based and six-month recall (mean difference 0.1 surfaces); 41 percent of the risk-based group had intervals of 12 months or longer.",
+            "limitations": "Trained practices in a trial; not a measure of routine practice.",
+            "contextTags": [
+              "randomised",
+              "safety of longer intervals"
+            ]
+          },
+          {
+            "id": "ev-0sa115j",
+            "relevance": 92,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 12,000 records, 81 percent of adults had six-month recall regardless of recorded risk and the risk field was completed in 64 percent.",
+            "limitations": "Cannot tell whether risk was assessed but not recorded.",
+            "contextTags": [
+              "cross-sectional",
+              "recall practice",
+              "records"
+            ]
+          },
+          {
+            "id": "ev-0dcw0v2",
+            "relevance": 88,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across 4,000 records, the risk field was blank in 29 percent and copied forward unchanged in 47 percent of repeat assessments.",
+            "limitations": "Did not link risk to recall intervals.",
+            "contextTags": [
+              "documentation",
+              "copy forward"
+            ]
+          },
+          {
+            "id": "ev-00dbui0",
+            "relevance": 75,
+            "methodQuality": 50,
+            "kind": "guideline",
+            "grade": "low",
+            "keyFindings": "Recommends adult intervals between 3 and 24 months set by risk at each examination; evidence judged of low certainty.",
+            "limitations": "Largely expert consensus.",
+            "contextTags": [
+              "guideline",
+              "standard"
+            ]
+          },
+          {
+            "id": "ev-1nijvo6",
+            "relevance": 60,
+            "methodQuality": 55,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "The 28 adults offered longer intervals mostly accepted them once reasons were explained, but some feared missed problems or losing their place.",
+            "limitations": "One region; interviews after the offer.",
+            "contextTags": [
+              "patient views",
+              "acceptability"
+            ]
+          },
+          {
+            "id": "ev-12uaz01",
+            "relevance": 84,
+            "methodQuality": 56,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 38,500 adults, no recall interval was recorded for 19 percent in the most deprived quintile against 7 percent in the least deprived.",
+            "limitations": "No clinical measure of risk.",
+            "contextTags": [
+              "deprivation",
+              "missing intervals",
+              "equity"
+            ]
+          },
+          {
+            "id": "ev-0prgjcq",
+            "relevance": 66,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 1,640 low-risk adults, caries increment at 12 to 24 months was similar to six-month recall (0.4 against 0.3 surfaces over three years).",
+            "limitations": "Practices that adopted risk-based recall; 23 percent incomplete follow-up among movers.",
+            "contextTags": [
+              "cohort",
+              "low risk",
+              "safety"
+            ]
+          },
+          {
+            "id": "ev-0da50w3",
+            "relevance": 58,
+            "methodQuality": 30,
+            "kind": "grey",
+            "grade": "very-low",
+            "keyFindings": "Argues that activity-based contracts discourage longer intervals and proposes measuring interval distribution by recorded risk before contract change.",
+            "limitations": "Undated; local audits not referenced.",
+            "contextTags": [
+              "commissioning",
+              "contracts"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In 12,000 records, 81 percent of adults had a six-month recall interval regardless of recorded risk, and the risk field was completed in 64 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0sa115j"
+            ],
+            "location": "Abstract, results",
+            "passage": "In all, 81 percent of adults had a six-month recall interval regardless of their recorded risk category, and the risk field was completed in 64 percent of records.",
+            "interpretation": "Risk-based recall may be rare in routine care; the local study measures it directly.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "The risk field was blank in 29 percent of records and copied forward unchanged in 47 percent of repeat assessments.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0dcw0v2"
+            ],
+            "location": "Abstract, results",
+            "passage": "The risk field was blank in 29 percent of records.",
+            "interpretation": "Recorded risk is an imperfect reference; independent risk markers are needed.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "In a randomised trial, caries increment did not differ between risk-based and six-month recall over four years.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1nxpm5j"
+            ],
+            "location": "Abstract, results",
+            "passage": "Caries increment did not differ between groups (mean difference 0.1 decayed, missing or filled surfaces).",
+            "interpretation": "Safety of longer intervals has randomised evidence already; the cohort option would largely repeat it.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Adults in the most deprived quintile were more likely to have no recall interval recorded (19 percent against 7 percent).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-12uaz01"
+            ],
+            "location": "Abstract, results",
+            "passage": "Adults in the most deprived quintile were more likely to have no recall interval recorded (19 percent against 7 percent in the least deprived quintile).",
+            "interpretation": "Missing intervals must be analysed as a finding by deprivation, not excluded.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Eight retrieved records, appraised at abstract level. Randomised and cohort evidence suggests that longer intervals for low-risk adults do not increase decay, so the safety question has answers. Routine practice appears far from risk-based: in one large record study most adults had six-month recall whatever their recorded risk, risk fields are often blank or copied forward, and adults in deprived areas more often have no interval recorded. Patients accept longer intervals when reasons are explained. What is missing is a current measure of how intervals are set in this network, with recorded risk and independent risk markers, before contracts change.",
+        "gradeOverall": "low",
+        "gradeRationale": "One randomised trial is indirect to routine practice; the practice-level evidence is observational and from other settings; one undated briefing.",
+        "summary": "Eight retrieved records appraised; four claims; overall certainty low."
+      },
+      "note": "Appraisal of the eight retrieved records (S13); certainty low over inspected records (G1). The undated record keeps year null.",
+      "expect": {
+        "store": {
+          "scan.items[1].grade": "low",
+          "scan.items[0].kind": "rct",
+          "scan.items[7].grade": "very-low",
+          "scan.items[7].year": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[3].sourceIds": [
+            "ev-12uaz01"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "14 general dental practices",
+          "two record systems with a risk field",
+          "activity-based contracts",
+          "contract change planned for 2028"
+        ],
+        "reading": "Guidance links the interval to recorded risk; practice appears to link it to habit and contract activity. The safety of longer intervals has randomised and cohort evidence, so the local unknown is how intervals are set now, how reliable the risk record is, and who is left without an interval.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Recorded risk category",
+            "kind": "context",
+            "detail": "Often blank or copied forward (claim c2)."
+          },
+          {
+            "id": "n2",
+            "label": "Recall interval set",
+            "kind": "outcome",
+            "detail": "Mostly six months elsewhere (claim c1)."
+          },
+          {
+            "id": "n3",
+            "label": "Independent risk markers",
+            "kind": "context",
+            "detail": "Recent fillings, smoking, diabetes."
+          },
+          {
+            "id": "n4",
+            "label": "Activity-based contract",
+            "kind": "context",
+            "detail": "Each examination counts as activity."
+          },
+          {
+            "id": "n5",
+            "label": "Randomised recall trial",
+            "kind": "rct",
+            "detail": "No difference in decay (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Adults in deprived areas",
+            "kind": "stakeholder",
+            "detail": "More often no interval recorded (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "No local measure",
+            "kind": "gap",
+            "detail": "Commissioners lack a baseline."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "should determine"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "pushes towards six months"
+          },
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "checks"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "supports longer intervals for low risk"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "more often missing"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "leaves unmeasured"
+          }
+        ],
+        "summary": "Map of how intervals should and do get set."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No baseline of recall intervals by recorded risk in the network",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Commissioners plan contract changes without knowing current practice.",
+            "opportunity": "Sample records from all 14 practices in one month."
+          },
+          {
+            "id": "g2",
+            "title": "The risk field is an unreliable reference",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Blank or copied-forward fields (claim c2) make concordance hard to judge.",
+            "opportunity": "Add independent markers and report copy-forward rates."
+          },
+          {
+            "id": "g3",
+            "title": "Missing intervals in deprived areas",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Excluding blanks would hide the group least served (claim c4).",
+            "opportunity": "Report missing intervals as an outcome by deprivation quintile."
+          },
+          {
+            "id": "g4",
+            "title": "Three practices without signed agreements",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "A partial sample could bias the network estimate.",
+            "opportunity": "Delay extraction until all 14 sign, or report which practices are missing."
+          }
+        ],
+        "errorsFound": [],
+        "reevaluation": "The investigator's cross-sectional choice fits the gaps: the missing piece is a current measure, not safety.",
+        "summary": "Four gaps; the missing baseline and the unreliable risk field are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[2].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Fewer than half of adults in the network have a recall interval concordant with their recorded risk category.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 90,
+            "parsimony": 85,
+            "rationale": "Other record studies found most adults on six-month recall regardless of risk (claim c1).",
+            "risks": "Concordance depends on an unreliable risk field."
+          },
+          {
+            "id": "h2",
+            "statement": "Adults in the most deprived quintile more often have no recall interval recorded.",
+            "novelty": 40,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 90,
+            "parsimony": 85,
+            "rationale": "Found elsewhere (claim c4).",
+            "risks": "Deprivation is area-based, not individual."
+          },
+          {
+            "id": "h3",
+            "statement": "Practices with structured templates set more risk-concordant intervals.",
+            "novelty": 50,
+            "need": 55,
+            "practiceChange": 60,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Templates reduce blank fields.",
+            "risks": "Only 14 practices, so practice-level comparisons are weak."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults examined in the 14 network practices in one month of 2027, what proportion have a recall interval concordant with their recorded risk category, and how does this differ by independent risk markers and area deprivation?",
+            "framework": "PECO",
+            "population": "Adults with a routine examination in the 14 practices in March 2027",
+            "intervention": "Recorded risk category (exposure)",
+            "comparator": "Recall interval set at that examination",
+            "outcome": "Concordance of interval with risk under the guideline mapping; missing interval",
+            "time": "Single month, March 2027",
+            "setting": "Practice-based research network, 14 practices"
+          }
+        ],
+        "finer": "Feasible in six months of part-time research time; interesting to commissioners; novel locally; ethical as anonymised records under the governance note; relevant to 2028 contracts.",
+        "summary": "One PECO question on concordance and missing intervals."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work (6 of 13 stages): the investigator's family choice, the unresolved-then-explicit basis and the partial stages survive.",
+      "expect": {
+        "store": {
+          "title": "Are dental recall intervals risk-based? A cross-sectional study of records in a practice-based research network",
+          "family": "cross-sectional",
+          "design.basis": "explicit",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ],
+          "needsReview": [],
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.items[7].year": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "stage": {
+          "questions": "complete",
+          "design": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Are dental recall intervals risk-based? A cross-sectional study of records in a practice-based research network"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "cross-sectional",
+        "rationale": "The investigator chose the cross-sectional design, and the evidence supports it: the safety of longer intervals has randomised and cohort answers (claim c3), while the unknown is how intervals are set now (claim c1), how reliable the risk record is (claim c2) and who has no interval (claim c4). A record sample from all 14 practices in one month measures that directly within six months of part-time research time.",
+        "alternatives": [
+          "Two-year cohort of decay by interval (not chosen: repeats randomised evidence and needs follow-up funding)",
+          "Questionnaire to dentists (refused: reports intentions, not recorded practice)"
+        ],
+        "guidelines": [
+          "STROBE (cross-sectional)",
+          "RECORD"
+        ],
+        "whyNotMoreComplex": "Linking to later decay would answer a safety question already studied; the commissioners need a baseline of current practice.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Measure how recall intervals are set in the 14 practices with a cross-sectional study of records: 80 adult records per practice from one month, comparing each interval with the recorded risk category and with independent risk markers, and reporting missing intervals by deprivation.",
+          "question": "Is recall in the network's practices risk-based, and for whom is it not?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Routine recall is often not risk-based and risk fields are unreliable, so a direct local measure is needed.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Missing intervals concentrate in deprived areas and must be reported.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c4"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The safety of longer intervals is still unknown, which would favour the cohort design instead.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Governance confirmation that anonymised record extracts need no research ethics review",
+              "status": "met",
+              "evidence": "Network governance note PBRN-GOV-2026-11 dated 2026-07-30, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Signed data release agreements from all 14 practices",
+              "status": "unmet",
+              "evidence": "Eleven of 14 signed by 2026-09-15 (investigator's local fact)"
+            }
+          ],
+          "alternatives": [
+            "A two-year cohort of patients by interval (the investigator's second option)",
+            "A questionnaire to dentists about how they set intervals"
+          ],
+          "note": "Rests on ledger claims c1, c2 and c4; c3 supports the defeating criterion being unmet. Three practices have not yet signed data release agreements."
+        },
+        "summary": "Cross-sectional record study recommended in line with the investigator's choice; one gate is unmet until all practices sign."
+      },
+      "note": "recommendedFamily, selectionStatus and actionStatus require S11; the status text D5. The unmet agreement gate keeps the action blocked.",
+      "expect": {
+        "store": {
+          "design.recommended": "cross-sectional",
+          "family": "cross-sectional",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].recommendedFamily": "cross-sectional",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection with an unmet gate: accepted, action blocked (G7; A2 item 9). S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "family": "cross-sectional",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Cross-sectional study of anonymised records of adults examined in the 14 network practices in March 2027, comparing recall intervals with recorded risk and independent risk markers.",
+        "population": "Adults aged 18 or over with a routine examination in March 2027; 80 records per practice selected by a random number list from the month's examination log (1,120 records).",
+        "exposure": "Recorded risk category at the examination; independent markers: new fillings or extractions in the previous two years, recorded smoking, diabetes and periodontal pocketing.",
+        "procedures": "The research dentist extracts the interval, risk field, markers and home postcode district (converted to deprivation quintile) with a piloted form, and double-extracts 10 percent. Records from practices without signed agreements are not extracted until they sign.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Risk-concordant recall interval",
+            "measure": "Interval within the guideline range for the recorded risk category (low 12 to 24 months, medium 6 to 12, high 3 to 6)",
+            "timing": "At the March 2027 examination",
+            "why": "Directly answers whether recall is risk-based.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Missing recall interval",
+            "measure": "No interval recorded",
+            "timing": "Same",
+            "why": "More common in deprived areas (claim c4).",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Risk field quality",
+            "measure": "Blank, or identical to the previous assessment despite new treatment",
+            "timing": "Same",
+            "why": "Recorded risk may be unreliable (claim c2).",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Extraction agreement",
+            "measure": "Agreement between double extractions",
+            "timing": "During extraction",
+            "why": "Checks data quality.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 15 minutes per record: 1,120 records take about 35 of the 48 research days available.",
+        "biasMitigation": [
+          "Random selection from the examination log",
+          "Independent risk markers alongside the recorded category",
+          "Double extraction of 10 percent",
+          "Missing intervals kept as an outcome"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Unreliable reference standard",
+            "severity": "high",
+            "note": "Recorded risk may be copied forward; markers give a second view."
+          },
+          {
+            "id": "b2",
+            "label": "Practices missing agreements",
+            "severity": "watch",
+            "note": "Reported explicitly; extraction waits for them."
+          },
+          {
+            "id": "b3",
+            "label": "One month only",
+            "severity": "watch",
+            "note": "Seasonal variation is unlikely to change interval setting."
+          }
+        ],
+        "parsimony": {
+          "score": 84,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 4,
+          "flags": [],
+          "simplestPath": "One month of records, one concordance outcome, network and practice estimates."
+        },
+        "theoreticalFramework": "None needed; reporting follows STROBE for cross-sectional studies with the RECORD extension.",
+        "summary": "1,120 records from 14 practices; one concordance outcome; missing intervals by deprivation."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[1].role": "secondary",
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cross-sectional estimate of a proportion with practice clustering.",
+        "sampleSize": "Eighty records in each of 14 practices give 1,120. With a proportion near 50 percent the simple 95 percent interval would be about plus or minus 3.4 points, but with an intraclass correlation of 0.05 the design effect is about 4.95 (1 plus 79 times 0.05), so the network estimate has an interval of about plus or minus 6.5 points and each practice estimate about plus or minus 11 points. More records per practice would add little because precision is limited by the number of practices; the time budget (about 35 of 48 days) sets 80 per practice.",
+        "primaryAnalysis": "Proportion of adults with a risk-concordant interval with a 95 percent interval from a random-intercept logistic model with practice as the cluster; practice-level estimates shown as a caterpillar plot.",
+        "secondaryAnalysis": "Missing interval and risk-field quality by deprivation quintile; concordance against independent markers instead of the recorded category; agreement between double extractions (kappa).",
+        "missingData": "A missing interval is an outcome, not missing data; missing postcode districts are reported and excluded only from the deprivation analysis.",
+        "multiplicity": "One primary estimate; secondary estimates descriptive.",
+        "software": "R (lme4).",
+        "overfittingGuards": [
+          "Guideline mapping of risk to intervals fixed before extraction",
+          "No practice ranking beyond the caterpillar plot",
+          "Secondary analyses listed in advance"
+        ],
+        "summary": "1,120 records give about plus or minus 6.5 points for the network estimate after clustering."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "design effect is about 4.95"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: anonymised records; practices may feel judged, so practice results go first to each practice and are published without names.",
+        "consent": "Individual consent is not required for anonymised extracts under the network governance note; practices consent through data release agreements.",
+        "data": "Extraction on practice premises into an anonymised form; postcode district converted to deprivation quintile at extraction; no names or dates of birth leave the practice.",
+        "equity": "PROGRESS-Plus: adults in deprived areas are more likely to have no interval recorded and may be most harmed by both over-long and absent recall; missing intervals are reported by deprivation, and the result is framed so that longer intervals do not become a reason to reduce access in deprived areas.",
+        "effectiveness": "Gives commissioners a baseline of whether recall is risk-based before contracts change.",
+        "efficiency": "Six months of part-time research time; no practice payments.",
+        "costs": "Research dentist salary already funded.",
+        "grants": "None needed.",
+        "partnerships": "Practice managers, the local dental committee, commissioners and two patient representatives.",
+        "rebPath": "Research ethics review not required for anonymised record extracts (network governance note PBRN-GOV-2026-11); extraction waits for signed data release agreements from all 14 practices, the unmet gate on the accepted decision.",
+        "limitations": "Recorded risk is unreliable; one month; 14 practices.",
+        "summary": "Anonymised records with practice-first reporting and equity reporting by deprivation."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "PBRN-GOV-2026-11"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient representatives and the local dental committee review the concordance definition and the plain-language summary for commissioners.",
+        "socialListening": "No social media listening; practice complaint logs mentioning recall are summarised with practice consent.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Losing my place",
+            "quote": "Composite paraphrase: If I go two years between check-ups, will they still keep me on the books?",
+            "implication": "Report missing and long intervals alongside access.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "The contract",
+            "quote": "Composite paraphrase: Every check-up counts towards our activity; stretching intervals costs the practice.",
+            "implication": "Describe the contract context when reporting results.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "The risk box",
+            "quote": "Composite paraphrase: Honestly, the risk box gets copied from last time unless something big has changed.",
+            "implication": "Measure copy-forward and use independent markers.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Three composite voices on access, contracts and record keeping."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Are dental recall intervals risk-based? A cross-sectional study of records in 14 general dental practices",
+        "abstract": "Objective: to estimate how often adult recall intervals match recorded risk and independent risk markers, and how often intervals are missing, by area deprivation. Design: cross-sectional study of 1,120 anonymised records from 14 practices in one month of 2027. Results and conclusions will follow extraction.",
+        "introduction": "Guidance asks for risk-based recall, and randomised evidence suggests longer intervals are safe for low-risk adults, but record studies elsewhere show most adults recalled at six months. Commissioners need a local baseline before contracts change.",
+        "methods": "Random selection of 80 examination records per practice; extraction of interval, risk field and independent markers; a random-intercept logistic model with practice clustering.",
+        "results": "No data have been extracted yet. The report will present concordance overall and by practice, missing intervals by deprivation, and risk-field quality.",
+        "discussion": "The discussion will relate current practice to guidance and contracts and set out what a risk-based contract would need to measure.",
+        "limitations": "Unreliable recorded risk; one month; 14 practices.",
+        "conclusion": "To be written after analysis; it will not claim that longer intervals are safe in this network.",
+        "reportingChecklist": "STROBE (cross-sectional) with the RECORD extension",
+        "summary": "STROBE-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE (cross-sectional) with the RECORD extension",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Three practices have not signed data release agreements; extraction waits and the decision stays blocked",
+          "Pilot the extraction form and the guideline mapping on 20 records before March 2027",
+          "Check the undated commissioning briefing's source before citing it"
+        ],
+        "improvementNotes": "The investigator chose the cross-sectional design at the problem stage with the family control; the design reply agreed and the decision rests on three ledger claims.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: agreements, piloting and an undated source."
+      },
+      "note": "audit fields fail at 875fe59 because of the L1.6 store defect, not a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Are dental recall intervals risk-based? A cross-sectional study of records in a practice-based research network",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "cross-sectional",
+          "design.basis": "explicit",
+          "design.decisions": {
+            "length": 1
+          },
+          "scan.items[7].year": {
+            "isNull": true
+          }
+        },
+        "screen": {
+          "includes": [
+            "Are dental recall intervals risk-based? A cross-sectional study of records in a practice-based research network"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "basis explicit and the decision fields require S11; scan.claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "cross-sectional",
+            "design.basis": "explicit",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[1].status": "unmet",
+            "scan.items[7].year": {
+              "isNull": true
+            },
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 4
+            },
+            "problem.constraints": "Six months of a part-time research dentist (two days a week) from February 2027; no payments to practices for follow-up data; records only, with no patient contact.",
+            "problem.rawNeed": "I coordinate a practice-based research network of 14 general dental practices. National guidance says that recall intervals should be set between 3 and 24 months according to each patient's risk of decay and gum disease, but my impression is that almost everyone is still recalled every six months, and that the risk assessment in the record is often blank or copied forward from the last visit. The commissioners want to know whether risk-based recall is actually happening before they change the dental contracts in 2028.\n\nI can see two ways to answer this. The first option is to do a cross-sectional study: take a sample of adult patients from each practice's records in a single month and compare the recall interval set at their last examination with the risk category recorded, and with markers of risk such as recent fillings, smoking and diabetes. The second option is to follow a cohort of patients over two years to see whether those given longer intervals develop more decay. That would tell us more about safety, but I have funding for only six months of a part-time research dentist and no way to pay practices for follow-up data.\n\nI would like help choosing between these, deciding what counts as a risk-based interval, how many records to sample in each practice, and how to handle practices where the risk field is missing. Our practices serve very different areas, from a university town to former mining villages, and I want to know whether adults from deprived areas are recalled differently."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

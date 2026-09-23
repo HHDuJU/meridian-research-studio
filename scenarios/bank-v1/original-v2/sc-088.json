@@ -1,0 +1,1474 @@
+{
+  "id": "sc-088",
+  "version": 2,
+  "title": "Primary care portal messages: urgent-message flag accuracy across clinics, late ethics reply refused after an edit",
+  "field": "digital-health",
+  "level": 5,
+  "family": "diagnostic",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Level 5 with a multi-site diagnostic accuracy design, a late reply refused after an investigator edit, and dependency closure between Protocol and Stats. The need names a diagnostic accuracy study (routing explicit); the problem reply echoes the typed constraints (no rejected-change, G11). Seven fixture records are appraised; one annotation gives relevance 105, stored null with issue out-of-range (never clamped). The supported decision is accepted with both gates met. After Protocol and Stats are complete for three clinics, the investigator starts Ethics; while that request is pending, the investigator records on screen that clinic C has paused (set-field protocol.population), which flags Stats for review (G8). The held Ethics reply, produced against the earlier study revision, then arrives and is refused by the studyRevision guard: nothing is applied and the refusal is shown and logged (G6). Stats is regenerated for two clinics, clearing the flag, and a fresh Ethics request is applied. The held reply is encoded as illuminate (request sent, reply held), set-field, then wait (reply delivered), because the format has no field for a held reply. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 2, 4, 5, 7 (ev-08xzrhg, ev-0u8uypx, ev-0hra19l, ev-1qyikkr, ev-0xgkvle) and titleYearKey-keyed for records 3 and 6 (ev-0idtq6s, ev-1g04mzv). Requires S13 (appraisal payload), S11 (selectionStatus, actionStatus, recommendedFamily, basis) and D5 (status text). The studyRevision guard itself is in the 875fe59 library (store.ts mergeStageIfRevision); applying it on the screen is L1.2 wiring, not a work-order entry. Catches: a late reply applied over a changed study, a downstream stage left current after an upstream edit, a score clamped instead of stored unknown, and results by clinic lost when a site withdraws.",
+  "inputs": {
+    "need": "I lead digital health for a primary care organisation with three clinics (A, B and C) and about 38,000 patients. Since we opened the patient portal to everyone in 2023, secure messages to clinicians have risen by about 70 percent, and our physicians and nurse practitioners now spend a median of 1.4 hours a day on portal messages, much of it after clinic hours. Some messages are urgent, such as new chest pain, a child with a high fever or a medication reaction, and they wait for hours in the same queue as prescription requests and appointment questions.\n\nOur electronic record vendor offers an automated triage flag that reads each incoming message and marks it as needing same-day clinical attention or not. Before we switch it on, we want a diagnostic accuracy study across the three clinics: run the flag silently on incoming messages for a few months and compare it with a reference standard of two clinicians independently reviewing each sampled message without seeing the flag. The clinics differ: clinic B serves many older patients, and clinic C has many patients who write in languages other than English.\n\nI need help with sampling the messages, how many we need to estimate sensitivity for urgent messages with useful precision, how to build the reference standard and handle disagreement, what to report besides accuracy (for example how much clinician time might be saved and which urgent messages would be missed), and how to handle privacy when clinicians read message text for this purpose. We have a small quality budget, an informatics nurse, and clinicians willing to review messages for two hours a week.",
+    "constraints": "Quality budget of 12,000. Informatics nurse 1 day per week and reviewing clinicians 2 hours per week each until June 2027. The triage flag may run only in silent mode; no clinical action on its output during the study.",
+    "localFacts": [
+      "Portal messages to clinicians rose by about 70 percent between 2023 and 2026 across the three clinics.",
+      "The privacy office approved extraction of message text from the three clinics for this study on 2026-09-15 (approval PRV-2026-221).",
+      "The vendor agreed to run the triage flag in silent mode from November 2026 (agreement VEN-2026-09).",
+      "Clinic C's medical director has said the clinic may pause participation while it changes its record configuration in early 2027."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I lead digital health for a primary care organisation with three clinics (A, B and C) and about 38,000 patients. Since we opened the patient portal to everyone in 2023, secure messages to clinicians have risen by about 70 percent, and our physicians and nurse practitioners now spend a median of 1.4 hours a day on portal messages, much of it after clinic hours. Some messages are urgent, such as new chest pain, a child with a high fever or a medication reaction, and they wait for hours in the same queue as prescription requests and appointment questions.\n\nOur electronic record vendor offers an automated triage flag that reads each incoming message and marks it as needing same-day clinical attention or not. Before we switch it on, we want a diagnostic accuracy study across the three clinics: run the flag silently on incoming messages for a few months and compare it with a reference standard of two clinicians independently reviewing each sampled message without seeing the flag. The clinics differ: clinic B serves many older patients, and clinic C has many patients who write in languages other than English.\n\nI need help with sampling the messages, how many we need to estimate sensitivity for urgent messages with useful precision, how to build the reference standard and handle disagreement, what to report besides accuracy (for example how much clinician time might be saved and which urgent messages would be missed), and how to handle privacy when clinicians read message text for this purpose. We have a small quality budget, an informatics nurse, and clinicians willing to review messages for two hours a week.",
+          "problem.constraints": "Quality budget of 12,000. Informatics nurse 1 day per week and reviewing clinicians 2 hours per week each until June 2027. The triage flag may run only in silent mode; no clinical action on its output during the study.",
+          "family": "diagnostic",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I lead digital health for a primary care"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Accuracy of an automated urgent-message flag for patient portal messages across three primary care clinics",
+        "subtitle": "Diagnostic accuracy study before switching the flag on",
+        "family": "diagnostic",
+        "statement": "Portal messages to clinicians have risen by about 70 percent since 2023 in a three-clinic primary care organisation, and clinicians spend a median of 1.4 hours a day on them. Urgent messages wait in the same queue as routine requests. The vendor's automated triage flag could route urgent messages faster, but its accuracy in these clinics, and for older patients and messages in languages other than English, is unknown. A diagnostic accuracy study with the flag in silent mode against a two-clinician reference standard is needed before it is switched on.",
+        "whoAffected": "About 38,000 patients who use the portal, especially older patients, carers and people writing in languages other than English; physicians and nurse practitioners; reception teams.",
+        "whatHurts": "Urgent messages can wait hours; clinicians work after hours; a flag that misses urgent messages could delay care for the patients least well served.",
+        "currentPractice": "All messages enter one queue, sorted by reception staff; clinicians read them between and after appointments.",
+        "whyNow": "The vendor offers the flag, message volume is still rising, and the organisation must decide whether to switch it on in 2027.",
+        "constraints": "Quality budget of 12,000. Informatics nurse 1 day per week and reviewing clinicians 2 hours per week each until June 2027. The triage flag may run only in silent mode; no clinical action on its output during the study.",
+        "patientCenteredGoal": "Patients who write about something urgent reach a clinician the same day, whatever their age or language.",
+        "summary": "Problem framed as a multi-site diagnostic accuracy study of a message triage flag."
+      },
+      "note": "Constraints are echoed byte for byte, so no rejected-change issue arises (G11).",
+      "expect": {
+        "store": {
+          "title": "Accuracy of an automated urgent-message flag for patient portal messages across three primary care clinics",
+          "family": "diagnostic",
+          "problem.statement": {
+            "includes": "silent mode"
+          },
+          "problem.rawNeed": "I lead digital health for a primary care organisation with three clinics (A, B and C) and about 38,000 patients. Since we opened the patient portal to everyone in 2023, secure messages to clinicians have risen by about 70 percent, and our physicians and nurse practitioners now spend a median of 1.4 hours a day on portal messages, much of it after clinic hours. Some messages are urgent, such as new chest pain, a child with a high fever or a medication reaction, and they wait for hours in the same queue as prescription requests and appointment questions.\n\nOur electronic record vendor offers an automated triage flag that reads each incoming message and marks it as needing same-day clinical attention or not. Before we switch it on, we want a diagnostic accuracy study across the three clinics: run the flag silently on incoming messages for a few months and compare it with a reference standard of two clinicians independently reviewing each sampled message without seeing the flag. The clinics differ: clinic B serves many older patients, and clinic C has many patients who write in languages other than English.\n\nI need help with sampling the messages, how many we need to estimate sensitivity for urgent messages with useful precision, how to build the reference standard and handle disagreement, what to report besides accuracy (for example how much clinician time might be saved and which urgent messages would be missed), and how to handle privacy when clinicians read message text for this purpose. We have a small quality budget, an informatics nurse, and clinicians willing to review messages for two hours a week.",
+          "problem.constraints": "Quality budget of 12,000. Informatics nurse 1 day per week and reviewing clinicians 2 hours per week each until June 2027. The triage flag may run only in silent mode; no clinical action on its output during the study.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Accuracy of an automated urgent-message flag for patient portal messages across three primary care clinics"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "automated triage patient portal messages urgent sensitivity specificity primary care language",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Accuracy of a natural language processing triage flag for urgent patient portal messages: a validation study in primary care",
+            "authors": "Nakamura-Obi E, Fairbairn-Adeyemi T, Castellano-Hurst M",
+            "year": 2023,
+            "venue": "Journal of Primary Care Informatics",
+            "doi": "10.5555/jpci.2023.0415",
+            "providerType": "diagnostic accuracy study",
+            "abstract": "We ran an automated triage flag on 2,400 randomly sampled portal messages from four primary care practices and compared it with a reference standard of two clinicians reviewing each message independently, with a third resolving disagreements. Urgent messages made up 4 percent of the sample. Sensitivity for urgent messages was 86 percent (95 percent CI 79 to 91) and specificity was 91 percent. Sensitivity was 71 percent for messages written in languages other than English. Most missed urgent messages combined several requests, with the urgent one last. The authors caution that accuracy may differ in other patient populations."
+          },
+          {
+            "title": "Patient portal message volume and physicians' after-hours work: a multi-site analysis",
+            "authors": "Lindahl-Mbeki R, Osei-Carrington J",
+            "year": 2021,
+            "venue": "Clinical Workload Research",
+            "doi": "10.5555/cwr.2021.0098",
+            "providerType": "cohort study",
+            "abstract": "We linked electronic record audit logs for 212 primary care physicians to their daily portal message counts over one year. Each additional 10 messages per day was associated with 23 minutes more work in the record outside scheduled hours. Physicians in the highest fifth of message volume reported higher burnout scores. Messages about medications and test results took longest to handle. The analysis could not separate message volume from other features of busy practices, and it did not record who wrote the messages or how urgent they were."
+          },
+          {
+            "title": "Reference standards for patient message triage studies: agreement between clinicians",
+            "authors": "Okafor-Svensson L, Brandt-Kariuki A",
+            "year": 2024,
+            "venue": "Informatics Methods Notes",
+            "providerType": "journal-article",
+            "abstract": "Two clinicians independently rated the urgency of 900 patient portal messages without clinical context beyond the message and the problem list. Agreement on whether a message needed same-day attention was moderate (kappa 0.62). A third clinician adjudicated disagreements, which involved 14 percent of messages. Disagreement was most common for messages describing chronic symptoms that had changed, and for messages from carers. The authors recommend a written urgency definition with examples, calibration before rating, and adjudication rather than consensus discussion, and they report that rating took about one minute per message."
+          },
+          {
+            "title": "Automated triage of patient messages: a systematic review of diagnostic accuracy",
+            "authors": "Petersen-Achebe K, Morrow-Tanaka S, Diallo-Whitfield C",
+            "year": 2020,
+            "venue": "Health Informatics Evidence Reviews",
+            "doi": "10.5555/hier.2020.0033",
+            "providerType": "systematic review",
+            "abstract": "We included 12 studies of automated triage of patient messages. Reported sensitivity for urgent messages ranged from 62 to 94 percent. Most studies were at high risk of bias in the reference standard, because a single clinician rated messages or raters knew the automated result. Spectrum bias was common: several studies enriched samples with obviously urgent messages. Only 2 studies were multi-site, and none reported accuracy by patient language or age. The review recommends independent double rating and random sampling."
+          },
+          {
+            "title": "Clinicians' experience of managing patient portal messages: an interview study",
+            "authors": "Haddad-Lund N, Oyelaran-Pierce G",
+            "year": 2022,
+            "venue": "Primary Care Workforce Studies",
+            "doi": "10.5555/pcws.2022.0151",
+            "providerType": "qualitative research",
+            "abstract": "We interviewed 24 physicians and nurse practitioners about portal messages. Participants described answering messages in the evening, guilt about delays, and fear of missing an urgent message among routine requests. Several were cautious about automated triage and wanted to know how often it would miss urgent messages before relying on it. Participants suggested that a flag should route urgent messages to a clinician quickly rather than decide what could wait. Nurse practitioners described triaging messages for physicians without protected time, and several participants had changed their working hours to keep up with the queue."
+          },
+          {
+            "title": "Language, age and the content of patient portal messages in primary care",
+            "authors": "Clinic Informatics Collaborative",
+            "year": 2019,
+            "venue": "Informatics practice report series",
+            "providerType": "report",
+            "abstract": "We described 5,000 portal messages from three clinics. Messages from patients aged over 75 more often contained several requests in one message. Messages written in languages other than English were three times as likely to be routed to the wrong staff member by reception teams. Carers wrote a fifth of messages for patients over 80. The report recommends that any automated routing be tested separately for older patients, carers and messages in languages other than English. It did not assess clinical urgency or outcomes."
+          },
+          {
+            "title": "Spectrum effects in the accuracy of message triage across clinic populations",
+            "authors": "Varga-Mensah D, Olsen-Castellanos R",
+            "year": 2025,
+            "venue": "Journal of Diagnostic Informatics",
+            "doi": "10.5555/jdi.2025.0012",
+            "providerType": "diagnostic accuracy study",
+            "abstract": "We validated the same message triage flag in five clinics with different patient populations against a two-clinician reference standard. Sensitivity for urgent messages varied from 74 to 90 percent across clinics, and was lowest in the clinic with the most messages in languages other than English. Specificity varied less. Pooling clinics hid these differences. The authors recommend reporting accuracy by clinic and by message language, and sampling enough urgent messages in each clinic to do so. The reference standard was the same in every clinic."
+          }
+        ]
+      },
+      "note": "Seven records; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-08xzrhg",
+            "ev-0u8uypx",
+            "ev-0idtq6s",
+            "ev-0hra19l",
+            "ev-1qyikkr",
+            "ev-1g04mzv",
+            "ev-0xgkvle"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.items[0].grade": "unrated",
+          "scan.items[3].relevance": {
+            "isNull": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Spectrum effects in the accuracy of message triage across clinic populations"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-08xzrhg",
+            "relevance": 95,
+            "methodQuality": 72,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Sensitivity for urgent messages 86 percent (95 percent CI 79 to 91), specificity 91 percent, prevalence 4 percent; sensitivity 71 percent for messages in languages other than English.",
+            "limitations": "Four practices; one vendor version.",
+            "contextTags": [
+              "diagnostic accuracy",
+              "triage flag",
+              "language"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0u8uypx",
+            "relevance": 72,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Each additional 10 messages per day was associated with 23 minutes more after-hours record work.",
+            "limitations": "Confounded by practice busyness.",
+            "contextTags": [
+              "workload",
+              "after-hours"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0idtq6s",
+            "relevance": 86,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Two clinicians agreed moderately on same-day urgency (kappa 0.62); adjudication was needed for 14 percent of messages.",
+            "limitations": "900 messages; limited clinical context.",
+            "contextTags": [
+              "reference standard",
+              "agreement"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0hra19l",
+            "relevance": 105,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 12 studies sensitivity ranged from 62 to 94 percent; high risk of bias in reference standards; only 2 multi-site studies.",
+            "limitations": "Heterogeneous flags and definitions.",
+            "contextTags": [
+              "systematic review",
+              "spectrum bias"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1qyikkr",
+            "relevance": 64,
+            "methodQuality": 58,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "24 clinicians described after-hours work and fear of missing urgent messages; they wanted to know the miss rate before relying on a flag.",
+            "limitations": "Volunteers.",
+            "contextTags": [
+              "clinician experience"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1g04mzv",
+            "relevance": 70,
+            "methodQuality": 42,
+            "kind": "grey",
+            "grade": "very-low",
+            "keyFindings": "Messages from patients over 75 more often combined several requests; messages in languages other than English were three times as likely to be misrouted.",
+            "limitations": "Descriptive report; no accuracy data.",
+            "contextTags": [
+              "age",
+              "language",
+              "carers"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0xgkvle",
+            "relevance": 92,
+            "methodQuality": 68,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Sensitivity varied from 74 to 90 percent across five clinics, lowest where most messages were in languages other than English.",
+            "limitations": "Five clinics; one flag version.",
+            "contextTags": [
+              "spectrum effect",
+              "multi-site"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-08xzrhg"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "Against a two-clinician reference standard, the flag's sensitivity for urgent messages was 86 percent (95 percent CI 79 to 91) and its specificity 91 percent, with urgent messages making up 4 percent of the sample.",
+            "passage": "Sensitivity for urgent messages was 86 percent (95 percent CI 79 to 91) and specificity was 91 percent.",
+            "interpretation": "A planning value for sensitivity and prevalence."
+          },
+          {
+            "id": "c2",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-08xzrhg"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "Sensitivity was 71 percent for messages written in languages other than English.",
+            "passage": "Sensitivity was 71 percent for messages written in languages other than English.",
+            "interpretation": "Accuracy must be reported by language."
+          },
+          {
+            "id": "c3",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0idtq6s"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Two clinicians agreed moderately on same-day urgency (kappa 0.62), and a third clinician adjudicated disagreements in 14 percent of messages.",
+            "passage": "Agreement on whether a message needed same-day attention was moderate (kappa 0.62).",
+            "interpretation": "Use a written definition, calibration and adjudication for the reference standard."
+          },
+          {
+            "id": "c4",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0xgkvle"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Across five clinics, the flag's sensitivity for urgent messages varied from 74 to 90 percent, lowest in the clinic with the most messages in languages other than English.",
+            "passage": "Sensitivity for urgent messages varied from 74 to 90 percent across clinics",
+            "interpretation": "Report accuracy by clinic; do not pool clinics blindly."
+          },
+          {
+            "id": "c5",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0u8uypx"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Each additional 10 portal messages per day was associated with 23 minutes more after-hours record work for primary care physicians.",
+            "passage": "Each additional 10 messages per day was associated with 23 minutes more work in the record outside scheduled hours.",
+            "interpretation": "Workload matters, but accuracy decides whether the flag can safely reduce it."
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. A validation study and a five-clinic study report sensitivity for urgent messages in the 74 to 90 percent range, lower for messages in languages other than English, and a review of 12 studies finds reference standards at high risk of bias and few multi-site studies. Clinician agreement on urgency is only moderate without adjudication. Message volume is linked to after-hours work, and clinicians want the miss rate before relying on a flag. A multi-site study with an adjudicated reference standard, random sampling and results by clinic and language is needed.",
+        "gradeOverall": "low",
+        "gradeRationale": "Few accuracy studies, variable by population, with frequent reference standard bias; workload evidence observational.",
+        "summary": "Seven retrieved records appraised; five claims; certainty low. One annotation carried an out-of-range relevance."
+      },
+      "note": "The annotation for the systematic review gives relevance 105, outside 0 to 100: stored null with issue out-of-range, never clamped to 100 (contracts.ts scoreOrNull at 875fe59). Certainty 'low' over inspected records (G1, S13).",
+      "expect": {
+        "store": {
+          "scan.items[3].relevance": {
+            "isNull": true
+          },
+          "scan.items[3].methodQuality": 66,
+          "scan.items[3].grade": "low",
+          "scan.items[0].grade": "moderate",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-08xzrhg"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-0xgkvle"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-0hra19l].relevance",
+              "code": "out-of-range"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "Three clinics, about 38,000 patients",
+          "Portal messages up about 70 percent since 2023",
+          "Flag available in silent mode from November 2026",
+          "Clinic C may pause in early 2027"
+        ],
+        "reading": "The flag's value depends on its sensitivity for urgent messages in these clinics, which varies with population and language, and on a reference standard that clinicians agree on. Workload pressure pushes towards switching it on; the risk falls on patients whose urgent messages are missed, who are more likely to be older, writing through carers, or writing in another language.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Automated urgent-message flag",
+            "kind": "framework",
+            "detail": "Index test, silent mode."
+          },
+          {
+            "id": "n2",
+            "label": "Two-clinician adjudicated review",
+            "kind": "context",
+            "detail": "Reference standard (claim c3)."
+          },
+          {
+            "id": "n3",
+            "label": "Sensitivity for urgent messages",
+            "kind": "outcome",
+            "detail": "86 percent in one validation (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "Messages in other languages",
+            "kind": "stakeholder",
+            "detail": "Sensitivity 71 percent (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Clinic populations",
+            "kind": "context",
+            "detail": "Sensitivity 74 to 90 percent across clinics (claim c4)."
+          },
+          {
+            "id": "n6",
+            "label": "After-hours clinician work",
+            "kind": "outcome",
+            "detail": "Linked to message volume (claim c5)."
+          },
+          {
+            "id": "n7",
+            "label": "Clinic C",
+            "kind": "context",
+            "detail": "Most messages in other languages; may pause."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "measured by"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "defines truth for"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "lowers"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "modifies"
+          },
+          {
+            "from": "n1",
+            "to": "n6",
+            "relation": "might reduce"
+          },
+          {
+            "from": "n7",
+            "to": "n4",
+            "relation": "concentrates"
+          }
+        ],
+        "summary": "Map places sensitivity at the centre, modified by language and clinic population."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No accuracy estimate in these clinics",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Sensitivity varies across clinic populations (claim c4).",
+            "opportunity": "Estimate sensitivity in each clinic with enough urgent messages."
+          },
+          {
+            "id": "g2",
+            "title": "Reference standard reliability",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Clinicians agree only moderately (claim c3).",
+            "opportunity": "Written definition, calibration and third-clinician adjudication."
+          },
+          {
+            "id": "g3",
+            "title": "Messages in other languages",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "Sensitivity was 71 percent for such messages (claim c2), and clinic C has the most.",
+            "opportunity": "Report sensitivity by language; keep clinic C in the sample if possible."
+          },
+          {
+            "id": "g4",
+            "title": "Time saved is not accuracy",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Workload gains do not justify missed urgent messages.",
+            "opportunity": "Report time saved as secondary and misses as a balancing measure."
+          }
+        ],
+        "errorsFound": [],
+        "reevaluation": "A multi-site accuracy study with language-specific results is the right next step.",
+        "summary": "Four gaps; three high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[2].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "The flag's sensitivity for urgent messages across the study clinics will be at least 85 percent.",
+            "novelty": 40,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 75,
+            "parsimony": 85,
+            "rationale": "The validation study reported 86 percent.",
+            "risks": "Population differences may lower it."
+          },
+          {
+            "id": "h2",
+            "statement": "Sensitivity will be at least 10 points lower for messages in languages other than English.",
+            "novelty": 50,
+            "need": 80,
+            "practiceChange": 75,
+            "feasibility": 60,
+            "parsimony": 75,
+            "rationale": "Reported 71 percent against 86 percent overall.",
+            "risks": "Few such messages if clinic C pauses."
+          },
+          {
+            "id": "h3",
+            "statement": "Silent flagging would move urgent messages to the front of the queue a median of 3 hours earlier.",
+            "novelty": 45,
+            "need": 70,
+            "practiceChange": 70,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Urgent messages currently wait in one queue.",
+            "risks": "Queue time estimates depend on timestamps."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 primary."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In portal messages sent to clinicians at the participating clinics, what are the sensitivity and specificity of the vendor's automated urgent-message flag, run in silent mode, against an adjudicated two-clinician reference standard, overall, by clinic and by message language?",
+            "framework": "PICO",
+            "population": "Randomly sampled portal messages to clinicians at the participating clinics",
+            "intervention": "Automated urgent-message flag (index test)",
+            "comparator": "Adjudicated two-clinician review (reference standard)",
+            "outcome": "Sensitivity and specificity for messages needing same-day attention",
+            "time": "November 2026 onward",
+            "setting": "Primary care clinics"
+          }
+        ],
+        "finer": "Feasible with the quality budget and reviewing clinicians; interesting to clinicians and the vendor; novel locally and by language; ethical with privacy approval and silent mode; relevant to the switch-on decision.",
+        "summary": "One diagnostic accuracy question."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "diagnostic",
+        "rationale": "The decision to switch the flag on depends on how often it misses urgent messages, which a diagnostic accuracy study answers: the flag runs silently, sampled messages are rated by two clinicians blind to the flag with third-clinician adjudication (c3), and accuracy is reported overall, by clinic and by language because it varies with population (c2, c4). The planning value for sensitivity comes from a primary care validation (c1).",
+        "alternatives": [
+          "Switch the flag on and monitor (refused: misses would reach patients before accuracy is known)",
+          "Single-clinic study (refused: accuracy varies by clinic population)",
+          "Randomised comparison of flagged and unflagged queues (deferred: only after accuracy is acceptable)"
+        ],
+        "guidelines": [
+          "STARD 2015"
+        ],
+        "whyNotMoreComplex": "A randomised comparison of queues would expose patients to an unvalidated flag; accuracy comes first.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a multi-clinic diagnostic accuracy study of the flag in silent mode against an adjudicated two-clinician reference standard, with random sampling and results by clinic and message language.",
+          "question": "Should the organisation switch on the automated urgent-message flag?",
+          "claimIds": [
+            "c1",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Sensitivity varies by clinic population, so local multi-site accuracy is needed.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A reliable reference standard can be built with adjudication.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Privacy approval for extracting message text",
+              "status": "met",
+              "evidence": "Privacy office approval PRV-2026-221 dated 2026-09-15, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Vendor agreement to run the flag in silent mode",
+              "status": "met",
+              "evidence": "Vendor agreement VEN-2026-09, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Switch on with monitoring",
+            "Single-clinic validation"
+          ],
+          "note": "Rests on ledger claims c1, c3 and c4 from retrieved records; both gates rest on investigator-supplied approvals."
+        },
+        "summary": "Diagnostic accuracy study recommended; decision rests on three ledger claims; gates met."
+      },
+      "note": "selectionStatus and recommendedFamily require S11; claims S13; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "diagnostic",
+          "family": "diagnostic",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].recommendedFamily": "diagnostic",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: c1, c3 and c4 rest on retrieved records and both gates are met (G7). Requires S11, S13, D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "diagnostic"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Three-clinic diagnostic accuracy study of an automated urgent-message flag in silent mode, with random sampling of portal messages and an adjudicated two-clinician reference standard.",
+        "population": "Portal messages to clinicians at clinics A, B and C from November 2026, sampled at random within each clinic.",
+        "exposure": "Index test: the vendor's flag (urgent or not urgent), recorded silently. Reference standard: two clinicians rate each sampled message for same-day attention blind to the flag, with a third adjudicating disagreement.",
+        "procedures": "Weekly random sample of about 200 messages across the three clinics, proportional to volume; written urgency definition with examples; calibration session before rating; the informatics nurse extracts messages and flags under the privacy approval.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Sensitivity for urgent messages",
+            "measure": "Proportion of reference-standard urgent messages flagged urgent",
+            "timing": "End of sampling",
+            "why": "A missed urgent message is the main harm.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Specificity",
+            "measure": "Proportion of non-urgent messages not flagged",
+            "timing": "End of sampling",
+            "why": "False alarms cost clinician time.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Sensitivity by clinic and language",
+            "measure": "Sensitivity within each clinic and for messages in languages other than English",
+            "timing": "End of sampling",
+            "why": "Accuracy varies by population.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Reference standard agreement",
+            "measure": "Kappa between the two raters before adjudication",
+            "timing": "Monthly",
+            "why": "Checks the reliability of the truth.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Missed urgent messages",
+            "measure": "Content and outcome of each false negative, reviewed by a clinician",
+            "timing": "Monthly",
+            "why": "Shows what the flag would have missed.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 200 sampled messages per week; two reviewers at two hours per week each can rate them.",
+        "biasMitigation": [
+          "Random sampling within clinics",
+          "Reviewers blind to the flag",
+          "Adjudication by a third clinician",
+          "Results by clinic and language"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Spectrum bias",
+            "severity": "watch",
+            "note": "Random rather than enriched sampling."
+          },
+          {
+            "id": "b2",
+            "label": "Imperfect reference standard",
+            "severity": "watch",
+            "note": "Calibration and adjudication."
+          }
+        ],
+        "parsimony": {
+          "score": 82,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "Subgroups limited to clinic and language"
+          ],
+          "simplestPath": "One index test, one reference standard, one primary accuracy measure."
+        },
+        "theoreticalFramework": "None beyond STARD.",
+        "summary": "Three-clinic accuracy protocol with random sampling and adjudication."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.population": {
+            "includes": "clinics A, B and C"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cross-classification of index test and reference standard in randomly sampled messages from three clinics.",
+        "sampleSize": "With sensitivity near 86 percent and urgent messages at about 4 percent, about 95 urgent messages give a 95 percent confidence interval of about 7 percentage points either side of the estimate; at 4 percent that means about 2,400 sampled messages, or about 12 weeks at 200 messages per week across three clinics. Reporting sensitivity by clinic with an interval of about 12 points either side needs about 32 urgent messages per clinic.",
+        "primaryAnalysis": "Sensitivity and specificity with Wilson intervals, overall and by clinic, from the two-by-two table against the adjudicated reference standard.",
+        "secondaryAnalysis": "Sensitivity for messages in languages other than English and from patients over 75; kappa before adjudication; description of every false negative.",
+        "missingData": "Messages the flag failed to score are counted and reported; they are treated as not flagged in a sensitivity analysis.",
+        "multiplicity": "One primary measure; subgroups are descriptive with intervals.",
+        "software": "R (epiR for accuracy measures).",
+        "overfittingGuards": [
+          "Urgency definition fixed before rating",
+          "No threshold tuning of the flag",
+          "Subgroups fixed in advance"
+        ],
+        "summary": "About 95 urgent messages from about 2,400 sampled over 12 weeks."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 12 weeks at 200 messages per week"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: silent mode means no clinical action on the flag.",
+        "consent": "Waiver of individual consent requested for message review at all three clinics.",
+        "data": "Message text extracted at clinics A, B and C under PRV-2026-221.",
+        "equity": "Clinic C's messages in other languages are sampled in full.",
+        "effectiveness": "Accuracy decides the switch-on.",
+        "efficiency": "Reviewer time within budget.",
+        "costs": "Within the quality budget.",
+        "grants": "None.",
+        "partnerships": "Three clinic directors.",
+        "rebPath": "Research ethics review with a consent waiver for three clinics.",
+        "limitations": "Silent mode only.",
+        "summary": "Ethics plan for three clinics."
+      },
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Held reply (G6): the runner sends this Ethics request, captures studyRevision, holds the model's reply while the next step (the investigator's protocol edit) runs, and releases it at the release after that. Nothing is applied yet. After the release: The held Ethics reply was produced against the three-clinic study and arrives after the edit: the studyRevision guard refuses it, nothing is applied (no stage patch, no completion), and the refusal is shown and logged (G6; store.ts mergeStageIfRevision at 875fe59, wired to the screen by L1.2).",
+      "expect": {
+        "store": {
+          "ethics.rebPath": "",
+          "ethics.consent": "",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ],
+          "ethics.equity": "",
+          "audit.entries[0].summary": {
+            "includes": "refused"
+          },
+          "needsReview": [
+            "stats"
+          ]
+        },
+        "stage": {
+          "ethics": "incomplete",
+          "stats": "needs-review"
+        },
+        "error": {
+          "shown": true,
+          "includes": "changed since the request"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "protocol.population",
+          "value": "Portal messages to clinicians at clinics A and B from November 2026; clinic C paused its participation for its record reconfiguration, so its messages are no longer sampled.",
+          "note": "While the Ethics request is pending, the investigator records on screen that clinic C has paused (local fact). The protocol changes after Stats was completed, so Stats is flagged for review and not counted complete (G8). Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "protocol.population": "Portal messages to clinicians at clinics A and B from November 2026; clinic C paused its participation for its record reconfiguration, so its messages are no longer sampled.",
+              "needsReview": [
+                "stats"
+              ],
+              "completedStages": [
+                "problem",
+                "scan",
+                "map",
+                "gaps",
+                "hypotheses",
+                "questions",
+                "design",
+                "protocol",
+                "stats"
+              ]
+            },
+            "stage": {
+              "stats": "needs-review",
+              "ethics": "incomplete"
+            },
+            "screen": {
+              "includes": [
+                "review required"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 2,
+      "response": {
+        "designSummary": "Cross-classification of index test and reference standard in randomly sampled messages from clinics A and B after clinic C paused.",
+        "sampleSize": "With clinic C paused, clinics A and B supply about 140 sampled messages per week, so reaching about 95 urgent messages at 4 percent takes about 17 weeks instead of 12, still within the study period. Few messages in languages other than English come from clinics A and B, so sensitivity for them cannot be estimated with a useful interval; it is reported as a limitation, with a plan to add clinic C when it resumes.",
+        "primaryAnalysis": "Sensitivity and specificity with Wilson intervals, overall and by clinic, from the two-by-two table against the adjudicated reference standard.",
+        "secondaryAnalysis": "Sensitivity for patients over 75 and, descriptively, for messages in languages other than English; kappa before adjudication; description of every false negative.",
+        "missingData": "Messages the flag failed to score are counted and reported; they are treated as not flagged in a sensitivity analysis.",
+        "multiplicity": "One primary measure; subgroups are descriptive with intervals.",
+        "software": "R (epiR for accuracy measures).",
+        "overfittingGuards": [
+          "Urgency definition fixed before rating",
+          "No threshold tuning of the flag",
+          "Subgroups fixed in advance"
+        ],
+        "summary": "About 17 weeks at 140 messages per week for 95 urgent messages; the language subgroup can no longer be estimated precisely."
+      },
+      "note": "Dependency closure: the statistics are regenerated for two clinics, which clears Stats from review.",
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 17 weeks"
+          },
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 2,
+      "response": {
+        "risks": "Minimal for patients: the flag runs in silent mode and no clinical action depends on it; reviewers read messages that are already handled in the usual way.",
+        "consent": "Individual consent is impracticable for thousands of sampled messages; a waiver of consent is requested, with notices on the portal explaining the study and an opt-out.",
+        "data": "Message text from clinics A and B is extracted by the informatics nurse under privacy approval PRV-2026-221, pseudonymised, and reviewed on the organisation's secure system; clinic C's messages are not extracted while it is paused.",
+        "equity": "PROGRESS-Plus: older patients, carers and people writing in languages other than English are at most risk of missed urgent messages. With clinic C paused, messages in other languages are few, so the study cannot yet show whether the flag is safe for them; the report says so, and the flag is not recommended for switch-on for those messages until clinic C's data are added.",
+        "effectiveness": "The flag is recommended only if sensitivity is acceptable overall and in each subgroup that can be estimated.",
+        "efficiency": "Reviewer time within the quality budget.",
+        "costs": "Reviewer and informatics nurse time within the 12,000 quality budget.",
+        "grants": "A digital health equity grant could fund adding clinic C and interpreters for rating.",
+        "partnerships": "Clinic directors, the patient advisory group, a community organisation serving patients who write in other languages, and the vendor.",
+        "rebPath": "Research ethics review of secondary use of message text with a consent waiver under TCPS 2, alongside privacy approval PRV-2026-221, for clinics A and B; an amendment adds clinic C when it resumes.",
+        "limitations": "Two clinics; few messages in other languages; imperfect reference standard.",
+        "summary": "Consent waiver and privacy approval for two clinics; the equity gap from clinic C's pause is stated."
+      },
+      "note": "A fresh Ethics request against the current study is applied.",
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "clinics A and B"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "The patient advisory group and a community organisation for patients who write in other languages review the portal notice and the plain-language summary.",
+        "socialListening": "No social media listening; complaints about portal response times are summarised in anonymised form.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Waiting for an answer",
+            "quote": "Composite paraphrase: I wrote that my chest felt tight and got a reply the next afternoon.",
+            "implication": "Report what the flag would have done with urgent messages that waited.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Trust in the flag",
+            "quote": "Composite paraphrase: Tell me how many urgent messages it misses before you ask me to ignore the rest.",
+            "implication": "Lead with sensitivity and the missed messages.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Writing for someone else",
+            "quote": "Composite paraphrase: I write for my father; I put everything in one message so nothing gets lost.",
+            "implication": "Report accuracy for multi-request and carer messages.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Language",
+            "quote": "Composite paraphrase: Our members write in their own language because that is how they can explain the problem.",
+            "implication": "Add clinic C when it resumes so the language subgroup can be estimated.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on waiting, trust, carers and language."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Accuracy of an automated urgent-message flag for patient portal messages in primary care: a multi-clinic diagnostic accuracy study",
+        "abstract": "Objective: to estimate the sensitivity and specificity of a vendor's urgent-message flag for patient portal messages. Design: diagnostic accuracy study with the flag in silent mode against an adjudicated two-clinician reference standard, in clinics A and B after clinic C paused. Results will follow sampling.",
+        "introduction": "Portal message volume drives clinician after-hours work; automated triage could help, but accuracy varies by population and language.",
+        "methods": "Random weekly samples; two blinded clinician raters with adjudication; sensitivity and specificity with Wilson intervals, by clinic and subgroup.",
+        "results": "No data have been collected yet.",
+        "discussion": "The discussion will weigh accuracy against the workload problem and state what is not known for messages in other languages.",
+        "limitations": "Two clinics after clinic C paused; imperfect reference standard; one flag version.",
+        "conclusion": "To be written after analysis.",
+        "reportingChecklist": "STARD 2015",
+        "summary": "STARD report structure with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STARD 2015",
+          "manuscript.abstract": {
+            "includes": "clinic C paused"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The first ethics reply was produced against the three-clinic protocol and refused after the protocol changed; only the fresh two-clinic reply is kept",
+          "Plan the amendment that adds clinic C when it resumes, so the language subgroup can be estimated",
+          "One appraisal annotation carried a relevance of 105; it was stored as unknown and should be re-rated by a person"
+        ],
+        "improvementNotes": "The protocol population changed while an ethics request was pending; the late reply was refused, Stats was flagged and re-run for two clinics, and Ethics was generated again against the current study.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes on the refused reply, clinic C and an unknown relevance."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 store.ts mergeStage overwrites it (L1.6, a store defect).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Accuracy of an automated urgent-message flag for patient portal messages across three primary care clinics",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "protocol.population": "Portal messages to clinicians at clinics A and B from November 2026; clinic C paused its participation for its record reconfiguration, so its messages are no longer sampled.",
+          "ethics.rebPath": {
+            "includes": "clinics A and B"
+          },
+          "stats.sampleSize": {
+            "includes": "about 17 weeks"
+          },
+          "scan.items[3].relevance": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Accuracy of an automated urgent-message flag for patient portal messages across three primary care clinics"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Accuracy of an automated urgent-message flag for patient portal messages across three primary care clinics",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "protocol.population": "Portal messages to clinicians at clinics A and B from November 2026; clinic C paused its participation for its record reconfiguration, so its messages are no longer sampled.",
+          "ethics.consent": {
+            "includes": "waiver of consent"
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Accuracy of an automated urgent-message flag for patient portal messages across three primary care clinics"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; the refused reply leaves no trace in the ethics fields (G6). One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "needsReview": [],
+            "protocol.population": "Portal messages to clinicians at clinics A and B from November 2026; clinic C paused its participation for its record reconfiguration, so its messages are no longer sampled.",
+            "ethics.rebPath": {
+              "includes": "clinics A and B"
+            },
+            "ethics.data": {
+              "includes": "clinic C's messages are not extracted"
+            },
+            "stats.sampleSize": {
+              "includes": "about 17 weeks"
+            },
+            "scan.items[3].relevance": {
+              "isNull": true
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "family": "diagnostic"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-088.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
+}

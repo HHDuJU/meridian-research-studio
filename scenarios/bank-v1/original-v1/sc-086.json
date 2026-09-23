@@ -1,0 +1,1522 @@
+{
+  "id": "sc-086",
+  "version": 1,
+  "title": "Imaging stewardship: umbrella review of decision support for low back pain, landmark lead unverified, stale decision",
+  "field": "radiology",
+  "level": 4,
+  "family": "umbrella-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S5",
+    "S10",
+    "S11",
+    "S13"
+  ],
+  "notes": "Level 4 adversarial path on an explicitly named umbrella review. The problem reply paraphrases the investigator's typed constraints: under G11 the typed text stays and the replacement is refused with issue rejected-change (S5). A fixture search returns seven records. The first scan call (shape discovery) adds four leads; the first is presented as a 'landmark' multicentre study with the invented DOI 10.5555/jrp.2015.9001 that no retrieval returned: it is appended after the retrieved records (D1) and stays origin 'model', status unverified, with no checks, whatever its label (G3); its explicit null certainty is logged 'cleared'. The second scan call (shape appraisal) annotates the seven records; one annotation tries to change a record's year and that write is dropped with an issue (identity is not annotatable). Certainty 'low' comes only from the appraisal (G1). The design decision rests on c1 to c3 from retrieved records with both gates met, so acceptance is a supported positive (accepted, ready). Then the review cited by c1 receives an erratum through the store's change-source action: the decision must become stale with the action blocked, in the store, on screen (Design route) and after reload, and in the export; completed stages after Scan are flagged for review (G7, G8). Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 2, 3, 5, 6 (ev-0n5rc5h, ev-0ji9hw4, ev-0culnpd, ev-0uigllw, ev-1vyeeld) and titleYearKey-keyed for records 4 and 7 (ev-1p1anhe, ev-1pkyfyv). Requires S5 (rejected-change), D1 (leads appended), S13 (appraisal payload), S10 (stale on a key findings change), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a model overwriting investigator text, a landmark label turned into verification, an appraisal rewriting identity, and an accepted decision left current after its cited source changed.",
+  "inputs": {
+    "need": "I am a consultant radiologist and lead for imaging stewardship in a health region with four hospitals and about 90 primary care practices. Lumbar spine MRI requests have grown every year, and when we sampled 300 requests for low back pain last spring, 34 percent had no red flag, no radiculopathy and no documented trial of conservative care. The region is about to buy an electronic decision support tool that checks imaging orders against appropriateness criteria at the moment of ordering, and the procurement board wants to know what such tools actually achieve before it writes the specification.\n\nWe would like to do an umbrella review: there are already many reviews of imaging decision support, some specific to low back pain, and I would rather bring them together properly than add another pooled analysis of the same trials. The questions are whether decision support reduces inappropriate imaging, whether it changes imaging volume, whether patients are any worse off, how often clinicians override the advice, and whether effects differ for people in deprived areas or with limited English.\n\nI need help with the question, how to find and judge the reviews, what to do when several reviews include the same primary studies, how to handle reviews that disagree, and how to present the findings to a procurement board that is not clinical. A colleague keeps citing one famous multicentre study with a 40 percent effect that I have never been able to find.",
+    "constraints": "Review must be finished by 2027-03-31 for the procurement board. One information specialist for 10 days and two reviewers part time. English-language reviews only unless a translator can be found.",
+    "localFacts": [
+      "A sample of 300 lumbar MRI requests for low back pain in spring 2026 found 34 percent without a red flag, radiculopathy or documented conservative care.",
+      "The regional library service allocated an information specialist for 10 working days from October 2026 (allocation LIB-2026-41).",
+      "The procurement board agreed on 2026-09-17 to finalise the decision support specification only after the review reports (minute PB-2026-09-17-3)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a consultant radiologist and lead for imaging stewardship in a health region with four hospitals and about 90 primary care practices. Lumbar spine MRI requests have grown every year, and when we sampled 300 requests for low back pain last spring, 34 percent had no red flag, no radiculopathy and no documented trial of conservative care. The region is about to buy an electronic decision support tool that checks imaging orders against appropriateness criteria at the moment of ordering, and the procurement board wants to know what such tools actually achieve before it writes the specification.\n\nWe would like to do an umbrella review: there are already many reviews of imaging decision support, some specific to low back pain, and I would rather bring them together properly than add another pooled analysis of the same trials. The questions are whether decision support reduces inappropriate imaging, whether it changes imaging volume, whether patients are any worse off, how often clinicians override the advice, and whether effects differ for people in deprived areas or with limited English.\n\nI need help with the question, how to find and judge the reviews, what to do when several reviews include the same primary studies, how to handle reviews that disagree, and how to present the findings to a procurement board that is not clinical. A colleague keeps citing one famous multicentre study with a 40 percent effect that I have never been able to find.",
+          "problem.constraints": "Review must be finished by 2027-03-31 for the procurement board. One information specialist for 10 days and two reviewers part time. English-language reviews only unless a translator can be found.",
+          "family": "umbrella-review",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a consultant radiologist and lead for"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Decision support for lumbar imaging in low back pain: an umbrella review for procurement",
+        "subtitle": "Umbrella review of reviews of imaging decision support",
+        "family": "umbrella-review",
+        "statement": "A health region is about to procure electronic decision support that checks imaging orders against appropriateness criteria. In a sample of 300 lumbar MRI requests for low back pain, 34 percent had no red flag, radiculopathy or documented conservative care. Many reviews of imaging decision support exist, overlap and sometimes disagree; the procurement board needs one appraised synthesis of what such tools achieve for appropriateness, volume, patient outcomes, override and equity.",
+        "whoAffected": "Adults with low back pain in primary care and emergency departments, the clinicians who order imaging, radiology services, and the procurement board.",
+        "whatHurts": "Imaging without an indication leads to further tests and treatment without better outcomes, lengthens waits for patients who need MRI, and a poorly specified tool could add alerts that clinicians ignore.",
+        "currentPractice": "Imaging requests are vetted by radiologists after ordering; no decision support at the point of ordering.",
+        "whyNow": "The specification is due in 2027 and the board agreed to wait for the review.",
+        "constraints": "Finish by March 2027; limited reviewer time; English only.",
+        "patientCenteredGoal": "People with low back pain get imaging when it will change their care and are spared imaging that will not.",
+        "summary": "Problem framed as an umbrella review to inform procurement of imaging decision support."
+      },
+      "note": "The reply returns a shorter paraphrase of the investigator's constraints. Under G11 the typed constraints stay byte for byte and the attempted replacement is recorded as issue rejected-change at 'constraints' and shown on screen. At 875fe59 the paraphrase overwrites the typed text; requires S5 (investigator authority over investigator-entered text).",
+      "expect": {
+        "store": {
+          "title": "Decision support for lumbar imaging in low back pain: an umbrella review for procurement",
+          "family": "umbrella-review",
+          "problem.constraints": "Review must be finished by 2027-03-31 for the procurement board. One information specialist for 10 days and two reviewers part time. English-language reviews only unless a translator can be found.",
+          "problem.rawNeed": "I am a consultant radiologist and lead for imaging stewardship in a health region with four hospitals and about 90 primary care practices. Lumbar spine MRI requests have grown every year, and when we sampled 300 requests for low back pain last spring, 34 percent had no red flag, no radiculopathy and no documented trial of conservative care. The region is about to buy an electronic decision support tool that checks imaging orders against appropriateness criteria at the moment of ordering, and the procurement board wants to know what such tools actually achieve before it writes the specification.\n\nWe would like to do an umbrella review: there are already many reviews of imaging decision support, some specific to low back pain, and I would rather bring them together properly than add another pooled analysis of the same trials. The questions are whether decision support reduces inappropriate imaging, whether it changes imaging volume, whether patients are any worse off, how often clinicians override the advice, and whether effects differ for people in deprived areas or with limited English.\n\nI need help with the question, how to find and judge the reviews, what to do when several reviews include the same primary studies, how to handle reviews that disagree, and how to present the findings to a procurement board that is not clinical. A colleague keeps citing one famous multicentre study with a 40 percent effect that I have never been able to find.",
+          "problem.statement": {
+            "includes": "procurement board needs"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Decision support for lumbar imaging in low back pain: an umbrella review for procurement",
+            "One information specialist for 10 days"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "imaging clinical decision support appropriateness lumbar spine low back pain review override",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Clinical decision support for diagnostic imaging orders: a systematic review of effects on appropriateness and volume",
+            "authors": "Okafor-Lindahl P, Brandt-Nakamura S, Idowu-Fischer R",
+            "year": 2018,
+            "venue": "Journal of Imaging Quality and Safety",
+            "doi": "10.5555/jiqs.2018.0442",
+            "providerType": "systematic review",
+            "abstract": "We included 32 studies of electronic clinical decision support at the point of ordering diagnostic imaging, 6 of them randomised. Across 14 studies that reported appropriateness, the proportion of inappropriate orders fell by a pooled relative 27 percent (95 percent CI 18 to 35 percent). Effects on imaging volume were smaller and inconsistent. Studies in which clinicians could ignore the advice without giving a reason showed smaller effects. Few studies reported patient outcomes, and most were uncontrolled before-after comparisons from academic centres. We rated the certainty of the evidence as low."
+          },
+          {
+            "title": "Decision support for lumbar spine imaging in adults with low back pain: a systematic review and meta-analysis",
+            "authors": "Ferreira-Holm K, Achebe-Tanaka L, Morrow-Singh V",
+            "year": 2021,
+            "venue": "Spine Imaging Evidence",
+            "doi": "10.5555/sie.2021.0113",
+            "providerType": "meta-analysis",
+            "abstract": "We included 11 studies of decision support for lumbar spine imaging in adults presenting with low back pain in primary care or emergency departments. Decision support reduced lumbar imaging orders for non-specific low back pain (risk ratio 0.78, 95 percent CI 0.66 to 0.92). Of the included studies, 2 randomised trials measured pain and function at 3 months and found no differences between groups. Heterogeneity was substantial, largely explained by whether the tool required a reason to override. No study reported outcomes by socioeconomic group or language."
+          },
+          {
+            "title": "Interventions to reduce low-value imaging for low back pain: an overview of reviews",
+            "authors": "Lindqvist-Obi M, Carrasco-Hughes D",
+            "year": 2016,
+            "venue": "Musculoskeletal Care Reviews",
+            "doi": "10.5555/mcr.2016.0058",
+            "providerType": "review",
+            "abstract": "We identified 9 reviews of interventions to reduce imaging for low back pain. Audit and feedback, decision support at ordering and targeted education were the interventions with the most consistent reductions in imaging. Confidence in the reviews was low: 4 of the 9 reviews were rated critically low on a standard appraisal tool, mainly because they did not assess risk of bias in included studies. The overview did not account for primary studies included in more than one review and did not report patient outcomes."
+          },
+          {
+            "title": "Override of imaging decision support advice by clinicians: a systematic review",
+            "authors": "Hassan-Whitfield J, Obuya-Lund R",
+            "year": 2023,
+            "venue": "Health Informatics Practice",
+            "providerType": "systematic review",
+            "abstract": "We reviewed 19 studies that reported how often clinicians overrode imaging decision support advice. Override rates ranged from 49 to 96 percent of alerts that advised against an order. Overrides were more frequent when alerts fired for orders already judged urgent, when the tool gave no alternative, and in emergency departments. Tools that required a structured reason to override had lower override rates. Few studies examined whether overridden orders were later judged appropriate, and none measured effects on patients whose orders were cancelled after an alert."
+          },
+          {
+            "title": "Imaging for low back pain in adults: clinical practice guideline",
+            "authors": "Low Back Pain Guideline Development Group",
+            "year": 2019,
+            "venue": "Clinical Guidance Series in Imaging",
+            "doi": "10.5555/cgsi.2019.0007",
+            "providerType": "practice guideline",
+            "abstract": "The guideline recommends against routine imaging for adults with low back pain without red flags, and against imaging within the first six weeks for non-specific pain. Imaging is recommended for suspected cauda equina syndrome, malignancy, infection or fracture, and for radiculopathy persisting after six weeks when surgery or injection is being considered. The guideline notes that imaging without an indication is associated with more further investigation and treatment without better outcomes. Evidence was graded low to moderate for most recommendations."
+          },
+          {
+            "title": "Methodological quality and overlap of systematic reviews of imaging decision support: an appraisal with AMSTAR 2",
+            "authors": "Petersen-Oyelaran A, Kim-Castellanos T",
+            "year": 2024,
+            "venue": "Research Synthesis Methods in Radiology",
+            "doi": "10.5555/rsmr.2024.0019",
+            "providerType": "journal-article",
+            "abstract": "We appraised 26 systematic reviews of decision support for imaging orders with AMSTAR 2. Confidence was rated critically low for 15 reviews and low for 7, most often because protocols were not registered and excluded studies were not listed. The primary studies overlapped substantially across reviews, with a corrected covered area of 18 percent, so counting reviews would double-count the same evidence. Reviews that reported larger effects more often included uncontrolled studies. The authors recommend overlap matrices and AMSTAR 2 ratings in any overview."
+          },
+          {
+            "title": "Do imaging stewardship interventions affect groups differently? A scoping review of equity reporting",
+            "authors": "Mahlangu-Reid C, Soto-Brennan P, Fitzgerald-Ude N",
+            "year": 2020,
+            "venue": "Equity in Health Services",
+            "providerType": "journal-article",
+            "abstract": "We mapped 38 studies of interventions to reduce low-value imaging and recorded whether they reported effects by socioeconomic position, ethnicity, language, age or sex. Only 4 of 38 studies reported any subgroup effect, and none reported effects by language. Two studies found that reductions in imaging were smaller among patients from deprived areas, while one found no difference. Most studies were from academic centres in high-income settings. The review concludes that the equity effects of imaging stewardship are largely unknown and recommends routine subgroup reporting."
+          }
+        ]
+      },
+      "note": "Seven records; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0n5rc5h",
+            "ev-0ji9hw4",
+            "ev-0culnpd",
+            "ev-1p1anhe",
+            "ev-0uigllw",
+            "ev-1vyeeld",
+            "ev-1pkyfyv"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-0n5rc5h",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[2].year": 2016,
+          "scan.items[3].doi": {
+            "absent": true
+          },
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Decision support for lumbar spine imaging in adults with low back pain: a systematic review and meta-analysis"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "decision support imaging appropriateness low back pain reviews override equity",
+        "sourcesConsulted": [
+          "model knowledge of imaging stewardship literature"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "Certainty is left to the appraisal of the retrieved reviews.",
+        "synthesis": "Four further items are suggested as leads alongside the retrieved reviews, including a widely cited multicentre evaluation that reported a 40 percent effect.",
+        "items": [
+          {
+            "id": "lead-landmark-1",
+            "title": "Point-of-order decision support and imaging appropriateness: the landmark multicentre evaluation",
+            "authors": "Imaging Appropriateness Collaborative",
+            "year": 2015,
+            "source": "Journal of Radiology Practice",
+            "kind": "rct",
+            "grade": "high",
+            "methodQuality": 85,
+            "relevance": 90,
+            "verification": "landmark",
+            "doi": "10.5555/jrp.2015.9001",
+            "contextTags": [
+              "decision support",
+              "multicentre",
+              "landmark"
+            ],
+            "keyFindings": "Reported a 40 percent fall in inappropriate advanced imaging after decision support across many centres.",
+            "limitations": "Not stated.",
+            "notes": "A landmark trial that is widely cited."
+          },
+          {
+            "title": "Imaging decision support in emergency departments: a review of effects and override",
+            "authors": "Nilsen-Adeyemi R, Chu-Barrett K",
+            "year": 2019,
+            "source": "Emergency Informatics Review",
+            "kind": "systematic-review",
+            "relevance": 70,
+            "methodQuality": null,
+            "verification": "verify",
+            "contextTags": [
+              "emergency department"
+            ],
+            "keyFindings": "Reported smaller effects in emergency departments than in primary care.",
+            "limitations": "Unchecked lead.",
+            "notes": ""
+          },
+          {
+            "title": "Primary care clinicians' views of imaging decision support alerts",
+            "authors": "Osei-Hargreaves M, Lund-Farouk S",
+            "year": 2021,
+            "source": "Family Practice Informatics",
+            "kind": "qualitative",
+            "relevance": 58,
+            "methodQuality": null,
+            "verification": "ai-lead",
+            "contextTags": [
+              "clinician views"
+            ],
+            "keyFindings": "Described alert fatigue and requests for alternatives to imaging in the alert.",
+            "limitations": "Unchecked lead.",
+            "notes": ""
+          },
+          {
+            "title": "The cost of low-value lumbar imaging to a health system",
+            "authors": "Brennan-Moyo T, Aziz-Carlsen J",
+            "year": 2017,
+            "source": "Health Economics of Imaging",
+            "kind": "observational",
+            "relevance": 50,
+            "methodQuality": null,
+            "verification": "ai-lead",
+            "contextTags": [
+              "cost"
+            ],
+            "keyFindings": "Estimated the downstream costs of imaging without an indication.",
+            "limitations": "Unchecked lead.",
+            "notes": ""
+          }
+        ],
+        "summary": "Four leads suggested; one is presented as a landmark trial with a DOI."
+      },
+      "note": "The first lead is labelled 'landmark' and carries the invented DOI 10.5555/jrp.2015.9001; no retrieval returned it. It is appended after the retrieved records (D1) with origin 'model', status unverified and no checks (G3): the label stays a label and never becomes verification. The explicit null certainty is logged 'cleared' and certainty stays unassessed until the appraisal (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 11
+          },
+          "scan.items[0].id": "ev-0n5rc5h",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[6].provenance.status": "retrieved",
+          "scan.items[7].title": "Point-of-order decision support and imaging appropriateness: the landmark multicentre evaluation",
+          "scan.items[7].doi": "10.5555/jrp.2015.9001",
+          "scan.items[7].verification": "landmark",
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[7].provenance.checks": {
+            "length": 0
+          },
+          "scan.items[10].provenance.origin": "model",
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          }
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": 2
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0n5rc5h",
+            "relevance": 90,
+            "methodQuality": 55,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 14 studies reporting appropriateness, inappropriate orders fell by a pooled relative 27 percent (95 percent CI 18 to 35 percent); effects on volume smaller and inconsistent.",
+            "limitations": "Mostly uncontrolled studies from academic centres; few patient outcomes.",
+            "contextTags": [
+              "appropriateness",
+              "volume",
+              "pooled"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0ji9hw4",
+            "relevance": 94,
+            "methodQuality": 62,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Lumbar imaging orders for non-specific low back pain fell (risk ratio 0.78); two trials found no difference in pain or function at 3 months.",
+            "limitations": "Substantial heterogeneity; no equity reporting.",
+            "contextTags": [
+              "low back pain",
+              "lumbar imaging",
+              "patient outcomes"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0culnpd",
+            "relevance": 72,
+            "methodQuality": 40,
+            "kind": "systematic-review",
+            "grade": "very-low",
+            "year": 2017,
+            "keyFindings": "Across 9 reviews, audit and feedback, decision support and targeted education gave the most consistent reductions; 4 of 9 reviews were rated critically low.",
+            "limitations": "Did not handle overlap; no patient outcomes.",
+            "contextTags": [
+              "overview of reviews",
+              "overlap not handled"
+            ],
+            "notes": "The year of this record should be 2017."
+          },
+          {
+            "id": "ev-1p1anhe",
+            "relevance": 80,
+            "methodQuality": 58,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Override rates ranged from 49 to 96 percent of alerts; a required structured reason lowered override.",
+            "limitations": "Few studies checked whether overridden orders were appropriate.",
+            "contextTags": [
+              "override",
+              "alert design"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0uigllw",
+            "relevance": 76,
+            "methodQuality": 70,
+            "kind": "guideline",
+            "grade": "moderate",
+            "keyFindings": "Recommends against routine imaging without red flags and against imaging within six weeks for non-specific pain.",
+            "limitations": "Low to moderate evidence for most recommendations.",
+            "contextTags": [
+              "guideline",
+              "appropriateness criteria"
+            ],
+            "notes": "Source for the tool's criteria."
+          },
+          {
+            "id": "ev-1vyeeld",
+            "relevance": 88,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Of 26 reviews, 15 were rated critically low and 7 low on AMSTAR 2; corrected covered area 18 percent.",
+            "limitations": "Appraisal of reviews, not of patient outcomes.",
+            "contextTags": [
+              "AMSTAR 2",
+              "overlap",
+              "methods"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1pkyfyv",
+            "relevance": 70,
+            "methodQuality": 52,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Only 4 of 38 studies reported any subgroup effect and none by language; two found smaller reductions in deprived areas.",
+            "limitations": "Mapping without quality appraisal.",
+            "contextTags": [
+              "equity",
+              "subgroup reporting"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0n5rc5h"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "Across 14 studies that reported appropriateness, electronic decision support reduced inappropriate imaging orders by a pooled relative 27 percent (95 percent CI 18 to 35 percent).",
+            "passage": "the proportion of inappropriate orders fell by a pooled relative 27 percent (95 percent CI 18 to 35 percent)",
+            "interpretation": "The largest pooled estimate of effect on appropriateness; the review's certainty is low."
+          },
+          {
+            "id": "c2",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0ji9hw4"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "In adults with low back pain, decision support reduced lumbar imaging orders (risk ratio 0.78, 95 percent CI 0.66 to 0.92), and 2 trials found no differences in pain or function at 3 months.",
+            "passage": "Decision support reduced lumbar imaging orders for non-specific low back pain (risk ratio 0.78, 95 percent CI 0.66 to 0.92).",
+            "interpretation": "Fewer orders without a signal of patient harm in the few trials that looked."
+          },
+          {
+            "id": "c3",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1vyeeld"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Of 26 reviews of imaging decision support, 15 were rated critically low confidence on AMSTAR 2, and the primary studies overlapped with a corrected covered area of 18 percent.",
+            "passage": "with a corrected covered area of 18 percent, so counting reviews would double-count the same evidence",
+            "interpretation": "An umbrella review must appraise reviews and handle overlap rather than count them."
+          },
+          {
+            "id": "c4",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1p1anhe"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Clinicians overrode imaging decision support advice in 49 to 96 percent of alerts that advised against an order.",
+            "passage": "Override rates ranged from 49 to 96 percent of alerts that advised against an order.",
+            "interpretation": "Alert design, including a required reason to override, belongs in the specification."
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Reviews report that decision support reduces inappropriate imaging orders and lumbar imaging for low back pain, with no signal of harm in the few trials that measured pain and function, but most underlying studies are uncontrolled and many reviews are of critically low quality with heavily overlapping primary studies. Clinicians override most alerts unless a reason is required. Equity effects are largely unreported. The multicentre study with a 40 percent effect suggested by the discovery call is a model lead that no retrieved record contains.",
+        "gradeOverall": "low",
+        "gradeRationale": "Consistent direction for appropriateness and orders, downgraded for risk of bias in primary studies, low review quality and overlap; patient outcomes and equity effects very uncertain.",
+        "summary": "Seven retrieved records appraised; four claims; certainty low. One annotation tried to change a record's year."
+      },
+      "note": "The annotation for the overview of reviews tries to change its year to 2017; identity is not annotatable, so the write is dropped with an issue and the record keeps year 2016 (875fe59 appraise.ts behaviour). The other annotation fields apply. Certainty 'low' is the appraisal's value over the retrieved records (G1, S13).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 11
+          },
+          "scan.items[2].year": 2016,
+          "scan.items[2].grade": "very-low",
+          "scan.items[2].keyFindings": {
+            "includes": "4 of 9 reviews"
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].keyFindings": {
+            "includes": "27 percent"
+          },
+          "scan.items[7].provenance.status": "unverified",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0n5rc5h"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-1vyeeld"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-0culnpd].year",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "Health region with four hospitals and about 90 practices",
+          "Procurement specification due in 2027",
+          "34 percent of sampled lumbar MRI requests without an indication",
+          "Information specialist for 10 days"
+        ],
+        "reading": "The procurement question sits on a crowded, overlapping and often low-quality review literature. Effects on appropriateness and orders are consistent in direction but come from uncontrolled studies that reviews count repeatedly. Override behaviour and alert design decide whether a tool works in practice, and equity effects are almost unreported. The famous 40 percent figure is an unverified lead.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Decision support at the point of ordering",
+            "kind": "framework",
+            "detail": "The tool to be procured."
+          },
+          {
+            "id": "n2",
+            "label": "Review of 32 studies",
+            "kind": "systematic-review",
+            "detail": "Pooled relative reduction of 27 percent (claim c1)."
+          },
+          {
+            "id": "n3",
+            "label": "Low back pain review",
+            "kind": "systematic-review",
+            "detail": "Risk ratio 0.78 for orders (claim c2)."
+          },
+          {
+            "id": "n4",
+            "label": "Overlap and review quality",
+            "kind": "gap",
+            "detail": "15 of 26 reviews critically low; overlap 18 percent (claim c3)."
+          },
+          {
+            "id": "n5",
+            "label": "Override of alerts",
+            "kind": "context",
+            "detail": "49 to 96 percent (claim c4)."
+          },
+          {
+            "id": "n6",
+            "label": "Inappropriate lumbar imaging orders",
+            "kind": "outcome",
+            "detail": "Primary outcome for the review."
+          },
+          {
+            "id": "n7",
+            "label": "Patients in deprived areas or with limited English",
+            "kind": "stakeholder",
+            "detail": "Effects unreported."
+          },
+          {
+            "id": "n8",
+            "label": "Procurement board",
+            "kind": "stakeholder",
+            "detail": "Non-clinical audience."
+          },
+          {
+            "id": "n9",
+            "label": "Unverified landmark lead",
+            "kind": "gap",
+            "detail": "40 percent effect; not retrieved; stays unverified."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n6",
+            "relation": "expected to reduce"
+          },
+          {
+            "from": "n2",
+            "to": "n6",
+            "relation": "estimates effect on"
+          },
+          {
+            "from": "n3",
+            "to": "n6",
+            "relation": "estimates effect on"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "weakens confidence in"
+          },
+          {
+            "from": "n5",
+            "to": "n1",
+            "relation": "limits"
+          },
+          {
+            "from": "n7",
+            "to": "n6",
+            "relation": "may differ in"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "specifies"
+          },
+          {
+            "from": "n9",
+            "to": "n8",
+            "relation": "must not inform"
+          }
+        ],
+        "summary": "Map shows the overlapping evidence behind the procurement decision and the unverified lead."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[8].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Overlapping reviews counted as independent evidence",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Primary studies overlap across reviews (claim c3); counting reviews inflates confidence.",
+            "opportunity": "Build a citation matrix and report the corrected covered area; prefer the most recent high-quality review per question."
+          },
+          {
+            "id": "g2",
+            "title": "Patient outcomes barely measured",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "Only two trials measured pain and function (claim c2).",
+            "opportunity": "Report patient outcomes separately and say plainly how little is known."
+          },
+          {
+            "id": "g3",
+            "title": "Equity effects unknown",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Few studies report subgroup effects and none by language.",
+            "opportunity": "Extract any subgroup results and recommend equity monitoring in the specification."
+          },
+          {
+            "id": "g4",
+            "title": "An untraceable 40 percent figure",
+            "kind": "error",
+            "severity": "moderate",
+            "whyItMatters": "The figure colleagues cite matches no retrieved record; the model's landmark lead is unverified.",
+            "opportunity": "Do not cite the figure; attempt to retrieve and check the lead by its identifier."
+          }
+        ],
+        "errorsFound": [
+          "The discovery reply presented an unretrieved multicentre study as a landmark with a DOI; it remains an unverified lead."
+        ],
+        "reevaluation": "An umbrella review with AMSTAR 2 appraisal and overlap handling is the right design; primary studies should be revisited only where reviews conflict.",
+        "summary": "Four gaps: overlap, patient outcomes, equity and an untraceable figure."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[3].kind": "error",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Overlapping reviews counted as independent evidence"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "After accounting for overlap and review quality, the best available evidence will show a reduction in inappropriate lumbar imaging orders with decision support, but with low certainty.",
+            "novelty": 35,
+            "need": 85,
+            "practiceChange": 75,
+            "feasibility": 80,
+            "parsimony": 80,
+            "rationale": "Consistent direction across reviews; low quality and overlap.",
+            "risks": "Conflicting reviews on effect size."
+          },
+          {
+            "id": "h2",
+            "statement": "Tools that require a structured reason to override will be associated with larger effects.",
+            "novelty": 45,
+            "need": 70,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Supported by the override review and heterogeneity in the low back pain review.",
+            "risks": "Indirect comparison across studies."
+          },
+          {
+            "id": "h3",
+            "statement": "No review will report effects by language, and few by deprivation.",
+            "novelty": 30,
+            "need": 60,
+            "practiceChange": 50,
+            "feasibility": 90,
+            "parsimony": 85,
+            "rationale": "The equity mapping found 4 of 38 studies with subgroup results.",
+            "risks": "None beyond search completeness."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 frames the main synthesis."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In adults with low back pain and the clinicians who order their imaging, what do systematic reviews show about the effect of point-of-order imaging decision support, compared with no decision support, on inappropriate imaging orders, imaging volume, patient outcomes, override and equity?",
+            "framework": "PICO",
+            "population": "Adults with low back pain; ordering clinicians in primary care and emergency departments",
+            "intervention": "Electronic decision support at the point of ordering",
+            "comparator": "No decision support or usual vetting",
+            "outcome": "Inappropriate orders (primary); volume, pain and function, override, subgroup effects",
+            "time": "Reviews published to the search date",
+            "setting": "Primary care and emergency departments"
+          }
+        ],
+        "finer": "Feasible within 10 information specialist days and part-time reviewers; interesting to the procurement board; novel in handling overlap and quality explicitly; ethical with published data; relevant to the 2027 specification.",
+        "summary": "One PICO question for an umbrella review."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "umbrella-review",
+        "rationale": "The question is what an overlapping body of reviews shows, which an umbrella review answers: appraise each review with AMSTAR 2, build an overlap matrix, prefer the most recent high-quality review per outcome, and return to primary studies only where reviews disagree. The retrieved evidence shows reduced inappropriate orders (c1) and lumbar orders without harm in the trials that looked (c2), and that overlap and low review quality make simple counting misleading (c3).",
+        "alternatives": [
+          "New systematic review and pooled analysis of primary studies (refused: repeats existing pooling of the same studies)",
+          "Rapid review of the most recent review only (refused: ignores disagreement and quality)",
+          "Local before-after evaluation after purchase (deferred: follows procurement)"
+        ],
+        "guidelines": [
+          "PRIOR (reporting overviews of reviews)",
+          "AMSTAR 2"
+        ],
+        "whyNotMoreComplex": "Re-pooling primary studies would take more than the available time and add little where recent reviews exist.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct an umbrella review of reviews of point-of-order imaging decision support, focused on low back pain, with AMSTAR 2 appraisal and an overlap matrix, reporting to the procurement board by March 2027.",
+          "question": "What evidence synthesis should inform the specification for imaging decision support?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Reviews report reductions in inappropriate and lumbar imaging orders.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Overlap and low review quality make an appraised overview necessary.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "A recent high-quality overview of the same question already exists.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Information specialist time for the search",
+              "status": "met",
+              "evidence": "Library allocation LIB-2026-41 for 10 working days from October 2026, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Procurement board agreement to wait for the review",
+              "status": "met",
+              "evidence": "Board minute PB-2026-09-17-3, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "New pooled analysis of primary studies",
+            "Rapid review of the latest review"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; the unverified landmark lead is not cited."
+        },
+        "summary": "Umbrella review recommended; decision rests on three ledger claims; gates met."
+      },
+      "note": "The decision cites c1 to c3 only; the landmark lead is not a ledger claim. selectionStatus requires S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "umbrella-review",
+          "family": "umbrella-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The supported positive predecessor of the source change: c1 to c3 rest on retrieved records and both gates are met, so the selection is accepted and the action ready (G7). Requires S11, S13, D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "umbrella-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "change-source",
+      "record": "Clinical decision support for diagnostic imaging orders: a systematic review of effects on appropriateness and volume",
+      "field": "keyFindings",
+      "value": "Erratum from the authors: after removing 4 duplicated studies, inappropriate orders fell by a pooled relative 9 percent (95 percent CI -2 to 19 percent), and the effect on appropriateness is no longer clear.",
+      "note": "The review cited by claim c1 receives an erratum that removes most of its effect. The route is still the Design stage, so the decision panel is on screen. status and selectionStatus 'stale' require S10 (the evidence revision must cover source text; at 875fe59 it hashes only id, status, DOI, PMID and title), with S11 for the field; the status text requires D5. The stored key findings and the flags on completed stages after Scan hold at 875fe59 (G8).",
+      "expect": {
+        "store": {
+          "scan.items[0].keyFindings": "Erratum from the authors: after removing 4 duplicated studies, inappropriate orders fell by a pooled relative 9 percent (95 percent CI -2 to 19 percent), and the effect on appropriateness is no longer clear.",
+          "scan.items[0].title": "Clinical decision support for diagnostic imaging orders: a systematic review of effects on appropriateness and volume",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "design.decisions[-1].actionStatus": "blocked",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "scan": "complete",
+          "map": "needs-review",
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: the stale status survives in the store and on screen (G7). Requires S10, S11, D5.",
+      "expect": {
+        "store": {
+          "title": "Decision support for lumbar imaging in low back pain: an umbrella review for procurement",
+          "design.decisions[-1].status": "stale",
+          "design.decisions[-1].selectionStatus": "stale",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "scan.items[0].keyFindings": "Erratum from the authors: after removing 4 duplicated studies, inappropriate orders fell by a pooled relative 9 percent (95 percent CI -2 to 19 percent), and the effect on appropriateness is no longer clear.",
+          "scan.items[7].provenance.status": "unverified"
+        },
+        "stage": {
+          "design": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "stale",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Umbrella review of systematic reviews of point-of-order imaging decision support, with a focus on low back pain, AMSTAR 2 appraisal, an overlap matrix and a narrative synthesis for a non-clinical board.",
+        "population": "Systematic reviews of adults for whom imaging was ordered in primary care or emergency departments, with a low back pain subset.",
+        "exposure": "Electronic decision support at the point of ordering imaging, compared with no decision support or usual vetting.",
+        "procedures": "Search four databases and a registry of review protocols from 2010; two reviewers screen and extract; AMSTAR 2 appraisal by two reviewers; citation matrix with corrected covered area; for each outcome, the most recent review with the highest AMSTAR 2 rating is primary; conflicts resolved by returning to the primary studies they share.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Inappropriate imaging orders",
+            "measure": "Relative change in the proportion of orders judged inappropriate, as reported by the selected review",
+            "timing": "As reported",
+            "why": "The board's main question.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Pain and function",
+            "measure": "Patient-reported pain and function at the latest reported time point",
+            "timing": "As reported",
+            "why": "Checks that fewer images do not harm patients.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Override of alerts",
+            "measure": "Proportion of alerts overridden",
+            "timing": "As reported",
+            "why": "Decides alert design in the specification.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Evidence overlap",
+            "measure": "Corrected covered area across included reviews",
+            "timing": "At synthesis",
+            "why": "Prevents double counting.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Ten information specialist days and two part-time reviewers until March 2027.",
+        "biasMitigation": [
+          "Protocol registered before screening",
+          "Two independent reviewers",
+          "Overlap matrix",
+          "No use of unretrieved leads"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Low-quality reviews",
+            "severity": "high",
+            "note": "Most reviews are critically low on AMSTAR 2; primary review selection rules fixed in advance."
+          },
+          {
+            "id": "b2",
+            "label": "Language restriction",
+            "severity": "watch",
+            "note": "English-only unless translation is found."
+          }
+        ],
+        "parsimony": {
+          "score": 82,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "No new pooling"
+          ],
+          "simplestPath": "One primary outcome, one review per outcome, overlap reported."
+        },
+        "theoreticalFramework": "None beyond PRIOR and AMSTAR 2.",
+        "summary": "Umbrella review protocol with one primary outcome and overlap handling."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[3].role": "process",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Umbrella review; no new pooling of primary studies.",
+        "sampleSize": "No sample size calculation applies. About 26 to 35 reviews are expected from the appraisal record; the synthesis uses one primary review per outcome, so precision is that of the selected review's estimate, reported with its interval and AMSTAR 2 rating.",
+        "primaryAnalysis": "For each outcome, report the selected review's estimate, interval and certainty; describe the direction and size of estimates from other reviews and explain disagreements by overlap, study design and override policy.",
+        "secondaryAnalysis": "Corrected covered area; subgroup results by deprivation or language where any review reports them.",
+        "missingData": "Outcomes not reported by any review are listed as unknown.",
+        "multiplicity": "Not applicable; no new tests.",
+        "software": "Spreadsheet citation matrix; R for the corrected covered area.",
+        "overfittingGuards": [
+          "Primary review selection rules fixed before extraction",
+          "No re-pooling of overlapping studies",
+          "Unretrieved leads excluded"
+        ],
+        "summary": "No new pooling; one appraised review per outcome with overlap reported."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "No sample size calculation applies"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "None to participants; the risk is that a weak synthesis drives a costly procurement.",
+        "consent": "Not applicable: published reviews only.",
+        "data": "Extraction forms and the overlap matrix are archived with the report.",
+        "equity": "PROGRESS-Plus: effects by deprivation, language, age and sex are extracted wherever reported; the report states that equity effects are largely unknown and recommends monitoring them after purchase.",
+        "effectiveness": "The review succeeds if the board can state what the tool should do and how its effects will be monitored.",
+        "efficiency": "Uses existing reviews rather than new pooling.",
+        "costs": "Staff time already allocated.",
+        "grants": "None needed.",
+        "partnerships": "Procurement board, two patient partners with low back pain, primary care and emergency department ordering clinicians.",
+        "rebPath": "No research ethics review is required for a review of published literature; the protocol is registered publicly before screening.",
+        "limitations": "Low-quality reviews, overlapping evidence and English-language restriction.",
+        "summary": "Review of published literature; no ethics review; equity reporting built in."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "No research ethics review"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners with low back pain and two ordering clinicians review the plain-language summary for the board.",
+        "socialListening": "No social media listening.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Wanting a scan",
+            "quote": "Composite paraphrase: I thought the scan would show what was wrong; nobody explained why I did not need one.",
+            "implication": "The specification should include patient explanation material, not only an alert.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Alert fatigue",
+            "quote": "Composite paraphrase: If it fires on every order I will click through it without reading.",
+            "implication": "Extract evidence on alert design and override policies.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Board needs",
+            "quote": "Composite paraphrase: Tell us what the tool must do and what we will measure after we buy it.",
+            "implication": "Present findings as specification requirements.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Emergency pressure",
+            "quote": "Composite paraphrase: In the emergency department I order the scan because the patient cannot wait weeks for an appointment.",
+            "implication": "Report emergency department results separately.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on explanation, alert fatigue, board needs and emergency pressure."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Point-of-order decision support for imaging in low back pain: an umbrella review",
+        "abstract": "Objective: to synthesise systematic reviews of point-of-order imaging decision support, with a focus on low back pain. Design: umbrella review with AMSTAR 2 appraisal and overlap analysis. Outcomes: inappropriate orders, patient outcomes, override and equity. Results will follow screening and synthesis.",
+        "introduction": "Many overlapping reviews of imaging decision support exist, with low methodological quality. A region procuring a tool needs an appraised synthesis.",
+        "methods": "Registered protocol; four databases; two reviewers; AMSTAR 2; citation matrix and corrected covered area; primary review per outcome.",
+        "results": "No data have been collected yet.",
+        "discussion": "The discussion will translate the findings into specification requirements and monitoring recommendations.",
+        "limitations": "Review quality, overlap and language restriction.",
+        "conclusion": "To be written after synthesis.",
+        "reportingChecklist": "PRIOR",
+        "summary": "Umbrella review report structure with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "PRIOR",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The accepted decision is stale after the erratum to the appropriateness review cited by claim c1; re-appraise that record and decide again before the board relies on it",
+          "The multicentre study presented as a landmark is an unverified model lead with an unchecked DOI; never cite it unless a recorded check confirms it",
+          "Map, gaps, hypotheses, questions and design are flagged for review after the source change"
+        ],
+        "improvementNotes": "The problem reply tried to replace the investigator's constraints and was refused; one appraisal annotation tried to change a record's year and was dropped; the landmark lead stayed unverified.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the stale decision, the unverified lead and the flagged stages."
+      },
+      "note": "The audit patch is expected to be stored; at 875fe59 store.ts mergeStage overwrites it (L1.6, a store defect).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "After reopen the route is not the Design stage, so the status checked on screen is 'review required' in the stage list (G8, D5); selectionStatus 'stale' requires S10 and S11.",
+      "expect": {
+        "store": {
+          "title": "Decision support for lumbar imaging in low back pain: an umbrella review for procurement",
+          "design.decisions[-1].selectionStatus": "stale",
+          "needsReview": [
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ],
+          "problem.constraints": "Review must be finished by 2027-03-31 for the procurement board. One information specialist for 10 days and two reviewers part time. English-language reviews only unless a translator can be found.",
+          "scan.items[7].provenance.status": "unverified"
+        },
+        "stage": {
+          "design": "needs-review",
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "status and selectionStatus 'stale' require S10 (and S11); the appended lead D1; the kept constraints S5. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "design.decisions[-1].status": "stale",
+            "design.decisions[-1].selectionStatus": "stale",
+            "design.decisions[-1].actionStatus": "blocked",
+            "scan.items[0].keyFindings": "Erratum from the authors: after removing 4 duplicated studies, inappropriate orders fell by a pooled relative 9 percent (95 percent CI -2 to 19 percent), and the effect on appropriateness is no longer clear.",
+            "scan.items[2].year": 2016,
+            "scan.items[7].provenance.origin": "model",
+            "scan.items[7].provenance.status": "unverified",
+            "scan.items[7].verification": "landmark",
+            "problem.constraints": "Review must be finished by 2027-03-31 for the procurement board. One information specialist for 10 days and two reviewers part time. English-language reviews only unless a translator can be found.",
+            "needsReview": [
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design"
+            ],
+            "scan.claims": {
+              "length": 4
+            }
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

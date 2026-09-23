@@ -1,0 +1,1450 @@
+{
+  "id": "sc-056",
+  "version": 2,
+  "title": "Children's hospital asthma pathway: action plan completeness and 90-day emergency revisits, accepted with one gate met and one unmet",
+  "field": "pediatrics",
+  "level": 2,
+  "family": "cohort",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Ordinary path on a clearly stated cohort question. The fixture search returns seven records with abstracts; the appraisal (shape appraisal) annotates all seven and records five source-derived claims whose passages are exact substrings of the abstracts, with certainty 'low' as the appraisal's own value. The design decision rests on claims c1, c2, c3 and c5; its ethics gate is met on the investigator's REB approval record and its data sharing gate is unmet (the custodian returned the draft unsigned), so acceptance succeeds (selectionStatus accepted) while the action stays blocked (actionStatus blocked), in the store, on screen and in the export (G7; A2 item 9). The problem reply omits the constraints key, so the investigator's constraints stay as typed (G11). Record ids are not typed by hand: each is stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1, 3, 4, 6: ev-0lz2pd5, ev-1dlrmal, ev-0i10rm2, ev-04pzwqi) or, without a DOI, of titleYearKey(title, year) (records 2, 5, 7: ev-0nqmzqb, ev-0bs8ux6, ev-1w4t8sp). Requires S13 (appraisal payload applied on the production scan path), S11 (selectionStatus, actionStatus, basis on acceptance) and D5 (decision status text on screen). Catches: an unmet gate treated as met or ignored at acceptance, acceptance refused because a gate is unresolved, an action shown as ready while a gate is unmet, and export or reload that loses the gate statuses. The audit checks fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+  "inputs": {
+    "need": "I am a paediatric respirologist and the physician lead for the asthma pathway at a 190-bed children's hospital. We admit about 620 children aged 2 to 17 with asthma each year. Every child is supposed to go home with a written asthma action plan on our five-section paper template (daily medicines, signs of worsening, what to do in the yellow zone, when to come back to emergency, and a booked follow-up appointment), which is scanned into the chart. When our respiratory educator looked at 90 plans from last winter, 41 were missing at least one section, most often the yellow-zone steps or the follow-up appointment.\n\nOur families come back a lot: roughly one in six children has another asthma visit to an emergency department within 90 days, and some of those visits are to the community hospitals nearer home, which we never hear about. Before we spend money on an electronic plan with forced fields, I want to know whether a complete plan at discharge is actually associated with fewer emergency revisits and readmissions within 90 days, or whether complete plans simply go to families who were going to do well anyway.\n\nWe would like to do a cohort study of discharges from 2022 to 2025, with plan completeness scored from the scanned template and revisits taken from the provincial emergency visits dataset so that visits to other hospitals are counted. I need help defining completeness, choosing the confounders that matter (severity of the admission, previous admissions, age, controller medicine at discharge, neighbourhood income), checking whether four years of discharges give enough events, and working out what we can say if the linkage is delayed. Our ethics approval is in place, but the data sharing agreement with the provincial custodian is not.",
+    "constraints": "No new funding. The analysis is done by me and a data analyst at 0.2 FTE over six months. Data come only from the hospital chart archive and the provincial emergency visits dataset; there is no contact with families.",
+    "localFacts": [
+      "The hospital research ethics board approved the protocol with a waiver of consent for secondary use of charts on 2026-09-02 (approval REB-2026-0871).",
+      "The provincial emergency visits data custodian returned our draft data sharing agreement unsigned on 2026-09-09 and asked for a revised privacy impact assessment.",
+      "Asthma action plans are written on a five-section paper template and scanned into the chart; about 620 children aged 2 to 17 are admitted with asthma each year.",
+      "The respiratory educator reviewed 90 plans from the 2025 winter season and found 41 missing at least one section."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a paediatric respirologist and the physician lead for the asthma pathway at a 190-bed children's hospital. We admit about 620 children aged 2 to 17 with asthma each year. Every child is supposed to go home with a written asthma action plan on our five-section paper template (daily medicines, signs of worsening, what to do in the yellow zone, when to come back to emergency, and a booked follow-up appointment), which is scanned into the chart. When our respiratory educator looked at 90 plans from last winter, 41 were missing at least one section, most often the yellow-zone steps or the follow-up appointment.\n\nOur families come back a lot: roughly one in six children has another asthma visit to an emergency department within 90 days, and some of those visits are to the community hospitals nearer home, which we never hear about. Before we spend money on an electronic plan with forced fields, I want to know whether a complete plan at discharge is actually associated with fewer emergency revisits and readmissions within 90 days, or whether complete plans simply go to families who were going to do well anyway.\n\nWe would like to do a cohort study of discharges from 2022 to 2025, with plan completeness scored from the scanned template and revisits taken from the provincial emergency visits dataset so that visits to other hospitals are counted. I need help defining completeness, choosing the confounders that matter (severity of the admission, previous admissions, age, controller medicine at discharge, neighbourhood income), checking whether four years of discharges give enough events, and working out what we can say if the linkage is delayed. Our ethics approval is in place, but the data sharing agreement with the provincial custodian is not.",
+          "problem.constraints": "No new funding. The analysis is done by me and a data analyst at 0.2 FTE over six months. Data come only from the hospital chart archive and the provincial emergency visits dataset; there is no contact with families.",
+          "family": "cohort",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a paediatric respirologist and the physician lead"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Written asthma action plan completeness at discharge and 90-day emergency revisits in children",
+        "subtitle": "Cohort of 2022 to 2025 discharges linked to provincial emergency visits",
+        "family": "cohort",
+        "statement": "Children admitted with asthma are meant to leave with a complete five-section written action plan, but a local review found 41 of 90 plans missing at least one section. It is not known whether a complete plan at discharge is associated with fewer asthma emergency revisits or readmissions within 90 days once severity, previous admissions and family circumstances are taken into account. The answer decides whether an electronic plan with forced fields is worth funding.",
+        "whoAffected": "Children aged 2 to 17 admitted with asthma (about 620 a year), their parents and caregivers, the respiratory educators and ward nurses who write the plans, and the community hospitals that see revisits the children's hospital never learns about.",
+        "whatHurts": "An emergency revisit means another night of breathlessness, missed school and work, and sometimes a readmission. Incomplete plans leave families without clear steps for the yellow zone or a booked follow-up, and families with limited English may be least able to fill the gaps themselves.",
+        "currentPractice": "A five-section paper plan is written at discharge by the ward nurse or respiratory educator and scanned into the chart. Completeness is not measured routinely, and revisits to other hospitals are invisible to the discharging team.",
+        "whyNow": "A proposal for an electronic plan with forced fields is waiting for funding, the winter review showed frequent missing sections, and ethics approval for secondary use of charts has just been granted.",
+        "patientCenteredGoal": "Every child goes home with a plan the family can use, and fewer children need emergency care for asthma in the three months after discharge.",
+        "summary": "Problem framed as a cohort question: is a complete action plan at discharge associated with fewer 90-day asthma emergency revisits after accounting for severity and family circumstances?"
+      },
+      "note": "The reply leaves out the constraints key, so the investigator's typed constraints stay as entered (G11; an omitted key is never merged, which holds at 875fe59).",
+      "expect": {
+        "store": {
+          "title": "Written asthma action plan completeness at discharge and 90-day emergency revisits in children",
+          "family": "cohort",
+          "problem.statement": {
+            "includes": "complete plan at discharge is associated with fewer asthma emergency revisits"
+          },
+          "problem.rawNeed": "I am a paediatric respirologist and the physician lead for the asthma pathway at a 190-bed children's hospital. We admit about 620 children aged 2 to 17 with asthma each year. Every child is supposed to go home with a written asthma action plan on our five-section paper template (daily medicines, signs of worsening, what to do in the yellow zone, when to come back to emergency, and a booked follow-up appointment), which is scanned into the chart. When our respiratory educator looked at 90 plans from last winter, 41 were missing at least one section, most often the yellow-zone steps or the follow-up appointment.\n\nOur families come back a lot: roughly one in six children has another asthma visit to an emergency department within 90 days, and some of those visits are to the community hospitals nearer home, which we never hear about. Before we spend money on an electronic plan with forced fields, I want to know whether a complete plan at discharge is actually associated with fewer emergency revisits and readmissions within 90 days, or whether complete plans simply go to families who were going to do well anyway.\n\nWe would like to do a cohort study of discharges from 2022 to 2025, with plan completeness scored from the scanned template and revisits taken from the provincial emergency visits dataset so that visits to other hospitals are counted. I need help defining completeness, choosing the confounders that matter (severity of the admission, previous admissions, age, controller medicine at discharge, neighbourhood income), checking whether four years of discharges give enough events, and working out what we can say if the linkage is delayed. Our ethics approval is in place, but the data sharing agreement with the provincial custodian is not.",
+          "problem.constraints": "No new funding. The analysis is done by me and a data analyst at 0.2 FTE over six months. Data come only from the hospital chart archive and the provincial emergency visits dataset; there is no contact with families.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Written asthma action plan completeness at discharge and 90-day emergency revisits in children"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "written asthma action plan completeness at paediatric discharge and emergency revisits within 90 days",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Completeness of written asthma action plans at discharge and 90-day emergency revisits in children: a provincial cohort",
+            "authors": "Achterberg-Mensah L, Delacroix-Oyelowo T, Brandvold-Ng S",
+            "year": 2022,
+            "venue": "Journal of Paediatric Respiratory Care",
+            "doi": "10.5555/jprc.2022.0317",
+            "providerType": "journal-article",
+            "abstract": "We followed 2,340 children aged 2 to 17 discharged after an asthma admission from four hospitals and linked them to provincial emergency department data for 90 days. Plans were scored complete when all five template sections were filled, which happened at 52 percent of discharges. After adjustment for age, prior admissions, admission severity and controller prescription, a complete plan was associated with fewer emergency revisits within 90 days (adjusted hazard ratio 0.72, 95 percent CI 0.58 to 0.89). The association was weaker in children with a previous intensive care admission. Revisits to hospitals other than the discharging hospital made up a fifth of all events. Residual confounding by family engagement cannot be excluded, because families who keep appointments may also receive more complete plans."
+          },
+          {
+            "title": "Raising action plan completeness on a paediatric ward: a before-and-after improvement report",
+            "authors": "Quist-Obeng R, Halvorsen-Tan M",
+            "year": 2019,
+            "venue": "Child Health Improvement Notes",
+            "providerType": "journal-article",
+            "abstract": "On one 28-bed paediatric ward, a nurse-led discharge checklist and weekly feedback raised the proportion of complete asthma action plans from 48 percent to 86 percent over nine months. Emergency revisits within 30 days were 11 percent before and 9 percent after the change, a difference the authors describe as compatible with chance given 210 and 196 discharges in the two periods. Completion fell to 71 percent in the three months after feedback stopped. Parents reported that the yellow-zone section was the part most often explained in a hurry at discharge. The report did not adjust for season or for changes in controller prescribing over the same period."
+          },
+          {
+            "title": "Written action plans for children with asthma: a systematic review of effects on urgent care use",
+            "authors": "Rasmussen-Adu K, Petrov-Lindqvist E, Okafor-Grey J, Sato-Mbeki H",
+            "year": 2020,
+            "venue": "Paediatric Evidence Reviews",
+            "doi": "10.5555/per.2020.0412",
+            "providerType": "review",
+            "abstract": "We searched four databases to 2019 for trials and controlled studies of written asthma action plans in children. Twelve studies with 3,105 children met the inclusion criteria. In seven randomised trials, action plans reduced urgent care visits (risk ratio 0.78, 95 percent CI 0.64 to 0.95), with substantial heterogeneity between trials. Plans based on symptoms and plans based on peak flow performed similarly. No study examined how complete the plans were, and only two measured whether families still had the plan at follow-up. Most trials delivered plans together with structured education, so the effect of the written plan alone is uncertain."
+          },
+          {
+            "title": "Measuring the completeness of paediatric asthma action plans: development and reliability of a five-item score",
+            "authors": "Mwangi-Laurent A, Oduya-Fischer P, Castellanos-Webb D",
+            "year": 2021,
+            "venue": "Journal of Paediatric Respiratory Care",
+            "doi": "10.5555/jprc.2021.0098",
+            "providerType": "journal-article",
+            "abstract": "We developed a five-item completeness score for paper asthma action plans covering daily medicines, signs of worsening, yellow-zone actions, emergency criteria and a booked follow-up appointment. Two respiratory educators independently scored 240 scanned plans. Agreement was good for the total score (kappa 0.81) and lowest for the yellow-zone item (kappa 0.64), where handwritten doses were often illegible. Only 38 percent of plans scored five of five. Scoring took about two minutes per plan. We recommend treating an illegible dose as missing and reporting item-level completeness alongside the total score."
+          },
+          {
+            "title": "Understanding of asthma action plans among caregivers with limited English proficiency",
+            "authors": "Nakashima-Obi Y, Ferreira-Holm C",
+            "year": 2018,
+            "venue": "Family Health Literacy Quarterly",
+            "providerType": "journal-article",
+            "abstract": "We assessed 152 caregivers of children discharged after an asthma admission, using a teach-back task on the yellow zone of the family's own plan. Caregivers who preferred a language other than English described the correct yellow-zone steps in 44 percent of cases, compared with 79 percent of English-preferring caregivers. Plans had been written in English for all families, and an interpreter had been used at discharge for 21 of 58 families who needed one. Caregivers with lower health literacy scores were also less accurate. The study was done at one children's hospital and did not follow children for later emergency visits."
+          },
+          {
+            "title": "Where do children go after an asthma discharge? Emergency revisits outside the discharging hospital",
+            "authors": "Brennan-Achebe S, Varga-Oduya L",
+            "year": 2024,
+            "venue": "Northern Child Health Services Review",
+            "doi": "10.5555/nchsr.2024.0056",
+            "providerType": "journal-article",
+            "abstract": "Using provincial emergency department data, we followed 3,880 children discharged after an asthma admission from two children's hospitals. Within 90 days, 17 percent had at least one asthma-related emergency visit. Of these revisits, 21 percent took place at a hospital other than the discharging one, most often a community hospital closer to home. Children from the lowest neighbourhood income quintile were more likely to revisit elsewhere. Studies that count only revisits to the discharging hospital would miss about one revisit in five and would under-count revisits most among lower-income families, biasing comparisons that differ by income."
+          },
+          {
+            "title": "Confounding by severity in observational studies of asthma discharge interventions",
+            "authors": "Lindqvist-Oyelaran M, Adeyemi-Holt B, Tanaka-Reid F",
+            "year": 2016,
+            "venue": "Methods in Child Health Research",
+            "providerType": "journal-article",
+            "abstract": "We examined 14 observational studies of discharge interventions for childhood asthma, including action plans, education sessions and follow-up calls. In 11 studies, children who received the intervention differed from those who did not in markers of severity or family engagement, most often previous admissions and controller use. Only four studies adjusted for a measure of prior health care use, and none used an active comparator or a negative control outcome. We describe a minimum adjustment set (age, previous admissions in 12 months, admission severity, controller at discharge and area income) and recommend a negative control outcome such as injury visits."
+          }
+        ]
+      },
+      "note": "Seven records, all with abstracts; record 3 carries the provider label 'review', which the ingestion maps to kind systematic-review (holds at 875fe59). Ids are stableRecordId values (see notes). Nothing is graded before an appraisal (G1, G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0lz2pd5",
+            "ev-0nqmzqb",
+            "ev-1dlrmal",
+            "ev-0i10rm2",
+            "ev-0bs8ux6",
+            "ev-04pzwqi",
+            "ev-1w4t8sp"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-0lz2pd5",
+          "scan.items[0].doi": "10.5555/jprc.2022.0317",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].id": "ev-0nqmzqb",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[2].kind": "systematic-review",
+          "scan.items[6].id": "ev-1w4t8sp",
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Completeness of written asthma action plans at discharge and 90-day emergency revisits in children: a provincial cohort"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0lz2pd5",
+            "relevance": 94,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 2,340 children linked to provincial emergency data, a complete plan was associated with fewer 90-day emergency revisits (adjusted hazard ratio 0.72, 95 percent CI 0.58 to 0.89); complete plans were issued at 52 percent of discharges.",
+            "limitations": "Observational; family engagement not measured; four hospitals in another province with a different template.",
+            "contextTags": [
+              "cohort",
+              "action plan completeness",
+              "provincial linkage",
+              "90-day revisits"
+            ],
+            "notes": "Closest in design to the proposed study; sets planning values."
+          },
+          {
+            "id": "ev-0nqmzqb",
+            "relevance": 62,
+            "methodQuality": 38,
+            "kind": "qi-report",
+            "grade": "very-low",
+            "keyFindings": "A discharge checklist with weekly feedback raised plan completeness from 48 to 86 percent; 30-day revisits changed from 11 to 9 percent, compatible with chance.",
+            "limitations": "Uncontrolled before-and-after on one ward; 210 and 196 discharges in the two periods; no adjustment for season.",
+            "contextTags": [
+              "improvement report",
+              "feedback",
+              "completeness"
+            ]
+          },
+          {
+            "id": "ev-1dlrmal",
+            "relevance": 72,
+            "methodQuality": 70,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Across seven randomised trials, written action plans reduced urgent care visits (risk ratio 0.78, 95 percent CI 0.64 to 0.95); no study measured plan completeness.",
+            "limitations": "Plans usually delivered with education; heterogeneity; search ended in 2019.",
+            "contextTags": [
+              "systematic review",
+              "trials",
+              "urgent care"
+            ]
+          },
+          {
+            "id": "ev-0i10rm2",
+            "relevance": 86,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A five-item completeness score for scanned plans had good agreement between two scorers (kappa 0.81), lowest for the yellow-zone item (kappa 0.64); 38 percent of plans were fully complete.",
+            "limitations": "One hospital's template; two scorers only.",
+            "contextTags": [
+              "measurement",
+              "completeness score",
+              "reliability"
+            ]
+          },
+          {
+            "id": "ev-0bs8ux6",
+            "relevance": 70,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Caregivers preferring a language other than English gave correct yellow-zone steps in 44 percent of teach-back tasks against 79 percent of English-preferring caregivers.",
+            "limitations": "One hospital; no revisit outcomes; teach-back done by study staff.",
+            "contextTags": [
+              "equity",
+              "language",
+              "health literacy"
+            ]
+          },
+          {
+            "id": "ev-04pzwqi",
+            "relevance": 88,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Of 90-day asthma revisits after a paediatric discharge, 21 percent occurred at another hospital, more often for children from the lowest income quintile.",
+            "limitations": "Two children's hospitals; administrative diagnosis codes.",
+            "contextTags": [
+              "linkage",
+              "outcome ascertainment",
+              "income"
+            ]
+          },
+          {
+            "id": "ev-1w4t8sp",
+            "relevance": 80,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 11 of 14 observational studies, children who received a discharge intervention differed in severity or family engagement markers; a minimum adjustment set and a negative control outcome are proposed.",
+            "limitations": "Methodological review; no pooled estimate.",
+            "contextTags": [
+              "confounding",
+              "adjustment set",
+              "negative control"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a provincial cohort of 2,340 children discharged after an asthma admission, a complete written action plan was associated with fewer emergency revisits within 90 days (adjusted hazard ratio 0.72).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0lz2pd5"
+            ],
+            "location": "Abstract, results",
+            "passage": "a complete plan was associated with fewer emergency revisits within 90 days (adjusted hazard ratio 0.72, 95 percent CI 0.58 to 0.89)",
+            "interpretation": "An association of this size is plausible and gives a planning value; it may partly reflect family engagement.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "About one in five asthma emergency revisits within 90 days of a paediatric discharge took place at a hospital other than the discharging one.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-04pzwqi"
+            ],
+            "location": "Abstract",
+            "passage": "Of these revisits, 21 percent took place at a hospital other than the discharging one",
+            "interpretation": "Single-hospital data would under-count the outcome, most among lower-income families; linkage is needed.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "A five-item completeness score for paper action plans showed good agreement between two scorers (kappa 0.81), lowest for the yellow-zone item.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0i10rm2"
+            ],
+            "location": "Abstract, results",
+            "passage": "Agreement was good for the total score (kappa 0.81) and lowest for the yellow-zone item (kappa 0.64)",
+            "interpretation": "The score can define exposure; illegible doses should be scored as missing.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Caregivers who preferred a language other than English described the correct yellow-zone steps in 44 percent of cases against 79 percent of English-preferring caregivers.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0bs8ux6"
+            ],
+            "location": "Abstract, results",
+            "passage": "Caregivers who preferred a language other than English described the correct yellow-zone steps in 44 percent of cases, compared with 79 percent of English-preferring caregivers.",
+            "interpretation": "A complete plan in English may not be a usable plan; language preference should be recorded and examined.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "In 11 of 14 observational studies of asthma discharge interventions, children who received the intervention differed in markers of severity or family engagement from those who did not.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1w4t8sp"
+            ],
+            "location": "Abstract",
+            "passage": "In 11 studies, children who received the intervention differed from those who did not in markers of severity or family engagement",
+            "interpretation": "Confounding by severity and engagement is the main threat; adjust for prior admissions and controller use and add a negative control outcome.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. One provincial cohort found fewer 90-day emergency revisits after a complete plan (adjusted hazard ratio 0.72), and a review of seven trials supports written plans in general, though no trial measured completeness. A reliable five-item completeness score exists. One fifth of revisits happen at other hospitals, so linkage to provincial data is needed, and observational studies of discharge interventions are prone to confounding by severity and engagement. Caregivers who prefer another language understand English plans less well. The evidence supports a linked cohort with a pre-specified adjustment set, not a claim that completeness causes fewer revisits.",
+        "gradeOverall": "low",
+        "gradeRationale": "One directly relevant observational cohort, a review of trials that did not measure completeness, and single-site measurement and equity studies; consistent direction but serious risk of confounding and indirectness.",
+        "summary": "Seven retrieved records appraised; five source-derived claims with passages; overall certainty low."
+      },
+      "note": "Appraisal over the seven retrieved records (S13 dispatches it to the appraisal mapper on the production scan path). Certainty is the appraisal's own value over inspected records (G1). Passages are exact substrings of the abstracts.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].relevance": 94,
+          "scan.items[0].methodQuality": 66,
+          "scan.items[0].kind": "observational",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[1].kind": "qi-report",
+          "scan.items[1].grade": "very-low",
+          "scan.items[2].grade": "moderate",
+          "scan.items[3].keyFindings": {
+            "includes": "kappa 0.81"
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].id": "c1",
+          "scan.claims[0].sourceIds": [
+            "ev-0lz2pd5"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-04pzwqi"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0i10rm2"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-1w4t8sp"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.synthesis": {
+            "includes": "Seven retrieved records"
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "190-bed children's hospital, about 620 asthma admissions a year",
+          "five-section paper plan scanned into the chart",
+          "provincial emergency visits dataset",
+          "community hospitals nearer home"
+        ],
+        "reading": "A complete plan sits between the admission and the 90 days at home, but so do severity, previous admissions, controller medicine and family circumstances, which also shape who gets a complete plan. Revisits are only fully visible through provincial linkage because one in five happens elsewhere, most often for lower-income families. Language preference affects whether a complete plan is usable. The measurement tool exists; the missing piece is a linked, adjusted comparison in this hospital's population.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Complete written action plan at discharge",
+            "kind": "context",
+            "detail": "Five of five sections on the paper template (claim c3)."
+          },
+          {
+            "id": "n2",
+            "label": "Asthma emergency revisit or readmission within 90 days",
+            "kind": "outcome",
+            "detail": "Counted at any hospital in the province."
+          },
+          {
+            "id": "n3",
+            "label": "Admission severity and previous admissions",
+            "kind": "context",
+            "detail": "Drive both plan completeness and revisits (claim c5)."
+          },
+          {
+            "id": "n4",
+            "label": "Family engagement and neighbourhood income",
+            "kind": "context",
+            "detail": "Linked to where and whether families revisit (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Provincial cohort with hazard ratio 0.72",
+            "kind": "observational",
+            "detail": "Planning value for the association (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Revisits outside the discharging hospital",
+            "kind": "gap",
+            "detail": "One fifth of events missed without linkage."
+          },
+          {
+            "id": "n7",
+            "label": "Caregivers with limited English",
+            "kind": "stakeholder",
+            "detail": "Understand English plans less well (claim c4)."
+          },
+          {
+            "id": "n8",
+            "label": "Respiratory educators and ward nurses",
+            "kind": "stakeholder",
+            "detail": "Write and explain the plans."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "hypothesised to reduce"
+          },
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "influences"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "raises"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "shapes where revisits occur"
+          },
+          {
+            "from": "n5",
+            "to": "n1",
+            "relation": "reports association for"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "hides part of"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "limits the usefulness of"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "produce"
+          }
+        ],
+        "summary": "Map places plan completeness among the confounders that also decide who revisits, and shows why linkage is needed to count the outcome."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.contexts": {
+            "length": 4
+          },
+          "map.nodes[5].kind": "gap",
+          "map.reading": {
+            "includes": "provincial linkage"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local estimate of the plan completeness and revisit association",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The funding decision for an electronic plan rests on whether completeness matters in this population, and the only comparable cohort comes from another province and template.",
+            "opportunity": "Estimate the adjusted association in 2022 to 2025 discharges with linked revisits."
+          },
+          {
+            "id": "g2",
+            "title": "Revisits elsewhere are invisible without linkage",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "One fifth of revisits happen at other hospitals (claim c2), more for lower-income families, so hospital-only data would bias the comparison.",
+            "opportunity": "Use the provincial emergency visits dataset as the outcome source and report how many events came from other hospitals."
+          },
+          {
+            "id": "g3",
+            "title": "Confounding by severity and engagement",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Children who receive complete plans may differ in severity and family engagement (claim c5).",
+            "opportunity": "Pre-specify the adjustment set and add injury visits as a negative control outcome."
+          },
+          {
+            "id": "g4",
+            "title": "Plans that are complete but not understood",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Caregivers who prefer another language understood English plans less well (claim c4).",
+            "opportunity": "Record language preference and interpreter use and report the association by language group."
+          },
+          {
+            "id": "g5",
+            "title": "Illegible handwritten doses",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "The yellow-zone item had the lowest agreement because doses were illegible (claim c3).",
+            "opportunity": "Score an illegible dose as missing and double-score a random 10 percent of plans."
+          }
+        ],
+        "errorsFound": [
+          "The need treats a complete plan as a cause of fewer revisits; the retrieved evidence supports an association that may partly reflect severity and engagement."
+        ],
+        "reevaluation": "The gaps confirm a linked cohort with a pre-specified adjustment set, a negative control outcome and reporting by language group; the linkage is essential rather than optional.",
+        "summary": "Five gaps; the missing local estimate, invisible revisits and confounding are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].severity": "high",
+          "gaps.items[3].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Revisits elsewhere are invisible without linkage"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Among children aged 2 to 17 discharged after an asthma admission in 2022 to 2025, a complete five-section plan is associated with a lower rate of asthma emergency revisit or readmission within 90 days (adjusted hazard ratio 0.80 or lower) than an incomplete plan.",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 70,
+            "parsimony": 85,
+            "rationale": "Need and practice change are high because a funding decision depends on it; novelty is moderate because one cohort elsewhere found an association (c1); feasibility depends on the linkage agreement.",
+            "risks": "Residual confounding by engagement; delayed linkage; misclassification of completeness from illegible entries."
+          },
+          {
+            "id": "h2",
+            "statement": "The association is weaker for children whose caregivers prefer a language other than English.",
+            "novelty": 55,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 60,
+            "parsimony": 60,
+            "rationale": "Understanding of English plans is lower in this group (c4), so completeness may matter less when the plan cannot be used.",
+            "risks": "Small subgroup and wide intervals; language preference may be missing from older charts."
+          },
+          {
+            "id": "h3",
+            "statement": "Completeness of the yellow-zone section alone accounts for most of any association.",
+            "novelty": 50,
+            "need": 55,
+            "practiceChange": 65,
+            "feasibility": 65,
+            "parsimony": 55,
+            "rationale": "The yellow zone is the section most often missing and hardest to score (c3).",
+            "risks": "Item-level analyses multiply comparisons and are prone to chance findings."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the single primary comparison, with h2 as a pre-specified equity analysis."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].feasibility": 70,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among children aged 2 to 17 discharged after an asthma admission from 2022 to 2025, is a complete five-section written action plan, compared with an incomplete plan, associated with a lower rate of asthma emergency revisit or readmission at any provincial hospital within 90 days, after adjustment for age, previous admissions, admission severity, controller at discharge and neighbourhood income?",
+            "framework": "PECO",
+            "population": "Children aged 2 to 17, first asthma discharge per child in 2022 to 2025",
+            "intervention": "Complete plan (five of five sections) at discharge (exposure)",
+            "comparator": "Incomplete plan (four or fewer sections)",
+            "outcome": "First asthma emergency visit or readmission at any hospital in the province",
+            "time": "90 days after discharge",
+            "setting": "190-bed children's hospital with provincial emergency visit linkage"
+          }
+        ],
+        "finer": "Feasible from scanned plans and linked provincial data within the analyst's time if the data sharing agreement is signed; interesting to the pathway team and the funding committee; novel for this template and population; ethical as secondary use under an approved waiver; relevant because it decides the electronic plan funding.",
+        "summary": "One PECO question with a 90-day window and a pre-specified adjustment set."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[0].time": "90 days after discharge",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "cohort",
+        "rationale": "The exposure is recorded for every discharge on the scanned template, and 90-day revisits are common enough (about one child in six) that following all discharges is efficient. A cohort keeps the timing of plan and revisit clear and lets the analysis adjust for the confounders named in the retrieved methods review (c5). Linkage to the provincial dataset is required because a fifth of revisits happen elsewhere (c2). Reporting follows STROBE with the RECORD extension.",
+        "alternatives": [
+          "Chart-based analysis of revisits to this hospital only (refused: misses about one revisit in five, unequally by income)",
+          "Case-control study of children who revisited (refused: the outcome is not rare and exposure timing is clearer in a cohort)",
+          "Randomised comparison of an electronic plan against the paper plan (deferred: justified only if completeness shows a meaningful association)"
+        ],
+        "guidelines": [
+          "STROBE",
+          "RECORD"
+        ],
+        "whyNotMoreComplex": "A trial of the electronic plan would answer the funding question directly but needs money and a signal worth testing; the cohort uses existing charts and linked data to decide whether that signal exists.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Pursue a cohort of first asthma discharges from 2022 to 2025 with plan completeness scored by the five-item score and 90-day revisits from the provincial emergency visits dataset, adjusted for the pre-specified severity and engagement set, because a comparable cohort found an association (c1), a fifth of revisits happen elsewhere (c2), the score is reliable (c3) and confounding by severity is the main threat (c5).",
+          "question": "Should the pathway team run a linked cohort of plan completeness and 90-day emergency revisits before funding an electronic plan?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A complete plan has been associated with fewer revisits elsewhere, and revisits can be counted across hospitals with linkage.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "A provincial analysis of plan completeness and revisits already covers this hospital's discharges.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics board approval with a waiver of consent for secondary use of charts",
+              "status": "met",
+              "evidence": "REB approval REB-2026-0871 dated 2026-09-02, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Signed data sharing agreement with the provincial emergency visits data custodian",
+              "status": "unmet",
+              "evidence": "The custodian returned the draft agreement unsigned on 2026-09-09 and asked for a revised privacy impact assessment (investigator local fact)"
+            }
+          ],
+          "alternatives": [
+            "Chart-based analysis of revisits to this hospital only",
+            "Improvement project on plan completion without an outcome comparison"
+          ],
+          "note": "Rests on ledger claims c1, c2, c3 and c5 from retrieved records. The ethics gate is met on the investigator's approval record; the data sharing gate is unmet, so the action stays blocked until the agreement is signed."
+        },
+        "summary": "Cohort recommended; the decision rests on four ledger claims, the ethics gate is met and the data sharing gate is unmet."
+      },
+      "note": "The decision cites c1, c2, c3 and c5, which exist only when S13 applied the appraisal. The unmet data sharing gate keeps the action blocked even before acceptance; selectionStatus and actionStatus require S11, the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "cohort",
+          "family": "cohort",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c5"
+          ],
+          "design.decisions[-1].criteria[0].claimIds": [
+            "c1",
+            "c2"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: every claim exists in the ledger and rests on a retrieved record, so the selection is accepted; one gate is met on the investigator's approval record and one is unmet, so the action stays blocked (G7; A2 item 9: an unresolved gate leaves the selection acceptable and the action blocked). selectionStatus, actionStatus and basis 'explicit' require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "unmet",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c5"
+          ],
+          "design.basis": "explicit",
+          "family": "cohort"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Cohort of first asthma discharges per child from 2022 to 2025 at the children's hospital, with plan completeness scored from the scanned template and asthma emergency revisits or readmissions within 90 days taken from the linked provincial emergency visits dataset.",
+        "population": "Children aged 2 to 17 discharged alive after an admission with a primary asthma diagnosis, first eligible discharge per child; excluded are transfers to another hospital, discharges to intensive care follow-up programmes and children living outside the province.",
+        "exposure": "Complete plan: five of five sections filled on the scanned template (daily medicines, signs of worsening, yellow-zone actions with legible doses, emergency criteria, booked follow-up). Incomplete: four or fewer. An illegible dose counts as missing. Item-level completeness is recorded for description.",
+        "procedures": "Two respiratory educators score plans using the five-item score after a calibration set of 30 plans; 10 percent are double-scored. The analyst extracts age, sex, previous asthma admissions in 12 months, intensive care during the admission, length of stay, controller at discharge, language preference, interpreter use and postal code for neighbourhood income. After the data sharing agreement is signed, the provincial custodian links the cohort by health number and returns revisits and readmissions within 90 days as a de-identified file.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Asthma emergency revisit or readmission within 90 days",
+            "measure": "First emergency department visit or admission with an asthma diagnosis at any hospital in the province",
+            "timing": "0 to 90 days after discharge",
+            "why": "What families experience and what the plan is meant to prevent; counted across hospitals because a fifth of revisits happen elsewhere.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Asthma readmission within 90 days",
+            "measure": "Admission with an asthma diagnosis at any provincial hospital",
+            "timing": "0 to 90 days after discharge",
+            "why": "The most serious form of the outcome.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Asthma emergency revisit within 30 days",
+            "measure": "First asthma emergency visit at any provincial hospital",
+            "timing": "0 to 30 days after discharge",
+            "why": "The window in which the plan's yellow-zone steps matter most.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Plan completeness by section",
+            "measure": "Proportion of plans with each of the five sections complete, by year",
+            "timing": "At scoring",
+            "why": "Shows which sections an electronic plan would need to force.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 1,900 first discharges over four years; scoring at about two minutes per plan is roughly 65 educator hours; the analyst's 0.2 FTE over six months covers extraction and analysis once the linked file arrives.",
+        "biasMitigation": [
+          "Adjustment set fixed before linkage: age, previous admissions in 12 months, intensive care during the admission, controller at discharge, neighbourhood income quintile",
+          "Negative control outcome: injury-related emergency visits within 90 days",
+          "Scorers blind to revisit status because scoring is completed before the linked file is received",
+          "Outcome counted at every provincial hospital through linkage"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by family engagement",
+            "severity": "high",
+            "note": "Not measured directly; the negative control outcome and previous admissions partly address it."
+          },
+          {
+            "id": "b2",
+            "label": "Exposure misclassification",
+            "severity": "watch",
+            "note": "Illegible or partly filled sections; double-scoring limits drift."
+          },
+          {
+            "id": "b3",
+            "label": "Outcome ascertainment",
+            "severity": "ok",
+            "note": "Provincial linkage counts revisits at other hospitals."
+          }
+        ],
+        "parsimony": {
+          "score": 82,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 7,
+          "flags": [
+            "Seven covariates fixed before linkage",
+            "One process measure, no additional outcomes"
+          ],
+          "simplestPath": "One exposure contrast, one primary outcome counted across hospitals, one pre-specified adjustment set."
+        },
+        "theoreticalFramework": "Target trial emulation as a planning device to fix eligibility, exposure definition and time zero at discharge; no other framework.",
+        "summary": "Linked cohort of about 1,900 first discharges with one primary outcome, two secondary outcomes and a negative control outcome."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.outcomes[3].patientCentered": false,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "protocol.parsimony.covariateCount": 7,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cohort of first discharges per child; time to first asthma emergency revisit or readmission within 90 days; complete versus incomplete plan.",
+        "sampleSize": "About 620 asthma admissions a year give about 2,480 discharges over four years and about 1,900 first discharges per child. With a 16 percent 90-day revisit risk, about 300 events are expected. If 45 percent of plans are complete, 300 events give 80 percent power at two-sided alpha 0.05 to detect a hazard ratio of about 0.72 (Schoenfeld approximation); a hazard ratio of 0.80 would need about 640 events, roughly eight years of discharges. The estimate will be reported with its confidence interval, not as a significance verdict.",
+        "primaryAnalysis": "Cox model for time to first asthma emergency revisit or readmission within 90 days, adjusted for the seven pre-specified covariates, with robust standard errors; proportional hazards checked with scaled Schoenfeld residuals.",
+        "secondaryAnalysis": "The same model for 90-day readmission and 30-day revisit; the negative control outcome; the association by caregiver language preference as a pre-specified interaction (h2); item-level completeness described without testing.",
+        "missingData": "Plans missing from the scan archive are reported and treated as not assessed, never as incomplete; covariates missing for more than 5 percent of children are handled by multiple imputation with 20 imputations; children who move out of the province are censored at the last provincial contact.",
+        "multiplicity": "One primary contrast; secondary outcomes and the language interaction are labelled as secondary and reported with confidence intervals only.",
+        "software": "R with the survival package; code and covariate list archived before the linked file is received.",
+        "overfittingGuards": [
+          "Covariate set fixed before linkage",
+          "No stepwise selection",
+          "About 40 events per covariate for the primary model"
+        ],
+        "summary": "About 300 expected events give 80 percent power for a hazard ratio of about 0.72; smaller effects would need more years of discharges."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "hazard ratio of about 0.72"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal physical risk; the main risk is privacy harm from linking identifiable charts to provincial emergency data.",
+        "consent": "Individual consent is impracticable for about 1,900 past discharges; the REB approved a waiver of consent for secondary use (REB-2026-0871), with notice on the hospital's research transparency page.",
+        "data": "Linkage by the provincial custodian using health numbers under the data sharing agreement; the analysis file holds no names, health numbers or exact dates and stays on the hospital research server.",
+        "equity": "PROGRESS-Plus: caregivers who prefer a language other than English, families in the lowest income quintile and children from rural areas who revisit community hospitals are the groups most likely to be missed or misclassified. The outcome is counted across hospitals, language preference and interpreter use are recorded, and results are reported by language group and income quintile.",
+        "effectiveness": "The study informs whether an electronic plan with forced fields is worth funding; a precise null result is also useful.",
+        "efficiency": "Uses existing charts and linked data, about 65 educator hours and 0.2 FTE of analyst time.",
+        "costs": "Staff time within existing roles; a linkage fee from the custodian may apply and is not yet known.",
+        "grants": "None needed for the cohort; a positive result would support a grant for a comparison of electronic and paper plans.",
+        "partnerships": "Respiratory educators, two parent partners from the hospital's family advisory council, the provincial data custodian and a community hospital emergency physician.",
+        "rebPath": "Approved by the hospital REB under TCPS 2 with a waiver of consent (REB-2026-0871); the data sharing agreement with the custodian is a separate requirement and no linkage starts before it is signed.",
+        "limitations": "Residual confounding by family engagement; plans missing from the archive; revisits outside the province are not captured.",
+        "summary": "Secondary use under an approved waiver, a separate unsigned data sharing agreement, and reporting by language and income."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "REB-2026-0871"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two parent partners review the completeness definition and the plain-language summary; a respiratory educator and a community hospital emergency physician review the outcome definitions before linkage.",
+        "socialListening": "No social media listening; the family advisory council's notes on discharge teaching from the last year are read for themes about action plans.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "The yellow zone in a hurry",
+            "quote": "Composite paraphrase: They went through the plan while we were packing up, and by the time we got home I could not remember how many puffs to give.",
+            "implication": "Record whether the yellow-zone section was completed with legible doses and treat illegible doses as missing.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "A plan in the wrong language",
+            "quote": "Composite paraphrase: The paper was all in English; my son read it to me, but he is nine.",
+            "implication": "Record language preference and interpreter use and report the association by language group.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Revisits nobody sees",
+            "quote": "Composite paraphrase: Half the children I see at our community emergency were discharged from the children's hospital a few weeks before, and they never find out.",
+            "implication": "Count revisits at every provincial hospital through linkage.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "patient",
+            "theme": "Teenagers managing alone",
+            "quote": "Composite paraphrase: My mum works nights, so the plan is really for me, and nobody explained it to me.",
+            "implication": "Note whether the plan was explained to the young person as well as the caregiver for children aged 12 and over.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on hurried teaching, language, invisible revisits and teenagers who manage their own asthma."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].source": "family",
+          "voices.items[0].verification": "ai-lead",
+          "voices.items[0].quote": {
+            "includes": "Composite paraphrase"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Written asthma action plan completeness at discharge and emergency revisits within 90 days in children: a linked cohort study",
+        "abstract": "Objective: to estimate the association between a complete written asthma action plan at discharge and asthma emergency revisits or readmissions within 90 days. Design: cohort of first asthma discharges per child from 2022 to 2025 at one children's hospital, linked to provincial emergency visit data. Exposure: five of five plan sections complete. Outcome: first asthma emergency visit or readmission at any provincial hospital. Results and conclusions will be written after linkage and analysis.",
+        "introduction": "Written action plans reduce urgent care use in trials, but plans are often incomplete in practice, and revisits to other hospitals are invisible to the discharging team. Whether completeness itself matters is unknown for this population.",
+        "methods": "Plans are scored with a five-item completeness score by educators blind to outcomes. Revisits and readmissions come from the provincial dataset after linkage. A Cox model adjusts for seven pre-specified covariates; injury visits serve as a negative control outcome.",
+        "results": "No data have been analysed yet. The report will present the cohort flow, completeness by section, events at the discharging and other hospitals, crude and adjusted hazard ratios, the negative control result and the association by language group.",
+        "discussion": "The discussion will weigh the estimate against the retrieved provincial cohort and the trials of written plans, and consider how much of any association could reflect family engagement rather than the plan itself. It will state what the result means for funding an electronic plan with forced fields.",
+        "limitations": "Residual confounding by family engagement is likely, and plans missing from the archive may not be missing at random. Revisits outside the province are not captured, and the study covers one children's hospital.",
+        "conclusion": "To be written after analysis. It will describe an association and will not claim that completeness causes fewer revisits.",
+        "reportingChecklist": "STROBE with the RECORD extension",
+        "summary": "STROBE and RECORD structured draft; results left empty until the linked analysis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE with the RECORD extension",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The data sharing agreement with the provincial custodian is unsigned; the decision's action stays blocked and no linkage starts until it is signed",
+          "Run an identity check on the seven retrieved records before the manuscript cites them",
+          "Agree the illegible-dose rule with the two scorers before calibration"
+        ],
+        "improvementNotes": "Seven records came from a recorded search and were appraised at abstract level; the accepted decision rests on four ledger claims. One gate is met on the REB approval record and one is unmet. No record has an identity check yet.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the unsigned agreement, identity checks, and the scoring rule."
+      },
+      "note": "audit.openFixes, audit.lastReview and audit.improvementNotes state the correct behaviour; at 875fe59 they fail because store.ts mergeStage writes the audit entries over the audit patch (A3 L1.6), a store defect rather than a missing entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "one is unmet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Statuses are checked in the export; the decision panel is not on the audit route.",
+      "expect": {
+        "store": {
+          "title": "Written asthma action plan completeness at discharge and 90-day emergency revisits in children",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c5"
+          ],
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Written asthma action plan completeness at discharge and 90-day emergency revisits in children"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Written asthma action plan completeness at discharge and 90-day emergency revisits in children",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "No new funding. The analysis is done by me and a data analyst at 0.2 FTE over six months. Data come only from the hospital chart archive and the provincial emergency visits dataset; there is no contact with families.",
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "stats.sampleSize": {
+            "includes": "Schoenfeld"
+          }
+        },
+        "screen": {
+          "includes": [
+            "Written asthma action plan completeness at discharge and 90-day emergency revisits in children"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; the claims require S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.rawNeed": "I am a paediatric respirologist and the physician lead for the asthma pathway at a 190-bed children's hospital. We admit about 620 children aged 2 to 17 with asthma each year. Every child is supposed to go home with a written asthma action plan on our five-section paper template (daily medicines, signs of worsening, what to do in the yellow zone, when to come back to emergency, and a booked follow-up appointment), which is scanned into the chart. When our respiratory educator looked at 90 plans from last winter, 41 were missing at least one section, most often the yellow-zone steps or the follow-up appointment.\n\nOur families come back a lot: roughly one in six children has another asthma visit to an emergency department within 90 days, and some of those visits are to the community hospitals nearer home, which we never hear about. Before we spend money on an electronic plan with forced fields, I want to know whether a complete plan at discharge is actually associated with fewer emergency revisits and readmissions within 90 days, or whether complete plans simply go to families who were going to do well anyway.\n\nWe would like to do a cohort study of discharges from 2022 to 2025, with plan completeness scored from the scanned template and revisits taken from the provincial emergency visits dataset so that visits to other hospitals are counted. I need help defining completeness, choosing the confounders that matter (severity of the admission, previous admissions, age, controller medicine at discharge, neighbourhood income), checking whether four years of discharges give enough events, and working out what we can say if the linkage is delayed. Our ethics approval is in place, but the data sharing agreement with the provincial custodian is not.",
+            "problem.constraints": "No new funding. The analysis is done by me and a data analyst at 0.2 FTE over six months. Data come only from the hospital chart archive and the provincial emergency visits dataset; there is no contact with families.",
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 5
+            },
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[0].status": "met",
+            "design.decisions[-1].gates[1].status": "unmet"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-056.json), superseded 2026-09-22T20:50Z: golden error under S1 (D8), the appraisal reply stated 'about 200 discharges per period' where the cited abstract states '210 and 196 discharges in the two periods', an undeclared derivation or approximation that the application must quarantine; the recorded model output now states the source values, so the expected issue count stands."
+}

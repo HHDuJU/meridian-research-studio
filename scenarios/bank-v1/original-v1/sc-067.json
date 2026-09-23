@@ -1,0 +1,1447 @@
+{
+  "id": "sc-067",
+  "version": 1,
+  "title": "Nurse residency program: accuracy of a month-3 transition check for first-year separation of new graduate nurses",
+  "field": "nursing",
+  "level": 1,
+  "family": "diagnostic",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Routine level 1 path with one clear design: a diagnostic accuracy study of a nurse residency's month-3 self-rating (index test) against separation from the hospital within 12 months of hire (reference standard). The need names diagnostic accuracy, a reference standard and sensitivity and specificity and no other design, so classifyFamily routes it to \"diagnostic\" at create. The problem reply repeats the investigator's constraints word for word, so G11 has nothing to reject. A fixture search returns seven records with abstracts; the appraisal (shape \"appraisal\") annotates all seven by id and records four source-derived claims whose passages are exact substrings of the abstracts; certainty \"low\" is the appraisal's own value over inspected records (G1). The decision rests on ledger claims c1 to c3 and its two gates are met on investigator-supplied approvals (local facts), so acceptance is a supported positive: selectionStatus accepted and actionStatus ready (G7). Record ids are not typed by hand: the generator computed each one with stableRecordId from src/lib/evidence/records.ts (FNV-1a of the normalised DOI for records 1, 3, 5 and 6, of titleYearKey(title, year) for records 2, 4 and 7): ev-1wtv7nh, ev-1xey52k, ev-0rv4ugl, ev-0qrnmkw, ev-1e910eh, ev-18ddgis, ev-0yr15ks. Requires S13 (appraisal dispatched on the production scan path), S11 (selectionStatus, actionStatus, basis on acceptance) and D5 (status text on screen). Catches: certainty or completion without retrieval, an appraisal that cannot reach the ledger, a decision accepted without ledger support, investigator constraints overwritten, work lost on reload or reopen, and an export that differs from the store.",
+  "inputs": {
+    "need": "I coordinate the 12-month nurse residency program for new graduate registered nurses at our 640-bed regional teaching hospital. We take three intakes a year (February, June and October) of about 70 new graduates each. Retention is our biggest worry: in the last three years between 19 and 26 percent of each intake left the hospital within 12 months of hire, and every nurse who leaves costs us months of orientation and preceptor time.\n\nAt the month-3 residency seminar every resident completes our Transition Check, a 15-item self-rating (0 to 60 points, lower means a harder transition) covering workload, confidence, belonging and support from preceptors. Right now the score is filed and nobody acts on it. Our nurse educators would like to use a cut-off, probably 30 or below, to offer a mentoring booster to residents who look likely to leave, but we do not know whether the score actually picks out the nurses who later go.\n\nI would like to set up a diagnostic accuracy study of the month-3 Transition Check, with separation from the hospital within 12 months of hire as the reference standard, taken from human resources dates by someone who never sees the scores. Before we build the booster around the score we need the sensitivity and specificity at the proposed cut-off, how many residents we would flag, and how many of the flagged residents would actually leave. The score must never be used in performance reviews, and the residents need to trust that. We have no research funding beyond the residency budget, and the study should run within the normal residency schedule for the intakes starting in October 2026.",
+    "constraints": "No research funding beyond the residency budget. The Transition Check is completed during the month-3 seminar and must add no extra resident time. Scores are never shared with nurse managers or used in performance reviews. Human resources can release hire and separation dates only, not exit reasons.",
+    "localFacts": [
+      "The hospital research ethics board approved the residency evaluation protocol on 2026-07-30 (approval REB-2026-417), with verbal consent at the month-3 seminar.",
+      "Human resources signed a data release memorandum on 2026-08-12 (HR-DR-2026-12) for hire and separation dates of consenting residents, prepared by an analyst who never sees Transition Check scores.",
+      "The four intakes from October 2026 to October 2027 are expected to total about 280 new graduates.",
+      "In the 2023 to 2025 intakes, 19 to 26 percent of residents separated from the hospital within 12 months of hire (residency office summary)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "problem.constraints holds the typed text from the create form (the delivered application keeps it; A3 receipt). family comes from classifyFamily at 875fe59.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I coordinate the 12-month nurse residency program for new graduate registered nurses at our 640-bed regional teaching hospital. We take three intakes a year (February, June and October) of about 70 new graduates each. Retention is our biggest worry: in the last three years between 19 and 26 percent of each intake left the hospital within 12 months of hire, and every nurse who leaves costs us months of orientation and preceptor time.\n\nAt the month-3 residency seminar every resident completes our Transition Check, a 15-item self-rating (0 to 60 points, lower means a harder transition) covering workload, confidence, belonging and support from preceptors. Right now the score is filed and nobody acts on it. Our nurse educators would like to use a cut-off, probably 30 or below, to offer a mentoring booster to residents who look likely to leave, but we do not know whether the score actually picks out the nurses who later go.\n\nI would like to set up a diagnostic accuracy study of the month-3 Transition Check, with separation from the hospital within 12 months of hire as the reference standard, taken from human resources dates by someone who never sees the scores. Before we build the booster around the score we need the sensitivity and specificity at the proposed cut-off, how many residents we would flag, and how many of the flagged residents would actually leave. The score must never be used in performance reviews, and the residents need to trust that. We have no research funding beyond the residency budget, and the study should run within the normal residency schedule for the intakes starting in October 2026.",
+          "problem.constraints": "No research funding beyond the residency budget. The Transition Check is completed during the month-3 seminar and must add no extra resident time. Scores are never shared with nurse managers or used in performance reviews. Human resources can release hire and separation dates only, not exit reasons.",
+          "family": "diagnostic",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I coordinate the 12-month nurse residency program"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Month-3 Transition Check and separation of new graduate nurses within 12 months of hire",
+        "subtitle": "Diagnostic accuracy study within a hospital nurse residency program",
+        "family": "diagnostic",
+        "statement": "Between 19 and 26 percent of each residency intake leave the hospital within 12 months of hire. The residency collects a 15-item Transition Check at month 3 but does not know whether a score of 30 or below identifies the residents who will later leave. The study will estimate the sensitivity and specificity of that cut-off against separation within 12 months of hire before a mentoring booster is tied to it.",
+        "whoAffected": "New graduate registered nurses in the residency (about 210 a year in three intakes), their preceptors and nurse educators, the units that lose staff, and the patients those units care for.",
+        "whatHurts": "Each early separation loses months of orientation and preceptor time and leaves units short of experienced nurses. Residents who struggle are not offered help in time, and a poorly performing cut-off would either miss them or label many residents who were never going to leave.",
+        "currentPractice": "The Transition Check is completed at the month-3 seminar and filed without action; retention support is the same for every resident, and separation is tracked only in annual human resources summaries.",
+        "whyNow": "The educators want to launch a mentoring booster with the October 2026 intake, and the ethics approval and the human resources data release are already in place.",
+        "constraints": "No research funding beyond the residency budget. The Transition Check is completed during the month-3 seminar and must add no extra resident time. Scores are never shared with nurse managers or used in performance reviews. Human resources can release hire and separation dates only, not exit reasons.",
+        "patientCenteredGoal": "Patients on every unit are cared for by supported, experienced nurses because residents who are struggling are offered help early without being labelled or judged.",
+        "summary": "Problem framed as a diagnostic accuracy question: does a month-3 score of 30 or below identify residents who separate within 12 months of hire?"
+      },
+      "note": "The reply repeats the typed constraints exactly, so no rejected-change issue is expected (G11 applies only to a null, empty or different value).",
+      "expect": {
+        "store": {
+          "title": "Month-3 Transition Check and separation of new graduate nurses within 12 months of hire",
+          "family": "diagnostic",
+          "problem.statement": {
+            "includes": "sensitivity and specificity"
+          },
+          "problem.constraints": "No research funding beyond the residency budget. The Transition Check is completed during the month-3 seminar and must add no extra resident time. Scores are never shared with nurse managers or used in performance reviews. Human resources can release hire and separation dates only, not exit reasons.",
+          "problem.rawNeed": {
+            "includes": "diagnostic accuracy study"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Month-3 Transition Check and separation of new graduate nurses within 12 months of hire"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "new graduate nurse transition self-rating accuracy first-year separation residency",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Accuracy of a month-3 transition self-rating for predicting first-year separation among new graduate nurses",
+            "authors": "Adebayo-Lund K, Moreau-Singh T, Halvorsen-Oyelaran J",
+            "year": 2022,
+            "venue": "Journal of Nursing Workforce Studies",
+            "doi": "10.5555/jnws.2022.0213",
+            "providerType": "journal-article",
+            "abstract": "Background: early identification of new graduate nurses at risk of leaving could focus retention support. Methods: in two teaching hospitals, 412 residents completed a 15-item transition self-rating at month 3, and separation from the employing hospital within 12 months of hire was taken from human resources records by staff blind to the scores. Results: 79 residents (19 percent) separated. At a score of 30 or below, sensitivity was 0.71 (95 percent CI 0.60 to 0.81) and specificity 0.68 (0.63 to 0.73); the area under the ROC curve was 0.74. Positive predictive value was 0.35 at the observed prevalence. Conclusions: the self-rating identified most nurses who later left but flagged many who stayed, and the threshold should be validated locally before use."
+          },
+          {
+            "title": "Transition shock in the first year of practice: validation of a 15-item self-rating scale for new graduate nurses",
+            "authors": "Okafor-Brennan M, Sato-Lindqvist A",
+            "year": 2019,
+            "venue": "Transition to Practice Review",
+            "providerType": "journal-article",
+            "abstract": "We examined the measurement properties of a 15-item self-rating of transition difficulty completed by 638 new graduate nurses in five hospitals. Items cover workload, clinical confidence, belonging and preceptor support, scored 0 to 4 and summed to 0 to 60. Internal consistency was high (Cronbach alpha 0.88) and a four-factor structure fitted the data acceptably. Test-retest reliability over two weeks was 0.81 in a subsample of 94 nurses. Scores were lowest between months 3 and 4 of practice and rose thereafter. The scale was not evaluated against later turnover, and the authors caution that it measures experienced difficulty rather than intention to leave."
+          },
+          {
+            "title": "Nurse residency programmes and first-year retention of new graduate nurses: a systematic review",
+            "authors": "Castillo-Hartmann R, Nwachukwu-Berg L, Fairweather-Iqbal S",
+            "year": 2021,
+            "venue": "Nursing Retention Quarterly",
+            "doi": "10.5555/nrq.2021.0077",
+            "providerType": "review",
+            "abstract": "We searched four bibliographic databases to 2020 for studies reporting 12-month retention of new graduate nurses with and without a structured residency programme. Twenty-four studies met the criteria, 21 of them before-after comparisons within single organisations. Reported 12-month retention ranged from 78 to 94 percent with a residency and from 64 to 88 percent without. Programme content, length and the definition of retention varied widely, and nine studies counted internal transfers as losses. No included study evaluated a screening step to target extra support. Certainty was low because of uncontrolled designs and inconsistent outcome definitions."
+          },
+          {
+            "title": "Stated intention to leave and actual separation among early-career nurses: a 12-month follow-up",
+            "authors": "Petrovic-Amadi D, Lindgren-Oduya H",
+            "year": 2017,
+            "venue": "Clinical Staff Development Letters",
+            "providerType": "journal-article",
+            "abstract": "Intention to leave is often used as a stand-in for turnover. We asked 355 nurses in their first two years of practice at six months whether they intended to leave their employer within a year, and followed actual separation in human resources records. Sixty-two nurses (17 percent) separated. Stated intention identified 30 of them (sensitivity 0.48) and was absent in 253 of the 293 who stayed (specificity 0.86). Nurses who left for family or relocation reasons rarely reported an intention in advance. The authors conclude that stated intention misses about half of later leavers and should not be the only trigger for retention support."
+          },
+          {
+            "title": "Human resources records as the reference standard for nurse turnover research: completeness and misclassification of separation data",
+            "authors": "Whitcombe-Adeyemi F, Tanaka-Riordan P, Bello-Sorensen C",
+            "year": 2020,
+            "venue": "Journal of Nursing Workforce Studies",
+            "doi": "10.5555/jnws.2020.0048",
+            "providerType": "journal-article",
+            "abstract": "We compared human resources separation records for 1,904 nurses in three hospitals with payroll end dates and manager confirmation. Separation dates were present and correct for 99 percent of nurses who left. Reason codes were less reliable: 23 percent of separations coded as resignations were internal transfers to another unit or site of the same organisation, and 9 percent of retirements were coded as resignations. The authors recommend defining turnover as leaving the organisation, using dates rather than reason codes, and stating before analysis how internal transfers are handled."
+          },
+          {
+            "title": "A targeted mentoring booster for new graduate nurses with low transition scores: a before-after evaluation",
+            "authors": "Kowalski-Mensah A, Duarte-Fitzgerald N",
+            "year": 2024,
+            "venue": "Nurse Education and Practice Reports",
+            "doi": "10.5555/nepr.2024.0130",
+            "providerType": "journal-article",
+            "abstract": "One hospital offered six additional mentoring sessions to new graduate nurses who scored in the lowest quarter of a transition self-rating at month 3. Twelve-month retention of all residents was 81 percent in the two years before the booster and 88 percent in the two years after. Uptake among eligible residents was 64 percent. Other changes during the period included a new preceptor allowance and a regional hiring freeze, and the evaluation had no concurrent comparison group. The authors suggest that a screening threshold should be validated before a booster is tied to it."
+          },
+          {
+            "title": "Prevalence of first-year separation and the stability of screening thresholds across hospitals",
+            "authors": "Iwu-Castellano B, Ferreira-Nakamura O, Holm-Achterberg V",
+            "year": 2016,
+            "venue": "Transition to Practice Review",
+            "providerType": "journal-article",
+            "abstract": "Using transition ratings and human resources data from 11 hospitals, we examined how the usefulness of a fixed screening threshold changed with local separation rates. First-year separation ranged from 12 to 27 percent between hospitals. Sensitivity and specificity at a fixed threshold varied little, but the positive predictive value ranged from 0.21 at 12 percent separation to 0.44 at 27 percent. Two hospitals whose residency seminars were held later in the first year showed lower sensitivity. The authors recommend reporting predictive values at the local prevalence and fixing the timing of the rating."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; the ids are stableRecordId values (see notes). Before appraisal no record carries a grade, a score or a certainty (G1, G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].performedBy": "app",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1wtv7nh",
+            "ev-1xey52k",
+            "ev-0rv4ugl",
+            "ev-0qrnmkw",
+            "ev-1e910eh",
+            "ev-18ddgis",
+            "ev-0yr15ks"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-1wtv7nh",
+          "scan.items[0].doi": "10.5555/jnws.2022.0213",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].provenance.access": "abstract",
+          "scan.items[0].grade": "unrated",
+          "scan.items[0].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[0].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].id": "ev-1xey52k",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[6].id": "ev-0yr15ks",
+          "scan.claims": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Accuracy of a month-3 transition self-rating for predicting first-year separation among new graduate nurses"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1wtv7nh",
+            "relevance": 94,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "At a month-3 score of 30 or below, sensitivity was 0.71 and specificity 0.68 for separation within 12 months among 412 residents; the area under the ROC curve was 0.74 and the positive predictive value 0.35.",
+            "limitations": "Two hospitals; the threshold was examined in the same data that produced the estimate; separation prevalence of 19 percent may differ locally.",
+            "contextTags": [
+              "diagnostic accuracy",
+              "nurse residency",
+              "month 3",
+              "first-year separation"
+            ]
+          },
+          {
+            "id": "ev-1xey52k",
+            "relevance": 78,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "The 15-item self-rating was internally consistent (alpha 0.88) and stable over two weeks (0.81); scores were lowest at months 3 to 4.",
+            "limitations": "No comparison with later separation; measures experienced difficulty, not intention to leave.",
+            "contextTags": [
+              "measurement properties",
+              "self-rating",
+              "timing"
+            ]
+          },
+          {
+            "id": "ev-0rv4ugl",
+            "relevance": 70,
+            "methodQuality": 58,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 24 studies, 12-month retention was 78 to 94 percent with a residency and 64 to 88 percent without; no study evaluated a screening step.",
+            "limitations": "Mostly single-organisation before-after studies; inconsistent retention definitions; search ended in 2020.",
+            "contextTags": [
+              "residency programs",
+              "retention",
+              "systematic review"
+            ]
+          },
+          {
+            "id": "ev-0qrnmkw",
+            "relevance": 72,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Stated intention to leave at month 6 identified 30 of 62 later leavers (sensitivity 0.48) with specificity 0.86.",
+            "limitations": "Single question; early-career rather than residency nurses; one health system.",
+            "contextTags": [
+              "intention to leave",
+              "comparator trigger"
+            ]
+          },
+          {
+            "id": "ev-1e910eh",
+            "relevance": 84,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Separation dates in human resources records were present and correct for 99 percent of leavers; reason codes misclassified internal transfers as resignations in 23 percent.",
+            "limitations": "Three hospitals; manager confirmation used as the check.",
+            "contextTags": [
+              "reference standard",
+              "human resources data",
+              "internal transfers"
+            ]
+          },
+          {
+            "id": "ev-18ddgis",
+            "relevance": 60,
+            "methodQuality": 38,
+            "kind": "qi-report",
+            "grade": "very-low",
+            "keyFindings": "Twelve-month retention rose from 81 to 88 percent after a booster for residents in the lowest quarter of the self-rating; uptake was 64 percent.",
+            "limitations": "Uncontrolled before-after comparison with a new allowance and a hiring freeze in the same period.",
+            "contextTags": [
+              "mentoring booster",
+              "before-after"
+            ]
+          },
+          {
+            "id": "ev-0yr15ks",
+            "relevance": 80,
+            "methodQuality": 57,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Across 11 hospitals, the positive predictive value of a fixed threshold ranged from 0.21 to 0.44 as separation varied from 12 to 27 percent; later seminars lowered sensitivity.",
+            "limitations": "Hospital-level comparison; threshold timing varied between sites.",
+            "contextTags": [
+              "predictive values",
+              "prevalence",
+              "threshold timing"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "At a month-3 score of 30 or below, a 15-item transition self-rating had a sensitivity of 0.71 and a specificity of 0.68 for separation within 12 months of hire among 412 residents.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1wtv7nh"
+            ],
+            "location": "Abstract, results",
+            "passage": "At a score of 30 or below, sensitivity was 0.71 (95 percent CI 0.60 to 0.81) and specificity 0.68 (0.63 to 0.73)",
+            "interpretation": "Planning values for local validation; the estimate comes from the data that chose the threshold and may be optimistic.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Human resources separation dates were present and correct for 99 percent of nurses who left, so dates rather than reason codes can serve as the reference standard.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1e910eh"
+            ],
+            "location": "Abstract",
+            "passage": "Separation dates were present and correct for 99 percent of nurses who left.",
+            "interpretation": "Define the target condition as leaving the hospital by date; do not rely on exit reason codes.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c3",
+            "text": "The positive predictive value of a fixed transition threshold ranged from 0.21 to 0.44 as first-year separation varied from 12 to 27 percent between hospitals.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0yr15ks"
+            ],
+            "location": "Abstract",
+            "passage": "the positive predictive value ranged from 0.21 at 12 percent separation to 0.44 at 27 percent",
+            "interpretation": "Report predictive values at the local separation rate; a borrowed estimate would mislead the booster plan.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Stated intention to leave identified fewer than half of early-career nurses who later separated.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0qrnmkw"
+            ],
+            "location": "Abstract, results",
+            "passage": "Stated intention identified 30 of them (sensitivity 0.48)",
+            "interpretation": "Intention alone is a weak trigger; it is a comparison, not a replacement for the index test.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. One two-hospital study reports that a month-3 transition self-rating at 30 or below had sensitivity 0.71 and specificity 0.68 for separation within 12 months, with a positive predictive value of 0.35; a multi-hospital analysis shows predictive values shift with the local separation rate. The scale itself is reliable, human resources dates are an accurate reference standard when internal transfers are handled explicitly, and stated intention to leave misses about half of leavers. A booster tied to a low score was followed by better retention only in an uncontrolled comparison. The evidence supports measuring the accuracy of the cut-off locally before acting on it.",
+        "gradeOverall": "low",
+        "gradeRationale": "One accuracy study with the threshold chosen in its own data, supported by measurement and reference-standard studies; imprecise and indirect for this hospital's separation rate. Certainty that the cut-off performs as reported here is low.",
+        "summary": "Seven retrieved records appraised; four source-derived claims recorded with passages; overall certainty low."
+      },
+      "note": "Annotations and claims reach the store only when the production scan path dispatches this payload to the appraisal mapper (S13). Certainty is expected because it is assigned over seven retrieved records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-1wtv7nh",
+          "scan.items[0].grade": "moderate",
+          "scan.items[0].methodQuality": 66,
+          "scan.items[0].relevance": 94,
+          "scan.items[0].kind": "observational",
+          "scan.items[0].keyFindings": {
+            "includes": "sensitivity was 0.71"
+          },
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[2].grade": "low",
+          "scan.items[5].grade": "very-low",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].id": "c1",
+          "scan.claims[0].kind": "source-derived",
+          "scan.claims[0].sourceIds": [
+            "ev-1wtv7nh"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-1e910eh"
+          ],
+          "scan.claims[1].uncertainty": "low",
+          "scan.claims[2].sourceIds": [
+            "ev-0yr15ks"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-0qrnmkw"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.synthesis": {
+            "includes": "Seven retrieved records"
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "640-bed regional teaching hospital",
+          "three residency intakes a year of about 70",
+          "month-3 residency seminar",
+          "human resources dates without exit reasons"
+        ],
+        "reading": "The Transition Check is collected at the point where transition difficulty peaks, but nobody links it to the outcome that matters to the hospital. Retrieved evidence suggests the score separates future leavers from stayers only moderately, and that what a positive result means depends on the local separation rate. The reference standard is available and accurate by date, provided internal transfers are counted as staying. The main human risk is that a flag becomes a label: managers must never see scores, and residents must trust that the check is for support.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Month-3 Transition Check score",
+            "kind": "context",
+            "detail": "15 items, 0 to 60; proposed cut-off 30 or below."
+          },
+          {
+            "id": "n2",
+            "label": "Separation within 12 months of hire",
+            "kind": "outcome",
+            "detail": "Reference standard from human resources dates."
+          },
+          {
+            "id": "n3",
+            "label": "Two-hospital accuracy study",
+            "kind": "observational",
+            "detail": "Sensitivity 0.71 and specificity 0.68 at 30 or below (claim c1)."
+          },
+          {
+            "id": "n4",
+            "label": "Human resources separation dates",
+            "kind": "context",
+            "detail": "Accurate by date; reason codes unreliable (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Local separation rate 19 to 26 percent",
+            "kind": "context",
+            "detail": "Sets the predictive values (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Mentoring booster",
+            "kind": "framework",
+            "detail": "Support the educators want to target with the cut-off."
+          },
+          {
+            "id": "n7",
+            "label": "New graduate residents",
+            "kind": "stakeholder",
+            "detail": "Screened at month 3; need to trust the purpose."
+          },
+          {
+            "id": "n8",
+            "label": "Nurse managers",
+            "kind": "stakeholder",
+            "detail": "Must not see individual scores."
+          },
+          {
+            "id": "n9",
+            "label": "Stated intention to leave",
+            "kind": "observational",
+            "detail": "Misses about half of leavers (claim c4)."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "is tested against"
+          },
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "reports accuracy of"
+          },
+          {
+            "from": "n4",
+            "to": "n2",
+            "relation": "ascertains"
+          },
+          {
+            "from": "n5",
+            "to": "n1",
+            "relation": "determines predictive value of"
+          },
+          {
+            "from": "n1",
+            "to": "n6",
+            "relation": "would trigger"
+          },
+          {
+            "from": "n8",
+            "to": "n7",
+            "relation": "could stigmatise if scores leak to"
+          },
+          {
+            "from": "n9",
+            "to": "n2",
+            "relation": "weaker predictor of"
+          }
+        ],
+        "summary": "Map links the month-3 score to separation through the retrieved accuracy, reference-standard and prevalence evidence, and names the labelling risk."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.contexts": {
+            "length": 4
+          },
+          "map.nodes[5].kind": "framework",
+          "map.reading": {
+            "includes": "internal transfers"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local estimate of the cut-off's accuracy",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The only accuracy estimate comes from two other hospitals and chose its threshold in its own data (claim c1).",
+            "opportunity": "Measure sensitivity and specificity at 30 or below in the next four intakes with the threshold fixed in advance."
+          },
+          {
+            "id": "g2",
+            "title": "Predictive values depend on the local separation rate",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "At 12 to 27 percent separation the positive predictive value moved from 0.21 to 0.44 (claim c3), which decides how many flagged residents would stay anyway.",
+            "opportunity": "Report predictive values at the observed rate and at the hospital's recent range of 19 to 26 percent."
+          },
+          {
+            "id": "g3",
+            "title": "Internal transfers could be counted as separations",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Reason codes misclassify transfers as resignations (claim c2).",
+            "opportunity": "Define the target condition as leaving the hospital by date; count transfers between units as staying."
+          },
+          {
+            "id": "g4",
+            "title": "Residents who leave before month 3 are never screened",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "Early leavers are outside the index test's reach and would be invisible in the accuracy estimate.",
+            "opportunity": "Count them in the flow diagram and report them separately."
+          },
+          {
+            "id": "g5",
+            "title": "Accuracy may differ by rotation pattern and campus",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Residents on night-heavy rotations or at the rural campus may score and leave for different reasons, so one cut-off could fail them.",
+            "opportunity": "Report accuracy descriptively by rotation pattern and campus without choosing subgroup thresholds."
+          }
+        ],
+        "errorsFound": [
+          "The need assumes a low score means a resident will leave; in the retrieved accuracy study about two flagged residents stayed for every one who left."
+        ],
+        "reevaluation": "The gaps point to a small, pre-specified local accuracy study with a fixed cut-off, a date-based reference standard and predictive values at the local rate before any booster depends on the score.",
+        "summary": "Five gaps: no local accuracy, prevalence-dependent predictive values, transfer misclassification, unscreened early leavers, and possible subgroup differences."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].severity": "high",
+          "gaps.items[4].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No local estimate of the cut-off's accuracy"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "In the intakes from October 2026 to October 2027, a month-3 Transition Check score of 30 or below will have a sensitivity of at least 0.65 and a specificity of at least 0.60 for separation from the hospital within 12 months of hire.",
+            "novelty": 35,
+            "need": 88,
+            "practiceChange": 82,
+            "feasibility": 86,
+            "parsimony": 90,
+            "rationale": "Need and practice change are high because the booster plan depends on the answer; novelty is modest because one external estimate exists; feasibility is high because the score and the dates are already collected.",
+            "risks": "Fewer separations than expected would widen the intervals; a change in seminar timing would change the index test."
+          },
+          {
+            "id": "h2",
+            "statement": "Adding stated intention to leave at month 6 to the month-3 score will raise sensitivity without lowering specificity below 0.60.",
+            "novelty": 50,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 60,
+            "parsimony": 45,
+            "rationale": "Intention alone misses half of leavers (claim c4), but it might add information to the score.",
+            "risks": "A second question adds resident time and an extra test to pre-specify."
+          },
+          {
+            "id": "h3",
+            "statement": "The cut-off is less accurate for residents on night-heavy rotations than for those on day-heavy rotations.",
+            "novelty": 45,
+            "need": 50,
+            "practiceChange": 40,
+            "feasibility": 55,
+            "parsimony": 60,
+            "rationale": "Night work may change both transition scores and reasons for leaving.",
+            "risks": "Too few separations in each group for more than a descriptive comparison."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected as the single accuracy target that decides the booster plan."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[0].parsimony": 90,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "sensitivity of at least 0.65"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among new graduate nurses in the residency intakes from October 2026 to October 2027 who complete the month-3 seminar, what are the sensitivity and specificity of a Transition Check score of 30 or below for separation from the hospital within 12 months of hire?",
+            "framework": "PICO",
+            "population": "New graduate registered nurses in the four residency intakes from October 2026 to October 2027 who complete the month-3 seminar",
+            "intervention": "Month-3 Transition Check score of 30 or below (index test)",
+            "comparator": "Separation from the hospital within 12 months of hire, from human resources dates (reference standard)",
+            "outcome": "Sensitivity and specificity at the pre-specified cut-off, with predictive values at the local separation rate",
+            "time": "Index test at month 3; reference standard at 12 months after hire",
+            "setting": "640-bed regional teaching hospital nurse residency program"
+          }
+        ],
+        "finer": "Feasible with data already collected and approvals in hand; interesting to educators and human resources; novel locally; ethical with verbal consent and scores withheld from managers; relevant because the booster plan depends on it.",
+        "summary": "One accuracy question with the index test, reference standard and cut-off fixed in advance."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "questions.items[0].comparator": {
+            "includes": "reference standard"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "diagnostic",
+        "rationale": "The question is how well an existing score separates residents who will leave from those who will stay, which is a diagnostic (prognostic) accuracy question: one index test, one pre-specified cut-off, one reference standard ascertained blind to the score. Every resident who completes the month-3 seminar is tested, and separation dates are complete in human resources records (c2). The retrieved accuracy estimate (c1) is a planning value, and predictive values must be measured at the local separation rate (c3). Reporting follows STARD 2015.",
+        "alternatives": [
+          "Prediction model with several predictors (refused: about 56 expected separations cannot support more than two or three predictors)",
+          "Stated intention to leave as the trigger (refused as the sole trigger: it misses about half of leavers, claim c4)",
+          "Offer the booster to every resident without screening (kept as the fallback if accuracy is poor)"
+        ],
+        "guidelines": [
+          "STARD 2015"
+        ],
+        "whyNotMoreComplex": "A multivariable model or a trial of the booster would need more separations and a validated trigger first; a single accuracy estimate at a fixed cut-off answers the question the booster plan depends on.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a diagnostic accuracy study of the month-3 Transition Check at a pre-specified cut-off of 30 or below against separation from the hospital within 12 months of hire, in the four intakes from October 2026 to October 2027, before any mentoring booster is tied to the score.",
+          "question": "Does a month-3 Transition Check score of 30 or below identify new graduate nurses who separate within 12 months of hire accurately enough to target a mentoring booster?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A comparable self-rating showed useful but imperfect accuracy elsewhere and predictive values depend on the local separation rate, so local accuracy has to be measured.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The residency changes the timing or content of the month-3 seminar during the study period.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics board approval of the residency evaluation protocol",
+              "status": "met",
+              "evidence": "Approval REB-2026-417 dated 2026-07-30, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Human resources release of hire and separation dates prepared blind to the scores",
+              "status": "met",
+              "evidence": "Data release memorandum HR-DR-2026-12 signed 2026-08-12, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Offer the booster to every resident without screening",
+            "Use stated intention to leave at month 6 as the trigger"
+          ],
+          "note": "Rests on ledger claims c1 to c3, each from a retrieved record, and on the investigator's approval records for both gates."
+        },
+        "summary": "Diagnostic accuracy study recommended; the decision rests on three ledger claims from retrieved records and both gates are met on investigator-supplied approvals."
+      },
+      "note": "The decision cites ledger claims c1 to c3, which exist only when S13 applied the appraisal. selectionStatus requires S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "diagnostic",
+          "family": "diagnostic",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].criteria[0].claimIds": [
+            "c1",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "A supported positive: the claims exist in the ledger and rest on retrieved records, and both gates are met on investigator-supplied approvals, so selection is accepted and action is ready (G7). selectionStatus, actionStatus and basis 'explicit' require S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "diagnostic"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Single-site diagnostic accuracy study nested in the nurse residency program: the month-3 Transition Check (index test, cut-off 30 or below fixed in advance) is compared with separation from the hospital within 12 months of hire (reference standard) for the four intakes from October 2026 to October 2027.",
+        "population": "All new graduate registered nurses in the four intakes who attend the month-3 seminar and give verbal consent; residents who leave before month 3 are counted in the flow diagram but cannot be tested.",
+        "exposure": "Index test: the 15-item Transition Check (0 to 60 points), completed on paper at the month-3 seminar and scored by the residency coordinator; positive at 30 or below. Reference standard: a separation date within 365 days of hire in human resources records; transfers between units or sites of the hospital count as staying.",
+        "procedures": "The coordinator enters scores into a locked study file keyed by study number. Twelve months after each resident's hire date, the human resources analyst named in HR-DR-2026-12 returns hire and separation dates by study number without access to the scores. The residency office keeps the only link between names and study numbers. Seminar timing (month 3 plus or minus two weeks) is recorded for every resident.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Sensitivity and specificity at the pre-specified cut-off",
+            "measure": "Proportion of residents who separate within 12 months with a score of 30 or below, and proportion of residents who stay with a score above 30",
+            "timing": "Index test at month 3; reference standard at 12 months after hire",
+            "why": "Decides whether the score can target the booster without missing leavers or flagging too many stayers.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Area under the ROC curve",
+            "measure": "Discrimination of the continuous score for separation within 12 months",
+            "timing": "After the last reference-standard ascertainment",
+            "why": "Shows whether another cut-off could be worth testing later.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Predictive values at the local separation rate",
+            "measure": "Positive and negative predictive values at the observed rate and at 19 and 26 percent",
+            "timing": "After the last reference-standard ascertainment",
+            "why": "Tells the educators how many flagged residents would actually leave (claim c3).",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Completion of the check at the month-3 seminar",
+            "measure": "Proportion of residents in each intake with a complete Transition Check",
+            "timing": "Each intake",
+            "why": "Incomplete checks would bias the accuracy estimate.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Residents who feel monitored by the check",
+            "measure": "Agreement with one item at the month-6 seminar: I worry the Transition Check could be used to judge my performance",
+            "timing": "Month 6",
+            "why": "The check only helps if residents answer it honestly.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 280 residents over four intakes; the check already takes 10 minutes of seminar time; the human resources extract is one query per intake; no extra funding is needed.",
+        "biasMitigation": [
+          "Cut-off of 30 or below fixed before the first score is linked to separation data",
+          "Reference standard ascertained by an analyst without access to scores",
+          "Every tested resident receives the reference standard (no partial verification)",
+          "Transfers between units defined as staying before analysis"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Incorporation or review bias",
+            "severity": "ok",
+            "note": "Separation dates are recorded by human resources independently of the score."
+          },
+          {
+            "id": "b2",
+            "label": "Spectrum of residents tested",
+            "severity": "watch",
+            "note": "Early leavers before month 3 are not tested; they are reported separately."
+          },
+          {
+            "id": "b3",
+            "label": "Timing of the index test",
+            "severity": "watch",
+            "note": "Seminars held later lower sensitivity elsewhere; timing is recorded for every resident."
+          }
+        ],
+        "parsimony": {
+          "score": 84,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "One index test, one cut-off, one reference standard; subgroup results descriptive only"
+          ],
+          "simplestPath": "One score, one cut-off, one date-based reference standard, four intakes."
+        },
+        "theoreticalFramework": "None beyond the STARD 2015 accuracy framework; the transition construct is taken from the scale's own validation.",
+        "summary": "Accuracy study over four intakes with one primary accuracy outcome, two secondary, one process and one balancing measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[4].role": "balancing",
+          "protocol.outcomes[0].patientCentered": false,
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "protocol.parsimony.score": 84,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Single-site diagnostic accuracy study; 2 by 2 table of the month-3 cut-off against separation within 12 months of hire.",
+        "sampleSize": "About 280 residents are expected across four intakes. At 20 percent separation, about 56 residents will separate and 224 will stay. With an expected sensitivity of 0.70, 56 separations give a 95 percent confidence interval of about plus or minus 0.12 (1.96 x sqrt(0.70 x 0.30 / 56)); an expected specificity of 0.68 with 224 stayers gives about plus or minus 0.06. A half-width of 0.10 for sensitivity would need about 81 separations, roughly six intakes; the team accepts plus or minus 0.12 for a local decision about the booster and will report the intervals as they are.",
+        "primaryAnalysis": "Sensitivity and specificity at 30 or below with Wilson 95 percent confidence intervals, from all residents with both a month-3 score and a 12-month reference-standard result; STARD flow diagram.",
+        "secondaryAnalysis": "Area under the ROC curve for the continuous score with a DeLong interval; positive and negative predictive values at the observed separation rate and recalculated at 19 and 26 percent; accuracy by rotation pattern and campus reported descriptively.",
+        "missingData": "Residents with an incomplete check or withdrawn consent are counted in the flow diagram; no imputation. A missing separation date is treated as staying only after human resources confirms continued employment.",
+        "multiplicity": "One pre-specified cut-off carries the question; other cut-offs and subgroups are exploratory and labelled as such.",
+        "software": "R; the analysis script and the cut-off are archived before the first reference-standard extract is released.",
+        "overfittingGuards": [
+          "Cut-off fixed before linkage; no threshold optimisation in the same data",
+          "Youden index reported only as exploratory",
+          "No subgroup-specific thresholds",
+          "Analysis script archived before the first extract"
+        ],
+        "summary": "About 56 separations give sensitivity to plus or minus 0.12 and specificity to plus or minus 0.06 at the pre-specified cut-off."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "plus or minus 0.12"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal physical risk. The main risks are that a low score becomes a label, that managers learn individual scores, and that residents feel surveilled; scores never leave the residency office and are not used for performance or employment decisions.",
+        "consent": "Verbal consent at the month-3 seminar after a short information sheet that states who sees the score, what human resources shares, and that declining changes nothing about the residency; consent can be withdrawn until the 12-month extract.",
+        "data": "Study numbers link scores and dates; the name key is held only by the residency office; the analysis file holds no names, no unit and no manager; files are kept on the hospital research drive and destroyed five years after publication.",
+        "equity": "PROGRESS-Plus: residents who are first in their family to attend university, internationally raised graduates, residents with caring responsibilities and those on night-heavy rotations or at the rural campus may experience transition differently. Accuracy is reported descriptively for these groups, and the booster, if built, is offered on request to anyone regardless of score.",
+        "effectiveness": "The study succeeds if it gives a local estimate precise enough to decide whether the cut-off can target the booster; a poor result is a useful answer that points to offering support to everyone.",
+        "efficiency": "Uses a check already completed and dates already held; about one hour of analyst time per intake.",
+        "costs": "Residency coordinator and analyst time within existing roles; no participant payments.",
+        "grants": "None needed; a positive result could support a nursing education grant to evaluate the booster itself.",
+        "partnerships": "Residency educators, the human resources analytics team, two residents from the previous intake as advisors, and the nurses' union representative for the information sheet.",
+        "rebPath": "Approved by the hospital research ethics board on 2026-07-30 (REB-2026-417) with verbal consent; the human resources release is covered by HR-DR-2026-12.",
+        "limitations": "Single hospital; early leavers are not tested; the estimate is imprecise with about 56 separations.",
+        "summary": "Minimal-risk accuracy study with verbal consent, scores withheld from managers, and descriptive equity reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "REB-2026-417"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "ethics.consent": {
+            "includes": "Verbal consent"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two residents from the June 2026 intake review the information sheet and the month-6 item before October; a preceptor and the union representative join the planning meeting; the human resources analyst confirms the extract steps.",
+        "socialListening": "No social media listening; anonymous comments from the last two residency evaluations are read for mentions of the month-3 seminar.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "Fear of being labelled",
+            "quote": "Composite paraphrase: If a low score goes to my manager, I will just write whatever looks fine.",
+            "implication": "State on the information sheet that scores never reach managers.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Month 3 is the hardest point",
+            "quote": "Composite paraphrase: By the third month the orientation buddy is gone and the rota is full; that is when people start looking elsewhere.",
+            "implication": "Keep the index test at month 3 and record seminar timing.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Transfers are not losses",
+            "quote": "Composite paraphrase: Half the resignations we see in the system are nurses moving to another floor, not leaving us.",
+            "implication": "Count transfers between units as staying.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Support should not depend on a score",
+            "quote": "Composite paraphrase: I would rather every new grad could ask for a mentor than wait to be picked by a questionnaire.",
+            "implication": "Keep the booster open on request whatever the study shows.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on labelling, timing, transfers and open access to support."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[0].verification": "ai-lead",
+          "voices.items[2].source": "partner",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Accuracy of a month-3 transition self-rating for identifying new graduate nurses who leave within 12 months of hire: a single-site diagnostic accuracy study",
+        "abstract": "Objective: to estimate the sensitivity and specificity of a month-3 Transition Check score of 30 or below for separation from the hospital within 12 months of hire. Design: diagnostic accuracy study in four residency intakes, October 2026 to October 2027. Reference standard: separation date in human resources records, ascertained blind to the score. Results and conclusions will be written after the last reference-standard extract.",
+        "introduction": "One in five new graduate nurses leaves the hospital within a year of hire. A month-3 self-rating is already collected, and one external study suggests it identifies most later leavers while flagging many who stay. The hospital needs a local estimate before it ties a mentoring booster to the score.",
+        "methods": "All residents attending the month-3 seminar are eligible. The cut-off of 30 or below was fixed in advance. Separation dates are released by a human resources analyst who does not see the scores, and transfers between units count as staying. Sensitivity and specificity are reported with Wilson intervals and predictive values at the local separation rate.",
+        "results": "No data have been collected yet. The report will present the STARD flow diagram, the 2 by 2 table, sensitivity and specificity with intervals, the ROC curve and predictive values.",
+        "discussion": "The discussion will compare local accuracy with the external estimate, weigh how many flagged residents would stay anyway, and state whether the cut-off can target the booster.",
+        "limitations": "Single site; residents who leave before month 3 are untested; about 56 separations limit precision.",
+        "conclusion": "To be written after the analysis; it will be limited to the accuracy of this cut-off in this hospital.",
+        "reportingChecklist": "STARD 2015",
+        "summary": "STARD-structured draft with results left empty until the reference-standard data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STARD 2015",
+          "manuscript.results": {
+            "includes": "No data have been collected yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Confirm with the human resources analyst how transfers between units and sites are coded before the first extract",
+          "Run an identity check on the seven retrieved records before the manuscript cites them",
+          "Record the date of each month-3 seminar so index-test timing can be reported"
+        ],
+        "improvementNotes": "Seven records came from a recorded search and were appraised at abstract level; the decision rests on three ledger claims with passages from those abstracts. No record has an identity check yet, and the cut-off was fixed before any linkage.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before the first intake; evidence retrieved and appraised at abstract level but not yet identity-checked."
+      },
+      "note": "The audit stage's own fields fail at 875fe59 because store.ts mergeStage overwrites the audit patch (A3 L1.6); they state the correct behaviour.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "ledger claims"
+          },
+          "audit.entries": {
+            "min": 13
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Statuses are checked in the export; the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Month-3 Transition Check and separation of new graduate nurses within 12 months of hire",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "No research funding beyond the residency budget. The Transition Check is completed during the month-3 seminar and must add no extra resident time. Scores are never shared with nurse managers or used in performance reviews. Human resources can release hire and separation dates only, not exit reasons.",
+          "scan.items": {
+            "length": 7
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Month-3 Transition Check and separation of new graduate nurses within 12 months of hire"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Month-3 Transition Check and separation of new graduate nurses within 12 months of hire",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.rawNeed": "I coordinate the 12-month nurse residency program for new graduate registered nurses at our 640-bed regional teaching hospital. We take three intakes a year (February, June and October) of about 70 new graduates each. Retention is our biggest worry: in the last three years between 19 and 26 percent of each intake left the hospital within 12 months of hire, and every nurse who leaves costs us months of orientation and preceptor time.\n\nAt the month-3 residency seminar every resident completes our Transition Check, a 15-item self-rating (0 to 60 points, lower means a harder transition) covering workload, confidence, belonging and support from preceptors. Right now the score is filed and nobody acts on it. Our nurse educators would like to use a cut-off, probably 30 or below, to offer a mentoring booster to residents who look likely to leave, but we do not know whether the score actually picks out the nurses who later go.\n\nI would like to set up a diagnostic accuracy study of the month-3 Transition Check, with separation from the hospital within 12 months of hire as the reference standard, taken from human resources dates by someone who never sees the scores. Before we build the booster around the score we need the sensitivity and specificity at the proposed cut-off, how many residents we would flag, and how many of the flagged residents would actually leave. The score must never be used in performance reviews, and the residents need to trust that. We have no research funding beyond the residency budget, and the study should run within the normal residency schedule for the intakes starting in October 2026.",
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "protocol.outcomes": {
+            "length": 5
+          }
+        },
+        "screen": {
+          "includes": [
+            "Month-3 Transition Check and separation of new graduate nurses within 12 months of hire"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "selectionStatus and actionStatus require S11; scan.claims requires S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.constraints": "No research funding beyond the residency budget. The Transition Check is completed during the month-3 seminar and must add no extra resident time. Scores are never shared with nurse managers or used in performance reviews. Human resources can release hire and separation dates only, not exit reasons.",
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 4
+            },
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c2",
+              "c3"
+            ],
+            "family": "diagnostic"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1669 @@
+{
+  "id": "sc-102",
+  "version": 1,
+  "title": "Academic radiology department: narrative review of incidental finding follow-up tracking, invented landmark lead and unsupported first decision",
+  "field": "radiology",
+  "level": 4,
+  "family": "narrative-review",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S1",
+    "S8",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on a clear narrative review question. A fixture search returns seven records with abstracts (years 2016 to 2025). A discovery reply then adds four model leads; the first presents itself as a landmark national benchmark (112 hospitals, completion 36 and 61 percent) with the invented DOI 10.5555/jnis.2017.0419. It must be stored as a lead (origin model, status unverified, access unknown, no checks) and stay unverified in the store and the export; the landmark label is a model label, not verification (G3). The leads are appended after the retrieved records, which keep their retrieval provenance (D1); an undated lead keeps year and quality null (G4). An appraisal of the seven retrieved records records claims c1 to c4 with exact passages. The first design reply rests on 'c5', which is not in the ledger, and quotes the unverified lead's figures: the id is dropped with an issue, the action is blocked, and acceptance must be refused (S1, S8). The revised design reply rests on c1 to c4, supersedes the first (withdrawn, not erased), and is accepted with both gates met (selectionStatus accepted, actionStatus ready). The problem reply restates the investigator's constraints exactly (G11). Record ids are stableRecordId(record) imported by the generator from src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 5 and 7 (ev-02xuc7a, ev-0yywy7d, ev-1eq8w2l, ev-0en9vqy, ev-0dfpj0a) and titleYearKey hash for records 2 and 6 (ev-0le5u1k, ev-0f55znl). Requires D1 (leads appended, retrieved records kept), S13 (appraisal path), S1 and S8 (refusal of the unsupported selection), S11 (selectionStatus, actionStatus, basis) and D5 (status text). Catches: a landmark label or DOI turned into verification, leads overwriting retrieved records, a decision accepted on a claim the ledger does not hold or on figures from an unverified lead, a refused decision erased instead of withdrawn, and work lost on reload or reopen.",
+  "inputs": {
+    "need": "I am the quality lead for a radiology department in an academic hospital that reads about 310,000 examinations a year. Our reports often recommend follow-up imaging for incidental findings: lung nodules on chest CT, adrenal and renal lesions on abdominal CT, thyroid nodules on neck imaging, and pancreatic cysts. A spot check last spring of 200 reports with such a recommendation found that follow-up imaging had been done within the recommended window for 94 patients, and for 41 patients nobody could tell us whether the recommendation had even been seen. Two patients were later found to have cancers in lesions that had been flagged years earlier.\n\nThe department wants to choose a tracking approach before next year's budget round. The options on the table are structured recommendation codes in the report, a nurse navigator who follows up every flagged finding, automatic alerts to the ordering clinician in the electronic health record, letters sent directly to patients, or some combination. Each option has champions, and each needs money and staff.\n\nBefore we decide, I want a narrative review of how health systems track follow-up recommendations for incidental imaging findings: which approaches have been described, what follow-up completion they report, where the loop tends to break (the ordering clinician has left, the patient was seen only in the emergency department, the recommendation was vague), and who falls through the cracks. I am especially worried about patients without a family doctor and patients seen only in the emergency department. I need help framing the review question, choosing sources, and presenting conflicting reports to the department's quality committee without overselling any single system.",
+    "constraints": "Three months for the review, reporting to the quality committee on 14 January 2027. Two radiologists and the hospital librarian share the work; no funding and no access to patient records for this review. English and French publications only.",
+    "localFacts": [
+      "A spot check of 200 reports with a follow-up recommendation found completed follow-up within the recommended window for 94 patients and no record that the recommendation was seen for 41.",
+      "The radiology quality committee meets on 14 January 2027 and will choose a tracking approach for the following budget year.",
+      "The department chair approved the review as departmental quality work and assigned the hospital librarian for three days (email of 2026-09-08).",
+      "The department reads about 310,000 examinations a year across CT, MRI, ultrasound and radiography."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "The need names one design (narrative review), so classifyFamily in src/lib/stages.ts at 875fe59 routes it as explicit narrative-review. design.basis 'explicit' at create requires S11.",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the quality lead for a radiology department in an academic hospital that reads about 310,000 examinations a year. Our reports often recommend follow-up imaging for incidental findings: lung nodules on chest CT, adrenal and renal lesions on abdominal CT, thyroid nodules on neck imaging, and pancreatic cysts. A spot check last spring of 200 reports with such a recommendation found that follow-up imaging had been done within the recommended window for 94 patients, and for 41 patients nobody could tell us whether the recommendation had even been seen. Two patients were later found to have cancers in lesions that had been flagged years earlier.\n\nThe department wants to choose a tracking approach before next year's budget round. The options on the table are structured recommendation codes in the report, a nurse navigator who follows up every flagged finding, automatic alerts to the ordering clinician in the electronic health record, letters sent directly to patients, or some combination. Each option has champions, and each needs money and staff.\n\nBefore we decide, I want a narrative review of how health systems track follow-up recommendations for incidental imaging findings: which approaches have been described, what follow-up completion they report, where the loop tends to break (the ordering clinician has left, the patient was seen only in the emergency department, the recommendation was vague), and who falls through the cracks. I am especially worried about patients without a family doctor and patients seen only in the emergency department. I need help framing the review question, choosing sources, and presenting conflicting reports to the department's quality committee without overselling any single system.",
+          "family": "narrative-review",
+          "design.basis": "explicit",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the quality lead for a radiology department in an academic hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Tracking follow-up of incidental imaging findings: a narrative review to inform a radiology department's choice",
+        "subtitle": "Narrative review for the radiology quality committee, January 2027",
+        "family": "narrative-review",
+        "statement": "Radiology reports in the department often recommend follow-up imaging for incidental findings, but a spot check found completed follow-up within the recommended window for 94 of 200 patients and no evidence that the recommendation was seen for 41. The department must choose a tracking approach before the next budget round. A narrative review will describe how health systems track these recommendations, what completion they report, where the loop breaks and who is missed, so that the committee can choose on evidence.",
+        "whoAffected": "Patients with incidental findings that need follow-up, especially patients without a family doctor and patients seen only in the emergency department; radiologists and ordering clinicians; and the quality committee that must choose and fund an approach.",
+        "whatHurts": "Missed follow-up can delay the diagnosis of cancers in flagged lesions, as happened to two patients; unclear responsibility wastes clinician effort and leaves patients unaware of findings.",
+        "currentPractice": "Recommendations are written as free text in the report and sent to the ordering clinician; there are no codes, no list of open recommendations, no navigator and no letters to patients.",
+        "whyNow": "Two late cancer diagnoses, a spot check showing poor completion, and a budget decision in January 2027.",
+        "constraints": "Three months for the review, reporting to the quality committee on 14 January 2027. Two radiologists and the hospital librarian share the work; no funding and no access to patient records for this review. English and French publications only.",
+        "patientCenteredGoal": "Every patient with an incidental finding that needs follow-up learns about it and has the follow-up done in time, whoever ordered the original examination.",
+        "summary": "Problem framed as a narrative review to inform the department's choice of a tracking approach for incidental finding follow-up."
+      },
+      "note": "The reply restates the investigator's constraints exactly as typed (G11: nothing to reject).",
+      "expect": {
+        "store": {
+          "title": "Tracking follow-up of incidental imaging findings: a narrative review to inform a radiology department's choice",
+          "family": "narrative-review",
+          "problem.statement": {
+            "includes": "94 of 200 patients"
+          },
+          "problem.constraints": "Three months for the review, reporting to the quality committee on 14 January 2027. Two radiologists and the hospital librarian share the work; no funding and no access to patient records for this review. English and French publications only.",
+          "problem.rawNeed": {
+            "includes": "narrative review"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Tracking follow-up of incidental imaging findings: a narrative review to inform a radiology department's choice"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "incidental imaging finding follow-up recommendation tracking completion radiology navigator alerts",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Structured follow-up recommendation codes in radiology reports and completion of recommended imaging: a before-after study",
+            "authors": "Haddad-Lindqvist S, Okonkwo-Pierce M, Tanaka-Brandt L",
+            "year": 2018,
+            "venue": "Brightwater Journal of Radiology Practice",
+            "doi": "10.5555/bjrp.2018.0231",
+            "providerType": "journal-article",
+            "abstract": "After our department introduced standard codes for follow-up recommendations in radiology reports, we compared 1,200 reports with an incidental finding before the change with 1,200 reports after it. Recommendations became more specific: the share naming a modality and an interval rose from 46 percent to 88 percent. Completion of recommended imaging within the stated interval rose from 51 percent to 58 percent. Completion was lowest for findings reported on emergency department examinations. The codes did not by themselves notify anyone, and completion was measured only within our own health system, so imaging done elsewhere was missed."
+          },
+          {
+            "title": "A nurse navigator for incidental pulmonary nodules: follow-up completion over three years",
+            "authors": "Mwangi-Holt D, Castellanos-Achebe R",
+            "year": 2020,
+            "venue": "Thoracic Imaging Service Reports",
+            "providerType": "journal-article",
+            "abstract": "A nurse navigator reviewed every chest CT report with an incidental pulmonary nodule and a follow-up recommendation, contacted the ordering clinician and, when needed, the patient, and booked the follow-up scan. Over three years, 2,406 patients were tracked. Follow-up completion within the recommended window was 79 percent, compared with 43 percent in the year before the navigator started. Completion was 64 percent among patients without a regular primary care clinician. The navigator post required one full-time position for about 800 new nodules a year. The comparison was with a single earlier year and did not adjust for changes in referral patterns."
+          },
+          {
+            "title": "Automated alerts to ordering clinicians for actionable incidental findings: a controlled comparison across two hospitals",
+            "authors": "Lorenz-Adeyemi K, Whitcombe-Nakashima P, Oduya-Grant F",
+            "year": 2022,
+            "venue": "Clinical Informatics in Imaging",
+            "doi": "10.5555/cii.2022.0418",
+            "providerType": "journal-article",
+            "abstract": "One hospital sent an automated electronic health record alert to the ordering clinician for every report with an actionable incidental finding, while a sister hospital did not. Among 3,150 findings, follow-up was completed within the recommended interval for 62 percent at the alert hospital and 55 percent at the comparison hospital. Alerts were acknowledged within seven days for 71 percent of findings. When the ordering clinician was an emergency physician or a resident who had since rotated, acknowledgement fell to 38 percent. The hospitals differed in patient mix and in access to primary care."
+          },
+          {
+            "title": "Letters sent directly to patients about incidental imaging findings: effect on follow-up and on patient worry",
+            "authors": "Brennan-Obi C, Varga-Moreau A",
+            "year": 2016,
+            "venue": "Patient Communication in Imaging",
+            "doi": "10.5555/pci.2016.0067",
+            "providerType": "journal-article",
+            "abstract": "Patients with an incidental finding that needed follow-up imaging were sent a plain-language letter by the radiology department in addition to the usual report to their clinician. Compared with a matched group from the previous year, follow-up completion rose from 48 percent to 60 percent. In a questionnaire returned by 212 of 390 patients who received letters, 17 percent said the letter made them very worried, and most said they would have preferred to hear about the finding from their own clinician. Letters were sent only in English, and patients without a fixed address were not reached."
+          },
+          {
+            "title": "Why follow-up of incidental imaging findings fails: a structured review of reported failure points",
+            "authors": "Petit-Ramirez J, Soto-Lindgren E, Adu-Hargreave N",
+            "year": 2024,
+            "venue": "Health Systems Safety Review",
+            "doi": "10.5555/hssr.2024.0102",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 37 published reports of follow-up failures for incidental imaging findings and classified where the loop broke. The most frequent failure points were a recommendation that did not reach a clinician who took responsibility, vague recommendations without a modality or interval, patients seen only in emergency or inpatient settings without a follow-up clinician, and loss of contact after patients moved. Few reports described failures among patients who did not speak the local language. Most reports came from single academic centres, and the review did not assess the quality of the included reports."
+          },
+          {
+            "title": "Follow-up completion for incidental adrenal and renal lesions among patients without a primary care clinician",
+            "authors": "Rasmussen-Diallo T, Kimura-Fenwick O",
+            "year": 2021,
+            "venue": "Urban Health Imaging",
+            "providerType": "journal-article",
+            "abstract": "Among 1,038 patients with an incidental adrenal or renal lesion that needed follow-up imaging, 612 had a primary care clinician on record. Follow-up completion within one year was 67 percent for patients with a primary care clinician and 34 percent for those without. Patients first imaged in the emergency department made up most of those without a clinician. Completion was also lower among patients living in the most deprived neighbourhoods. The study used one health system's records and could not capture imaging done elsewhere, so completion may be underestimated for patients who moved."
+          },
+          {
+            "title": "Combining report codes, a tracking list and navigators for incidental findings: five years at a regional health system",
+            "authors": "Quist-Ferreira H, Nwosu-Blake G, Holm-Achterberg I",
+            "year": 2025,
+            "venue": "Brightwater Journal of Radiology Practice",
+            "doi": "10.5555/bjrp.2025.0011",
+            "providerType": "journal-article",
+            "abstract": "A regional health system combined structured recommendation codes, a tracking list of every open recommendation, and two navigators who closed the loop with clinicians and patients. Over five years, 14,820 recommendations were tracked. Completion within the recommended interval rose from 49 percent in the first year to 76 percent in the fifth year. The programme needed 2.5 full-time staff, mostly navigator time and list maintenance. The system was introduced in stages alongside other safety work, so the contribution of each component cannot be separated, and there was no comparison health system."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values (DOI hash for records 1, 3, 4, 5, 7; title and year hash for records 2 and 6).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-02xuc7a",
+            "ev-0le5u1k",
+            "ev-0yywy7d",
+            "ev-1eq8w2l",
+            "ev-0en9vqy",
+            "ev-0f55znl",
+            "ev-0dfpj0a"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].id": "ev-02xuc7a",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Automated alerts to ordering clinicians for actionable incidental findings: a controlled comparison across two hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "incidental imaging finding follow-up recommendation tracking completion radiology navigator alerts",
+        "sourcesConsulted": [
+          "model knowledge of the radiology safety literature"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "No certainty is given for leads; the retrieved records are appraised separately.",
+        "synthesis": "Four further publications are suggested as leads to check alongside the seven retrieved records: a national benchmark of follow-up completion, a study of portal messages written by radiologists, an undated preprint on language barriers, and regional guidance on recommendation wording.",
+        "items": [
+          {
+            "title": "Closing the loop on incidental imaging findings: a national benchmark of follow-up completion across 112 hospitals",
+            "authors": "Pemberton-Oyelaran J, Hargreave-Ndiaye C, Solberg-Watts D",
+            "year": 2017,
+            "source": "Journal of National Imaging Standards",
+            "kind": "observational",
+            "grade": "moderate",
+            "methodQuality": 72,
+            "relevance": 88,
+            "verification": "landmark",
+            "doi": "10.5555/jnis.2017.0419",
+            "contextTags": [
+              "benchmark",
+              "national",
+              "tracking systems"
+            ],
+            "keyFindings": "Across 112 hospitals, follow-up of incidental findings was completed within the recommended interval for 36 percent of patients; hospitals with any tracking system achieved 61 percent.",
+            "limitations": "Completion reported by the hospitals themselves; definitions of tracking varied.",
+            "notes": "The national reference figure for incidental finding follow-up."
+          },
+          {
+            "title": "Patient portal messages from radiologists about incidental findings: follow-up and patient questions",
+            "authors": "Achebe-Lindholm R, Moreno-Vasquez T",
+            "year": 2023,
+            "source": "Imaging Informatics Letters",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 50,
+            "relevance": 64,
+            "verification": "verify",
+            "contextTags": [
+              "patient portal",
+              "direct communication"
+            ],
+            "keyFindings": "Portal messages written by radiologists were followed by more completed follow-up among patients who used the portal, and by more patient questions to the department.",
+            "limitations": "Portal users only; single centre.",
+            "notes": "Recalled as a lead; not retrieved by the recorded search."
+          },
+          {
+            "title": "Language barriers and follow-up of incidental imaging findings in a multilingual city",
+            "authors": "Farouk-Lindqvist A, Obi-Castellanos M",
+            "year": null,
+            "source": "Health Equity in Imaging preprint server",
+            "kind": "preprint",
+            "methodQuality": null,
+            "relevance": 70,
+            "verification": "ai-lead",
+            "contextTags": [
+              "language",
+              "equity",
+              "interpreter"
+            ],
+            "keyFindings": "Patients whose preferred language was not the local language completed recommended follow-up less often, and interpreter use at the index visit was rarely recorded.",
+            "limitations": "Not peer reviewed; the listing gives no year.",
+            "notes": "Recalled as a lead; no certainty grade given."
+          },
+          {
+            "title": "Management of incidental findings on imaging: guidance for radiology departments",
+            "authors": "Regional Imaging Quality Collaborative",
+            "year": 2019,
+            "source": "Regional guidance series",
+            "kind": "guideline",
+            "grade": "low",
+            "methodQuality": 55,
+            "relevance": 72,
+            "verification": "verify",
+            "contextTags": [
+              "guideline",
+              "recommendation wording",
+              "tracking list"
+            ],
+            "keyFindings": "The guidance recommends that every follow-up recommendation name the modality and the interval and that departments keep a list of open recommendations.",
+            "limitations": "Consensus-based; the evidence review is not described.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Four leads suggested; one is presented as a landmark national benchmark with a DOI."
+      },
+      "note": "Four model leads. The first calls itself a landmark and carries the invented DOI 10.5555/jnis.2017.0419: it is stored as a lead with provenance origin 'model', status 'unverified', access 'unknown' and no checks, whatever its label (G3; the verification badge comes from provenance.status, A3 item L1.5, shown by D5). The leads are appended after the seven retrieved records, which keep their retrieval provenance (D1; at 875fe59 the model items replace the retrieved records). The undated lead keeps year and methodQuality null and grade unrated (G4). gradeOverall null leaves certainty unassessed, and the model's sourcesConsulted text is dropped. The Scan is complete because records were retrieved (G2).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 11
+          },
+          "scan.items[0].id": "ev-02xuc7a",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.items[6].id": "ev-0dfpj0a",
+          "scan.items[7].title": "Closing the loop on incidental imaging findings: a national benchmark of follow-up completion across 112 hospitals",
+          "scan.items[7].doi": "10.5555/jnis.2017.0419",
+          "scan.items[7].verification": "landmark",
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[7].provenance.access": "unknown",
+          "scan.items[7].provenance.checks": {
+            "length": 0
+          },
+          "scan.items[9].year": {
+            "isNull": true
+          },
+          "scan.items[9].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[9].grade": "unrated",
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "gradeOverall",
+              "code": "cleared"
+            }
+          ],
+          "count": {
+            "min": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "unrated",
+            "Closing the loop on incidental imaging findings: a national benchmark of follow-up completion across 112 hospitals"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-02xuc7a",
+            "relevance": 80,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Structured codes made recommendations more specific (46 to 88 percent naming modality and interval), and completion rose from 51 to 58 percent; completion was lowest for emergency department examinations.",
+            "limitations": "Before-after in one department; codes notified no one; imaging done elsewhere was missed.",
+            "contextTags": [
+              "report codes",
+              "recommendation wording",
+              "before-after"
+            ]
+          },
+          {
+            "id": "ev-0le5u1k",
+            "relevance": 88,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "With a nurse navigator, completion within the window was 79 percent against 43 percent the year before, and 64 percent among patients without a regular primary care clinician; one full-time navigator handled about 800 new nodules a year.",
+            "limitations": "Compared with one earlier year; lung nodules only; no adjustment for referral changes.",
+            "contextTags": [
+              "navigator",
+              "lung nodules",
+              "staffing"
+            ]
+          },
+          {
+            "id": "ev-0yywy7d",
+            "relevance": 86,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Completion was 62 percent at the alert hospital and 55 percent at the comparison hospital; alerts were acknowledged within seven days for 71 percent of findings, but for 38 percent when the ordering clinician was an emergency physician or a rotated resident.",
+            "limitations": "Two hospitals with different patient mix and primary care access.",
+            "contextTags": [
+              "clinician alerts",
+              "acknowledgement",
+              "controlled comparison"
+            ]
+          },
+          {
+            "id": "ev-1eq8w2l",
+            "relevance": 70,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Letters to patients were followed by completion of 60 percent against 48 percent in a matched earlier group; 17 percent of responding patients said the letter made them very worried.",
+            "limitations": "Historical matched comparison; 212 of 390 questionnaires returned; English-only letters.",
+            "contextTags": [
+              "patient letters",
+              "worry",
+              "direct communication"
+            ]
+          },
+          {
+            "id": "ev-0en9vqy",
+            "relevance": 84,
+            "methodQuality": 48,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 37 reports, the loop most often broke where no clinician took responsibility, where recommendations were vague, where patients were seen only in emergency or inpatient settings, and after patients moved.",
+            "limitations": "Quality of the included reports not assessed; mostly single academic centres; language barriers rarely described.",
+            "contextTags": [
+              "failure points",
+              "closed loop",
+              "patient safety"
+            ]
+          },
+          {
+            "id": "ev-0f55znl",
+            "relevance": 82,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Completion within one year was 67 percent for patients with a primary care clinician and 34 percent for those without, most of whom were first imaged in the emergency department.",
+            "limitations": "One health system's records; imaging done elsewhere not captured.",
+            "contextTags": [
+              "equity",
+              "primary care",
+              "emergency department"
+            ]
+          },
+          {
+            "id": "ev-0dfpj0a",
+            "relevance": 78,
+            "methodQuality": 44,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "A combined programme of codes, a tracking list and navigators saw completion rise from 49 to 76 percent over five years, needing 2.5 full-time staff.",
+            "limitations": "No comparison system; introduced in stages with other safety work, so components cannot be separated.",
+            "contextTags": [
+              "combined programme",
+              "tracking list",
+              "resources"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "With a nurse navigator for incidental lung nodules, follow-up completion within the recommended window was 79 percent, against 43 percent in the year before, and 64 percent among patients without a regular primary care clinician.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0le5u1k"
+            ],
+            "location": "Abstract",
+            "passage": "Follow-up completion within the recommended window was 79 percent, compared with 43 percent in the year before the navigator started.",
+            "interpretation": "A named person closing the loop is associated with the largest reported gain; the comparison is with a single earlier year.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Automated alerts to ordering clinicians were associated with completion of 62 percent against 55 percent at a comparison hospital, and acknowledgement fell to 38 percent when the ordering clinician was an emergency physician or a rotated resident.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0yywy7d"
+            ],
+            "location": "Abstract",
+            "passage": "When the ordering clinician was an emergency physician or a resident who had since rotated, acknowledgement fell to 38 percent.",
+            "interpretation": "Alerts depend on a clinician who is still responsible for the patient.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "For incidental adrenal or renal lesions, follow-up completion within one year was 67 percent for patients with a primary care clinician and 34 percent for those without.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0f55znl"
+            ],
+            "location": "Abstract",
+            "passage": "Follow-up completion within one year was 67 percent for patients with a primary care clinician and 34 percent for those without.",
+            "interpretation": "Patients without a primary care clinician need an approach that does not rely on one.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "A review of 37 reports found the loop most often broke where no clinician took responsibility, where recommendations were vague, where patients were seen only in emergency or inpatient settings, and after patients moved.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0en9vqy"
+            ],
+            "location": "Abstract",
+            "passage": "The most frequent failure points were a recommendation that did not reach a clinician who took responsibility, vague recommendations without a modality or interval, patients seen only in emergency or inpatient settings without a follow-up clinician, and loss of contact after patients moved.",
+            "interpretation": "The review can be organised by these failure points.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Approaches that assign a person to close the loop report the largest gains (a navigator: 79 against 43 percent), clinician alerts help less when the ordering clinician is no longer responsible (acknowledgement 38 percent for emergency physicians and rotated residents), and letters to patients raise completion while worrying some patients. Patients without a primary care clinician complete follow-up far less often (34 against 67 percent), and the loop breaks at predictable points. Completion is defined with different windows and denominators, so figures cannot be pooled. The four model leads, including a national benchmark presented as a landmark, were not retrieved and are not part of this appraisal.",
+        "gradeOverall": "low",
+        "gradeRationale": "Before-after and two-site comparisons from single systems, a structured review without quality assessment, and descriptive records; consistent in direction but at serious risk of bias and not comparable across definitions.",
+        "summary": "Seven retrieved records appraised; four source-derived claims; overall certainty low; the leads are not appraised."
+      },
+      "note": "Appraisal of the seven retrieved records only; the leads are not annotated and no claim cites them. Applied through the appraisal mapper on the production scan path (S13), with the leads kept after the records (D1). The landmark lead is still unverified.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 11
+          },
+          "scan.items[1].grade": "low",
+          "scan.items[1].relevance": 88,
+          "scan.items[4].kind": "systematic-review",
+          "scan.items[6].grade": "very-low",
+          "scan.items[5].keyFindings": {
+            "includes": "67 percent"
+          },
+          "scan.items[7].provenance.status": "unverified",
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0le5u1k"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-0yywy7d"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0f55znl"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-0en9vqy"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "academic radiology department, about 310,000 examinations a year",
+          "free-text recommendations, no tracking list",
+          "quality committee decision on 14 January 2027",
+          "patients without a family doctor and emergency-only patients"
+        ],
+        "reading": "The loop has five links: the recommendation is written, reaches a responsible clinician, is acknowledged, is acted on, and the follow-up is completed. Retrieved records show that codes improve the first link, alerts depend on the second, navigators and tracking lists repair the middle of the chain, and letters bypass the clinician at the cost of some worry. Patients without a primary care clinician and emergency-only patients break the chain at the second link. A model lead offering a national benchmark is not part of the evidence until it is checked.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Recommendation in the report",
+            "kind": "context",
+            "detail": "Free text today; codes make it specific."
+          },
+          {
+            "id": "n2",
+            "label": "Responsible clinician",
+            "kind": "stakeholder",
+            "detail": "Often absent for emergency-only patients."
+          },
+          {
+            "id": "n3",
+            "label": "Completed follow-up imaging",
+            "kind": "outcome",
+            "detail": "Within the recommended interval."
+          },
+          {
+            "id": "n4",
+            "label": "Nurse navigator",
+            "kind": "observational",
+            "detail": "79 against 43 percent completion (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Automated clinician alerts",
+            "kind": "observational",
+            "detail": "Acknowledgement 38 percent for emergency physicians and rotated residents (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Patients without a primary care clinician",
+            "kind": "stakeholder",
+            "detail": "34 against 67 percent completion (claim c3)."
+          },
+          {
+            "id": "n7",
+            "label": "Structured review of failure points",
+            "kind": "systematic-review",
+            "detail": "Where the loop breaks (claim c4)."
+          },
+          {
+            "id": "n8",
+            "label": "Unverified national benchmark lead",
+            "kind": "gap",
+            "detail": "A model lead with an identifier no retrieval returned; not evidence."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "must reach"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "acts to produce"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "associated with higher"
+          },
+          {
+            "from": "n5",
+            "to": "n2",
+            "relation": "notifies"
+          },
+          {
+            "from": "n6",
+            "to": "n2",
+            "relation": "often lacks"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "classifies failures of"
+          },
+          {
+            "from": "n8",
+            "to": "n3",
+            "relation": "claims a figure for, unchecked"
+          }
+        ],
+        "summary": "Map lays out the five links of the follow-up loop, the approaches that repair each, and the unverified benchmark kept apart from the evidence."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[7].kind": "gap",
+          "map.reading": {
+            "includes": "five links"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No comparison of tracking approaches in one place",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Each approach is reported in a different setting and design, so champions quote the figure that suits them.",
+            "opportunity": "Tabulate every approach with its design, setting, finding types and completion definition."
+          },
+          {
+            "id": "g2",
+            "title": "Completion figures are not comparable",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Windows, denominators and finding types differ between studies, so a single number per approach would mislead.",
+            "opportunity": "Record window and denominator with every figure and refuse to pool."
+          },
+          {
+            "id": "g3",
+            "title": "Patients without a primary care clinician and emergency-only patients",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "They complete follow-up far less often (claim c3) and are where alerts fail (claim c2).",
+            "opportunity": "Extract results for these groups from every report and state which approaches were never tested with them."
+          },
+          {
+            "id": "g4",
+            "title": "Language and interpreter needs are rarely reported",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Few failure reports describe patients who do not speak the local language (claim c4), and letters were English-only in the retrieved study.",
+            "opportunity": "Search specifically for language-related follow-up and report the gap if nothing is found."
+          },
+          {
+            "id": "g5",
+            "title": "An unverified benchmark is circulating",
+            "kind": "error",
+            "severity": "moderate",
+            "whyItMatters": "A model lead presents a national benchmark as a landmark with a DOI that no retrieval returned; citing it would anchor the committee on an unchecked number.",
+            "opportunity": "Check its identifier before any use; until then it is not evidence."
+          }
+        ],
+        "errorsFound": [
+          "The first scan reply labelled an unretrieved national benchmark as a landmark with a DOI; the label is not verification, and the lead stays unverified."
+        ],
+        "reevaluation": "The gaps favour a narrative review organised by failure point, with completion definitions kept visible, equity results extracted throughout, and unverified figures kept out of the committee report.",
+        "summary": "Five gaps; the missing comparison, incomparable figures and the groups most often missed are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[2].kind": "equity",
+          "gaps.items[4].kind": "error",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "An unverified benchmark is circulating"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Approaches that give a named person responsibility for closing the loop (navigators or an owned tracking list) report larger completion gains than notification alone (codes, alerts or letters).",
+            "novelty": 40,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "The retrieved records point this way (claims c1 and c2), and the answer bears directly on the committee's budget choice.",
+            "risks": "Navigator studies are before-after and may reflect enthusiastic early adopters."
+          },
+          {
+            "id": "h2",
+            "statement": "Completion gains are smallest for patients without a primary care clinician and emergency-only patients, whatever the approach.",
+            "novelty": 45,
+            "need": 80,
+            "practiceChange": 70,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "These patients lack the responsible clinician most approaches rely on (claims c2 and c3).",
+            "risks": "Few reports give results for these groups."
+          },
+          {
+            "id": "h3",
+            "statement": "Letters sent directly to patients raise completion but worry a minority of recipients.",
+            "novelty": 35,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 80,
+            "parsimony": 75,
+            "rationale": "One retrieved study found both effects.",
+            "risks": "Worry is rarely measured."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three review-level hypotheses; h1 organises the comparison, h2 the equity analysis."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "hypotheses.items[1].need": 80,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In adults with incidental imaging findings that carry a follow-up recommendation, how do tracking approaches (report codes, tracking lists, navigators, clinician alerts, letters to patients and their combinations) compare in reported follow-up completion, where does the loop break, and which patients are missed?",
+            "framework": "PICO",
+            "population": "Adults with incidental imaging findings that carry a follow-up recommendation",
+            "intervention": "Tracking approaches: report codes, tracking lists, navigators, clinician alerts, letters or portal messages to patients, and combinations",
+            "comparator": "Free-text recommendations without tracking, or another approach",
+            "outcome": "Follow-up completion within the recommended interval, with its window and denominator; failure points; results for patients without a primary care clinician and emergency-only patients",
+            "time": "Reports published 2010 to 2026",
+            "setting": "Hospital and health-system radiology services"
+          }
+        ],
+        "finer": "Feasible in three months with two radiologists and three librarian days; interesting to the committee and to clinicians; novel as a comparison across approaches; ethical as a literature review; relevant because it decides a budget choice in January 2027.",
+        "summary": "One review question with completion, failure points and equity as the three strands."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "questions.items[0].outcome": {
+            "includes": "window and denominator"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "narrative-review",
+        "rationale": "A national benchmark shows that tracking systems nearly double completion (c5), so the review can be limited to the combined tracking model and completed quickly.",
+        "alternatives": [
+          "Systematic review with meta-analysis (refused: too slow for January 2027)",
+          "Review of structured report codes only"
+        ],
+        "guidelines": [
+          "SANRA"
+        ],
+        "whyNotMoreComplex": "The benchmark already settles which approach works; a broader review would add little.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct a narrative review limited to the combined tracking model (report codes, a tracking list and a navigator), because a national benchmark of 112 hospitals shows follow-up completion of 36 percent without tracking and 61 percent with any tracking system (c5).",
+          "question": "Which tracking approaches should the narrative review cover?",
+          "claimIds": [
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A national benchmark shows that tracking systems nearly double completion.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c5"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Department chair approval of the review and librarian time",
+              "status": "met",
+              "evidence": "Chair's email of 2026-09-08 assigning the librarian for three days, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Review structured report codes only"
+          ],
+          "note": "Rests on the national benchmark (c5)."
+        },
+        "summary": "Narrative review recommended, limited to the combined model on the strength of the national benchmark."
+      },
+      "note": "Adversarial reply: the decision rests on 'c5', which is not in the ledger (c1 to c4), and its statement carries the unverified lead's figures (112 hospitals, 36 and 61 percent) that no retrieved record reports. The unknown id is dropped with an issue (holds at 875fe59), leaving a 'pursue' decision with no supporting claim, so the action is blocked. selectionStatus and actionStatus require S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "narrative-review",
+          "family": "narrative-review",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].criteria[0].claimIds": [],
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "decision.claimIds",
+              "code": "dropped"
+            }
+          ],
+          "count": {
+            "min": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Refusal: the decision's only claim is absent from the ledger and its figures come from an unverified model lead, so the selection is unsupported and acceptance must be refused (G7; A2 item 9: a block from S1 or S8 on the decision's own claims or text). Status 'proposed' after the attempt requires S1 and S8 (at 875fe59 nothing refuses); selectionStatus and actionStatus require S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked"
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 2,
+      "response": {
+        "recommended": "narrative-review",
+        "rationale": "The committee must choose among approaches that were studied in different ways and settings. A narrative review organised by where the loop breaks can compare them honestly without pooling incomparable completion figures (c1, c2), and can show who each approach misses (c3, c4). The national benchmark suggested as a lead is unverified and is not used.",
+        "alternatives": [
+          "Systematic review with meta-analysis (refused: completion figures use different windows and denominators, and it cannot finish by January 2027)",
+          "Adopt structured report codes now and review later (refused: codes alone notify no one)",
+          "Rely on the structured review of failure points alone (refused: it does not compare approaches or their completion)"
+        ],
+        "guidelines": [
+          "SANRA items as a quality checklist for narrative reviews"
+        ],
+        "whyNotMoreComplex": "A systematic review with pooling would average figures that measure different things; the narrative review keeps each figure with its definition and setting, which is what the committee needs to compare approaches.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct the narrative review of how health systems track follow-up of incidental imaging findings, covering every tracking approach, organised by where the loop breaks, with completion reported alongside each study's design and definitions, and separately for patients without a primary care clinician and emergency-only patients.",
+          "question": "Which tracking approaches should the narrative review cover, and how should it present them to the committee?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Published tracking approaches report different completion gains in different settings, so a structured comparison can inform the choice.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Failure points and inequities are described in the retrieved records and can be mapped to each approach.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "A current review already compares tracking approaches across this mix of findings.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Department chair approval of the review and librarian time",
+              "status": "met",
+              "evidence": "Chair's email of 2026-09-08 assigning the librarian for three days, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Quality committee agenda time on 14 January 2027",
+              "status": "met",
+              "evidence": "Committee meeting of 14 January 2027 to choose a tracking approach, stated in the investigator's local facts"
+            }
+          ],
+          "alternatives": [
+            "Adopt structured report codes now and review later",
+            "Rely on the structured review of failure points alone"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records; the unverified benchmark lead is excluded."
+        },
+        "summary": "Narrative review of all approaches recommended; the decision rests on four ledger claims and both gates are met."
+      },
+      "note": "Revised reply resting on ledger claims c1 to c4 from retrieved records (they exist only if S13 applied the appraisal). The refused first decision, still proposed, is superseded and withdrawn, not erased (875fe59). selectionStatus requires S11; the status text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].status": "withdrawn",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "design.decisions[1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[1].status": "proposed",
+          "design.decisions[1].selectionStatus": "proposed",
+          "design.decisions[1].gates[1].status": "met",
+          "family": "narrative-review"
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The supported positive: claims c1 to c4 exist in the ledger and rest on retrieved records, the defeating criterion does not hold and both gates are met, so the selection is accepted and the action is ready (G7). S11 for selectionStatus, actionStatus and basis; S13 for the claims; S1 and S8 for the withdrawn first decision; D5 for the status text.",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[0].status": "withdrawn",
+          "design.basis": "explicit",
+          "family": "narrative-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Narrative review of approaches to tracking follow-up of incidental imaging findings, organised by the points where the loop breaks, with completion reported alongside each study's design, setting and definitions, for the radiology quality committee on 14 January 2027.",
+        "population": "Adults with an incidental imaging finding that carries a follow-up recommendation (lung, adrenal, renal, thyroid, pancreatic and liver findings); reports from any health system, in English or French, published 2010 to 2026.",
+        "exposure": "Tracking approaches: structured recommendation codes, tracking lists, navigators, automated clinician alerts, letters or portal messages to patients, and combinations of these.",
+        "procedures": "The librarian searches three bibliographic databases and the grey literature of radiology and patient safety bodies, and the reviewers follow citations of included reports. Two radiologists screen and extract together, recording approach, setting, finding types, the completion definition (window and denominator), failure points, resources, and results for patients without a primary care clinician, emergency-only patients and patients who need an interpreter. Every figure cited to the committee is checked against its source record first; unverified leads, including the national benchmark lead, are listed separately and not cited.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Follow-up completion within the recommended interval",
+            "measure": "Proportion of recommendations with completed follow-up imaging within the interval each study states, recorded with its window and denominator",
+            "timing": "As reported",
+            "why": "The outcome every approach claims to improve and the one the spot check measured.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Later-stage diagnoses after missed follow-up",
+            "measure": "Cancers or other serious diagnoses made at a later stage in flagged lesions, as reported",
+            "timing": "As reported",
+            "why": "The harm the department is trying to prevent.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Acknowledgement by a responsible clinician",
+            "measure": "Proportion of recommendations acknowledged by a clinician, as reported",
+            "timing": "As reported",
+            "why": "Shows where alert-based approaches break.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Patient worry and unnecessary imaging",
+            "measure": "Reported worry after direct communication and follow-up imaging judged unnecessary",
+            "timing": "As reported",
+            "why": "Direct letters and aggressive tracking can harm as well as help.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Three months: month 1 search and screening, month 2 extraction, month 3 synthesis and committee report; three librarian days and two radiologists' time, as approved.",
+        "biasMitigation": [
+          "Extraction fields fixed before screening",
+          "Completion definitions recorded with every figure; no pooling",
+          "Every figure cited to the committee checked against its source record",
+          "Unverified leads kept in a separate list and never cited as evidence"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Publication of successes",
+            "severity": "watch",
+            "note": "Programmes that failed are less often published; grey literature is searched."
+          },
+          {
+            "id": "b2",
+            "label": "Incomparable completion definitions",
+            "severity": "high",
+            "note": "Handled by reporting definitions rather than pooling."
+          },
+          {
+            "id": "b3",
+            "label": "Single academic centres",
+            "severity": "watch",
+            "note": "Settings may not match a department without navigators or a tracking list."
+          }
+        ],
+        "parsimony": {
+          "score": 82,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "One primary outcome with its definition; one process and one balancing measure"
+          ],
+          "simplestPath": "One review question, one extraction form, one table per approach organised by failure point."
+        },
+        "theoreticalFramework": "A closed-loop communication model (recommendation, receipt, acknowledgement, action, completion) organises the failure points; no other framework.",
+        "summary": "Three-month narrative review; one primary outcome with its definition, one secondary, one process and one balancing measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[3].role": "balancing",
+          "protocol.biasFlags[1].severity": "high",
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Narrative synthesis organised by failure point and approach; completion figures tabulated with their definitions and never pooled.",
+        "sampleSize": "Not applicable: the unit is the published report. The pre-search retrieved seven relevant records, one of them a structured review of 37 reports, so about 40 to 60 eligible reports are expected; the synthesis describes ranges and patterns rather than a pooled estimate.",
+        "primaryAnalysis": "For each approach, a table of completion with and without the approach, with window, denominator, finding types, setting and design; patterns across approaches described without vote counting.",
+        "secondaryAnalysis": "Failure points mapped to the approaches that address them; results for patients without a primary care clinician, emergency-only patients and patients who need an interpreter reported wherever available; resources per approach where reported.",
+        "missingData": "Reports without a completion denominator are described but left out of the completion table; missing subgroup results are recorded as not reported.",
+        "multiplicity": "No statistical testing; approaches are not ranked by significance.",
+        "software": "Reference manager and a shared extraction spreadsheet.",
+        "overfittingGuards": [
+          "Extraction fields fixed before screening",
+          "No pooling of completion figures with different windows or denominators",
+          "Every figure cited to the committee checked against its source record",
+          "Unverified leads listed separately and never cited as evidence"
+        ],
+        "summary": "Narrative synthesis without pooling; the number and comparability of reports, not a power calculation, limit what can be concluded."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "unit is the published report"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "No patients are involved; the risks are overselling one approach and anchoring the committee on an unverified figure.",
+        "consent": "Not applicable; no patient data are used for the review.",
+        "data": "Published and publicly available reports only; the spring spot check is described with the department's aggregate figures and no patient identifiers.",
+        "equity": "PROGRESS-Plus: patients without a primary care clinician, emergency-only patients, patients who need an interpreter and patients in the most deprived neighbourhoods complete follow-up less often. The review extracts results for these groups wherever reported, and the committee report states which approaches were never tested with them.",
+        "effectiveness": "The committee gets a comparison of approaches with their definitions, settings, resources and blind spots instead of competing single figures.",
+        "efficiency": "Two radiologists and three librarian days; the review may prevent spending on an approach that misses the patients most at risk.",
+        "costs": "Staff time within existing roles; no direct costs.",
+        "grants": "None needed; an evaluation of the chosen approach could later seek hospital quality funding.",
+        "partnerships": "Hospital librarian, an emergency physician, a primary care representative and a patient partner who comments on how findings should be communicated.",
+        "rebPath": "A literature review needs no research ethics review; the chair approved it as departmental quality work. Any later evaluation of the chosen approach that uses patient records will go through the hospital's ethics screening.",
+        "limitations": "Narrative synthesis, English and French reports only, mostly single-centre before-after evidence, and completion definitions that differ.",
+        "summary": "No participants; the ethical weight lies in honest comparison, attention to the patients most often missed, and keeping unverified figures out."
+      },
+      "expect": {
+        "store": {
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "ethics.rebPath": {
+            "includes": "needs no research ethics review"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A patient partner, an emergency physician and a primary care representative comment on the review question and on the committee summary before it is sent.",
+        "socialListening": "No social media listening; the hospital's patient relations log is read for complaints about findings that were not followed up.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Hearing about a finding by letter",
+            "quote": "Composite paraphrase: The letter said there was a spot on my kidney and to see my doctor; I did not sleep until the appointment.",
+            "implication": "Record worry as a balancing measure and look for studies of how findings were communicated.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Never hearing back",
+            "quote": "Composite paraphrase: I went to the emergency department for a fall, and two years later I learned the scan had shown something they wanted to check.",
+            "implication": "Extract results for emergency-only patients from every report.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Responsibility in the emergency department",
+            "quote": "Composite paraphrase: I order the scan for the fracture, the patient goes home, and the line about the adrenal lesion lands in an inbox nobody reads.",
+            "implication": "Treat the responsible clinician as the key failure point in the review.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Navigator workload",
+            "quote": "Composite paraphrase: One navigator can close most loops for lung nodules, but not for every finding in a department this size.",
+            "implication": "Extract resources per approach alongside completion.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "partner",
+            "theme": "Primary care capacity",
+            "quote": "Composite paraphrase: If every incidental finding comes to us, we need to know it is expected and what the interval is.",
+            "implication": "Report how approaches handled recommendation wording and handover to primary care.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on worry, emergency-only patients, responsibility, workload and handover."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[2].source": "clinician",
+          "voices.items[0].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Tracking follow-up of incidental imaging findings: a narrative review of approaches, failure points and the patients who are missed",
+        "abstract": "Background: follow-up imaging recommended for incidental findings is often not done. Aim: to describe approaches used to track these recommendations, the completion they report, where the loop breaks and which patients are missed. Methods: narrative review of reports from 2010 to 2026 in English and French, organised by failure point, with completion figures reported with their definitions and not pooled. Results and conclusions will be written after the review.",
+        "introduction": "Incidental findings are common, and follow-up recommendations often go unacted. Departments can choose report codes, tracking lists, navigators, clinician alerts or letters to patients, but these have been studied in different settings with different definitions of completion.",
+        "methods": "Three bibliographic databases and grey literature searched, with citation follow-up. Two radiologists screen and extract approach, setting, finding types, completion definition, failure points, resources and results for patients without a primary care clinician, emergency-only patients and patients who need an interpreter. Figures are checked against their sources; unverified leads are excluded.",
+        "results": "No review data have been extracted yet. The report will present the flow of reports, a table of approaches with completion and definitions, the failure points each approach addresses, resources, and results for the groups most often missed.",
+        "discussion": "The discussion will compare approaches by the links of the loop they repair, weigh the quality and comparability of the evidence, and state what it means for the department's choice.",
+        "limitations": "Narrative synthesis; English and French reports only; mostly single-centre before-after evidence; completion defined differently across reports.",
+        "conclusion": "To be written after the review; it will not rank approaches by a pooled figure and will cite no unverified benchmark.",
+        "reportingChecklist": "SANRA items as a quality checklist for narrative reviews",
+        "summary": "Narrative review draft with results left empty until extraction is complete."
+      },
+      "expect": {
+        "store": {
+          "manuscript.results": {
+            "includes": "No review data have been extracted yet"
+          },
+          "manuscript.conclusion": {
+            "includes": "no unverified benchmark"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The national benchmark lead (36 and 61 percent, DOI 10.5555/jnis.2017.0419) is unverified; do not cite it unless an identity check finds the record",
+          "The first design reply cited claim c5, which is not in the ledger; its acceptance was refused and it was withdrawn when the revised decision arrived",
+          "Run identity checks on the seven retrieved records before the committee report cites them"
+        ],
+        "improvementNotes": "A discovery reply added four leads after the seven retrieved records; one presented itself as a landmark with a DOI and stayed unverified. The first design reply rested on a claim that is not in the ledger and on the lead's figures; it was refused. The accepted decision rests on four ledger claims from retrieved records.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the unverified benchmark lead, the withdrawn unsupported decision, and identity checks on the retrieved records."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour and FAIL at 875fe59 because of the store defect named in A3 item L1.6, not a missing work-order entry.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Statuses (the lead's provenance, both decisions) are checked in the export, because the Scan and Design panels are not on this route.",
+      "expect": {
+        "store": {
+          "title": "Tracking follow-up of incidental imaging findings: a narrative review to inform a radiology department's choice",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 11
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.items[7].doi": "10.5555/jnis.2017.0419",
+          "design.decisions": {
+            "length": 2
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Tracking follow-up of incidental imaging findings: a narrative review to inform a radiology department's choice"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Tracking follow-up of incidental imaging findings: a narrative review to inform a radiology department's choice",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 11
+          },
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ]
+        },
+        "screen": {
+          "includes": [
+            "Tracking follow-up of incidental imaging findings: a narrative review to inform a radiology department's choice"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The landmark lead is still unverified with no check (G3); the refused decision is withdrawn and the supported one accepted with the action ready. Appended leads require D1; selectionStatus and actionStatus S11; the withdrawn first decision S1 and S8; the claims S13. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items[7].provenance.status": "unverified",
+            "scan.items[7].provenance.origin": "model",
+            "scan.items[7].provenance.checks": {
+              "length": 0
+            },
+            "scan.items[7].verification": "landmark",
+            "scan.items[7].doi": "10.5555/jnis.2017.0419",
+            "scan.items[0].provenance.status": "retrieved",
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 4
+            },
+            "design.decisions[0].status": "withdrawn",
+            "design.decisions[0].selectionStatus": "withdrawn",
+            "design.decisions[-1].status": "accepted",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "problem.constraints": "Three months for the review, reporting to the quality committee on 14 January 2027. Two radiologists and the hospital librarian share the work; no funding and no access to patient records for this review. English and French publications only."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

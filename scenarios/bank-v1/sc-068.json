@@ -1,6 +1,6 @@
 {
   "id": "sc-068",
-  "version": 1,
+  "version": 2,
   "title": "Three-hospital network: two-strand scoping review of stewardship audit and feedback, long inputs near the context budget",
   "field": "pharmacy",
   "level": 5,
@@ -11,7 +11,8 @@
     "D5",
     "S5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Expert level 5 path with inputs near the compact budget: a need of 557 words, 1215 characters of typed constraints and 12 local facts (1783 characters), all of which must survive create, reload, reopen and export exactly. The need names a scoping review and deliberately avoids words the router reads as other designs, so classifyFamily routes it to \"scoping-review\". The design is a scoping review with two strands kept apart: measured outcomes of audit and feedback, and experience of recommendations, each with its own primary charted outcome (the protocol stores two primary outcomes with parsimony.primaryOutcomeCount 2, which the application must accept, not reduce to one). Refusals: (1) the problem reply condenses the long constraints into one line that drops several of them; the typed text stays and a rejected-change issue at \"constraints\" is recorded and shown (G11; S5). (2) The appraisal of nine retrieved records adds a tenth annotation for ev-1v7r0x2, a record that was never retrieved: it is dropped with an issue and no item is added (records cannot be invented at appraisal; S13 on the production path). (3) As a scoping review, the appraisal assigns no per-record grade, no quality score and no overall certainty (gradeOverall null): the records stay \"unrated\", scores stay null and certainty stays \"\" and \"not assessed\" although Scan is complete on retrieved records (G1, G2, G4). The decision rests on five ledger claims and its three gates are met on investigator-supplied approvals, so acceptance is ready (G7). Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3, 5 and 8; titleYearKey for records 2, 4, 6, 7 and 9): ev-1ayhitq, ev-0bavujx, ev-0chxe4x, ev-11uewq8, ev-0f8tl7v, ev-07hychk, ev-028ccj8, ev-0pcbhhn, ev-1qwr8ow; ev-1v7r0x2 is not among them. The validator warns that ev-1v7r0x2 matches no retrieved record; that is the point of the step. Requires S5 (rejected-change), S13 (appraisal path), S11 and D5. Catches: long investigator text truncated or replaced, an invented record admitted at appraisal, certainty invented for a scoping map, and two strand primaries forced into one.",
   "inputs": {
@@ -100,7 +101,13 @@
         "screen": {
           "includes": [
             "Prospective audit and feedback for antimicrobial stewardship: a two-strand scoping review for extending the service",
-            {"anyOf": ["kept", "refused", "not applied"]},
+            {
+              "anyOf": [
+                "kept",
+                "refused",
+                "not applied"
+              ]
+            },
             "must not be analysed as part of the review"
           ]
         }
@@ -936,13 +943,65 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met",
+          "design.decisions[-1].gates[2].status": "unknown",
+          "design.decisions[-1].gates[2].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2",
+        "g3"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[2].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].gates[2].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1476,5 +1535,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-068.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2, g3)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1. Model responses, need and records are unchanged."
 }

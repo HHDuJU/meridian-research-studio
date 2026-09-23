@@ -1,0 +1,1371 @@
+{
+  "id": "sc-064",
+  "version": 1,
+  "title": "Surgical prehabilitation program: validating bedside tests against exercise testing for triage, two undated records unrated and the ethics gate unknown",
+  "field": "surgery",
+  "level": 3,
+  "family": "diagnostic",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path on an explicitly named diagnostic accuracy study. The fixture search returns seven records, two of them undated grey reports (year null). The appraisal sends explicit nulls for their relevance, methodQuality and grade: the scores are stored null (never 0 or 50) and the grade stays 'unrated', with one 'cleared' issue per grade null (G4; holds at 875fe59). One of the undated records carries a high-uncertainty claim (c5) that the decision does not rely on. The decision rests on c1 to c4 and is accepted; the physiotherapy gate is met on the investigator's memo and the REB gate stays unknown, so the action stays blocked in the store, on screen and in the export. The problem reply omits the constraints key (G11). Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 3, 5, 7 (ev-0ijcrxk, ev-1nx7672, ev-0a9k8jf, ev-0geq4b2), titleYearKey-based for records 2, 4, 6 (ev-0xv0fir, ev-1v4ah45, ev-1199cka; the undated ones use '?' for the year). Requires S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a guessed year or default score for unknowns, a null grade turned into 'low', a cleared issue without an unresolved value, an unknown gate treated as met, and unknowns lost on reload or export.",
+  "inputs": {
+    "need": "I am the anaesthetist who leads our prehabilitation program before major abdominal surgery (colorectal, upper gastrointestinal, liver and pancreatic resections). About 110 patients a quarter have these operations, but the supervised exercise program has 40 places a quarter. At the moment we decide who gets a place using cardiopulmonary exercise testing: patients with an anaerobic threshold below 11 mL/kg/min are prioritised. But we have one CPET machine, a four-week wait, and many patients have surgery within five weeks of the decision to operate, so half are never tested in time.\n\nI want to know whether a simple bedside test done at the pre-assessment clinic could pick out the patients with a low anaerobic threshold well enough to allocate prehabilitation places. The candidates are the 30-second sit-to-stand test and gait speed over four metres, which our physiotherapists already use. My plan is a diagnostic accuracy study: consecutive patients booked for major abdominal surgery would do the bedside tests at pre-assessment and then CPET as the reference standard within two weeks, before any prehabilitation starts. I would like to know the sensitivity and specificity at useful cut-offs, and whether a combination is better than either test alone.\n\nI need help with the sample size, choosing cut-offs without overfitting, dealing with patients who cannot complete CPET, making sure the testers are blind to each other's results, and deciding what accuracy would be good enough to replace CPET for triage. The physiotherapy department has agreed to run the tests; ethics approval has been applied for but not yet granted.",
+    "constraints": "One CPET machine with 12 test slots a week. The bedside tests must take less than ten minutes at pre-assessment. No funding beyond existing staff time; results are needed within 12 months.",
+    "localFacts": [
+      "About 110 patients a quarter undergo major abdominal surgery; the supervised prehabilitation program has 40 places a quarter.",
+      "The physiotherapy department agreed on 2026-08-30 to run the sit-to-stand and gait speed tests in pre-assessment clinics (memo PT-26-07).",
+      "The ethics application for the accuracy study was submitted on 2026-09-05; the REB meets on 2026-10-20.",
+      "The single CPET machine offers 12 test slots a week and the current wait is four weeks.",
+      "Patients with an anaerobic threshold below 11 mL/kg/min are currently prioritised for prehabilitation places."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the anaesthetist who leads our prehabilitation program before major abdominal surgery (colorectal, upper gastrointestinal, liver and pancreatic resections). About 110 patients a quarter have these operations, but the supervised exercise program has 40 places a quarter. At the moment we decide who gets a place using cardiopulmonary exercise testing: patients with an anaerobic threshold below 11 mL/kg/min are prioritised. But we have one CPET machine, a four-week wait, and many patients have surgery within five weeks of the decision to operate, so half are never tested in time.\n\nI want to know whether a simple bedside test done at the pre-assessment clinic could pick out the patients with a low anaerobic threshold well enough to allocate prehabilitation places. The candidates are the 30-second sit-to-stand test and gait speed over four metres, which our physiotherapists already use. My plan is a diagnostic accuracy study: consecutive patients booked for major abdominal surgery would do the bedside tests at pre-assessment and then CPET as the reference standard within two weeks, before any prehabilitation starts. I would like to know the sensitivity and specificity at useful cut-offs, and whether a combination is better than either test alone.\n\nI need help with the sample size, choosing cut-offs without overfitting, dealing with patients who cannot complete CPET, making sure the testers are blind to each other's results, and deciding what accuracy would be good enough to replace CPET for triage. The physiotherapy department has agreed to run the tests; ethics approval has been applied for but not yet granted.",
+          "problem.constraints": "One CPET machine with 12 test slots a week. The bedside tests must take less than ten minutes at pre-assessment. No funding beyond existing staff time; results are needed within 12 months.",
+          "family": "diagnostic",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the anaesthetist who leads our prehabilitation program"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Bedside tests to triage patients for prehabilitation before major abdominal surgery: accuracy against CPET",
+        "subtitle": "Diagnostic accuracy study with CPET anaerobic threshold as the reference standard",
+        "family": "diagnostic",
+        "statement": "Prehabilitation places (40 a quarter) are allocated by exercise testing, but the single machine's four-week wait means about half of the 110 patients a quarter are never tested in time. It is not known whether the 30-second sit-to-stand test or four-metre gait speed, done at pre-assessment, can identify patients with an anaerobic threshold below 11 mL/kg/min accurately enough to triage places.",
+        "whoAffected": "Patients awaiting colorectal, upper gastrointestinal, liver and pancreatic resections, especially older and frail patients; physiotherapists and exercise physiologists; the prehabilitation team allocating 40 places.",
+        "whatHurts": "Unfit patients who miss prehabilitation because they wait for a test face more complications, and places may go to patients who need them less.",
+        "currentPractice": "Exercise testing decides priority; untested patients are allocated places by clinical impression when surgery is close.",
+        "whyNow": "A four-week wait, bedside tests already used by physiotherapists, and an ethics application under review.",
+        "patientCenteredGoal": "The patients who would gain most from prehabilitation are identified in time to complete it before surgery.",
+        "summary": "Problem framed as a diagnostic accuracy question for triage to prehabilitation."
+      },
+      "note": "Constraints key omitted; the investigator's text stays (G11).",
+      "expect": {
+        "store": {
+          "title": "Bedside tests to triage patients for prehabilitation before major abdominal surgery: accuracy against CPET",
+          "family": "diagnostic",
+          "problem.constraints": "One CPET machine with 12 test slots a week. The bedside tests must take less than ten minutes at pre-assessment. No funding beyond existing staff time; results are needed within 12 months.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Bedside tests to triage patients for prehabilitation before major abdominal surgery: accuracy against CPET"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "sit-to-stand gait speed accuracy anaerobic threshold cardiopulmonary exercise testing major abdominal surgery",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Accuracy of the 30-second sit-to-stand test for a low anaerobic threshold before major abdominal surgery",
+            "authors": "Okonkwo-Brandvold T, Laurent-Mensah P, Ishikawa-Reid A",
+            "year": 2021,
+            "venue": "Perioperative Medicine and Fitness",
+            "doi": "10.5555/pmf.2021.0144",
+            "providerType": "journal-article",
+            "abstract": "In 212 consecutive patients awaiting major abdominal surgery, the 30-second sit-to-stand test was compared with cardiopulmonary exercise testing. A count of 10 or fewer identified an anaerobic threshold below 11 mL/kg/min with sensitivity 78 percent and specificity 69 percent. The area under the receiver operating characteristic curve was 0.77. Testers knew the exercise test results in a third of patients, and 14 patients who could not complete exercise testing were excluded. The cut-off was chosen in the same data, which may overstate accuracy in new patients."
+          },
+          {
+            "title": "Gait speed and anaerobic threshold in older surgical patients: a small comparison",
+            "authors": "Varga-Achterberg L, Oduya-Castellanos M",
+            "year": null,
+            "venue": "Anaesthesia research meeting abstract book",
+            "providerType": "conference-abstract",
+            "abstract": "In 64 patients aged 65 or older scheduled for major surgery, gait speed over four metres was compared with the anaerobic threshold from exercise testing. Gait speed below 1.0 m/s identified an anaerobic threshold below 11 mL/kg/min with sensitivity 71 percent and specificity 62 percent. The abstract does not state the year of the meeting, the recruitment period, how patients were selected or whether testers were blinded. The abstract gives no information about losses to follow-up or missing exercise tests."
+          },
+          {
+            "title": "Field tests of functional capacity against cardiopulmonary exercise testing before major surgery: a systematic review of diagnostic accuracy",
+            "authors": "Rasmussen-Obi H, Petrakis-Nwosu D, Svensson-Achebe K, Tanaka-Holt R",
+            "year": 2019,
+            "venue": "Perioperative Evidence Reviews",
+            "doi": "10.5555/per.2019.0228",
+            "providerType": "review",
+            "abstract": "We included 15 studies comparing simple field tests (sit-to-stand, gait speed, stair climbing, incremental shuttle walk) with the anaerobic threshold from exercise testing before major surgery. Sensitivity for a low anaerobic threshold ranged from 62 to 81 percent and specificity from 55 to 78 percent. Most studies were at high risk of bias in patient selection and blinding, and no study validated a cut-off in a separate sample. Patients unable to complete exercise testing were usually excluded. No field test was accurate enough to replace exercise testing for individual risk assessment."
+          },
+          {
+            "title": "Combining sit-to-stand and gait speed to triage patients for prehabilitation: a service report",
+            "authors": "Surgical prehabilitation service, Kestrelmoor General Hospital",
+            "year": null,
+            "venue": "Hospital service improvement bulletin",
+            "providerType": "report",
+            "abstract": "A single hospital combined the 30-second sit-to-stand test and gait speed to decide which patients were offered supervised prehabilitation. The service reports that most patients it judged high risk were identified by the combination, but exercise testing was done only in patients with abnormal bedside results, so accuracy cannot be calculated. Uptake of prehabilitation rose after the triage change. The report gives no date, no numbers for the patients tested and no description of how the combination rule was chosen."
+          },
+          {
+            "title": "Prehabilitation places, waiting times and postoperative complications at a regional surgical centre",
+            "authors": "Mbeki-Lindqvist S, Ferreira-Dube J",
+            "year": 2023,
+            "venue": "Journal of Surgical Pathways",
+            "doi": "10.5555/jsp.2023.0071",
+            "providerType": "journal-article",
+            "abstract": "Among 540 patients undergoing major abdominal surgery at one centre, those who completed at least four weeks of supervised prehabilitation had fewer postoperative complications than those who did not, but patients who completed the program were younger and fitter. Of patients prioritised for a place by exercise testing, 46 percent started prehabilitation too late to complete four weeks before surgery because they waited for the test. The authors argue that faster triage matters as much as the choice of triage test."
+          },
+          {
+            "title": "Patients unable to complete cardiopulmonary exercise testing before major surgery: frequency and outcomes",
+            "authors": "Nakamura-Fischer O, Brennan-Oyelaran B",
+            "year": 2017,
+            "venue": "Perioperative Medicine and Fitness",
+            "providerType": "journal-article",
+            "abstract": "Of 1,120 patients referred for exercise testing before major surgery, 9 percent could not complete a test, most often because of joint pain, frailty or breathlessness at low workloads. These patients had the highest rate of postoperative complications in the cohort. Accuracy studies that excluded them would overstate the specificity of any bedside test, because the patients most likely to fail both tests are removed. The authors recommend a pre-specified rule that classifies inability to complete testing as low functional capacity."
+          },
+          {
+            "title": "Sample size for diagnostic accuracy studies when the target condition prevalence is uncertain: a practical guide",
+            "authors": "Halvorsen-Adeyemi E, Quist-Morales R, Sato-Kowalczyk N",
+            "year": 2025,
+            "venue": "Diagnostic Research Methods",
+            "doi": "10.5555/drm.2025.0012",
+            "providerType": "journal-article",
+            "abstract": "We give worked examples for planning accuracy studies. Estimating a sensitivity of 80 percent with a 95 percent confidence interval of plus or minus 10 percentage points needs about 62 patients with the target condition; if the prevalence is 40 percent, about 155 patients must be recruited. We recommend inflating the total for patients without a usable reference result, pre-specifying cut-offs from earlier studies, and reporting accuracy for a second cut-off only as exploratory. Choosing a cut-off in the same data inflates both sensitivity and specificity."
+          }
+        ]
+      },
+      "note": "Two records (a conference abstract and a hospital service report) carry no year and are stored with year null (G4).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0ijcrxk",
+            "ev-0xv0fir",
+            "ev-1nx7672",
+            "ev-1v4ah45",
+            "ev-0a9k8jf",
+            "ev-1199cka",
+            "ev-0geq4b2"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.items[3].grade": "unrated",
+          "scan.items[0].provenance.origin": "retrieval",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Combining sit-to-stand and gait speed to triage patients for prehabilitation: a service report"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0ijcrxk",
+            "relevance": 95,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "In 212 consecutive patients, a sit-to-stand count of 10 or fewer identified an anaerobic threshold below 11 mL/kg/min with sensitivity 78 percent and specificity 69 percent (area under the curve 0.77).",
+            "limitations": "Cut-off chosen in the same data; testers unblinded for a third; 14 patients unable to complete testing excluded.",
+            "contextTags": [
+              "sit-to-stand",
+              "accuracy",
+              "cut-off"
+            ]
+          },
+          {
+            "id": "ev-0xv0fir",
+            "relevance": null,
+            "methodQuality": null,
+            "kind": "observational",
+            "grade": null,
+            "keyFindings": "Reports sensitivity 71 percent and specificity 62 percent for gait speed below 1.0 m/s in 64 older patients.",
+            "limitations": "No year, recruitment period, selection method or blinding reported.",
+            "contextTags": [
+              "gait speed",
+              "older patients",
+              "conference abstract"
+            ],
+            "notes": "Not rated: the abstract lacks the information needed to judge relevance or method quality."
+          },
+          {
+            "id": "ev-1nx7672",
+            "relevance": 88,
+            "methodQuality": 68,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 15 studies, field-test sensitivity for a low anaerobic threshold ranged from 62 to 81 percent; no study validated a cut-off in a separate sample; patients unable to complete testing were usually excluded.",
+            "limitations": "High risk of bias in included studies; heterogeneous tests.",
+            "contextTags": [
+              "systematic review",
+              "field tests",
+              "validation"
+            ]
+          },
+          {
+            "id": "ev-1v4ah45",
+            "relevance": null,
+            "methodQuality": null,
+            "kind": "qi-report",
+            "grade": null,
+            "keyFindings": "A hospital combined both bedside tests for triage; exercise testing was done only after abnormal bedside results, so accuracy cannot be calculated.",
+            "limitations": "Partial verification; no date; no numbers; rule chosen without description.",
+            "contextTags": [
+              "combination rule",
+              "partial verification",
+              "service report"
+            ],
+            "notes": "Not rated: undated and without numbers; relevance and quality cannot be judged from what is reported."
+          },
+          {
+            "id": "ev-0a9k8jf",
+            "relevance": 80,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Of patients prioritised by exercise testing, 46 percent started prehabilitation too late to complete four weeks because they waited for the test.",
+            "limitations": "One centre; complications comparison confounded by fitness.",
+            "contextTags": [
+              "waiting times",
+              "triage speed",
+              "prehabilitation"
+            ]
+          },
+          {
+            "id": "ev-1199cka",
+            "relevance": 85,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Of 1,120 referred patients, 9 percent could not complete exercise testing; they had the most complications; excluding them overstates specificity.",
+            "limitations": "One referral service.",
+            "contextTags": [
+              "reference standard failure",
+              "frailty",
+              "spectrum bias"
+            ]
+          },
+          {
+            "id": "ev-0geq4b2",
+            "relevance": 75,
+            "methodQuality": 65,
+            "kind": "expert",
+            "grade": "low",
+            "keyFindings": "Estimating a sensitivity of 80 percent within 10 points needs about 62 patients with the target condition, about 155 in total at 40 percent prevalence; cut-offs chosen in the same data inflate accuracy.",
+            "limitations": "Methods guidance, not empirical accuracy data.",
+            "contextTags": [
+              "sample size",
+              "methods"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In 212 consecutive patients awaiting major abdominal surgery, a sit-to-stand count of 10 or fewer identified an anaerobic threshold below 11 mL/kg/min with sensitivity 78 percent and specificity 69 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0ijcrxk"
+            ],
+            "location": "Abstract, results",
+            "passage": "A count of 10 or fewer identified an anaerobic threshold below 11 mL/kg/min with sensitivity 78 percent and specificity 69 percent.",
+            "interpretation": "Pre-specify 10 or fewer as the cut-off to validate; the published accuracy is probably optimistic.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Across 15 accuracy studies of field tests against exercise testing, no study validated a cut-off in a separate sample.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1nx7672"
+            ],
+            "location": "Abstract",
+            "passage": "no study validated a cut-off in a separate sample",
+            "interpretation": "The local study should validate pre-specified cut-offs, not derive new ones.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Of 1,120 patients referred for exercise testing before major surgery, 9 percent could not complete a test, and excluding them overstates specificity.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1199cka"
+            ],
+            "location": "Abstract",
+            "passage": "Of 1,120 patients referred for exercise testing before major surgery, 9 percent could not complete a test",
+            "interpretation": "Classify inability to complete testing by a pre-specified rule rather than excluding those patients.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Estimating a sensitivity of 80 percent to within plus or minus 10 percentage points needs about 62 patients with the target condition.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0geq4b2"
+            ],
+            "location": "Abstract, worked example",
+            "passage": "Estimating a sensitivity of 80 percent with a 95 percent confidence interval of plus or minus 10 percentage points needs about 62 patients with the target condition",
+            "interpretation": "With about 40 percent prevalence, recruit about 155 plus those without a usable reference result.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "An undated conference abstract reported sensitivity 71 percent and specificity 62 percent for gait speed below 1.0 m/s in 64 older patients.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0xv0fir"
+            ],
+            "location": "Abstract",
+            "passage": "Gait speed below 1.0 m/s identified an anaerobic threshold below 11 mL/kg/min with sensitivity 71 percent and specificity 62 percent.",
+            "interpretation": "A candidate cut-off for gait speed, from an unrated source that cannot be appraised.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c6",
+            "text": "Of patients prioritised for prehabilitation by exercise testing at one centre, 46 percent started too late to complete four weeks because they waited for the test.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0a9k8jf"
+            ],
+            "location": "Abstract",
+            "passage": "46 percent started prehabilitation too late to complete four weeks before surgery because they waited for the test",
+            "interpretation": "Speed of triage matters; a bedside test only helps if it is accurate enough.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level; two undated grey records are left unrated. One study found a sit-to-stand cut-off of 10 or fewer detected a low anaerobic threshold with sensitivity 78 and specificity 69 percent, but chose the cut-off in its own data. A review found field-test sensitivity of 62 to 81 percent, no validated cut-off and routine exclusion of patients who cannot complete exercise testing, which overstates specificity. Waiting for exercise testing delayed prehabilitation for almost half of prioritised patients elsewhere. The evidence supports a validation study of pre-specified cut-offs in consecutive patients, not a switch to bedside triage now.",
+        "gradeOverall": "low",
+        "gradeRationale": "Single-centre accuracy studies with cut-offs derived in the same data, a review of studies at high risk of bias, and unappraisable grey reports; serious risk of bias and imprecision.",
+        "summary": "Seven records appraised; two undated records left unrated with null scores; six claims."
+      },
+      "note": "The annotations for the two undated records send explicit nulls: relevance and methodQuality are stored null (unknown, not 0 or 50) and the grade null leaves the documented unresolved value 'unrated', each grade null logged as 'cleared' (holds at 875fe59; D2 requires that a cleared issue always matches the unresolved value, which it does). Applying the appraisal requires S13.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[0].relevance": 95,
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].relevance": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[1].keyFindings": {
+            "includes": "gait speed below 1.0 m/s"
+          },
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.items[3].relevance": {
+            "isNull": true
+          },
+          "scan.items[3].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[3].grade": "unrated",
+          "scan.items[3].kind": "qi-report",
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.claims[4].sourceIds": [
+            "ev-0xv0fir"
+          ],
+          "scan.claims[4].uncertainty": "high",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-0xv0fir].grade",
+              "code": "cleared"
+            },
+            {
+              "path": "annotations[ev-1v4ah45].grade",
+              "code": "cleared"
+            }
+          ],
+          "count": 2
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "one CPET machine, 12 slots a week, four-week wait",
+          "110 major abdominal operations and 40 prehabilitation places a quarter",
+          "physiotherapists already doing bedside tests",
+          "surgery within five weeks of decision"
+        ],
+        "reading": "Triage is a race between the date of surgery and the time needed for testing and four weeks of prehabilitation. Exercise testing is the accepted reference but too slow; bedside tests are fast but their accuracy is uncertain and their published cut-offs were derived in their own data. The patients who cannot complete exercise testing are the frailest and the ones accuracy studies usually drop. A validation study of pre-specified cut-offs, including those patients, answers whether the fast test can replace the slow one for triage.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Exercise testing anaerobic threshold below 11 mL/kg/min",
+            "kind": "context",
+            "detail": "Reference standard."
+          },
+          {
+            "id": "n2",
+            "label": "30-second sit-to-stand, cut-off 10 or fewer",
+            "kind": "context",
+            "detail": "Index test (claim c1)."
+          },
+          {
+            "id": "n3",
+            "label": "Four-metre gait speed, below 1.0 m/s",
+            "kind": "context",
+            "detail": "Index test from an unrated abstract (claim c5)."
+          },
+          {
+            "id": "n4",
+            "label": "Sensitivity for a low anaerobic threshold",
+            "kind": "outcome",
+            "detail": "What triage needs most."
+          },
+          {
+            "id": "n5",
+            "label": "Patients unable to complete exercise testing",
+            "kind": "gap",
+            "detail": "Usually excluded (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Late start of prehabilitation",
+            "kind": "outcome",
+            "detail": "46 percent elsewhere (claim c6)."
+          },
+          {
+            "id": "n7",
+            "label": "Frail and older patients",
+            "kind": "stakeholder",
+            "detail": "Most likely to fail both tests."
+          },
+          {
+            "id": "n8",
+            "label": "Physiotherapists and exercise physiologists",
+            "kind": "stakeholder",
+            "detail": "Must be blind to each other's results."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "estimated against n1 for"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "estimated against n1 for"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "biases if excluded"
+          },
+          {
+            "from": "n1",
+            "to": "n6",
+            "relation": "delays and causes"
+          },
+          {
+            "from": "n7",
+            "to": "n5",
+            "relation": "over-represented in"
+          },
+          {
+            "from": "n8",
+            "to": "n2",
+            "relation": "perform"
+          }
+        ],
+        "summary": "Map sets the bedside tests against the reference standard, with the untestable patients as the main bias."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.nodes[4].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Published cut-offs have never been validated",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Cut-offs derived in the same data overstate accuracy (claims c1, c2).",
+            "opportunity": "Validate pre-specified cut-offs in consecutive local patients."
+          },
+          {
+            "id": "g2",
+            "title": "Patients unable to complete exercise testing are dropped",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Excluding them overstates specificity and removes the frailest (claim c3).",
+            "opportunity": "Classify inability to complete testing as low functional capacity by a pre-specified rule, with a sensitivity analysis."
+          },
+          {
+            "id": "g3",
+            "title": "Two grey sources cannot be appraised",
+            "kind": "evidence",
+            "severity": "moderate",
+            "whyItMatters": "The gait speed cut-off and the combination rule come from undated, unrated reports (claim c5).",
+            "opportunity": "Treat their figures as candidate values only, not as evidence."
+          },
+          {
+            "id": "g4",
+            "title": "Frail and older patients may be misclassified",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Joint pain and frailty affect both tests.",
+            "opportunity": "Report accuracy for patients aged 75 and over and by frailty."
+          }
+        ],
+        "errorsFound": [
+          "The two undated grey records have no year and no appraisable methods; they stay unrated rather than receiving guessed scores."
+        ],
+        "reevaluation": "The gaps confirm a validation study of pre-specified bedside test cut-offs in consecutive patients with blinded testing and a rule for patients who cannot complete the reference test.",
+        "summary": "Four gaps; unvalidated cut-offs and dropped untestable patients are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[1].severity": "high",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "In consecutive patients booked for major abdominal surgery, a 30-second sit-to-stand count of 10 or fewer detects an anaerobic threshold below 11 mL/kg/min (or inability to complete exercise testing) with sensitivity of at least 75 percent.",
+            "novelty": 55,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 75,
+            "parsimony": 85,
+            "rationale": "Triage needs high sensitivity so that unfit patients are not missed; 75 percent is the lower bound the triage group judged acceptable; the published estimate is 78 percent with an optimistic cut-off (c1).",
+            "risks": "Blinding lapses; CPET capacity; prevalence lower than planned."
+          },
+          {
+            "id": "h2",
+            "statement": "Adding gait speed below 1.0 m/s to the sit-to-stand test raises sensitivity without an unacceptable fall in specificity.",
+            "novelty": 60,
+            "need": 65,
+            "practiceChange": 65,
+            "feasibility": 75,
+            "parsimony": 60,
+            "rationale": "A combination rule is used elsewhere without accuracy data.",
+            "risks": "Exploratory; multiplicity of combinations."
+          },
+          {
+            "id": "h3",
+            "statement": "Bedside triage would let most prioritised patients start prehabilitation at least four weeks before surgery.",
+            "novelty": 45,
+            "need": 75,
+            "practiceChange": 70,
+            "feasibility": 70,
+            "parsimony": 65,
+            "rationale": "Waiting for testing delayed almost half elsewhere (c6).",
+            "risks": "Not tested in this study; follows only if accuracy is adequate."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 is the primary validation target."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "In consecutive adults booked for major abdominal surgery, what are the sensitivity and specificity of a 30-second sit-to-stand count of 10 or fewer, done at pre-assessment, for an anaerobic threshold below 11 mL/kg/min or inability to complete exercise testing within two weeks?",
+            "framework": "PICO",
+            "population": "Consecutive adults booked for colorectal, upper gastrointestinal, liver or pancreatic resection",
+            "intervention": "30-second sit-to-stand test, cut-off 10 or fewer (index test)",
+            "comparator": "Exercise testing anaerobic threshold (reference standard)",
+            "outcome": "Sensitivity and specificity for anaerobic threshold below 11 mL/kg/min or inability to complete testing",
+            "time": "Reference test within two weeks of the index test",
+            "setting": "Pre-assessment clinics of one surgical centre"
+          }
+        ],
+        "finer": "Feasible with physiotherapy support and five exercise test slots a week; interesting to the prehabilitation team; novel as a validation; ethical with consent and no change to care until results are known; relevant to allocating 40 places a quarter.",
+        "summary": "One accuracy question with a pre-specified cut-off and a rule for untestable patients."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "diagnostic",
+        "rationale": "The question is how well a fast bedside test agrees with the reference standard for triage, which is a diagnostic accuracy question. Validating pre-specified cut-offs in consecutive patients, with blinded testers and a rule for patients who cannot complete the reference test, addresses the biases of the published studies (c2, c3). Reporting follows STARD.",
+        "alternatives": [
+          "Randomised comparison of bedside and exercise-test triage (deferred: needs evidence of adequate accuracy first)",
+          "Derive a new prediction model from many variables (refused: overfitting with about 180 patients)",
+          "Switch triage now (refused: published cut-offs were never validated)"
+        ],
+        "guidelines": [
+          "STARD"
+        ],
+        "whyNotMoreComplex": "A randomised comparison of triage strategies would be the next step only if a bedside test proves accurate enough.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Pursue a validation study of the 30-second sit-to-stand test (cut-off 10 or fewer, pre-specified from c1) and four-metre gait speed against exercise testing in about 180 consecutive patients, with blinded testers, cut-offs validated rather than derived (c2), patients unable to complete exercise testing classified by a pre-specified rule (c3) and a sample size based on sensitivity precision (c4).",
+          "question": "Should the prehabilitation team validate bedside tests against exercise testing before using them for triage?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "A bedside cut-off with promising but unvalidated accuracy exists, and waiting for exercise testing delays prehabilitation.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c6"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "No bedside cut-off reaches a sensitivity of 75 percent acceptable to the triage group.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Physiotherapy department agreement to run the bedside tests at pre-assessment",
+              "status": "met",
+              "evidence": "Memo PT-26-07 dated 2026-08-30, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "REB approval of the accuracy study with consent for exercise testing within two weeks",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Switch triage to the sit-to-stand test now on published accuracy",
+            "Buy exercise testing capacity instead of validating bedside tests"
+          ],
+          "note": "Rests on ledger claims c1 to c4; the unrated gait speed abstract (c5) supplies only a candidate cut-off and is not relied on. The physiotherapy gate is met; the REB gate stays unknown until the committee meets."
+        },
+        "summary": "Diagnostic validation study recommended; physiotherapy gate met, REB gate unknown."
+      },
+      "note": "Claims require S13; statuses S11; text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "diagnostic",
+          "family": "diagnostic",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].criteria[0].claimIds": [
+            "c1",
+            "c6"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].evidence": {
+            "absent": true
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive; the unknown REB gate keeps the action blocked (G7; A2 item 9). S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.basis": "explicit",
+          "family": "diagnostic"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Single-centre diagnostic accuracy study validating pre-specified cut-offs of two bedside tests against the exercise-test anaerobic threshold in consecutive adults booked for major abdominal surgery.",
+        "population": "Consecutive adults booked for colorectal, upper gastrointestinal, liver or pancreatic resection who attend pre-assessment at least three weeks before surgery; excluded are patients for whom exercise testing is contraindicated.",
+        "exposure": "Index tests at pre-assessment by a physiotherapist: 30-second sit-to-stand (cut-off 10 or fewer) and four-metre gait speed (cut-off below 1.0 m/s), both pre-specified.",
+        "procedures": "Exercise testing within two weeks by an exercise physiologist blind to the bedside results; the physiotherapist is blind to exercise results because testing follows. Anaerobic threshold is read by two physiologists independently, with a third for disagreement. Patients who start but cannot complete exercise testing are classified as reference positive (low functional capacity) in the primary analysis. Prehabilitation allocation continues by current practice during the study.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Sensitivity of sit-to-stand 10 or fewer",
+            "measure": "Proportion of reference-positive patients with a count of 10 or fewer",
+            "timing": "Reference test within two weeks",
+            "why": "Triage must not miss unfit patients.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Specificity of sit-to-stand 10 or fewer",
+            "measure": "Proportion of reference-negative patients with a count above 10",
+            "timing": "Same",
+            "why": "Places are limited.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Accuracy of gait speed and the combination",
+            "measure": "Sensitivity and specificity of gait speed below 1.0 m/s and of either test positive",
+            "timing": "Same",
+            "why": "Candidate alternatives; exploratory for the combination.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Unable to complete a test",
+            "measure": "Proportion unable to complete each index test and the reference test",
+            "timing": "At testing",
+            "why": "The untestable patients are the main source of bias.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 180 patients over nine months using 5 of the 12 weekly exercise test slots; bedside tests take under ten minutes.",
+        "biasMitigation": [
+          "Consecutive recruitment",
+          "Blinded index and reference testers",
+          "Pre-specified cut-offs",
+          "Pre-specified rule for incomplete reference tests"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Spectrum bias",
+            "severity": "watch",
+            "note": "Patients seen late for pre-assessment are missed."
+          },
+          {
+            "id": "b2",
+            "label": "Incorporation of untestable patients",
+            "severity": "watch",
+            "note": "Classification rule tested in a sensitivity analysis."
+          }
+        ],
+        "parsimony": {
+          "score": 84,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 0,
+          "flags": [
+            "Two pre-specified cut-offs; combination exploratory"
+          ],
+          "simplestPath": "One index test, one cut-off, one reference standard."
+        },
+        "theoreticalFramework": "None beyond the accuracy study design.",
+        "summary": "Consecutive-patient validation of two pre-specified bedside cut-offs against exercise testing."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": false,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cross-classification of index test results against the reference standard in consecutive patients; pre-specified cut-offs.",
+        "sampleSize": "Estimating a sensitivity of 80 percent to within plus or minus 10 percentage points needs about 62 reference-positive patients (c4). With an expected 40 percent prevalence of an anaerobic threshold below 11 mL/kg/min or incomplete testing, about 155 patients are needed; inflating by about 15 percent for patients without a usable reference result gives about 180. Specificity will then be estimated to within about 9 percentage points.",
+        "primaryAnalysis": "Sensitivity with a Wilson 95 percent confidence interval at the pre-specified cut-off, compared with the 75 percent threshold agreed by the triage group.",
+        "secondaryAnalysis": "Specificity; predictive values at the observed prevalence; gait speed accuracy; the either-positive combination as exploratory; accuracy for patients aged 75 and over; sensitivity analysis excluding patients who could not complete exercise testing.",
+        "missingData": "Patients without an index result are reported; patients without any reference attempt are excluded and described; no imputation of reference results.",
+        "multiplicity": "One primary estimate at one cut-off; other cut-offs and combinations are exploratory and labelled so.",
+        "software": "R; analysis plan registered before recruitment.",
+        "overfittingGuards": [
+          "Cut-offs fixed before recruitment",
+          "No data-driven cut-off search reported as validated",
+          "Combination treated as exploratory"
+        ],
+        "summary": "About 180 patients for a sensitivity estimate within 10 points at 40 percent prevalence."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 180"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: bedside tests and an exercise test, which carries a small risk of adverse events and is supervised by trained staff; no change to prehabilitation allocation during the study.",
+        "consent": "Written consent at pre-assessment for the bedside tests and for exercise testing within two weeks; declining does not affect care.",
+        "data": "Study database holds test results and a study number; linked to the surgical record only for eligibility.",
+        "equity": "PROGRESS-Plus: older, frail and disabled patients and patients with limited English are most likely to be unable to complete tests or to be misclassified. Interpreters are offered, test instructions are demonstrated, and accuracy is reported for patients aged 75 and over and by frailty.",
+        "effectiveness": "A validated bedside test would let prehabilitation start earlier for the patients who need it.",
+        "efficiency": "Uses existing physiotherapy and exercise test staff.",
+        "costs": "Staff time only.",
+        "grants": "None needed; a later triage comparison could seek funding.",
+        "partnerships": "Physiotherapy, exercise physiology, the surgical pre-assessment team and two patient partners who completed prehabilitation.",
+        "rebPath": "Submitted to the REB on 2026-09-05 under ICH-GCP and Declaration of Helsinki principles; the committee meets on 2026-10-20, so approval is unknown and recruitment waits for it.",
+        "limitations": "One centre; prevalence may differ from planning; blinding depends on sequencing.",
+        "summary": "Low-risk accuracy study with consent; REB decision pending."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "approval is unknown"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners who completed prehabilitation review the information sheet and the demonstration of the bedside tests.",
+        "socialListening": "No social media listening; comments from the prehabilitation program's exit questionnaires are read for themes.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Waiting for the bike test",
+            "quote": "Composite paraphrase: By the time I had the bike test, my operation was ten days away and there was no time for the exercise classes.",
+            "implication": "Measure how quickly bedside triage could lead to a place.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Joint pain",
+            "quote": "Composite paraphrase: My knees would not let me stand up and sit down that many times, but my heart and lungs are fine.",
+            "implication": "Record why a test could not be completed and report accuracy by reason.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Blinding in a small team",
+            "quote": "Composite paraphrase: We all sit in the same office; keeping the results apart will take discipline.",
+            "implication": "Sequence tests so the index test always comes first and store results separately.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Three composite voices on waiting, joint pain and blinding."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Accuracy of bedside tests against the exercise-test anaerobic threshold for triage to prehabilitation before major abdominal surgery",
+        "abstract": "Objective: to validate pre-specified cut-offs of the 30-second sit-to-stand test and gait speed for a low anaerobic threshold. Design: consecutive-patient accuracy study with blinded testers. Primary outcome: sensitivity of sit-to-stand 10 or fewer. Results will be written after recruitment.",
+        "introduction": "Exercise testing is too slow to triage every patient for prehabilitation before major abdominal surgery. Bedside tests are fast, but their published cut-offs were derived in their own data and never validated.",
+        "methods": "Consecutive adults did both bedside tests at pre-assessment and exercise testing within two weeks, with testers blind to each other's results. Patients unable to complete exercise testing were classified by a pre-specified rule, and cut-offs were fixed before recruitment.",
+        "results": "No data have been collected yet. The report will present the flow of patients, cross-tables for each test, sensitivity and specificity with intervals, and results for patients aged 75 and over.",
+        "discussion": "The discussion will compare validated accuracy with the published estimates and state whether bedside triage is acceptable for allocating places. It will consider the patients who could not complete either test.",
+        "limitations": "This is a single centre, and blinding depends on the order of testing. The prevalence of the target condition may differ from the planning value.",
+        "conclusion": "To be written after analysis. It will state whether the pre-specified cut-off meets the triage threshold.",
+        "reportingChecklist": "STARD",
+        "summary": "STARD draft; results empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STARD",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The REB decision is unknown; the decision's action stays blocked and recruitment waits",
+          "Two retrieved records are undated and unrated; do not quote their figures as established",
+          "Register the analysis plan with the pre-specified cut-offs before recruitment"
+        ],
+        "improvementNotes": "Two undated grey records kept null relevance and method quality and stayed unrated; the accepted decision rests on four dated, appraised claims.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: ethics, unrated records and the analysis plan."
+      },
+      "note": "Audit fields fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Bedside tests to triage patients for prehabilitation before major abdominal surgery: accuracy against CPET",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[3].relevance": {
+            "isNull": true
+          },
+          "scan.claims": {
+            "length": 6
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Bedside tests to triage patients for prehabilitation before major abdominal surgery: accuracy against CPET"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Bedside tests to triage patients for prehabilitation before major abdominal surgery: accuracy against CPET",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.items[3].methodQuality": {
+            "isNull": true
+          },
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ]
+        },
+        "screen": {
+          "includes": [
+            "Bedside tests to triage patients for prehabilitation before major abdominal surgery: accuracy against CPET"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "Unknown years and scores stay null in the export (G4); S11 for the decision fields; one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.items[1].year": {
+              "isNull": true
+            },
+            "scan.items[1].relevance": {
+              "isNull": true
+            },
+            "scan.items[1].grade": "unrated",
+            "scan.items[3].year": {
+              "isNull": true
+            },
+            "scan.items[3].methodQuality": {
+              "isNull": true
+            },
+            "scan.items[3].grade": "unrated",
+            "scan.gradeOverall": "low",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[1].status": "unknown"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "id": "sc-055",
-  "version": 1,
+  "version": 2,
   "title": "Postpartum hypertension: remote blood pressure monitoring pragmatic trial, one lead with its year given as text",
   "field": "obstetrics",
   "level": 2,
@@ -11,7 +11,8 @@
     "D1",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary path on a pragmatic trial (routing explicit pragmatic-trial from 'We want to run a pragmatic trial'; allocation is not described with any other design word). A fixture search returns seven records. The first scan reply (shape discovery) omits the certainty keys (omitKeys) and appends three leads after the records (D1): the first gives its year as the 4-digit string '2021', which must be stored as the number 2021 with no issue and survive a reload; the third has year null, stored null and unrated (G4); all three stay unverified model leads (G3). The only issue is the routine sourcesConsulted drop, and with records retrieved the Scan can complete (G2). A reload on the Scan route follows. The appraisal (scan call 2) annotates the seven records and records claims c1 to c4; certainty 'low' over inspected records. The decision rests on c1 to c4 with two gates met on investigator-supplied records and the ethics gate unknown (accepted, blocked). The protocol makes six-week blood pressure control primary because readmission is underpowered (about 950 women would be needed), with inclusion measured as a process outcome. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 3, 4, 5 (ev-0v29ru5, ev-1ni9nbz, ev-0tgdamh, ev-08nx7om); titleYearKey hash for records 2, 6, 7 (ev-125igf5, ev-02pc6lt, ev-1cn5t3n). Requires D1 (leads appended after retrieved records), S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text); the string year conversion holds at 875fe59. Catches: a year stored as text or dropped, an invented year for an undated lead, leads replacing retrieved records, and a readmission outcome chosen without the numbers to power it.",
   "inputs": {
@@ -927,13 +928,40 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1425,5 +1453,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-055.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

@@ -1,6 +1,6 @@
 {
   "id": "sc-079",
-  "version": 1,
+  "version": 2,
   "title": "Medical school: near-peer examination-skills teaching, cost-effectiveness with a concurrent comparison",
   "field": "medical-education",
   "level": 2,
@@ -11,7 +11,8 @@
     "D1",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Level 2, ordinary ambiguity on an explicitly economic question. Routing at create is explicit ('economic', from 'cost-effectiveness analysis' with an intent verb); the problem reply keeps it and echoes the typed constraints byte for byte (no rejected-change, G11). A fixture search returns six records; the appraisal call (scan call 1) annotates them and records four source-derived claims (certainty 'low' over inspected records, G1). A second scan call of shape discovery then asks for supplementary costing leads: its four leads are appended after the retrieved records (D1) as unverified model leads (G3), and the first carries year \"2021\" as a 4-digit string, which the contract stores as 2021 without an issue. The discovery reply omits gradeOverall, gradeRationale and synthesis (omitKeys), so the appraisal's certainty and synthesis are unchanged; the only issue is the routine drop of sourcesConsulted. Ordinary ambiguity: two candidate designs weighed at the design stage, a constraint the investigator left out (the perspective and willingness to pay, named in gaps), and one null score (h2 novelty stays null, G4). The decision rests on c1 to c3 and two gates met on investigator-supplied records, so acceptance is a supported positive. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 2, 4, 5 (ev-0mwqby2, ev-1xsdm9y, ev-15ov4hn, ev-0q0a1ak) and titleYearKey-keyed for records 3 and 6 (ev-1en9gz4, ev-0kk5k37). Requires D1 (leads appended, never replacing retrieved records), S13 (appraisal payload), S11 (selectionStatus, actionStatus, recommendedFamily, basis) and D5 (status text). Catches: a year string rejected or guessed, leads that replace retrieved records, a certainty overwritten by an omitted key, and a null score turned into a number.",
   "inputs": {
@@ -927,8 +928,8 @@
             "c2",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -937,13 +938,38 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -960,14 +986,14 @@
         "store": {
           "design.decisions[-1].status": "accepted",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].actionStatus": "blocked",
           "design.basis": "explicit",
           "family": "economic"
         },
         "screen": {
           "includes": [
             "accepted",
-            "ready"
+            "blocked"
           ]
         }
       }
@@ -1464,7 +1490,7 @@
               "isNull": true
             },
             "design.decisions[-1].selectionStatus": "accepted",
-            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].actionStatus": "blocked",
             "problem.constraints": "No funding. Existing data only, plus about 4 hours per week of the director's and an education fellow's time from October 2026 to May 2027. Student data may be used only in de-identified form under the school's education data policy."
           }
         },
@@ -1473,5 +1499,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-079.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Decision 1 is expected blocked from its acceptance (step 12) on: the investigator's facts give no research ethics status. Model responses, need and records are unchanged."
 }

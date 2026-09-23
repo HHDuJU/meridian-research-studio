@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { applyDecision, evaluateDecision } from "../src/lib/evidence/decision";
+import { applyDecision, approvalReview, evaluateDecision } from "../src/lib/evidence/decision";
+import { DETERMINATION_GATE } from "../src/lib/evidence/authority";
 import { applyAiResult } from "../src/lib/apply-ai";
 import { ledgerIssues } from "../src/lib/evidence/ledger";
 import { createStudy } from "../src/lib/defaults";
@@ -115,7 +116,9 @@ test("f7_registry_field_not_in_cited_fact_is_flagged (SYN-LOCAL-03): a restricte
   const inside = modelDecision(study, {
     gates: [{ id: "g-in", requirement: "Registry records treated patients", status: "met", evidence: "The block registry holds treated patients only" }],
   });
-  assert.equal(inside.decision!.gates[0].status, "met");
+  // D10 / S5: a supported model "met" is a proposal with no concerns; the investigator confirms it.
+  assert.equal(inside.decision!.gates[0].status, "unknown");
+  assert.deepEqual(inside.decision!.gates[0].proposal?.concerns, []);
 });
 
 test("f8_needs_no_approval_contradicts_unknown_status (SYN-LOCAL-04): 'needs no approval' is blocked; clinical access is not research permission", () => {
@@ -162,8 +165,25 @@ test("f8_needs_no_approval_contradicts_unknown_status (SYN-LOCAL-04): 'needs no 
   const ok = modelDecision(exempt, {
     statement: "Run a preliminary count of high-dose opioid patients from the clinic dashboard; this needs no approval (letter QI-2026-14).",
   });
-  const e2 = evaluateAccepted(ok.decision!, exempt);
-  assert.equal(e2.blockers.some((b) => /no approval/i.test(b)), false, e2.blockers.join(" | "));
+  // The model's words settle nothing: the investigator records the determination on the decision, and
+  // Meridian offers their own fact as the reference.
+  const review = approvalReview({ ...ok.decision!, status: "accepted", selectionStatus: "accepted" }, exempt);
+  assert.equal(review.ethicsRecordMissing, true);
+  assert.match(review.suggestedEthicsRecord ?? "", /QI-2026-14/);
+  const recorded = { ...ok.decision!, status: "accepted" as const, selectionStatus: "accepted" as const, gates: [{ id: "rec", requirement: DETERMINATION_GATE.ethics, status: "not-required" as const, setBy: "investigator" as const, evidence: review.suggestedEthicsRecord!, record: true as const }] };
+  const e2 = evaluateDecision(recorded, exempt);
+  assert.equal(e2.blockers.some((b) => /no approval|ethics status/i.test(b)), false, e2.blockers.join(" | "));
+  assert.equal(e2.canAct, true);
+  // With the investigator's own fact saying the data-use approval is unknown, recording the ethics status is
+  // not enough: the open fact blocks until the investigator records the data determination or sets it aside.
+  const open = { ...r.decision!, status: "accepted" as const, selectionStatus: "accepted" as const, gates: [{ id: "rec", requirement: DETERMINATION_GATE.ethics, status: "not-required" as const, setBy: "investigator" as const, evidence: "Clinic QI office: service evaluation, no REB review (QIO-2026-3)", record: true as const }] };
+  const e3 = evaluateDecision(open, study);
+  assert.equal(e3.canAct, false);
+  assert.ok(e3.blockers.some((b) => /your own facts leave an approval open/.test(b)), e3.blockers.join(" | "));
+  // Only an action on that fact, for this decision, settles it.
+  const item = approvalReview(open, study).openItems[0].text;
+  const given = { ...open, settledItems: [{ text: item, how: "given" as const, note: "Custodian confirmed no data-use approval is needed for the count (DC-2026-5)", at: "2026-09-23T00:00:00Z" }] };
+  assert.equal(evaluateDecision(given, study).canAct, true);
 });
 
 test("permission_for_other_study_is_not_permission_here (SYN-LOCAL-05): an approval scoped to another protocol does not meet this study's gate", () => {
@@ -216,7 +236,8 @@ test("permission_for_other_study_is_not_permission_here (SYN-LOCAL-05): an appro
   const r3 = modelDecision(same, {
     gates: [{ id: "g-reb", requirement: "REB approval for the audit", status: "met", evidence: "REB-2026-188" }],
   });
-  assert.equal(r3.decision!.gates[0].status, "met");
+  assert.equal(r3.decision!.gates[0].status, "unknown");
+  assert.deepEqual(r3.decision!.gates[0].proposal?.concerns, []);
 });
 
 test("conflicting_staff_allocations_block_capacity_gate (SYN-LOCAL-06): conflicting facts keep the capacity gate open until the investigator resolves it", () => {
@@ -260,6 +281,9 @@ test("conflicting_staff_allocations_block_capacity_gate (SYN-LOCAL-06): conflict
   assert.equal(S().acceptDecision(s.id, "latest").ok, true);
   assert.equal(S().studies.find((x) => x.id === s.id)!.design.decisions.at(-1)!.actionStatus, "blocked");
   assert.equal(S().setGate(s.id, "latest", "g-cap", "met", "Confirmed with the unit manager on 2026-09-20: 8 hours per week restored (email UM-0920)").ok, true);
+  // The capacity gate is settled; the work also needs the investigator's record of its ethics status.
+  assert.equal(S().studies.find((x) => x.id === s.id)!.design.decisions.at(-1)!.actionStatus, "blocked");
+  assert.equal(S().addGate(s.id, "latest", DETERMINATION_GATE.ethics, "met", "REB-2026-240 approved the follow-up study on 2026-08-12").ok, true);
   const after = S().studies.find((x) => x.id === s.id)!;
   assert.equal(after.design.decisions.at(-1)!.actionStatus, "ready");
   assert.equal(after.problem.localFacts?.length, 2);

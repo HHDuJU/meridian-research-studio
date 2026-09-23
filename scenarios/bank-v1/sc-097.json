@@ -1,6 +1,6 @@
 {
   "id": "sc-097",
-  "version": 1,
+  "version": 2,
   "title": "Orthopaedic pre-assessment: scoping review of preoperative anaemia pathways, invalid lead values and a revised Gaps stage",
   "field": "anesthesia",
   "level": 4,
@@ -11,7 +11,8 @@
     "D1",
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on an explicit scoping review need. A fixture search returns six records. A discovery reply after retrieval then carries four leads with two refused values: a guideline lead with method quality 140 (stored null, issue 'out-of-range') and a nurse-led report with year true (stored null, issue 'invalid-type'), never coerced (G4); the explicit null certainty gives 'cleared'. The leads are appended after the six records, which keep their ids and provenance (D1), and stay unverified to the export (G3). The appraisal (scan call 2) annotates the records and assigns 'low' certainty over inspected records. After the design is accepted (a supported positive), the investigator re-runs Gaps because the first reply missed distant patients' access to intravenous iron: the revised reply flags the completed Hypotheses, Questions and Design stages for review ('review required', not counted as complete, G8), which survives a reload; the accepted decision stays accepted because no cited record or claim changed (G7). Re-running Questions clears its flag, and the investigator's re-review marks Hypotheses and Design complete, after which no flag remains. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 3, 5, 6 (ev-0lhfg4i, ev-0m40pvi, ev-1p29o7o, ev-0blm1k0, ev-1lu58nb); the titleYearKey(title, year) hash for record 4 (ev-11856sq). Requires D1 (leads appended, never replacing records), S13 (appraisal payload), S11 (selectionStatus, actionStatus) and D5 (status text including 'review required'). Catches: out-of-range or wrongly typed values stored, leads that overwrite retrieved records, a revision that leaves downstream stages counted as complete, flags lost on reload, and a decision made stale by a change that touched no evidence.",
   "inputs": {
@@ -925,13 +926,60 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1676,5 +1724,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-097.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 1. Model responses, need and records are unchanged."
 }

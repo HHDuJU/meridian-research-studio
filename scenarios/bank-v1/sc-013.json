@@ -1,6 +1,6 @@
 {
   "id": "sc-013",
-  "version": 1,
+  "version": 2,
   "title": "Health board atrial fibrillation gap register: umbrella review scoped after an empty search, certainty over zero records dropped",
   "field": "cardiology",
   "level": 3,
@@ -11,7 +11,8 @@
     "D5",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Demanding path over an empty search. A health board pharmacist wants an umbrella review before choosing an intervention for an atrial fibrillation gap register; routing at create is umbrella-review (explicit under the 875fe59 classifier and the A1-B rule). The problem reply sends constraints null: under G11 the investigator's constraints stay exactly as typed and the refusal is recorded as rejected-change at 'constraints' (at 875fe59 the null clears the field, which G11 forbids); rejected-change is not an 875fe59 code and is counted under S11, the closest listed entry. The recorded fixture search returns HTTP 200 with zero records. The discovery reply over zero records carries four model leads (one undated with null quality, one with a null grade), a certainty 'moderate' that must be dropped with an issue (G1), and a model key claiming the empty search was confirmed, which must be dropped (A3 D20 correction; A3.2 section 1); the stage stays incomplete (G2). The investigator then confirms the empty search on screen, which completes the stage with certainty still unassessed and writes scan.emptySearchConfirmation.by 'investigator' (A3.2); a reload keeps it. The design decision narrows the next step to the umbrella review, rests on no ledger claim, and has one gate met on the investigator's library record and one unmet (protocol registration), so acceptance gives an accepted selection with a blocked action. No record is retrieved, so no record id is computed; the leads' ids are model ids. Requires D20 (certainty dropped over zero records, confirm-empty-search, not assessed, the confirmation record), S13 (a model confirmation key refused on the production path), S11 (rejected-change, recommendedFamily, selectionStatus, actionStatus, basis) and D5 (status text). Catches: certainty or completion over an empty search, a model field confirming a search, investigator text erased by a model null, invented defaults for unknown values, and an unmet gate turned into an actionable decision.",
   "inputs": {
@@ -732,7 +733,7 @@
           "design.decisions[-1].kind": "narrow",
           "design.decisions[-1].status": "proposed",
           "design.decisions[-1].claimIds": [],
-          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
           "design.decisions[-1].gates[1].status": "unmet",
           "design.decisions[-1].gates[1].evidence": {
             "absent": true
@@ -748,7 +749,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -760,6 +762,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1244,5 +1266,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-013.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

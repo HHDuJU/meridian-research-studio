@@ -1,0 +1,1653 @@
+{
+  "id": "sc-011",
+  "version": 1,
+  "title": "Regional cancer centre: financial toxicity survey, a lead reusing a retrieved record's id, and a revised Questions stage flagging later stages",
+  "field": "oncology",
+  "level": 4,
+  "family": "cross-sectional",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S1",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on an explicit cross-sectional survey need. A fixture search returns six records and the appraisal (scan call 1) assigns moderate certainty with five claims. A second scan reply (shape discovery) asks for further leads and deliberately omits gradeOverall, gradeRationale and synthesis (omitKeys): the appraisal's values must stay. One of its three leads carries the id of the retrieved single-item screening study but describes a different paper: it must be quarantined (scan.quarantine.items, issue id-collision), never appended and never merged into the retrieved record, whose provenance, grade, key findings and citing claim stay unchanged; the other two leads are appended after the six records as unverified model leads. The design decision rests on c1 to c3 with both gates met and is accepted (ready). Later the Questions stage is repeated with a revised response (population restricted to the first six months of treatment and a screening agreement question added) after Design, Protocol and Analysis were complete: all three are flagged for review (G8); redoing Protocol and Analysis clears their flags, and Design stays review required to the end, on screen, after reload, after reopen and in the export. The decision stays accepted because no cited record changed (G7), a negative control on staleness. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 5, 6 (ev-0pr4tpy, ev-01lqsba, ev-0xk9yov, ev-03gcm9g, ev-08zvsu6); titleYearKey hash for record 2 (ev-1ptqhms). Requires D1 and S1 (quarantine per A2 item 6, leads appended), S13 (appraisal), S11 (statuses) and D5 (status text and review required). Catches: a colliding lead overwriting or duplicating a retrieved record, omitted keys wiping reviewed content, downstream stages left current after an upstream revision, flags lost on reload, and a decision made stale by a change that touches no cited source.",
+  "inputs": {
+    "need": "I am a nurse researcher in the supportive care service of a regional cancer centre that starts systemic treatment for about 1,900 adults a year. Our oncologists and social workers keep hearing about patients who delay treatment, miss appointments or cannot afford parking, travel and medicines, but the centre has no routine way to find these patients. We want to know how common financial toxicity is among our patients receiving systemic treatment, which groups are most affected, and whether the question about money in our existing distress screening finds the people who need help.\n\nMy plan is a cross-sectional survey of adults receiving chemotherapy, immunotherapy or targeted therapy at the centre over three months, using a validated 11-item financial toxicity questionnaire together with questions about income, employment, travel distance, benefits and out-of-pocket spending. We would also compare each respondent's answer to the financial problems checkbox on the distress screening form with their questionnaire score.\n\nThe centre's patient and family advisory council supports the work, and the research ethics board approved the protocol this month. We have a research coordinator two days a week and can offer the questionnaire on paper, on a tablet or by telephone, in English and three other languages, with interpreters paid from the supportive care budget. I need help with sampling (consecutive patients or a random sample of clinic days), the sample size for comparing groups, how to reduce non-response among the patients most affected, and how to report results so that the centre can decide whether to set up a financial navigation service.",
+    "constraints": "Research coordinator two days a week; recruitment from February to April 2027; questionnaire in four languages; no linkage to billing or benefit records.",
+    "localFacts": [
+      "The research ethics board approved the survey protocol on 2026-09-12 (REB-2026-204).",
+      "The supportive care budget funds translation into three languages and telephone interpreters for the survey (budget line SC-2026-11).",
+      "The distress screening form at first treatment visits includes a financial problems checkbox, completed by about 85 percent of patients.",
+      "The patient and family advisory council endorsed the project on 2026-08-30."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a nurse researcher in the supportive care service of a regional cancer centre that starts systemic treatment for about 1,900 adults a year. Our oncologists and social workers keep hearing about patients who delay treatment, miss appointments or cannot afford parking, travel and medicines, but the centre has no routine way to find these patients. We want to know how common financial toxicity is among our patients receiving systemic treatment, which groups are most affected, and whether the question about money in our existing distress screening finds the people who need help.\n\nMy plan is a cross-sectional survey of adults receiving chemotherapy, immunotherapy or targeted therapy at the centre over three months, using a validated 11-item financial toxicity questionnaire together with questions about income, employment, travel distance, benefits and out-of-pocket spending. We would also compare each respondent's answer to the financial problems checkbox on the distress screening form with their questionnaire score.\n\nThe centre's patient and family advisory council supports the work, and the research ethics board approved the protocol this month. We have a research coordinator two days a week and can offer the questionnaire on paper, on a tablet or by telephone, in English and three other languages, with interpreters paid from the supportive care budget. I need help with sampling (consecutive patients or a random sample of clinic days), the sample size for comparing groups, how to reduce non-response among the patients most affected, and how to report results so that the centre can decide whether to set up a financial navigation service.",
+          "family": "cross-sectional",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a nurse researcher in the supportive care service"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Financial toxicity among adults receiving systemic cancer treatment at a regional cancer centre",
+        "subtitle": "Cross-sectional survey to inform screening and a financial navigation service",
+        "family": "cross-sectional",
+        "statement": "Clinicians at a regional cancer centre see patients who delay treatment or miss appointments because of costs, but the centre does not know how common financial toxicity is among the 1,900 adults starting systemic treatment each year, who is most affected, or whether the financial problems checkbox in its distress screening finds them. A cross-sectional survey with a validated questionnaire can estimate prevalence by group and inform a decision on a financial navigation service.",
+        "whoAffected": "Adults receiving systemic cancer treatment and their families, especially younger patients, those on low incomes, those who stopped working and those living far from the centre; supportive care staff; centre leadership deciding on navigation.",
+        "whatHurts": "Costs of travel, parking, medicines and lost income can push patients to delay or skip treatment and cause lasting hardship for families; unmet need is invisible if screening misses it.",
+        "currentPractice": "Distress screening at the first treatment visit with a financial problems checkbox; referral to social work at clinician discretion; no measurement of financial toxicity.",
+        "whyNow": "Ethics approval is in place, interpreter funding is available, and leadership wants evidence before deciding on a navigation service.",
+        "constraints": "Coordinator two days a week; three months of recruitment; four languages; no linkage to billing or benefit records.",
+        "patientCenteredGoal": "No patient delays or abandons cancer treatment because of its costs, and those at risk are found early and helped.",
+        "summary": "Problem framed as a cross-sectional survey of financial toxicity with screening agreement as a second question."
+      },
+      "note": "G11: the reply paraphrases the typed constraints ('three months of recruitment' in place of February to April 2027, the questionnaire and the research coordinator reworded). The stored constraints stay exactly as typed, the application records the issue 'dropped' at 'constraints' and shows a partial-apply warning naming constraints and saying the entered text was kept; the rest of the reply applies.",
+      "expect": {
+        "store": {
+          "title": "Financial toxicity among adults receiving systemic cancer treatment at a regional cancer centre",
+          "family": "cross-sectional",
+          "problem.statement": {
+            "includes": "financial problems checkbox"
+          },
+          "problem.constraints": "Research coordinator two days a week; recruitment from February to April 2027; questionnaire in four languages; no linkage to billing or benefit records.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Financial toxicity among adults receiving systemic cancer treatment at a regional cancer centre",
+            "constraints",
+            {"anyOf": ["kept", "refused", "not applied"]}
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "financial toxicity prevalence systemic cancer therapy survey distress screening single item non-response navigation",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Prevalence of financial toxicity among adults receiving systemic cancer therapy: a five-centre survey with a validated 11-item questionnaire",
+            "authors": "Mensah-Kowalski A, Lindqvist-Obi J, Carvalho-Stroud E",
+            "year": 2021,
+            "venue": "Ashcombe Supportive Oncology Care",
+            "doi": "10.5555/jsoc.2021.0263",
+            "providerType": "journal-article",
+            "abstract": "We surveyed 1,450 adults receiving systemic therapy in five cancer centres with a validated financial toxicity questionnaire; 64 percent of those approached responded. Thirty-eight percent reported moderate or severe financial toxicity. Financial toxicity was more common among patients under 65, those with household income in the lowest two quintiles, those who had stopped working because of treatment and those living more than 50 kilometres from the centre. Patients receiving oral targeted therapy reported higher out-of-pocket spending on medicines. Non-respondents were younger and more often lived far from the centre, so the prevalence may be underestimated."
+          },
+          {
+            "title": "Out-of-pocket costs and travel burden during chemotherapy: a patient diary study",
+            "authors": "Achterberg-Nwosu D, Fairclough-Sato M",
+            "year": 2019,
+            "venue": "Cancer Care Economics Notes",
+            "providerType": "journal-article",
+            "abstract": "Two hundred and twelve patients receiving chemotherapy kept a spending diary for twelve weeks. Travel and parking made up 41 percent of out-of-pocket spending, medicines and supplements 27 percent and lost income of family carers was reported by a third of patients. Patients living in rural areas spent on average twice as much on travel as those living in the city. Spending was highest in the first six weeks of treatment. The authors note that diary completion fell over time, especially among patients who were most unwell."
+          },
+          {
+            "title": "Agreement between a single financial distress item and a multi-item financial toxicity score in oncology outpatients",
+            "authors": "Brennan-Oyelowo S, Haddad-Lund P, Tanaka-Achebe V",
+            "year": 2023,
+            "venue": "Wrenmouth Cancer Distress Measurement Reports",
+            "doi": "10.5555/pomr.2023.0088",
+            "providerType": "journal-article",
+            "abstract": "In 640 oncology outpatients we compared a single financial problems item from a distress screening checklist with a validated multi-item financial toxicity score. The single item identified 61 percent of patients with moderate or severe financial toxicity on the multi-item score, and agreement beyond chance was moderate (kappa 0.45). Patients who did not tick the item despite high scores were more often older and more often described money as a private matter. The authors suggest that a single checkbox can support but not replace a short validated measure."
+          },
+          {
+            "title": "Non-response in cancer patient surveys: who is missed and does it matter?",
+            "authors": "Olawale-Petersen K, Moreau-Ibrahim L",
+            "year": 2020,
+            "venue": "Survey Methods in Oncology",
+            "doi": "10.5555/smo.2020.0041",
+            "providerType": "journal-article",
+            "abstract": "Across four surveys of cancer patients, non-respondents were younger, had lower incomes and more often spoke a language other than the survey language. Offering the questionnaire in several modes (paper, tablet and telephone) and in the main community languages raised response from 48 to 66 percent and reduced the difference in response between income groups by half. Estimates of unmet need changed by up to eight percentage points when weighting for non-response. The authors recommend recording the characteristics of everyone approached so that non-response can be described and weighted."
+          },
+          {
+            "title": "Financial toxicity and skipped or delayed cancer treatment: a systematic review of 19 observational studies",
+            "authors": "Kagame-Whitlock R, Sorensen-Mbatha T",
+            "year": 2022,
+            "venue": "Supportive Care Evidence Reviews",
+            "doi": "10.5555/scer.2022.0192",
+            "providerType": "review",
+            "abstract": "We included 19 observational studies examining financial toxicity and adherence to cancer treatment. Across studies, patients with financial toxicity more often skipped doses, delayed treatment or missed appointments (pooled odds ratio 1.8, 95 percent CI 1.4 to 2.3), with substantial heterogeneity. Most studies were cross-sectional, so the direction of the association is uncertain, and adherence was usually self-reported. No study tested whether screening followed by financial navigation improved adherence. The authors call for routine measurement of financial toxicity with a validated instrument."
+          },
+          {
+            "title": "Financial navigation in cancer centres: a before-after evaluation of a navigator service",
+            "authors": "Petrov-Adeyemi M, Lindgren-Castellanos H",
+            "year": 2024,
+            "venue": "Ashcombe Supportive Oncology Care",
+            "doi": "10.5555/jsoc.2024.0017",
+            "providerType": "journal-article",
+            "abstract": "One cancer centre introduced a financial navigator who helped patients with benefits, travel grants and medicine costs. Among 310 patients who used the service, median out-of-pocket spending over three months fell by 38 percent and the mean financial toxicity score improved modestly. Patients referred through distress screening were less likely to be the most affected than those referred by social workers. The navigator saw a median of three patients a day, and waiting times for a first appointment rose to three weeks by the end of the year. The evaluation had no comparison group and patients chose whether to use the service."
+          }
+        ]
+      },
+      "note": "Six records with abstracts; ids are stableRecordId values (see notes). Record 3 (the single-item agreement study) is the one a later lead collides with.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 6,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0pr4tpy",
+            "ev-1ptqhms",
+            "ev-01lqsba",
+            "ev-0xk9yov",
+            "ev-03gcm9g",
+            "ev-08zvsu6"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[2].id": "ev-01lqsba",
+          "scan.items[2].provenance.origin": "retrieval",
+          "scan.items[2].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Agreement between a single financial distress item and a multi-item financial toxicity score in oncology outpatients"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0pr4tpy",
+            "relevance": 94,
+            "methodQuality": 70,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Thirty-eight percent of 1,450 adults on systemic therapy had moderate or severe financial toxicity, more among younger, lower-income, not working and distant patients.",
+            "limitations": "Response 64 percent; non-respondents younger and more distant.",
+            "contextTags": [
+              "prevalence",
+              "multicentre survey",
+              "risk groups"
+            ]
+          },
+          {
+            "id": "ev-1ptqhms",
+            "relevance": 72,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Travel and parking were 41 percent of out-of-pocket spending; rural patients spent twice as much on travel; spending peaked in the first six weeks.",
+            "limitations": "Diary completion fell over time.",
+            "contextTags": [
+              "out-of-pocket costs",
+              "travel",
+              "rural"
+            ]
+          },
+          {
+            "id": "ev-01lqsba",
+            "relevance": 90,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "A single financial problems item identified 61 percent of patients with moderate or severe financial toxicity; kappa 0.45.",
+            "limitations": "One centre; English only.",
+            "contextTags": [
+              "screening",
+              "single item",
+              "agreement"
+            ]
+          },
+          {
+            "id": "ev-0xk9yov",
+            "relevance": 86,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Several modes and community languages raised response from 48 to 66 percent and halved the gap in response between income groups.",
+            "limitations": "Four surveys; different populations.",
+            "contextTags": [
+              "non-response",
+              "survey methods",
+              "languages"
+            ]
+          },
+          {
+            "id": "ev-03gcm9g",
+            "relevance": 76,
+            "methodQuality": 62,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Financial toxicity was associated with skipped doses, delays or missed appointments (pooled odds ratio 1.8), mostly from cross-sectional studies.",
+            "limitations": "Heterogeneous; direction uncertain.",
+            "contextTags": [
+              "adherence",
+              "systematic review"
+            ]
+          },
+          {
+            "id": "ev-08zvsu6",
+            "relevance": 70,
+            "methodQuality": 45,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Navigator users' out-of-pocket spending fell by 38 percent; distress-screening referrals reached less affected patients than social work referrals.",
+            "limitations": "No comparison group; self-selected users.",
+            "contextTags": [
+              "financial navigation",
+              "before-after"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In five cancer centres, 38 percent of adults receiving systemic therapy reported moderate or severe financial toxicity.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0pr4tpy"
+            ],
+            "location": "Abstract, results",
+            "passage": "Thirty-eight percent reported moderate or severe financial toxicity.",
+            "interpretation": "Planning value for local prevalence; likely underestimated because of non-response.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "A single financial problems item identified 61 percent of patients with moderate or severe financial toxicity on a multi-item score.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-01lqsba"
+            ],
+            "location": "Abstract, results",
+            "passage": "The single item identified 61 percent of patients with moderate or severe financial toxicity on the multi-item score",
+            "interpretation": "The centre's checkbox is likely to miss many affected patients; worth measuring locally.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Offering several modes and community languages raised response from 48 to 66 percent and halved the income gap in response.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0xk9yov"
+            ],
+            "location": "Abstract, results",
+            "passage": "raised response from 48 to 66 percent and reduced the difference in response between income groups by half",
+            "interpretation": "Supports multi-mode, multilingual administration.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c4",
+            "text": "Financial toxicity was associated with skipped doses, delayed treatment or missed appointments, pooled odds ratio 1.8.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-03gcm9g"
+            ],
+            "location": "Abstract, results",
+            "passage": "pooled odds ratio 1.8, 95 percent CI 1.4 to 2.3",
+            "interpretation": "Why finding affected patients matters clinically; direction uncertain.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Travel and parking made up 41 percent of out-of-pocket spending during chemotherapy.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1ptqhms"
+            ],
+            "location": "Abstract, results",
+            "passage": "Travel and parking made up 41 percent of out-of-pocket spending",
+            "interpretation": "Travel questions belong in the survey.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records, appraised at abstract level. A multicentre survey found moderate or severe financial toxicity in 38 percent of adults on systemic therapy, concentrated among younger, lower-income, not working and distant patients, probably underestimated by non-response. Travel and parking dominate out-of-pocket spending. A single distress-screening item misses about four in ten affected patients. Multi-mode, multilingual administration substantially reduces non-response bias. Financial toxicity is associated with poorer adherence, and a navigator service lowered spending without a comparison group.",
+        "gradeOverall": "moderate",
+        "gradeRationale": "Consistent survey evidence with validated measures and a measurement study for the prevalence and screening questions; adherence and navigation evidence is weaker. Moderate certainty for prevalence and screening agreement.",
+        "summary": "Six retrieved records appraised; five claims recorded; overall certainty moderate."
+      },
+      "note": "Appraisal of six retrieved records on the production scan path (S13); certainty moderate over inspected records.",
+      "expect": {
+        "store": {
+          "scan.items[2].grade": "moderate",
+          "scan.items[2].keyFindings": {
+            "includes": "61 percent"
+          },
+          "scan.items[4].kind": "systematic-review",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-01lqsba"
+          ],
+          "scan.gradeOverall": "moderate",
+          "scan.synthesis": {
+            "includes": "Six retrieved records"
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 2,
+      "omitKeys": [
+        "gradeOverall",
+        "gradeRationale",
+        "synthesis"
+      ],
+      "response": {
+        "query": "financial toxicity prevalence systemic cancer therapy survey distress screening single item non-response navigation",
+        "sourcesConsulted": [
+          "model knowledge of the financial toxicity literature"
+        ],
+        "items": [
+          {
+            "title": "Financial toxicity in adolescents and young adults with cancer: a national survey",
+            "authors": "Oduya-Brandt K, Mwale-Fitzgerald S",
+            "year": 2022,
+            "source": "Quillsby Young Adult Cancer Reports",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 58,
+            "relevance": 55,
+            "verification": "verify",
+            "contextTags": [
+              "young adults",
+              "survey"
+            ],
+            "keyFindings": "Nearly half of young adults reported moderate or severe financial toxicity, linked to interrupted education and work.",
+            "limitations": "Young adults only.",
+            "notes": "Suggested as a further lead."
+          },
+          {
+            "id": "ev-01lqsba",
+            "title": "Screening for financial hardship with one question in community oncology practices",
+            "authors": "Garcia-Lindholm P",
+            "year": 2018,
+            "source": "Brackenmoor Oncology Practice Notes",
+            "kind": "observational",
+            "grade": "moderate",
+            "methodQuality": 64,
+            "relevance": 88,
+            "verification": "verify",
+            "contextTags": [
+              "screening",
+              "single question"
+            ],
+            "keyFindings": "A single question identified most patients with financial hardship in community practices.",
+            "limitations": "Community practices only.",
+            "notes": "Suggested as a further lead on screening."
+          },
+          {
+            "title": "Parking charges and missed cancer appointments: a hospital policy review",
+            "authors": "Regional Patient Transport Forum",
+            "year": 2020,
+            "source": "Regional patient transport reports",
+            "kind": "grey",
+            "grade": "very-low",
+            "methodQuality": 35,
+            "relevance": 60,
+            "verification": "ai-lead",
+            "contextTags": [
+              "parking",
+              "access"
+            ],
+            "keyFindings": "Hospitals with free parking for cancer patients reported fewer missed treatment appointments.",
+            "limitations": "Policy review without analysis.",
+            "notes": "Suggested as a further lead on travel costs."
+          }
+        ],
+        "summary": "Three further leads suggested; one reuses the id of a retrieved record for a different paper."
+      },
+      "note": "A discovery reply after the appraisal lists three further leads and omits the certainty, rationale and synthesis keys, so the appraisal's values stay (an omitted key never overwrites; contracts.ts). The second lead reuses the id of the retrieved single-item study for a different paper: it is quarantined with issue id-collision and never appended or merged, and the retrieved record, its annotation and the claim citing it stay unchanged (A2 item 6; quarantine S1, D1). The other two leads are appended after the six records as model leads (D1; at 875fe59 the leads replace the records).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[2].id": "ev-01lqsba",
+          "scan.items[2].title": "Agreement between a single financial distress item and a multi-item financial toxicity score in oncology outpatients",
+          "scan.items[2].provenance.origin": "retrieval",
+          "scan.items[2].provenance.status": "retrieved",
+          "scan.items[2].grade": "moderate",
+          "scan.items[2].keyFindings": {
+            "includes": "61 percent"
+          },
+          "scan.items[6].title": "Financial toxicity in adolescents and young adults with cancer: a national survey",
+          "scan.items[6].provenance.origin": "model",
+          "scan.items[6].provenance.status": "unverified",
+          "scan.items[7].title": "Parking charges and missed cancer appointments: a hospital policy review",
+          "scan.quarantine.items": {
+            "length": 1
+          },
+          "scan.quarantine.items[0].title": "Screening for financial hardship with one question in community oncology practices",
+          "scan.quarantine.items[0].provenance.origin": "model",
+          "scan.quarantine.items[0].provenance.status": {
+            "notEquals": "verified"
+          },
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-01lqsba"
+          ],
+          "scan.gradeOverall": "moderate",
+          "scan.synthesis": {
+            "includes": "Six retrieved records"
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "items[1]",
+              "code": "id-collision"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": {
+            "min": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "moderate certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional cancer centre, about 1,900 systemic therapy starts a year",
+          "distress screening with a financial problems checkbox",
+          "four day units",
+          "questionnaire in four languages"
+        ],
+        "reading": "Financial toxicity arises from travel, parking, medicines and lost income, and falls hardest on younger, lower-income and distant patients, who are also least likely to answer surveys. The centre's checkbox is the only current detector and probably misses many. Finding these patients matters because hardship goes with skipped treatment. Survey design, non-response and the checkbox's performance are therefore the core of the study.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Moderate or severe financial toxicity",
+            "kind": "outcome",
+            "detail": "Primary outcome (claim c1)."
+          },
+          {
+            "id": "n2",
+            "label": "Travel and parking costs",
+            "kind": "context",
+            "detail": "Largest share of spending (claim c5)."
+          },
+          {
+            "id": "n3",
+            "label": "Younger, lower-income and distant patients",
+            "kind": "stakeholder",
+            "detail": "Most affected and least likely to respond."
+          },
+          {
+            "id": "n4",
+            "label": "Distress screening checkbox",
+            "kind": "context",
+            "detail": "Misses about four in ten (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Multi-mode, multilingual survey",
+            "kind": "framework",
+            "detail": "Raises response (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Skipped doses and missed appointments",
+            "kind": "outcome",
+            "detail": "Associated with hardship (claim c4)."
+          },
+          {
+            "id": "n7",
+            "label": "Financial navigation service",
+            "kind": "context",
+            "detail": "Decision the survey informs."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "to": "n1",
+            "relation": "drives"
+          },
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "carry most of"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "detects part of"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "reaches"
+          },
+          {
+            "from": "n1",
+            "to": "n6",
+            "relation": "is associated with"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "would address"
+          }
+        ],
+        "summary": "Map links cost drivers, affected groups, screening and non-response around the prevalence question."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 7
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local measure of financial toxicity",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Leadership cannot size a navigation service without local prevalence by group.",
+            "opportunity": "Estimate prevalence with a validated questionnaire among patients on systemic therapy."
+          },
+          {
+            "id": "g2",
+            "title": "The checkbox may miss many affected patients",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "A single item found about six in ten affected patients elsewhere (claim c2).",
+            "opportunity": "Compare each respondent's checkbox with the questionnaire score."
+          },
+          {
+            "id": "g3",
+            "title": "The most affected are least likely to respond",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "Younger, lower-income and non-English-speaking patients respond less (claim c3), which would understate need.",
+            "opportunity": "Offer paper, tablet and telephone in four languages and record characteristics of everyone approached."
+          },
+          {
+            "id": "g4",
+            "title": "Link to treatment adherence is uncertain",
+            "kind": "outcome",
+            "severity": "watch",
+            "whyItMatters": "The association with skipped treatment comes mostly from cross-sectional studies (claim c4).",
+            "opportunity": "Report self-reported delays as a secondary measure without causal claims."
+          }
+        ],
+        "errorsFound": [
+          "A model lead reused the identifier of a retrieved measurement study for a different paper; it was quarantined and must not be cited."
+        ],
+        "reevaluation": "The gaps confirm a multi-mode, multilingual cross-sectional survey with a checkbox agreement analysis and non-response reporting.",
+        "summary": "Four gaps; local prevalence, checkbox performance and non-response are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[2].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "The checkbox may miss many affected patients"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "At least a third of adults receiving systemic therapy at the centre report moderate or severe financial toxicity, with higher prevalence among patients under 65 and those living more than 50 kilometres away.",
+            "novelty": 35,
+            "need": 90,
+            "practiceChange": 80,
+            "feasibility": 85,
+            "parsimony": 85,
+            "rationale": "Consistent with the retrieved multicentre survey; decides the size of a navigation service.",
+            "risks": "Non-response among the most affected."
+          },
+          {
+            "id": "h2",
+            "statement": "The distress screening checkbox identifies fewer than two thirds of patients with moderate or severe financial toxicity.",
+            "novelty": 45,
+            "need": 75,
+            "practiceChange": 75,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "A single item performed so elsewhere (claim c2).",
+            "risks": "Checkbox completed at a different time from the questionnaire."
+          },
+          {
+            "id": "h3",
+            "statement": "Patients with moderate or severe financial toxicity more often report delaying or skipping treatment.",
+            "novelty": 30,
+            "need": 70,
+            "practiceChange": 60,
+            "feasibility": 80,
+            "parsimony": 70,
+            "rationale": "Supported by the review (claim c4).",
+            "risks": "Self-report; direction unknown."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected, h2 as the screening question."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults receiving systemic cancer therapy at the centre, what is the prevalence of moderate or severe financial toxicity, and how does it differ by age, income, employment and travel distance?",
+            "framework": "PECO",
+            "population": "Adults receiving systemic cancer therapy at the regional cancer centre",
+            "intervention": "Age, household income, employment change and travel distance (exposures)",
+            "comparator": "Patients without these characteristics",
+            "outcome": "Moderate or severe financial toxicity on the validated 11-item questionnaire",
+            "time": "February to April 2027",
+            "setting": "Four day units of a regional cancer centre"
+          }
+        ],
+        "finer": "Feasible with a coordinator and interpreters in three months; interesting to leadership and supportive care; novel locally; ethical under the approved protocol; relevant to a navigation decision.",
+        "summary": "One PECO question on prevalence and groups."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "cross-sectional",
+        "rationale": "Prevalence by group at one point in treatment is what a cross-sectional survey measures, and the checkbox agreement can be measured in the same respondents. Multi-mode, multilingual administration reduces the non-response bias that would hide the most affected (c3); the retrieved prevalence (c1) sets planning values; the checkbox is likely to miss many (c2). Reporting follows STROBE for cross-sectional studies.",
+        "alternatives": [
+          "Longitudinal follow-up of new patients over a year (refused: the navigation decision needs prevalence now)",
+          "Adding a question to distress screening only (refused: the checkbox is what needs checking)",
+          "Trial of financial navigation (deferred: the survey decides whether and for whom)"
+        ],
+        "guidelines": [
+          "STROBE"
+        ],
+        "whyNotMoreComplex": "A longitudinal design or a trial would answer different questions; the survey answers the leadership's question in three months.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Run a cross-sectional survey of adults on systemic therapy at the centre from February to April 2027 with the validated questionnaire offered on paper, tablet and telephone in four languages, and compare the distress checkbox with the questionnaire score.",
+          "question": "How should the centre measure financial toxicity before deciding on a navigation service?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Financial toxicity is common enough elsewhere to justify local measurement, and the checkbox may miss many affected patients.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Non-response bias can be reduced by several modes and languages.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The centre has already decided on a navigation service regardless of results.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics approval of the survey protocol",
+              "status": "met",
+              "evidence": "REB-2026-204 approved 2026-09-12, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Funding for translation and interpreters",
+              "status": "met",
+              "evidence": "Supportive care budget line SC-2026-11, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Add a question to distress screening only",
+            "Start a navigation service without measurement"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; both gates are met on investigator-supplied records; the quarantined lead is not used."
+        },
+        "summary": "Cross-sectional survey recommended; the decision rests on three ledger claims and both gates are met."
+      },
+      "note": "The decision rests on ledger claims c1 to c3; claim c2 cites the retrieved record whose id the quarantined lead reused, and must still point at that record. selectionStatus requires S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "cross-sectional",
+          "family": "cross-sectional",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive with both gates met: accepted selection, ready action (G7). S11 for the statuses and basis, D5 for the text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.basis": "explicit",
+          "family": "cross-sectional"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Cross-sectional survey of adults receiving systemic cancer therapy at four day units over three months.",
+        "population": "Consecutive adults attending for systemic therapy on sampled clinic days from February to April 2027; one questionnaire per person.",
+        "exposure": "Age, household income, employment change, travel distance, therapy type and benefits status.",
+        "procedures": "The coordinator samples clinic days at random, approaches every eligible patient, records age, sex and postcode of everyone approached, and offers paper, tablet or telephone completion in four languages with interpreters.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Moderate or severe financial toxicity",
+            "measure": "Score in the moderate or severe range on the validated 11-item questionnaire",
+            "timing": "At completion",
+            "why": "The prevalence leadership needs (claim c1).",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Out-of-pocket spending",
+            "measure": "Self-reported spending on travel, parking and medicines in the previous month",
+            "timing": "At completion",
+            "why": "Shows what navigation would target.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Response by group",
+            "measure": "Completed questionnaires divided by patients approached, by age, language and distance",
+            "timing": "Weekly",
+            "why": "Non-response hides the most affected (claim c3).",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 1,200 eligible attenders in three months at two coordinator days a week on sampled clinic days.",
+        "biasMitigation": [
+          "Random sample of clinic days",
+          "Characteristics of everyone approached recorded",
+          "Four languages and three modes"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Non-response among the most affected",
+            "severity": "high",
+            "note": "Weighted estimates reported alongside crude ones."
+          },
+          {
+            "id": "b2",
+            "label": "Survivor sampling",
+            "severity": "watch",
+            "note": "Patients who stopped treatment are not approached."
+          }
+        ],
+        "parsimony": {
+          "score": 82,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 6,
+          "flags": [
+            "Six pre-specified group variables"
+          ],
+          "simplestPath": "One questionnaire, one primary outcome, one weighted prevalence."
+        },
+        "theoreticalFramework": "None beyond survey sampling.",
+        "summary": "Survey of all adults on systemic therapy with one primary outcome."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "protocol.population": {
+            "includes": "Consecutive adults attending"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cross-sectional survey with non-response weighting.",
+        "sampleSize": "About 1,200 eligible attenders and 65 percent response give about 780 respondents; a prevalence near 38 percent would have a 95 percent confidence interval of about plus or minus 3.4 percentage points.",
+        "primaryAnalysis": "Weighted prevalence of moderate or severe financial toxicity with 95 percent confidence intervals, overall and by group; prevalence ratios from a Poisson model with robust variance.",
+        "secondaryAnalysis": "Out-of-pocket spending by distance and therapy type.",
+        "missingData": "Questionnaires with more than two missing items are scored as the instrument manual directs; unit non-response handled by weighting on age, sex and distance.",
+        "multiplicity": "One primary estimate; group comparisons reported with confidence intervals.",
+        "software": "R with the survey package.",
+        "overfittingGuards": [
+          "Group variables fixed before recruitment",
+          "No data-driven subgroups"
+        ],
+        "summary": "About 780 respondents; prevalence within about 3.4 points."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 780 respondents"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 2,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults within their first six months of systemic cancer therapy at the centre, what is the prevalence of moderate or severe financial toxicity, and how does it differ by age, income, employment and travel distance?",
+            "framework": "PECO",
+            "population": "Adults within the first six months of systemic cancer therapy at the regional cancer centre",
+            "intervention": "Age, household income, employment change and travel distance (exposures)",
+            "comparator": "Patients without these characteristics",
+            "outcome": "Moderate or severe financial toxicity on the validated 11-item questionnaire",
+            "time": "February to April 2027",
+            "setting": "Four day units of a regional cancer centre"
+          },
+          {
+            "id": "q2",
+            "text": "In the same patients, how well does the financial problems checkbox on the distress screening form agree with moderate or severe financial toxicity on the questionnaire?",
+            "framework": "PICO",
+            "population": "Respondents with a completed distress screening form",
+            "intervention": "Financial problems checkbox ticked",
+            "comparator": "Questionnaire score in the moderate or severe range",
+            "outcome": "Proportion of affected patients identified by the checkbox and agreement beyond chance",
+            "time": "Screening form within four weeks of the questionnaire",
+            "setting": "Same centre"
+          }
+        ],
+        "finer": "Revised after the protocol was drafted: restricting to the first six months of treatment matches when spending peaks and when the navigation service would act, and the checkbox question the investigator asked for is now explicit.",
+        "summary": "Revised: population restricted to the first six months of treatment, and the screening agreement question added."
+      },
+      "note": "The Questions stage is repeated with a revised response after Design, Protocol and Analysis were completed: the population is restricted to the first six months of treatment and the checkbox question is added. The consequential upstream change flags the three completed downstream stages for review; they stay in completedStages but are shown as review required and not counted as complete (G8; flagging holds at 875fe59, the screen text requires D5). The accepted decision is not made stale, because no cited record changed (G7).",
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].population": {
+            "includes": "first six months"
+          },
+          "questions.items[1].framework": "PICO",
+          "needsReview": [
+            "design",
+            "protocol",
+            "stats"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "questions": "complete",
+          "design": "needs-review",
+          "protocol": "needs-review",
+          "stats": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Questions route: the review flags and the revised question must survive (G8).",
+      "expect": {
+        "store": {
+          "needsReview": [
+            "design",
+            "protocol",
+            "stats"
+          ],
+          "questions.items": {
+            "length": 2
+          },
+          "scan.quarantine.items": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "design": "needs-review",
+          "stats": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 2,
+      "response": {
+        "overview": "Cross-sectional survey of adults within their first six months of systemic cancer therapy at four day units over three months, with a checkbox agreement analysis.",
+        "population": "Consecutive adults within six months of starting systemic therapy attending on sampled clinic days from February to April 2027; one questionnaire per person.",
+        "exposure": "Age, household income, employment change, travel distance, therapy type and benefits status; for the second question, the financial problems checkbox on the distress screening form.",
+        "procedures": "The coordinator samples clinic days at random, approaches every eligible patient, records age, sex, postcode and months since starting treatment for everyone approached, and offers three modes in four languages; the distress screening form closest in time within four weeks is linked by the clinical team.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Moderate or severe financial toxicity",
+            "measure": "Score in the moderate or severe range on the validated 11-item questionnaire",
+            "timing": "At completion",
+            "why": "The prevalence leadership needs, in the months when spending peaks.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Checkbox agreement",
+            "measure": "Proportion of patients with moderate or severe financial toxicity who ticked the checkbox, and kappa",
+            "timing": "Checkbox within four weeks of the questionnaire",
+            "why": "Whether current screening finds affected patients (claim c2).",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Out-of-pocket spending",
+            "measure": "Self-reported spending on travel, parking and medicines in the previous month",
+            "timing": "At completion",
+            "why": "Shows what navigation would target.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Response by group",
+            "measure": "Completed questionnaires divided by patients approached, by age, language and distance",
+            "timing": "Weekly",
+            "why": "Non-response hides the most affected (claim c3).",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "About 900 eligible attenders within six months of starting treatment in three months.",
+        "biasMitigation": [
+          "Random sample of clinic days",
+          "Characteristics of everyone approached recorded",
+          "Four languages and three modes",
+          "Checkbox linked by staff not involved in scoring"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Non-response among the most affected",
+            "severity": "high",
+            "note": "Weighted estimates reported alongside crude ones."
+          },
+          {
+            "id": "b2",
+            "label": "Timing between checkbox and questionnaire",
+            "severity": "watch",
+            "note": "Limited to four weeks."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 6,
+          "flags": [
+            "Six pre-specified group variables"
+          ],
+          "simplestPath": "One questionnaire, one primary outcome, one agreement analysis."
+        },
+        "theoreticalFramework": "None beyond survey sampling.",
+        "summary": "Revised survey restricted to the first six months of treatment with a checkbox agreement analysis."
+      },
+      "note": "Redoing Protocol clears its own flag; Analysis stays flagged (it is downstream of Protocol and already flagged); Design stays flagged.",
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[1].name": "Checkbox agreement",
+          "protocol.population": {
+            "includes": "within six months of starting systemic therapy"
+          },
+          "needsReview": [
+            "design",
+            "stats"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "stats": "needs-review",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 2,
+      "response": {
+        "designSummary": "Cross-sectional survey with non-response weighting and an agreement analysis.",
+        "sampleSize": "About 900 eligible attenders within six months of starting treatment and 65 percent response give about 585 respondents. A prevalence near 38 percent would have a 95 percent confidence interval of about plus or minus 3.9 percentage points, and a comparison between groups making up 40 and 60 percent of respondents has 80 percent power to detect a difference of about 11.5 percentage points. Kappa for the checkbox would be estimated within about plus or minus 0.08.",
+        "primaryAnalysis": "Weighted prevalence of moderate or severe financial toxicity with 95 percent confidence intervals, overall and by group; prevalence ratios from a Poisson model with robust variance adjusted for the six group variables.",
+        "secondaryAnalysis": "Proportion of affected patients identified by the checkbox with its confidence interval, and kappa; out-of-pocket spending by distance and therapy type.",
+        "missingData": "Scored as the instrument manual directs for missing items; unit non-response weighted on age, sex, distance and months since starting treatment; respondents without a screening form within four weeks are excluded from the agreement analysis and counted.",
+        "multiplicity": "One primary estimate; secondary estimates reported with confidence intervals.",
+        "software": "R with the survey package.",
+        "overfittingGuards": [
+          "Group variables fixed before recruitment",
+          "No data-driven subgroups",
+          "Agreement threshold fixed by the instrument manual"
+        ],
+        "summary": "About 585 respondents; prevalence within about 3.9 points; 80 percent power for an 11.5-point difference between groups."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 585 respondents"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "needsReview": [
+            "design"
+          ]
+        },
+        "stage": {
+          "stats": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: questions about money can cause embarrassment or distress. Every respondent receives information on the social work service and on travel grants, whatever their score.",
+        "consent": "Verbal or written consent at the day unit or by telephone, recorded by the coordinator; interpreters used where needed; patients may skip any question.",
+        "data": "Questionnaires carry a study number; the linkage list for the checkbox analysis is held by the clinical team and destroyed after analysis; no billing or benefit records are accessed.",
+        "equity": "PROGRESS-Plus: younger patients, patients on low incomes, those who stopped working, those living far away and those who speak languages other than English are most affected and least likely to respond. Three modes, four languages, interpreters and weighting are used, and results are reported by these groups.",
+        "effectiveness": "The survey tells leadership how many patients a navigation service would serve and whether screening would find them.",
+        "efficiency": "Coordinator time and interpreter funding; no new systems.",
+        "costs": "Interpreters and translation from budget line SC-2026-11; printing.",
+        "grants": "None needed; a navigation service could later be evaluated with external funding.",
+        "partnerships": "Patient and family advisory council, social work, the four day unit managers, and a community organisation supporting patients who travel from rural areas.",
+        "rebPath": "Approved by the research ethics board on 2026-09-12 (REB-2026-204); any change to the population definition is submitted as an amendment before recruitment.",
+        "limitations": "Patients who stopped treatment are not reached; self-reported spending; one centre.",
+        "summary": "Low-risk survey with support information for all, multilingual administration and equity reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "amendment"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "needsReview": [
+            "design"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two members of the patient and family advisory council review the questionnaire introduction and the plain-language results; a rural patient support organisation advises on travel questions.",
+        "socialListening": "No social media listening; comments to the centre's patient experience service about parking and travel in the last year are summarised.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Choosing between treatment and bills",
+            "quote": "Composite paraphrase: I moved my infusion twice because I could not afford the fuel that week.",
+            "implication": "Ask about delays and travel costs directly.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Lost income",
+            "quote": "Composite paraphrase: I took unpaid leave to drive him to every appointment; nobody asked how we were managing.",
+            "implication": "Include carers' lost income in the spending questions.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "patient",
+            "theme": "Money is private",
+            "quote": "Composite paraphrase: I did not tick the money box because it felt like begging.",
+            "implication": "Test the checkbox against the questionnaire and word the introduction with care.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Finding out too late",
+            "quote": "Composite paraphrase: We usually hear about money problems when someone has already missed a cycle.",
+            "implication": "Restrict to the first six months when spending peaks.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on delays, carers' income, privacy about money and late discovery."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "patient"
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Financial toxicity among adults in their first six months of systemic cancer therapy: a cross-sectional survey",
+        "abstract": "Objective: to estimate the prevalence of moderate or severe financial toxicity by group and the agreement of a distress screening checkbox with a validated questionnaire. Design: cross-sectional survey in four day units from February to April 2027, offered in three modes and four languages, with non-response weighting. Results and conclusions will be written after the survey.",
+        "introduction": "Financial toxicity is common during systemic cancer therapy and associated with delayed or skipped treatment, but screening often relies on a single item.",
+        "methods": "Clinic days were sampled at random and every eligible patient approached. The primary outcome was a moderate or severe score on a validated questionnaire; the checkbox closest in time was linked for the agreement analysis.",
+        "results": "No data have been collected yet. The report will present response by group, weighted prevalence, prevalence ratios, checkbox agreement and spending.",
+        "discussion": "The discussion will size a navigation service and state whether the checkbox is adequate for screening.",
+        "limitations": "Patients who stopped treatment are missed; self-report; one centre.",
+        "conclusion": "To be written after the survey; it will not claim effects of navigation.",
+        "reportingChecklist": "STROBE (cross-sectional)",
+        "summary": "STROBE-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE (cross-sectional)",
+          "manuscript.title": {
+            "includes": "first six months"
+          }
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "A discovery lead reused the identifier of the retrieved screening study for a different paper; it is quarantined and must not be cited",
+          "The Design stage is flagged for review after the question was revised; re-review the decision against the revised population before recruitment",
+          "Submit the population change to the ethics board as an amendment"
+        ],
+        "improvementNotes": "The Questions stage was repeated with a revised response after Protocol and Analysis were complete; both were redone and cleared, while Design stays flagged until the investigator reviews it. The accepted decision did not become stale because no cited source changed.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the quarantined lead, the Design review and the ethics amendment."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour; at 875fe59 they fail because mergeStage overwrites the audit stage's patch (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "design"
+          ]
+        },
+        "stage": {
+          "audit": "complete",
+          "design": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "After reopen the stage list must still show Design as review required and not count it as complete (G8, D5).",
+      "expect": {
+        "store": {
+          "title": "Financial toxicity among adults receiving systemic cancer treatment at a regional cancer centre",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [
+            "design"
+          ],
+          "scan.quarantine.items": {
+            "length": 1
+          },
+          "scan.items": {
+            "length": 8
+          },
+          "questions.items": {
+            "length": 2
+          }
+        },
+        "stage": {
+          "design": "needs-review",
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The quarantine (S1, D1), the flagged Design stage and the decision's statuses (S11) are in the export. selectionStatus stays 'accepted': the question revision flags Design for review (G8) but changes no cited record, so the decision is not stale (G7). One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "needsReview": [
+              "design"
+            ],
+            "scan.quarantine.items": {
+              "length": 1
+            },
+            "scan.quarantine.items[0].provenance.origin": "model",
+            "scan.items[2].provenance.origin": "retrieval",
+            "scan.items[2].title": "Agreement between a single financial distress item and a multi-item financial toxicity score in oncology outpatients",
+            "scan.gradeOverall": "moderate",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "questions.items": {
+              "length": 2
+            },
+            "protocol.outcomes[1].name": "Checkbox agreement"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

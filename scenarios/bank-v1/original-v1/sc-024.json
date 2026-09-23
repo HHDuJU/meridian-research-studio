@@ -1,0 +1,1254 @@
+{
+  "id": "sc-024",
+  "version": 1,
+  "title": "Primary care network: accuracy of chronic kidney disease coding, empty search confirmed, design unresolved until the Design stage",
+  "field": "primary-care",
+  "level": 3,
+  "family": "diagnostic",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D2",
+    "D5",
+    "D20",
+    "S11"
+  ],
+  "notes": "Demanding path. The need names two designs (a cross-sectional count of missed patients, or sensitivity and specificity against laboratory results), so routing is unresolved at create; the problem reply returns family null (D2: family unchanged, basis unresolved) and also constraints null. By G11 the investigator's typed constraints are kept unchanged and the null is refused with a 'rejected-change' issue at 'constraints' (not cleared, as the older level 3 sample expected before G11). The recorded fixture search returns HTTP 200 with zero records. The discovery reply brings five model leads, two with year, grade and methodQuality null (stored null and 'unrated', never 2020, 50 or 'low'), plus a certainty 'low' that must be dropped with an issue; leads alone leave the stage incomplete with the status 'leads only' (G1, G2, G3, G4). The study is reopened after this partial work, and only then does the investigator confirm the empty search on screen, which completes the stage with certainty still unassessed. The Design stage resolves the family to diagnostic; the proposed decision must not change study.family (D3 within S11) and acceptance sets it with basis 'explicit'. The decision cites no claim (nothing was retrieved) and both gates are met on investigator-supplied approvals, so the action is ready. The 'rejected-change' code is not an 875fe59 IssueCode: its checkpoint depends on the null-handling matrix of D2 extended by format rule G11 (no separate work-order entry is named for G11 yet; S5's authority boundary is related). Requires D2, D20 (no certainty and no completion over an empty scan, leads only, confirm-empty-search, 'not assessed'), S11 (routing, recommendedFamily, selectionStatus, actionStatus, family set only on acceptance) and D5 (decision status text). Catches: a model null erasing investigator text, certainty or completion without retrieved records, invented defaults for unknowns, and a proposed recommendation that changes the family before acceptance.",
+  "inputs": {
+    "need": "I am a GP partner and the research lead for a primary care network of six practices with about 48,000 registered patients. Our chronic kidney disease registers look too small. When our pharmacist searched one practice's records last spring, she came across patients with repeatedly low eGFR results who had no kidney disease code at all, and others coded with stage 3 kidney disease after a single low result during a bout of vomiting or dehydration. That matters because the code drives annual reviews, blood pressure targets, medicine dose checks and referral, and because our registers feed the network's planning.\n\nI want to know how accurate our kidney disease coding really is compared with what the laboratory results show, using the usual definition of two eGFR values below 60 at least 90 days apart. I am not sure whether this should be a cross-sectional study of how many patients are missed or a study of the sensitivity and specificity of the codes against the laboratory results, and I do not know whether anyone has already done this in general practice. We only have existing records: no patient contact and no extra blood tests. Our network analyst can give about 60 hours, and the data protection officer has already approved a pseudonymised extract. The results need to be ready before the network's planning meeting in March 2027, when we decide whether to fund a recoding exercise across the practices.",
+    "constraints": "Existing records only: no patient contact and no additional blood tests. About 60 hours of network analyst time. Results are needed before the network planning meeting in March 2027.",
+    "localFacts": [
+      "The network's data protection officer approved a pseudonymised extract of coded diagnoses and laboratory results from all six practices on 3 September 2026 (DPA-PCN-2026-14).",
+      "The network's research governance lead classified the work as service evaluation on 10 September 2026 (reference SE-PCN-2026-03).",
+      "The network analyst has 60 hours allocated to this work between October and December 2026 (allocation PCN-AN-2026-07).",
+      "All six practices have received eGFR results electronically from the same hospital laboratory since 2018."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "note": "Two designs named: classifyFamily returns unresolved; the family stays unset and design.basis 'unresolved' (S11, L1.4: never substitute a family).",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a GP partner and the research lead for a primary care network of six practices with about 48,000 registered patients. Our chronic kidney disease registers look too small. When our pharmacist searched one practice's records last spring, she came across patients with repeatedly low eGFR results who had no kidney disease code at all, and others coded with stage 3 kidney disease after a single low result during a bout of vomiting or dehydration. That matters because the code drives annual reviews, blood pressure targets, medicine dose checks and referral, and because our registers feed the network's planning.\n\nI want to know how accurate our kidney disease coding really is compared with what the laboratory results show, using the usual definition of two eGFR values below 60 at least 90 days apart. I am not sure whether this should be a cross-sectional study of how many patients are missed or a study of the sensitivity and specificity of the codes against the laboratory results, and I do not know whether anyone has already done this in general practice. We only have existing records: no patient contact and no extra blood tests. Our network analyst can give about 60 hours, and the data protection officer has already approved a pseudonymised extract. The results need to be ready before the network's planning meeting in March 2027, when we decide whether to fund a recoding exercise across the practices.",
+          "problem.constraints": "Existing records only: no patient contact and no additional blood tests. About 60 hours of network analyst time. Results are needed before the network planning meeting in March 2027.",
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "design.recommended": "",
+          "completedStages": [],
+          "needsReview": [],
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a GP partner and the research lead for a primary care network"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Accuracy of chronic kidney disease codes in general practice records against laboratory-defined disease",
+        "subtitle": "Design not yet settled: prevalence of uncoded disease or accuracy of the codes",
+        "family": null,
+        "statement": "In a primary care network of six practices, chronic kidney disease registers appear too small: patients with repeatedly low eGFR results lack a kidney disease code, and some patients are coded after a single low result during acute illness. The network does not know how accurate its kidney disease codes are against laboratory-defined disease (two eGFR values below 60 at least 90 days apart), which it needs to know before deciding whether to fund a recoding exercise.",
+        "whoAffected": "About 48,000 registered patients, especially older adults and people with diabetes or hypertension whose kidney disease may be uncoded; the GPs, pharmacists and nurses who run reviews; and the network's planners.",
+        "whatHurts": "An uncoded patient misses annual kidney reviews, blood pressure targets and dose checks for renally cleared medicines; a wrongly coded patient carries a label, extra monitoring and sometimes withheld medicines.",
+        "currentPractice": "Codes are added by clinicians during consultations or after hospital letters; no routine search compares codes with laboratory results across the network.",
+        "whyNow": "A pharmacist's search in one practice found both missed and doubtful codes, and the network decides on a recoding exercise in March 2027.",
+        "constraints": null,
+        "patientCenteredGoal": "Every patient whose kidney function is persistently reduced is known to the practice and reviewed, and nobody carries a kidney disease label from a single low result.",
+        "summary": "Problem framed; the design is left open (prevalence of uncoded disease or accuracy of the codes); the reply returns no constraints of its own."
+      },
+      "note": "family null: family unchanged and basis unresolved (D2, amendment A1 item A7). constraints null: investigator-entered text is never erased by a model reply (G11), so the stored constraints stay as typed and a 'rejected-change' issue is recorded at 'constraints' instead of a 'cleared' one.",
+      "expect": {
+        "store": {
+          "title": "Accuracy of chronic kidney disease codes in general practice records against laboratory-defined disease",
+          "problem.constraints": "Existing records only: no patient contact and no additional blood tests. About 60 hours of network analyst time. Results are needed before the network planning meeting in March 2027.",
+          "problem.rawNeed": "I am a GP partner and the research lead for a primary care network of six practices with about 48,000 registered patients. Our chronic kidney disease registers look too small. When our pharmacist searched one practice's records last spring, she came across patients with repeatedly low eGFR results who had no kidney disease code at all, and others coded with stage 3 kidney disease after a single low result during a bout of vomiting or dehydration. That matters because the code drives annual reviews, blood pressure targets, medicine dose checks and referral, and because our registers feed the network's planning.\n\nI want to know how accurate our kidney disease coding really is compared with what the laboratory results show, using the usual definition of two eGFR values below 60 at least 90 days apart. I am not sure whether this should be a cross-sectional study of how many patients are missed or a study of the sensitivity and specificity of the codes against the laboratory results, and I do not know whether anyone has already done this in general practice. We only have existing records: no patient contact and no extra blood tests. Our network analyst can give about 60 hours, and the data protection officer has already approved a pseudonymised extract. The results need to be ready before the network's planning meeting in March 2027, when we decide whether to fund a recoding exercise across the practices.",
+          "problem.statement": {
+            "includes": "two eGFR values below 60 at least 90 days apart"
+          },
+          "family": {
+            "isNull": true
+          },
+          "design.basis": "unresolved",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            },
+            {
+              "path": "family",
+              "code": "cleared"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "Accuracy of chronic kidney disease codes in general practice records against laboratory-defined disease",
+            "About 60 hours of network analyst time"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "accuracy of chronic kidney disease diagnosis codes in primary care electronic records against eGFR laboratory criteria",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "An empty search is an observable event (status ok, zero hits), never a silent empty list. 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].provider": "fixture",
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "accuracy of chronic kidney disease diagnosis codes in primary care electronic records against eGFR laboratory criteria",
+        "sourcesConsulted": [
+          "model recall of primary care informatics literature"
+        ],
+        "gradeOverall": "low",
+        "gradeRationale": "A handful of relevant studies suggest that codes miss many cases, so certainty is low.",
+        "synthesis": "The recorded search returned no records, so the five items below are leads recalled by the model, not retrieved records; none has been checked and two have no year. Among the leads, a multi-practice validation reports that codes find a little over half of laboratory-defined cases but are usually right when present, an undated report suggests about one in three cases is uncoded, and another undated lead suggests that some codes rest on a single result during acute illness. A time series links register size to payment incentives rather than to changes in kidney function.",
+        "items": [
+          {
+            "title": "Validity of chronic kidney disease codes in general practice records against laboratory criteria: a study in 40 practices",
+            "authors": "Rahman-Oduya S, Lindqvist-Harte P, Moreau-Afolabi J",
+            "year": 2020,
+            "source": "Primary Care Informatics Journal",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 62,
+            "relevance": 90,
+            "verification": "verify",
+            "doi": "10.5555/pcij.2020.0311",
+            "contextTags": [
+              "validation",
+              "coding accuracy",
+              "general practice"
+            ],
+            "keyFindings": "Against two eGFR values below 60 at least 90 days apart, a kidney disease code had a sensitivity of 58 percent and a positive predictive value of 91 percent; sensitivity was lowest in patients over 80.",
+            "limitations": "Practices volunteered; one clinical software system; stage 3a and 3b not separated.",
+            "notes": "Recalled as a lead; not retrieved by the recorded search and not checked."
+          },
+          {
+            "title": "Uncoded chronic kidney disease in general practice: prevalence and patient characteristics",
+            "authors": "Achterberg-Singh M, Oyelaran-Beck T",
+            "year": null,
+            "source": "Kidney Care in the Community bulletin",
+            "kind": "grey",
+            "grade": null,
+            "methodQuality": null,
+            "relevance": 76,
+            "verification": "ai-lead",
+            "contextTags": [
+              "prevalence",
+              "uncoded disease"
+            ],
+            "keyFindings": "Around one in three patients meeting laboratory criteria had no kidney disease code; uncoded patients were older and more often women.",
+            "limitations": "Publication year and methods unclear; may mix stage 3a with later stages.",
+            "notes": "Recalled as a lead; undated."
+          },
+          {
+            "title": "Automated laboratory searches to find uncoded kidney disease: a before-after evaluation in 14 practices",
+            "authors": "Kaminski-Obuya R, Delacroix-Hale M",
+            "year": 2021,
+            "source": "Journal of Practice Data Quality",
+            "kind": "observational",
+            "grade": "very-low",
+            "methodQuality": 38,
+            "relevance": 72,
+            "verification": "verify",
+            "contextTags": [
+              "automated search",
+              "recoding",
+              "before-after"
+            ],
+            "keyFindings": "Monthly automated searches raised coded prevalence from 3.1 to 4.4 percent over a year, mostly through new stage 3a codes.",
+            "limitations": "No accuracy measure; uncontrolled; new codes not checked against a second result.",
+            "notes": "Recalled as a lead; relevant to the recoding decision."
+          },
+          {
+            "title": "Single low eGFR results during acute illness and false-positive kidney disease labels",
+            "authors": "Petrakis-Nwachukwu L",
+            "year": null,
+            "source": "journal not known",
+            "kind": "observational",
+            "grade": null,
+            "methodQuality": null,
+            "relevance": 68,
+            "verification": "ai-lead",
+            "contextTags": [
+              "false positives",
+              "acute kidney injury",
+              "labelling"
+            ],
+            "keyFindings": "Among patients coded with kidney disease, about one in ten had only one low eGFR, usually taken during an acute illness.",
+            "limitations": "Year, journal and sample size unknown.",
+            "notes": "Recalled as a lead; details uncertain."
+          },
+          {
+            "title": "Coding incentives and chronic kidney disease registers in primary care: an interrupted time series",
+            "authors": "Ferreira-Blake J, Nguyen-Oyelowo S, Halvorsen-Achebe D",
+            "year": 2018,
+            "source": "Health Policy and Primary Care",
+            "kind": "observational",
+            "grade": "low",
+            "methodQuality": 55,
+            "relevance": 58,
+            "verification": "verify",
+            "contextTags": [
+              "incentives",
+              "registers",
+              "time series"
+            ],
+            "keyFindings": "Register size rose sharply after a payment incentive for kidney disease registers was introduced and fell after it was withdrawn, without matching changes in laboratory-defined prevalence.",
+            "limitations": "Registers only; no individual validation.",
+            "notes": "Recalled as a lead."
+          }
+        ],
+        "summary": "Five unchecked leads recalled after an empty search; two have no year and no quality rating."
+      },
+      "note": "Leads after an empty search: stored as model leads, unverified (G3), with unknowns kept unknown (G4; holds at 875fe59). The certainty over zero retrieved records is dropped with an issue and the stage stays incomplete with the status 'leads only' (G1, G2; requires D20).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[0].provenance.origin": "model",
+          "scan.items[0].provenance.status": "unverified",
+          "scan.items[0].doi": "10.5555/pcij.2020.0311",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.items[1].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[1].grade": "unrated",
+          "scan.items[1].relevance": 76,
+          "scan.items[3].year": {
+            "isNull": true
+          },
+          "scan.items[3].methodQuality": {
+            "isNull": true
+          },
+          "scan.items[3].grade": "unrated",
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "dropped"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            },
+            {
+              "path": "items[1].grade",
+              "code": "cleared"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "leads only",
+            "not assessed",
+            "unrated"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Reopen after partial work: Problem complete, Scan incomplete with five leads and an empty recorded search. Nothing may have been completed or graded in between.",
+      "expect": {
+        "store": {
+          "title": "Accuracy of chronic kidney disease codes in general practice records against laboratory-defined disease",
+          "completedStages": [
+            "problem"
+          ],
+          "needsReview": [],
+          "problem.constraints": "Existing records only: no patient contact and no additional blood tests. About 60 hours of network analyst time. Results are needed before the network planning meeting in March 2027.",
+          "design.basis": "unresolved",
+          "scan.items": {
+            "length": 5
+          },
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.retrievalEvents[0].resultCount": 0
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Accuracy of chronic kidney disease codes in general practice records against laboratory-defined disease"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-empty-search",
+      "note": "The investigator confirms on screen that the search was run and returned nothing; only this completes the stage (G2), and certainty stays unassessed (G1). Requires D20.",
+      "expect": {
+        "store": {
+          "completedStages": [
+            "problem",
+            "scan"
+          ],
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 5
+          },
+          "scan.retrievalEvents[0].resultCount": 0
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "six practices, about 48,000 registered patients",
+          "eGFR results received electronically since 2018",
+          "pseudonymised extract approved",
+          "recorded search returned no records"
+        ],
+        "reading": "Kidney disease codes are entered during consultations, while laboratory results arrive separately and are never compared with the problem list. Missed codes (low sensitivity) and doubtful codes after a single low result during acute illness (low positive predictive value) are different failures with different harms. Payment incentives move register size without moving kidney function. The recorded search found nothing, so every evidence node is an unchecked lead and the local records are the only way to measure accuracy here.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Kidney disease code on the problem list",
+            "kind": "context",
+            "detail": "The index test."
+          },
+          {
+            "id": "n2",
+            "label": "Laboratory-defined kidney disease",
+            "kind": "outcome",
+            "detail": "Two eGFR values below 60 at least 90 days apart: the reference standard."
+          },
+          {
+            "id": "n3",
+            "label": "Missed codes",
+            "kind": "outcome",
+            "detail": "Patients meeting laboratory criteria without a code."
+          },
+          {
+            "id": "n4",
+            "label": "Codes after a single low result",
+            "kind": "context",
+            "detail": "Often during vomiting or dehydration."
+          },
+          {
+            "id": "n5",
+            "label": "Lead: 40-practice validation",
+            "kind": "observational",
+            "detail": "Unchecked; sensitivity 58 percent, positive predictive value 91 percent."
+          },
+          {
+            "id": "n6",
+            "label": "Lead: undated prevalence report",
+            "kind": "grey",
+            "detail": "Unchecked; one in three uncoded."
+          },
+          {
+            "id": "n7",
+            "label": "Payment incentives",
+            "kind": "context",
+            "detail": "Move register size without changing prevalence."
+          },
+          {
+            "id": "n8",
+            "label": "Empty recorded search",
+            "kind": "gap",
+            "detail": "The fixture search returned no records."
+          },
+          {
+            "id": "n9",
+            "label": "Patients aged 80 or over",
+            "kind": "stakeholder",
+            "detail": "Most often uncoded according to the leads."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "is compared with"
+          },
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "measure the sensitivity of"
+          },
+          {
+            "from": "n4",
+            "to": "n1",
+            "relation": "lower the positive predictive value of"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "reports rates of"
+          },
+          {
+            "from": "n7",
+            "to": "n1",
+            "relation": "shift the use of"
+          },
+          {
+            "from": "n9",
+            "to": "n3",
+            "relation": "are overrepresented in"
+          },
+          {
+            "from": "n8",
+            "to": "n2",
+            "relation": "leaves the estimate to local data for"
+          }
+        ],
+        "summary": "Map separates missed codes from doubtful codes and shows that, with an empty search, local records must supply the accuracy estimate."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "The recorded search returned no records",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Nothing retrieved means nothing appraised; the five leads are unchecked and two are undated, so no certainty can be claimed.",
+            "opportunity": "Retrieve and check the leads by identifier before citing them; answer the local question from local records."
+          },
+          {
+            "id": "g2",
+            "title": "Patients with only one eGFR result cannot be classified",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "The reference standard needs two results 90 days apart; excluding patients tested once biases accuracy estimates (partial verification).",
+            "opportunity": "Report how many coded and uncoded patients lack a second result and analyse them separately."
+          },
+          {
+            "id": "g3",
+            "title": "Codes added after a single low result during acute illness",
+            "kind": "error",
+            "severity": "moderate",
+            "whyItMatters": "False labels lower the positive predictive value and can lead to withheld medicines.",
+            "opportunity": "Flag coded patients whose only low result coincided with an acute illness code."
+          },
+          {
+            "id": "g4",
+            "title": "Accuracy may differ by age and sex",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Leads suggest older patients and women are more often uncoded, which would concentrate missed reviews in those groups.",
+            "opportunity": "Report sensitivity by age band and sex without basing policy on subgroups alone."
+          },
+          {
+            "id": "g5",
+            "title": "Incentives distort registers",
+            "kind": "implementation",
+            "severity": "watch",
+            "whyItMatters": "A recoding exercise driven by payment could add doubtful codes.",
+            "opportunity": "Measure positive predictive value as well as sensitivity before any recoding."
+          }
+        ],
+        "errorsFound": [
+          "The discovery reply assigned a certainty label although the recorded search returned no records.",
+          "Register size is not a measure of accuracy; a larger register can hold more wrong codes."
+        ],
+        "reevaluation": "With nothing retrieved, the gaps favour a local accuracy study: codes against laboratory-defined disease, with partial verification handled explicitly and both sensitivity and positive predictive value reported.",
+        "summary": "Five gaps; the empty search and partial verification are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[2].kind": "error",
+          "gaps.items[1].severity": "high",
+          "gaps.errorsFound": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "The recorded search returned no records"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Against laboratory-defined chronic kidney disease stage 3 to 5, a kidney disease code in the network's records has a sensitivity below 70 percent and a positive predictive value of at least 85 percent.",
+            "novelty": 35,
+            "need": 82,
+            "practiceChange": 78,
+            "feasibility": 85,
+            "parsimony": 82,
+            "rationale": "Need is high because a recoding decision depends on it; novelty is modest because the question has been asked elsewhere but not checked here; the data exist and one comparison answers it.",
+            "risks": "Partial verification, practices coding differently, and the definition of the observation window."
+          },
+          {
+            "id": "h2",
+            "statement": "Sensitivity is lowest in patients aged 80 or over and in stage 3a.",
+            "novelty": 40,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 80,
+            "parsimony": 70,
+            "rationale": "Leads point to older patients; the stage split tells the recoding exercise where to look.",
+            "risks": "Small numbers in stage 4 and 5."
+          },
+          {
+            "id": "h3",
+            "statement": "About one in ten coded patients has only one low eGFR result, taken during an acute illness.",
+            "novelty": 45,
+            "need": 60,
+            "practiceChange": 65,
+            "feasibility": 75,
+            "parsimony": 72,
+            "rationale": "Quantifies the false-label problem the pharmacist saw.",
+            "risks": "Acute illness is not always coded."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected, with h2 and h3 as pre-specified secondary questions."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults registered with the six practices who had at least two eGFR results between January 2019 and June 2026, what are the sensitivity and positive predictive value of a chronic kidney disease stage 3 to 5 code against laboratory-defined disease (two eGFR values below 60 at least 90 days apart)?",
+            "framework": "PICO",
+            "population": "Adults registered on 30 June 2026 with at least two eGFR results in the window",
+            "intervention": "Chronic kidney disease stage 3 to 5 code on the problem list (index test)",
+            "comparator": "Laboratory-defined chronic kidney disease (reference standard)",
+            "outcome": "Sensitivity, positive predictive value, specificity and negative predictive value",
+            "time": "January 2019 to June 2026",
+            "setting": "Six general practices in one primary care network"
+          }
+        ],
+        "finer": "Feasible within 60 analyst hours on an approved extract; interesting to GPs, pharmacists and planners; novel locally; ethical as service evaluation of pseudonymised records; relevant to a funding decision in March 2027.",
+        "summary": "One accuracy question with the code as index test and laboratory results as reference standard."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PICO",
+          "questions.items[0].comparator": "Laboratory-defined chronic kidney disease (reference standard)",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "diagnostic",
+        "rationale": "The question is how well a code (the index test) agrees with laboratory-defined disease (the reference standard), which is a diagnostic accuracy question answered by a cross-sectional sample of registered adults. Counting uncoded patients alone would give sensitivity but not the positive predictive value that the recoding decision also needs. The recorded search returned nothing, so no claim is cited; the design rests on the confirmed empty search and the investigator's local facts.",
+        "alternatives": [
+          "Cross-sectional count of uncoded patients only (refused: says nothing about wrong codes)",
+          "Recoding exercise without measurement (refused: could add doubtful codes, as incentive-driven registers did)",
+          "Manual review of every record (refused: outside the 60-hour allowance; a random sample is reviewed instead)"
+        ],
+        "guidelines": [
+          "STARD 2015",
+          "RECORD"
+        ],
+        "whyNotMoreComplex": "A prospective study with repeat testing would reduce partial verification but needs patient contact, which the constraints exclude; existing records answer the decision question.",
+        "decision": {
+          "kind": "narrow",
+          "statement": "Narrow the question to the sensitivity and positive predictive value of kidney disease stage 3 to 5 codes against laboratory-defined disease in the six practices' existing records, and decide on recoding only after the estimate.",
+          "question": "How should the network find out whether its kidney disease codes are accurate enough before funding recoding?",
+          "claimIds": [],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Most adults with laboratory-defined disease have at least two eGFR results in the window, so the reference standard can be applied.",
+              "role": "justifies",
+              "status": "unknown",
+              "claimIds": []
+            },
+            {
+              "id": "k2",
+              "text": "A network-wide validation using the same laboratory data already exists.",
+              "role": "defeats",
+              "status": "unmet",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Approval for a pseudonymised extract of codes and laboratory results from all six practices",
+              "status": "met",
+              "evidence": "Data protection officer approval DPA-PCN-2026-14 dated 3 September 2026, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Governance classification of the work",
+              "status": "met",
+              "evidence": "Service evaluation classification SE-PCN-2026-03 dated 10 September 2026, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Count uncoded patients only",
+            "Recode without measuring"
+          ],
+          "note": "No ledger claim exists because the recorded search returned no records; the decision rests on the confirmed empty search and the investigator's approvals."
+        },
+        "summary": "Diagnostic accuracy design recommended; the decision narrows the question, cites no claim and has both gates met."
+      },
+      "note": "The recommendation resolves the family to diagnostic, but a proposed decision must not change study.family (D3 within S11, work-order test proposed_decision_does_not_mutate_study_family); at 875fe59 applyAiResult sets the family immediately. recommendedFamily and selectionStatus require S11; the panel text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "diagnostic",
+          "family": {
+            "isNull": true
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "narrow",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].claimIds": [],
+          "design.decisions[-1].recommendedFamily": "diagnostic",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The decision cites no claim (nothing was retrieved) and none of its text is contradicted, so the selection is acceptable; both gates are met on investigator-supplied approvals, so the action is ready (G7; amendment A2 item 9). Acceptance sets the family from recommendedFamily with basis 'explicit' (S11); the panel text requires D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "family": "diagnostic",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Diagnostic accuracy study in existing records: the kidney disease code on the problem list (index test) against laboratory-defined chronic kidney disease (reference standard) for adults registered with six practices.",
+        "population": "Adults aged 18 or over registered on 30 June 2026 with at least two eGFR results between January 2019 and June 2026; adults with a single result are counted and described separately.",
+        "exposure": "Index test: any chronic kidney disease stage 3 to 5 code on the problem list at 30 June 2026. Reference standard: two eGFR values below 60 at least 90 days apart, the later within the window.",
+        "procedures": "The analyst runs one pseudonymised extract of codes, eGFR results, age, sex, diabetes and hypertension codes, and acute illness codes from the six practices. Each adult is classified by index test and reference standard. A GP and a pharmacist review a random sample of 200 discordant records to describe reasons (single result during acute illness, recovered kidney function, coding lag). No patient is contacted and no test is added.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Sensitivity of the kidney disease code",
+            "measure": "Coded adults divided by adults with laboratory-defined disease",
+            "timing": "Status at 30 June 2026",
+            "why": "Missed codes are the main safety concern for reviews and dose checks.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Positive predictive value of the code",
+            "measure": "Adults with laboratory-defined disease divided by coded adults",
+            "timing": "Status at 30 June 2026",
+            "why": "Wrong labels matter for the recoding decision.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Adults who cannot be classified",
+            "measure": "Proportion of coded and uncoded adults with only one eGFR result",
+            "timing": "Window January 2019 to June 2026",
+            "why": "Measures partial verification.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "One extract and about 60 analyst hours; the 200-record review takes about 12 hours of clinician time within existing roles.",
+        "biasMitigation": [
+          "Reference standard applied by a fixed rule before looking at codes",
+          "Adults with one eGFR result reported separately rather than dropped silently",
+          "Discordant-record review on a random sample, not chosen cases",
+          "Per-practice estimates to show coding differences"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Partial verification",
+            "severity": "high",
+            "note": "Adults tested once are more often uncoded and healthier."
+          },
+          {
+            "id": "b2",
+            "label": "Reference standard error",
+            "severity": "watch",
+            "note": "Two results can both fall in an acute illness; acute illness codes are flagged."
+          }
+        ],
+        "parsimony": {
+          "score": 85,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 4,
+          "flags": [
+            "Four descriptive variables for subgroup reporting"
+          ],
+          "simplestPath": "One extract, one index test against one reference standard, one primary accuracy measure."
+        },
+        "theoreticalFramework": "None beyond the index test and reference standard structure of STARD.",
+        "summary": "Accuracy study in existing records with sensitivity as the primary measure, positive predictive value secondary and partial verification reported."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[2].role": "process",
+          "protocol.parsimony.covariateCount": 4,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cross-sectional diagnostic accuracy study; each adult is classified by code and by laboratory results at 30 June 2026.",
+        "sampleSize": "About 38,000 adults are registered; if 60 percent have at least two eGFR results and 9 percent of those meet laboratory criteria, about 2,050 adults have laboratory-defined disease. With a sensitivity near 60 percent, 2,050 cases give a 95 percent confidence interval about 2.1 percentage points either side; the subgroup aged 80 or over (about 600 cases) gives about 4 points either side, enough to separate 50 from 70 percent. The study uses every eligible adult; no sampling is needed except for the 200-record review.",
+        "primaryAnalysis": "Sensitivity with a Wilson 95 percent confidence interval, pooled across practices, with per-practice estimates shown.",
+        "secondaryAnalysis": "Positive predictive value, specificity and negative predictive value; sensitivity by age band, sex and stage; reasons for discordance from the 200-record review.",
+        "missingData": "Adults with a single eGFR result are excluded from the primary estimate and reported with their coding status; a sensitivity analysis counts coded adults with a single low result as false positives.",
+        "multiplicity": "One primary estimate; subgroups reported with intervals and no significance tests.",
+        "software": "R; the classification rule and code are fixed before the extract is opened.",
+        "overfittingGuards": [
+          "Reference standard rule fixed before extraction",
+          "Subgroups limited to age band, sex and stage",
+          "No threshold search on eGFR values"
+        ],
+        "summary": "All eligible adults; about 2,050 cases give a precise sensitivity estimate and useful precision in the oldest group."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 2,050 adults have laboratory-defined disease"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: secondary use of pseudonymised records; the main risk is re-identification in small practices, handled by reporting no cell below five.",
+        "consent": "Individual consent is not sought for a service evaluation of pseudonymised records; the network's privacy notice covers service evaluation and is displayed in each practice.",
+        "data": "The extract holds no names or record numbers; it stays on the network's secure server and is deleted after the report.",
+        "equity": "PROGRESS-Plus: older adults, women, people from minority ethnic groups (where recorded) and people in deprived areas may be more often uncoded. Results are reported by age band and sex, and ethnicity where completeness allows, so that recoding reaches the groups most often missed.",
+        "effectiveness": "Useful if the estimate is precise enough to decide on funding and targeting recoding.",
+        "efficiency": "Existing records and staff time only.",
+        "costs": "Sixty analyst hours and about 12 clinician hours.",
+        "grants": "None needed.",
+        "partnerships": "Practice pharmacists, the hospital laboratory, and two patient partners from the network's patient participation groups.",
+        "rebPath": "Classified as service evaluation by the network's research governance lead (SE-PCN-2026-03), with the pseudonymised extract approved by the data protection officer (DPA-PCN-2026-14); if a publication extends beyond service evaluation, research ethics review of secondary use would be sought first.",
+        "limitations": "Partial verification, one laboratory, and codes as the only record of clinicians' diagnoses.",
+        "summary": "Service evaluation of pseudonymised records with approvals in place and equity reporting by age and sex."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "SE-PCN-2026-03"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners review the plain-language summary and the wording of any recoding letter; practice pharmacists review the discordance categories before analysis.",
+        "socialListening": "No social media listening; practice complaints about unexpected kidney disease labels in the last two years are read without identifiers.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Not being told",
+            "quote": "Composite paraphrase: My blood tests had been low for years and nobody mentioned my kidneys until a new doctor looked.",
+            "implication": "Report sensitivity by age band and make missed reviews the main harm described.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "A label from one test",
+            "quote": "Composite paraphrase: I had a stomach bug, one blood test was low, and now I am on a kidney list and my tablets were changed.",
+            "implication": "Quantify codes resting on a single low result during acute illness.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Coding workload",
+            "quote": "Composite paraphrase: If the search throws up four hundred names, somebody has to look at each one before we code it.",
+            "implication": "Measure positive predictive value before any automated recoding.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Medicine safety",
+            "quote": "Composite paraphrase: The dose checks only fire when the code is there; without it, the system thinks the kidneys are fine.",
+            "implication": "Link missed codes to the dose checks they switch off in the discussion.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on missed diagnoses, false labels, workload and medicine safety."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[1].theme": "A label from one test",
+          "voices.items[0].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Accuracy of chronic kidney disease codes against laboratory-defined disease in six general practices: a diagnostic accuracy study using existing records",
+        "abstract": "Objective: to estimate the sensitivity and positive predictive value of kidney disease stage 3 to 5 codes against laboratory-defined disease. Design: cross-sectional diagnostic accuracy study of pseudonymised records of adults registered with six practices, with a random review of 200 discordant records. Results and conclusions will be written after analysis.",
+        "introduction": "Kidney disease codes drive reviews and medicine safety checks in general practice, but they may miss patients with persistently low eGFR and may label patients after a single low result. A recorded literature search returned no records for this question.",
+        "methods": "Adults with at least two eGFR results between January 2019 and June 2026 were classified by code and by laboratory results (two values below 60 at least 90 days apart). Sensitivity and positive predictive value were estimated with Wilson intervals; adults tested once were reported separately.",
+        "results": "No data have been analysed yet. The report will present the flow of adults, the two-by-two table, accuracy estimates overall and by subgroup, and reasons for discordance.",
+        "discussion": "The discussion will interpret accuracy against the recoding decision, weigh partial verification, and compare the estimates with published studies once they have been retrieved and checked.",
+        "limitations": "Partial verification; one laboratory; codes as the only record of diagnosis; six practices in one network.",
+        "conclusion": "To be written after analysis; it will be limited to coding accuracy in these practices.",
+        "reportingChecklist": "STARD 2015 with the RECORD extension",
+        "summary": "STARD-structured draft with results left empty until analysis."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STARD 2015 with the RECORD extension",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Retrieve and check the five leads (two undated) by identifier before the report cites any of them",
+          "State in the report that the recorded search returned no records and that no certainty was assigned",
+          "Keep the investigator's constraints as entered; the problem reply's null for them was rejected"
+        ],
+        "improvementNotes": "The design stayed unresolved until the Design stage, where the need for both sensitivity and positive predictive value settled it as a diagnostic accuracy study. The empty search was confirmed on screen by the investigator; the discovery reply's certainty was dropped and no certainty was assigned.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: unchecked leads, the empty-search statement, and the constraints kept as entered."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 mergeStage overwrites the audit patch (deliverable 1b item L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Certainty and statuses are checked in the export; the scan and decision panels are not on this route.",
+      "expect": {
+        "store": {
+          "title": "Accuracy of chronic kidney disease codes in general practice records against laboratory-defined disease",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "problem.constraints": "Existing records only: no patient contact and no additional blood tests. About 60 hours of network analyst time. Results are needed before the network planning meeting in March 2027.",
+          "scan.items[1].year": {
+            "isNull": true
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "family": "diagnostic",
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Accuracy of chronic kidney disease codes in general practice records against laboratory-defined disease"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "gradeOverall '' after a dropped certainty requires D20; the kept constraints require D2 with G11; statuses S11. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "problem.constraints": "Existing records only: no patient contact and no additional blood tests. About 60 hours of network analyst time. Results are needed before the network planning meeting in March 2027.",
+            "scan.gradeOverall": "",
+            "scan.retrievalEvents[0].status": "ok",
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.items[1].year": {
+              "isNull": true
+            },
+            "scan.items[1].grade": "unrated",
+            "scan.items[0].provenance.status": "unverified",
+            "family": "diagnostic",
+            "design.basis": "explicit",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

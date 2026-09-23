@@ -1,6 +1,6 @@
 {
   "id": "sc-074",
-  "version": 2,
+  "version": 3,
   "title": "Community hospital pharmacy: scoping review of technician medication reconciliation, certainty over an empty search dropped",
   "field": "pharmacy",
   "level": 3,
@@ -11,7 +11,8 @@
     "D5",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Demanding level 3 path. The need names a scoping review and no other design, so classifyFamily routes it to \"scoping-review\" at create; the problem reply returns the typed constraints unchanged (G11). A first recorded fixture search with a narrow query returns HTTP 200 with zero records. The discovery reply that follows carries no leads but a certainty \"moderate\" and a key investigatorConfirmsEmptySearch: true: over zero records the certainty is dropped with an issue and stays \"\" (G1), the model's confirmation key is dropped with an issue because only the investigator's screen action can confirm an empty search (G2; A3 D20(a) correction), and the stage stays incomplete (\"not assessed\"). A second, broader recorded search returns seven records and is a second retrieval event, not a replacement; the appraisal (scan call 2) annotates all seven and records four claims, certainty \"low\" over inspected records, and only now is Scan complete. The decision rests on claims c1 to c4, but its second-reviewer gate stays unknown (the residency director has not replied), so acceptance gives selectionStatus accepted with actionStatus blocked through reload, reopen and export (G7; A2 item 9). Record ids were computed by the generator with stableRecordId from src/lib/evidence/records.ts (normalised DOI for records 1, 3, 5 and 7; titleYearKey for records 2, 4 and 6): ev-1gh39r9, ev-1jgrec7, ev-068hno7, ev-0jxtduw, ev-0wo4oma, ev-17ae8d5, ev-1lwrsse. The validator warns about the key outside the discovery schema; that key is the point of the step. Requires D20 (empty-scan certainty and completion, model confirmation refused), S13 (appraisal path), S11 (selection and action status) and D5 (status text). Catches: certainty assigned over nothing, completion claimed by a model field, a second search that overwrites the first event, and an unknown gate treated as met.",
   "inputs": {
@@ -889,7 +890,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -901,6 +904,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1422,5 +1445,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-074.json), superseded 2026-09-22T20:40Z: golden error GE-2, screen.excludes \"moderate certainty\" at the discovery step collided with the model synthesis text the scenario itself stores and shows; the store check scan.gradeOverall \"\" and the visible \"not assessed\" already prove that no certainty was assigned."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-074.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

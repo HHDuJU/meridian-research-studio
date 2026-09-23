@@ -1,6 +1,6 @@
 {
   "id": "sc-011",
-  "version": 1,
+  "version": 2,
   "title": "Regional cancer centre: financial toxicity survey, a lead reusing a retrieved record's id, and a revised Questions stage flagging later stages",
   "field": "oncology",
   "level": 4,
@@ -12,7 +12,8 @@
     "D5",
     "S1",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on an explicit cross-sectional survey need. A fixture search returns six records and the appraisal (scan call 1) assigns moderate certainty with five claims. A second scan reply (shape discovery) asks for further leads and deliberately omits gradeOverall, gradeRationale and synthesis (omitKeys): the appraisal's values must stay. One of its three leads carries the id of the retrieved single-item screening study but describes a different paper: it must be quarantined (scan.quarantine.items, issue id-collision), never appended and never merged into the retrieved record, whose provenance, grade, key findings and citing claim stay unchanged; the other two leads are appended after the six records as unverified model leads. The design decision rests on c1 to c3 with both gates met and is accepted (ready). Later the Questions stage is repeated with a revised response (population restricted to the first six months of treatment and a screening agreement question added) after Design, Protocol and Analysis were complete: all three are flagged for review (G8); redoing Protocol and Analysis clears their flags, and Design stays review required to the end, on screen, after reload, after reopen and in the export. The decision stays accepted because no cited record changed (G7), a negative control on staleness. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 5, 6 (ev-0pr4tpy, ev-01lqsba, ev-0xk9yov, ev-03gcm9g, ev-08zvsu6); titleYearKey hash for record 2 (ev-1ptqhms). Requires D1 and S1 (quarantine per A2 item 6, leads appended), S13 (appraisal), S11 (statuses) and D5 (status text and review required). Catches: a colliding lead overwriting or duplicating a retrieved record, omitted keys wiping reviewed content, downstream stages left current after an upstream revision, flags lost on reload, and a decision made stale by a change that touches no cited source.",
   "inputs": {
@@ -95,7 +96,13 @@
           "includes": [
             "Financial toxicity among adults receiving systemic cancer treatment at a regional cancer centre",
             "constraints",
-            {"anyOf": ["kept", "refused", "not applied"]}
+            {
+              "anyOf": [
+                "kept",
+                "refused",
+                "not applied"
+              ]
+            }
           ]
         }
       }
@@ -914,8 +921,8 @@
             "c2",
             "c3"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -924,13 +931,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "met",
+      "reason": "Research ethics approval of the survey protocol: REB-2026-204 approved 2026-09-12, supplied by the investigator",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "met",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1649,5 +1701,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-011.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (approved) citing the ethics gate the investigator confirmed before accepting decision 1. Model responses, need and records are unchanged."
 }

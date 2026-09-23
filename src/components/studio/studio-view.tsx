@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { StageFrame } from "./stage-frame";
 import { StagePanel } from "./stage-panels";
 import { studyStatus } from "@/lib/status";
+import { evaluateDecision } from "@/lib/evidence/decision";
 
 const SCENARIO_MODE = import.meta.env.VITE_SCENARIO_MODE === "true";
 
@@ -58,7 +59,7 @@ export function StudioView({ study, stage }: { study: Study; stage: StageId }) {
             <ul className="mt-2 space-y-0.5 text-xs text-spine-muted" data-meridian-decision-status-list="">
               {study.design.decisions.map((d) => (
                 <li key={d.id} data-meridian-decision-status={d.selectionStatus ?? d.status}>
-                  {d.selectionStatus ?? d.status} {d.actionStatus ?? "blocked"}
+                  {d.selectionStatus ?? d.status} {evaluateDecision(d, study).actionStatus}
                 </li>
               ))}
             </ul>
@@ -146,7 +147,7 @@ export function StudioView({ study, stage }: { study: Study; stage: StageId }) {
             <Badge variant="secondary">{family.short}</Badge>
             {study.design.decisions?.length ? (
               <span className="text-xs text-muted-foreground" data-meridian-decision-status-list="">
-                {study.design.decisions.map((d) => `${d.selectionStatus ?? d.status} ${d.actionStatus ?? "blocked"}`).join(" · ")}
+                {study.design.decisions.map((d) => `${d.selectionStatus ?? d.status} ${evaluateDecision(d, study).actionStatus}`).join(" · ")}
               </span>
             ) : null}
             {SCENARIO_MODE && modelMode === "replay" ? <Badge variant="outline">model replay</Badge> : null}

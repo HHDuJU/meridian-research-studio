@@ -1,6 +1,6 @@
 {
   "id": "sc-072",
-  "version": 1,
+  "version": 2,
   "title": "Regional crisis text line: implementation study of a triage and queue protocol after two empty searches, data gate unknown",
   "field": "psychiatry",
   "level": 3,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "D20",
-    "S11"
+    "S11",
+    "D10"
   ],
   "notes": "Demanding level 3 path. The need names an implementation study and RE-AIM and no other design, so classifyFamily routes it to \"implementation\" at create; the problem reply repeats the typed constraints (G11). Two recorded fixture searches both return HTTP 200 with zero records (a narrow query, then the broader query the model proposed). Between them a well-behaved discovery reply returns no leads and no certainty (gradeOverall omitted, listed in omitKeys), so nothing can complete the stage: it stays incomplete and \"not assessed\" after the reply and after the second empty search (G1, G2). Only the investigator's on-screen confirmation completes Scan, recorded as scan.emptySearchConfirmation.by \"investigator\" (A3.2 section 1, D20); certainty stays \"\" through reload, reopen and export. A reopen after the Gaps stage checks that the confirmation and completion survive partial work. A hypothesis whose feasibility the model cannot judge carries null (stored null, \"not assessed\", never 50; G4). The decision cites no ledger claim (nothing was retrieved) and has one gate that stays unknown (the vendor data-sharing agreement is drafted but not signed), so acceptance is allowed and the action stays blocked to the export (G7; A2 item 9). No record ids are involved. Requires D20 (no certainty and no completion over empty searches, investigator confirmation, \"not assessed\"), S11 (selectionStatus, actionStatus, basis) and D5 (status text). Catches: completion or certainty from an empty search or a model reply, a confirmation that a model could write, an unknown gate treated as met, a null score shown as a number, and state lost on reopen.",
   "inputs": {
@@ -688,7 +689,7 @@
           "design.decisions[-1].gates[0].evidence": {
             "absent": true
           },
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
           "design.decisions[-1].selectionStatus": "proposed",
           "design.decisions[-1].actionStatus": "blocked",
           "completedStages": [
@@ -699,7 +700,8 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -711,6 +713,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1235,5 +1257,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-072.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 12 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged."
 }

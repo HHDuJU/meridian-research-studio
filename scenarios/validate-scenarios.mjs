@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// validate-scenarios.mjs: checks Meridian usage-scenario files against SCENARIO_FORMAT.md, format version 1.2.
-// Validator revision 1.3 (2026-09-22, the late illuminate step with its during actions). Revision 1.2 is kept as
-// bank-samples/original-v1/validate-scenarios.v1-2.mjs, revision 1.1 as validate-scenarios.v1-1.mjs there.
+// validate-scenarios.mjs: checks Meridian usage-scenario files against SCENARIO_FORMAT.md, format version 1.3.
+// Validator revision 1.4 (2026-09-23, D10: the confirm-gate step and DecisionGate.proposal). Revision 1.3 is kept as
+// bank-samples/original-v1/validate-scenarios.v1-3.mjs, revision 1.1 as validate-scenarios.v1-1.mjs there
+// (revision 1.2 was not kept in the repository).
 //
 // Usage: node validate-scenarios.mjs <dir> [--forbidden <terms.txt>] [--index <INDEX.json>]
 //   <dir>         folder whose *.json files are scenarios. Subfolders are not read. Bank metadata files (a name
@@ -22,7 +23,9 @@
 //   file, top-level, id, early-stop, inputs, need-words      the file and the scenario object
 //   step-schema, retrieve, stage-schema, call-numbering, decision-step, expect-schema, work-order
 //   outcome-check         every consequential step (retrieve, illuminate, confirm-empty-search, accept-decision,
-//                         withdraw-decision, change-source, set-field, mark-complete) carries an expect with at
+//                         confirm-gate, record-determination, settle-open-item, withdraw-decision, change-source, set-field,
+//                         mark-complete)
+//                         carries an expect with at
 //                         least one store, stage, issues or error check
 //   reload-reopen-expect  every reload and reopen step carries an expect
 //   final-export          an export step with expect.export.equalsStore true comes after the last consequential step
@@ -51,8 +54,8 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 
-const FORMAT_VERSION = "1.2";
-const VALIDATOR_REVISION = "1.3";
+const FORMAT_VERSION = "1.3";
+const VALIDATOR_REVISION = "1.4";
 
 const FIELDS = [
   "anesthesia", "pain-medicine", "critical-care", "emergency-medicine", "surgery", "obstetrics", "pediatrics",
@@ -120,6 +123,7 @@ const WORK_ORDER_PATHS = [
   [/^claims(\[|\.|$)/, "top-level claims (work order)"],
   [/^scan\.claims\[-?\d+\]\.origin$/, "Claim.origin (F1, S5)"],
   [/(^|\.)resourcesAssumed(\[|\.|$)/, "resourcesAssumed (D10)"],
+  [/\.gates\[-?\d+\]\.proposal(\.|$)/, "DecisionGate.proposal (D10)"],
   [/^scan\.items\[-?\d+\]\.abstract(\.|$)/, "EvidenceItem.abstract (D1)"],
   [/^documents(\[|\.|$)/, "study.documents (S3)"],
   [/^meta(\.|$)/, "export meta (R1)"],
@@ -154,6 +158,14 @@ const STEP_SPECS = {
   "confirm-empty-search": { required: [], optional: [] },
   "set-field": { required: ["path", "value"], optional: [] },
   "accept-decision": { required: ["which"], optional: [] },
+  // Format 1.3 (D10): the investigator confirms gates the model proposed as met (all, or the listed gate ids).
+  "confirm-gate": { required: ["which"], optional: ["gates"] },
+  // Format 1.3 (D10): the investigator records the status of one kind of approval for this work: approved with
+  // its reference ("met") or not required with the reason ("not-required", the default).
+  "record-determination": { required: ["which", "body", "reason"], optional: ["status"] },
+  // Format 1.3 (D10): the investigator acts on one of their own facts that leaves an approval open, for one
+  // decision: "given" (with the reference) or "aside" (with the reason it does not concern the decision).
+  "settle-open-item": { required: ["which", "match", "how", "note"], optional: [] },
   "withdraw-decision": { required: ["which"], optional: [] },
   "mark-complete": { required: ["stage"], optional: [] },
   "change-source": { required: ["record", "field", "value"], optional: [] },
@@ -163,7 +175,8 @@ const STEP_SPECS = {
   wait: { required: ["ms"], optional: [] },
 };
 // Steps that change the study or depend on a model or provider response; each must state its outcome.
-const CONSEQUENTIAL = ["retrieve", "illuminate", "confirm-empty-search", "accept-decision", "withdraw-decision", "change-source", "set-field", "mark-complete"];
+const CONSEQUENTIAL = ["retrieve", "illuminate", "confirm-empty-search", "accept-decision", "confirm-gate", "record-determination", "settle-open-item", "withdraw-decision", "change-source", "set-field", "mark-complete"];
+const DETERMINATION_BODIES = ["ethics", "consent", "data"];
 const OUTCOME_KEYS = ["store", "stage", "issues", "error"];
 const COMMON_STEP_KEYS = ["do", "expect", "stopOnFail", "note"];
 // Format 1.2: investigator actions a late illuminate step holds its reply across (SCENARIO_FORMAT.md, "Late replies").
@@ -213,6 +226,8 @@ const DOI_LIKE = /(?<![\d.])10\.(\d{4,9})(?:\.\d+)*\/[^\s"'<>]*/g;
 const PMID_TEXT = /\bPMID\b\s*[:#]?\s*\d{4,9}/i;
 const PUBMED_URL = /pubmed\.ncbi\.nlm\.nih\.gov\/\d{4,9}/i;
 const TRIAL_NUMBER = /\b(?:NCT\d{8}|ISRCTN\d{8})\b/;
+// The ASCII range starts at \x00; the rule flags any character outside it.
+// eslint-disable-next-line no-control-regex
 const NON_ASCII = /[^\x00-\x7F]/g;
 const UNICODE_HYPHENS = new RegExp(`[${String.fromCharCode(0x2010)}-${String.fromCharCode(0x2015)}]`, "g"); // as in identifiers.ts
 
@@ -819,6 +834,15 @@ function validateFile(file, forbidden) {
     const allowed = [...COMMON_STEP_KEYS, ...spec.required, ...spec.optional];
     for (const k of Object.keys(step)) if (!allowed.includes(k)) fail("step-schema", `${where}.${k}`, `unknown field for do "${step.do}"`);
     for (const k of spec.required) if (!has(step, k)) fail("step-schema", where, `do "${step.do}" requires "${k}"`);
+    if (step.do === "settle-open-item") {
+      if (!["given", "aside"].includes(step.how)) fail("step-schema", `${where}.how`, 'must be "given" or "aside"');
+      for (const k of ["match", "note"]) if (typeof step[k] !== "string" || !step[k].trim()) fail("step-schema", `${where}.${k}`, "must be a non-empty string");
+    }
+    if (step.do === "record-determination") {
+      if (!DETERMINATION_BODIES.includes(step.body)) fail("step-schema", `${where}.body`, `must be one of ${DETERMINATION_BODIES.join(", ")}`);
+      if (typeof step.reason !== "string" || !step.reason.trim()) fail("step-schema", `${where}.reason`, "must be the investigator's reason or reference");
+      if (has(step, "status") && !["met", "not-required"].includes(step.status)) fail("step-schema", `${where}.status`, 'must be "met" (approved, with the reference) or "not-required" (with the reason)');
+    }
     if (has(step, "stopOnFail") && typeof step.stopOnFail !== "boolean") fail("step-schema", `${where}.stopOnFail`, "must be a boolean");
     if (has(step, "note") && (typeof step.note !== "string" || !step.note.trim() || step.note.length > LIMITS.stepNoteChars)) fail("step-schema", `${where}.note`, `must be a non-empty string of at most ${LIMITS.stepNoteChars} characters`);
     // Format 1.2, late replies: an illuminate step may hold its recorded reply while the investigator acts.

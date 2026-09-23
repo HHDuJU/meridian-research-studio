@@ -1,0 +1,1498 @@
+{
+  "id": "sc-049",
+  "version": 1,
+  "title": "Medical wards: protected night repositioning rounds for pressure injuries, landmark lead unverified, renamed record quarantined",
+  "field": "nursing",
+  "level": 4,
+  "family": "qi-pdsa",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D1",
+    "D5",
+    "S1",
+    "S11",
+    "S13"
+  ],
+  "notes": "Adversarial path on a clear QI question (routing explicit qi-pdsa from 'quality improvement project using PDSA cycles' and 'run charts'). A fixture search returns seven records with abstracts. The first scan reply (shape discovery) carries three leads: a model-labelled 'landmark' ratio study with the invented DOI 10.5555/nsj.2018.0777, which is appended and must stay unverified with no checks (G3); a lead that reuses the id of retrieved record 2 (ev-1ihlm0s) but renames the uncontrolled before-after report as a multicentre controlled trial that 'eliminated' injuries, which must be quarantined with issue id-collision while record 2 keeps its title, provenance, missing DOI and label (A2 item 6; D1, S1); and a sensor report appended as a lead with methodQuality null. The reply's certainty is an explicit null, so certainty stays unassessed until the appraisal. The second scan reply (shape appraisal) annotates the seven records, again tries to retitle record 2 (the title key is dropped with an issue, the stored title unchanged) and records claims c1 to c4; certainty 'low'. The design decision rests on c1 to c3 only; the float nurse gate is unknown, so acceptance gives selection accepted and action blocked. Reload and reopen follow the last stage. Unlike a lead that echoes a retrieved record with an invented DOI, here the colliding lead changes the record's title and design, and the landmark lead is a separate, non-colliding invention. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 3, 5, 6 (ev-0bok56v, ev-0uhk5zi, ev-0aphgus, ev-0ekr4am); titleYearKey hash for records 2, 4, 7 (ev-1ihlm0s, ev-0clsgbr, ev-1tyuu4i). Requires D1 and S1 (append and quarantine), S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a lead that renames or overwrites a retrieved record, a model label or DOI treated as verification, identity edits through the appraisal, and a decision resting on unretrieved leads.",
+  "inputs": {
+    "need": "I am the clinical nurse specialist for tissue viability at a 420-bed general hospital. Two medical wards, 7A and 7B, have the highest rates of hospital-acquired pressure injuries in the hospital, and most injuries are first found on the morning after a night shift. The staffing roster shows that on nearly half of nights these wards run with one registered nurse for more than seven patients, and the night nurses tell us that two-hourly repositioning is the first thing to slip when the ward is busy. We cannot fund more nurses, but the night bank can sometimes release a float nurse.\n\nWe want to run a quality improvement project using PDSA cycles to test a protected night repositioning round: at 23:00, 02:00 and 05:00 a named nurse, or the float nurse when the ratio is worse than one to seven, repositions and checks the skin of every patient at high risk, and the risk score is reassessed at the evening handover. We would track pressure injuries on run charts and look separately at nights with poor staffing.\n\nThe board has asked me what the evidence says about staffing levels and pressure injuries, because a colleague keeps quoting a large multicentre study that supposedly proved a fixed ratio prevents most injuries, and I cannot find it. I need help with an aim statement, a measure that is not distorted by how injuries are reported, balancing measures for the night shift, and how to present rare events without overclaiming.",
+    "constraints": "No additional nursing posts; any float nurse comes from the existing night bank. Changes must fit the electronic care plan without new build. Results are reported at ward level only, never by individual nurse.",
+    "localFacts": [
+      "Wards 7A and 7B (28 beds each) recorded 41 hospital-acquired pressure injuries of category 2 or worse in the last 12 months.",
+      "On 46 percent of nights last year, wards 7A and 7B ran with one registered nurse for more than seven patients, according to the staffing roster.",
+      "The hospital quality committee registered the project as quality improvement on 2026-09-02 (registration QI-2026-054); no REB review is required.",
+      "The tissue viability team inspects the skin of every patient on both wards once a week, and all pressure injuries are entered in the incident system within 24 hours."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am the clinical nurse specialist for tissue viability at a 420-bed general hospital. Two medical wards, 7A and 7B, have the highest rates of hospital-acquired pressure injuries in the hospital, and most injuries are first found on the morning after a night shift. The staffing roster shows that on nearly half of nights these wards run with one registered nurse for more than seven patients, and the night nurses tell us that two-hourly repositioning is the first thing to slip when the ward is busy. We cannot fund more nurses, but the night bank can sometimes release a float nurse.\n\nWe want to run a quality improvement project using PDSA cycles to test a protected night repositioning round: at 23:00, 02:00 and 05:00 a named nurse, or the float nurse when the ratio is worse than one to seven, repositions and checks the skin of every patient at high risk, and the risk score is reassessed at the evening handover. We would track pressure injuries on run charts and look separately at nights with poor staffing.\n\nThe board has asked me what the evidence says about staffing levels and pressure injuries, because a colleague keeps quoting a large multicentre study that supposedly proved a fixed ratio prevents most injuries, and I cannot find it. I need help with an aim statement, a measure that is not distorted by how injuries are reported, balancing measures for the night shift, and how to present rare events without overclaiming.",
+          "family": "qi-pdsa",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am the clinical nurse specialist for tissue viability"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Protected night repositioning rounds and hospital-acquired pressure injuries on two medical wards",
+        "subtitle": "QI project with PDSA cycles, stratified by night staffing",
+        "family": "qi-pdsa",
+        "statement": "Wards 7A and 7B recorded 41 hospital-acquired pressure injuries of category 2 or worse in a year, most found after night shifts, and on 46 percent of nights they ran with one registered nurse for more than seven patients. Night repositioning is the first task to slip. The project will test whether a protected night repositioning round with risk reassessment at the evening handover reduces pressure injuries, with results examined separately for poorly staffed nights.",
+        "whoAffected": "Adult medical inpatients at high risk of pressure injury, especially older, immobile and acutely ill patients, and the night nurses and float nurses on wards 7A and 7B.",
+        "whatHurts": "Pressure injuries cause pain, infection, longer stays and loss of dignity; nurses feel blamed for injuries that follow nights they could not staff safely.",
+        "currentPractice": "Two-hourly repositioning is prescribed in the care plan but not protected; risk is scored at admission and weekly; a float nurse is sometimes available from the night bank.",
+        "whyNow": "The board has asked for action and for evidence on staffing, the tissue viability team already inspects skin weekly, and the project is registered (QI-2026-054).",
+        "constraints": "No additional nursing posts; any float nurse comes from the existing night bank. Changes must fit the electronic care plan without new build. Results are reported at ward level only, never by individual nurse.",
+        "patientCenteredGoal": "No patient on wards 7A and 7B develops a pressure injury because a night was busy.",
+        "summary": "Problem framed as a ward QI project on night repositioning, with staffing as a stratifier rather than the intervention."
+      },
+      "expect": {
+        "store": {
+          "title": "Protected night repositioning rounds and hospital-acquired pressure injuries on two medical wards",
+          "family": "qi-pdsa",
+          "problem.constraints": "No additional nursing posts; any float nurse comes from the existing night bank. Changes must fit the electronic care plan without new build. Results are reported at ward level only, never by individual nurse.",
+          "problem.statement": {
+            "includes": "46 percent of nights"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Protected night repositioning rounds and hospital-acquired pressure injuries on two medical wards"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "night nurse staffing ratio hospital-acquired pressure injury repositioning rounds medical wards improvement",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Night-shift nurse staffing and hospital-acquired pressure injuries: an observational study across 24 medical wards",
+            "authors": "Achterberg-Kimani L, Solberg-Nwosu P, Fairley-Ortega D",
+            "year": 2020,
+            "venue": "Skerrow Journal of Nursing Workforce",
+            "doi": "10.5555/sjnw.2020.0419",
+            "providerType": "journal-article",
+            "abstract": "We linked shift-level staffing records to hospital-acquired pressure injuries on 24 medical wards over two years. Each additional patient per registered nurse on night shifts was associated with an 11 percent higher incidence of category 2 or worse pressure injuries after adjustment for patient acuity and ward. Day-shift staffing showed a weaker association. The association was strongest on wards where most patients were at high risk. Because staffing and acuity move together, residual confounding is likely, and the study cannot show that a fixed ratio would prevent injuries. Wards with a float nurse available at night had fewer missed repositioning episodes recorded in care plans."
+          },
+          {
+            "title": "Protected night repositioning rounds on two medical wards: a before-after improvement report",
+            "authors": "Mwale-Lindgren C, Oyelaran-Pike T",
+            "year": 2022,
+            "venue": "Greyhaven Improvement Letters",
+            "providerType": "journal-article",
+            "abstract": "Two medical wards introduced protected night repositioning rounds at fixed times, led by a named nurse, with a float nurse joining when staffing fell below a set level. We compared pressure injuries in the nine months before and the nine months after the change. Category 2 or worse injuries fell from 3.1 to 1.9 per 1,000 patient-days. Completion of the night rounds was recorded on 84 percent of nights. Nurses reported that fixed times made repositioning harder to postpone. The comparison is uncontrolled, a new mattress contract started during the second period, and injuries were counted from incident reports."
+          },
+          {
+            "title": "Pressure injury prevention bundles in acute hospital care: a systematic review",
+            "authors": "Kaur-Brennan S, Delacroix-Ansah M, Petrov-Holt J, Nakashima-Obi F",
+            "year": 2019,
+            "venue": "Lowbridge Acute Care Quarterly",
+            "doi": "10.5555/lacq.2019.0288",
+            "providerType": "journal-article",
+            "abstract": "We searched four databases for controlled and uncontrolled studies of prevention bundles in adult acute care. Thirty-one studies met the criteria; 26 reported fewer pressure injuries after a bundle was introduced, but only five had a concurrent control. Repositioning schedules, risk reassessment and skin inspection were the most common components. Effects were larger in studies that measured injuries by incident reports than in studies that used direct skin inspection. Most studies were at high risk of bias, and none separated the effect of staffing from the effect of the bundle. The review supports bundles as change ideas rather than as proven interventions."
+          },
+          {
+            "title": "Weekly skin inspection compared with incident reporting for measuring pressure injury incidence",
+            "authors": "Varga-Adebayo H, Lindqvist-Sato R",
+            "year": 2017,
+            "venue": "Skerrow Journal of Nursing Workforce",
+            "providerType": "journal-article",
+            "abstract": "On six wards we compared pressure injuries found at weekly skin inspection by a tissue viability nurse with injuries recorded in the incident reporting system. Incident reports captured 64 percent of the category 2 or worse injuries found at inspection. Capture was lower for injuries on the heels and for patients discharged within a week. Reporting rose during periods of improvement activity, which would make an improvement project look worse at first when measured by incident reports. The authors recommend weekly inspection as the outcome measure for improvement work and incident reports as a secondary source."
+          },
+          {
+            "title": "Float nurse deployment when night ratios exceed a threshold: effects on missed care in medical wards",
+            "authors": "Ferreira-Mbeki A, Holm-Quartey S",
+            "year": 2024,
+            "venue": "Greyhaven Improvement Letters",
+            "doi": "10.5555/gil.2024.0133",
+            "providerType": "journal-article",
+            "abstract": "Four medical wards deployed a float nurse on nights when the ratio exceeded one nurse to seven patients. Using care-plan records, we compared missed care on nights with and without a float nurse over one year. Missed repositioning was recorded on 18 percent of high-risk patient-nights without a float nurse and 9 percent with one. Missed medication doses showed a similar but smaller difference. Float nurses were available on 61 percent of the nights that met the threshold. Nights were not allocated at random, and ward managers requested float nurses more often for the busiest nights."
+          },
+          {
+            "title": "Skin tone and the detection of early pressure injury: an observational study of nurse assessment",
+            "authors": "Okonkwo-Reyes B, Tanaka-Whitfield G",
+            "year": 2021,
+            "venue": "Lowbridge Acute Care Quarterly",
+            "doi": "10.5555/lacq.2021.0045",
+            "providerType": "journal-article",
+            "abstract": "We compared ward nurses' skin assessments with assessments by tissue viability specialists in 540 adult inpatients. Category 1 pressure injuries were missed by ward nurses in 38 percent of patients with darker skin tones and 14 percent of patients with lighter skin tones. Missed early injuries more often progressed to category 2 or worse within a week. Assessment that included touch for warmth and firmness, not only colour, reduced the difference. The study used a small number of specialist assessors in one hospital, and skin tone was recorded by the assessors."
+          },
+          {
+            "title": "Run chart rules for rare adverse events in ward improvement projects",
+            "authors": "Brandt-Osei K, Marsh-Nakamura E",
+            "year": 2015,
+            "venue": "Greyhaven Improvement Letters",
+            "providerType": "journal-article",
+            "abstract": "Improvement teams often plot rare adverse events such as pressure injuries or falls with injury as weekly counts, which produces charts dominated by zeros. We simulated ward-level data and compared run charts of weekly rates with charts of the number of patient-days between events. With fewer than two events per ward per week, charts of patient-days between events detected a halving of the event rate about six weeks earlier than weekly run charts and gave fewer false signals. We recommend charts of time or patient-days between events for rare events, with the counting rule fixed before baseline."
+          }
+        ]
+      },
+      "note": "Seven records with abstracts; ids are stableRecordId values computed by the generator (see notes). Record 2 (the before-after report) has no DOI, so its id comes from its title and year.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0bok56v",
+            "ev-1ihlm0s",
+            "ev-0uhk5zi",
+            "ev-0clsgbr",
+            "ev-0aphgus",
+            "ev-0ekr4am",
+            "ev-1tyuu4i"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].id": "ev-1ihlm0s",
+          "scan.items[1].title": "Protected night repositioning rounds on two medical wards: a before-after improvement report",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[1].provenance.origin": "retrieval",
+          "scan.items[1].provenance.status": "retrieved",
+          "scan.items[1].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Protected night repositioning rounds on two medical wards: a before-after improvement report"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "night staffing ratios pressure injuries",
+        "sourcesConsulted": [
+          "model knowledge",
+          "landmark workforce literature"
+        ],
+        "gradeOverall": null,
+        "gradeRationale": "Certainty is left to the appraisal of the retrieved records.",
+        "synthesis": "Three further items are suggested: the landmark multicentre ratio study the board has heard about, a controlled evaluation of repositioning rounds, and a report on turning sensors.",
+        "items": [
+          {
+            "title": "Mandated night staffing ratios and pressure injury incidence across 40 hospitals",
+            "authors": "Halvorsen-Mbeki T, Carrington-Ade J, Novak-Oyelowo R",
+            "year": 2018,
+            "source": "Nursing Staffing Journal",
+            "kind": "observational",
+            "grade": "high",
+            "methodQuality": 90,
+            "relevance": 96,
+            "verification": "landmark",
+            "doi": "10.5555/nsj.2018.0777",
+            "contextTags": [
+              "staffing ratio",
+              "multicentre",
+              "pressure injury"
+            ],
+            "keyFindings": "Hospitals that adopted a mandated night ratio of one nurse to five patients had 60 percent fewer pressure injuries than hospitals without a mandate.",
+            "limitations": "None reported.",
+            "notes": "The landmark study behind fixed ratios."
+          },
+          {
+            "id": "ev-1ihlm0s",
+            "title": "Protected night repositioning rounds eliminate pressure injuries: a multicentre controlled trial",
+            "authors": "Mwale-Lindgren C, Oyelaran-Pike T",
+            "year": 2022,
+            "source": "Greyhaven Improvement Letters",
+            "kind": "rct",
+            "grade": "high",
+            "methodQuality": 85,
+            "relevance": 98,
+            "verification": "verify",
+            "contextTags": [
+              "repositioning",
+              "controlled trial"
+            ],
+            "keyFindings": "Protected night rounds eliminated category 2 or worse pressure injuries across participating wards.",
+            "limitations": "Short follow-up.",
+            "notes": "Same authors as the retrieved report; presented as a controlled trial."
+          },
+          {
+            "title": "Wearable turning sensors for patients at high risk of pressure injury on medical wards",
+            "authors": "Iqbal-Sorensen N",
+            "year": 2023,
+            "source": "Digital Nursing Notes",
+            "kind": "grey",
+            "relevance": 52,
+            "verification": "ai-lead",
+            "contextTags": [
+              "sensors",
+              "technology"
+            ],
+            "keyFindings": "Sensors prompted nurses when a patient had not been turned for two hours.",
+            "limitations": "Vendor-supported report.",
+            "notes": "Out of scope for a no-cost project."
+          }
+        ],
+        "summary": "Three leads: a landmark ratio study with a DOI, a controlled trial of repositioning rounds, and a sensor report."
+      },
+      "note": "The second lead reuses the id of retrieved record 2 but renames it as a controlled trial that 'eliminated' injuries: it is never appended and never overwrites; it is quarantined with issue id-collision and record 2 keeps its title, provenance, missing DOI and label (A2 item 6; D1, S1). The landmark lead with the invented DOI and the sensor lead are appended after the seven records as model leads, unverified, with no checks (G3; D1); the landmark label and the lead's own grade are model labels, not verification. The explicit null certainty leaves the certainty unassessed ('cleared'); certainty comes only from the appraisal. The sourcesConsulted issue holds at 875fe59.",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 9
+          },
+          "scan.items[1].id": "ev-1ihlm0s",
+          "scan.items[1].title": "Protected night repositioning rounds on two medical wards: a before-after improvement report",
+          "scan.items[1].provenance.origin": "retrieval",
+          "scan.items[1].provenance.status": "retrieved",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[1].verification": "verify",
+          "scan.items[7].title": "Mandated night staffing ratios and pressure injury incidence across 40 hospitals",
+          "scan.items[7].doi": "10.5555/nsj.2018.0777",
+          "scan.items[7].verification": "landmark",
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.items[7].provenance.checks": [],
+          "scan.items[8].provenance.origin": "model",
+          "scan.items[8].methodQuality": {
+            "isNull": true
+          },
+          "scan.quarantine.items": {
+            "length": 1
+          },
+          "scan.quarantine.items[0].title": "Protected night repositioning rounds eliminate pressure injuries: a multicentre controlled trial",
+          "scan.quarantine.items[0].provenance.origin": "model",
+          "scan.quarantine.items[0].provenance.status": {
+            "notEquals": "verified"
+          },
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents": {
+            "length": 1
+          }
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "items[1]",
+              "code": "id-collision"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ],
+          "count": {
+            "min": 2
+          }
+        },
+        "screen": {
+          "includes": [
+            "unverified",
+            "quarantined"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0bok56v",
+            "relevance": 90,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Each additional patient per nurse on nights was associated with an 11 percent higher incidence of category 2 or worse injuries; a float nurse was linked to fewer missed repositioning episodes.",
+            "limitations": "Observational; staffing and acuity move together; cannot show that a fixed ratio prevents injuries.",
+            "contextTags": [
+              "night staffing",
+              "association"
+            ],
+            "notes": "The retrieved evidence on staffing the board asked about."
+          },
+          {
+            "id": "ev-1ihlm0s",
+            "title": "Protected night repositioning rounds eliminate pressure injuries: a multicentre controlled trial",
+            "relevance": 92,
+            "methodQuality": 48,
+            "kind": "qi-report",
+            "grade": "low",
+            "keyFindings": "After protected night rounds, category 2 or worse injuries fell from 3.1 to 1.9 per 1,000 patient-days; rounds recorded on 84 percent of nights.",
+            "limitations": "Uncontrolled before-after; new mattresses during the second period; incident-report counting.",
+            "contextTags": [
+              "change idea",
+              "before-after"
+            ],
+            "notes": "The change idea closest to the project."
+          },
+          {
+            "id": "ev-0uhk5zi",
+            "relevance": 74,
+            "methodQuality": 62,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "26 of 31 studies reported fewer injuries after bundles, but only five had a concurrent control; effects were larger when counted by incident reports.",
+            "limitations": "High risk of bias; staffing effects not separated.",
+            "contextTags": [
+              "bundles",
+              "systematic review"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0clsgbr",
+            "relevance": 86,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Incident reports captured 64 percent of injuries found at weekly skin inspection; reporting rose during improvement activity.",
+            "limitations": "Six wards; one inspector per ward.",
+            "contextTags": [
+              "measurement",
+              "operational definition"
+            ],
+            "notes": "Supports weekly inspection as the outcome measure."
+          },
+          {
+            "id": "ev-0aphgus",
+            "relevance": 80,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Missed repositioning on 18 percent of high-risk patient-nights without a float nurse and 9 percent with one; float nurses available on 61 percent of qualifying nights.",
+            "limitations": "Non-random deployment; care-plan records.",
+            "contextTags": [
+              "float nurse",
+              "missed care"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0ekr4am",
+            "relevance": 72,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Category 1 injuries were missed in 38 percent of patients with darker skin tones against 14 percent with lighter tones; touch-based assessment reduced the gap.",
+            "limitations": "One hospital; assessor-recorded skin tone.",
+            "contextTags": [
+              "equity",
+              "skin tone",
+              "detection"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1tyuu4i",
+            "relevance": 68,
+            "methodQuality": 57,
+            "kind": "expert",
+            "grade": "very-low",
+            "keyFindings": "For fewer than two events per ward per week, charts of patient-days between events detected a halving earlier than weekly run charts.",
+            "limitations": "Simulation study.",
+            "contextTags": [
+              "run charts",
+              "rare events"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Each additional patient per registered nurse on night shifts was associated with an 11 percent higher incidence of category 2 or worse pressure injuries.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0bok56v"
+            ],
+            "location": "Abstract, results",
+            "passage": "Each additional patient per registered nurse on night shifts was associated with an 11 percent higher incidence of category 2 or worse pressure injuries",
+            "interpretation": "Night staffing matters and should stratify the analysis; the study does not show a fixed ratio prevents injuries.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "After protected night repositioning rounds, category 2 or worse injuries fell from 3.1 to 1.9 per 1,000 patient-days in an uncontrolled comparison.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1ihlm0s"
+            ],
+            "location": "Abstract, results",
+            "passage": "Category 2 or worse injuries fell from 3.1 to 1.9 per 1,000 patient-days.",
+            "interpretation": "A plausible change idea; the size of change is a planning value only.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c3",
+            "text": "Incident reports captured 64 percent of category 2 or worse injuries found at weekly skin inspection.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0clsgbr"
+            ],
+            "location": "Abstract",
+            "passage": "Incident reports captured 64 percent of the category 2 or worse injuries found at inspection.",
+            "interpretation": "Use weekly inspection as the outcome measure; incident reports would make the project look worse as reporting improves.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Ward nurses missed category 1 injuries in 38 percent of patients with darker skin tones and 14 percent with lighter skin tones.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0ekr4am"
+            ],
+            "location": "Abstract, results",
+            "passage": "Category 1 pressure injuries were missed by ward nurses in 38 percent of patients with darker skin tones and 14 percent of patients with lighter skin tones.",
+            "interpretation": "Train touch-based assessment and report injuries by skin tone.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Worse night staffing is associated with more pressure injuries, and a float nurse is associated with less missed repositioning, but neither study shows that a fixed ratio prevents injuries. Protected night rounds were followed by fewer injuries in one uncontrolled report. Incident reports undercount injuries found at weekly inspection, and early injuries are missed more often in darker skin. Rare events are better charted as patient-days between events. The multicentre ratio study quoted to the board was offered only as an unverified model lead and was not retrieved.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational and uncontrolled before-after evidence, one review of studies at high risk of bias; consistent in direction, with serious confounding by acuity.",
+        "summary": "Seven records appraised; four claims; the renaming of record 2 is refused; certainty low."
+      },
+      "note": "The annotation for record 2 again tries to change its title to the quarantined lead's title: identity is not annotatable, so the title key is dropped with an issue and the stored title is unchanged (appraise.ts lines 74 to 77 at 875fe59, reached through the production scan path, S13). The other annotations and the four claims apply; certainty is assigned over seven inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 9
+          },
+          "scan.items[1].title": "Protected night repositioning rounds on two medical wards: a before-after improvement report",
+          "scan.items[1].grade": "low",
+          "scan.items[1].kind": "qi-report",
+          "scan.items[6].grade": "very-low",
+          "scan.items[7].provenance.status": "unverified",
+          "scan.quarantine.items": {
+            "length": 1
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0bok56v"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-1ihlm0s"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-0clsgbr"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-0ekr4am"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "annotations[ev-1ihlm0s].title",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "low certainty",
+            "unverified"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "wards 7A and 7B, 28 beds each",
+          "46 percent of nights worse than one nurse to seven patients",
+          "weekly skin inspection by tissue viability",
+          "night bank float nurse, availability uncertain"
+        ],
+        "reading": "Night staffing, repositioning and early detection form one causal chain: when a ward is short, repositioning slips (c1), and injuries that start as category 1 are missed, more often in darker skin (c4), until they are found at category 2. A protected round targets the middle of the chain (c2); the float nurse targets its start. Measurement sits outside the chain but can distort it, because incident reports undercount and rise with attention (c3). The multicentre ratio study quoted to the board remains an unverified lead.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Nights worse than one nurse to seven",
+            "kind": "context",
+            "detail": "46 percent of nights last year."
+          },
+          {
+            "id": "n2",
+            "label": "Protected night repositioning round",
+            "kind": "framework",
+            "detail": "23:00, 02:00, 05:00; float nurse when available."
+          },
+          {
+            "id": "n3",
+            "label": "Category 2 or worse pressure injury",
+            "kind": "outcome",
+            "detail": "Counted at weekly inspection."
+          },
+          {
+            "id": "n4",
+            "label": "Missed early injury in darker skin",
+            "kind": "gap",
+            "detail": "38 against 14 percent missed (c4)."
+          },
+          {
+            "id": "n5",
+            "label": "Incident reports",
+            "kind": "context",
+            "detail": "Capture about two thirds of injuries (c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Staffing association study",
+            "kind": "observational",
+            "detail": "11 percent higher incidence per extra patient per nurse (c1)."
+          },
+          {
+            "id": "n7",
+            "label": "Night nurses and float nurses",
+            "kind": "stakeholder",
+            "detail": "Deliver the round; must not be blamed."
+          },
+          {
+            "id": "n8",
+            "label": "Quarantined and unverified leads",
+            "kind": "gap",
+            "detail": "A renamed copy of record 2 and an unretrieved landmark ratio study."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "threatens delivery of"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "expected to reduce"
+          },
+          {
+            "from": "n4",
+            "to": "n3",
+            "relation": "lets early injuries progress to"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "undercounts"
+          },
+          {
+            "from": "n6",
+            "to": "n1",
+            "relation": "links poor staffing to injuries on"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "deliver"
+          }
+        ],
+        "summary": "Map of staffing, repositioning, detection and measurement around night-time pressure injuries."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 6
+          },
+          "map.nodes[1].kind": "framework",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "The quoted ratio study cannot be traced",
+            "kind": "error",
+            "severity": "high",
+            "whyItMatters": "The board's belief that a fixed ratio prevents most injuries rests on a study that was not retrieved; the model offered it only as an unverified landmark lead with a DOI no search returned.",
+            "opportunity": "Report to the board what the retrieved evidence shows (an association, c1) and run an identity check before anyone cites the lead."
+          },
+          {
+            "id": "g2",
+            "title": "Incident reports would distort the run chart",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Reports capture about two thirds of injuries and rise with attention (c3).",
+            "opportunity": "Use weekly skin inspection as the outcome measure with a counting rule fixed before baseline."
+          },
+          {
+            "id": "g3",
+            "title": "Early injuries are missed in darker skin",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Category 1 injuries were missed far more often in darker skin (c4).",
+            "opportunity": "Include touch-based assessment in the round and report injuries by skin tone category."
+          },
+          {
+            "id": "g4",
+            "title": "Weekly counts are too sparse for a run chart",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "With about three or four injuries a month across both wards, weekly charts are mostly zeros.",
+            "opportunity": "Chart patient-days between injuries, with monthly rates as a secondary display."
+          },
+          {
+            "id": "g5",
+            "title": "Float nurse availability is not guaranteed",
+            "kind": "implementation",
+            "severity": "watch",
+            "whyItMatters": "Float nurses were available on 61 percent of qualifying nights elsewhere.",
+            "opportunity": "Record float availability every night and test the round without the float nurse in cycle 1."
+          }
+        ],
+        "errorsFound": [
+          "A discovery lead reused the id of the retrieved before-after report and renamed it as a controlled trial that eliminated injuries; it was quarantined, and the appraisal's attempt to retitle the record was refused.",
+          "A lead labelled landmark with DOI 10.5555/nsj.2018.0777 was not retrieved and remains unverified."
+        ],
+        "reevaluation": "The gaps confirm a PDSA project with inspection-based measurement, charts suited to rare events, equity reporting by skin tone, and an honest message to the board about staffing evidence.",
+        "summary": "Five gaps; the untraceable ratio study and measurement distortion are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[0].kind": "error",
+          "gaps.items[2].kind": "equity",
+          "gaps.errorsFound": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "The quoted ratio study cannot be traced"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "A protected night repositioning round with handover risk reassessment will lengthen the median interval between category 2 or worse injuries on wards 7A and 7B, including on nights worse than one nurse to seven.",
+            "novelty": 30,
+            "need": 90,
+            "practiceChange": 80,
+            "feasibility": 80,
+            "parsimony": 85,
+            "rationale": "Need is high after 41 injuries in a year; the change idea is supported by one uncontrolled report (c2) and the staffing association (c1); the interval measure suits rare events.",
+            "risks": "Round completion may collapse on the worst nights."
+          },
+          {
+            "id": "h2",
+            "statement": "Adding touch-based skin assessment to the round will increase the proportion of injuries first found at category 1.",
+            "novelty": 45,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Targets the detection gap in darker skin (c4).",
+            "risks": "More category 1 findings could look like worsening."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "h1 selected; h2 kept as a planned second change idea."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "On wards 7A and 7B, will a protected night repositioning round with risk reassessment at the evening handover, tested in PDSA cycles from November 2026 to April 2027, increase the median number of patient-days between category 2 or worse pressure injuries found at weekly skin inspection by at least half compared with the baseline year?",
+            "framework": "QI-aim",
+            "population": "Adult inpatients at high risk of pressure injury on wards 7A and 7B",
+            "intervention": "Protected night repositioning round at fixed times, float nurse when the ratio is worse than one to seven, and handover risk reassessment",
+            "comparator": "Baseline year of usual care",
+            "outcome": "Patient-days between category 2 or worse injuries found at weekly inspection",
+            "time": "Baseline year, then six months of PDSA cycles",
+            "setting": "Two 28-bed medical wards"
+          }
+        ],
+        "finer": "Feasible within existing staff and the night bank; interesting to the board; novel locally; ethical under registration QI-2026-054; relevant because injuries follow busy nights.",
+        "summary": "One SMART QI aim with an interval measure suited to rare events."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-pdsa",
+        "rationale": "The aim is local improvement with rapid learning on two wards. PDSA cycles let the team test the round first without the float nurse, then with it, then with touch-based assessment, while charts of patient-days between injuries (suited to rare events) show whether the interval lengthens. Night staffing is a stratifier (c1), the change idea has precedent (c2), and the outcome is measured by weekly inspection because incident reports undercount (c3). Reporting follows SQUIRE 2.0.",
+        "alternatives": [
+          "Controlled comparison of wards with and without the round (refused: two wards, no funding, local improvement question)",
+          "Board-level campaign for a mandated ratio (refused: the retrieved evidence shows an association, and the quoted study is untraced)",
+          "Turning sensors (refused: cost and scope)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0",
+          "Model for Improvement"
+        ],
+        "whyNotMoreComplex": "A controlled design would need more wards and months of stable delivery; the local question is whether these two wards can protect night repositioning and see fewer injuries.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Test a protected night repositioning round with handover risk reassessment on wards 7A and 7B in PDSA cycles from November 2026, measuring patient-days between category 2 or worse injuries found at weekly skin inspection, stratified by night staffing.",
+          "question": "Should wards 7A and 7B test a protected night repositioning round to reduce pressure injuries?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Night staffing is associated with injuries, a protected round has been followed by fewer injuries elsewhere, and weekly inspection gives an undistorted measure.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The hospital introduces a mandated night ratio on these wards during the project.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Quality committee registration of the project as quality improvement",
+              "status": "met",
+              "evidence": "Registration QI-2026-054 dated 2026-09-02, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Night bank agreement to release a float nurse when the ratio is worse than one to seven",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Round without a float nurse only",
+            "Touch-based assessment training without a protected round"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from retrieved records; neither the quarantined lead nor the unverified landmark lead is cited. The float nurse gate is unknown, so the action stays blocked."
+        },
+        "summary": "QI with PDSA cycles recommended; the decision rests on three ledger claims and waits for the night bank's agreement."
+      },
+      "note": "The decision rests on c1 to c3 from the appraisal (S13), not on either model lead. selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-pdsa",
+          "family": "qi-pdsa",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection: c1 to c3 exist in the ledger and rest on retrieved records, so it is accepted; the unknown float nurse gate keeps the action blocked (A2 item 9, G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.basis": "explicit",
+          "family": "qi-pdsa"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Ward QI project on 7A and 7B using the Model for Improvement: a baseline year from existing weekly inspection data, then three PDSA cycles from November 2026 to April 2027 testing a protected night repositioning round, first without and then with a float nurse on poorly staffed nights, and finally with touch-based skin assessment.",
+        "population": "All adult inpatients on wards 7A and 7B; the round covers patients scored at high risk at the evening handover.",
+        "exposure": "Protected night repositioning round at 23:00, 02:00 and 05:00 by a named nurse, joined by a float nurse when the ratio is worse than one to seven and one is available; risk reassessed at the evening handover; touch-based assessment added in cycle 3.",
+        "procedures": "Cycle 1 (November and December): round on 7A only, no float nurse. Cycle 2 (January and February): both wards, float nurse requested on qualifying nights. Cycle 3 (March and April): touch-based assessment added. Weekly skin inspection by tissue viability continues unchanged as the measurement source; the night nurse in charge records round completion and float availability on a ward sheet each night. Fortnightly huddle reviews the charts.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Patient-days between category 2 or worse injuries",
+            "measure": "Patient-days between successive injuries found at weekly skin inspection, both wards combined, with a fixed counting rule",
+            "timing": "Continuously from the baseline year to April 2027",
+            "why": "Suited to rare events and not distorted by reporting behaviour.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Monthly injury rate by night staffing",
+            "measure": "Category 2 or worse injuries per 1,000 patient-days, split by nights worse or better than one nurse to seven",
+            "timing": "Monthly",
+            "why": "Shows whether the round protects patients on poorly staffed nights.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Round completion",
+            "measure": "Proportion of scheduled round times completed, and float nurse availability on qualifying nights",
+            "timing": "Nightly",
+            "why": "Separates a failed idea from failed delivery.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Missed night medication doses",
+            "measure": "Proportion of scheduled night doses given more than one hour late, from the electronic administration record",
+            "timing": "Weekly",
+            "why": "The round must not take time from other night care.",
+            "patientCentered": true
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Patients woken by the round",
+            "measure": "Yes or no question at the morning round for a sample of 10 patients per ward per week",
+            "timing": "Weekly",
+            "why": "Repositioning at night disturbs sleep.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Uses existing staff, the night bank when available, and the existing weekly inspection; about 15 minutes per night for recording.",
+        "biasMitigation": [
+          "Outcome from weekly inspection, not incident reports",
+          "Counting rule and chart rules fixed before cycle 1",
+          "Stratification by night staffing recorded from the roster, not by recollection",
+          "Co-interventions such as mattress changes annotated on the chart"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Secular change in mattresses or policy",
+            "severity": "watch",
+            "note": "Annotate the chart; compare with other medical wards' incident trends."
+          },
+          {
+            "id": "b2",
+            "label": "Inspection drift",
+            "severity": "watch",
+            "note": "Tissue viability nurses may look harder during the project; double inspection of a 10 percent sample."
+          },
+          {
+            "id": "b3",
+            "label": "Blame of night nurses",
+            "severity": "ok",
+            "note": "Ward-level reporting only, as the constraints require."
+          }
+        ],
+        "parsimony": {
+          "score": 85,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 0,
+          "flags": [
+            "One process and two balancing measures; no causal claim about staffing"
+          ],
+          "simplestPath": "One interval chart from existing inspections, three short cycles, one nightly completion sheet."
+        },
+        "theoreticalFramework": "Model for Improvement with PDSA cycles; SEIPS only to name work-system factors (staffing, tasks, tools) when revising the round.",
+        "summary": "Three PDSA cycles with an interval measure from weekly inspection, a staffing-stratified secondary rate, one process and two balancing measures."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[0].patientCentered": true,
+          "protocol.outcomes[4].role": "balancing",
+          "protocol.parsimony.primaryOutcomeCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Time-ordered measurement of a rare event with a chart of patient-days between injuries (g-chart) as the primary display and monthly rate charts as secondary.",
+        "sampleSize": "The two wards have about 18,800 patient-days a year, so 41 injuries give a baseline of about 2.2 per 1,000 patient-days and a median of about 460 patient-days between injuries. Weekly counts would average fewer than one injury, so a weekly run chart would be mostly zeros. Over six months of cycles about 9,400 patient-days are expected; if the rate halves, about 10 injuries would occur instead of 20, and a g-chart would show a signal when two or more consecutive intervals exceed the upper limit or eight intervals lie above the baseline median. Six months is therefore the minimum period for a credible signal.",
+        "primaryAnalysis": "g-chart of patient-days between successive category 2 or worse injuries, centre line and limits from the baseline year, with pre-specified rules: a single interval above the upper limit, or eight consecutive intervals above the baseline median. Limits are recalculated only after a sustained shift.",
+        "secondaryAnalysis": "Monthly u-charts of injury rates split by nights worse or better than one nurse to seven; run charts of round completion, float availability, late night doses and patients woken.",
+        "missingData": "Weeks without inspection are annotated and the patient-days are counted without assumed injuries; nights without a completion sheet are counted as not recorded, not as completed.",
+        "multiplicity": "One primary chart carries the aim; other charts are descriptive and not tested.",
+        "software": "Spreadsheet chart templates kept by tissue viability; limits checked by the hospital's quality analyst.",
+        "overfittingGuards": [
+          "Chart type, counting rule and signal rules fixed before cycle 1",
+          "Baseline limits frozen until a sustained shift",
+          "Staffing split pre-specified; no other subgroups",
+          "Changes between cycles marked on the charts before new points are examined"
+        ],
+        "summary": "Rare events charted as patient-days between injuries; about six months of cycles needed for a credible signal."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "460 patient-days between injuries"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: repositioning is standard care. Risks are sleep disturbance, time taken from other night care, and blame of individual nurses for injuries.",
+        "consent": "The round is care, not research; patients are told about it and may ask not to be woken for a round, which is recorded and respected. Staff take part as normal work.",
+        "data": "Inspection and completion data are held by tissue viability with bed numbers and dates only; reports are at ward level; no nurse is identified.",
+        "equity": "PROGRESS-Plus: patients with darker skin tones, patients with cognitive impairment or delirium who cannot report pain, and patients with limited English are at risk of later detection. Touch-based assessment is part of cycle 3, injuries are reported by skin tone category, and interpreters are used when patients are asked about being woken.",
+        "effectiveness": "Success is a sustained lengthening of the interval between injuries with stable late-dose and waking measures.",
+        "efficiency": "Uses existing staff and inspection; the float nurse comes from the night bank when available.",
+        "costs": "Recording sheets and staff time; no new budget.",
+        "grants": "None needed.",
+        "partnerships": "Night nurses from both wards, the night bank manager, tissue viability, and two patient partners from the hospital's patient panel.",
+        "rebPath": "Registered by the hospital quality committee as quality improvement (QI-2026-054, 2026-09-02); no REB review required. Publication would follow SQUIRE 2.0 and the journal's policy for QI reports.",
+        "limitations": "Two wards; uncontrolled; float availability outside the team's control.",
+        "summary": "Minimal-risk QI with ward-level reporting, a right to decline night waking, and equity reporting by skin tone."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "QI-2026-054"
+          },
+          "ethics.equity": {
+            "includes": "skin tone"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners and two night nurses review the round's wording to patients and the waking question; the night bank manager joins the fortnightly huddle once a month.",
+        "socialListening": "No social media listening; the wards' patient comment cards are read for mentions of night-time care.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "clinician",
+            "theme": "The first thing to slip",
+            "quote": "Composite paraphrase (night nurse): When there are nine of them and one of me, turning is the job I promise myself I will do after the drugs round.",
+            "implication": "Protect the round at fixed times rather than asking nurses to fit it in.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Being woken",
+            "quote": "Composite paraphrase: I would rather be turned than get a sore, but tell me before you do it.",
+            "implication": "Explain the round at the evening handover and ask about waking preferences.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "family",
+            "theme": "Noticing late",
+            "quote": "Composite paraphrase: Nobody saw it until it was an open wound, and my father's skin never looks red.",
+            "implication": "Touch-based assessment and reporting by skin tone.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Blame",
+            "quote": "Composite paraphrase (ward manager): Every injury form reads like it is somebody's fault, and the night staff stop reporting.",
+            "implication": "Ward-level reporting only and inspection-based measurement.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on slipping tasks, waking, late detection and blame."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[2].source": "family",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A protected night repositioning round to reduce hospital-acquired pressure injuries on two medical wards: a quality improvement project",
+        "abstract": "Problem: 41 category 2 or worse pressure injuries in a year on two medical wards, most found after night shifts, with poor night staffing on almost half of nights. Intervention: a protected night repositioning round with handover risk reassessment, a float nurse when available and touch-based skin assessment, tested in three PDSA cycles. Measures: patient-days between injuries found at weekly inspection, rates by night staffing, round completion and balancing measures. Results will follow the cycles.",
+        "introduction": "Night staffing is associated with pressure injuries, and protected repositioning has been followed by fewer injuries in an uncontrolled report. The multicentre ratio study quoted locally could not be traced by the recorded search.",
+        "methods": "Model for Improvement; three PDSA cycles from November 2026 to April 2027; outcome from weekly skin inspection with a fixed counting rule; g-chart with pre-specified rules; registration QI-2026-054.",
+        "results": "No data have been collected yet. The report will present the g-chart, staffing-stratified rates, round completion and balancing measures, with injuries by skin tone category.",
+        "discussion": "The discussion will interpret any signal against co-interventions, state what the project shows about poorly staffed nights, and avoid causal claims about staffing ratios.",
+        "limitations": "Two wards; uncontrolled; rare events; float nurse availability outside the team's control.",
+        "conclusion": "To be written after the cycles; limited to these wards' injuries and the round's delivery.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.introduction": {
+            "includes": "could not be traced"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The night bank has not agreed to release a float nurse; the decision's action stays blocked until it does",
+          "A lead reusing the id of the retrieved before-after report was quarantined; never cite the quarantined item",
+          "The landmark ratio study with DOI 10.5555/nsj.2018.0777 is an unverified model lead; tell the board it could not be traced"
+        ],
+        "improvementNotes": "The discovery reply appended two model leads (one labelled landmark with an invented DOI) and one lead reusing a retrieved record's id with a new title, which was quarantined; the appraisal's attempt to retitle the same record was refused. The decision rests only on claims from retrieved records.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the float nurse gate, the quarantined item and the untraced landmark lead."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 the audit patch is overwritten by store.ts mergeStage (L1.6 defect, sheet A3).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Audit route; the quarantine, the unverified leads and the unchanged record 2 must persist. quarantine requires S1 and D1.",
+      "expect": {
+        "store": {
+          "title": "Protected night repositioning rounds and hospital-acquired pressure injuries on two medical wards",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.items": {
+            "length": 9
+          },
+          "scan.items[1].title": "Protected night repositioning rounds on two medical wards: a before-after improvement report",
+          "scan.quarantine.items": {
+            "length": 1
+          },
+          "scan.claims": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Protected night repositioning rounds and hospital-acquired pressure injuries on two medical wards"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list.",
+      "expect": {
+        "store": {
+          "title": "Protected night repositioning rounds and hospital-acquired pressure injuries on two medical wards",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "scan.items[7].provenance.origin": "model",
+          "scan.items[7].doi": "10.5555/nsj.2018.0777",
+          "scan.quarantine.items[0].title": "Protected night repositioning rounds eliminate pressure injuries: a multicentre controlled trial",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ]
+        },
+        "screen": {
+          "includes": [
+            "Protected night repositioning rounds and hospital-acquired pressure injuries on two medical wards"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click, one file equal to the store (G10). The quarantine requires S1 and D1; the appended leads D1; selectionStatus and actionStatus S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "scan.items": {
+              "length": 9
+            },
+            "scan.items[1].title": "Protected night repositioning rounds on two medical wards: a before-after improvement report",
+            "scan.items[1].provenance.origin": "retrieval",
+            "scan.items[7].provenance.status": "unverified",
+            "scan.items[7].verification": "landmark",
+            "scan.quarantine.items": {
+              "length": 1
+            },
+            "scan.quarantine.items[0].provenance.origin": "model",
+            "scan.gradeOverall": "low",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ]
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

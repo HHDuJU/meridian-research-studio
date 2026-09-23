@@ -1,6 +1,6 @@
 {
   "id": "sc-094",
-  "version": 2,
+  "version": 3,
   "title": "Health authority simulation centre: in-situ simulation for rapid response teams, late Stats reply refused after a protocol edit",
   "field": "medical-education",
   "level": 5,
@@ -11,7 +11,8 @@
     "D5",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Expert path on an explicit multi-site mixed methods need. Eight fixture records are appraised (certainty 'low'); the decision rests on five claims and its board-of-record ethics gate stays unknown, so the accepted selection keeps a blocked action. The protocol is written for all calls at four hospitals (about 2,860 a year). The investigator then clicks Illuminate for Stats and, while that request is in flight, restricts the protocol's population to adult ward calls (about 2,310 a year) through the screen. Encoding of the late reply within the format's step types: the set-field step carries the edit and its note tells the runner to issue the Stats request first and hold the replay reply; the following illuminate step (stats call 1) releases that held reply, which was computed for the old population, and it must be refused by the studyRevision guard: nothing merged, Stats incomplete, the investigator's text kept, an error shown and the refusal logged in the audit entries (G6). A reload shows the refusal persists. Dependency closure across protocol and stats: a second protocol reply reconciles the other protocol text and omits population (listed in omitKeys) so the investigator's text stays; the second Stats reply (stats call 2) then computes the sample size for the adult ward population with the intracluster correlation from a retrieved record and a small-sample correction for four clusters. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 3, 4, 5, 7, 8 (ev-1hezq7w, ev-03tbpnq, ev-0k5qs13, ev-1wti2ae, ev-1kjarsp, ev-0uzdfhc, ev-0npnrbz); the titleYearKey(title, year) hash for record 6 (ev-1bzo348). Requires S10 (studyRevision guard at the commit boundary; mergeStageIfRevision exists at 875fe59, its use on the Illuminate path is A3 L1.2 as corrected by A3.1), D5 (refusal and statuses shown), S11 (selectionStatus, actionStatus) and S13 (appraisal payload). Catches: a late reply merged after an edit, a refused reply that still completes the stage, an investigator edit overwritten by a later model reply, and stats that no longer match the protocol.",
   "inputs": {
@@ -857,7 +858,11 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met",
+          "design.decisions[-1].gates[2].status": "unknown",
+          "design.decisions[-1].gates[2].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -869,6 +874,29 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2",
+        "g3"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[2].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].gates[2].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1602,5 +1630,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-094.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-094.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g2, g3)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

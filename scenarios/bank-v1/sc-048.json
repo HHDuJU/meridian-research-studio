@@ -1,6 +1,6 @@
 {
   "id": "sc-048",
-  "version": 1,
+  "version": 2,
   "title": "Long-term care homes: implementing monthly interdisciplinary deprescribing rounds, RE-AIM outcomes from routine records",
   "field": "geriatrics",
   "level": 1,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Routine path on a clear implementation question (routing explicit implementation from 'We plan an implementation study' and 'RE-AIM'; no other design word in the need). A fixture search returns six records with abstracts; the appraisal (scan call 1, shape appraisal) annotates all six by id and records four source-derived claims whose passages are exact substrings of the abstracts; certainty 'low'. The design decision (kind implementation) rests on c1 to c3, both gates are met on investigator-supplied records (OPS-2026-31, QA-2026-077), and acceptance is a supported positive (accepted, ready). The protocol has one primary implementation outcome (reach), three process measures, a secondary medicine count and a balancing pair, so no clinical benefit is claimed. A reopen follows the Ethics stage (partial work, later stages incomplete) and a reload follows the last stage. The problem reply restates the typed constraints verbatim (no G11 issue). Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 2, 4, 6 (ev-1d5yowi, ev-1cxc24r, ev-0sboarb, ev-0ttf5e9); titleYearKey hash for records 3, 5 (ev-023aey9, ev-15ls9bi). Requires S13 (appraisal), S11 (selectionStatus, actionStatus, basis explicit) and D5 (status text). Catches: an appraisal that never reaches the ledger, a supported decision not accepted or not ready, partial work lost on reopen, and an export that differs from the store.",
   "inputs": {
@@ -798,8 +799,8 @@
             "c1",
             "c2"
           ],
-          "design.decisions[-1].gates[0].status": "met",
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -808,13 +809,58 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Ethics determination for the evaluation using routine data: Determination QA-2026-077 dated 2026-09-04 (quality assurance, no REB review required), supplied by the investigator",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -1378,5 +1424,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-048.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) citing the ethics gate the investigator confirmed before accepting decision 1. Model responses, need and records are unchanged."
 }

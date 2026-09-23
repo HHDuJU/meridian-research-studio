@@ -1,6 +1,6 @@
 {
   "id": "sc-043",
-  "version": 2,
+  "version": 3,
   "title": "Teaching hospital pre-assessment clinic: perioperative glucose protocol, a late reply refused and a trial replaced by a feasibility study",
   "field": "anesthesia",
   "level": 5,
@@ -11,7 +11,8 @@
     "D5",
     "S5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Expert path. The need names a randomised trial, so routing is 'rct' at create. The problem reply returns constraints null: the investigator's typed constraints stay unchanged with issue rejected-change (G11; S5 named because no listed entry defines the code). A fixture search returns seven records. The first scan appraisal is a late reply: the request goes out, the investigator edits the constraints while it is pending (orthopaedic lists cannot schedule patients first), and the reply produced against the earlier study revision must be refused by the studyRevision guard: nothing applied, stage still incomplete, the refusal shown and logged (G6; A3.1 item 1). A second appraisal against the new revision is applied (S13) and reflects the edit (scheduling evidence rated less relevant). The first design decision (a definitive randomised trial) is accepted with its action blocked by the unknown ethics gate. The stats stage then shows that about 340 patients would be needed, nearly five years at this hospital. A second design reply recommends a single-site feasibility study with progression criteria; it flags the completed protocol and stats stages for review (G8), the investigator withdraws the first decision and accepts the second, so the family becomes 'feasibility' only on acceptance (S11), and re-running protocol and stats clears the review flags. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator script: 'ev-' plus the base-36 FNV-1a hash of the normalised DOI (records 1 ev-0jr97rm, 2 ev-0b7ko0z, 4 ev-1uob0w3, 5 ev-0pty7n9, 7 ev-09rj0pl), or of titleYearKey(title, year) when there is no DOI (records 3 ev-1cem7kp, 6 ev-0eizjy8). Catches: a model null erasing investigator text, a stale reply merged after an edit, a proposed recommendation that changes the family before acceptance, two accepted decisions at once, and review flags that never clear.",
   "inputs": {
@@ -946,7 +947,9 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -958,6 +961,26 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1214,7 +1237,9 @@
           "needsReview": [
             "protocol",
             "stats"
-          ]
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete",
@@ -1229,6 +1254,26 @@
             "proposed",
             "accepted",
             "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed this gate as met; the investigator's own facts support it, and the investigator confirms it on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1782,5 +1827,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-043.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-043.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 10 (g2); step 15 (g2)), and a confirm-gate step after it has the investigator confirm those gates. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

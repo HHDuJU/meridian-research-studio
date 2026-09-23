@@ -149,7 +149,7 @@ export function minusIsSign(s: string, hyphenAt: number): boolean {
   if (hyphenAt < 0 || s[hyphenAt] !== "-") return false;
   if (hyphenAt === 0) return true;
   const prev = s[hyphenAt - 1];
-  if (/[\s(\[]/.test(prev)) return true;
+  if (/[\s([]/.test(prev)) return true;
   const look = s.slice(Math.max(0, hyphenAt - 6), hyphenAt);
   return /(?:CI|to|from|of|,)\s*$/i.test(look);
 }

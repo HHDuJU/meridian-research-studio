@@ -1,0 +1,1407 @@
+{
+  "id": "sc-010",
+  "version": 1,
+  "title": "Regional pneumonia registry: five-year outcomes cohort, certainty over an empty search dropped, linkage gate still unknown",
+  "field": "epidemiology",
+  "level": 3,
+  "family": "cohort",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D20",
+    "S11",
+    "S13"
+  ],
+  "notes": "Demanding path on an explicit registry-based cohort need. The first, narrow fixture search returns zero records (status ok, 0 hits). The first scan reply (shape discovery, no items) nevertheless proposes the certainty 'very-low': it must be dropped with issue 'dropped' at gradeOverall, the certainty stays unassessed ('not assessed' on screen, no certainty label) and the stage stays incomplete (G1, G2; D20). A reload on the Scan route checks that the dropped label does not come back. A broader second search then returns six records, the empty first event stays in the history, and the appraisal (scan call 2) assigns 'low' certainty over inspected records and completes the stage. This differs from an empty search confirmed by the investigator: here the scan completes through records retrieved by a later search. The decision rests on claims c1 to c3; its linkage gate has no evidence and stays unknown through every later stage, so the accepted selection keeps a blocked action to the export. Record ids are stableRecordId values as in src/lib/evidence/records.ts at 875fe59: DOI hash for records 1, 3, 4, 5, 6 (ev-0t1dbpg, ev-0kczf5q, ev-07v2hhu, ev-03e92rw, ev-0md02sb); titleYearKey hash for record 2 (ev-1rmmxbv). Requires D20 (no certainty and no completion over zero records, 'not assessed'), S11 (selectionStatus, actionStatus, basis), S13 (appraisal) and D5 (status text). Catches: a certainty label invented over an empty search, a stage completed without records, a dropped label restored on reload, an empty search erased from the history, and an unknown gate treated as met.",
+  "inputs": {
+    "need": "I am an epidemiologist in the clinical research unit of a university hospital. We run the regional pneumonia registry, which has enrolled every adult admitted with community-acquired pneumonia to the four hospitals in our region since 2016, with severity scores, microbiology and treatment. I want to use it for a registry-based cohort study of what happens to patients in the five years after discharge: death, new cardiovascular events (myocardial infarction, stroke, admission for heart failure), readmission for pneumonia, and loss of independence, meaning a move into a care home. Clinicians keep saying that pneumonia ages people and that the cardiovascular risk stays high for years, but most of what I have seen covers only the first 30 or 90 days.\n\nThe registry can be linked to the national death register and to hospital admissions across the region, and the regional statistics office can provide a comparison group from the general population matched on age, sex and area. Linkage needs approval from the registry's data access committee and from the statistics office, and the committee has told us it will not decide before its February meeting at the earliest.\n\nI need help framing the question, choosing the comparison group (the general population, or patients admitted with other acute infections), handling confounding by existing heart disease and frailty, and defining the time windows. I also need to know what published evidence exists, because a colleague keeps quoting a doubling of cardiovascular risk over ten years that I cannot trace. The registry holds about 11,800 patients discharged alive between 2016 and 2021, so five years of follow-up are complete for all of them.",
+    "constraints": "Secondary use of registry and linked data only; no patient contact; one epidemiologist and a part-time statistician for twelve months; linkage requires the data access committee's and the statistics office's approval.",
+    "localFacts": [
+      "The regional pneumonia registry holds 11,800 adults discharged alive after community-acquired pneumonia between 2016 and 2021.",
+      "The registry's data access committee meets in February 2027 and has not decided on linkage to the death register and regional admissions.",
+      "The regional statistics office can supply a general population comparison group matched on age, sex and area, subject to its own approval.",
+      "The university research ethics board covers registry studies under standing approval REB-SP-2016-04 with a waiver of consent."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am an epidemiologist in the clinical research unit of a university hospital. We run the regional pneumonia registry, which has enrolled every adult admitted with community-acquired pneumonia to the four hospitals in our region since 2016, with severity scores, microbiology and treatment. I want to use it for a registry-based cohort study of what happens to patients in the five years after discharge: death, new cardiovascular events (myocardial infarction, stroke, admission for heart failure), readmission for pneumonia, and loss of independence, meaning a move into a care home. Clinicians keep saying that pneumonia ages people and that the cardiovascular risk stays high for years, but most of what I have seen covers only the first 30 or 90 days.\n\nThe registry can be linked to the national death register and to hospital admissions across the region, and the regional statistics office can provide a comparison group from the general population matched on age, sex and area. Linkage needs approval from the registry's data access committee and from the statistics office, and the committee has told us it will not decide before its February meeting at the earliest.\n\nI need help framing the question, choosing the comparison group (the general population, or patients admitted with other acute infections), handling confounding by existing heart disease and frailty, and defining the time windows. I also need to know what published evidence exists, because a colleague keeps quoting a doubling of cardiovascular risk over ten years that I cannot trace. The registry holds about 11,800 patients discharged alive between 2016 and 2021, so five years of follow-up are complete for all of them.",
+          "family": "cohort",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am an epidemiologist in the clinical research unit of a university hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Five-year outcomes after community-acquired pneumonia in a regional registry cohort",
+        "subtitle": "Registry-based cohort with two comparison groups and linked outcomes",
+        "family": "cohort",
+        "statement": "A regional registry holds 11,800 adults discharged alive after community-acquired pneumonia between 2016 and 2021, with five years of possible follow-up. Clinicians believe that pneumonia raises cardiovascular risk and loss of independence for years, but local evidence covers only the first months and a widely quoted ten-year doubling of cardiovascular risk has no traceable source. A registry-based cohort with linked outcomes and a carefully chosen comparison group can estimate the long-term excess risk, provided that frailty and existing heart disease are handled.",
+        "whoAffected": "Adults who survive a pneumonia admission, especially older people with heart disease or frailty; their families; hospital and primary care clinicians planning follow-up.",
+        "whatHurts": "If the excess cardiovascular risk persists, survivors are missing follow-up that could prevent events; if it does not, clinicians are worrying patients with an untraced figure.",
+        "currentPractice": "Follow-up after pneumonia ends at discharge or one clinic visit; no routine cardiovascular review; no local data beyond 90 days.",
+        "whyNow": "Five years of follow-up are complete for every registry patient discharged by 2021, and linkage requests can be decided in February 2027.",
+        "constraints": "Secondary use of registry and linked data only; no patient contact; one epidemiologist and a part-time statistician for twelve months; linkage requires the data access committee's and the statistics office's approval.",
+        "patientCenteredGoal": "Pneumonia survivors receive follow-up proportionate to their real long-term risk and stay independent for as long as possible.",
+        "summary": "Problem framed as a registry-based cohort study of five-year outcomes with confounding by frailty as the main threat."
+      },
+      "expect": {
+        "store": {
+          "title": "Five-year outcomes after community-acquired pneumonia in a regional registry cohort",
+          "family": "cohort",
+          "problem.statement": {
+            "includes": "no traceable source"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Five-year outcomes after community-acquired pneumonia in a regional registry cohort"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "regional pneumonia registry linked cohort five-year cardiovascular events care home entry general population and infection comparison groups 2016 to 2021",
+      "response": {
+        "status": 200,
+        "total": 0,
+        "records": []
+      },
+      "note": "A narrow first search returns nothing: an observable event with status 'ok' and 0 hits, never a silent empty list. 'not assessed' on screen requires D20.",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[0].recordIds": [],
+          "scan.items": {
+            "length": 0
+          },
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "discovery",
+      "call": 1,
+      "response": {
+        "query": "regional pneumonia registry linked cohort five-year cardiovascular events care home entry general population and infection comparison groups 2016 to 2021",
+        "sourcesConsulted": [
+          "recorded search of the fixture provider (0 records)",
+          "general knowledge of pneumonia outcomes"
+        ],
+        "gradeOverall": "very-low",
+        "gradeRationale": "The search found nothing, so the evidence is very thin.",
+        "synthesis": "The recorded search returned no records for this combination of registry, linked outcomes and comparison groups. Nothing was retrieved, so nothing can be appraised from this search.",
+        "items": [],
+        "summary": "No records to appraise; a certainty label was nonetheless proposed."
+      },
+      "note": "A discovery reply over zero retrieved records carries the certainty 'very-low': it must be dropped with an issue, the certainty stays unassessed and the stage stays incomplete (G1, G2; D20). At 875fe59 the label is stored and the stage completes. The sourcesConsulted issue holds at 875fe59.",
+      "expect": {
+        "store": {
+          "scan.gradeOverall": "",
+          "scan.items": {
+            "length": 0
+          },
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "gradeOverall",
+              "code": "dropped"
+            },
+            {
+              "path": "sourcesConsulted",
+              "code": "dropped"
+            }
+          ]
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ],
+          "excludes": [
+            "very low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Scan route with the scan incomplete: the dropped certainty must not reappear and the stage must stay incomplete (G1, G2; D20).",
+      "expect": {
+        "store": {
+          "scan.gradeOverall": "",
+          "scan.retrievalEvents[0].resultCount": 0,
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "scan": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "not assessed"
+          ],
+          "excludes": [
+            "very low certainty",
+            "no recorded response"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "long-term outcomes after community-acquired pneumonia cardiovascular events mortality comparison group frailty cohort",
+      "response": {
+        "status": 200,
+        "total": 6,
+        "records": [
+          {
+            "title": "Cardiovascular events in the five years after hospitalisation for community-acquired pneumonia: a linked national cohort of 18,400 adults with matched controls",
+            "authors": "Lindqvist-Opoku S, Marchetti-Hale D, Tanaka-Boateng R",
+            "year": 2018,
+            "venue": "Caddisford Respiratory Epidemiology",
+            "doi": "10.5555/jre.2018.0247",
+            "providerType": "journal-article",
+            "abstract": "We followed 18,400 adults discharged after community-acquired pneumonia and 73,600 population controls matched on age, sex and area for five years using linked national data. The hazard ratio for a first myocardial infarction, stroke or heart failure admission was 1.9 in the first year and 1.3 in years two to five. Adjustment for cardiovascular disease and diabetes before the pneumonia reduced the later estimate to 1.15 (95 percent CI 1.07 to 1.24). Mortality was higher throughout. The authors note that frailty was not measured and that population controls were healthier than patients in ways the adjustment could not capture."
+          },
+          {
+            "title": "Long-term mortality after community-acquired pneumonia compared with other acute infections: a registry study",
+            "authors": "Achebe-Carlsson P, Fenwick-Osei M",
+            "year": 2020,
+            "venue": "Infection Outcomes Research",
+            "providerType": "journal-article",
+            "abstract": "Using a hospital infection registry, we compared five-year mortality of 6,200 adults discharged after community-acquired pneumonia with 9,100 adults discharged after urinary tract infection or cellulitis. Five-year mortality was 38 percent after pneumonia and 33 percent after the other infections. After adjustment for age, comorbidity and a frailty score, the hazard ratio was 1.12 (95 percent CI 1.04 to 1.20). The excess was concentrated in the first year. The authors argue that part of the apparent long-term effect of pneumonia seen against the general population reflects the frailty of people who are admitted with any infection."
+          },
+          {
+            "title": "Choosing the comparison group in studies of outcomes after infection: general population versus hospitalised controls",
+            "authors": "Haddad-Mwangi L, Brennan-Sato K",
+            "year": 2022,
+            "venue": "Tamsford Epidemiologic Methods Letters",
+            "doi": "10.5555/eml.2022.0074",
+            "providerType": "journal-article",
+            "abstract": "We compared the two usual comparison groups for studies of long-term outcomes after an infection admission. General population controls overstate the effect of the infection because admitted patients are frailer and sicker before the infection. Controls admitted with another infection understate it when that infection shares some of the same long-term effects. In three linked datasets, estimates against the two comparison groups bracketed the estimate from an analysis using each patient's own history before the infection. We recommend reporting results against both comparison groups and measuring frailty before the index admission."
+          },
+          {
+            "title": "Frailty, pre-existing cardiovascular disease and long-term outcomes after pneumonia: a confounding analysis",
+            "authors": "Sorensen-Adeyemi J, Kowalczyk-Nnamdi E",
+            "year": 2021,
+            "venue": "Caddisford Respiratory Epidemiology",
+            "doi": "10.5555/jre.2021.0119",
+            "providerType": "journal-article",
+            "abstract": "In 9,600 adults discharged after pneumonia and matched population controls, we measured frailty with a hospital frailty score calculated from admissions in the two years before the pneumonia. Adjusting for this frailty score halved the excess five-year mortality, from a hazard ratio of 1.62 to 1.29, and reduced the excess of cardiovascular events from 1.34 to 1.14. Adjusting for complications during the pneumonia admission reduced the estimates further, but the authors warn that these complications lie on the causal path and should not be adjusted for in the main analysis."
+          },
+          {
+            "title": "Moving into long-term care within two years after hospitalisation for pneumonia in adults aged 75 and over",
+            "authors": "Petrov-Lindgren A, Okafor-Whitlock B",
+            "year": 2023,
+            "venue": "Ageing and Health Services Research",
+            "doi": "10.5555/ahsr.2023.0156",
+            "providerType": "journal-article",
+            "abstract": "Among 4,300 adults aged 75 and over who lived at home before a pneumonia admission, 9 percent moved into long-term care within two years, against 4 percent of matched adults from the general population. The difference was largest among people with cognitive impairment and among those who lived alone. About half of the moves happened within three months of discharge. The authors suggest that loss of independence is a patient-important outcome that registries rarely capture and that care home entry can be identified from linked address and social care data."
+          },
+          {
+            "title": "Linking pneumonia registries to national death and hospital admission data: completeness and pitfalls",
+            "authors": "Varga-Asante T, Holmberg-Iqbal N",
+            "year": 2016,
+            "venue": "Health Data Linkage Reports",
+            "doi": "10.5555/hdlr.2016.0032",
+            "providerType": "journal-article",
+            "abstract": "We linked a regional pneumonia registry to national death data and regional hospital admissions using deterministic and probabilistic methods. Linkage succeeded for 98.7 percent of registry patients. Causes of death on death certificates agreed with hospital diagnoses for cardiovascular deaths in 81 percent of cases. Admissions to hospitals outside the region were missed, affecting about 4 percent of patients who moved during follow-up. We recommend censoring at the date of leaving the region and using hospital diagnoses rather than death certificates alone to define cardiovascular events."
+          }
+        ]
+      },
+      "note": "A broader second search returns six records. The empty first event stays in the history. Ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.retrievalEvents[1].status": "ok",
+          "scan.retrievalEvents[1].resultCount": 6,
+          "scan.retrievalEvents[1].recordIds": [
+            "ev-0t1dbpg",
+            "ev-1rmmxbv",
+            "ev-0kczf5q",
+            "ev-07v2hhu",
+            "ev-03e92rw",
+            "ev-0md02sb"
+          ],
+          "scan.items": {
+            "length": 6
+          },
+          "scan.items[0].id": "ev-0t1dbpg",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Cardiovascular events in the five years after hospitalisation for community-acquired pneumonia: a linked national cohort of 18,400 adults with matched controls"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 2,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0t1dbpg",
+            "relevance": 93,
+            "methodQuality": 70,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Against population controls, the hazard ratio for cardiovascular events was 1.9 in the first year and 1.3 in years two to five, falling to 1.15 after adjustment for earlier cardiovascular disease and diabetes.",
+            "limitations": "Frailty not measured; population controls healthier than patients.",
+            "contextTags": [
+              "cardiovascular events",
+              "population controls",
+              "five years"
+            ]
+          },
+          {
+            "id": "ev-1rmmxbv",
+            "relevance": 85,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Against patients admitted with other infections, five-year mortality was 38 against 33 percent, adjusted hazard ratio 1.12, with the excess in the first year.",
+            "limitations": "Registry of one hospital group; no cardiovascular outcomes.",
+            "contextTags": [
+              "infection comparison group",
+              "mortality"
+            ]
+          },
+          {
+            "id": "ev-0kczf5q",
+            "relevance": 88,
+            "methodQuality": 72,
+            "kind": "expert",
+            "grade": "moderate",
+            "keyFindings": "Population controls overstate and infection controls understate long-term effects; estimates against both bracket a self-controlled estimate.",
+            "limitations": "Methods analysis of three datasets.",
+            "contextTags": [
+              "comparison group",
+              "methods"
+            ]
+          },
+          {
+            "id": "ev-07v2hhu",
+            "relevance": 90,
+            "methodQuality": 68,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Adjusting for a frailty score from prior admissions halved excess five-year mortality (1.62 to 1.29) and reduced the cardiovascular excess from 1.34 to 1.14; in-admission complications lie on the causal path.",
+            "limitations": "Frailty from admission codes only.",
+            "contextTags": [
+              "frailty",
+              "confounding",
+              "mediation"
+            ]
+          },
+          {
+            "id": "ev-03e92rw",
+            "relevance": 80,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Nine percent of adults aged 75 and over moved into long-term care within two years of pneumonia against 4 percent of matched adults.",
+            "limitations": "Older adults only; care entry from address data.",
+            "contextTags": [
+              "loss of independence",
+              "care home"
+            ]
+          },
+          {
+            "id": "ev-0md02sb",
+            "relevance": 78,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Linkage succeeded for 98.7 percent of registry patients; certificate causes agreed with hospital diagnoses for 81 percent of cardiovascular deaths; out-of-region admissions missed.",
+            "limitations": "One registry.",
+            "contextTags": [
+              "data linkage",
+              "outcome ascertainment"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "Against population controls, the hazard ratio for a first cardiovascular event was 1.9 in the first year after pneumonia and 1.3 in years two to five.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0t1dbpg"
+            ],
+            "location": "Abstract, results",
+            "passage": "The hazard ratio for a first myocardial infarction, stroke or heart failure admission was 1.9 in the first year and 1.3 in years two to five.",
+            "interpretation": "The excess falls after the first year; no retrieved record supports a ten-year doubling.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "General population controls overstate and infection controls understate long-term effects, so results should be reported against both.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0kczf5q"
+            ],
+            "location": "Abstract, recommendations",
+            "passage": "We recommend reporting results against both comparison groups and measuring frailty before the index admission.",
+            "interpretation": "Fixes the design: two comparison groups and frailty measured before admission.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c3",
+            "text": "Adjusting for frailty measured before the pneumonia halved excess five-year mortality and reduced the cardiovascular excess from 1.34 to 1.14.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-07v2hhu"
+            ],
+            "location": "Abstract, results",
+            "passage": "reduced the excess of cardiovascular events from 1.34 to 1.14",
+            "interpretation": "Frailty must be measured before the index admission and complications of the admission left out of the main model.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Linkage of a pneumonia registry to death and admission data succeeded for 98.7 percent of patients, with out-of-region admissions missed.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0md02sb"
+            ],
+            "location": "Abstract",
+            "passage": "Linkage succeeded for 98.7 percent of registry patients.",
+            "interpretation": "Linked outcomes are complete enough; censor at leaving the region.",
+            "uncertainty": "low"
+          },
+          {
+            "id": "c5",
+            "text": "Among adults aged 75 and over, 9 percent moved into long-term care within two years of pneumonia against 4 percent of matched adults.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-03e92rw"
+            ],
+            "location": "Abstract, results",
+            "passage": "9 percent moved into long-term care within two years, against 4 percent of matched adults from the general population",
+            "interpretation": "Care home entry is a measurable patient-important outcome.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Six retrieved records from the broader second search, appraised at abstract level; the first, narrower search returned nothing. Against population controls, cardiovascular risk after pneumonia is raised most in the first year (hazard ratio 1.9) and less in years two to five (1.3), and adjustment for earlier cardiovascular disease and frailty shrinks the later excess to about 1.15. Against patients admitted with other infections, the mortality excess is small and concentrated in the first year. Methods work shows the two comparison groups bracket the truth. Care home entry doubles in older adults. Linkage is near complete. No retrieved record supports a ten-year doubling of cardiovascular risk.",
+        "gradeOverall": "low",
+        "gradeRationale": "Consistent observational cohorts with serious confounding by frailty and comparison-group choice; estimates shrink with better adjustment. Low certainty that a long-term cardiovascular excess persists beyond the first year.",
+        "summary": "Six retrieved records appraised after an empty first search; five claims recorded; overall certainty low."
+      },
+      "note": "Appraisal of the six records from the second search (S13). Certainty 'low' is now assigned over inspected records and the stage completes (G1, G2).",
+      "expect": {
+        "store": {
+          "scan.items[0].grade": "low",
+          "scan.items[2].kind": "expert",
+          "scan.items[5].grade": "moderate",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-0t1dbpg"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-07v2hhu"
+          ],
+          "scan.gradeOverall": "low",
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional pneumonia registry, 11,800 survivors discharged 2016 to 2021",
+          "linkage to death register and regional admissions pending",
+          "general population and infection comparison groups",
+          "untraced ten-year doubling figure"
+        ],
+        "reading": "Frailty and existing heart disease sit before both the pneumonia admission and later events, so the size of any long-term effect depends on how they are measured and which comparison group is used. The first year after discharge carries most of the excess, and later years much less. Loss of independence is the outcome patients notice and registries rarely record. Everything rests on linkage that is not yet approved.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Pneumonia admission",
+            "kind": "context",
+            "detail": "Index event in the registry."
+          },
+          {
+            "id": "n2",
+            "label": "First cardiovascular event within five years",
+            "kind": "outcome",
+            "detail": "Primary outcome."
+          },
+          {
+            "id": "n3",
+            "label": "Frailty and heart disease before admission",
+            "kind": "context",
+            "detail": "Main confounders (claim c3)."
+          },
+          {
+            "id": "n4",
+            "label": "Choice of comparison group",
+            "kind": "framework",
+            "detail": "Population and infection controls bracket the truth (claim c2)."
+          },
+          {
+            "id": "n5",
+            "label": "Population cohort with matched controls",
+            "kind": "observational",
+            "detail": "1.9 then 1.3 (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Care home entry",
+            "kind": "outcome",
+            "detail": "9 against 4 percent in older adults (claim c5)."
+          },
+          {
+            "id": "n7",
+            "label": "Registry data access committee",
+            "kind": "stakeholder",
+            "detail": "Linkage decision not before February."
+          },
+          {
+            "id": "n8",
+            "label": "Untraced ten-year doubling figure",
+            "kind": "gap",
+            "detail": "No retrieved record supports it."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n3",
+            "to": "n1",
+            "relation": "raises the chance of"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "raises"
+          },
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "hypothesised to raise, mostly in the first year"
+          },
+          {
+            "from": "n4",
+            "to": "n5",
+            "relation": "explains the size of"
+          },
+          {
+            "from": "n1",
+            "to": "n6",
+            "relation": "is followed by more"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "controls access to data on"
+          },
+          {
+            "from": "n8",
+            "to": "n5",
+            "relation": "is not supported by"
+          }
+        ],
+        "summary": "Map sets confounding by frailty and the comparison group at the centre, with linkage approval as the practical dependency."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 8
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[7].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "Excess risk beyond the first year is uncertain",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Estimates for years two to five shrink with adjustment (claims c1, c3), and the decision about long-term follow-up turns on them.",
+            "opportunity": "Estimate hazard ratios separately for the first year and years two to five."
+          },
+          {
+            "id": "g2",
+            "title": "Comparison group determines the answer",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Population controls overstate and infection controls understate the effect (claim c2).",
+            "opportunity": "Report both comparisons with frailty measured before the index admission."
+          },
+          {
+            "id": "g3",
+            "title": "Loss of independence is rarely measured",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Care home entry doubles in older adults (claim c5) and matters to patients more than a hazard ratio.",
+            "opportunity": "Include care home entry as a secondary outcome from linked address data."
+          },
+          {
+            "id": "g4",
+            "title": "Older and deprived survivors carry the highest risk",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Frailty and deprivation cluster, and people living alone lose independence most.",
+            "opportunity": "Report absolute risks by age group, deprivation quintile and living alone."
+          },
+          {
+            "id": "g5",
+            "title": "The ten-year doubling figure has no source",
+            "kind": "error",
+            "severity": "watch",
+            "whyItMatters": "Clinicians repeat it to patients, and no retrieved record supports it.",
+            "opportunity": "Do not use it as a planning value; report what the local data show."
+          }
+        ],
+        "errorsFound": [
+          "The first scan reply assigned a certainty label although the recorded search had returned no records.",
+          "The quoted ten-year doubling of cardiovascular risk matches no retrieved record."
+        ],
+        "reevaluation": "The gaps confirm a registry-based cohort with two comparison groups, frailty measured before admission, time-split estimates and care home entry as a secondary outcome.",
+        "summary": "Five gaps; the persistence of excess risk and the comparison group are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[4].kind": "error",
+          "gaps.errorsFound": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Comparison group determines the answer"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Among adults discharged alive after community-acquired pneumonia, the hazard of a first cardiovascular event in years two to five is at most 1.2 times that of matched population controls after adjustment for frailty and existing heart disease, while the first-year hazard ratio exceeds 1.5.",
+            "novelty": 45,
+            "need": 80,
+            "practiceChange": 70,
+            "feasibility": 75,
+            "parsimony": 80,
+            "rationale": "Consistent with the retrieved cohorts; separates early from late risk, which is what follow-up planning needs.",
+            "risks": "Residual confounding by frailty; linkage not yet approved."
+          },
+          {
+            "id": "h2",
+            "statement": "Against patients admitted with other acute infections, the excess cardiovascular risk after pneumonia is small and limited to the first year.",
+            "novelty": 50,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "Infection controls share frailty, isolating what is specific to pneumonia.",
+            "risks": "Other infections may share cardiovascular effects."
+          },
+          {
+            "id": "h3",
+            "statement": "Adults aged 75 and over who lived alone are about twice as likely to move into a care home within two years of pneumonia as matched controls.",
+            "novelty": 40,
+            "need": 75,
+            "practiceChange": 65,
+            "feasibility": 65,
+            "parsimony": 70,
+            "rationale": "Supported by one retrieved cohort; patient-important.",
+            "risks": "Care home entry depends on address data quality."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected with early and late windows."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults discharged alive after community-acquired pneumonia from the four regional hospitals in 2016 to 2021, what is the hazard of a first cardiovascular event in the first year and in years two to five compared with matched general population controls and with patients admitted for other acute infections, after adjustment for frailty and existing cardiovascular disease?",
+            "framework": "PECO",
+            "population": "Adults discharged alive after community-acquired pneumonia, regional registry, 2016 to 2021",
+            "intervention": "Hospitalisation for community-acquired pneumonia (exposure)",
+            "comparator": "Matched general population adults; adults discharged after urinary tract infection or cellulitis",
+            "outcome": "First myocardial infarction, stroke, heart failure admission or cardiovascular death",
+            "time": "0 to 1 year and 1 to 5 years after discharge",
+            "setting": "Four hospitals in one region with linked death and admission data"
+          }
+        ],
+        "finer": "Feasible with existing registry data once linkage is approved; interesting to clinicians and patients; novel beyond 90 days for this region; ethical under the standing approval; relevant to follow-up planning.",
+        "summary": "One PECO question with two comparison groups and two time windows."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "questions.items[0].time": "0 to 1 year and 1 to 5 years after discharge",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "cohort",
+        "rationale": "The registry already enrols every pneumonia admission with five years of possible follow-up, and linkage can supply outcomes and comparison groups. A registry-based cohort with two comparison groups, general population controls and patients admitted for other infections, brackets the effect (c2); frailty from admissions in the two years before the index admission handles the main confounding (c3), and splitting follow-up at one year separates the early excess from any late one (c1).",
+        "alternatives": [
+          "Cohort against population controls only (refused: overstates the effect)",
+          "Self-controlled case series of cardiovascular events (kept as a sensitivity analysis for the first year)",
+          "Prospective follow-up of new pneumonia patients (refused: five years to answer a question the registry can answer now)"
+        ],
+        "guidelines": [
+          "STROBE",
+          "RECORD"
+        ],
+        "whyNotMoreComplex": "Existing registry and linked data answer the question; new recruitment would add years without adding validity.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Conduct a registry-based cohort of 11,800 pneumonia survivors discharged in 2016 to 2021 with linked death and admission outcomes, against matched population controls and patients admitted for other infections, with frailty measured before admission and follow-up split at one year.",
+          "question": "How should the unit estimate long-term outcomes after community-acquired pneumonia?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Published cohorts show an early excess that shrinks later and with adjustment, so a local estimate with better confounding control is informative.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c3"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Two comparison groups bracket the effect.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "The data access committee refuses linkage.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics coverage for secondary use of registry data",
+              "status": "met",
+              "evidence": "Standing approval REB-SP-2016-04 with a waiver of consent, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Data access committee and statistics office approval of linkage and the comparison groups",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Population controls only",
+            "Prospective follow-up of new patients"
+          ],
+          "note": "Rests on ledger claims c1 to c3 from the second, broader search; the linkage gate stays unknown until February at the earliest."
+        },
+        "summary": "Registry-based cohort recommended; the decision rests on three ledger claims and waits for the linkage decision."
+      },
+      "note": "The linkage gate has no evidence and stays unknown; the action is blocked (A2 item 9). selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "cohort",
+          "family": "cohort",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].evidence": {
+            "absent": true
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive: the claims rest on retrieved records from the second search; the unknown linkage gate keeps the action blocked (G7; A2 item 9). S11 for the statuses and basis, D5 for the text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.basis": "explicit",
+          "family": "cohort"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Registry-based cohort of adults discharged alive after community-acquired pneumonia in 2016 to 2021, with five years of linked follow-up and two comparison groups.",
+        "population": "All 11,800 registry patients discharged alive, first admission per person; comparison groups of general population adults matched four to one on age, sex and area, and adults discharged after urinary tract infection or cellulitis in the same hospitals and years.",
+        "exposure": "Hospitalisation for community-acquired pneumonia; secondary exposure categories by severity score and by bacteraemia.",
+        "procedures": "After approval, the statistics office links registry and comparison groups to the death register and regional admissions and returns a de-identified file. Frailty is calculated from admissions in the two years before the index date; follow-up starts at discharge and ends at death, leaving the region or five years.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "First cardiovascular event",
+            "measure": "Myocardial infarction, stroke, heart failure admission or cardiovascular death, defined from hospital diagnoses",
+            "timing": "0 to 1 year and 1 to 5 years after discharge",
+            "why": "The long-term risk clinicians believe persists (claim c1).",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "All-cause death",
+            "measure": "Death from any cause from the national register",
+            "timing": "Five years",
+            "why": "Patient-important and completely ascertained.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Care home entry",
+            "measure": "First change of address to a registered care home among people living at home before admission",
+            "timing": "Two years",
+            "why": "Loss of independence (claim c5).",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Linkage completeness",
+            "measure": "Proportion of registry patients linked to both data sources",
+            "timing": "At linkage",
+            "why": "Incomplete linkage biases outcomes (claim c4).",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Existing registry of 11,800 patients; linkage by the statistics office; analysis by one epidemiologist and a part-time statistician within twelve months of approval.",
+        "biasMitigation": [
+          "Two comparison groups reported side by side",
+          "Frailty measured before the index admission",
+          "Complications of the index admission excluded from the main model",
+          "Censoring at leaving the region"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Confounding by frailty",
+            "severity": "high",
+            "note": "Measured from prior admissions; residual confounding likely."
+          },
+          {
+            "id": "b2",
+            "label": "Comparison group choice",
+            "severity": "watch",
+            "note": "Handled by reporting both."
+          },
+          {
+            "id": "b3",
+            "label": "Out-of-region admissions",
+            "severity": "watch",
+            "note": "Censoring at leaving the region."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 9,
+          "flags": [
+            "Nine pre-specified covariates",
+            "Two comparison groups by design"
+          ],
+          "simplestPath": "One outcome, two windows, two comparisons, one covariate set."
+        },
+        "theoreticalFramework": "Target trial emulation to fix time zero at discharge and eligibility; no other framework.",
+        "summary": "Registry cohort with one primary outcome in two windows, two comparison groups and care home entry as a secondary outcome."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[2].patientCentered": true,
+          "protocol.parsimony.covariateCount": 9,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Registry-based cohort with matched population controls and infection controls; cause-specific Cox models split at one year.",
+        "sampleSize": "11,800 pneumonia survivors and about 47,200 population controls. Assuming about 1,400 first cardiovascular events among patients and 4,000 among controls in years two to five, the standard error of the log hazard ratio is about 0.031, so a hazard ratio of 1.3 would have a 95 percent confidence interval of about 1.22 to 1.38; precision rather than power limits interpretation, and the sample size is fixed by the registry.",
+        "primaryAnalysis": "Cause-specific Cox models for the first cardiovascular event with death from other causes as a competing event, follow-up split at one year, adjusted for nine covariates fixed in advance: age, sex, deprivation quintile, frailty score, previous cardiovascular disease, diabetes, chronic kidney disease, chronic lung disease and smoking status from the registry.",
+        "secondaryAnalysis": "The same models against infection controls; Fine-Gray models for absolute risk; all-cause death; care home entry among people living at home; a self-controlled case series for the first year as a sensitivity analysis.",
+        "missingData": "Smoking status missing for about 8 percent is handled by multiple imputation with 20 imputations; people who leave the region are censored at the date of leaving.",
+        "multiplicity": "One primary outcome in two windows against the population comparison; all other estimates are secondary and reported with confidence intervals.",
+        "software": "R with the survival package; code and covariate list archived before linkage.",
+        "overfittingGuards": [
+          "Covariates fixed before linkage",
+          "Complications of the index admission not adjusted for",
+          "Two comparison groups pre-specified, no others added"
+        ],
+        "summary": "Registry-sized cohort with precise estimates; Cox models split at one year against two comparison groups."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "1.22 to 1.38"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal physical risk; privacy risk from linking registry, death and admission data.",
+        "consent": "Covered by standing approval REB-SP-2016-04 with a waiver of consent for registry research; registry participants were informed of research use at enrolment.",
+        "data": "Linkage by the statistics office; the analysis file holds no names or identifiers; results with fewer than ten people in a cell are suppressed.",
+        "equity": "PROGRESS-Plus: older, frailer and more deprived survivors, and people living alone, carry the highest risks. Absolute risks are reported by age group, deprivation quintile and living arrangement so that follow-up can be targeted.",
+        "effectiveness": "The study tells clinicians whether long-term cardiovascular follow-up after pneumonia is justified and which survivors need it most.",
+        "efficiency": "Uses an existing registry and routine data; no participant contact.",
+        "costs": "Linkage fee from the statistics office, not yet quoted; staff time within the unit.",
+        "grants": "None needed for the analysis; a positive result could support a trial of structured follow-up.",
+        "partnerships": "Registry steering group, regional cardiology and respiratory clinicians, the statistics office, and two pneumonia survivors from the registry's patient panel.",
+        "rebPath": "Covered by the university's standing approval for registry research with a waiver of consent; linkage and the comparison groups also need the data access committee and the statistics office, whose decisions are unknown until February 2027 at the earliest.",
+        "limitations": "Residual confounding by frailty; cause-of-death coding; outcomes outside the region missed.",
+        "summary": "Standing ethics approval; linkage approvals still unknown; equity reporting by age, deprivation and living arrangement."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "unknown until February 2027"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two pneumonia survivors from the registry's patient panel review the outcomes and the plain-language summary; cardiology and respiratory clinicians review the covariate list.",
+        "socialListening": "No social media listening.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Never the same again",
+            "quote": "Composite paraphrase: I got over the infection, but a year later I still could not walk to the shops.",
+            "implication": "Keep care home entry and death alongside cardiovascular events.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Moving into care",
+            "quote": "Composite paraphrase: Dad came home from hospital and was in a care home within three months; nobody had talked about that possibility.",
+            "implication": "Report the timing of care home entry after discharge.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "The number people quote",
+            "quote": "Composite paraphrase: I tell patients their heart risk doubles for ten years, and I realise I do not know where that came from.",
+            "implication": "Report local estimates and correct the untraced figure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "Who needs follow-up",
+            "quote": "Composite paraphrase: I cannot bring every pneumonia survivor back to clinic; tell me which ones to see.",
+            "implication": "Report absolute risks by subgroup.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on recovery, care home entry, the untraced figure and targeting follow-up."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "voices.items[1].source": "family",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Cardiovascular events, death and care home entry in the five years after community-acquired pneumonia: a registry-based cohort study",
+        "abstract": "Objective: to estimate the long-term excess of cardiovascular events after community-acquired pneumonia. Design: registry-based cohort of 11,800 adults discharged alive in 2016 to 2021, linked to death and admission data, with matched population controls and controls admitted with other infections. Primary outcome: first cardiovascular event in the first year and in years two to five. Results and conclusions will be written after linkage and analysis.",
+        "introduction": "Pneumonia is followed by an early rise in cardiovascular events, but the size of any later excess depends on confounding by frailty and on the comparison group.",
+        "methods": "Registry patients and comparison groups were linked to the death register and regional admissions. Frailty came from admissions in the two years before the index date. Cause-specific Cox models were split at one year and adjusted for nine covariates fixed in advance.",
+        "results": "No data have been analysed yet. The report will present linkage completeness, absolute risks and hazard ratios by window and comparison group, and care home entry.",
+        "discussion": "The discussion will compare early and late estimates with the retrieved cohorts and state which survivors need long-term follow-up.",
+        "limitations": "Residual confounding; coding of causes of death; outcomes outside the region missed.",
+        "conclusion": "To be written after analysis; it will not repeat the untraced ten-year doubling figure.",
+        "reportingChecklist": "STROBE with the RECORD extension",
+        "summary": "STROBE and RECORD structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "STROBE with the RECORD extension",
+          "manuscript.conclusion": {
+            "includes": "untraced ten-year doubling figure"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "The linkage decision is unknown until February 2027 at the earliest; the decision stays blocked and no linkage is requested for analysis",
+          "The first scan reply proposed a certainty over zero records; it was dropped, and certainty now rests only on the six records of the second search",
+          "The ten-year doubling figure remains untraced and must not appear in any output"
+        ],
+        "improvementNotes": "The first search was too narrow and returned nothing; the scan stayed incomplete until a broader search returned six records and they were appraised. The linkage gate stayed unknown through every later stage.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: the unknown linkage gate, the dropped certainty lesson, and the untraced figure."
+      },
+      "note": "audit.openFixes and audit.lastReview state the correct behaviour; at 875fe59 they fail because mergeStage overwrites the audit stage's patch (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "After every later stage the linkage gate is still unknown; statuses are checked in the export because the decision panel is not on this route.",
+      "expect": {
+        "store": {
+          "title": "Five-year outcomes after community-acquired pneumonia in a regional registry cohort",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "scan.retrievalEvents": {
+            "length": 2
+          },
+          "scan.retrievalEvents[0].resultCount": 0,
+          "scan.items": {
+            "length": 6
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "stage": {
+          "scan": "complete",
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "Five-year outcomes after community-acquired pneumonia in a regional registry cohort"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The dropped certainty never reappears, the empty first search stays in the history, and the gate stays unknown with the action blocked (D20, S11). One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "scan.retrievalEvents[0].resultCount": 0,
+            "scan.retrievalEvents[1].resultCount": 6,
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 5
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[1].status": "unknown",
+            "problem.rawNeed": "I am an epidemiologist in the clinical research unit of a university hospital. We run the regional pneumonia registry, which has enrolled every adult admitted with community-acquired pneumonia to the four hospitals in our region since 2016, with severity scores, microbiology and treatment. I want to use it for a registry-based cohort study of what happens to patients in the five years after discharge: death, new cardiovascular events (myocardial infarction, stroke, admission for heart failure), readmission for pneumonia, and loss of independence, meaning a move into a care home. Clinicians keep saying that pneumonia ages people and that the cardiovascular risk stays high for years, but most of what I have seen covers only the first 30 or 90 days.\n\nThe registry can be linked to the national death register and to hospital admissions across the region, and the regional statistics office can provide a comparison group from the general population matched on age, sex and area. Linkage needs approval from the registry's data access committee and from the statistics office, and the committee has told us it will not decide before its February meeting at the earliest.\n\nI need help framing the question, choosing the comparison group (the general population, or patients admitted with other acute infections), handling confounding by existing heart disease and frailty, and defining the time windows. I also need to know what published evidence exists, because a colleague keeps quoting a doubling of cardiovascular risk over ten years that I cannot trace. The registry holds about 11,800 patients discharged alive between 2016 and 2021, so five years of follow-up are complete for all of them."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

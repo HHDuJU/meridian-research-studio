@@ -1,6 +1,6 @@
 {
   "id": "sc-021",
-  "version": 1,
+  "version": 2,
   "title": "Regional test-negative vaccine study: a partly unsupported decision refused, scoping review accepted, a cited record's year corrected on the Design route",
   "field": "epidemiology",
   "level": 4,
@@ -13,7 +13,8 @@
     "S8",
     "S10",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Adversarial path on a clear scoping-review question (routing scoping-review, explicit under both classifier rules): a regional agency maps methods choices in test-negative influenza vaccine effectiveness studies before writing its own protocol. A fixture search returns eight records (one undated, kept null); the appraisal records five claims whose passages and numbers occur in the cited abstracts. The first design reply cites c2 and 'c9'; c9 is not in the ledger and carries the decision's main assertion. It is dropped with an issue, and the partly supported decision must stay blocked and its acceptance be refused, because the dropped id remains a blocker (S1, S8; WO D13 change to test #35) although the remaining claim and the met gates would let it through at 875fe59. The revised reply supersedes it (withdrawn, kept) and rests on c1, c2 and c4; its acceptance is a supported positive (accepted, ready). After protocol and analysis, the investigator opens Design from the stage list; there the provider corrects the publication year of the rapid antigen record cited by c2 from 2024 to 2014, which takes the only support for criterion k2 (test type became live since 2020) out of that period: the decision must become stale and blocked in the store, on screen, after reload and in the export, with completed stages flagged. The record keeps its DOI-based id. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 3, 4, 5, 8 (ev-1z0pzrl, ev-0bf6hlb, ev-1bsnsg0, ev-001qucq, ev-0t8a94f) and titleYearKey hash for records 2, 6, 7 (ev-1vhpb5t, ev-1p35st2, ev-0kurypy). Requires S1 and S8 (refusal of a partly unsupported decision), S10 (revision covers the metadata a claim depends on), S11, S13 and D5. Catches: partial support treated as support, a superseded decision erased, and an accepted decision left current after a cited record's date moves out of the period it was cited for.",
   "inputs": {
@@ -795,7 +796,11 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -815,6 +820,29 @@
           "includes": [
             "proposed",
             "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -946,7 +974,11 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -958,6 +990,49 @@
           "includes": [
             "proposed",
             "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "not-required",
+      "reason": "Review of published literature only: no participants and no identifiable data.",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "not-required",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1511,5 +1586,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-021.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2); step 12 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (review not required) for a review of published literature before accepting decision 2. Model responses, need and records are unchanged."
 }

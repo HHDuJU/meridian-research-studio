@@ -1,6 +1,6 @@
 {
   "id": "sc-088",
-  "version": 2,
+  "version": 3,
   "title": "Primary care portal messages: urgent-message flag accuracy across clinics, late ethics reply refused after an edit",
   "field": "digital-health",
   "level": 5,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Level 5 with a multi-site diagnostic accuracy design, a late reply refused after an investigator edit, and dependency closure between Protocol and Stats. The need names a diagnostic accuracy study (routing explicit); the problem reply echoes the typed constraints (no rejected-change, G11). Seven fixture records are appraised; one annotation gives relevance 105, stored null with issue out-of-range (never clamped). The supported decision is accepted with both gates met. After Protocol and Stats are complete for three clinics, the investigator starts Ethics; while that request is pending, the investigator records on screen that clinic C has paused (set-field protocol.population), which flags Stats for review (G8). The held Ethics reply, produced against the earlier study revision, then arrives and is refused by the studyRevision guard: nothing is applied and the refusal is shown and logged (G6). Stats is regenerated for two clinics, clearing the flag, and a fresh Ethics request is applied. The held reply is encoded as illuminate (request sent, reply held), set-field, then wait (reply delivered), because the format has no field for a held reply. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 2, 4, 5, 7 (ev-08xzrhg, ev-0u8uypx, ev-0hra19l, ev-1qyikkr, ev-0xgkvle) and titleYearKey-keyed for records 3 and 6 (ev-0idtq6s, ev-1g04mzv). Requires S13 (appraisal payload), S11 (selectionStatus, actionStatus, recommendedFamily, basis) and D5 (status text). The studyRevision guard itself is in the 875fe59 library (store.ts mergeStageIfRevision); applying it on the screen is L1.2 wiring, not a work-order entry. Catches: a late reply applied over a changed study, a downstream stage left current after an upstream edit, a score clamped instead of stored unknown, and results by clinic lost when a site withdraws.",
   "inputs": {
@@ -785,7 +786,7 @@
             "c3",
             "c4"
           ],
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -794,13 +795,39 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -817,14 +844,14 @@
         "store": {
           "design.decisions[-1].status": "accepted",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].actionStatus": "blocked",
           "design.basis": "explicit",
           "family": "diagnostic"
         },
         "screen": {
           "includes": [
             "accepted",
-            "ready"
+            "blocked"
           ]
         }
       }
@@ -1460,7 +1487,7 @@
               "isNull": true
             },
             "design.decisions[-1].selectionStatus": "accepted",
-            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].actionStatus": "blocked",
             "family": "diagnostic"
           }
         },
@@ -1470,5 +1497,5 @@
       }
     }
   ],
-  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-088.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-088.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 9 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Decision 1 is expected blocked from its acceptance (step 11) on: the investigator's facts give no research ethics status. Model responses, need and records are unchanged. Earlier versions are described in the supersedes field of the kept file."
 }

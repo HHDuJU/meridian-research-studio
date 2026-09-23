@@ -1,6 +1,6 @@
 {
   "id": "sc-095",
-  "version": 1,
+  "version": 2,
   "title": "Intensive care unit: nurse-driven sedation interruption adherence, a two-hit search and leads only before a second search",
   "field": "critical-care",
   "level": 2,
@@ -12,7 +12,8 @@
     "D5",
     "D20",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary path with one ambiguity on an explicit lean need (value stream mapping, gemba walks and A3 named). The first, narrow search reports only two hits and returns no record bodies (HTTP 200, total 2, records empty), so the event is 'partial' with no records. A leads-only discovery reply follows: three unchecked leads (origin model, unverified, G3), one with no method quality (null, G4), and an explicit null on the model-owned gradeOverall (issue 'cleared', certainty stays ''); the stage stays incomplete ('leads only', G2). A broader second search then returns seven records, added after the leads in arrival order with both events kept (assumption: the application appends retrieved records after earlier items; D1 forbids replacement). The appraisal (scan call 2) annotates only the seven records and completes the stage with certainty 'low' over inspected records (G1); the leads stay unverified to the export. The decision rests on four claims from the second search, both gates are met on investigator-supplied records, and the acceptance is a supported positive. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 4, 5, 6, 7 (ev-1a3m7y5, ev-1f8vau2, ev-0ldcp6o, ev-18u2m3r, ev-1cpc924, ev-1sbthgq); the titleYearKey(title, year) hash for record 3 (ev-0woopen). Requires D20 (no certainty and no completion from leads or an empty ingest, 'not assessed', 'leads only'), D1 (leads and records kept side by side), S13 (appraisal payload), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a scan completed by leads or by a hit count without records, a certainty kept from a leads-only reply, leads erased or merged when records arrive, and a partial event rewritten as ok.",
   "inputs": {
@@ -960,7 +961,7 @@
             "c3",
             "c4"
           ],
-          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[1].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -969,13 +970,39 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[-1].gates[0].status": "unknown",
+          "design.decisions[-1].gates[0].proposal.status": "met",
+          "design.decisions[-1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
         },
         "issues": {
           "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
         },
         "screen": {
           "includes": [
@@ -992,7 +1019,7 @@
         "store": {
           "design.decisions[-1].status": "accepted",
           "design.decisions[-1].selectionStatus": "accepted",
-          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[-1].actionStatus": "blocked",
           "design.decisions[-1].claimIds": [
             "c1",
             "c2",
@@ -1005,7 +1032,7 @@
         "screen": {
           "includes": [
             "accepted",
-            "ready"
+            "blocked"
           ]
         }
       }
@@ -1506,7 +1533,7 @@
             "scan.items[3].provenance.status": "retrieved",
             "scan.gradeOverall": "low",
             "design.decisions[-1].selectionStatus": "accepted",
-            "design.decisions[-1].actionStatus": "ready"
+            "design.decisions[-1].actionStatus": "blocked"
           }
         },
         "downloads": {
@@ -1514,5 +1541,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-095.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. Decision 1 is expected blocked from its acceptance (step 13) on: the investigator's facts give no research ethics status. Model responses, need and records are unchanged."
 }

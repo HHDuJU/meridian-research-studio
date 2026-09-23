@@ -1,6 +1,6 @@
 {
   "id": "sc-012",
-  "version": 1,
+  "version": 2,
   "title": "Chemotherapy day unit: weekly symptom reporting, two candidate designs, the investigator withdraws the trial and chooses mixed methods",
   "field": "oncology",
   "level": 2,
@@ -10,7 +10,8 @@
   "requires": [
     "D5",
     "S11",
-    "S13"
+    "S13",
+    "D10"
   ],
   "notes": "Ordinary ambiguity: two candidate designs, and the investigator chooses one. A clinical nurse specialist names both a pragmatic trial and interviews, so routing at create is unresolved (family null, basis unresolved; the 875fe59 classifier and the A1-B evidence-mention rule agree). The problem reply omits family (omitKeys) and repeats the constraints word for word, so nothing changes and no issue arises. A fixture search returns seven records (years 2016 to 2024); the appraisal records six source-derived claims whose passages and numbers occur in the cited abstracts, with certainty moderate. The first design reply proposes a pragmatic trial resting on c1 and c5 with two unknown gates; the proposal must not set study.family (S11 with D3), which stays null. The investigator withdraws it (the rollout committee's decision RC-2026-06 removes equipoise) and the revised reply proposes an explanatory sequential mixed methods evaluation resting on c2, c3, c4 and c6 with both gates met on the investigator's approval records; acceptance is a supported positive (selection accepted, action ready) and only then does family become mixed-methods with basis explicit. The withdrawn decision is kept and exported. Record ids were computed by a generator script that loads stableRecordId from src/lib/evidence/records.ts at 875fe59: normalised-DOI hash for records 1, 3, 4, 5, 7 (ev-0e4joc7, ev-1s3ozft, ev-0vq2bzi, ev-0pod5nb, ev-12cag00) and titleYearKey hash for records 2, 6 (ev-0drtzay, ev-16j6bhd). Requires S11 (routing at create, recommendedFamily, selectionStatus, actionStatus, family unchanged by a proposal, basis explicit on acceptance), S13 (appraisal on the production scan path) and D5 (decision status text). Catches: a proposal silently setting the family, a withdrawn decision erased or re-accepted, a default family substituted for an unresolved one, and a choice lost on reload.",
   "inputs": {
@@ -1004,7 +1005,7 @@
             "c4",
             "c6"
           ],
-          "design.decisions[1].gates[0].status": "met",
+          "design.decisions[1].gates[0].status": "unknown",
           "completedStages": [
             "problem",
             "scan",
@@ -1013,7 +1014,10 @@
             "hypotheses",
             "questions",
             "design"
-          ]
+          ],
+          "design.decisions[1].gates[0].proposal.status": "met",
+          "design.decisions[1].gates[1].status": "unknown",
+          "design.decisions[1].gates[1].proposal.status": "met"
         },
         "stage": {
           "design": "complete"
@@ -1025,6 +1029,49 @@
           "includes": [
             "proposed",
             "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "confirm-gate",
+      "which": "latest",
+      "gates": [
+        "g1",
+        "g2"
+      ],
+      "note": "D10 (format 1.3): the model proposed these gates as met; the investigator's own facts support them, and the investigator confirms them on screen before acceptance. Only the investigator sets a gate.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[0].status": "met",
+          "design.decisions[-1].gates[1].status": "met",
+          "design.decisions[-1].gates[0].setBy": "investigator",
+          "design.decisions[-1].gates[1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "record-determination",
+      "which": "latest",
+      "body": "ethics",
+      "status": "met",
+      "reason": "Research ethics approval covering interviews with patients and triage nurses: REB approval REB-ONC-2026-044 dated 2026-09-02, supplied by the investigator",
+      "note": "D10 (format 1.3, rule G12): a decision is ready only with the investigator's record of the research ethics status of the work; the investigator records it before accepting.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].gates[-1].status": "met",
+          "design.decisions[-1].gates[-1].setBy": "investigator",
+          "design.decisions[-1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "proposed"
           ]
         }
       }
@@ -1568,5 +1615,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-012.json), superseded 2026-09-23T19:10Z: D10 (format 1.3, rule G12). A model \"met\" on a gate is a proposal: the Design step now expects \"unknown\" with proposal.status \"met\" (step 11 (g1, g2)), and a confirm-gate step after it has the investigator confirm those gates. The investigator records the ethics status (approved) citing the ethics gate the investigator confirmed before accepting decision 2. Model responses, need and records are unchanged."
 }

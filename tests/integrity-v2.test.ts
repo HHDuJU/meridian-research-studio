@@ -9,6 +9,8 @@ import { recordedTransport, blockedTransport } from "../src/lib/evidence/transpo
 import { ingestRecords, stableRecordId } from "../src/lib/evidence/records";
 import { approximateFigures, checkClaim, gateGrounding, groundedInInvestigatorText, investigatorSentences, requirementStatedByInvestigator, textMatchesTitle } from "../src/lib/evidence/grounding";
 import { applyDecision, decisionIsSupported, evaluateDecision, evidenceRevision, evidenceRevisionFor, studyRevision } from "../src/lib/evidence/decision";
+import { DETERMINATION_GATE } from "../src/lib/evidence/authority";
+import { approvalReview } from "../src/lib/evidence/decision";
 import { mergeAppraisedClaims } from "../src/lib/evidence/appraise";
 import { applyAiResult } from "../src/lib/apply-ai";
 import { applyLookupOutcome } from "../src/lib/evidence/verify";
@@ -287,16 +289,20 @@ test("gates: a model 'met' needs anchors the investigator entered; local facts s
   assert.equal(applyDecision(payload("Approved, trust me."), study).decision!.gates[0].status, "unknown");
 
   study.problem.localFacts = [{ id: "fact-1", text: "The governance committee classified the project as QI on 2026-09-08 (record CGC-2026-031).", by: "investigator", at: "" }];
-  const grounded = applyDecision(payload("Record CGC-2026-031 dated 2026-09-08, supplied by the investigator"), study);
-  assert.equal(grounded.decision!.gates[0].status, "met");
-  assert.equal(grounded.decision!.gates[0].setBy, "model");
-  assert.match(grounded.decision!.gates[0].grounding ?? "", /CGC-2026-031/);
-
-  // Removing the fact reopens the gate at evaluation time.
-  const accepted = { ...grounded.decision!, status: "accepted" as const, selectionStatus: "accepted" as const };
-  study.problem.localFacts = [];
+  const supported = applyDecision(payload("Record CGC-2026-031 dated 2026-09-08, supplied by the investigator"), study);
+  // D10 / S5: even a well-supported model "met" is a proposal; the investigator confirms it.
+  const g = supported.decision!.gates[0];
+  assert.equal(g.status, "unknown");
+  assert.equal(g.setBy, "model");
+  assert.equal(g.proposal?.status, "met");
+  assert.deepEqual(g.proposal?.concerns, []);
+  assert.match(g.proposal?.supportingFacts[0] ?? "", /CGC-2026-031/);
+  const accepted = { ...supported.decision!, status: "accepted" as const, selectionStatus: "accepted" as const };
   const ev = evaluateDecision({ ...accepted, inputRevision: evidenceRevision(study) }, study);
-  assert.ok(ev.blockers.some((b) => /declared met by the model/.test(b)));
+  assert.ok(ev.blockers.some((b) => /gate unknown: QI determination \(the model proposes "met"/.test(b)));
+  // A stored model "met" from before D10 is not treated as settled.
+  const legacy = { ...accepted, gates: [{ ...g, status: "met" as const, proposal: undefined }], inputRevision: evidenceRevision(study) };
+  assert.ok(evaluateDecision(legacy, study).blockers.some((b) => /declared met by the model; only the investigator can confirm/.test(b)));
 });
 
 test("investigator sets gates with evidence; the model cannot write local facts", () => {
@@ -312,6 +318,11 @@ test("investigator sets gates with evidence; the model cannot write local facts"
   assert.equal(S().acceptDecision(s.id, "latest").ok, true);
   assert.equal(S().setGate(s.id, "latest", "g1", "met").ok, false);
   assert.equal(S().setGate(s.id, "latest", "g1", "met", "QI screening record QIS-118").ok, true);
+  // D10 / S5: the confirmed ethics gate is offered as the reference; the investigator records the status.
+  const mid = S().studies.find((x) => x.id === s.id)!;
+  assert.match(approvalReview(mid.design.decisions.at(-1)!, mid).suggestedEthicsRecord ?? "", /QIS-118/);
+  assert.equal(mid.design.decisions.at(-1)!.actionStatus, "blocked");
+  assert.equal(S().addGate(s.id, "latest", DETERMINATION_GATE.ethics, "not-required", "QI screening record QIS-118").ok, true);
   const after = S().studies.find((x) => x.id === s.id)!;
   const d = after.design.decisions.at(-1)!;
   assert.equal(d.gates[0].setBy, "investigator");
@@ -732,7 +743,8 @@ test("review of 23 September: a gate the investigator sets without evidence show
   const cur = () => S().studies.find((x) => x.id === s.id)!;
   const d = applyDecision({ kind: "narrow", statement: "One PDSA cycle.", claimIds: [], criteria: [], gates: [{ id: "g1", requirement: "QI screening decision", status: "met", evidence: "QIS-2026-131, supplied by the investigator" }], alternatives: ["audit"] }, cur()).decision!;
   S().mergeStage(s.id, "design", { decisions: [d] });
-  assert.equal(cur().design.decisions[0].gates[0].status, "met");
+  assert.equal(cur().design.decisions[0].gates[0].status, "unknown");
+  assert.equal(cur().design.decisions[0].gates[0].proposal?.evidence, "QIS-2026-131, supplied by the investigator");
   assert.equal(S().setGate(s.id, 0, "g1", "unmet").ok, true);
   const g = cur().design.decisions[0].gates[0];
   assert.equal(g.status, "unmet");
@@ -768,6 +780,13 @@ test("gate scope: the investigator can mark a gate not required for this decisio
   assert.equal(S().setGate(s.id, 0, "g2", "not-required", "").ok, false);
   assert.equal(S().setGate(s.id, 0, "g2", "not-required", "The trial was the rejected alternative; this decision is a QI project.").ok, true);
   assert.equal(S().setGate(s.id, 0, "g3", "not-required", "No trial is run under this decision.").ok, true);
+  // The pharmacy gate the model proposed as met still waits for the investigator's confirmation.
+  assert.ok(evaluateDecision(cur().design.decisions[0], cur()).blockers.some((b) => /gate unknown: Pharmacy agreement/.test(b)));
+  const g1 = cur().design.decisions[0].gates.find((g) => g.id === "g1")!;
+  assert.equal(S().setGate(s.id, 0, "g1", "met", g1.proposal!.evidence).ok, true);
+  // D10 / S5: the work also needs the investigator's record of its ethics status.
+  assert.ok(evaluateDecision(cur().design.decisions[0], cur()).blockers.some((b) => /ethics status/.test(b)));
+  assert.equal(S().addGate(s.id, 0, DETERMINATION_GATE.ethics, "not-required", "Registered with the QI office as quality improvement (QIS-2026-131)").ok, true);
   const after = evaluateDecision(cur().design.decisions[0], cur());
   assert.deepEqual(after.blockers, []);
   assert.equal(after.canAct, true);
