@@ -4,7 +4,7 @@ import { parsePubmedArticles, pubmedFetchRequest, pubmedSearchRequest } from "..
 import { abstractFromInvertedIndex, openalexDiscoveryRequest, parseOpenAlexWorks } from "../src/lib/evidence/providers/openalex";
 import { clinicalTrialsSearchRequest, parseClinicalTrials } from "../src/lib/evidence/providers/clinicaltrials";
 import { crossrefLookupRequest } from "../src/lib/evidence/providers/crossref";
-import { lookupDoisLive, providerQuery, queryProblem, searchLive } from "../src/lib/evidence/live";
+import { lookupDoisLive, providerQuery, queryProblem, redactRequestUrl, searchLive, searchPubmedLive } from "../src/lib/evidence/live";
 import { recordedTransport, blockedTransport } from "../src/lib/evidence/transport";
 import { ingestRecords, stableRecordId } from "../src/lib/evidence/records";
 import { approximateFigures, checkClaim, gateGrounding, groundedInInvestigatorText, investigatorSentences, requirementStatedByInvestigator, textMatchesTitle } from "../src/lib/evidence/grounding";
@@ -330,16 +330,21 @@ test("local facts enter the evidence revision; an accepted decision goes stale w
   assert.equal(S().studies.find((x) => x.id === s.id)!.design.decisions.at(-1)!.status, "stale");
 });
 
-test("evidence revision v2 covers grade and kind; v1-stamped decisions are compared with v1", () => {
+test("evidence revision: ev3 covers grade and kind; ev1 and ev2 stamps are compared with their own formula", () => {
   const { study, id } = studyWithRecord(ABSTRACT);
   const v1 = evidenceRevisionFor(study, 1);
-  const v2 = evidenceRevision(study);
+  const v2 = evidenceRevisionFor(study, 2);
+  const v3 = evidenceRevision(study);
   assert.match(v1, /^ev1-/);
   assert.match(v2, /^ev2-/);
-  const legacy = { ...applyDecision({ kind: "defer", statement: "Wait.", claimIds: [], criteria: [], gates: [], alternatives: [] }, study).decision!, inputRevision: v1, status: "accepted" as const, selectionStatus: "accepted" as const };
-  assert.equal(evaluateDecision(legacy, study).status, "accepted");
+  assert.match(v3, /^ev3-/);
+  for (const stamp of [v1, v2]) {
+    const legacy = { ...applyDecision({ kind: "defer", statement: "Wait.", claimIds: [], criteria: [], gates: [], alternatives: [] }, study).decision!, inputRevision: stamp, status: "accepted" as const, selectionStatus: "accepted" as const };
+    assert.equal(evaluateDecision(legacy, study).status, "accepted", stamp);
+  }
   const regraded = { ...study, scan: { ...study.scan, items: study.scan.items.map((i) => (i.id === id ? { ...i, grade: "low" as const } : i)) } };
-  assert.notEqual(evidenceRevision(regraded), v2);
+  assert.notEqual(evidenceRevision(regraded), v3);
+  assert.equal(evidenceRevisionFor(regraded, 1), v1);
 });
 
 test("appraisal claims merge by record scope; superseded claims are kept; colliding ids are renamed", () => {
@@ -646,4 +651,92 @@ test("a gate rests on the investigator's own statement of the requirement; negat
   assert.equal(requirementStatedByInvestigator("Ethics approval", inv).stated, false);
   // An identifier the investigator never gave refuses the gate even when the requirement overlaps.
   assert.equal(gateGrounding("Monthly extraction of coded consultations and prescriptions by the network data team", "Data agreement DSA-2026-044 signed", inv).grounded, false);
+});
+
+test("gate grounding refuses needs, plans, conditions, questions, partial counts and unanchored figures (review of 23 September)", () => {
+  const cases: [string, string, string][] = [
+    ["Any change to the order set must be approved by the pharmacy and therapeutics committee.", "Approval by the pharmacy and therapeutics committee for the order set change", "Stated in the investigator's constraints"],
+    ["We will apply for departmental funding for the pilot.", "Departmental funding for the pilot", "Stated in the investigator's constraints"],
+    ["Research ethics approval of the screening protocol is required before enrolment.", "Research ethics approval of the screening protocol", "Stated by the investigator"],
+    ["If the hospital foundation funds a research coordinator, recruitment can start in March.", "Hospital foundation funding for a research coordinator", "Stated by the investigator"],
+    ["Can the network data team extract coded consultations monthly?", "Monthly extraction of coded consultations by the network data team", "Stated by the investigator"],
+    ["We hope to get statistician support from the methods centre.", "Statistician support from the methods centre", "Stated by the investigator"],
+    ["We would like all caregivers to be screened at the first visit.", "Screening of all caregivers at the first visit", "Stated by the investigator"],
+    ["Eleven of the 14 practices had signed data release agreements.", "Signed data release agreements from all 14 practices", "Stated by the investigator"],
+    ["The protocol needs research ethics board approval before the pilot.", "Research ethics board approval REB-2026-999 for the protocol", "Confirmed by the investigator"],
+    ["The unit has 12 beds and one research nurse.", "Protected research time for the unit's nurse", "12 months of protected time confirmed"],
+    ["The department funds the pilot from its education budget.", "Departmental funding for the pilot", "Funding of $50,000 confirmed"],
+    // Recorded bank gates left open that the first version of the rule would have grounded (sc-037, sc-044, sc-056):
+    ["School and student identities stay with the survey custodian; analysis only through the custodian's secure analysis service.", "Survey custodian approval of the analysis through the secure analysis service", "Stated by the investigator"],
+    ["The memory clinic sees about 640 new referrals a year, and clinicians screen about 80 percent of caregivers at the first visit.", "Clinician time for screening at every first visit", "Stated by the investigator"],
+    ["The provincial emergency visits data custodian returned our draft data sharing agreement unsigned on 2026-09-01.", "Signed data sharing agreement with the provincial emergency visits data custodian", "Stated by the investigator"],
+  ];
+  for (const [inv, requirement, evidence] of cases) {
+    const g = gateGrounding(requirement, evidence, inv);
+    assert.equal(g.grounded, false, `${requirement} <= ${inv}: ${g.reason}`);
+  }
+  // Plain statements still ground: the sc-083 local fact, and a figure beside its own words.
+  const fact = "The network's 11 practices use the same clinical system, and the network data team can extract coded consultations and prescriptions monthly.";
+  assert.equal(gateGrounding("Monthly extraction of coded consultations and prescriptions by the network data team", "Stated in the investigator's local facts", fact).grounded, true);
+  assert.equal(groundedInInvestigatorText("48 inpatient beds on the unit", "The unit has 48 inpatient beds.").grounded, true);
+  assert.equal(groundedInInvestigatorText("12 months of protected time confirmed", "The unit has 12 beds.").grounded, false);
+});
+
+test("review of 23 September: keys stay on the server, source text is never marked, derivations follow renamed ids", async () => {
+  // An NCBI key reaches NCBI but not the request URLs returned to the page and stored in evidence runs.
+  const seen: string[] = [];
+  const transport = async (req: { url: string }) => {
+    seen.push(req.url);
+    return req.url.includes("esearch")
+      ? { status: 200, body: JSON.stringify({ esearchresult: { count: "1", idlist: ["90000001"], querytranslation: "q" } }) }
+      : { status: 200, body: EFETCH_XML };
+  };
+  const r = await searchPubmedLive("(ketamine) AND (pain)", transport as never, { ncbiApiKey: "SECRET-KEY-123", sleep: noSleep, pauseMs: 0 });
+  assert.ok(seen.some((u) => u.includes("api_key=SECRET-KEY-123")));
+  assert.ok(r.requests.length >= 1);
+  assert.ok(r.requests.every((u) => !u.includes("SECRET-KEY-123")));
+  assert.equal(redactRequestUrl("https://x.test/a?db=pubmed&api_key=abc&tool=m"), "https://x.test/a?db=pubmed&api_key=REDACTED&tool=m");
+
+  // A retrieved abstract that mentions "Dec-2019" keeps its text through the appraisal apply.
+  const { study, id } = studyWithRecord("RESULTS: Between Jan-2018 and Dec-2019, 41 percent attended.");
+  const out = applyAiResult("scan", { annotations: [{ id, relevance: 70 }] }, "rct", study);
+  const item = (out.stagePatch.items as EvidenceItem[]).find((i) => i.id === id)!;
+  assert.equal(item.abstract?.text, "RESULTS: Between Jan-2018 and Dec-2019, 41 percent attended.");
+
+  // A second batch that reuses c1 to c3 keeps its percent derivation on its own renamed operands.
+  const claim = (cid: string, extra: Partial<Claim> = {}): Claim => ({ id: cid, text: cid, kind: "source-derived", sourceIds: ["ev-b"], uncertainty: "moderate", origin: "model", ...extra });
+  const existing = [claim("c1", { sourceIds: ["ev-a"] }), claim("c2", { sourceIds: ["ev-a"] }), claim("c3", { sourceIds: ["ev-a"] })];
+  const incoming = [claim("c1"), claim("c2"), claim("c3", { assertion: { supportStatus: "supported", spans: [], estimate: "50", derivation: { method: "percent", operandIds: ["c1", "c2"] } } })];
+  const m = mergeAppraisedClaims(existing, incoming, new Set(["ev-b"]), { startsRun: false });
+  const c3 = m.claims.find((c) => c.id === "c3-2")!;
+  assert.deepEqual(c3.assertion?.derivation?.operandIds, ["c1-2", "c2-2"]);
+});
+
+test("review of 23 September: a derivation whose operands arrive in the same reply is not flagged at apply", () => {
+  const { study, id } = studyWithRecord("RESULTS: Of 80 treated patients, 40 responded.");
+  const out = applyAiResult("scan", {
+    annotations: [{ id, relevance: 80 }],
+    claims: [
+      { id: "c1", text: "40 patients responded.", kind: "source-derived", sourceIds: [id], passage: "40 responded", uncertainty: "moderate", assertion: { estimate: "40" } },
+      { id: "c2", text: "80 patients were treated.", kind: "source-derived", sourceIds: [id], passage: "Of 80 treated patients", uncertainty: "moderate", assertion: { estimate: "80" } },
+      { id: "c3", text: "Half of the treated patients responded.", kind: "source-derived", sourceIds: [id], uncertainty: "moderate", assertion: { estimate: "50", derivation: { method: "percent", operandIds: ["c1", "c2"], rounding: { decimals: 0 } } } },
+    ],
+  }, "rct", study);
+  const claims = out.stagePatch.claims as Claim[];
+  assert.deepEqual(claims.map((c) => c.id).sort(), ["c1", "c2", "c3"]);
+  assert.equal(out.issues.some((i) => i.code === "claim-unsupported"), false, JSON.stringify(out.issues));
+});
+
+test("review of 23 September: a gate the investigator sets without evidence shows no model evidence as theirs", () => {
+  const s = S().create({ family: "qi-pdsa", setting: "s", rawNeed: "Handover PCA errors.", localFacts: ["QI screening decision QIS-2026-131 dated 2026-09-02."] });
+  const cur = () => S().studies.find((x) => x.id === s.id)!;
+  const d = applyDecision({ kind: "narrow", statement: "One PDSA cycle.", claimIds: [], criteria: [], gates: [{ id: "g1", requirement: "QI screening decision", status: "met", evidence: "QIS-2026-131, supplied by the investigator" }], alternatives: ["audit"] }, cur()).decision!;
+  S().mergeStage(s.id, "design", { decisions: [d] });
+  assert.equal(cur().design.decisions[0].gates[0].status, "met");
+  assert.equal(S().setGate(s.id, 0, "g1", "unmet").ok, true);
+  const g = cur().design.decisions[0].gates[0];
+  assert.equal(g.status, "unmet");
+  assert.equal(g.setBy, "investigator");
+  assert.equal(g.evidence, undefined);
+  assert.ok((cur().audit.entries ?? []).some((e) => /the model's evidence was: QIS-2026-131/.test(e.summary ?? "")));
 });

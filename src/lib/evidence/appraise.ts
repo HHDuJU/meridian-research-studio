@@ -237,7 +237,7 @@ export function mergeAppraisedClaims(
   incoming: Claim[],
   appraisedRecordIds: ReadonlySet<string>,
   opts: { startsRun?: boolean } = {},
-): { claims: Claim[]; superseded: Claim[]; renamed: Record<string, string> } {
+): { claims: Claim[]; superseded: Claim[]; renamed: Record<string, string>; fresh: Claim[] } {
   const superseded: Claim[] = [];
   const kept: Claim[] = [];
   for (const c of existing) {
@@ -261,7 +261,15 @@ export function mergeAppraisedClaims(
     taken.add(id);
     return { ...c, id };
   });
-  return { claims: [...kept, ...fresh], superseded, renamed };
+  // Derivation operands name claims of the same reply (S1 evaluates them against that reply), so a
+  // renamed operand is renamed inside the derivation too (review of 23 September: batch 2's "c3-2"
+  // otherwise derived from batch 1's "c1" and "c2").
+  const remapped = fresh.map((c) => {
+    const d = c.assertion?.derivation;
+    if (!d || !d.operandIds.some((id) => renamed[id])) return c;
+    return { ...c, assertion: { ...c.assertion!, derivation: { ...d, operandIds: d.operandIds.map((id) => renamed[id] ?? id) } } };
+  });
+  return { claims: [...kept, ...remapped], superseded, renamed, fresh: remapped };
 }
 
 export const APPRAISAL_SCHEMA = `{

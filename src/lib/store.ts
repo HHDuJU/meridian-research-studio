@@ -166,14 +166,20 @@ export const useStudio = create<StudioState>()(
         const ev = (evidence ?? "").trim();
         if (status === "met" && !ev) return { ok: false, reason: "a met gate needs the evidence that shows it (a document, reference or approval number)" };
         const target = list[idx];
-        if (!target.gates.some((g) => g.id === gateId)) return { ok: false, reason: "gate not found" };
+        const prior = target.gates.find((g) => g.id === gateId);
+        if (!prior) return { ok: false, reason: "gate not found" };
+        const priorModelEvidence = prior.setBy !== "investigator" ? prior.evidence : undefined;
         const decisions = list.map((d, i) =>
           i === idx
             ? {
                 ...d,
                 gates: d.gates.map((g) =>
                   g.id === gateId
-                    ? { ...g, status, setBy: "investigator" as const, ...(ev ? { evidence: ev } : {}), grounding: "set by the investigator" }
+                    ? (() => {
+                        // The investigator's setting replaces the model's evidence; without new evidence none is shown as theirs.
+                        const { evidence: _modelEvidence, ...rest } = g;
+                        return { ...rest, status, setBy: "investigator" as const, ...(ev ? { evidence: ev } : {}), grounding: "set by the investigator" };
+                      })()
                     : g,
                 ),
               }
@@ -183,7 +189,7 @@ export const useStudio = create<StudioState>()(
         // flagging downstream stages for review.
         const refreshed = refreshDecisionStatuses({ ...s, design: { ...s.design, decisions } });
         get().update(id, { design: refreshed.design });
-        get().log(id, { id: uid("audit"), at: nowIso(), kind: "note", stage: "design", actor: "investigator", summary: `Investigator set gate ${gateId} of decision ${target.id} to ${status}${ev ? ` (${ev})` : ""}.` });
+        get().log(id, { id: uid("audit"), at: nowIso(), kind: "note", stage: "design", actor: "investigator", summary: `Investigator set gate ${gateId} of decision ${target.id} to ${status}${ev ? ` (${ev})` : ""}${priorModelEvidence ? `; the model's evidence was: ${priorModelEvidence}` : ""}.` });
         return { ok: true };
       },
       update: (id, patch) => {

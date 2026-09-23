@@ -246,11 +246,14 @@ function applyStage(
               startsRun: (options.appraisalBatch?.index ?? 1) === 1,
             })
           : null;
-        const supportView = { scan: { ...(study?.scan ?? { claims: [] }), items: appraisal.items } as Study["scan"], documents: study?.documents ?? [] };
+        // The ledger-level check sees the ledger as it will be after this apply, so a derivation whose
+        // operands arrive in the same reply finds them.
+        const supportView = {
+          scan: { ...(study?.scan ?? { claims: [] }), items: appraisal.items, claims: merged ? merged.claims : (study?.scan.claims ?? []) } as Study["scan"],
+          documents: study?.documents ?? [],
+        };
         if (merged) {
-          for (const a of appraisal.claims) {
-            const c = merged.claims.find((x) => x.id === (merged.renamed[a.id] ?? a.id));
-            if (!c) continue;
+          for (const c of merged.fresh) {
             const sup = checkClaim(c, supportView);
             if (sup.blocking) issues.add(`claims[${c.id}]`, "claim-unsupported", sup.message, c.passage);
           }

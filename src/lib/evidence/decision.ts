@@ -36,21 +36,23 @@ export function contentHash(s: string): string {
 }
 
 /**
- * Content hash of what a decision can rest on. Version 2 ("ev2-") also covers each record's certainty
- * grade and design label (D24: re-grading a record must stale the decisions resting on it) and the
- * investigator's local facts. Decisions stamped with a version 1 revision are compared with the
- * version 1 formula, so upgrading does not mark every stored decision stale.
+ * Content hash of what a decision can rest on. Each prefix names one formula, so a stored stamp is always
+ * compared with the formula that made it and upgrading never marks stored decisions stale by itself:
+ *   ev1  a45: records (with year), claims, documents, constraints, synthesis;
+ *   ev2  integrity branch of 22 September: ev1 without year, plus each record's certainty grade and
+ *        design label (D24: re-grading a record stales the decisions resting on it) and local facts;
+ *   ev3  current: ev1 plus grade, design label and local facts.
  */
 export function evidenceRevision(study: Study): string {
-  return evidenceRevisionFor(study, 2);
+  return evidenceRevisionFor(study, 3);
 }
 
-export function evidenceRevisionFor(study: Study, version: 1 | 2): string {
+export function evidenceRevisionFor(study: Study, version: 1 | 2 | 3): string {
   const items = [...study.scan.items]
     .map(
       (i) =>
-        `${i.id}|${i.provenance?.status ?? "?"}|${i.doi ?? ""}|${i.pmid ?? ""}|${i.year ?? ""}|${i.title}|${i.abstract?.sha256 ?? ""}|${i.notes}|${i.keyFindings ?? ""}|${i.limitations ?? ""}|${i.publicationStatus ?? ""}|${(i.contextTags ?? []).slice().sort().join(",")}` +
-        (version === 2 ? `|${i.grade ?? ""}|${i.kind ?? ""}` : ""),
+        `${i.id}|${i.provenance?.status ?? "?"}|${i.doi ?? ""}|${i.pmid ?? ""}|${version === 2 ? "" : `${i.year ?? ""}|`}${i.title}|${i.abstract?.sha256 ?? ""}|${i.notes}|${i.keyFindings ?? ""}|${i.limitations ?? ""}|${i.publicationStatus ?? ""}|${(i.contextTags ?? []).slice().sort().join(",")}` +
+        (version === 1 ? "" : `|${i.grade ?? ""}|${i.kind ?? ""}`),
     )
     .sort();
   const claims = [...(study.scan.claims ?? [])]
@@ -62,12 +64,12 @@ export function evidenceRevisionFor(study: Study, version: 1 | 2): string {
   const parts = [items.join("\n"), claims.join("\n"), docs.join("\n"), constraints, synthesis];
   if (version === 1) return `ev1-${contentHash(parts.join("\n#\n"))}`;
   parts.push((study.problem.localFacts ?? []).map((f) => `${f.id}|${f.text}`).sort().join("\n"));
-  return `ev2-${contentHash(parts.join("\n#\n"))}`;
+  return `ev${version}-${contentHash(parts.join("\n#\n"))}`;
 }
 
 /** The current revision in the same version as a stored decision's stamp. */
 export function currentRevisionFor(study: Study, stamp: string): string {
-  return evidenceRevisionFor(study, stamp.startsWith("ev1-") ? 1 : 2);
+  return evidenceRevisionFor(study, stamp.startsWith("ev1-") ? 1 : stamp.startsWith("ev2-") ? 2 : 3);
 }
 
 /** Revision of the whole study content (excluding bookkeeping, usage, and audit log entries). D27: openFixes / improvementNotes / lastReview count. */

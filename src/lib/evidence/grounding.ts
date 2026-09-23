@@ -183,18 +183,32 @@ function numberWordsToDigits(text: string): string {
 }
 
 /*
- * Figures used as anchors between a model's statement and the investigator's text ("48 beds", "2 FTE").
- * Canonical absolute values; this is anchor matching, not claim support (S1 in support.ts decides that).
+ * Figures as anchors ("48 beds", "2 FTE") count only with their context: the same figure must appear in
+ * the investigator's text beside at least one of the content words that stand within four words of it
+ * in the statement, so "12 months of protected time" is not anchored by "The unit has 12 beds". This is
+ * anchor matching, not claim support (S1 in support.ts decides that).
  */
-function figures(text: string): string[] {
-  const t = normalizeForMatch(numberWordsToDigits(text));
-  const out = new Set<string>();
-  for (const m of t.matchAll(/(?<![\p{L}\d.])(\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?|\.\d+)(?![\d])/gu)) {
-    const raw = m[1].replace(/,/g, "");
-    const n = Number(raw.startsWith(".") ? `0${raw}` : raw);
-    if (Number.isFinite(n)) out.add(String(Number(Math.abs(n).toPrecision(12))));
-  }
-  return [...out];
+function figureContexts(text: string): Map<string, Set<string>> {
+  const toks = normalizeForMatch(numberWordsToDigits(text)).split(/[\s/;:()[\]]+/).filter(Boolean);
+  const out = new Map<string, Set<string>>();
+  toks.forEach((tok, i) => {
+    const m = tok.match(/^\$?(\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)(%?)[.,]?$/);
+    if (!m) return;
+    const key = `${String(Number(m[1].replace(/,/g, "")))}${m[2]}`;
+    const ctx = out.get(key) ?? new Set<string>();
+    for (let j = Math.max(0, i - 4); j <= Math.min(toks.length - 1, i + 4); j++) {
+      if (j === i) continue;
+      const w = toks[j].replace(/[^\p{L}]/gu, "");
+      if (w.length >= 4 && !CONTENT_STOP.has(w)) ctx.add(w.slice(0, 5));
+    }
+    out.set(key, ctx);
+  });
+  return out;
+}
+
+/** Figures of two or more digits (or percentages); single digits are too common to anchor anything. */
+function significantFigures(figs: Map<string, Set<string>>): [string, Set<string>][] {
+  return [...figs].filter(([n]) => n.endsWith("%") || n.replace(/\./g, "").length >= 2);
 }
 
 export interface Grounding {
@@ -252,10 +266,14 @@ export function groundedInInvestigatorText(statement: string, investigator: stri
         : `cites ${missingIds.join(", ")}, which the investigator never supplied`,
     };
   }
-  const nums = figures(statement).filter((n) => n.replace(".", "").length >= 2);
-  const haveNums = new Set(figures(positive));
-  const foundNums = nums.filter((n) => haveNums.has(n));
-  const missingNums = nums.filter((n) => !haveNums.has(n));
+  const invFigs = figureContexts(positive);
+  const foundNums: string[] = [];
+  const missingNums: string[] = [];
+  for (const [n, ctx] of significantFigures(figureContexts(statement))) {
+    const have = invFigs.get(n);
+    if (have && [...ctx].some((w) => have.has(w))) foundNums.push(n);
+    else missingNums.push(n);
+  }
   const foundIds = ids;
   // A verbatim run of 5+ words from the investigator's text also anchors the statement.
   const words = normalizeForMatch(statement).replace(/[^\p{L}\p{N} ]+/gu, " ").split(" ").filter(Boolean);
@@ -280,12 +298,31 @@ export function groundedInInvestigatorText(statement: string, investigator: stri
  * a local fact ("network data team capability stated in the investigator's local facts") names no
  * record number or verbatim phrase, yet the investigator did write that the resource exists (bank
  * scenario sc-083: "the network data team can extract coded consultations and prescriptions monthly").
- * The requirement counts as stated when one positive sentence of the investigator's covers at least
- * three of its content words and 60 percent of them. Sentences that say something is not in place, or
- * that negate ("no", "not", "without"), never count; an identifier the investigator never supplied
- * still refuses the gate whatever the overlap.
+ * The requirement counts as stated only when one investigator sentence asserts it: the sentence covers
+ * at least three of the requirement's content words and 60 percent of them, contains every figure the
+ * requirement names, and is a plain statement. Sentences that say something is pending, refused or
+ * unknown, that negate ("no", "not", "without"), that state a need, plan, wish or condition ("must",
+ * "will", "would like", "if", "is required", a question), or that report part of what the requirement
+ * asks for all of ("eleven of the 14 practices" against "all 14 practices") never count. Identifiers or
+ * figures the investigator never supplied, in the requirement or in the model's evidence, refuse the gate.
  */
-const NEGATED = /\b(?:no|not|none|never|without|cannot|can't|unable|unavailable|lack|lacks|lacking|nobody|neither|nor)\b/i;
+const NEGATED =
+  /\b(?:no|not|none|never|without|cannot|can't|unable|unavailable|lack|lacks|lacking|nobody|neither|nor|unsigned|unapproved|unfunded|unconfirmed|returned)\b/i;
+/*
+ * Words that carry authority (an approval, an agreement, a signature, funding): when the requirement
+ * names one, the investigator's sentence must name the same thing, not only its topic ("analysis only
+ * through the custodian's secure service" does not say the custodian approved the analysis).
+ */
+const AUTHORITY_STEMS = ["approv", "agree", "consent", "permi", "authori", "sign", "waive", "clear", "licen", "contract", "fund", "budget", "allocat", "grant", "endorse", "sanction", "mandate"];
+function authorityStems(text: string): string[] {
+  const t = normalizeForMatch(text);
+  return AUTHORITY_STEMS.filter((st) => new RegExp(`\\b${st}`, "i").test(t));
+}
+const INTENT =
+  /\b(?:must|needs?|needed|require[sd]?|requiring|will|would|shall|should|could|may|might|plan(?:s|ned|ning)?|intend(?:s|ed)?|hope(?:s|d)?|wish(?:es)?|want(?:s|ed)?|aim(?:s|ed)?|propos(?:e|es|ed)|expect(?:s|ed)?|if|unless|whether|seek(?:s|ing)?|apply|applying|to be)\b/i;
+const ALL_OF = /\b(?:all|every|each|whole|entire)\b/i;
+const PARTIAL =
+  /\b(?:[a-z]+|\d+)\s+of\s+(?:the\s+)?\d+\b|\b\d+(?:\.\d+)?\s*(?:%|percent|per cent)|\b(?:some|most|many|few|half|part|several|majority|minority|about|around|approximately|nearly|almost)\b/i;
 const CONTENT_STOP = new Set(
   "that this these those with from into onto over under their there which while where when what will would could should must have been being also only such than then them they your ours about after before during each every other more most some many much very".split(
     " ",
@@ -300,13 +337,22 @@ function contentStems(text: string): Set<string> {
 export function requirementStatedByInvestigator(requirement: string, investigator: string): { stated: boolean; sentence?: string; share: number } {
   const req = contentStems(requirement);
   if (req.size < 3) return { stated: false, share: 0 };
+  const reqFigures = significantFigures(figureContexts(requirement)).map(([n]) => n);
+  const wantsAll = ALL_OF.test(requirement);
+  const authority = authorityStems(requirement);
   let best = { stated: false, sentence: undefined as string | undefined, share: 0 };
   for (const x of investigatorSentences(investigator)) {
-    if (x.notInPlace || NEGATED.test(x.text)) continue;
-    const have = contentStems(x.text);
+    const t = x.text.trim();
+    if (x.notInPlace || NEGATED.test(t) || INTENT.test(t) || t.endsWith("?")) continue;
+    if (wantsAll && PARTIAL.test(t)) continue;
+    const said = authorityStems(t);
+    if (authority.some((st) => !said.includes(st))) continue;
+    const figs = figureContexts(t);
+    if (reqFigures.some((n) => !figs.has(n))) continue;
+    const have = contentStems(t);
     const hits = [...req].filter((w) => have.has(w)).length;
     const share = hits / req.size;
-    if (hits >= 3 && share >= 0.6 && share > best.share) best = { stated: true, sentence: x.text, share };
+    if (hits >= 3 && share >= 0.6 && share > best.share) best = { stated: true, sentence: t, share };
   }
   return best;
 }
@@ -314,15 +360,21 @@ export function requirementStatedByInvestigator(requirement: string, investigato
 /** The grounding of a gate a model says is met: its evidence anchors first, then the investigator's own statement of the requirement. */
 export function gateGrounding(requirement: string, evidence: string, investigator: string): Grounding {
   const byEvidence = groundedInInvestigatorText(evidence, investigator);
+  const positive = investigatorSentences(investigator).filter((x) => !x.notInPlace).map((x) => x.text).join("\n");
+  const hay = normalizeForMatch(positive);
+  const unsuppliedIds = identifierTokens(requirement).filter((id) => !hay.includes(normalizeForMatch(id)));
+  if (unsuppliedIds.length) {
+    return { grounded: false, foundAnchors: [], missingAnchors: unsuppliedIds, reason: `the requirement names ${unsuppliedIds.join(", ")}, which the investigator never supplied` };
+  }
   if (byEvidence.grounded) return byEvidence;
-  // An identifier the investigator never supplied (or said is not in place) refuses the gate outright.
-  if (identifierTokens(evidence).length) return byEvidence;
+  // An identifier or a figure in the evidence that the investigator never supplied refuses the gate.
+  if (identifierTokens(evidence).length || byEvidence.missingAnchors.length) return byEvidence;
   const stated = requirementStatedByInvestigator(requirement, investigator);
   if (stated.stated) {
     return {
       grounded: true,
       foundAnchors: [`"${(stated.sentence ?? "").slice(0, 160)}"`],
-      missingAnchors: byEvidence.missingAnchors,
+      missingAnchors: [],
       reason: `the investigator's own words state the requirement: "${(stated.sentence ?? "").slice(0, 160)}"`,
     };
   }

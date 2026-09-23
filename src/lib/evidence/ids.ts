@@ -111,8 +111,13 @@ export function resolveAlias(study: Study, id: string): string | undefined {
   return undefined;
 }
 
-// Quoted source text and enumerated fields (kinds, statuses, levels) are never rewritten.
-const QUOTED_KEYS = new Set(["passage", "quote", "kind", "status", "uncertainty", "grade", "origin", "severity", "selectionStatus", "actionStatus"]);
+// Quoted and stored source text (a record's abstract and content versions, documents) and enumerated
+// fields (kinds, statuses, levels) are never rewritten. Review of 23 September: the appraisal patch
+// carries items[].abstract.text, and "Dec-2019" in a retrieved abstract became "⟦unresolved:Dec-2019⟧".
+const QUOTED_KEYS = new Set([
+  "passage", "quote", "abstract", "contentVersions", "documents",
+  "kind", "status", "uncertainty", "grade", "origin", "severity", "selectionStatus", "actionStatus",
+]);
 
 function collectPatchIds(value: unknown, into: Set<string>) {
   if (Array.isArray(value)) {

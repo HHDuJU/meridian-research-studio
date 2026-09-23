@@ -141,13 +141,22 @@ function transportFailure(status: number): "blocked" | "error" | null {
   return null;
 }
 
+/**
+ * Request URLs are returned to the page and stored in the study's evidence runs; an API key must not
+ * travel with them (review of 23 September: MERIDIAN_NCBI_API_KEY would have reached browser storage
+ * and every export).
+ */
+export function redactRequestUrl(url: string): string {
+  return url.replace(/([?&](?:api_key|apikey|key|token|access_token)=)[^&#]*/gi, "$1REDACTED");
+}
+
 /** PubMed: esearch for PMIDs, then efetch for whole records with abstracts. */
 export async function searchPubmedLive(query: string, rawTransport: Transport, opts: LiveOptions = {}): Promise<LiveSearchResult> {
   const max = Math.min(Math.max(opts.max ?? 20, 1), 100);
   const sleep = opts.sleep ?? defaultSleep;
   const transport = retrying(gated(rawTransport, sleep), sleep, opts.retryPauseMs ?? 2000);
   const searchReq = pubmedSearchRequest(query, max, "meridian", opts.contact, opts.ncbiApiKey);
-  const requests = [searchReq.url];
+  const requests = [redactRequestUrl(searchReq.url)];
   const sres = await transport(searchReq);
   const sfail = transportFailure(sres.status);
   if (sfail) return { event: failedEvent("pubmed", query, sfail, sres.note ?? `esearch HTTP ${sres.status}`), items: [], documents: [], requests };
@@ -169,7 +178,7 @@ export async function searchPubmedLive(query: string, rawTransport: Transport, o
   }
   await sleep(opts.pauseMs ?? 400);
   const fetchReq = pubmedFetchRequest(found.pmids, "meridian", opts.contact, opts.ncbiApiKey);
-  requests.push(fetchReq.url);
+  requests.push(redactRequestUrl(fetchReq.url));
   const fres = await transport(fetchReq);
   const ffail = transportFailure(fres.status);
   if (ffail) {
@@ -225,7 +234,7 @@ export async function searchLive(provider: LiveProvider, query: string, transpor
   const r = await runSearch(adapterFor(provider, opts), q, retrying(gated(transport, sleep), sleep, opts.retryPauseMs ?? 2000));
   const withAbstract = r.items.filter((i) => i.abstract?.text).length;
   const note = [r.event.note ?? "", r.items.length ? `${withAbstract} of ${r.items.length} records carry an abstract or registry summary` : ""].filter(Boolean).join("; ");
-  return { event: { ...r.event, note: note || undefined }, items: r.items, documents: r.documents, requests: [r.request.url] };
+  return { event: { ...r.event, note: note || undefined }, items: r.items, documents: r.documents, requests: [redactRequestUrl(r.request.url)] };
 }
 
 /**
@@ -245,7 +254,7 @@ export async function lookupDoisLive(
   for (let i = 0; i < requested.length; i += 20) {
     const chunk = requested.slice(i, i + 20);
     const req = crossrefLookupRequest(chunk, opts.contact);
-    requests.push(req.url);
+    requests.push(redactRequestUrl(req.url));
     const res = await transport(req);
     const fail = transportFailure(res.status);
     if (fail) {

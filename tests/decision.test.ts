@@ -101,7 +101,7 @@ test("compact context carries decisions with kind, status, revision and gates", 
   const s = studyWithEvidence();
   s.design.decisions = [applyDecision(rawDecision, s).decision!];
   const ctx = compactStudy(s, "protocol");
-  assert.match(ctx, /DECISIONS:\n\S+ \[narrow; proposed; rev ev[12]-[0-9a-f]{8}\]/);
+  assert.match(ctx, /DECISIONS:\n\S+ \[narrow; proposed; rev ev[123]-[0-9a-f]{8}\]/);
   assert.match(ctx, /gates: REB determination for secondary use of registry data \[unknown\]/);
 });
 
