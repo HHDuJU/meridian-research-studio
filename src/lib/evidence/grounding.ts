@@ -27,8 +27,6 @@ export interface LedgerCheck {
   message: string;
 }
 
-const BLOCKING: ReadonlySet<LedgerCheckStatus> = new Set(["unsupported", "text-title-mismatch"]);
-
 /** Lower-case, NFKC, one kind of dash and quote, "percent" as %, mid-dot decimals, single spaces. */
 export function normalizeForMatch(s: string): string {
   return (s ?? "")
@@ -275,4 +273,58 @@ export function groundedInInvestigatorText(statement: string, investigator: stri
     return { grounded: false, foundAnchors: anchors, missingAnchors: missingNums, reason: `states ${missingNums.join(", ")}, which the investigator's text does not contain` };
   }
   return { grounded: true, foundAnchors: anchors, missingAnchors: missingNums, reason: `anchored in investigator text: ${anchors.join(", ")}` };
+}
+
+/*
+ * A gate can also rest on the investigator's own statement of the requirement: a model that paraphrases
+ * a local fact ("network data team capability stated in the investigator's local facts") names no
+ * record number or verbatim phrase, yet the investigator did write that the resource exists (bank
+ * scenario sc-083: "the network data team can extract coded consultations and prescriptions monthly").
+ * The requirement counts as stated when one positive sentence of the investigator's covers at least
+ * three of its content words and 60 percent of them. Sentences that say something is not in place, or
+ * that negate ("no", "not", "without"), never count; an identifier the investigator never supplied
+ * still refuses the gate whatever the overlap.
+ */
+const NEGATED = /\b(?:no|not|none|never|without|cannot|can't|unable|unavailable|lack|lacks|lacking|nobody|neither|nor)\b/i;
+const CONTENT_STOP = new Set(
+  "that this these those with from into onto over under their there which while where when what will would could should must have been being also only such than then them they your ours about after before during each every other more most some many much very".split(
+    " ",
+  ),
+);
+
+function contentStems(text: string): Set<string> {
+  const words = normalizeForMatch(text).match(/\p{L}{4,}/gu) ?? [];
+  return new Set(words.filter((w) => !CONTENT_STOP.has(w)).map((w) => w.slice(0, 5)));
+}
+
+export function requirementStatedByInvestigator(requirement: string, investigator: string): { stated: boolean; sentence?: string; share: number } {
+  const req = contentStems(requirement);
+  if (req.size < 3) return { stated: false, share: 0 };
+  let best = { stated: false, sentence: undefined as string | undefined, share: 0 };
+  for (const x of investigatorSentences(investigator)) {
+    if (x.notInPlace || NEGATED.test(x.text)) continue;
+    const have = contentStems(x.text);
+    const hits = [...req].filter((w) => have.has(w)).length;
+    const share = hits / req.size;
+    if (hits >= 3 && share >= 0.6 && share > best.share) best = { stated: true, sentence: x.text, share };
+  }
+  return best;
+}
+
+/** The grounding of a gate a model says is met: its evidence anchors first, then the investigator's own statement of the requirement. */
+export function gateGrounding(requirement: string, evidence: string, investigator: string): Grounding {
+  const byEvidence = groundedInInvestigatorText(evidence, investigator);
+  if (byEvidence.grounded) return byEvidence;
+  // An identifier the investigator never supplied (or said is not in place) refuses the gate outright.
+  if (identifierTokens(evidence).length) return byEvidence;
+  const stated = requirementStatedByInvestigator(requirement, investigator);
+  if (stated.stated) {
+    return {
+      grounded: true,
+      foundAnchors: [`"${(stated.sentence ?? "").slice(0, 160)}"`],
+      missingAnchors: byEvidence.missingAnchors,
+      reason: `the investigator's own words state the requirement: "${(stated.sentence ?? "").slice(0, 160)}"`,
+    };
+  }
+  return byEvidence;
 }

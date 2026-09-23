@@ -6,7 +6,7 @@ import { uid, nowIso } from "../utils";
 import { treatAsFullTextRead } from "./access";
 import { isWithdrawnResult } from "./publication-status";
 import { emptySearchConfirmationValid } from "../defaults";
-import { checkClaim, groundedInInvestigatorText, investigatorText } from "./grounding";
+import { checkClaim, gateGrounding, investigatorText } from "./grounding";
 
 /*
  * Evidence-backed decisions.
@@ -144,7 +144,7 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
     } else if (status === "met" && actor === "model") {
       // D10/S5: the evidence must be anchored in text the investigator entered (need, constraints,
       // local facts). An approval number or figure the investigator never supplied cannot meet a gate.
-      const g2 = groundedInInvestigatorText(evidence ?? "", investigatorText(study));
+      const g2 = gateGrounding(requirement, evidence ?? "", investigatorText(study));
       grounding = g2.reason;
       if (!g2.grounded) {
         issues.add(`${p}.status`, "ungrounded-gate", `"met" refused: the evidence ${g2.reason}; resolved to "unknown"`);
@@ -242,7 +242,7 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
     if (g.status === "unknown") blockers.push(`gate unknown: ${g.requirement}`);
     if (g.status === "met" && g.setBy !== "investigator") {
       // Re-checked every time: removing the local fact a gate rested on reopens the gate.
-      const gr = groundedInInvestigatorText(g.evidence ?? "", invText);
+      const gr = gateGrounding(g.requirement, g.evidence ?? "", invText);
       if (!gr.grounded) blockers.push(`gate "${g.requirement}" was declared met by the model, but its evidence ${gr.reason}`);
     }
   }

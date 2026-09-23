@@ -7,7 +7,7 @@ import { crossrefLookupRequest } from "../src/lib/evidence/providers/crossref";
 import { lookupDoisLive, providerQuery, queryProblem, searchLive } from "../src/lib/evidence/live";
 import { recordedTransport, blockedTransport } from "../src/lib/evidence/transport";
 import { ingestRecords, stableRecordId } from "../src/lib/evidence/records";
-import { approximateFigures, checkClaim, groundedInInvestigatorText, investigatorSentences, textMatchesTitle } from "../src/lib/evidence/grounding";
+import { approximateFigures, checkClaim, gateGrounding, groundedInInvestigatorText, investigatorSentences, requirementStatedByInvestigator, textMatchesTitle } from "../src/lib/evidence/grounding";
 import { applyDecision, decisionIsSupported, evaluateDecision, evidenceRevision, evidenceRevisionFor, studyRevision } from "../src/lib/evidence/decision";
 import { mergeAppraisedClaims } from "../src/lib/evidence/appraise";
 import { applyAiResult } from "../src/lib/apply-ai";
@@ -627,4 +627,23 @@ test("re-appraisal replaces the model's unsourced claims; later batches of a run
   const batch2 = mergeAppraisedClaims(existing, [inference("c1", "Batch two inference.")], new Set(["ev-b"]), { startsRun: false });
   assert.deepEqual(batch2.claims.map((c) => c.id), ["c1", "inv-1", "c1-2"]);
   assert.equal(batch2.superseded.length, 0);
+});
+
+test("a gate rests on the investigator's own statement of the requirement; negated or pending sentences never count", () => {
+  // Bank sc-083: the model paraphrased a local fact instead of quoting it; the gate was refused.
+  const inv = [
+    "The network's 11 practices use the same clinical system, and the network data team can extract coded consultations and prescriptions monthly.",
+    "The regional research ethics committee has not yet said whether individual patient consent can be waived for allocation at practice level.",
+    "No external funding before mid-2027.",
+    "There is NO research nurse and NO funded research coordinator.",
+  ].join("\n");
+  const g3 = gateGrounding("Monthly extraction of coded consultations and prescriptions by the network data team", "Network data team capability stated in the investigator's local facts (one clinical system, monthly extraction)", inv);
+  assert.equal(g3.grounded, true, g3.reason);
+  assert.match(g3.reason, /own words state the requirement/);
+  assert.equal(gateGrounding("Research ethics committee decision on waiving individual patient consent", "Committee agreed per the investigator", inv).grounded, false);
+  assert.equal(requirementStatedByInvestigator("External funding secured before mid-2027", inv).stated, false);
+  assert.equal(requirementStatedByInvestigator("Funded research nurse and research coordinator time", inv).stated, false);
+  assert.equal(requirementStatedByInvestigator("Ethics approval", inv).stated, false);
+  // An identifier the investigator never gave refuses the gate even when the requirement overlaps.
+  assert.equal(gateGrounding("Monthly extraction of coded consultations and prescriptions by the network data team", "Data agreement DSA-2026-044 signed", inv).grounded, false);
 });
