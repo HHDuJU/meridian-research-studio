@@ -1,0 +1,51 @@
+{
+ "id": "live-b-eras",
+ "note": "Seed 2. Perioperative: colorectal ERAS unplanned overnight stay. Evidence path through Design. Searches PubMed and ClinicalTrials.gov only (OpenAlex off) to bound appraisal calls in this session; OpenAlex was exercised in the earlier run of the day.",
+ "inputs": {
+  "need": "Our colorectal enhanced recovery (ERAS) pathway plans discharge on the morning after elective laparoscopic colectomy. About one patient in three stays an unplanned extra night, most often for nausea, low urine output or late mobilisation, and the surgeons think the cause is anaesthetic. I want to find out which patient and perioperative factors predict the unplanned extra night, using the records we already have, before anyone changes the pathway.",
+  "setting": "Academic hospital, Ontario",
+  "constraints": "Secondary use of existing records only. One analyst for about 60 hours. Results needed before the pathway review in spring 2027.",
+  "localFacts": [
+   "The ERAS database holds 486 elective laparoscopic colectomies from January 2023 to June 2026 with discharge date and time.",
+   "The hospital privacy office approved secondary use of the ERAS database for audit on 2026-06-30 (approval PO-2026-117)."
+  ]
+ },
+ "providers": [
+  "pubmed",
+  "clinicaltrials"
+ ],
+ "steps": [
+  {
+   "do": "illuminate",
+   "stage": "problem"
+  },
+  {
+   "do": "illuminate",
+   "stage": "scan"
+  },
+  {
+   "do": "search",
+   "fallbackQuery": "(colectomy OR \"colorectal surgery\") AND (\"enhanced recovery\" OR ERAS) AND (\"length of stay\" OR discharge)"
+  },
+  {
+   "do": "check-identities"
+  },
+  {
+   "do": "illuminate",
+   "stage": "scan"
+  },
+  {
+   "do": "illuminate",
+   "stage": "design"
+  },
+  {
+   "do": "accept-decision"
+  },
+  {
+   "do": "reload"
+  },
+  {
+   "do": "export"
+  }
+ ]
+}

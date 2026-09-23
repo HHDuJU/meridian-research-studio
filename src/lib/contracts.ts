@@ -24,7 +24,11 @@ export type IssueCode =
   | "unresolved-reference"
   | "id-collision"
   | "unsupported"
-  | "quote-not-in-source";
+  | "quote-not-in-source"
+  /** A model said a gate is met, but its evidence is not anchored in investigator-entered text. */
+  | "ungrounded-gate"
+  /** A source-derived claim whose passage or numbers do not occur in the cited record's stored text. */
+  | "claim-unsupported";
 
 export interface Issue {
   path: string;

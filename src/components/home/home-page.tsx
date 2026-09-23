@@ -21,6 +21,7 @@ export function HomePage() {
   const [rawNeed, setRawNeed] = useState("");
   const [setting, setSetting] = useState("Academic hospital, Ontario");
   const [constraints, setConstraints] = useState("");
+  const [localFacts, setLocalFacts] = useState("");
   const [family, setFamily] = useState<StudyFamily | "auto">("auto");
   const [scenarioKey, setScenarioKey] = useState("");
 
@@ -40,6 +41,7 @@ export function HomePage() {
       replayKey: SCENARIO_MODE && scenarioKey.trim() ? scenarioKey.trim() : undefined,
       constraints: constraints.trim() || undefined,
       basis,
+      localFacts: localFacts.split("\n").map((l) => l.trim()).filter(Boolean),
     });
     navigate({ to: "/studio/$studyId", params: { studyId: study.id }, search: { stage: "problem" } });
   }
@@ -102,6 +104,18 @@ export function HomePage() {
                 placeholder="Funding, time, data access, what must not change…"
               />
             </label>
+            <label className="mt-4 block">
+              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                Local facts you can document (optional, one per line)
+              </span>
+              <Textarea
+                className="mt-2 min-h-16"
+                value={localFacts}
+                onChange={(e) => setLocalFacts(e.target.value)}
+                data-meridian-local-facts-input=""
+                placeholder="REB file 26-311 approved 2026-08-27 · Analyst time 0.2 FTE from January (memo CP-44)"
+              />
+            </label>
             <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
               Study family
             </p>
@@ -111,7 +125,7 @@ export function HomePage() {
                 on={family === "auto"}
                 onClick={() => setFamily("auto")}
               />
-              {FAMILY_META.slice(0, 8).map((f) => (
+              {FAMILY_META.map((f) => (
                 <FamilyChip key={f.id} label={f.label} on={family === f.id} onClick={() => setFamily(f.id)} />
               ))}
             </div>

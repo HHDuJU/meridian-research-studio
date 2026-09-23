@@ -4,7 +4,8 @@ import { createStudy, migrateStudy, scanMayComplete, queryHashOf, scanContentRev
 import { writeImmutableBackup, browserLocalStorage, createGuardedStorage, readBackupFailure, FAIL_KEY, MAIN_KEY } from "./persist-backup";
 import { SEED_IDS, SEED_STUDIES } from "./seed";
 import { STAGE_IDS, STUDY_SCHEMA_VERSION, STUDY_FAMILIES, orderNeedsReview } from "./types";
-import type { AuditEntry, StageId, Study, StudyFamily, EvidenceItem, RetrievalEvent, SourceDocument, SourceCheck } from "./types";
+import type { AuditEntry, CheckProvider, EvidenceRun, ModelRun, SourceCheck, StageId, Study, StudyFamily, EvidenceItem, RetrievalEvent, SourceDocument } from "./types";
+import { applyLookupOutcome, type LookupOutcome } from "./evidence/verify";
 import { nowIso, uid } from "./utils";
 import { refreshDecisionStatuses, studyRevision, decisionIsSupported } from "./evidence/decision";
 import { illuminateDecision } from "./illuminate";
@@ -27,7 +28,21 @@ interface StudioState {
     replayKey?: string;
     constraints?: string;
     basis?: "explicit" | "inferred" | "unresolved";
+    /** One investigator-documented local fact per entry (approvals, resources, data access). */
+    localFacts?: string[];
   }) => Study;
+  /** Investigator-only: record a local fact (an approval with its reference, a resource, data access). */
+  addLocalFact: (id: string, text: string) => { ok: boolean; reason?: string };
+  /** Investigator-only: remove a local fact. Decisions and gates that rested on it are re-evaluated. */
+  removeLocalFact: (id: string, factId: string) => void;
+  /** Investigator-only: set a decision gate's status with the evidence that shows it. */
+  setGate: (
+    id: string,
+    which: "latest" | number,
+    gateId: string,
+    status: "met" | "unmet" | "unknown",
+    evidence?: string,
+  ) => { ok: boolean; reason?: string };
   update: (id: string, patch: StudyPatch) => void;
   /** Investigator family choice: records design.basis explicit, or unresolved when cleared. */
   setFamily: (id: string, family: StudyFamily | null) => void;
@@ -59,6 +74,7 @@ interface StudioState {
     stage: StageId,
     payload: unknown,
     expectedRevision: string,
+    options?: { appraisedRecordIds?: string[]; appraisalBatch?: { index: number; of: number } },
   ) => { ok: boolean; complete: boolean; reason?: string; summary: string; issues?: { path: string; code: string; message?: string }[] };
   recordIlluminateFailure: (id: string, stage: StageId, error: string) => void;
   log: (id: string, entry: AuditEntry) => void;
@@ -66,7 +82,27 @@ interface StudioState {
     id: string,
     payload: { event: RetrievalEvent; items: EvidenceItem[]; documents: SourceDocument[] },
   ) => void;
+  /** Apply registry identity checks (one outcome per requested chunk of DOIs). */
+  applyIdentityChecks: (
+    id: string,
+    provider: CheckProvider,
+    chunks: { requested: string[]; outcome: LookupOutcome }[],
+  ) => IdentityCheckSummary;
+  /** Append-only record of a model call (reproducibility). */
+  recordModelRun: (id: string, run: ModelRun) => void;
+  /** Append-only record of a live search or identity check. */
+  recordEvidenceRun: (id: string, run: EvidenceRun) => void;
 }
+
+export interface IdentityCheckSummary {
+  checked: number;
+  verified: number;
+  mismatch: number;
+  notFound: number;
+  unresolved: number;
+  failed: number;
+}
+
 
 /** Stages after `stage` in the pipeline that are already complete — the ones an upstream change puts in question. */
 export function downstreamCompleted(study: Study, stage: StageId): StageId[] {
@@ -102,6 +138,53 @@ export const useStudio = create<StudioState>()(
         const study = createStudy(input);
         set({ studies: [study, ...get().studies] });
         return study;
+      },
+      addLocalFact: (id, text) => {
+        const s = get().studies.find((x) => x.id === id);
+        const t = (text ?? "").trim();
+        if (!s) return { ok: false, reason: "study not found" };
+        if (!t) return { ok: false, reason: "empty fact" };
+        const fact = { id: uid("fact"), text: t, by: "investigator" as const, at: nowIso() };
+        get().mergeStage(id, "problem", { localFacts: [...(s.problem.localFacts ?? []), fact] });
+        get().log(id, { id: uid("audit"), at: nowIso(), kind: "edit", stage: "problem", actor: "investigator", summary: `Local fact ${fact.id} added.` });
+        return { ok: true };
+      },
+      removeLocalFact: (id, factId) => {
+        const s = get().studies.find((x) => x.id === id);
+        if (!s) return;
+        const facts = s.problem.localFacts ?? [];
+        if (!facts.some((f) => f.id === factId)) return;
+        get().mergeStage(id, "problem", { localFacts: facts.filter((f) => f.id !== factId) });
+        get().log(id, { id: uid("audit"), at: nowIso(), kind: "edit", stage: "problem", actor: "investigator", summary: `Local fact ${factId} removed.` });
+      },
+      setGate: (id, which, gateId, status, evidence) => {
+        const s = get().studies.find((x) => x.id === id);
+        if (!s) return { ok: false, reason: "study not found" };
+        const idx = decisionIndex(s, which);
+        const list = s.design.decisions ?? [];
+        if (idx < 0 || idx >= list.length) return { ok: false, reason: "no decision" };
+        const ev = (evidence ?? "").trim();
+        if (status === "met" && !ev) return { ok: false, reason: "a met gate needs the evidence that shows it (a document, reference or approval number)" };
+        const target = list[idx];
+        if (!target.gates.some((g) => g.id === gateId)) return { ok: false, reason: "gate not found" };
+        const decisions = list.map((d, i) =>
+          i === idx
+            ? {
+                ...d,
+                gates: d.gates.map((g) =>
+                  g.id === gateId
+                    ? { ...g, status, setBy: "investigator" as const, ...(ev ? { evidence: ev } : {}), grounding: "set by the investigator" }
+                    : g,
+                ),
+              }
+            : d,
+        );
+        // A gate is about authority and resources, not study content: re-evaluate the decisions without
+        // flagging downstream stages for review.
+        const refreshed = refreshDecisionStatuses({ ...s, design: { ...s.design, decisions } });
+        get().update(id, { design: refreshed.design });
+        get().log(id, { id: uid("audit"), at: nowIso(), kind: "note", stage: "design", actor: "investigator", summary: `Investigator set gate ${gateId} of decision ${target.id} to ${status}${ev ? ` (${ev})` : ""}.` });
+        return { ok: true };
       },
       update: (id, patch) => {
         set({
@@ -215,6 +298,7 @@ export const useStudio = create<StudioState>()(
             at: nowIso(),
             kind: "note",
             stage,
+            actor: "system",
             summary: `Stale model response for ${stage} refused: produced against revision ${expectedRevision}, study is now ${current}.`,
           });
           return { applied: false, reason: `study changed since the request (${expectedRevision} → ${current}); the reply was not applied` };
@@ -251,6 +335,7 @@ export const useStudio = create<StudioState>()(
           at: nowIso(),
           kind: "note",
           stage: "scan",
+          actor: "investigator",
           summary: "Investigator confirmed the search was run and returned no records.",
         });
       },
@@ -268,6 +353,7 @@ export const useStudio = create<StudioState>()(
             at: nowIso(),
             kind: "note",
             stage: "design",
+            actor: "system",
             summary: `Accept refused: ${support.reason}`,
           });
           return { ok: false, reason: support.reason };
@@ -297,6 +383,7 @@ export const useStudio = create<StudioState>()(
           at: nowIso(),
           kind: "note",
           stage: "design",
+          actor: "investigator",
           summary: `Investigator accepted decision ${list[idx].id}.`,
         });
         return { ok: true };
@@ -318,6 +405,7 @@ export const useStudio = create<StudioState>()(
           at: nowIso(),
           kind: "note",
           stage: "design",
+          actor: "investigator",
           summary: `Investigator withdrew decision ${list[idx].id}.`,
         });
         return { ok: true };
@@ -403,14 +491,15 @@ export const useStudio = create<StudioState>()(
           at: nowIso(),
           kind: "edit",
           stage: "scan",
+          actor: "investigator",
           summary: `Source ${item.id} ${field} changed.`,
         });
         return { ok: true };
       },
-      illuminateApply: (id, stage, payload, expectedRevision) => {
+      illuminateApply: (id, stage, payload, expectedRevision, options) => {
         const s = get().studies.find((x) => x.id === id);
         if (!s) return { ok: false, complete: false, reason: "study not found", summary: "missing study" };
-        const decision = illuminateDecision(s, stage, payload, expectedRevision);
+        const decision = illuminateDecision(s, stage, payload, expectedRevision, options ?? {});
         const stamp = (extra: Partial<Study["lastIlluminate"]> & { ok: boolean; summary: string }) => {
           get().update(id, {
             lastIlluminate: {
@@ -427,6 +516,7 @@ export const useStudio = create<StudioState>()(
             at: nowIso(),
             kind: "note",
             stage,
+            actor: "system",
             summary: `Illuminate refused (${decision.reason ?? "rejected"}). Model gates stripped: ${decision.droppedGates.join(",") || "none"}.`,
           });
           stamp({
@@ -463,6 +553,7 @@ export const useStudio = create<StudioState>()(
           at: nowIso(),
           kind: "generate",
           stage,
+          actor: "model",
           summary: decision.applied.summary,
         });
         stamp({ ok: true, summary: decision.applied.summary });
@@ -517,6 +608,47 @@ export const useStudio = create<StudioState>()(
           sourcesConsulted: [...new Set([...(s.scan.sourcesConsulted ?? []), payload.event.provider])],
         });
         get().update(id, { documents, idAliases: merged.aliases });
+      },
+      applyIdentityChecks: (id, provider, chunks) => {
+        const zero: IdentityCheckSummary = { checked: 0, verified: 0, mismatch: 0, notFound: 0, unresolved: 0, failed: 0 };
+        const s = get().studies.find((x) => x.id === id);
+        if (!s || !chunks.length) return zero;
+        let items = s.scan.items;
+        const checks: SourceCheck[] = [];
+        for (const c of chunks) {
+          const r = applyLookupOutcome(items, c.requested, provider, c.outcome);
+          items = r.items;
+          checks.push(...r.checks);
+        }
+        if (!checks.length) return zero;
+        const summary: IdentityCheckSummary = {
+          checked: checks.length,
+          verified: checks.filter((c) => c.result === "match").length,
+          mismatch: checks.filter((c) => c.result === "mismatch").length,
+          notFound: checks.filter((c) => c.result === "not-found").length,
+          unresolved: checks.filter((c) => c.result === "unresolved").length,
+          failed: checks.filter((c) => c.result === "error" || c.result === "blocked").length,
+        };
+        get().mergeStage(id, "scan", { items });
+        get().log(id, {
+          id: uid("audit"),
+          at: nowIso(),
+          kind: "note",
+          stage: "scan",
+          actor: "system",
+          summary: `Identity checks (${provider}): ${summary.checked} checked, ${summary.verified} verified, ${summary.mismatch} mismatch, ${summary.notFound} not found, ${summary.unresolved} unresolved, ${summary.failed} failed.`,
+        });
+        return summary;
+      },
+      recordModelRun: (id, run) => {
+        const s = get().studies.find((x) => x.id === id);
+        if (!s) return;
+        get().update(id, { modelRuns: [...(s.modelRuns ?? []), run] });
+      },
+      recordEvidenceRun: (id, run) => {
+        const s = get().studies.find((x) => x.id === id);
+        if (!s) return;
+        get().update(id, { evidenceRuns: [...(s.evidenceRuns ?? []), run] });
       },
     }),
     {

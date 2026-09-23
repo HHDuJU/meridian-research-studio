@@ -6,6 +6,7 @@ import { uid, nowIso } from "../utils";
 import { treatAsFullTextRead } from "./access";
 import { isWithdrawnResult } from "./publication-status";
 import { emptySearchConfirmationValid } from "../defaults";
+import { checkClaim, groundedInInvestigatorText, investigatorText } from "./grounding";
 
 /*
  * Evidence-backed decisions.
@@ -34,11 +35,22 @@ export function contentHash(s: string): string {
   return h.toString(16).padStart(8, "0");
 }
 
+/**
+ * Content hash of what a decision can rest on. Version 2 ("ev2-") also covers each record's certainty
+ * grade and design label (D24: re-grading a record must stale the decisions resting on it) and the
+ * investigator's local facts. Decisions stamped with a version 1 revision are compared with the
+ * version 1 formula, so upgrading does not mark every stored decision stale.
+ */
 export function evidenceRevision(study: Study): string {
+  return evidenceRevisionFor(study, 2);
+}
+
+export function evidenceRevisionFor(study: Study, version: 1 | 2): string {
   const items = [...study.scan.items]
     .map(
       (i) =>
-        `${i.id}|${i.provenance?.status ?? "?"}|${i.doi ?? ""}|${i.pmid ?? ""}|${i.year ?? ""}|${i.title}|${i.abstract?.sha256 ?? ""}|${i.notes}|${i.keyFindings ?? ""}|${i.limitations ?? ""}|${i.publicationStatus ?? ""}|${(i.contextTags ?? []).slice().sort().join(",")}`,
+        `${i.id}|${i.provenance?.status ?? "?"}|${i.doi ?? ""}|${i.pmid ?? ""}|${i.year ?? ""}|${i.title}|${i.abstract?.sha256 ?? ""}|${i.notes}|${i.keyFindings ?? ""}|${i.limitations ?? ""}|${i.publicationStatus ?? ""}|${(i.contextTags ?? []).slice().sort().join(",")}` +
+        (version === 2 ? `|${i.grade ?? ""}|${i.kind ?? ""}` : ""),
     )
     .sort();
   const claims = [...(study.scan.claims ?? [])]
@@ -47,12 +59,20 @@ export function evidenceRevision(study: Study): string {
   const docs = [...(study.documents ?? [])].map((d) => `${d.id}|${d.sha256}`).sort();
   const constraints = study.problem.constraints ?? "";
   const synthesis = study.scan.synthesis ?? "";
-  return `ev1-${contentHash([items.join("\n"), claims.join("\n"), docs.join("\n"), constraints, synthesis].join("\n#\n"))}`;
+  const parts = [items.join("\n"), claims.join("\n"), docs.join("\n"), constraints, synthesis];
+  if (version === 1) return `ev1-${contentHash(parts.join("\n#\n"))}`;
+  parts.push((study.problem.localFacts ?? []).map((f) => `${f.id}|${f.text}`).sort().join("\n"));
+  return `ev2-${contentHash(parts.join("\n#\n"))}`;
+}
+
+/** The current revision in the same version as a stored decision's stamp. */
+export function currentRevisionFor(study: Study, stamp: string): string {
+  return evidenceRevisionFor(study, stamp.startsWith("ev1-") ? 1 : 2);
 }
 
 /** Revision of the whole study content (excluding bookkeeping, usage, and audit log entries). D27: openFixes / improvementNotes / lastReview count. */
 export function studyRevision(study: Study): string {
-  const { updatedAt: _u, audit, usage: _usage, activity: _act, ...rest } = study as Study & Record<string, unknown>;
+  const { updatedAt: _u, audit, usage: _usage, activity: _act, modelRuns: _runs, evidenceRuns: _eruns, ...rest } = study as Study & Record<string, unknown>;
   const auditSubstance = audit
     ? { openFixes: audit.openFixes, improvementNotes: audit.improvementNotes, lastReview: audit.lastReview }
     : null;
@@ -116,12 +136,31 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
     }
     const evidence = stringOrUndefined(g.evidence, `${p}.evidence`, issues);
     let status = enumOrResolve(GATE_STATUS, g.status, `${p}.status`, issues, "unknown") ?? "unknown";
+    let grounding: string | undefined;
     if (status === "met" && !evidence?.trim()) {
       // A model cannot declare a gate met without pointing at evidence — that is the whole point of a gate.
       issues.add(`${p}.status`, "resolved", '"met" without evidence resolved to "unknown"');
       status = "unknown";
+    } else if (status === "met" && actor === "model") {
+      // D10/S5: the evidence must be anchored in text the investigator entered (need, constraints,
+      // local facts). An approval number or figure the investigator never supplied cannot meet a gate.
+      const g2 = groundedInInvestigatorText(evidence ?? "", investigatorText(study));
+      grounding = g2.reason;
+      if (!g2.grounded) {
+        issues.add(`${p}.status`, "ungrounded-gate", `"met" refused: the evidence ${g2.reason}; resolved to "unknown"`);
+        status = "unknown";
+      }
     }
-    return [{ id: typeof g.id === "string" && g.id.trim() ? g.id : `gate-${n + 1}`, requirement, status, ...(evidence?.trim() ? { evidence } : {}) }];
+    return [
+      {
+        id: typeof g.id === "string" && g.id.trim() ? g.id : `gate-${n + 1}`,
+        requirement,
+        status,
+        setBy: actor,
+        ...(evidence?.trim() ? { evidence } : {}),
+        ...(grounding ? { grounding } : {}),
+      },
+    ];
   });
   const decision: DecisionRecord = {
     id: typeof raw.id === "string" && raw.id.trim() ? raw.id : uid("dec"),
@@ -162,7 +201,7 @@ export interface DecisionEvaluation {
 export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvaluation {
   const blockers: string[] = [];
   const warnings: string[] = [];
-  const currentRevision = evidenceRevision(study);
+  const currentRevision = currentRevisionFor(study, d.inputRevision);
   const stale = d.inputRevision !== currentRevision;
   if (stale) blockers.push(`made against evidence revision ${d.inputRevision}; the evidence/ledger is now ${currentRevision} — re-review before acting`);
 
@@ -181,6 +220,11 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
       blockers.push(`claim ${c.id} is unsupported or quarantined`);
     }
   }
+  for (const c of supporting) {
+    const sup = checkClaim(c, study);
+    if (sup.blocking) blockers.push(`claim ${c.id}: ${sup.message}`);
+    else if (sup.status === "no-source-text" && c.kind === "source-derived") warnings.push(`claim ${c.id}: ${sup.message}`);
+  }
   const sourceDerived = supporting.filter((c) => c.kind === "source-derived");
   if (sourceDerived.length) {
     const anyVerified = sourceDerived.some((c) => c.sourceIds.some((s) => itemsById.get(s)?.provenance.status === "verified"));
@@ -192,9 +236,15 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
     if (!fullText) warnings.push("all supporting sources were read at abstract/metadata level; no full text inspected");
   }
   if (d.kind === "pursue" && d.claimIds.length === 0) blockers.push("a 'pursue' decision with no supporting claims");
+  const invText = investigatorText(study);
   for (const g of d.gates) {
     if (g.status === "unmet") blockers.push(`gate unmet: ${g.requirement}`);
     if (g.status === "unknown") blockers.push(`gate unknown: ${g.requirement}`);
+    if (g.status === "met" && g.setBy !== "investigator") {
+      // Re-checked every time: removing the local fact a gate rested on reopens the gate.
+      const gr = groundedInInvestigatorText(g.evidence ?? "", invText);
+      if (!gr.grounded) blockers.push(`gate "${g.requirement}" was declared met by the model, but its evidence ${gr.reason}`);
+    }
   }
   for (const c of d.criteria) {
     if (c.role === "defeats" && c.status === "met") blockers.push(`defeating condition holds: ${c.text}`);
@@ -262,6 +312,8 @@ export function decisionIsSupported(d: DecisionRecord, study: Study): { ok: bool
     }
     const retrieved = sources.some((s) => s.provenance.status === "retrieved" || s.provenance.status === "verified");
     if (!retrieved) return { ok: false, reason: `unsupported selection: claim ${id} does not rest on a retrieved record` };
+    const sup = checkClaim(c, study);
+    if (sup.blocking) return { ok: false, reason: `unsupported selection: claim ${id}: ${sup.message}` };
     restsOnRetrieved = true;
   }
   const commitsToAct = d.kind === "pursue" || d.kind === "implementation" || d.kind === "replicate";

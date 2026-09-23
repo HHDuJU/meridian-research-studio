@@ -17,6 +17,7 @@ import type { StageId, Study, StudyFamily } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { StageFrame } from "./stage-frame";
 import { StagePanel } from "./stage-panels";
+import { studyStatus } from "@/lib/status";
 
 const SCENARIO_MODE = import.meta.env.VITE_SCENARIO_MODE === "true";
 
@@ -180,6 +181,7 @@ export function StudioView({ study, stage }: { study: Study; stage: StageId }) {
 
         <div className="flex flex-1">
           <main className="min-w-0 flex-1 px-4 py-8 sm:px-8">
+            <StudyStatusPanel study={study} />
             <StageFrame study={study} stage={stage}>
               <StagePanel study={study} stage={stage} />
             </StageFrame>
@@ -343,5 +345,50 @@ function StageChip({
       {label}
       {complete ? <Check className="size-3.5" /> : null}
     </button>
+  );
+}
+
+
+/** Where the study stands, in four lines, and the next useful step. Derived; never edits the study. */
+function StudyStatusPanel({ study }: { study: Study }) {
+  const st = studyStatus(study);
+  const navigate = useNavigate();
+  const setStage = useStudio((s) => s.setStage);
+  const e = st.evidence;
+  return (
+    <section className="mx-auto mb-6 max-w-3xl rounded-xl border border-border bg-card/60 p-4 text-sm" data-meridian-status="">
+      <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Where this study stands</p>
+      <ul className="mt-2 space-y-1">
+        <li data-meridian-status-evidence="">
+          Evidence: {e.records} records, {e.retrieved + e.verified} from real searches ({e.verified} identity-checked
+          {e.mismatch ? `, ${e.mismatch} mismatched` : ""}), {e.withText} with stored text{e.leads ? `, ${e.leads} unverified model leads` : ""}
+          {e.withdrawn ? `, ${e.withdrawn} retracted or withdrawn` : ""}.
+        </li>
+        <li data-meridian-status-claims="">
+          Claims: {st.claims.total} in the ledger, {st.claims.supported} checked against the source text
+          {st.claims.notSupported ? `, ${st.claims.notSupported} not supported by it` : ""}
+          {st.claims.unchecked ? `, ${st.claims.unchecked} not checkable` : ""}.
+        </li>
+        <li data-meridian-status-decisions="">
+          Decisions: {st.decisions.accepted} accepted, {st.decisions.proposed} waiting for you, {st.decisions.stale} stale,{" "}
+          {st.decisions.ready} ready to act on. Local facts entered: {st.localFacts}.
+        </li>
+        {st.review.length ? <li>Needs re-review: {st.review.join(", ")}.</li> : null}
+      </ul>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="font-medium" data-meridian-next-step="">Next: {st.next.text}</span>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            setStage(study.id, st.next.stage);
+            navigate({ to: "/studio/$studyId", params: { studyId: study.id }, search: { stage: st.next.stage } });
+          }}
+        >
+          Go to {st.next.stage}
+        </Button>
+      </div>
+    </section>
   );
 }

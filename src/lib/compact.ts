@@ -1,5 +1,6 @@
 import type { EvidenceItem, StageId, Study } from "./types";
 import { STAGE_BY_ID } from "./stages";
+import { checkClaim, textMatchesTitle } from "./evidence/grounding";
 
 /*
  * Compact study context for a model call.
@@ -15,8 +16,22 @@ import { STAGE_BY_ID } from "./stages";
  */
 
 export const EVIDENCE_IN_CONTEXT = 12;
-/** At the Scan (appraisal) stage the model must see every record it is asked to annotate, with its abstract. */
+/**
+ * @deprecated Abstracts are no longer clipped at appraisal (S4/D6): a record the model is asked to
+ * annotate is shown whole, and a set too large for one call is split into batches
+ * (`scanAppraisalBatches`). Kept for older imports; not used to cut text.
+ */
 export const ABSTRACT_CHARS_AT_SCAN = 520;
+/** Context size the server accepts (mirrors MAX_COMPACT_CHARS in ai.ts). */
+export const CONTEXT_LIMIT = 32_000;
+/** Room kept for the stage schema, the steer and the batch note. */
+export const CONTEXT_MARGIN = 2_500;
+
+export interface CompactOptions {
+  /** Scan appraisal: only these records are shown (one batch); others are listed by id. */
+  recordIds?: string[];
+  batch?: { index: number; of: number };
+}
 
 function clip(s: string, n = 900): string {
   const t = (s ?? "").trim();
@@ -46,19 +61,59 @@ export function rankEvidence(items: EvidenceItem[]): EvidenceItem[] {
 }
 
 function evidenceLine(i: EvidenceItem, withAbstract = false): string {
-  const id = i.doi ? `doi:${i.doi}` : i.pmid ? `pmid:${i.pmid}` : "no identifier";
+  const id = i.doi ? `doi:${i.doi}` : i.pmid ? `pmid:${i.pmid}` : (i.provenance?.identifiers?.nct ? `nct:${i.provenance.identifiers.nct}` : "no identifier");
   const first = (i.authors ?? "").split(",")[0]?.trim() || "—";
+  const flags = [i.publicationStatus === "retracted" || i.publicationStatus === "withdrawn" ? `${i.publicationStatus.toUpperCase()}` : ""].filter(Boolean);
   const parts = [
-    `${i.id} | ${i.year ?? "year?"} ${first} — ${i.title} [${i.kind}/${i.grade}/${i.provenance?.status ?? "unverified"}; ${id}${i.source ? `; ${i.source}` : ""}]`,
+    `${i.id} | ${i.year ?? "year?"} ${first} — ${i.title} [${i.kind}/${i.grade}/${i.provenance?.status ?? "unverified"}; ${id}${i.source ? `; ${i.source}` : ""}${flags.length ? `; ${flags.join(", ")}` : ""}]`,
   ];
-  if (i.keyFindings) parts.push(`  findings: ${clip(i.keyFindings, 220)}`);
-  if (i.limitations) parts.push(`  limits: ${clip(i.limitations, 160)}`);
-  if (withAbstract && i.abstract?.text) parts.push(`  ${clip(i.abstract.text, ABSTRACT_CHARS_AT_SCAN)}`);
-  else if (withAbstract && i.notes) parts.push(`  ${clip(i.notes, ABSTRACT_CHARS_AT_SCAN)}`);
+  if (i.keyFindings) parts.push(`  findings: ${clip(i.keyFindings, 600)}`);
+  if (i.limitations) parts.push(`  limits: ${clip(i.limitations, 400)}`);
+  // At appraisal the record is shown whole: claims must quote it, so nothing may be cut.
+  if (withAbstract && i.abstract?.text) {
+    const fit = textMatchesTitle(i.title ?? "", i.abstract.text);
+    parts.push(
+      fit.ok
+        ? `  TEXT: ${i.abstract.text.trim()}`
+        : `  TEXT (WARNING: shares almost no words with the title; it may belong to another work, so attribute nothing from it to this record): ${i.abstract.text.trim()}`,
+    );
+  }
+  else if (withAbstract) parts.push("  TEXT: none stored (metadata only); do not attribute findings to this record.");
+  if (withAbstract && i.notes) parts.push(`  notes (commentary, not source text): ${clip(i.notes, 400)}`);
   return parts.join("\n");
 }
 
-export function compactStudy(study: Study, stage: StageId): string {
+/** A record can be appraised when its text is stored or a search or registry check produced it. */
+function isAppraisable(i: EvidenceItem): boolean {
+  return !!i.abstract?.text || i.provenance?.status === "retrieved" || i.provenance?.status === "verified";
+}
+
+/**
+ * Split the records the model must appraise into batches that each fit the context limit with
+ * every record's text whole. One record per batch at minimum; order follows rankEvidence.
+ */
+export function scanAppraisalBatches(study: Study, limit = CONTEXT_LIMIT - CONTEXT_MARGIN): string[][] {
+  const records = rankEvidence(study.scan.items).filter(isAppraisable);
+  if (!records.length) return [];
+  const base = compactStudy(study, "scan", { recordIds: [] }).length;
+  const batches: string[][] = [];
+  let current: string[] = [];
+  let size = base;
+  for (const r of records) {
+    const len = evidenceLine(r, true).length + 1;
+    if (current.length && size + len > limit) {
+      batches.push(current);
+      current = [];
+      size = base;
+    }
+    current.push(r.id);
+    size += len;
+  }
+  if (current.length) batches.push(current);
+  return batches;
+}
+
+export function compactStudy(study: Study, stage: StageId, opts: CompactOptions = {}): string {
   const parts: string[] = [
     `Title: ${study.title}`,
     `Subtitle: ${study.subtitle}`,
@@ -76,6 +131,13 @@ export function compactStudy(study: Study, stage: StageId): string {
     `Constraints: ${clip(study.problem.constraints, 600)}`,
     `Patient goal: ${clip(study.problem.patientCenteredGoal, 400)}`,
   ];
+  const facts = study.problem.localFacts ?? [];
+  parts.push(
+    facts.length
+      ? "LOCAL FACTS entered by the investigator (the only basis on which a gate may be called met):\n" +
+          facts.map((f) => `- ${f.id}: ${clip(f.text, 400)}`).join("\n")
+      : "LOCAL FACTS entered by the investigator: none. Do not describe any approval, resource or agreement as supplied by the investigator.",
+  );
 
   const scan = study.scan;
   if (scan.retrievalEvents?.length) {
@@ -94,8 +156,9 @@ export function compactStudy(study: Study, stage: StageId): string {
     parts.push(`SCAN grade: ${scan.gradeOverall || "unrated"}. ${clip(scan.synthesis, 700)}`);
     const ranked = rankEvidence(scan.items);
     const appraising = stage === "scan";
-    const shown = appraising ? ranked : ranked.slice(0, EVIDENCE_IN_CONTEXT);
-    const hidden = appraising ? [] : ranked.slice(EVIDENCE_IN_CONTEXT);
+    const inBatch = opts.recordIds ? new Set(opts.recordIds) : null;
+    const shown = appraising ? (inBatch ? ranked.filter((i) => inBatch.has(i.id)) : ranked) : ranked.slice(0, EVIDENCE_IN_CONTEXT);
+    const hidden = appraising ? (inBatch ? ranked.filter((i) => !inBatch.has(i.id)) : []) : ranked.slice(EVIDENCE_IN_CONTEXT);
     const counts = scan.items.reduce<Record<string, number>>((acc, i) => {
       const k = i.provenance?.status ?? "unverified";
       acc[k] = (acc[k] ?? 0) + 1;
@@ -104,15 +167,26 @@ export function compactStudy(study: Study, stage: StageId): string {
     parts.push(
       `EVIDENCE (${scan.items.length} records; ${Object.entries(counts).map(([k, v]) => `${v} ${k}`).join(", ")}):\n` +
         shown.map((i) => evidenceLine(i, appraising)).join("\n") +
-        (hidden.length ? `\n  +${hidden.length} more records not shown (ids: ${hidden.map((h) => h.id).join(", ")}); ask for them by id if needed.` : ""),
+        (hidden.length
+          ? appraising
+            ? `\n  ${hidden.length} other records are appraised in other batches (ids: ${hidden.map((h) => h.id).join(", ")}); do not annotate or cite them in this call.`
+            : `\n  +${hidden.length} more records not shown (ids: ${hidden.map((h) => h.id).join(", ")}); ask for them by id if needed.`
+          : ""),
     );
+    if (appraising && opts.batch && opts.batch.of > 1) {
+      parts.push(`APPRAISAL BATCH ${opts.batch.index} of ${opts.batch.of}: annotate only the records shown; the synthesis and certainty should cover every record and the claim ledger so far.`);
+    }
   }
 
   if (scan.claims?.length) {
     parts.push(
       "CLAIM LEDGER:\n" +
         scan.claims
-          .map((c) => `${c.id} [${c.kind}; ${c.uncertainty} uncertainty] ${clip(c.text, 220)}${c.sourceIds.length ? ` ← ${c.sourceIds.join(", ")}` : ""}${c.location ? ` @ ${c.location}` : ""}`)
+          .map((c) => {
+            const sup = checkClaim(c, study);
+            const flag = sup.blocking ? ` {NOT SUPPORTED BY SOURCE TEXT: ${sup.message}}` : sup.status === "no-source-text" && c.kind === "source-derived" ? " {unchecked: no stored text}" : "";
+            return `${c.id} [${c.kind}; ${c.uncertainty} uncertainty] ${clip(c.text, 300)}${c.sourceIds.length ? ` ← ${c.sourceIds.join(", ")}` : ""}${c.location ? ` @ ${c.location}` : ""}${flag}`;
+          })
           .join("\n"),
     );
   }

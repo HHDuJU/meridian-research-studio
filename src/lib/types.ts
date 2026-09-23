@@ -360,6 +360,19 @@ export interface VoiceItem {
   verification: Verification;
 }
 
+/**
+ * A fact about the local setting that the investigator entered and can document: an approval with
+ * its reference, a resource or time commitment, a data-access agreement. Investigator-owned; a model
+ * can read these but never create, edit or delete them. Gates are met only by these facts or by the
+ * investigator directly.
+ */
+export interface LocalFact {
+  id: string;
+  text: string;
+  by: "investigator";
+  at: string;
+}
+
 export interface ProblemStage {
   rawNeed: string;
   statement: string;
@@ -369,6 +382,8 @@ export interface ProblemStage {
   whyNow: string;
   constraints: string;
   patientCenteredGoal: string;
+  /** Investigator-entered local facts (approvals, resources, data access). */
+  localFacts?: LocalFact[];
   generatedAt?: string;
 }
 
@@ -391,6 +406,8 @@ export interface ScanStage {
   synthesis: string;
   generatedAt?: string;
   quarantine?: { claims: Claim[]; annotations: unknown[]; items?: EvidenceItem[] };
+  /** Model claims replaced by a later appraisal of the same records. Kept, never deleted. */
+  supersededClaims?: Claim[];
   coverage?: { calls: { callId: string; recordIds: string[]; chars: number }[] };
   /**
    * Set only by an investigator screen action in the store. Model JSON cannot write this.
@@ -458,6 +475,10 @@ export interface DecisionGate {
   status: GateStatus;
   /** Where the evidence that the gate is met lives (a document, an approval number) — never model prose. */
   evidence?: string;
+  /** Who set the status. A model may only say "met" when its evidence is anchored in investigator text. */
+  setBy?: "model" | "investigator";
+  /** Why a model "met" was accepted (the investigator anchors found), or why it was refused. */
+  grounding?: string;
 }
 
 /** What would justify or defeat the decision, with the claims that speak to it. */
@@ -575,6 +596,55 @@ export interface AuditEntry {
   kind: "generate" | "edit" | "complete" | "note" | "fix";
   stage: StageId;
   summary: string;
+  /** Who caused the entry. Absent on entries written before actors were recorded. */
+  actor?: "investigator" | "model" | "system";
+}
+
+/**
+ * One model call, as it happened. Written for every Illuminate attempt (applied, refused, stale or
+ * failed) so an output can be traced to the model, prompt version and exact context that produced
+ * it. Hashes let a reviewer confirm that a stored context or reply is the one that was used.
+ */
+export interface ModelRun {
+  id: string;
+  at: string;
+  stage: StageId;
+  purpose?: "appraisal" | "discovery";
+  /** "xai" for a live call; "replay" for a recorded scenario response. */
+  provider: string;
+  model: string | null;
+  mode: "live" | "replay";
+  /** SHA-256 of the system prompt plus the stage schema the server used. */
+  promptSha256: string | null;
+  /** SHA-256 of the study context sent, and its length in characters. */
+  contextSha256: string;
+  contextChars: number;
+  instructionSha256?: string;
+  /** SHA-256 of the raw model text as received, before parsing. */
+  outputSha256: string | null;
+  elapsedMs: number | null;
+  usage?: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
+  outcome: "applied" | "refused" | "stale" | "failed";
+  issues: number;
+  /** Study revision the request was made against. */
+  requestRevision: string;
+  /** Records sent in this call, for batched appraisal. */
+  batch?: { index: number; of: number; recordIds: string[] };
+  note?: string;
+}
+
+/** One literature search or identity check run by the app, for the audit trail. */
+export interface EvidenceRun {
+  id: string;
+  at: string;
+  kind: "search" | "identity-check";
+  provider: string;
+  query?: string;
+  requests: string[];
+  status: "ok" | "partial" | "error" | "blocked";
+  records: number;
+  elapsedMs: number | null;
+  note?: string;
 }
 
 export interface AuditStage {
@@ -620,6 +690,10 @@ export interface Study {
   audit: AuditStage;
   documents?: SourceDocument[];
   usage?: UsageEvent[];
+  /** Every model call, append-only (reproducibility). */
+  modelRuns?: ModelRun[];
+  /** Every live search and identity check, append-only. */
+  evidenceRuns?: EvidenceRun[];
   activity?: ActivityEvent[];
   idAliases?: Record<string, string>;
   replayKey?: string;

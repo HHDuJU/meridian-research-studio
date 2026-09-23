@@ -13,7 +13,31 @@ export const OPENALEX = {
   select: "id,doi,title,publication_year,type,ids,primary_location,authorships,cited_by_count",
   /** Lookups keep the URL short (proxy limits) and need only identity fields. */
   lookupSelect: "id,doi,title,publication_year,type,ids,primary_location",
+  /** Production discovery also needs the abstract (as an inverted index) and the retraction flag. */
+  searchSelect: "id,doi,title,publication_year,type,ids,primary_location,authorships,abstract_inverted_index,is_retracted",
 };
+
+/** Production discovery request: same search, plus abstracts and the retraction flag. */
+export function openalexDiscoveryRequest(query: string, perPage = 20, mailto?: string): TransportRequest {
+  const params = new URLSearchParams({ search: query, "per-page": String(perPage), select: OPENALEX.searchSelect });
+  if (mailto) params.set("mailto", mailto);
+  return { url: `${OPENALEX.base}/works?${params.toString()}`, headers: { Accept: "application/json" } };
+}
+
+/**
+ * OpenAlex ships abstracts as an inverted index (word -> positions). Rebuild the text in position
+ * order. Returns undefined when the index is absent or empty; never invents words.
+ */
+export function abstractFromInvertedIndex(index: unknown): string | undefined {
+  if (!index || typeof index !== "object" || Array.isArray(index)) return undefined;
+  const slots: string[] = [];
+  for (const [word, positions] of Object.entries(index as Record<string, unknown>)) {
+    if (!Array.isArray(positions)) continue;
+    for (const pos of positions) if (Number.isInteger(pos) && (pos as number) >= 0 && (pos as number) < 20000) slots[pos as number] = word;
+  }
+  const words = slots.filter((w) => typeof w === "string");
+  return words.length ? words.join(" ") : undefined;
+}
 
 export function openalexSearchRequest(query: string, perPage = 10, mailto?: string): TransportRequest {
   const params = new URLSearchParams({ search: query, "per-page": String(perPage), select: OPENALEX.select });
@@ -41,6 +65,8 @@ interface OpenAlexWork {
   ids?: { openalex?: string; doi?: string; pmid?: string };
   primary_location?: { source?: { display_name?: string } | null } | null;
   authorships?: { author?: { display_name?: string } }[];
+  abstract_inverted_index?: Record<string, number[]> | null;
+  is_retracted?: boolean;
 }
 
 export function parseOpenAlexWorks(body: string): { total: number | null; records: RawRecord[] } {
@@ -62,6 +88,8 @@ export function parseOpenAlexWorks(body: string): { total: number | null; record
           pmid,
           openalex: w.id ?? w.ids?.openalex,
           providerType: w.type,
+          ...(abstractFromInvertedIndex(w.abstract_inverted_index) ? { abstract: abstractFromInvertedIndex(w.abstract_inverted_index) } : {}),
+          ...(w.is_retracted === true ? { publicationStatus: "retracted" as const } : {}),
         },
       ];
     }),

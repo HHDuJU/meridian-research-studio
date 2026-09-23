@@ -111,7 +111,8 @@ export function resolveAlias(study: Study, id: string): string | undefined {
   return undefined;
 }
 
-const QUOTED_KEYS = new Set(["passage", "quote"]);
+// Quoted source text and enumerated fields (kinds, statuses, levels) are never rewritten.
+const QUOTED_KEYS = new Set(["passage", "quote", "kind", "status", "uncertainty", "grade", "origin", "severity", "selectionStatus", "actionStatus"]);
 
 function collectPatchIds(value: unknown, into: Set<string>) {
   if (Array.isArray(value)) {
@@ -124,13 +125,23 @@ function collectPatchIds(value: unknown, into: Set<string>) {
   }
 }
 
-/** Mark unknown active ids in a model patch. Quoted source fields are left alone. Marking is not a resolution. */
+/** Objects the investigator wrote (claims, local facts, gates they set) carry their text as entered. */
+function investigatorAuthored(value: Record<string, unknown>): boolean {
+  return value.origin === "investigator" || value.by === "investigator" || value.setBy === "investigator";
+}
+
+/**
+ * Mark unknown active ids in a model patch. Quoted source fields are left alone, and so are objects the
+ * investigator wrote that a patch carries over (the appraisal merge keeps investigator claims): marking
+ * would rewrite investigator text. Marking is not a resolution.
+ */
 export function markUnknownIdsInPatch(
   patch: Record<string, unknown>,
   known: Set<string>,
   onUnknown: (path: string, id: string) => void,
   path = "",
 ): void {
+  if (investigatorAuthored(patch)) return;
   for (const [k, v] of Object.entries(patch)) {
     if (QUOTED_KEYS.has(k)) continue;
     const next = path ? `${path}.${k}` : k;

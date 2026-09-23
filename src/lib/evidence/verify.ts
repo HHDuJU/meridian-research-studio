@@ -123,7 +123,14 @@ export function applyLookupOutcome(
           ? `${outcome.note ?? outcome.status}; earlier mismatch retained`
           : outcome.note,
       };
-      status = retainMismatch ? "mismatch" : "check-failed";
+      // A failed cross-check is not evidence against a record whose identity a registry already
+      // established (a PubMed, OpenAlex or ClinicalTrials.gov record with its own identifier) or
+      // against an earlier successful check: those keep their status and carry the failed check.
+      const established =
+        item.provenance.status === "verified" ||
+        (item.provenance.status === "retrieved" &&
+          !!(item.provenance.identifiers.pmid || item.provenance.identifiers.openalex || item.provenance.identifiers.nct));
+      status = retainMismatch ? "mismatch" : established ? item.provenance.status : "check-failed";
     } else {
       const found = byDoi.get(doi);
       if (!found) {

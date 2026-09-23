@@ -21,6 +21,8 @@ export interface RawRecord {
   url?: string;
   /** Source-bound typed dates (epub/online vs print). Used to corroborate date variants. */
   dates?: { online?: number; print?: number; collection?: number };
+  /** Publication status as the provider states it (e.g. PubMed retraction links, OpenAlex is_retracted). */
+  publicationStatus?: EvidenceItem["publicationStatus"];
 }
 
 /**
@@ -46,8 +48,9 @@ export function kindFromProviderType(label: string | undefined): EvidenceKind {
  * (or normalised title+year when there is no DOI); collisions are practically irrelevant at
  * study scale and are detectable because two items would share an id.
  */
-export function stableRecordId(r: Pick<RawRecord, "doi" | "title" | "year">): string {
-  const key = normalizeDoi(r.doi) ?? titleYearKey(r.title, r.year);
+export function stableRecordId(r: Pick<RawRecord, "doi" | "title" | "year"> & { nct?: string }): string {
+  const nct = typeof r.nct === "string" && /^NCT\d{8}$/i.test(r.nct.trim()) ? `nct:${r.nct.trim().toUpperCase()}` : undefined;
+  const key = normalizeDoi(r.doi) ?? nct ?? titleYearKey(r.title, r.year);
   let h = 0x811c9dc5;
   for (let i = 0; i < key.length; i++) {
     h ^= key.charCodeAt(i);
@@ -93,6 +96,7 @@ export function ingestRecords(
       verification: "verify" as const,
       doi,
       pmid: r.pmid,
+      ...(r.publicationStatus && r.publicationStatus !== "unknown" ? { publicationStatus: r.publicationStatus } : {}),
       contextTags: [],
       keyFindings: "",
       limitations: "",

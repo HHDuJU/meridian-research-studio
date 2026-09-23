@@ -26,6 +26,11 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const APP_ENV_REL_PATH = ".grok/app-env.json";
+/**
+ * Committed fallback read when the host file is absent (a plain git clone has no `.grok/`), so a
+ * clone runs with the same flags as the builder workspace (auth off for local-first Meridian).
+ */
+export const APP_ENV_FALLBACK_REL_PATH = "meridian.app-env.json";
 
 const VITE_PREFIX = "VITE_";
 
@@ -56,7 +61,11 @@ export function readAppEnv(root) {
   try {
     return parseAppEnv(readFileSync(join(root, APP_ENV_REL_PATH), "utf8"));
   } catch {
-    return {};
+    try {
+      return parseAppEnv(readFileSync(join(root, APP_ENV_FALLBACK_REL_PATH), "utf8"));
+    } catch {
+      return {};
+    }
   }
 }
 

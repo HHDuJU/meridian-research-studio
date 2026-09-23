@@ -28,7 +28,8 @@ import {
 import type { Issue } from "./contracts";
 import { uid, nowIso } from "./utils";
 import { applyDecision } from "./evidence/decision";
-import { applyAppraisal } from "./evidence/appraise";
+import { applyAppraisal, mergeAppraisedClaims } from "./evidence/appraise";
+import { checkClaim } from "./evidence/grounding";
 import { knownSetForApply, markUnknownIdsInPatch } from "./evidence/ids";
 
 /*
@@ -124,15 +125,28 @@ function refuseModelConstraints(raw: Record<string, unknown>, study: Study | und
   );
 }
 
+export interface ApplyOptions {
+  /** Scan appraisal only: the records shown to the model in this call (one batch). Defaults to all records. */
+  appraisedRecordIds?: string[];
+  /** Scan appraisal only: which batch of the run this call is (batch 1, or no batch, starts a run). */
+  appraisalBatch?: { index: number; of: number };
+}
+
 export function applyAiResult(
   stage: StageId,
   input: unknown,
   family: StudyFamily | null,
   /** The current study, needed for stages whose payload must be validated against ledger content (design → decision). */
   study?: Study,
+  options: ApplyOptions = {},
 ): AppliedAi {
-  const applied = applyStage(stage, input, family, study);
+  const applied = applyStage(stage, input, family, study, options);
   if (!applied.ok || !study) return applied;
+  // The patch can hold objects shared with the stored study (claims carried over by the appraisal
+  // merge). Marking rewrites strings in place, so it works on a copy: the stored study must only
+  // change through the store, never through a shared reference (live run 2026-09-22: the in-place
+  // rewrite changed the study mid-call and every appraisal batch after the first was refused as stale).
+  applied.stagePatch = structuredClone(applied.stagePatch);
   const known = knownSetForApply(study, applied.stagePatch);
   markUnknownIdsInPatch(applied.stagePatch, known, (path, id) => {
     applied.issues.push({
@@ -150,6 +164,7 @@ function applyStage(
   input: unknown,
   family: StudyFamily | null,
   study?: Study,
+  options: ApplyOptions = {},
 ): AppliedAi {
   const issues = new Issues();
   if (!isRecord(input)) {
@@ -170,6 +185,9 @@ function applyStage(
     case "problem": {
       const keys = ["statement", "whoAffected", "whatHurts", "currentPractice", "whyNow", "constraints", "patientCenteredGoal", "title", "subtitle", "family"];
       refuseModelConstraints(raw, study, issues);
+      if (present(raw, "localFacts")) {
+        issues.add("localFacts", "dropped", "local facts are entered by the investigator; a model cannot add, edit or remove them", raw.localFacts);
+      }
       const fam = present(raw, "family")
         ? enumOrResolve(STUDY_FAMILIES, raw.family, "family", issues, family ?? undefined)
         : undefined;
@@ -220,13 +238,31 @@ function applyStage(
         const qAnns = [...(prevQ?.annotations ?? []), ...(appraisal.quarantine.annotations ?? [])];
         const qItems = prevQ?.items ?? [];
         const hasQ = qClaims.length + qAnns.length + qItems.length > 0;
+        // Claims are merged, not replaced: claims about records outside this call and investigator
+        // claims stay; replaced model claims are kept in supersededClaims (the trail is never lost).
+        const appraised = new Set(options.appraisedRecordIds ?? currentItems.map((i) => i.id));
+        const merged = present(raw, "claims")
+          ? mergeAppraisedClaims(study?.scan.claims ?? [], appraisal.claims, appraised, {
+              startsRun: (options.appraisalBatch?.index ?? 1) === 1,
+            })
+          : null;
+        const supportView = { scan: { ...(study?.scan ?? { claims: [] }), items: appraisal.items } as Study["scan"], documents: study?.documents ?? [] };
+        if (merged) {
+          for (const a of appraisal.claims) {
+            const c = merged.claims.find((x) => x.id === (merged.renamed[a.id] ?? a.id));
+            if (!c) continue;
+            const sup = checkClaim(c, supportView);
+            if (sup.blocking) issues.add(`claims[${c.id}]`, "claim-unsupported", sup.message, c.passage);
+          }
+        }
         return {
           ok: recognised(raw, ["annotations", "claims", "synthesis", "gradeOverall", "gradeRationale"]),
           summary,
           issues: issues.list,
           stagePatch: compactPatch({
             items: appraisal.items,
-            claims: appraisal.claims,
+            claims: merged ? merged.claims : undefined,
+            supersededClaims: merged && merged.superseded.length ? [...(study?.scan.supersededClaims ?? []), ...merged.superseded] : undefined,
             synthesis: appraisal.synthesis,
             gradeOverall: refuseCertainty ? "" : appraisal.gradeOverall,
             gradeRationale: refuseCertainty && appraisal.gradeOverall ? undefined : appraisal.gradeRationale,

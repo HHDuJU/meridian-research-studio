@@ -165,6 +165,7 @@ export function createStudy(input: {
   replayKey?: string;
   constraints?: string;
   basis?: "explicit" | "inferred" | "unresolved";
+  localFacts?: string[];
 }): Study {
   const createdAt = nowIso();
   const classified = classifyFamily(input.rawNeed);
@@ -174,6 +175,10 @@ export function createStudy(input: {
   else if (input.family && classified.family === input.family) basis = classified.basis;
   else if (input.family && classified.basis === "unresolved") basis = "explicit";
   else if (!input.family) basis = classified.basis;
+  const localFacts = (input.localFacts ?? [])
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .map((text) => ({ id: uid("fact"), text, by: "investigator" as const, at: createdAt }));
   const study: Study = {
     id: uid("study"),
     title: input.title || "Untitled study",
@@ -188,7 +193,7 @@ export function createStudy(input: {
     needsReview: [],
     schemaVersion: STUDY_SCHEMA_VERSION,
     ...(input.replayKey ? { replayKey: input.replayKey } : {}),
-    problem: { ...emptyProblem(input.rawNeed), constraints: input.constraints ?? "" },
+    problem: { ...emptyProblem(input.rawNeed), constraints: input.constraints ?? "", ...(localFacts.length ? { localFacts } : {}) },
     scan: emptyScan(),
     map: emptyMap(),
     gaps: emptyGaps(),
