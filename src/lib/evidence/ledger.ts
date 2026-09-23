@@ -27,7 +27,8 @@ const SOURCE_REQUIRED: ClaimKind[] = ["source-derived"];
  *  - a source-derived claim whose sources are all unverified/mismatch cannot carry low uncertainty;
  *  - a source-derived claim with low uncertainty should cite a location/passage;
  *  - a claim resting on a "mismatch" source is blocked (the identifier points elsewhere);
- *  - local facts, assumptions and scenarios are allowed without sources but must be labelled so.
+ *  - local facts, assumptions and scenarios are allowed without sources but must be labelled so;
+ *  - a local fact the model wrote is a proposal and blocks until the investigator enters it (D10 / S5).
  */
 export function ledgerIssues(claims: Claim[], items: EvidenceItem[], documents: SourceDocument[] = []): LedgerIssue[] {
   const byId = new Map(items.map((i) => [i.id, i]));
@@ -65,6 +66,10 @@ export function ledgerIssues(claims: Claim[], items: EvidenceItem[], documents: 
       if (abstractOnly && c.uncertainty === "low") {
         out.push({ claimId: c.id, severity: "note", message: "supported from abstract/metadata only; full text not read" });
       }
+    }
+    if (c.kind === "local-fact" && c.origin !== "investigator") {
+      // D10 / S5, SYN-LOCAL-01: only the investigator establishes a local fact; a model's is a proposal.
+      out.push({ claimId: c.id, severity: "block", message: "local fact proposed by the model; it is not established until the investigator enters it" });
     }
     if ((c.kind === "assumption" || c.kind === "scenario") && c.uncertainty === "low") {
       out.push({ claimId: c.id, severity: "should", message: `${c.kind} labelled low uncertainty — assumptions and scenarios are not facts` });

@@ -147,6 +147,15 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown, documents: S
       issues.add(p, "dropped", "claim with unrecognised kind dropped");
       continue;
     }
+    if (kind === "local-fact") {
+      // D10 / S5, SYN-LOCAL-01: only the investigator establishes local facts. The claim is kept as the
+      // model's proposal (origin "model", whatever origin the reply names) and cannot support a decision.
+      issues.add(
+        p,
+        "proposed-local-fact",
+        `the model proposed a local fact ("${text.slice(0, 120)}"); it is not established until the investigator enters it as a local fact`,
+      );
+    }
     const uncertainty = enumOrResolve(UNCERTAINTY, c.uncertainty, `${p}.uncertainty`, issues, "high") ?? "high";
     const sourceIds = stringArray(c.sourceIds, `${p}.sourceIds`, issues) ?? [];
     for (const sid of sourceIds) {

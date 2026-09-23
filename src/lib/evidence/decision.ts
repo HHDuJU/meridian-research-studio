@@ -6,7 +6,7 @@ import { uid, nowIso } from "../utils";
 import { treatAsFullTextRead } from "./access";
 import { isWithdrawnResult } from "./publication-status";
 import { emptySearchConfirmationValid } from "../defaults";
-import { checkClaim, gateGrounding, investigatorText } from "./grounding";
+import { checkClaim, exemptionAssertions, gateGrounding, investigatorStatesExemption, investigatorText, studyOwnText } from "./grounding";
 
 /*
  * Evidence-backed decisions.
@@ -146,7 +146,7 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
     } else if (status === "met" && actor === "model") {
       // D10/S5: the evidence must be anchored in text the investigator entered (need, constraints,
       // local facts). An approval number or figure the investigator never supplied cannot meet a gate.
-      const g2 = gateGrounding(requirement, evidence ?? "", investigatorText(study));
+      const g2 = gateGrounding(requirement, evidence ?? "", investigatorText(study), studyOwnText(study));
       grounding = g2.reason;
       if (!g2.grounded) {
         issues.add(`${p}.status`, "ungrounded-gate", `"met" refused: the evidence ${g2.reason}; resolved to "unknown"`);
@@ -238,7 +238,15 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
     if (!fullText) warnings.push("all supporting sources were read at abstract/metadata level; no full text inspected");
   }
   if (d.kind === "pursue" && d.claimIds.length === 0) blockers.push("a 'pursue' decision with no supporting claims");
+  const criterionClaims = d.criteria.flatMap((c) => c.claimIds).map((id) => claimsById.get(id)).filter((c): c is NonNullable<typeof c> => !!c);
+  for (const c of [...supporting, ...criterionClaims]) {
+    if (c.kind === "local-fact" && c.origin !== "investigator") {
+      // D10 / S5, SYN-LOCAL-01: a plan cannot treat the model's proposed local fact as available.
+      blockers.push(`claim ${c.id} is a local fact the model proposed ("${c.text.slice(0, 120)}"); only the investigator can establish it`);
+    }
+  }
   const invText = investigatorText(study);
+  const ownText = studyOwnText(study);
   for (const g of d.gates) {
     if (g.status === "unmet") blockers.push(`gate unmet: ${g.requirement}`);
     if (g.status === "unknown") blockers.push(`gate unknown: ${g.requirement}`);
@@ -248,8 +256,18 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
     }
     if (g.status === "met" && g.setBy !== "investigator") {
       // Re-checked every time: removing the local fact a gate rested on reopens the gate.
-      const gr = gateGrounding(g.requirement, g.evidence ?? "", invText);
+      const gr = gateGrounding(g.requirement, g.evidence ?? "", invText, ownText);
       if (!gr.grounded) blockers.push(`gate "${g.requirement}" was declared met by the model, but its evidence ${gr.reason}`);
+    }
+  }
+  if (d.actor === "model") {
+    // D10 / S5, SYN-LOCAL-04: "needs no approval" is an authorization claim the model cannot make.
+    const texts = [d.statement, d.question ?? "", d.note ?? "", ...d.criteria.map((c) => c.text), ...d.gates.filter((g) => g.setBy !== "investigator").map((g) => g.evidence ?? "")];
+    const asserted = texts.flatMap((t) => exemptionAssertions(t));
+    if (asserted.length && !investigatorStatesExemption(invText)) {
+      blockers.push(
+        `the decision says no approval is needed ("${asserted[0].slice(0, 160)}"), but the investigator has not stated that; an exemption is the review board's or the investigator's call, and clinical access to data is not research permission (if it was confirmed, add it as a local fact with its reference)`,
+      );
     }
   }
   for (const c of d.criteria) {

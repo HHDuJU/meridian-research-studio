@@ -1033,6 +1033,11 @@ function ClaimLedger({ study }: { study: Study }) {
               {c.id} · {c.kind} · {c.uncertainty} uncertainty · {c.origin ?? "unknown"}
             </p>
             <p className="mt-1 text-sm leading-relaxed">{c.text}</p>
+            {c.kind === "local-fact" && c.origin !== "investigator" ? (
+              <p className="mt-1 text-xs text-amber-700" data-meridian-proposed-local-fact="">
+                Model proposal, not a local fact: it counts only after you enter it yourself under local facts on the Problem stage.
+              </p>
+            ) : null}
             {c.passage ? <p className="mt-1 text-xs italic text-muted-foreground">"{c.passage}"{c.location ? ` (${c.location})` : ""}</p> : null}
             <p className="mt-1 text-xs text-muted-foreground">
               Sources: {c.sourceIds.map((id) => byId.get(id)?.title ?? id).join("; ") || "none"}

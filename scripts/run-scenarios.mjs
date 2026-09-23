@@ -1433,7 +1433,8 @@ async function main() {
         startedAt,
         finishedAt: new Date().toISOString(),
         treeSha256: pinnedTreeSha256,
-        appVersion: "a33",
+        // A label that cannot go stale: the pinned source checksum (override with MERIDIAN_APP_VERSION).
+        appVersion: process.env.MERIDIAN_APP_VERSION || `tree-${String(pinnedTreeSha256 ?? "").slice(0, 12)}`,
         status,
         executedWorkflow,
         authored: files.length,

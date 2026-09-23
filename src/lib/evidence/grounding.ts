@@ -155,6 +155,11 @@ export function investigatorText(study: Pick<Study, "problem">): string {
   return parts.filter(Boolean).join("\n");
 }
 
+/** The study's own description (title, need, constraints), used to tell this study from another one. */
+export function studyOwnText(study: Pick<Study, "problem" | "title">): string {
+  return [study.title, study.problem.rawNeed, study.problem.constraints].filter(Boolean).join("\n");
+}
+
 /** Identifier-like tokens: letters-and-digits codes such as REB-2026-188, CGC-2026-031, 26-311, NCT01234567. */
 export function identifierTokens(text: string): string[] {
   const t = (text ?? "").normalize("NFKC");
@@ -216,6 +221,8 @@ export interface Grounding {
   foundAnchors: string[];
   missingAnchors: string[];
   reason: string;
+  /** The investigator sentences that hold the anchors; the scope, authority and conflict checks read them. */
+  sentences?: string[];
 }
 
 /*
@@ -223,7 +230,7 @@ export interface Grounding {
  * "decision pending", "submitted on 2026-09-01") cannot ground a claim that it is in place, even
  * though it contains the same record number or words. Anchors count only from other sentences.
  */
-const NOT_IN_PLACE = new RegExp(
+const NOT_IN_PLACE_STRONG = new RegExp(
   [
     // Strong signals only. Generic negation ("do not need review", "is not covered", "not requiring")
     // and "requested" ("the committee requested the review") describe things that are in place; the
@@ -239,6 +246,17 @@ const NOT_IN_PLACE = new RegExp(
   ].join("|"),
   "i",
 );
+const UNCERTAIN = new RegExp(
+  [
+    // An open question is not a fact (D10, SYN-LOCAL-02): "permission for secondary use ... is unknown",
+    // "unclear whether the custodian agrees", "to be confirmed".
+    String.raw`\b(?:unknown|unclear|uncertain|undetermined|unconfirmed|unverified|unanswered|whether|tbc|tbd)\b`,
+    String.raw`\b(?:is|are|was|were|remains?)\s+not\s+(?:known|clear|established|confirmed|settled|agreed)\b`,
+    String.raw`\bnot\s+(?:yet\s+)?sure\b`,
+  ].join("|"),
+  "i",
+);
+const NOT_IN_PLACE = { test: (t: string) => NOT_IN_PLACE_STRONG.test(t) || UNCERTAIN.test(t) };
 
 export function investigatorSentences(investigator: string): { text: string; notInPlace: boolean }[] {
   return (investigator ?? "")
@@ -248,9 +266,14 @@ export function investigatorSentences(investigator: string): { text: string; not
     .map((text) => ({ text, notInPlace: NOT_IN_PLACE.test(text) }));
 }
 
+function flatWords(s: string): string {
+  return normalizeForMatch(s).replace(/[^\p{L}\p{N} ]+/gu, " ").replace(/\s+/g, " ").trim();
+}
+
 export function groundedInInvestigatorText(statement: string, investigator: string): Grounding {
   const sentences = investigatorSentences(investigator);
-  const positive = sentences.filter((x) => !x.notInPlace).map((x) => x.text).join("\n");
+  const positiveList = sentences.filter((x) => !x.notInPlace).map((x) => x.text);
+  const positive = positiveList.join("\n");
   const negative = sentences.filter((x) => x.notInPlace);
   const hay = normalizeForMatch(positive);
   const ids = identifierTokens(statement);
@@ -275,13 +298,13 @@ export function groundedInInvestigatorText(statement: string, investigator: stri
     else missingNums.push(n);
   }
   const foundIds = ids;
-  // A verbatim run of 5+ words from the investigator's text also anchors the statement.
-  const words = normalizeForMatch(statement).replace(/[^\p{L}\p{N} ]+/gu, " ").split(" ").filter(Boolean);
-  const flatHay = hay.replace(/[^\p{L}\p{N} ]+/gu, " ").replace(/\s+/g, " ");
+  // A verbatim run of 5+ words from one investigator sentence also anchors the statement.
+  const words = flatWords(statement).split(" ").filter(Boolean);
+  const flatSentences = positiveList.map(flatWords);
   let phrase = "";
   for (let i = 0; i + 5 <= words.length && !phrase; i++) {
     const cand = words.slice(i, i + 5).join(" ");
-    if (flatHay.includes(cand)) phrase = cand;
+    if (flatSentences.some((f) => ` ${f} `.includes(` ${cand} `))) phrase = cand;
   }
   const anchors = [...foundIds, ...foundNums, ...(phrase ? [`"${phrase}"`] : [])];
   if (!anchors.length) {
@@ -290,7 +313,19 @@ export function groundedInInvestigatorText(statement: string, investigator: stri
   if (missingNums.length && !phrase && !foundIds.length) {
     return { grounded: false, foundAnchors: anchors, missingAnchors: missingNums, reason: `states ${missingNums.join(", ")}, which the investigator's text does not contain` };
   }
-  return { grounded: true, foundAnchors: anchors, missingAnchors: missingNums, reason: `anchored in investigator text: ${anchors.join(", ")}` };
+  const statementFigs = figureContexts(statement);
+  const anchorSentences = positiveList.filter((sent, k) => {
+    const n = normalizeForMatch(sent);
+    if (foundIds.some((id) => n.includes(normalizeForMatch(id)))) return true;
+    if (phrase && ` ${flatSentences[k]} `.includes(` ${phrase} `)) return true;
+    const figs = figureContexts(sent);
+    return foundNums.some((num) => {
+      const have = figs.get(num);
+      const ctx = statementFigs.get(num);
+      return !!have && !!ctx && [...ctx].some((w) => have.has(w));
+    });
+  });
+  return { grounded: true, foundAnchors: anchors, missingAnchors: missingNums, reason: `anchored in investigator text: ${anchors.join(", ")}`, sentences: anchorSentences };
 }
 
 /*
@@ -357,8 +392,172 @@ export function requirementStatedByInvestigator(requirement: string, investigato
   return best;
 }
 
+/*
+ * D10 / S5: an anchor shows that the model read the investigator's text, not that the fact it read
+ * meets this gate. Four further checks run on the investigator sentence that holds the anchors:
+ *
+ *  1. Authority. A requirement for an approval, an agreement, funding or consent is met only by a
+ *     sentence that names the same kind of authority. "Clinic staff can view the dashboard for patient
+ *     care" states access for care, not a data-use approval for research (SYN-LOCAL-04).
+ *  2. Another study. A sentence about another, previous or separate study or protocol cannot meet this
+ *     study's gate (SYN-LOCAL-05).
+ *  3. Scope. A sentence that limits itself ("only", "limited to", "does not cover") meets a gate only
+ *     when every content word of the requirement is inside that limit: "the block registry holds treated
+ *     patients only" cannot show that it records non-treated candidates (SYN-LOCAL-03), and "covers
+ *     protocol CARE-KET-01 only" cannot approve another audit (SYN-LOCAL-05). When the limit names this
+ *     study (its own protocol number, or "this study"), the study's own description counts as inside it.
+ *  4. Conflict. Another investigator sentence on the same topic that says the resource is absent (zero,
+ *     none, no ...), not in place, or gives a different figure in the same unit leaves the gate open until
+ *     the investigator decides which holds (SYN-LOCAL-06). Both sentences stay as entered.
+ *
+ * The investigator can always set a gate directly; these checks bind only a model's "met".
+ */
+const AUTHORITY_GROUPS: { label: string; re: RegExp }[] = [
+  {
+    label: "an approval, permission or agreement",
+    re: /\b(?:approv\w*|permi(?:t|ts|tted|ssion|ssions)|allow(?:s|ed)?|authori[sz]\w*|clear(?:ed|ance)|sanction\w*|endors\w*|licen[cs]\w*|waive[dr]?|waivers?|exempt\w*|grant(?:ed|s)?|agree(?:d|ment|ments|s)?|contract\w*|signed|signature|signatures|sign-off|signoff|sponsor\w*)\b/i,
+  },
+  { label: "funding", re: /\b(?:fund(?:ed|ing|s)?|budget\w*|allocat\w*|grant(?:ed|s)?|award(?:ed|s)?|paid|pay|pays)\b/i },
+  { label: "consent", re: /\bconsent\w*\b/i },
+];
+const RESTRICT =
+  /\b(?:only(?!\s+(?:after|before|when|once|until|if|then|from|in\s+(?:january|february|march|april|may|june|july|august|september|october|november|december|\d{4}))\b)|solely|exclusively|limited to|restricted to|specific to|confined to|(?:does|do|will|would) not (?:cover|include|extend to|apply to)|excluding|except|no other|any other (?:use|uses|study|studies|project|projects|purpose|purposes|protocol|protocols|analysis|analyses))\b/i;
+const OTHER_STUDY =
+  /\b(?:another|previous|prior|earlier|former|past|different|separate|sister|parent|companion|older|last year's|other)\s+(?:study|studies|protocol|protocols|project|projects|trial|trials|registry|registries|application|applications|audit|audits|submission|submissions)\b/i;
+/** A protocol named by number ("protocol CARE-KET-01"): an approval for it is not an approval for a study that does not carry that number. */
+const PROTOCOL_REF = /\bprotocol\s+(?:no\.?\s*|number\s*|#\s*)?([A-Z0-9][A-Za-z0-9/-]*\d[A-Za-z0-9/-]*)/g;
+const THIS_STUDY =
+  /\b(?:this|the present|the current|the proposed|our current|our proposed)\s+(?:study|project|audit|protocol|trial|review|evaluation|initiative|pilot|work)\b/i;
+const CLINICAL_PURPOSE =
+  /\bfor\s+(?:patient|clinical|routine|direct|usual)?\s*care\b|\bclinical\s+(?:use|purposes?|operations?|work)\b|\boperational\s+(?:use|purposes?|access)\b|\bfor\s+(?:treatment|care delivery|service delivery)\b/i;
+const RESEARCH_PURPOSE = /\bresearch\b|\bsecondary\s+(?:use|analysis)\b|\bpublication\b/i;
+/** Words that say how a requirement is met, not what it is about. */
+const GENERIC_STEMS = new Set([
+  "confi", "docum", "writt", "forma", "obtai", "secur", "place", "requi", "need", "neede", "avail", "befor", "prior", "start",
+  "gate", "evide", "local", "facts", "fact", "inves", "suppl", "state", "enter", "study", "studi", "proje", "work",
+]);
+
+function topicStems(text: string): Set<string> {
+  return new Set([...contentStems(text)].filter((w) => !GENERIC_STEMS.has(w)));
+}
+
+function trimQuote(s: string): string {
+  return s.length > 160 ? `${s.slice(0, 157)}...` : s;
+}
+
+/** The words within five tokens of a restriction marker: what the limit is about. */
+function restrictionWindow(sentence: string): string {
+  const m = RESTRICT.exec(sentence);
+  if (!m) return "";
+  const before = sentence.slice(0, m.index).split(/\s+/).slice(-5).join(" ");
+  const after = sentence.slice(m.index + m[0].length).split(/\s+/).slice(0, 6).join(" ");
+  return `${before} ${m[0]} ${after}`;
+}
+
+/** Figures with the word after them ("8 hours", "0.5 FTE"), keyed by that word's stem. Years and figures that end a clause have no unit. */
+function figureUnits(text: string): Map<string, Set<string>> {
+  const raw = normalizeForMatch(numberWordsToDigits(text)).split(/\s+/).filter(Boolean);
+  const out = new Map<string, Set<string>>();
+  raw.forEach((tok, i) => {
+    const m = tok.match(/^\(?\$?(\d+(?:\.\d+)?)(%?)([.,;:)]?)$/);
+    if (!m) return;
+    const value = Number(m[1]);
+    let unit = "%";
+    if (!m[2]) {
+      if (Number.isInteger(value) && value >= 1900 && value <= 2100) return;
+      const next = raw[i + 1] ?? "";
+      if (m[3] || /^[([]/.test(next)) return;
+      unit = next.replace(/[^\p{L}]/gu, "").slice(0, 5);
+    }
+    if (!unit || unit.length < 2) return;
+    const set = out.get(unit) ?? new Set<string>();
+    set.add(String(value));
+    out.set(unit, set);
+  });
+  return out;
+}
+
+const ZERO_WORD = /^(?:0|zero|nil|none|no)$/;
+
+/*
+ * Another investigator statement on the requirement's topic (half or more of its topic words, in the same
+ * clause) that says the resource is not in place (declined, pending, withdrawn), absent ("zero protected
+ * research time", "no research nurse") or of a different amount in the same unit ("8 hours" against
+ * "4 hours"). Wishes, needs and questions ("I need help with whether ...") are not facts and never conflict.
+ */
+export function conflictingFact(requirement: string, anchor: string, investigator: string): string | null {
+  const req = [...topicStems(requirement)];
+  if (!req.length) return null;
+  const anchorUnits = figureUnits(anchor);
+  for (const x of investigatorSentences(investigator)) {
+    const t = x.text.trim();
+    if (t === anchor.trim() || INTENT.test(t) || t.endsWith("?")) continue;
+    for (const clause of t.split(/[;:.](?:\s|$)|,\s+(?:but|and|while|although)\s+/)) {
+      const stems = contentStems(clause);
+      const shared = req.filter((w) => stems.has(w));
+      if (shared.length < 2 || shared.length / req.length < 0.5) continue;
+      if (NOT_IN_PLACE_STRONG.test(clause)) return t;
+      const toks = normalizeForMatch(numberWordsToDigits(clause))
+        .split(/\s+/)
+        .map((w) => w.replace(/[^\p{L}\p{N}.%]/gu, ""))
+        .filter(Boolean);
+      if (toks.some((tk, i) => ZERO_WORD.test(tk) && toks.slice(i + 1, i + 3).some((w) => shared.includes(w.slice(0, 5))))) return t;
+      for (const [unit, values] of figureUnits(clause)) {
+        const mine = anchorUnits.get(unit);
+        if (mine && [...values].some((v) => !mine.has(v))) return t;
+      }
+    }
+  }
+  return null;
+}
+
+/** Why one investigator sentence cannot meet this gate for a model, or null when it can. `cited`: identifiers the model's evidence names (the approval's own number is not what the approval is limited to). */
+function sentenceRefusal(requirement: string, sentence: string, own: string, cited: string[] = []): string | null {
+  for (const g of AUTHORITY_GROUPS) {
+    if (g.re.test(requirement) && !g.re.test(sentence)) {
+      return `the investigator's sentence ("${trimQuote(sentence)}") names no ${g.label}, so it does not show that the requirement is met`;
+    }
+  }
+  if (RESEARCH_PURPOSE.test(requirement) && CLINICAL_PURPOSE.test(sentence) && !RESEARCH_PURPOSE.test(sentence)) {
+    return `the investigator's sentence ("${trimQuote(sentence)}") describes access for patient care, which is not permission for research use`;
+  }
+  if (OTHER_STUDY.test(sentence) && !THIS_STUDY.test(sentence)) {
+    return `the investigator's sentence ("${trimQuote(sentence)}") is about another study, not this one`;
+  }
+  // A sentence about the very thing the requirement names (an approved clinical protocol) is not an
+  // approval borrowed from another study: two or more of the requirement's subject words must be missing.
+  const subject = [...topicStems(AUTHORITY_GROUPS.reduce((t, g) => t.replace(new RegExp(g.re.source, "gi"), " "), requirement))];
+  const sentenceStems = contentStems(sentence);
+  const aboutSubject = subject.filter((w) => sentenceStems.has(w)).length >= 2 && subject.filter((w) => sentenceStems.has(w)).length / Math.max(1, subject.length) >= 0.6;
+  if (!THIS_STUDY.test(sentence) && !aboutSubject) {
+    const ownOutside = normalizeForMatch(own.replace(sentence, " "));
+    const protocols = [...sentence.matchAll(PROTOCOL_REF)].map((m) => m[1].replace(/[.,;:)]+$/, ""));
+    const foreign = protocols.filter((id) => !ownOutside.includes(normalizeForMatch(id)));
+    if (foreign.length) {
+      return `the investigator's sentence ("${trimQuote(sentence)}") concerns protocol ${foreign.join(", ")}, which this study's own description does not name`;
+    }
+  }
+  if (RESTRICT.test(sentence)) {
+    const window = restrictionWindow(sentence);
+    const ownOutside = normalizeForMatch(own.replace(sentence, " "));
+    const citedNorm = cited.map((c) => normalizeForMatch(c));
+    const windowIds = identifierTokens(window).filter((id) => !citedNorm.some((c) => c.includes(normalizeForMatch(id))));
+    const otherIds = windowIds.filter((id) => !ownOutside.includes(normalizeForMatch(id)));
+    const thisStudy = THIS_STUDY.test(window) || (windowIds.length > 0 && otherIds.length === 0);
+    if (otherIds.length) {
+      return `the investigator's fact is limited to ${otherIds.join(", ")} ("${trimQuote(sentence)}"), which this study's own description does not name`;
+    }
+    const inside = new Set([...contentStems(sentence), ...(thisStudy ? contentStems(own.replace(sentence, " ")) : [])]);
+    const outside = [...topicStems(requirement)].filter((w) => !inside.has(w));
+    if (outside.length) {
+      return `the investigator's fact is limited in scope ("${trimQuote(sentence)}"), and the requirement goes beyond it (${outside.join(", ")})`;
+    }
+  }
+  return null;
+}
+
 /** The grounding of a gate a model says is met: its evidence anchors first, then the investigator's own statement of the requirement. */
-export function gateGrounding(requirement: string, evidence: string, investigator: string): Grounding {
+export function gateGrounding(requirement: string, evidence: string, investigator: string, own = ""): Grounding {
   const byEvidence = groundedInInvestigatorText(evidence, investigator);
   const positive = investigatorSentences(investigator).filter((x) => !x.notInPlace).map((x) => x.text).join("\n");
   const hay = normalizeForMatch(positive);
@@ -366,17 +565,74 @@ export function gateGrounding(requirement: string, evidence: string, investigato
   if (unsuppliedIds.length) {
     return { grounded: false, foundAnchors: [], missingAnchors: unsuppliedIds, reason: `the requirement names ${unsuppliedIds.join(", ")}, which the investigator never supplied` };
   }
-  if (byEvidence.grounded) return byEvidence;
+  const cited = [...identifierTokens(evidence), ...identifierTokens(requirement)];
+  const checked = (g: Grounding, sentences: string[]): Grounding => {
+    if (!sentences.length) return g;
+    let firstRefusal = "";
+    for (const s of sentences) {
+      const refusal = sentenceRefusal(requirement, s, own, cited);
+      if (refusal) {
+        firstRefusal ||= refusal;
+        continue;
+      }
+      const conflict = conflictingFact(requirement, s, investigator);
+      if (conflict) {
+        firstRefusal ||= `conflicting local facts: "${trimQuote(s)}" and "${trimQuote(conflict)}"; only the investigator can say which holds`;
+        continue;
+      }
+      return g;
+    }
+    return { ...g, grounded: false, reason: firstRefusal };
+  };
+  if (byEvidence.grounded) return checked(byEvidence, byEvidence.sentences ?? []);
   // An identifier or a figure in the evidence that the investigator never supplied refuses the gate.
   if (identifierTokens(evidence).length || byEvidence.missingAnchors.length) return byEvidence;
   const stated = requirementStatedByInvestigator(requirement, investigator);
   if (stated.stated) {
-    return {
-      grounded: true,
-      foundAnchors: [`"${(stated.sentence ?? "").slice(0, 160)}"`],
-      missingAnchors: [],
-      reason: `the investigator's own words state the requirement: "${(stated.sentence ?? "").slice(0, 160)}"`,
-    };
+    return checked(
+      {
+        grounded: true,
+        foundAnchors: [`"${(stated.sentence ?? "").slice(0, 160)}"`],
+        missingAnchors: [],
+        reason: `the investigator's own words state the requirement: "${(stated.sentence ?? "").slice(0, 160)}"`,
+        sentences: stated.sentence ? [stated.sentence] : [],
+      },
+      stated.sentence ? [stated.sentence] : [],
+    );
   }
   return byEvidence;
+}
+
+/*
+ * D10 / S5, SYN-LOCAL-04: a model decision that says no approval, review or consent is needed makes an
+ * authorization claim. It stands only when one of the investigator's own sentences states that exemption
+ * (and is not itself pending, unknown or conditional). Clinical access to data does not count.
+ */
+const EXEMPTION = new RegExp(
+  [
+    String.raw`\b(?:needs?|requires?|required)\s+no\s+(?:formal\s+|further\s+|separate\s+|additional\s+|new\s+)?(?:approval|ethics|reb|irb|review|consent|permission|authori[sz]ation|data[- ]use agreement)`,
+    String.raw`\bno\s+(?:formal\s+|further\s+|separate\s+|additional\s+|new\s+)?(?:approval|ethics(?:\s+(?:approval|review))?|reb(?:\s+(?:approval|review))?|irb(?:\s+(?:approval|review))?|review|consent|permission|authori[sz]ation)\s+(?:is\s+|are\s+|would be\s+|will be\s+)?(?:needed|required|necessary)`,
+    String.raw`\b(?:does|do|did|will|would)\s+not\s+(?:need|require)\s+(?:an?\s+|any\s+)?(?:formal\s+|further\s+|separate\s+|new\s+)?(?:approval|ethics|reb|irb|review|consent|permission|authori[sz]ation)`,
+    String.raw`\b(?:doesn't|don't|won't|wouldn't)\s+(?:need|require)\s+(?:an?\s+|any\s+)?(?:approval|ethics|reb|irb|review|consent|permission)`,
+    String.raw`\b(?:approval|ethics review|reb review|irb review|consent|permission|authori[sz]ation)\s+(?:is|are|was|would be|will be)\s+(?:not\s+(?:needed|required|necessary)|unnecessary)`,
+    String.raw`\bnot\s+requiring\s+(?:an?\s+|any\s+)?(?:formal\s+|further\s+|separate\s+|new\s+)?(?:approval|ethics|reb|irb|review|consent|permission|authori[sz]ation)`,
+    String.raw`\b(?:approval|ethics review|reb review|irb review|review|consent|permission)\s+not\s+(?:needed|required|necessary)`,
+    String.raw`\bexempt(?:ed)?\s+from\s+(?:ethics\s+|reb\s+|irb\s+|research\s+ethics\s+)?(?:review|approval|oversight|consent)`,
+    String.raw`\bno\s+need\s+(?:for|of)\s+(?:an?\s+)?(?:approval|ethics|reb|irb|review|consent|permission)`,
+    String.raw`\bwithout\s+(?:the\s+)?need\s+(?:for|of)\s+(?:approval|ethics|reb|irb|review|consent)`,
+  ].join("|"),
+  "i",
+);
+const CONDITIONAL = /\b(?:if|whether|unless)\b|\?|\b(?:confirm|check|verify|ask|determine|clarify)\s+(?:whether|if|that)\b/i;
+
+/** Sentences in `text` that say no approval, review or consent is needed, as plain assertions. */
+export function exemptionAssertions(text: string): string[] {
+  return investigatorSentences(text)
+    .map((x) => x.text)
+    .filter((t) => EXEMPTION.test(t) && !CONDITIONAL.test(t));
+}
+
+/** Whether the investigator's own text states an exemption (not pending, not unknown, not conditional). */
+export function investigatorStatesExemption(investigator: string): boolean {
+  return investigatorSentences(investigator).some((x) => !x.notInPlace && EXEMPTION.test(x.text) && !CONDITIONAL.test(x.text));
 }

@@ -28,7 +28,9 @@ export type IssueCode =
   /** A model said a gate is met, but its evidence is not anchored in investigator-entered text. */
   | "ungrounded-gate"
   /** A source-derived claim whose passage or numbers do not occur in the cited record's stored text. */
-  | "claim-unsupported";
+  | "claim-unsupported"
+  /** A model claim of kind local-fact: a proposal, not established until the investigator enters it (D10 / S5). */
+  | "proposed-local-fact";
 
 export interface Issue {
   path: string;
