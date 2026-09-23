@@ -1,0 +1,1689 @@
+{
+  "id": "sc-058",
+  "version": 1,
+  "title": "Regional Lean catheter project across four hospitals: protocol revision flags analysis and ethics, late audit reply refused",
+  "field": "infectious-disease",
+  "level": 5,
+  "family": "qi-lean",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D27",
+    "S11",
+    "S13"
+  ],
+  "notes": "Expert path on a multi-site Lean project. Seven fixture records are appraised into six claims; the decision (kind implementation) rests on c1, c2, c3, c4 and c6, with the council gate met and Hospital D's data sharing gate unknown, so it is accepted with the action blocked. Dependency closure across stages (G8): the first protocol reply ignores two investigator facts (one Lean coach, one hospital at a time; Hospital D on paper), Analysis and Ethics are drafted on it, then the investigator re-runs Protocol (call 2); both completed downstream stages are flagged for review, Analysis is redone (call 2) and leaves the list, and Ethics is re-reviewed and marked complete by hand, so the closure ends with needsReview empty. Late reply (G6): after an applied audit call (positive control), the investigator requests a re-audit and edits the audit notes while it is pending; the reply for audit call 2 must be refused with nothing applied. The format has no step for a pending request, so this scenario represents it as audit call 1, a set-field on audit.improvementNotes (the request is sent at that step, before the edit is saved) and audit call 2 as the late reply; the runner must send the request before executing the set-field and deliver the reply after it. Record ids are stableRecordId(record) imported from src/lib/evidence/records.ts in the author's generator: DOI-based for records 1, 3, 5, 7 (ev-1nyhpv9, ev-0abegw1, ev-1bdpaih, ev-03gnd4n) and titleYearKey-based for records 2, 4, 6 (ev-1s4dbl6, ev-0jtvr38, ev-107rvsr). Requires D27 (substantive audit content in studyRevision; at 875fe59 the audit object is excluded, so the late reply would overwrite the investigator's notes), S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text, review required). Catches: downstream stages left complete after an upstream revision, a flag that never clears after re-review, a late model reply overwriting investigator text, and a refused reply that still changes the store.",
+  "inputs": {
+    "need": "I lead infection prevention and control for a regional health system with four acute hospitals (A to D) and 12 adult medical and surgical wards that we have agreed to work on first. Indwelling urinary catheters stay in too long. Our last quarterly point count found a catheter in 19 percent of ward patients, and when we reviewed 120 catheters, 38 had no documented indication on the day of review. Our catheter-associated urinary tract infection rate on these wards is about 2.3 per 1,000 catheter days, and two patients developed bacteraemia from a catheter source last year.\n\nWe want to run a Lean improvement project across the four hospitals. The idea is to value stream map the catheter pathway from insertion (mostly in emergency and theatres) to removal, find the waits and handoffs where catheters are forgotten, and then introduce standard work: a nurse-driven removal protocol, a daily catheter check at the morning huddle, and a removal reminder built into the nursing flowsheet. Each hospital has a ward manager champion, and the regional Lean office has one Lean coach who can support one hospital at a time, for about three months each.\n\nWhat I need: a sensible primary measure (catheter days per 100 patient days, the proportion of catheters without a valid indication, or infections), a measurement set-up that can tell change from noise across four hospitals that start at different times, what the statistics should look like, how to handle the fact that one hospital's flowsheet cannot produce catheter days automatically, and what we need to do about ethics for a system-wide project. I also want to avoid claiming an infection effect we cannot detect with these numbers. The regional quality council has approved the project; Hospital D's information governance office has not yet agreed to share ward-level data.",
+    "constraints": "No new funding. One Lean coach supports one hospital at a time for about three months. Measurement must use existing flowsheets and point counts; no chart review beyond 20 charts per ward per month.",
+    "localFacts": [
+      "The regional quality council approved the Lean catheter project for Hospitals A to D on 2026-08-25 (decision QC-2026-19).",
+      "The regional Lean office has one Lean coach, who can support one hospital at a time for about three months each.",
+      "Hospitals A, B and C record catheter insertion and removal in the nursing flowsheet; Hospital D records them on paper until its record system changes in late 2027.",
+      "Hospital D's information governance office has not replied to our request of 2026-09-01 to share ward-level catheter data with the regional team.",
+      "The regional research ethics office screened the project as quality improvement not requiring REB review on 2026-09-04 (screening QI-R-2026-077).",
+      "The last quarterly point count found an indwelling catheter in 19 percent of patients on the 12 wards; 38 of 120 catheters reviewed had no documented indication."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I lead infection prevention and control for a regional health system with four acute hospitals (A to D) and 12 adult medical and surgical wards that we have agreed to work on first. Indwelling urinary catheters stay in too long. Our last quarterly point count found a catheter in 19 percent of ward patients, and when we reviewed 120 catheters, 38 had no documented indication on the day of review. Our catheter-associated urinary tract infection rate on these wards is about 2.3 per 1,000 catheter days, and two patients developed bacteraemia from a catheter source last year.\n\nWe want to run a Lean improvement project across the four hospitals. The idea is to value stream map the catheter pathway from insertion (mostly in emergency and theatres) to removal, find the waits and handoffs where catheters are forgotten, and then introduce standard work: a nurse-driven removal protocol, a daily catheter check at the morning huddle, and a removal reminder built into the nursing flowsheet. Each hospital has a ward manager champion, and the regional Lean office has one Lean coach who can support one hospital at a time, for about three months each.\n\nWhat I need: a sensible primary measure (catheter days per 100 patient days, the proportion of catheters without a valid indication, or infections), a measurement set-up that can tell change from noise across four hospitals that start at different times, what the statistics should look like, how to handle the fact that one hospital's flowsheet cannot produce catheter days automatically, and what we need to do about ethics for a system-wide project. I also want to avoid claiming an infection effect we cannot detect with these numbers. The regional quality council has approved the project; Hospital D's information governance office has not yet agreed to share ward-level data.",
+          "problem.constraints": "No new funding. One Lean coach supports one hospital at a time for about three months. Measurement must use existing flowsheets and point counts; no chart review beyond 20 charts per ward per month.",
+          "family": "qi-lean",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I lead infection prevention and control for a regional health system"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "omitKeys": [
+        "constraints"
+      ],
+      "response": {
+        "title": "Lean catheter pathway across four hospitals: catheter days and catheter-associated infections",
+        "subtitle": "Lean project with staggered starts on 12 wards in Hospitals A to D",
+        "family": "qi-lean",
+        "statement": "Indwelling urinary catheters stay in longer than needed on 12 medical and surgical wards across four hospitals: 19 percent of ward patients had a catheter at the last point count and 38 of 120 reviewed catheters had no documented indication. The project will use value stream mapping and standard work (nurse-driven removal, a daily huddle check and a flowsheet reminder) to shorten catheter duration, measured in a way that separates real change from noise across hospitals that start at different times.",
+        "whoAffected": "Adult inpatients on 12 wards, especially older men after surgery and patients catheterised in emergency or theatres; ward nurses who own removal; physicians and theatre teams who insert catheters; the four ward manager champions.",
+        "whatHurts": "Unneeded catheters cause infections, bacteraemia, discomfort, delirium and immobility; two catheter-source bacteraemias occurred last year. Nurses are unsure whether they may remove catheters without an order.",
+        "currentPractice": "Removal depends on a physician order; indications are often undocumented; catheter days are recorded in flowsheets in three hospitals and on paper in Hospital D.",
+        "whyNow": "Council approval is in place, a Lean coach is available for one hospital at a time, and the point count showed a high share of catheters without an indication.",
+        "patientCenteredGoal": "Patients have a urinary catheter only while it is needed, and no patient has a catheter reinserted because it was removed without a plan.",
+        "summary": "Problem framed as a multi-site Lean project on catheter duration, with infections as a descriptive safety outcome."
+      },
+      "note": "The reply omits the constraints key, so the investigator's constraints stay as typed (G11).",
+      "expect": {
+        "store": {
+          "title": "Lean catheter pathway across four hospitals: catheter days and catheter-associated infections",
+          "family": "qi-lean",
+          "problem.constraints": "No new funding. One Lean coach supports one hospital at a time for about three months. Measurement must use existing flowsheets and point counts; no chart review beyond 20 charts per ward per month.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Lean catheter pathway across four hospitals: catheter days and catheter-associated infections"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "reducing indwelling urinary catheter days lean value stream nurse-driven removal protocol multiple hospitals",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Nurse-driven catheter removal protocols and catheter utilisation: a multi-hospital interrupted time series",
+            "authors": "Okoro-Lindahl B, Castellanos-Pike R, Mensah-Vogel T",
+            "year": 2020,
+            "venue": "Journal of Hospital Infection Prevention",
+            "doi": "10.5555/jhip.2020.0418",
+            "providerType": "journal-article",
+            "abstract": "Across 9 hospitals, a nurse-driven removal protocol with daily catheter review was introduced in a staggered sequence over 18 months. Catheter utilisation fell from 21 to 14 catheter days per 100 patient days, and segmented regression showed a level change at introduction in 7 of 9 hospitals. The infection rate per 1,000 catheter days did not change clearly (2.1 before and 1.9 after), and the number of infections was too small to estimate an effect with precision. Reinsertion within 48 hours of removal followed 4 percent of removals, similar before and after. Hospitals with a named ward champion sustained the change for longer."
+          },
+          {
+            "title": "Value stream mapping of the urinary catheter pathway from emergency department to ward",
+            "authors": "Varga-Holm D, Achebe-Nilsen F",
+            "year": 2018,
+            "venue": "Lean Methods in Hospital Care",
+            "providerType": "journal-article",
+            "abstract": "In one hospital, a team mapped the catheter pathway from insertion in the emergency department to removal on the ward, timing each step for 40 patients. Catheters inserted in the emergency department had no documented indication in 45 percent of cases, and the median wait between the first day a catheter was no longer needed and its removal was 2.5 days. Most of the wait arose at handoffs between teams, where no one owned the removal decision. After standard work and a daily huddle check, the median wait fell to 1 day in a second mapping of 40 patients. The study had no comparison group."
+          },
+          {
+            "title": "Interventions to reduce catheter-associated urinary tract infection: a systematic review of controlled and time-series studies",
+            "authors": "Rahman-Keller S, Oduya-Brandt L, Petrakis-Hughes M, Sato-Obi N",
+            "year": 2022,
+            "venue": "Infection Control Evidence Reviews",
+            "doi": "10.5555/icer.2022.0203",
+            "providerType": "review",
+            "abstract": "We included 31 studies of reminders, stop orders, nurse-driven removal and bundles. Catheter use fell in most studies, with a median relative reduction of 32 percent. Only 8 studies reported infection rates with enough events to estimate change, and their pooled rate ratio was 0.69 (95 percent CI 0.52 to 0.91), with high heterogeneity. Most studies were uncontrolled before-and-after designs at high risk of bias. Studies using interrupted time series with at least eight points before and after were less likely to report large effects."
+          },
+          {
+            "title": "Measuring catheter days when electronic flowsheets are incomplete: agreement between point prevalence counts and daily records",
+            "authors": "Mbeki-Sorensen A, Laurent-Adeyemi K",
+            "year": 2024,
+            "venue": "Surveillance Methods Letters",
+            "providerType": "journal-article",
+            "abstract": "On 14 wards we compared catheter days from electronic flowsheets with estimates from twice-weekly point prevalence counts. Estimates from the counts agreed with the flowsheet within 8 percent over a month, but weekly estimates varied more, and short catheterisations under two days were missed by the counts. Wards using paper records could produce monthly utilisation from the counts with about 3 hours of staff time a month. The authors advise against mixing the two sources within one ward's time series, because a switch of source can look like a change in practice."
+          },
+          {
+            "title": "Staggered rollout of improvement work across hospitals: designing for inference with multiple baselines",
+            "authors": "Lindgren-Oyelowo E, Tanaka-Ferreira J, Brennan-Quist H",
+            "year": 2016,
+            "venue": "Improvement Science Methods",
+            "doi": "10.5555/ism.2016.0031",
+            "providerType": "journal-article",
+            "abstract": "We describe how to plan improvement work that starts at different times in different hospitals so that each hospital acts as a control for the others while it waits. With four sites and three-month intervals, each site contributes a different baseline length, and a segmented regression with site-specific levels can separate the change at each start from secular trends. Simulations with 12 monthly points before the first start showed that staggered starts detected a 25 percent level change with 80 percent power where simultaneous starts reached 55 percent. Autocorrelation and seasonal infection patterns must be modelled explicitly."
+          },
+          {
+            "title": "Catheter reinsertion after nurse-driven removal: a balancing measure",
+            "authors": "Dubois-Mwangi C, Haddad-Strand O",
+            "year": 2021,
+            "venue": "Continence and Urology Nursing",
+            "providerType": "journal-article",
+            "abstract": "Across 6 wards, 1,240 catheter removals under a nurse-driven protocol were followed for 72 hours. Reinsertion occurred after 5.2 percent of removals, most often for urinary retention in men over 75 after surgery. A bladder scan before any reinsertion reduced unnecessary reinsertions over the following year. The authors recommend reporting reinsertion within 72 hours as a balancing measure with any removal protocol, and describing retention episodes separately so that a rise in reinsertions is not hidden inside falling catheter days."
+          },
+          {
+            "title": "Why catheters stay: ward nurses on removal decisions",
+            "authors": "Nakashima-Ortiz P, Adeleke-Svensson M, Reid-Castaneda A",
+            "year": 2019,
+            "venue": "Qualitative Nursing Practice",
+            "doi": "10.5555/qnp.2019.0117",
+            "providerType": "qualitative study",
+            "abstract": "We talked with 28 ward nurses in three hospitals about decisions to remove urinary catheters. Nurses described uncertainty about whether they were allowed to remove a catheter without a physician order, fear of reinsertion if the patient could not void, and handoffs where the reason for the catheter was lost. Several described catheters left in to manage incontinence or falls risk at night. Nurses on wards with a written removal protocol described fewer delays and more confidence in raising removal at the morning huddle."
+          }
+        ]
+      },
+      "note": "Seven records; record 7 carries the provider label 'qualitative study', which the ingestion maps to kind qualitative (holds at 875fe59).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-1nyhpv9",
+            "ev-1s4dbl6",
+            "ev-0abegw1",
+            "ev-0jtvr38",
+            "ev-1bdpaih",
+            "ev-107rvsr",
+            "ev-03gnd4n"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].provenance.status": "retrieved",
+          "scan.items[0].grade": "unrated",
+          "scan.items[6].kind": "qualitative",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Staggered rollout of improvement work across hospitals: designing for inference with multiple baselines"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-1nyhpv9",
+            "relevance": 92,
+            "methodQuality": 68,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A staggered nurse-driven removal protocol across 9 hospitals was followed by a fall from 21 to 14 catheter days per 100 patient days, with level changes in 7 of 9 hospitals; infection rates changed unclearly (2.1 and 1.9 per 1,000 catheter days).",
+            "limitations": "Non-randomised staggered design; infections too few for precision.",
+            "contextTags": [
+              "multi-hospital",
+              "interrupted time series",
+              "nurse-driven removal"
+            ]
+          },
+          {
+            "id": "ev-1s4dbl6",
+            "relevance": 84,
+            "methodQuality": 40,
+            "kind": "qi-report",
+            "grade": "very-low",
+            "keyFindings": "Mapping 40 patients showed a median wait of 2.5 days between a catheter no longer being needed and its removal, mostly at handoffs; after standard work the wait fell to 1 day.",
+            "limitations": "One hospital; no comparison group; small samples.",
+            "contextTags": [
+              "value stream map",
+              "handoffs",
+              "standard work"
+            ]
+          },
+          {
+            "id": "ev-0abegw1",
+            "relevance": 76,
+            "methodQuality": 66,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Across 31 studies catheter use fell by a median of 32 percent; in 8 studies with enough events the pooled infection rate ratio was 0.69 with high heterogeneity; time-series studies reported smaller effects.",
+            "limitations": "Mostly uncontrolled before-and-after studies at high risk of bias.",
+            "contextTags": [
+              "systematic review",
+              "infection outcomes",
+              "risk of bias"
+            ]
+          },
+          {
+            "id": "ev-0jtvr38",
+            "relevance": 88,
+            "methodQuality": 58,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Twice-weekly point counts estimated monthly catheter days within 8 percent of flowsheet values; mixing sources within one ward's series is discouraged.",
+            "limitations": "Fourteen wards; short catheterisations missed by counts.",
+            "contextTags": [
+              "measurement",
+              "paper records",
+              "point prevalence"
+            ]
+          },
+          {
+            "id": "ev-1bdpaih",
+            "relevance": 90,
+            "methodQuality": 62,
+            "kind": "expert",
+            "grade": "low",
+            "keyFindings": "In simulations with four sites and three-month intervals, staggered starts detected a 25 percent level change with 80 percent power against 55 percent for simultaneous starts.",
+            "limitations": "Simulation-based methods paper; assumptions about autocorrelation.",
+            "contextTags": [
+              "multiple baseline",
+              "staggered start",
+              "segmented regression"
+            ]
+          },
+          {
+            "id": "ev-107rvsr",
+            "relevance": 80,
+            "methodQuality": 52,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Reinsertion within 72 hours followed 5.2 percent of 1,240 nurse-driven removals, mostly retention in older men after surgery.",
+            "limitations": "Six wards; no comparison period.",
+            "contextTags": [
+              "balancing measure",
+              "reinsertion",
+              "retention"
+            ]
+          },
+          {
+            "id": "ev-03gnd4n",
+            "relevance": 70,
+            "methodQuality": 55,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Nurses were unsure whether they could remove catheters without an order, feared reinsertion, and lost indications at handoffs; written protocols were linked to fewer delays.",
+            "limitations": "Twenty-eight nurses in three hospitals.",
+            "contextTags": [
+              "nurse autonomy",
+              "handoffs",
+              "qualitative"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In a staggered introduction across 9 hospitals, a nurse-driven removal protocol with daily review was followed by a fall in catheter utilisation from 21 to 14 catheter days per 100 patient days.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1nyhpv9"
+            ],
+            "location": "Abstract, results",
+            "passage": "Catheter utilisation fell from 21 to 14 catheter days per 100 patient days",
+            "interpretation": "Catheter days per 100 patient days is a responsive primary measure for the project.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "In the same multi-hospital series the infection rate per 1,000 catheter days did not change clearly (2.1 before and 1.9 after).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1nyhpv9"
+            ],
+            "location": "Abstract, results",
+            "passage": "The infection rate per 1,000 catheter days did not change clearly (2.1 before and 1.9 after)",
+            "interpretation": "Infections should be reported descriptively; 12 wards cannot detect an infection effect.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "A value stream map of 40 patients found a median wait of 2.5 days between a catheter no longer being needed and its removal, mostly at handoffs.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1s4dbl6"
+            ],
+            "location": "Abstract",
+            "passage": "the median wait between the first day a catheter was no longer needed and its removal was 2.5 days",
+            "interpretation": "Handoffs are where standard work should act.",
+            "uncertainty": "high"
+          },
+          {
+            "id": "c4",
+            "text": "With four sites and three-month intervals, staggered starts detected a 25 percent level change with 80 percent power in simulations where simultaneous starts reached 55 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1bdpaih"
+            ],
+            "location": "Abstract, simulation results",
+            "passage": "staggered starts detected a 25 percent level change with 80 percent power where simultaneous starts reached 55 percent",
+            "interpretation": "The single-coach constraint is an advantage for inference: use a staggered multiple-baseline design.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Twice-weekly point counts estimated monthly catheter days within 8 percent of flowsheet values, and the two sources should not be mixed within one ward's series.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0jtvr38"
+            ],
+            "location": "Abstract",
+            "passage": "Estimates from the counts agreed with the flowsheet within 8 percent over a month",
+            "interpretation": "Hospital D can use point counts for its whole series, analysed as its own measure.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c6",
+            "text": "Reinsertion within 72 hours followed 5.2 percent of nurse-driven removals.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-107rvsr"
+            ],
+            "location": "Abstract",
+            "passage": "Reinsertion occurred after 5.2 percent of removals",
+            "interpretation": "Reinsertion within 72 hours is the balancing measure.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. Nurse-driven removal with daily review is consistently followed by fewer catheter days (21 to 14 per 100 patient days across 9 hospitals), while infection effects are imprecise and larger in weaker designs. Value stream mapping located most removal delay at handoffs. A staggered start across four sites gives far more power than a simultaneous start. Point counts can measure catheter days on paper-record wards if the source is not mixed within a series. Reinsertion after removal is about 5 percent and should be tracked. Nurses need explicit authority to remove catheters.",
+        "gradeOverall": "low",
+        "gradeRationale": "Time-series and before-and-after studies with consistent reductions in catheter use but imprecise and heterogeneous infection effects; a simulation-based methods paper and small qualitative work.",
+        "summary": "Seven records appraised; six source-derived claims; overall certainty low."
+      },
+      "note": "Appraisal of the seven retrieved records (S13). Certainty is the appraisal's value over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "low",
+          "scan.items[1].grade": "very-low",
+          "scan.items[1].kind": "qi-report",
+          "scan.items[4].kind": "expert",
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.claims[1].sourceIds": [
+            "ev-1nyhpv9"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-1bdpaih"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-0jtvr38"
+          ],
+          "scan.claims[2].uncertainty": "high",
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "four acute hospitals, 12 medical and surgical wards",
+          "catheters inserted mostly in emergency and theatres",
+          "one Lean coach, one hospital at a time",
+          "paper catheter records in Hospital D"
+        ],
+        "reading": "Catheter duration is set by a chain of handoffs from the inserting team to the ward, where the indication is often lost and no one owns removal. Standard work at the ward (nurse-driven removal, huddle check, flowsheet reminder) acts at the point where waits accumulate. The single Lean coach forces a staggered start, which is also the design that gives the most power to separate change from secular trends. Hospital D's paper records and pending information governance agreement shape how its data can be measured and shared. Infections are the outcome patients care about most but are too few on 12 wards to show change.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Catheter inserted in emergency or theatres without a documented indication",
+            "kind": "context",
+            "detail": "38 of 120 reviewed catheters had no indication."
+          },
+          {
+            "id": "n2",
+            "label": "Handoffs where removal is not owned",
+            "kind": "gap",
+            "detail": "Most of the wait in the retrieved value stream map (claim c3)."
+          },
+          {
+            "id": "n3",
+            "label": "Standard work: nurse-driven removal, huddle check, flowsheet reminder",
+            "kind": "framework",
+            "detail": "Lean countermeasures."
+          },
+          {
+            "id": "n4",
+            "label": "Catheter days per 100 patient days",
+            "kind": "outcome",
+            "detail": "Primary measure (claim c1)."
+          },
+          {
+            "id": "n5",
+            "label": "Catheter-associated infections",
+            "kind": "outcome",
+            "detail": "Descriptive only (claim c2)."
+          },
+          {
+            "id": "n6",
+            "label": "Reinsertion within 72 hours",
+            "kind": "outcome",
+            "detail": "Balancing measure (claim c6)."
+          },
+          {
+            "id": "n7",
+            "label": "Staggered start across four hospitals",
+            "kind": "framework",
+            "detail": "Multiple-baseline design (claim c4)."
+          },
+          {
+            "id": "n8",
+            "label": "Hospital D paper records and pending data agreement",
+            "kind": "context",
+            "detail": "Point counts as its measure (claim c5)."
+          },
+          {
+            "id": "n9",
+            "label": "Ward nurses and ward manager champions",
+            "kind": "stakeholder",
+            "detail": "Need explicit authority to remove."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "passes into"
+          },
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "lengthens"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "targets"
+          },
+          {
+            "from": "n3",
+            "to": "n6",
+            "relation": "may raise"
+          },
+          {
+            "from": "n4",
+            "to": "n5",
+            "relation": "exposure for"
+          },
+          {
+            "from": "n7",
+            "to": "n4",
+            "relation": "allows inference on"
+          },
+          {
+            "from": "n8",
+            "to": "n4",
+            "relation": "changes how it is measured in D"
+          },
+          {
+            "from": "n9",
+            "to": "n3",
+            "relation": "deliver"
+          }
+        ],
+        "summary": "Map links lost indications and unowned handoffs to catheter days, with the staggered start and Hospital D's measurement as design constraints."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "map.nodes[1].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No monthly catheter-days series for the 12 wards",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Quarterly point counts cannot show change from noise.",
+            "opportunity": "Build 12 months of flowsheet baseline for Hospitals A to C and start point counts in Hospital D before its start."
+          },
+          {
+            "id": "g2",
+            "title": "Infection effects cannot be detected on 12 wards",
+            "kind": "outcome",
+            "severity": "high",
+            "whyItMatters": "At about 2 infections per 1,000 catheter days, a year of 12 wards gives few events, and published effects are imprecise (claim c2).",
+            "opportunity": "Report infections descriptively and keep catheter days as the primary measure."
+          },
+          {
+            "id": "g3",
+            "title": "Mixed measurement sources across hospitals",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Hospital D cannot produce flowsheet catheter days, and switching sources within a series looks like change (claim c5).",
+            "opportunity": "Use point counts for Hospital D's whole series and analyse it with a site-specific level."
+          },
+          {
+            "id": "g4",
+            "title": "Nurses lack explicit authority to remove",
+            "kind": "implementation",
+            "severity": "moderate",
+            "whyItMatters": "Uncertainty about removal without an order keeps catheters in.",
+            "opportunity": "Approve a nurse-driven removal protocol through each hospital's medical advisory committee before its start."
+          },
+          {
+            "id": "g5",
+            "title": "Older men after surgery bear the reinsertion risk",
+            "kind": "equity",
+            "severity": "watch",
+            "whyItMatters": "Reinsertion concentrates in older surgical men with retention (claim c6).",
+            "opportunity": "Report reinsertion by age group and service, with a bladder scan before reinsertion."
+          }
+        ],
+        "errorsFound": [
+          "The need lists infections as a possible primary measure; with these numbers infections can only be described."
+        ],
+        "reevaluation": "The gaps favour a staggered multiple-baseline Lean project with catheter days as the primary measure, infections descriptive, reinsertion as balancing, and a site-specific measure for Hospital D.",
+        "summary": "Five gaps; the missing series and the undetectable infection effect are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].kind": "outcome",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "Introducing Lean standard work for catheter removal, one hospital at a time, lowers catheter days per 100 patient days by at least 25 percent within six months of each hospital's start, relative to that hospital's own baseline and to hospitals not yet started.",
+            "novelty": 30,
+            "need": 85,
+            "practiceChange": 85,
+            "feasibility": 80,
+            "parsimony": 85,
+            "rationale": "Need is high after two bacteraemias; novelty is low because nurse-driven removal is established (c1), which suits improvement work; the staggered design follows the coach constraint (c4).",
+            "risks": "Secular decline across the region; loss of momentum after the coach moves on."
+          },
+          {
+            "id": "h2",
+            "statement": "Reinsertion within 72 hours stays below 6 percent of removals after each start.",
+            "novelty": 30,
+            "need": 70,
+            "practiceChange": 60,
+            "feasibility": 85,
+            "parsimony": 80,
+            "rationale": "Balancing measure with a published reference value (c6).",
+            "risks": "Retention episodes coded inconsistently."
+          },
+          {
+            "id": "h3",
+            "statement": "The share of catheters without a documented indication falls from about 32 percent to under 10 percent.",
+            "novelty": 35,
+            "need": 65,
+            "practiceChange": 70,
+            "feasibility": 75,
+            "parsimony": 70,
+            "rationale": "Directly targets the handoff failure found in the value stream map (c3).",
+            "risks": "Documentation may improve without catheters coming out sooner."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 selected, h2 as the balancing check and h3 as a process measure."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "On 12 medical and surgical wards in Hospitals A to D, does Lean standard work for catheter removal, introduced one hospital per quarter from January 2027, reduce monthly catheter days per 100 patient days by at least 25 percent within six months of each hospital's start, while reinsertion within 72 hours stays below 6 percent?",
+            "framework": "QI-aim",
+            "population": "Adult inpatients on 12 medical and surgical wards in four hospitals",
+            "intervention": "Value stream mapping and standard work: nurse-driven removal, daily huddle check, flowsheet reminder",
+            "comparator": "Each hospital's own baseline and hospitals not yet started",
+            "outcome": "Monthly catheter days per 100 patient days",
+            "time": "January 2027 to March 2028",
+            "setting": "Regional health system, four acute hospitals"
+          }
+        ],
+        "finer": "Feasible with one coach and existing data; interesting to the council and wards; novel locally; ethical under the QI screening; relevant after two bacteraemias.",
+        "summary": "One time-bound improvement aim with a balancing threshold."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "QI-aim",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-lean",
+        "rationale": "The goal is to remove waste from a care pathway across four hospitals, which is what value stream mapping and standard work are for. The single coach makes a staggered start unavoidable, and the retrieved methods paper shows that a staggered multiple-baseline layout gives far more power than a simultaneous start (c4). Catheter days per 100 patient days is responsive (c1); infections are too few to test (c2). Reporting follows SQUIRE 2.0.",
+        "alternatives": [
+          "Stepped-wedge cluster randomised trial (refused: the order is fixed by coach availability and the question is local improvement)",
+          "Simultaneous start with one pooled before-and-after comparison (refused: cannot separate change from secular trends)",
+          "Protocol without Lean mapping (refused: does not find the handoff waits)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0"
+        ],
+        "whyNotMoreComplex": "Randomising the order would add little because the coach's availability already fixes it, and a trial would promise an infection effect these wards cannot show.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Run the Lean catheter project on the 12 wards with a staggered start, one hospital per quarter as the Lean coach moves (A in January, B in April, C in July, D in October 2027), measuring monthly catheter days per 100 patient days as the primary measure (c1, c4), reporting infections descriptively (c2), tracking reinsertion within 72 hours (c6) and targeting handoffs (c3).",
+          "question": "Should the region run the Lean catheter project across Hospitals A to D, and in what sequence?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c6"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Nurse-driven removal reduces catheter days, and a staggered start can separate that change from secular trends.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Another catheter reduction programme is scheduled on the same wards in 2027.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Regional quality council approval of the project for Hospitals A to D",
+              "status": "met",
+              "evidence": "Council decision QC-2026-19 dated 2026-08-25, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Hospital D information governance agreement to share ward-level catheter data with the regional team",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Simultaneous start in all four hospitals",
+            "Nurse-driven removal protocol without Lean mapping"
+          ],
+          "note": "Rests on ledger claims c1, c2, c3, c4 and c6. The council gate is met; Hospital D's data sharing gate is unknown, so the action stays blocked until the office replies."
+        },
+        "summary": "Lean project with staggered starts recommended; the council gate is met and Hospital D's data gate is unknown."
+      },
+      "note": "Claims exist only when S13 applied the appraisal; selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-lean",
+          "family": "qi-lean",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c6"
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "design.decisions[-1].gates[1].evidence": {
+            "absent": true
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported positive with one unknown gate: accepted selection, blocked action (G7; A2 item 9). S11 for the fields, D5 for the text.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.basis": "explicit",
+          "family": "qi-lean"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Lean project on 12 wards in Hospitals A to D. After a 12-month baseline, all four hospitals map the catheter pathway in January 2027 and introduce standard work in February 2027, with monthly measurement to March 2028.",
+        "population": "Adult inpatients on the 12 participating medical and surgical wards; all catheterised patients, including those catheterised in emergency or theatres before transfer.",
+        "exposure": "Standard work: nurse-driven removal protocol, a daily catheter check at the morning huddle and a flowsheet removal reminder, introduced in all four hospitals at once.",
+        "procedures": "Each hospital's champion leads a two-day mapping event with the Lean coach. Catheter days come from the nursing flowsheet in all four hospitals; indication documentation is checked on 20 charts per ward per month; infections follow the regional surveillance definition.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Catheter days per 100 patient days",
+            "measure": "Monthly catheter days divided by patient days, per ward",
+            "timing": "Monthly, baseline and intervention",
+            "why": "Responsive to removal practice and available from flowsheets.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Catheter-associated urinary tract infections per 1,000 catheter days",
+            "measure": "Regional surveillance definition",
+            "timing": "Monthly",
+            "why": "The harm patients care about; descriptive only.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Catheters without a documented indication",
+            "measure": "Proportion of 20 sampled catheterised patients per ward per month",
+            "timing": "Monthly",
+            "why": "Tracks the handoff failure.",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Reinsertion within 72 hours of removal",
+            "measure": "Reinsertions divided by removals",
+            "timing": "Monthly",
+            "why": "Guards against unsafe removal.",
+            "patientCentered": true
+          }
+        ],
+        "biasMitigation": [
+          "12-month baseline",
+          "Fixed surveillance definition",
+          "Annotated run charts for co-interventions"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Secular trend",
+            "severity": "high",
+            "note": "A simultaneous start cannot separate the project from regional trends."
+          },
+          {
+            "id": "b2",
+            "label": "Surveillance intensity",
+            "severity": "watch",
+            "note": "More attention to catheters may find more infections."
+          }
+        ],
+        "parsimony": {
+          "score": 74,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 2,
+          "flags": [
+            "One primary measure, one descriptive secondary"
+          ],
+          "simplestPath": "Monthly catheter days per ward before and after one start date."
+        },
+        "feasibility": "One coach for three months per hospital; about 3 staff hours a month for point counts in Hospital D; chart review limited to 20 charts per ward per month for indication documentation.",
+        "theoreticalFramework": "Lean value stream mapping and standard work; SEIPS only to describe the work system at handoffs.",
+        "summary": "Simultaneous start in all four hospitals with flowsheet catheter days as the primary measure."
+      },
+      "note": "First protocol reply. It ignores two investigator facts (one coach for one hospital at a time; Hospital D's paper records) and contradicts the accepted staggered sequence; the investigator notices only after Analysis and Ethics are drafted.",
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[3].role": "balancing",
+          "protocol.overview": {
+            "includes": "all four hospitals map the catheter pathway in January 2027"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Interrupted time series with a common start in February 2027: 12 monthly baseline points and 14 monthly intervention points per ward, pooled across 12 wards.",
+        "sampleSize": "Twelve wards with 26 monthly points each give 312 ward-months. With a baseline near 19 catheter days per 100 patient days and ward-to-ward variation of about 4, a pooled segmented regression can detect a level change of about 20 percent with 80 percent power, assuming modest autocorrelation; infections (about 2 per 1,000 catheter days) are too few for any test.",
+        "primaryAnalysis": "Segmented Poisson regression of monthly catheter days with patient days as the offset, a common change point in February 2027, ward random effects and a first-order autoregressive term.",
+        "secondaryAnalysis": "Descriptive infection rates; run charts of indication documentation and reinsertion.",
+        "missingData": "Months with incomplete flowsheet extracts are flagged and excluded from the model; no imputation.",
+        "multiplicity": "One primary measure; secondary and balancing measures are descriptive.",
+        "software": "R; code archived before the first start.",
+        "overfittingGuards": [
+          "Change point fixed in advance",
+          "No ward-level subgroup testing"
+        ],
+        "summary": "Pooled segmented regression with one common change point."
+      },
+      "note": "First analysis reply, built on the first protocol's simultaneous start.",
+      "expect": {
+        "store": {
+          "stats.designSummary": {
+            "includes": "common start in February 2027"
+          },
+          "stats.overfittingGuards": {
+            "length": 2
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: the project changes who removes catheters and when. The main risks are unsafe removal leading to retention and reinsertion, and staff feeling blamed for catheters left in; results are reported by ward, never by nurse.",
+        "consent": "Standard work is usual care under an approved nurse-driven protocol; patients are told why their catheter is being removed and can ask to keep it pending review. Staff take part as part of normal work.",
+        "data": "Ward-level counts only leave each hospital; patient identifiers stay in the local surveillance system; Hospital D's data are shared only after its information governance office agrees.",
+        "equity": "PROGRESS-Plus: older men after surgery bear most reinsertion risk, patients with dementia or limited English may not report retention symptoms, and night-shift wards have fewer staff to act on reminders. Reinsertion is reported by age group, bladder scanning is used before reinsertion, and interpreters are used for removal explanations.",
+        "effectiveness": "Success is a sustained fall in catheter days with reinsertion below 6 percent; infections are described, never claimed as an effect.",
+        "efficiency": "Existing staff, one coach and existing data systems.",
+        "costs": "Staff time within normal work; bladder scanners already on the wards.",
+        "grants": "None needed; a regional spread grant could follow.",
+        "partnerships": "Four ward manager champions, the regional Lean office, urology and emergency leads, and two patient partners from the regional advisory council.",
+        "rebPath": "Screened by the regional research ethics office as quality improvement not requiring REB review (QI-R-2026-077); any later publication follows SQUIRE 2.0.",
+        "limitations": "Non-randomised; infections too few to test; surveillance intensity may change.",
+        "summary": "Low-risk improvement work under a QI screening, with ward-level reporting and a data sharing condition for Hospital D."
+      },
+      "note": "This ethics text does not depend on the start sequence or the measurement source, which is why the investigator can later confirm it by hand.",
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "QI-R-2026-077"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 2,
+      "response": {
+        "overview": "Lean project on 12 wards in Hospitals A to D with a staggered start that follows the single Lean coach: Hospital A maps and starts standard work in January 2027, B in April, C in July and D in October. Each hospital keeps its own measurement source for the whole series, and the hospitals not yet started serve as concurrent controls.",
+        "population": "Adult inpatients on the 12 participating medical and surgical wards; all catheterised patients, including those catheterised in emergency or theatres before transfer.",
+        "exposure": "Standard work introduced at each hospital's start: nurse-driven removal protocol approved by that hospital's medical advisory committee, a daily catheter check at the morning huddle and a removal reminder (flowsheet in A to C, a huddle board prompt in D).",
+        "procedures": "Each champion leads a two-day mapping event with the coach in the hospital's first month, then standard work starts. Hospitals A to C take catheter days from the flowsheet from January 2026, giving 12 to 21 baseline months. Hospital D starts twice-weekly point counts in November 2026 and keeps them for its whole series, so its source never switches (c5). Indication documentation is checked on 20 charts per ward per month; reinsertion within 72 hours and infections follow the regional surveillance definitions. Hospital D's ward-level data stay in the hospital until its information governance office agrees to sharing.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Catheter days per 100 patient days",
+            "measure": "Monthly catheter days divided by patient days, per ward; flowsheet in A to C, point-count estimate in D",
+            "timing": "Monthly from each hospital's baseline to March 2028",
+            "why": "Responsive to removal practice (c1); measured consistently within each series.",
+            "patientCentered": false
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Catheter-associated urinary tract infections per 1,000 catheter days",
+            "measure": "Regional surveillance definition",
+            "timing": "Monthly",
+            "why": "The harm patients care about; descriptive only (c2).",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Catheters without a documented indication",
+            "measure": "Proportion of 20 sampled catheterised patients per ward per month",
+            "timing": "Monthly",
+            "why": "Tracks the handoff failure found in mapping (c3).",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Reinsertion within 72 hours of removal",
+            "measure": "Reinsertions divided by removals, reported by age group",
+            "timing": "Monthly",
+            "why": "Guards against unsafe removal (c6).",
+            "patientCentered": true
+          }
+        ],
+        "biasMitigation": [
+          "Staggered starts so that hospitals not yet started act as concurrent controls",
+          "One measurement source per hospital for the whole series",
+          "Fixed surveillance definitions",
+          "Annotated charts for co-interventions and staffing changes"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Secular trend",
+            "severity": "watch",
+            "note": "Staggered starts separate each start from regional trends."
+          },
+          {
+            "id": "b2",
+            "label": "Different measurement source in Hospital D",
+            "severity": "watch",
+            "note": "Analysed with a site-specific level; never pooled with a switch of source."
+          },
+          {
+            "id": "b3",
+            "label": "Surveillance intensity",
+            "severity": "watch",
+            "note": "More attention to catheters may find more infections."
+          }
+        ],
+        "parsimony": {
+          "score": 80,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 3,
+          "flags": [
+            "One primary measure, one descriptive secondary",
+            "Site-specific level for Hospital D instead of a second primary measure"
+          ],
+          "simplestPath": "Monthly catheter days per ward with one start date per hospital."
+        },
+        "feasibility": "One coach for three months per hospital; about 3 staff hours a month for point counts in Hospital D; chart review limited to 20 charts per ward per month for indication documentation.",
+        "theoreticalFramework": "Lean value stream mapping and standard work; SEIPS only to describe the work system at handoffs.",
+        "summary": "Revised protocol: staggered starts that follow the coach, and Hospital D measured by point counts for its whole series."
+      },
+      "note": "Dependency closure across stages (G8): the investigator re-runs the Protocol stage with the steer 'one coach, one hospital at a time; Hospital D is on paper'. The revised protocol is consequential, so every completed stage after it (Analysis and Ethics) is flagged for review: they stay in completedStages (history is not erased) but show as review required and are not counted complete. The needsReview list holds at 875fe59 (store.mergeStage); the status text 'review required' requires D5.",
+      "expect": {
+        "store": {
+          "protocol.overview": {
+            "includes": "B in April, C in July and D in October"
+          },
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "protocol.outcomes[0].measure": {
+            "includes": "point-count estimate in D"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ],
+          "needsReview": [
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "stats": "needs-review",
+          "ethics": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 2,
+      "response": {
+        "designSummary": "Multiple-baseline interrupted time series with staggered starts: Hospital A in January, B in April, C in July and D in October 2027; monthly catheter days per ward from each hospital's baseline to March 2028.",
+        "sampleSize": "Twelve wards contribute about 300 ward-months. With four hospitals starting at three-month intervals and at least 11 baseline months each, the retrieved simulation shows about 80 percent power to detect a 25 percent level change, against about 55 percent for a simultaneous start (c4). With a baseline near 19 catheter days per 100 patient days, a 25 percent change is a fall to about 14, similar to the published multi-hospital result (c1). Infections, at about 2 per 1,000 catheter days, give too few events for any test and are described only.",
+        "primaryAnalysis": "Segmented Poisson regression of monthly catheter days with patient days as the offset, hospital-specific change points at each start, hospital-specific levels (so Hospital D's point-count series has its own level), ward random effects, calendar month terms for seasonality and a first-order autoregressive error. The main estimate is the average level change across hospitals; the concurrent comparison with hospitals not yet started is shown alongside.",
+        "secondaryAnalysis": "Sensitivity analysis excluding Hospital D; descriptive infection rates per 1,000 catheter days; run charts of indication documentation and reinsertion by age group.",
+        "missingData": "Months with incomplete flowsheet extracts or missed point counts are flagged and excluded, never imputed; Hospital D's data enter the pooled model only after its information governance agreement.",
+        "multiplicity": "One primary estimate; secondary and balancing measures are descriptive.",
+        "software": "R; model code and change points archived before Hospital A starts.",
+        "overfittingGuards": [
+          "Change points fixed by the coach schedule before any data are seen",
+          "No ward-level subgroup testing",
+          "Hospital D's series never switches measurement source"
+        ],
+        "summary": "Staggered multiple-baseline analysis with hospital-specific change points; about 80 percent power for a 25 percent level change."
+      },
+      "note": "The Analysis stage is redone for the revised protocol and leaves the review list; Ethics stays flagged until the investigator re-reviews it.",
+      "expect": {
+        "store": {
+          "stats.designSummary": {
+            "includes": "staggered starts"
+          },
+          "stats.primaryAnalysis": {
+            "includes": "hospital-specific change points"
+          },
+          "stats.overfittingGuards": {
+            "length": 3
+          },
+          "needsReview": [
+            "ethics"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "stats": "complete",
+          "ethics": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "mark-complete",
+      "stage": "ethics",
+      "note": "The investigator re-reads the Ethics stage, finds nothing that depends on the start sequence or Hospital D's measurement source, and marks it complete by hand; this closes the dependency chain opened by the protocol revision (G8). Holds at 875fe59 (markComplete clears the flag).",
+      "expect": {
+        "store": {
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ],
+          "ethics.rebPath": {
+            "includes": "QI-R-2026-077"
+          }
+        },
+        "stage": {
+          "ethics": "complete",
+          "stats": "complete",
+          "protocol": "complete"
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners review the removal explanation leaflet; each ward champion runs a short staff feedback round after mapping; urology reviews the reinsertion rules.",
+        "socialListening": "No social media listening; patient comments from the four hospitals' feedback systems in the last year are searched for mentions of catheters.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Nobody knew why it was there",
+            "quote": "Composite paraphrase: I kept asking why I still had the tube, and every nurse said the doctor would decide.",
+            "implication": "Nurse-driven removal needs visible authority at the bedside and a documented indication.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "clinician",
+            "theme": "Fear of reinsertion",
+            "quote": "Composite paraphrase: If I take it out at night and he cannot pass urine, I am the one putting a new one in at four in the morning.",
+            "implication": "Pair removal with a bladder scan rule and report reinsertion as a balancing measure.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Handoffs from theatres",
+            "quote": "Composite paraphrase: They arrive from theatre with a catheter and no plan, and after two shift changes nobody remembers why.",
+            "implication": "Map the theatre handoff first and add the indication to the transfer note.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "family",
+            "theme": "Incontinence and dignity",
+            "quote": "Composite paraphrase: They left it in because Mum was wet at night, but she hated it and it made her confused.",
+            "implication": "Address incontinence care as part of standard work, not as a reason to keep a catheter.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on authority, reinsertion, theatre handoffs and incontinence."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "A staggered Lean project to shorten urinary catheter duration on 12 wards in four hospitals",
+        "abstract": "Problem: urinary catheters stayed longer than needed on 12 wards in four hospitals. Intervention: value stream mapping and standard work (nurse-driven removal, huddle check, removal reminder), introduced one hospital per quarter as the Lean coach moved. Measures: monthly catheter days per 100 patient days (primary), infections (descriptive), indication documentation (process) and reinsertion within 72 hours (balancing). Results will be written after March 2028.",
+        "introduction": "Catheter duration is driven by handoffs where the indication is lost. Nurse-driven removal reduces catheter days in multi-hospital series, while infection effects are imprecise.",
+        "methods": "Multiple-baseline interrupted time series with hospital-specific change points and hospital-specific levels; Hospital D used point counts for its whole series. The project was screened as quality improvement.",
+        "results": "No data have been collected yet. The report will show each hospital's series with its start marked, the pooled level change, infections, documentation and reinsertion.",
+        "discussion": "The discussion will separate the level change at each start from regional trends using the hospitals not yet started. It will report infections descriptively and will not claim an infection effect.",
+        "limitations": "The order of hospitals was fixed by coach availability, not randomised. Hospital D used a different measurement source, and infections were too few to test.",
+        "conclusion": "To be written after the final hospital's six-month follow-up. It will state whether catheter days fell at each start and whether reinsertion stayed within its threshold.",
+        "reportingChecklist": "SQUIRE 2.0",
+        "summary": "SQUIRE draft for the staggered project; results empty until data exist."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "SQUIRE 2.0",
+          "manuscript.methods": {
+            "includes": "hospital-specific change points"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Hospital D's information governance agreement is unknown; the decision's action stays blocked and D's ward-level data stay in the hospital",
+          "Record the date of the protocol revision and the investigator's re-review of Ethics in the project log",
+          "Approve the nurse-driven removal protocol at each hospital's medical advisory committee before its start",
+          "Run an identity check on the seven retrieved records before the SQUIRE report cites them"
+        ],
+        "improvementNotes": "The first protocol ignored the single coach and Hospital D's paper records; the revised protocol flagged Analysis and Ethics, Analysis was redone and Ethics was re-reviewed by hand.",
+        "lastReview": "2026-09-22",
+        "summary": "Four open fixes; the protocol revision and its downstream closure are recorded."
+      },
+      "note": "Positive control for the revision guard: no edit between request and reply, so the reply is applied (A3.1 item 1, unchanged_study_accepts_reply). The audit fields fail at 875fe59 because of the audit merge defect (A3 L1.6).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": {
+            "includes": "first protocol ignored the single coach"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "set-field",
+      "path": "audit.improvementNotes",
+      "value": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
+      "note": "The investigator asks for a re-audit (the request for audit call 2 is sent here, capturing studyRevision) and, while it is pending, rewrites the audit notes on screen. Investigator edits through set-field change the stored text (G11). With D27 this substantive audit content is part of studyRevision, so the study is now at a new revision.",
+      "expect": {
+        "store": {
+          "audit.improvementNotes": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
+          "audit.openFixes": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "Edited by the infection prevention lead on 2026-09-22"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 2,
+      "response": {
+        "openFixes": [
+          "Consider a stepped-wedge randomised order to strengthen causal claims",
+          "Add infections as a co-primary outcome"
+        ],
+        "improvementNotes": "The project is on track; all hospitals can share data.",
+        "lastReview": "2026-09-23",
+        "summary": "Two open fixes; notes rewritten."
+      },
+      "note": "Late reply refused (G6; A3.1 item 1, intervening_edit_refuses_reply). Representation: the request for this call was sent at the previous step, before the investigator's edit was saved; the runner sends the request and captures studyRevision before executing the set-field step, then delivers this recorded reply after it. The reply was produced against the earlier revision, so nothing is applied: the investigator's notes, the four open fixes and the last review date stay, the refusal is shown (the store's reason text 'study changed since the request') and logged. Requires D27: at 875fe59 studyRevision excludes the whole audit object, so the edit does not change the revision and this reply would overwrite the investigator's notes.",
+      "expect": {
+        "error": {
+          "shown": true,
+          "includes": "changed since the request"
+        },
+        "store": {
+          "audit.improvementNotes": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.openFixes[0]": {
+            "includes": "Hospital D's information governance agreement is unknown"
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "screen": {
+          "includes": [
+            "Edited by the infection prevention lead on 2026-09-22"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Lean catheter pathway across four hospitals: catheter days and catheter-associated infections",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "audit.improvementNotes": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
+          "audit.openFixes": {
+            "length": 4
+          },
+          "protocol.overview": {
+            "includes": "staggered start"
+          },
+          "stats.primaryAnalysis": {
+            "includes": "hospital-specific change points"
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Lean catheter pathway across four hospitals: catheter days and catheter-associated infections"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Lean catheter pathway across four hospitals: catheter days and catheter-associated infections",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "audit.improvementNotes": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
+          "audit.lastReview": "2026-09-22",
+          "scan.claims": {
+            "length": 6
+          }
+        },
+        "screen": {
+          "includes": [
+            "Lean catheter pathway across four hospitals: catheter days and catheter-associated infections"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The export carries the investigator's audit notes, not the refused reply's (G6, G10); selectionStatus and actionStatus require S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "needsReview": [],
+            "audit.improvementNotes": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
+            "audit.openFixes": {
+              "length": 4
+            },
+            "protocol.overview": {
+              "includes": "B in April, C in July and D in October"
+            },
+            "stats.designSummary": {
+              "includes": "staggered starts"
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].gates[1].status": "unknown",
+            "scan.gradeOverall": "low"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

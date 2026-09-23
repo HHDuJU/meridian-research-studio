@@ -19,10 +19,13 @@ import type { Issue } from "../contracts";
 import {
   codePoints,
   extractNumbers,
+  intervalsIn,
   normalizeDisplay,
+  nullValueReferences,
   sentenceAt,
   sentencesWithOffsets,
   sliceCp,
+  unitFamily,
 } from "./numbers";
 
 export interface SupportVerdict {
@@ -84,7 +87,20 @@ function sentenceHas(sentence: string, required: string[]): boolean {
   return required.every((t) => hay.includes(t));
 }
 
+function unitsOk(
+  claimNum: ReturnType<typeof extractNumbers>[number],
+  sourceNum: ReturnType<typeof extractNumbers>[number],
+): boolean {
+  const a = unitFamily(claimNum.unit);
+  const b = unitFamily(sourceNum.unit);
+  if (a && b && a !== b) return false;
+  // A claimed duration must meet a duration. A unitless estimate may meet a measured source number.
+  if (claimNum.role === "duration" && sourceNum.role !== "duration") return false;
+  return true;
+}
+
 function numbersCompatible(claimNum: ReturnType<typeof extractNumbers>[number], sourceNum: ReturnType<typeof extractNumbers>[number]): boolean {
+  if (!unitsOk(claimNum, sourceNum)) return false;
   if (claimNum.value === sourceNum.value) return true;
   if (Math.abs(claimNum.numeric - sourceNum.numeric) < 1e-9) return true;
   return false;
@@ -103,6 +119,7 @@ export function evaluateDerivation(
   derivation: Derivation,
   byId: Map<string, ClaimAssertion>,
 ): { ok: boolean; value?: number; reason?: string } {
+  if (derivation.method === "contains") return { ok: true };
   const operands = derivation.operandIds.map((id) => byId.get(id));
   if (operands.some((o) => !o)) return { ok: false, reason: "derivation operand is missing" };
   if (operands.some((o) => o!.supportStatus !== "supported")) {
@@ -210,10 +227,11 @@ export function supportClaim(
     " ",
   );
   const attributed = extractNumbers(claimText).filter((n) => n.role !== "p-value");
+  const nullRefs = nullValueReferences(claimText);
   const outcomeTokens = tokens(assertion.outcome ?? "");
   const timeTokens = tokens(assertion.timeWindow ?? "");
 
-  if (assertion.derivation) {
+  if (assertion.derivation && assertion.derivation.method !== "contains") {
     const derived = evaluateDerivation(assertion.derivation, knownAssertions);
     if (!derived.ok) {
       issues.push(issue(`${path}.derivation`, "unsupported", derived.reason ?? "derivation is not reproducible"));
@@ -265,11 +283,38 @@ export function supportClaim(
     }
 
     let bound: { doc: SourceDocument; n: ReturnType<typeof extractNumbers>[number]; sentence: string } | null = null;
+    const nullRef = nullRefs.some((r) => Math.abs(r.value - num.numeric) < 1e-9 && num.start >= r.start - 1 && num.end <= r.end + 1);
+    if (nullRef) {
+      let straddles = false;
+      for (const { doc } of citedDocs) {
+        const hit = intervalsIn(doc.text).find((iv) => iv.lo <= num.numeric && num.numeric <= iv.hi);
+        if (hit) {
+          straddles = true;
+          assertion.derivation = {
+            method: "contains",
+            operandIds: [`bound:${hit.lo}`, `bound:${hit.hi}`],
+          };
+          break;
+        }
+      }
+      if (!straddles) {
+        issues.push(
+          issue(
+            `${path}.text`,
+            "unsupported",
+            `null-value reference ${num.value} is not straddled by a cited interval`,
+            num.value,
+          ),
+        );
+        assertion.supportStatus = "quarantined";
+        return { status: "quarantined", spans: assertion.spans, issues, assertion };
+      }
+      continue;
+    }
     for (const { doc } of citedDocs) {
       const srcNums = extractNumbers(doc.text);
       for (const sNum of srcNums) {
         if (!numbersCompatible(num, sNum)) continue;
-        if (num.unit && sNum.unit && num.unit.toLowerCase() !== sNum.unit.toLowerCase()) continue;
         const sentence = sentenceAt(doc.text, sNum.start, sNum.end);
         if (outcomeTokens.length || timeTokens.length) {
           if (!sentenceHas(sentence, outcomeTokens) || !sentenceHas(sentence, timeTokens)) continue;
@@ -317,7 +362,13 @@ export function annotationHasUnsupportedNumber(
   const docs = documentsForRecord(item.id, documents, item);
   if (!docs.length) return true;
   const src = docs.flatMap((d) => extractNumbers(d.text));
-  return nums.some((n) => !src.some((s) => numbersCompatible(n, s)));
+  const refs = nullValueReferences(text);
+  const srcIntervals = docs.flatMap((d) => intervalsIn(d.text));
+  return nums.some((n) => {
+    const nullRef = refs.some((r) => Math.abs(r.value - n.numeric) < 1e-9);
+    if (nullRef) return !srcIntervals.some((iv) => iv.lo <= n.numeric && n.numeric <= iv.hi);
+    return !src.some((s) => numbersCompatible(n, s));
+  });
 }
 
 export { sentencesWithOffsets, sliceCp, codePoints };

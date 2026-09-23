@@ -149,12 +149,14 @@ function ScanPanel({ study }: { study: Study }) {
               disabled={retrieveBusy}
               onClick={() => {
                 setRetrieveBusy(true);
+                const providerEl = document.querySelector<HTMLSelectElement>("[data-meridian-retrieve-provider]");
+                const provider = providerEl?.value || "fixture";
                 void (async () => {
                   try {
                     const res = await fetch("/__scenario/retrieve", {
                       method: "POST",
                       headers: { "content-type": "application/json" },
-                      body: JSON.stringify({ key: study.replayKey ?? "", query: s.query }),
+                      body: JSON.stringify({ key: study.replayKey ?? "", query: s.query, provider }),
                     });
                     if (!res.ok) throw new Error(await res.text());
                     const data = (await res.json()) as {
@@ -171,6 +173,15 @@ function ScanPanel({ study }: { study: Study }) {
             >
               {retrieveBusy ? "Retrieving" : "Run recorded search"}
             </Button>
+            <label className="ml-2 text-xs text-muted-foreground">
+              Provider
+              <select data-meridian-retrieve-provider="" className="ml-1 rounded-md border border-border bg-background px-2 py-1 text-sm" defaultValue="fixture">
+                <option value="fixture">fixture</option>
+                <option value="pubmed">pubmed</option>
+                <option value="crossref">crossref</option>
+                <option value="openalex">openalex</option>
+              </select>
+            </label>
           </div>
         ) : null}
         {s.unsupportedGradeOverall ? (
@@ -283,25 +294,44 @@ function ScanPanel({ study }: { study: Study }) {
                 />
               </label>
               <label className="block text-xs">
-                <span className="mb-1 block text-muted-foreground">Change status</span>
+                <span className="mb-1 block text-muted-foreground">Record identity check</span>
                 <select
                   data-meridian-change-source="status"
                   data-record-id={item.id}
                   className="w-full rounded-md border border-border bg-background p-2 text-sm"
-                  defaultValue={item.provenance?.status}
-                  onChange={(e) => {
-                    if (e.target.value !== item.provenance?.status) {
-                      useStudio.getState().changeSource(study.id, { id: item.id }, "status", e.target.value);
-                    }
+                  defaultValue="mismatch"
+                >
+                  <option value="mismatch">mismatch</option>
+                  <option value="not-found">not-found</option>
+                  <option value="error">error</option>
+                  <option value="blocked">blocked</option>
+                  <option value="match">match</option>
+                </select>
+                <input
+                  data-meridian-check-note=""
+                  data-record-id={item.id}
+                  className="mt-1 w-full rounded-md border border-border bg-background p-2 text-sm"
+                  placeholder="Note required"
+                  defaultValue=""
+                />
+                <button
+                  type="button"
+                  data-meridian-record-check=""
+                  data-record-id={item.id}
+                  className="mt-1 text-xs underline"
+                  onClick={(e) => {
+                    const box = (e.currentTarget.parentElement ?? document).querySelector<HTMLSelectElement>(
+                      `[data-meridian-change-source="status"][data-record-id="${item.id}"]`,
+                    );
+                    const note = (e.currentTarget.parentElement ?? document).querySelector<HTMLInputElement>(
+                      `[data-meridian-check-note][data-record-id="${item.id}"]`,
+                    );
+                    const r = useStudio.getState().changeSource(study.id, { id: item.id }, "status", box?.value ?? "mismatch", note?.value ?? "");
+                    if (!r.ok) toast.warning(r.reason ?? "Check not recorded");
                   }}
                 >
-                  <option value="unverified">unverified</option>
-                  <option value="retrieved">retrieved</option>
-                  <option value="verified">verified</option>
-                  <option value="mismatch">mismatch</option>
-                  <option value="check-failed">check-failed</option>
-                  <option value="access-blocked">access-blocked</option>
-                </select>
+                  Record check
+                </button>
               </label>
               <label className="block text-xs sm:col-span-2">
                 <span className="mb-1 block text-muted-foreground">Change abstract</span>
@@ -515,26 +545,36 @@ function DesignPanel({ study }: { study: Study }) {
             {d.decisions.map((dec, idx) => {
                 const support = decisionIsSupported(dec, study);
                 const ev = evaluateDecision(dec, study);
+                const selection = dec.selectionStatus ?? dec.status;
+                const acceptDisabled = selection === "withdrawn" || selection === "stale";
+                const acceptReason =
+                  selection === "withdrawn" ? "withdrawn: cannot be accepted" : selection === "stale" ? "stale: re-run Design" : "";
                 return (
               <li key={dec.id} data-meridian-decision={dec.id} className="rounded-lg border border-border p-3">
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  {dec.kind} · selection {dec.selectionStatus ?? dec.status} · action {dec.actionStatus ?? ev.actionStatus} · {dec.actor}
+                  {dec.kind} · selection {selection} · action {dec.actionStatus ?? ev.actionStatus} · {dec.actor}
                 </p>
                 <p className="mt-1 text-sm leading-relaxed">{dec.statement}</p>
                 {!support.ok ? (
-                  <p data-meridian-decision-refusal="" className="mt-2 text-sm text-amber-700">
+                  <p data-meridian-decision-refusal="" data-meridian-error="" role="alert" className="mt-2 text-sm text-amber-700">
                     {support.reason}
+                  </p>
+                ) : null}
+                {acceptReason ? (
+                  <p data-meridian-error="" role="alert" className="mt-2 text-sm text-amber-700">
+                    {acceptReason}
                   </p>
                 ) : null}
                 {ev.blockers.length ? (
                   <p className="mt-1 text-xs text-muted-foreground">{ev.blockers.join("; ")}</p>
                 ) : null}
-                {(dec.selectionStatus ?? dec.status) === "proposed" ? (
+                {selection === "proposed" || acceptDisabled ? (
                   <div className="mt-2 flex gap-2">
                     <Button
                       type="button"
                       size="sm"
                       data-meridian-accept=""
+                      disabled={acceptDisabled}
                       onClick={() => {
                         const r = acceptDecision(study.id, idx);
                         if (!r.ok) toast.warning(r.reason ?? "Accept refused");
@@ -542,11 +582,13 @@ function DesignPanel({ study }: { study: Study }) {
                     >
                       Accept
                     </Button>
-                    <Button type="button" size="sm" variant="outline" data-meridian-withdraw="" onClick={() => withdrawDecision(study.id, idx)}>
-                      Withdraw
-                    </Button>
+                    {selection !== "withdrawn" ? (
+                      <Button type="button" size="sm" variant="outline" data-meridian-withdraw="" onClick={() => withdrawDecision(study.id, idx)}>
+                        Withdraw
+                      </Button>
+                    ) : null}
                   </div>
-                ) : (dec.selectionStatus ?? dec.status) === "accepted" || (dec.selectionStatus ?? dec.status) === "stale" ? (
+                ) : selection === "accepted" ? (
                   <div className="mt-2 flex gap-2">
                     <Button type="button" size="sm" variant="outline" data-meridian-withdraw="" onClick={() => withdrawDecision(study.id, idx)}>
                       Withdraw

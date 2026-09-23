@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# validator-selftest.sh: self-test of the scenario validator (validator revision 1.2).
+# validator-selftest.sh: self-test of the scenario validator (validator revision 1.3).
 #
 # Usage: bash validator-selftest.sh [path/to/validator.mjs]
 #   The default validator is validate-scenarios.mjs next to this script. Temporary folders go under $TMPDIR
@@ -117,6 +117,7 @@ accept_case "accept-investigator-edits-constraints.json" ""
 accept_case "accept-confirm-before-discovery.json" ""
 accept_case "accept-openalex-body.json" ""
 accept_case "accept-shared-skeleton.json" "sc-000-level1.json"
+accept_case "accept-late-reply.json" ""
 # Bank metadata in capitals (bank-v1/ holds ASSIGNMENTS.json and ASSIGNMENT_BATCHES.json) is skipped, not failed.
 d="$tmp/metadata"
 mkdir -p "$d"
@@ -220,6 +221,14 @@ printf '# selftest forbidden terms\nselftest forbidden marker\n' > "$tmp/forbidd
 run_case "broken-earlier-checks.json" "pmid trial-number doi forbidden ascii call-numbering stage-schema early-stop" "" \
   'contains a PMID; invented PMIDs are omitted|contains a PubMed article URL|a "pmid" key is not allowed|contains a trial registration number (NCT00000000)|real-looking DOI "10.1000/selftest-not-a-real-doi,"|contains the forbidden term "selftest forbidden marker"|1 non-ASCII character(s)|U+00E9|is 2 but this is illuminate call 1 for "scan"|missing top-level key(s) of the map schema: reading|earlyStop: must be a string of 20 to 600 characters' \
   "--forbidden $tmp/forbidden.txt"
+
+# Format 1.2: the late illuminate step and its during actions (validator 1.3).
+run_case "broken-late-no-during.json" "step-schema" "" \
+  'late: true needs a non-empty during array'
+run_case "broken-during-no-late.json" "step-schema" "" \
+  'during needs late: true on the same illuminate step'
+run_case "broken-during-illuminate.json" "step-schema outcome-check" "" \
+  'during[0].do: "illuminate" is not an investigator action a held reply can span|during[1]: a during action (do "set-field") needs an expect'
 
 listed="$(grep -oE '(run|accept)_case "[^"]+"' "$0" | sed -E 's/^(run|accept)_case "//; s/"$//' | tr ' ' '\n' | grep -E '^(broken|accept)-.*\.json$' | sort -u)"
 present="$(cd "$st" && ls broken/broken-*.json accept/accept-*.json | xargs -n1 basename | sort -u)"

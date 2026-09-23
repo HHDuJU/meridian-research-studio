@@ -1,6 +1,6 @@
 {
   "id": "sc-092",
-  "version": 1,
+  "version": 2,
   "title": "Regional referral intake: lean redesign with structured templates, empty first search confirmed, conflicting evidence",
   "field": "health-services",
   "level": 3,
@@ -213,7 +213,7 @@
           }
         ]
       },
-      "note": "A broader second search returns six records; the empty first event stays in the history. The stage now rests on retrieved records rather than on the confirmation (A3.2, D26), and no certainty exists before an appraisal (G1). Ids are stableRecordId values (see notes).",
+      "note": "A broader second search returns six records; the empty first event stays in the history. The stage now rests on retrieved records rather than on the confirmation (A3.2, D26), and no certainty exists before an appraisal (G1). Ids are stableRecordId values (see notes). Version 2: the new query invalidates the empty-search confirmation (D26), so the stage is incomplete until the appraisal at the next step completes it over the retrieved records.",
       "expect": {
         "store": {
           "scan.retrievalEvents": {
@@ -241,8 +241,7 @@
           },
           "scan.gradeOverall": "",
           "completedStages": [
-            "problem",
-            "scan"
+            "problem"
           ]
         },
         "screen": {
@@ -250,6 +249,9 @@
             "unrated",
             "not assessed"
           ]
+        },
+        "stage": {
+          "scan": "incomplete"
         }
       }
     },
@@ -1450,5 +1452,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-092.json), superseded 2026-09-22T20:40Z: golden error GE-3, the Scan stage was expected to stay complete after a broader second search invalidated the investigator's empty-search confirmation; under D26 the completion is withdrawn and the appraisal at the next step completes the stage."
 }

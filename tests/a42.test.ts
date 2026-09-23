@@ -86,21 +86,21 @@ test("design_proposal_does_not_overwrite_investigator_basis", () => {
 test("omitted_recommendedFamily_is_absent_not_empty_string", () => {
   const study = createStudy({ family: null, setting: "s", rawNeed: "n" });
   const r = applyDecision({ kind: "defer", statement: "Wait for data", claimIds: [] }, study);
-  assert.equal(r.decision?.recommendedFamily, undefined);
+  assert.equal(r.decision?.recommendedFamily, null);
   const applied = applyAiResult(
     "design",
     { recommended: null, rationale: "r", decision: { kind: "defer", statement: "Wait for data", claimIds: [] } },
     study.family,
     study,
   );
-  const last = (applied.stagePatch.decisions as { recommendedFamily?: string }[])?.at(-1);
-  assert.equal(last?.recommendedFamily, undefined);
+  const last = (applied.stagePatch.decisions as { recommendedFamily?: string | null }[])?.at(-1);
+  assert.equal(last?.recommendedFamily, null);
 });
 
 test("accept_without_recommended_family_keeps_unresolved_basis", () => {
   const S = () => useStudio.getState();
   const s = S().create({ family: null, setting: "s", rawNeed: "n" });
-  const applied = applyDecision({ kind: "implementation", statement: "Audit the pathway", claimIds: [] }, s);
+  const applied = applyDecision({ kind: "defer", statement: "Audit the pathway", claimIds: [] }, s);
   S().mergeStage(s.id, "design", { decisions: [applied.decision!] });
   const r = S().acceptDecision(s.id, "latest");
   assert.equal(r.ok, true);

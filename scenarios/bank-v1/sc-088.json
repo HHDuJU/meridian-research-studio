@@ -1,6 +1,6 @@
 {
   "id": "sc-088",
-  "version": 1,
+  "version": 2,
   "title": "Primary care portal messages: urgent-message flag accuracy across clinics, late ethics reply refused after an edit",
   "field": "digital-health",
   "level": 5,
@@ -1009,7 +1009,7 @@
         "limitations": "Silent mode only.",
         "summary": "Ethics plan for three clinics."
       },
-      "note": "Held reply (G6): the runner sends this Ethics request, captures studyRevision, holds the model's reply while the next step (the investigator's protocol edit) runs, and releases it at the wait step after that. Nothing is applied yet.",
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Held reply (G6): the runner sends this Ethics request, captures studyRevision, holds the model's reply while the next step (the investigator's protocol edit) runs, and releases it at the release after that. Nothing is applied yet. After the release: The held Ethics reply was produced against the three-clinic study and arrives after the edit: the studyRevision guard refuses it, nothing is applied (no stage patch, no completion), and the refusal is shown and logged (G6; store.ts mergeStageIfRevision at 875fe59, wired to the screen by L1.2).",
       "expect": {
         "store": {
           "ethics.rebPath": "",
@@ -1023,75 +1023,12 @@
             "questions",
             "design",
             "protocol",
-            "stats"
-          ]
-        },
-        "stage": {
-          "ethics": "incomplete"
-        }
-      }
-    },
-    {
-      "do": "set-field",
-      "path": "protocol.population",
-      "value": "Portal messages to clinicians at clinics A and B from November 2026; clinic C paused its participation for its record reconfiguration, so its messages are no longer sampled.",
-      "note": "While the Ethics request is pending, the investigator records on screen that clinic C has paused (local fact). The protocol changes after Stats was completed, so Stats is flagged for review and not counted complete (G8).",
-      "expect": {
-        "store": {
-          "protocol.population": "Portal messages to clinicians at clinics A and B from November 2026; clinic C paused its participation for its record reconfiguration, so its messages are no longer sampled.",
-          "needsReview": [
             "stats"
           ],
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol",
-            "stats"
-          ]
-        },
-        "stage": {
-          "stats": "needs-review",
-          "ethics": "incomplete"
-        },
-        "screen": {
-          "includes": [
-            "review required"
-          ]
-        }
-      }
-    },
-    {
-      "do": "wait",
-      "ms": 2000,
-      "note": "The held Ethics reply was produced against the three-clinic study and arrives after the edit: the studyRevision guard refuses it, nothing is applied (no stage patch, no completion), and the refusal is shown and logged (G6; store.ts mergeStageIfRevision at 875fe59, wired to the screen by L1.2).",
-      "expect": {
-        "error": {
-          "shown": true,
-          "includes": "changed since the request"
-        },
-        "store": {
-          "ethics.rebPath": "",
-          "ethics.consent": "",
           "ethics.equity": "",
           "audit.entries[0].summary": {
             "includes": "refused"
           },
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol",
-            "stats"
-          ],
           "needsReview": [
             "stats"
           ]
@@ -1100,12 +1037,53 @@
           "ethics": "incomplete",
           "stats": "needs-review"
         },
+        "error": {
+          "shown": true,
+          "includes": "changed since the request"
+        },
         "screen": {
           "includes": [
             "review required"
           ]
         }
-      }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "protocol.population",
+          "value": "Portal messages to clinicians at clinics A and B from November 2026; clinic C paused its participation for its record reconfiguration, so its messages are no longer sampled.",
+          "note": "While the Ethics request is pending, the investigator records on screen that clinic C has paused (local fact). The protocol changes after Stats was completed, so Stats is flagged for review and not counted complete (G8). Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "protocol.population": "Portal messages to clinicians at clinics A and B from November 2026; clinic C paused its participation for its record reconfiguration, so its messages are no longer sampled.",
+              "needsReview": [
+                "stats"
+              ],
+              "completedStages": [
+                "problem",
+                "scan",
+                "map",
+                "gaps",
+                "hypotheses",
+                "questions",
+                "design",
+                "protocol",
+                "stats"
+              ]
+            },
+            "stage": {
+              "stats": "needs-review",
+              "ethics": "incomplete"
+            },
+            "screen": {
+              "includes": [
+                "review required"
+              ]
+            }
+          }
+        }
+      ]
     },
     {
       "do": "illuminate",
@@ -1491,5 +1469,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-088.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
 }

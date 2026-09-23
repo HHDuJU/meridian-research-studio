@@ -1,0 +1,1504 @@
+{
+  "id": "sc-050",
+  "version": 1,
+  "title": "School dental programme: lean redesign of silver diamine fluoride pathway, two strands, late Analysis reply refused after an edit",
+  "field": "dentistry",
+  "level": 5,
+  "family": "qi-lean",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S11",
+    "S13"
+  ],
+  "notes": "Expert path on a lean redesign across 23 school clinics (routing explicit qi-lean from 'use lean methods' and 'value stream'; the need describes two kinds of evidence without naming any other design). A fixture search returns eight records; the appraisal records five claims; the decision (kind implementation) rests on c1 to c4 with the combined-form gate unknown, so acceptance gives selection accepted and action blocked. The protocol keeps two strands with one primary outcome each (the proportion treated within a window, and acceptability from structured conversations; parsimony primaryOutcomeCount 2), plus process and balancing measures. Late reply: the investigator clicks Illuminate on the Analysis stage and, while the reply is pending, widens the primary measure's window from 28 to 42 days (set-field on protocol.outcomes[0].measure). Because the format has no field for request timing, the pending request is encoded as the illuminate step that immediately follows the set-field, and both notes state that the runner dispatches its request before the edit and delivers the reply after it. That reply was produced against the earlier studyRevision and analyses the 28-day measure, so it must be refused (G6): nothing applied, stage incomplete, refusal shown and logged ('refused' in the newest audit entry, as the 875fe59 store logs it). A reload on the Analysis route checks that the edit persists and the refused reply does not reappear; stats call 2 then analyses the 42-day measure and is applied. The guard is the 875fe59 store's mergeStageIfRevision used by the screen per sheet A3 item L1.2 (corrected in A3.1 item 1), so it needs no work-order entry. Record ids are stableRecordId(record) from src/lib/evidence/records.ts, computed by the generator script: DOI hash for records 1, 2, 4, 5, 8 (ev-13x3j1l, ev-07la10p, ev-1idebrc, ev-1fkqvnj, ev-0uhljw2); titleYearKey hash for records 3, 6, 7 (ev-1rdin30, ev-1rvhznl, ev-0b3kuvy). Requires S13 (appraisal), S11 (selectionStatus, actionStatus) and D5 (status text). Catches: a late reply merged over the investigator's edit, strands blended into one primary outcome, and an edit lost on reload.",
+  "inputs": {
+    "need": "I lead the school dental programme for a regional public health unit. Our dental therapists run clinics in 23 primary schools with portable equipment, and since last year they can apply silver diamine fluoride (SDF) to arrest cavities in children who would otherwise wait months for restorative care. Uptake has been disappointing: in the spring term only 41 percent of children with at least one active cavity at the screening visit had SDF applied at the next clinic visit. The therapists say the flow of a clinic day is the problem. Consent forms come back late or not at all, consent for SDF is separate from the general dental consent, children are called from class in an order that suits the timetable rather than treatment need, and the black staining of treated teeth has to be explained to each parent by phone, which takes most of the afternoon.\n\nWe want to use lean methods to redesign the SDF pathway: map the value stream from screening to application, find the steps that add waiting and rework, and test changes such as a combined consent form, a call-from-class list ordered by treatment need, and a short photo leaflet about staining. Two things matter to us equally. The first is the numbers: the proportion of children with active cavities who receive SDF soon after screening, and chair time per child. The second is what parents, teachers and therapists make of the changes, especially the staining, which some families find unacceptable on front teeth, and whether children from families who speak little English are being left behind by the consent process.\n\nI need help structuring a lean project that keeps both kinds of evidence without blending them, choosing a primary measure for each strand, and planning structured conversations with parents and staff. We have a data analyst one day a week and the programme's own records, and no research grant.",
+    "constraints": "No research grant; a data analyst one day a week. Changes must not add clinic days or therapist hours. Consent materials must be approved by the school board before use. Photographs of children's teeth may not leave the programme's clinical record system.",
+    "localFacts": [
+      "The programme runs dental clinics in 23 primary schools with four dental therapists; each school has a clinic day about every three weeks.",
+      "In the spring term, 41 percent of children with at least one active cavity at screening had silver diamine fluoride applied at the next clinic visit.",
+      "The public health unit's research ethics committee approved the project on 2026-09-15 as a service evaluation with a research component for the structured conversations (approval PHU-REC-2026-22), with written consent for conversations.",
+      "The school board's data-sharing agreement allows the programme to use its own screening and treatment records for evaluation (agreement SB-DSA-2025-09).",
+      "A combined consent form has been drafted but not yet approved by the school board."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I lead the school dental programme for a regional public health unit. Our dental therapists run clinics in 23 primary schools with portable equipment, and since last year they can apply silver diamine fluoride (SDF) to arrest cavities in children who would otherwise wait months for restorative care. Uptake has been disappointing: in the spring term only 41 percent of children with at least one active cavity at the screening visit had SDF applied at the next clinic visit. The therapists say the flow of a clinic day is the problem. Consent forms come back late or not at all, consent for SDF is separate from the general dental consent, children are called from class in an order that suits the timetable rather than treatment need, and the black staining of treated teeth has to be explained to each parent by phone, which takes most of the afternoon.\n\nWe want to use lean methods to redesign the SDF pathway: map the value stream from screening to application, find the steps that add waiting and rework, and test changes such as a combined consent form, a call-from-class list ordered by treatment need, and a short photo leaflet about staining. Two things matter to us equally. The first is the numbers: the proportion of children with active cavities who receive SDF soon after screening, and chair time per child. The second is what parents, teachers and therapists make of the changes, especially the staining, which some families find unacceptable on front teeth, and whether children from families who speak little English are being left behind by the consent process.\n\nI need help structuring a lean project that keeps both kinds of evidence without blending them, choosing a primary measure for each strand, and planning structured conversations with parents and staff. We have a data analyst one day a week and the programme's own records, and no research grant.",
+          "family": "qi-lean",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I lead the school dental programme for a regional public health unit"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Lean redesign of the silver diamine fluoride pathway in a 23-school dental programme",
+        "subtitle": "Lean project with a measurement strand and a conversation strand, reported side by side",
+        "family": "qi-lean",
+        "statement": "In a school dental programme serving 23 primary schools, only 41 percent of children with an active cavity at screening received silver diamine fluoride at the next clinic visit last spring. Therapists attribute the gap to the flow of the clinic day: late or missing consent, a separate consent for SDF, children called from class in timetable order, and time spent explaining staining by phone. The project will redesign the pathway with lean methods and judge it by two separate kinds of evidence: timely treatment and chair time, and the views of parents, teachers and therapists, with attention to families who speak little English.",
+        "whoAffected": "Children aged about 5 to 11 with active cavities, their parents, class teachers and school office staff, and four dental therapists.",
+        "whatHurts": "Untreated cavities cause pain, infection and missed school; waiting for consent and searching for children wastes scarce clinic time; staining on front teeth can distress families.",
+        "currentPractice": "Screening visit, separate consent forms sent home in school bags, SDF at a later clinic day if consent returns, children called in timetable order, staining explained by phone.",
+        "whyNow": "SDF is newly available to therapists, uptake is low, and the school board is ready to consider a combined consent form.",
+        "constraints": "No research grant; a data analyst one day a week. Changes must not add clinic days or therapist hours. Consent materials must be approved by the school board before use. Photographs of children's teeth may not leave the programme's clinical record system.",
+        "patientCenteredGoal": "Every child with an active cavity is offered timely, acceptable treatment, and no family is left out because of language or a lost form.",
+        "summary": "Problem framed as a lean redesign of a treatment pathway with two separately measured strands."
+      },
+      "expect": {
+        "store": {
+          "title": "Lean redesign of the silver diamine fluoride pathway in a 23-school dental programme",
+          "family": "qi-lean",
+          "problem.constraints": "No research grant; a data analyst one day a week. Changes must not add clinic days or therapist hours. Consent materials must be approved by the school board before use. Photographs of children's teeth may not leave the programme's clinical record system.",
+          "problem.statement": {
+            "includes": "two separate kinds of evidence"
+          },
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Lean redesign of the silver diamine fluoride pathway in a 23-school dental programme"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "silver diamine fluoride school dental programme consent return staining acceptability lean value stream clinic flow",
+      "response": {
+        "status": 200,
+        "total": 8,
+        "records": [
+          {
+            "title": "Silver diamine fluoride in school-based dental programmes: caries arrest at six and twelve months",
+            "authors": "Oyelaran-Stroud M, Bergstrom-Achebe T, Rao-Whitfield K",
+            "year": 2020,
+            "venue": "Ashcombe Community Dental Health",
+            "doi": "10.5555/acdh.2020.0158",
+            "providerType": "journal-article",
+            "abstract": "We followed 1,122 children aged 5 to 11 who received silver diamine fluoride for active cavities in a school-based programme. Six months after one application, 72 percent of treated lesions were arrested; among lesions that received a second application at six months, 81 percent were arrested at twelve months. Arrest was lower on lesions that were large and on teeth that were hard to dry in the portable chair. No serious adverse events were recorded. Parents of 6 percent of treated children complained about staining. Children lost to follow-up were more often from schools in deprived areas, so arrest rates may be optimistic."
+          },
+          {
+            "title": "Parental acceptability of staining after silver diamine fluoride: choices and conversations",
+            "authors": "Lindqvist-Ayodele R, Moreau-Chen P",
+            "year": 2021,
+            "venue": "Vellmar Paediatric Dentistry Reports",
+            "doi": "10.5555/vpdr.2021.0092",
+            "providerType": "journal-article",
+            "abstract": "We asked 412 parents of children in school dental programmes to choose between treatment options shown with photographs, and held conversations with 30 of them. Staining after silver diamine fluoride was acceptable to 67 percent of parents on back teeth and to 29 percent on front teeth. Acceptance rose when the alternative was a general anaesthetic or a long wait, and when the photograph showed the stain on a back tooth. Parents wanted to see a photograph before agreeing and resented hearing about the stain only afterwards. Parents who took part in conversations were more often fluent in the majority language than the whole sample."
+          },
+          {
+            "title": "Consent return as the bottleneck in school dental programmes: a process mapping study",
+            "authors": "Achterberg-Nkosi F, Duarte-Holm J",
+            "year": 2019,
+            "venue": "Harthill Oral Health Services Letters",
+            "providerType": "journal-article",
+            "abstract": "We mapped the steps from dental screening to treatment in four school dental programmes and timed each step for 600 children. The median time to consent return was 16 days, and 22 percent of consent forms were never returned. Waiting for consent accounted for most of the time between screening and treatment, while chair time was a small share. Forms were lost between school bags, class teachers and the school office. Programmes that sent forms home with a reminder text to parents had faster return. The study did not record the language spoken at home, so it could not say who was least likely to return a form."
+          },
+          {
+            "title": "Lean redesign of a school dental clinic day: value stream mapping and chair utilisation",
+            "authors": "Petrakis-Oduya S, Hallberg-Mensah D, Ferreira-Lau N",
+            "year": 2023,
+            "venue": "Greyhaven Improvement Letters",
+            "doi": "10.5555/gil.2023.0204",
+            "providerType": "journal-article",
+            "abstract": "A school dental team used value stream mapping to redesign its clinic day across eight schools. Changes included a call-from-class list ordered by treatment need, preparation of instruments before children arrived and a single consent check at the door. Chair utilisation rose from 48 percent to 71 percent over two terms, and the number of children treated per clinic day rose from 11 to 16. Therapists reported less time spent waiting for children to be found in class. The evaluation used before-after data without a comparison group, and a new appointment clerk started during the second term."
+          },
+          {
+            "title": "Language, consent and treatment in school dental programmes: who is left out?",
+            "authors": "Kimani-Osei L, Varga-Tanaka B",
+            "year": 2024,
+            "venue": "Ashcombe Community Dental Health",
+            "doi": "10.5555/acdh.2024.0071",
+            "providerType": "journal-article",
+            "abstract": "Using records from a school dental programme serving 31 schools, we linked the language spoken at home to consent return and treatment. Children from families with limited proficiency in the majority language were less likely to have a consent form returned (adjusted odds ratio 0.43) and waited longer for treatment when a form was returned. Translated forms alone made little difference, while a phone call from a bilingual staff member increased return. Children with untreated cavities at the end of the year were concentrated in these families. Home language was missing for 14 percent of children, which may bias the estimates."
+          },
+          {
+            "title": "Application time and child cooperation for silver diamine fluoride in mobile school clinics",
+            "authors": "Brennan-Iwu C, Sato-Lindgren E",
+            "year": 2016,
+            "venue": "Vellmar Paediatric Dentistry Reports",
+            "providerType": "journal-article",
+            "abstract": "We timed silver diamine fluoride applications for 214 children in mobile school clinics and recorded cooperation on a simple scale. The median chair time for application was 4 minutes, compared with 22 minutes for a small restoration in the same clinics. Younger children and children who had not visited a dentist before were less cooperative, but most applications were completed at the first attempt. Time spent finding children in class and waiting for them to arrive exceeded chair time on most clinic days. The study was conducted by two experienced therapists, which may limit how far the timings apply to other teams."
+          },
+          {
+            "title": "Combined versus separate consent forms for preventive and non-invasive dental treatment in schools",
+            "authors": "Mahlangu-Frost D, Quist-Ibarra A",
+            "year": 2022,
+            "venue": "Harthill Oral Health Services Letters",
+            "providerType": "journal-article",
+            "abstract": "Twelve schools in one programme replaced separate consent forms for examination, fluoride varnish and silver diamine fluoride with a single combined form, while twelve other schools kept separate forms. The combined consent form raised consent return from 58 to 74 percent, while return in schools with separate forms was unchanged. The proportion of parents who ticked the box refusing silver diamine fluoride on the combined form was 11 percent. Schools were not allocated at random, and the combined form included a photograph of staining, so the effects of the two changes cannot be separated."
+          },
+          {
+            "title": "Teachers' views of dental clinics in primary schools: disruption, support and responsibility",
+            "authors": "Olawale-Hartmann S, Castellanos-Mbeki R",
+            "year": 2025,
+            "venue": "Greyhaven Improvement Letters",
+            "doi": "10.5555/gil.2025.0019",
+            "providerType": "journal-article",
+            "abstract": "We held structured conversations with 26 teachers and 9 school office staff in schools that host a dental clinic. Teachers supported the clinics but described disruption when children were called from lessons at unpredictable times, and some said they were left to explain treatment to anxious parents. Office staff were often responsible for chasing consent forms without being told why forms mattered. Participants suggested a timetable agreed in advance and a single point of contact in the dental team. Teachers were recruited through head teachers who favoured the programme, which may have limited critical views."
+          }
+        ]
+      },
+      "note": "Eight records with abstracts; ids are stableRecordId values computed by the generator (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 8,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-13x3j1l",
+            "ev-07la10p",
+            "ev-1rdin30",
+            "ev-1idebrc",
+            "ev-1fkqvnj",
+            "ev-1rvhznl",
+            "ev-0b3kuvy",
+            "ev-0uhljw2"
+          ],
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[2].id": "ev-1rdin30",
+          "scan.items[2].doi": {
+            "absent": true
+          },
+          "scan.items[3].doi": "10.5555/gil.2023.0204",
+          "scan.items[3].provenance.origin": "retrieval",
+          "scan.items[3].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Consent return as the bottleneck in school dental programmes: a process mapping study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-13x3j1l",
+            "relevance": 78,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "One application arrested 72 percent of lesions at six months; 81 percent with a second application at twelve months; 6 percent of parents complained about staining.",
+            "limitations": "Uncontrolled; follow-up losses concentrated in deprived schools.",
+            "contextTags": [
+              "effectiveness of SDF",
+              "school programme"
+            ],
+            "notes": "Supports the treatment itself; not the question of this project."
+          },
+          {
+            "id": "ev-07la10p",
+            "relevance": 84,
+            "methodQuality": 58,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Staining acceptable to 67 percent of parents on back teeth and 29 percent on front teeth; parents wanted a photograph before agreeing.",
+            "limitations": "Conversation sample more fluent in the majority language than the choice sample.",
+            "contextTags": [
+              "acceptability",
+              "staining",
+              "parents"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1rdin30",
+            "relevance": 92,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Median 16 days to consent return; 22 percent never returned; waiting for consent dominated time from screening to treatment.",
+            "limitations": "Home language not recorded.",
+            "contextTags": [
+              "consent",
+              "process mapping",
+              "waiting"
+            ],
+            "notes": "The bottleneck the redesign targets."
+          },
+          {
+            "id": "ev-1idebrc",
+            "relevance": 90,
+            "methodQuality": 52,
+            "kind": "qi-report",
+            "grade": "low",
+            "keyFindings": "Value stream redesign across eight schools raised chair utilisation from 48 to 71 percent and children treated per day from 11 to 16.",
+            "limitations": "Before-after without comparison; new clerk during the second term.",
+            "contextTags": [
+              "lean",
+              "value stream mapping",
+              "chair utilisation"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1fkqvnj",
+            "relevance": 86,
+            "methodQuality": 62,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Families with limited proficiency in the majority language had lower consent return (adjusted odds ratio 0.43); bilingual phone calls helped more than translated forms.",
+            "limitations": "Home language missing for 14 percent.",
+            "contextTags": [
+              "equity",
+              "language",
+              "consent"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1rvhznl",
+            "relevance": 66,
+            "methodQuality": 48,
+            "kind": "observational",
+            "grade": "very-low",
+            "keyFindings": "Median SDF application time 4 minutes against 22 minutes for a small restoration; finding children in class took longer than chair time.",
+            "limitations": "Two experienced therapists.",
+            "contextTags": [
+              "chair time",
+              "cooperation"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0b3kuvy",
+            "relevance": 88,
+            "methodQuality": 54,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A combined consent form raised return from 58 to 74 percent with no change in schools keeping separate forms; 11 percent refused SDF on the combined form.",
+            "limitations": "Non-random allocation; photograph added at the same time.",
+            "contextTags": [
+              "consent form",
+              "comparison schools"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0uhljw2",
+            "relevance": 70,
+            "methodQuality": 50,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Teachers supported clinics but described disruption from unpredictable calls from class; office staff chased forms without knowing why.",
+            "limitations": "Recruited through supportive head teachers.",
+            "contextTags": [
+              "teachers",
+              "school office",
+              "disruption"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "The median time to consent return was 16 days, and 22 percent of consent forms were never returned.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1rdin30"
+            ],
+            "location": "Abstract, results",
+            "passage": "The median time to consent return was 16 days, and 22 percent of consent forms were never returned.",
+            "interpretation": "Consent is the main source of waiting; the redesign should start there.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "A combined consent form raised consent return from 58 to 74 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0b3kuvy"
+            ],
+            "location": "Abstract, results",
+            "passage": "The combined consent form raised consent return from 58 to 74 percent",
+            "interpretation": "A strong change idea; the photograph was introduced at the same time.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Staining after SDF was acceptable to 67 percent of parents on back teeth and to 29 percent on front teeth.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-07la10p"
+            ],
+            "location": "Abstract, results",
+            "passage": "Staining after silver diamine fluoride was acceptable to 67 percent of parents on back teeth and to 29 percent on front teeth.",
+            "interpretation": "Front-tooth staining needs its own conversation and a balancing measure.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Value stream redesign of a school clinic day raised chair utilisation from 48 percent to 71 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1idebrc"
+            ],
+            "location": "Abstract, results",
+            "passage": "Chair utilisation rose from 48 percent to 71 percent over two terms",
+            "interpretation": "Lean redesign of the clinic day has precedent in the same setting.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Children from families with limited proficiency in the majority language were less likely to have a consent form returned (adjusted odds ratio 0.43).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1fkqvnj"
+            ],
+            "location": "Abstract, results",
+            "passage": "Children from families with limited proficiency in the majority language were less likely to have a consent form returned (adjusted odds ratio 0.43)",
+            "interpretation": "Report the quantitative strand by home language and include these families in the conversations.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Eight retrieved records, appraised at abstract level. Waiting for consent, not chair time, dominates the pathway from screening to treatment, and a combined consent form raised return in comparison schools. Lean redesign of the clinic day raised chair utilisation in eight schools. SDF itself arrests most lesions, but staining on front teeth is acceptable to fewer than a third of parents, who want to see a photograph first. Families with limited majority-language proficiency return fewer forms, and bilingual calls help more than translation. Teachers support clinics but want predictable timing. The evidence supports a lean redesign focused on consent and flow, judged separately by numbers and by the views of families and staff.",
+        "gradeOverall": "low",
+        "gradeRationale": "Before-after reports, non-random comparisons and qualitative studies with selected participants; consistent on where the delays are, imprecise on effect sizes.",
+        "summary": "Eight records appraised; five source-derived claims; certainty low."
+      },
+      "note": "Appraisal over eight retrieved records (S13); certainty over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[2].grade": "low",
+          "scan.items[2].relevance": 92,
+          "scan.items[5].grade": "very-low",
+          "scan.items[3].kind": "qi-report",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[0].sourceIds": [
+            "ev-1rdin30"
+          ],
+          "scan.claims[1].sourceIds": [
+            "ev-0b3kuvy"
+          ],
+          "scan.claims[2].sourceIds": [
+            "ev-07la10p"
+          ],
+          "scan.claims[3].sourceIds": [
+            "ev-1idebrc"
+          ],
+          "scan.claims[4].sourceIds": [
+            "ev-1fkqvnj"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "23 primary schools, clinic day about every three weeks",
+          "four dental therapists with portable equipment",
+          "separate SDF consent, forms in school bags",
+          "families with limited English",
+          "data analyst one day a week"
+        ],
+        "reading": "The value stream runs from screening, through consent, to a clinic day and the call from class. Most of the elapsed time is waiting for consent (c1), and each three-weekly clinic day is a single chance per child. The combined form (c2) and a need-ordered call list (c4) attack waiting and rework; the staining leaflet addresses the reason some parents refuse (c3). Language sits upstream of consent (c5), so a pathway that looks faster on average may leave the same children behind. Teachers and office staff carry parts of the flow without owning it.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Screening visit",
+            "kind": "context",
+            "detail": "Identifies children with active cavities."
+          },
+          {
+            "id": "n2",
+            "label": "Consent return",
+            "kind": "context",
+            "detail": "Median 16 days elsewhere; 22 percent never returned (c1)."
+          },
+          {
+            "id": "n3",
+            "label": "Combined consent form with staining photograph",
+            "kind": "framework",
+            "detail": "Change idea (c2); awaiting school board approval."
+          },
+          {
+            "id": "n4",
+            "label": "Need-ordered call-from-class list",
+            "kind": "framework",
+            "detail": "Change idea from value stream work (c4)."
+          },
+          {
+            "id": "n5",
+            "label": "SDF applied within the window",
+            "kind": "outcome",
+            "detail": "Primary measure of the quantitative strand."
+          },
+          {
+            "id": "n6",
+            "label": "Acceptability to parents, teachers and therapists",
+            "kind": "outcome",
+            "detail": "Primary finding of the conversation strand."
+          },
+          {
+            "id": "n7",
+            "label": "Families with limited English",
+            "kind": "stakeholder",
+            "detail": "Lower consent return (c5)."
+          },
+          {
+            "id": "n8",
+            "label": "Front-tooth staining",
+            "kind": "context",
+            "detail": "Acceptable to 29 percent of parents (c3)."
+          },
+          {
+            "id": "n9",
+            "label": "Teachers and school office",
+            "kind": "stakeholder",
+            "detail": "Carry forms and calls without owning the pathway."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2",
+            "relation": "starts the wait for"
+          },
+          {
+            "from": "n3",
+            "to": "n2",
+            "relation": "expected to shorten"
+          },
+          {
+            "from": "n4",
+            "to": "n5",
+            "relation": "expected to raise"
+          },
+          {
+            "from": "n2",
+            "to": "n5",
+            "relation": "gates"
+          },
+          {
+            "from": "n7",
+            "to": "n2",
+            "relation": "face barriers at"
+          },
+          {
+            "from": "n8",
+            "to": "n6",
+            "relation": "shapes"
+          },
+          {
+            "from": "n9",
+            "to": "n4",
+            "relation": "must agree"
+          }
+        ],
+        "summary": "Value stream map from screening to application, with the two strands' outcomes kept apart."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[4].kind": "outcome",
+          "map.nodes[5].kind": "outcome",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No local timing of the pathway",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The programme knows the end result (41 percent) but not where the days go; a value stream map needs timed steps.",
+            "opportunity": "Time each step for a sample of children in four schools before any change."
+          },
+          {
+            "id": "g2",
+            "title": "Consent barriers by home language are unmeasured",
+            "kind": "equity",
+            "severity": "high",
+            "whyItMatters": "Families with limited majority-language proficiency return fewer forms (c5); an average improvement could hide them.",
+            "opportunity": "Record home language and report the primary measure by it; include these families in conversations with interpreters."
+          },
+          {
+            "id": "g3",
+            "title": "Front-tooth staining may cause refusals the numbers misread",
+            "kind": "outcome",
+            "severity": "moderate",
+            "whyItMatters": "Most parents find front-tooth staining unacceptable (c3); a fall in uptake could reflect informed refusal, not a failed pathway.",
+            "opportunity": "Count informed refusals separately and explore them in conversations."
+          },
+          {
+            "id": "g4",
+            "title": "Numbers and views could be blended into one verdict",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "Mixing strands invites claiming success from one while ignoring the other.",
+            "opportunity": "Pre-specify one primary measure per strand and report them side by side before any integration."
+          },
+          {
+            "id": "g5",
+            "title": "Teachers and office staff are not part of the pathway design",
+            "kind": "implementation",
+            "severity": "watch",
+            "whyItMatters": "Changes to calls from class and form handling depend on them (retrieved teacher accounts).",
+            "opportunity": "Include a teacher and an office staff member in the value stream mapping session."
+          }
+        ],
+        "errorsFound": [
+          "The spring figure of 41 percent measures SDF at the next clinic visit, not within a fixed window; the new measure must state its window and denominator."
+        ],
+        "reevaluation": "The gaps support a lean redesign with timed baseline mapping, a quantitative strand reported by home language, and a separate conversation strand.",
+        "summary": "Five gaps; missing timings and unmeasured language barriers are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[1].kind": "equity",
+          "gaps.items[3].kind": "method",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Consent barriers by home language are unmeasured"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "A redesigned pathway (combined consent with a staining photograph, a need-ordered call list and a staining leaflet) will raise the proportion of children with active cavities who receive SDF soon after screening from about 41 percent to at least 60 percent, without widening the gap by home language.",
+            "novelty": 40,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 75,
+            "parsimony": 75,
+            "rationale": "Targets the consent bottleneck (c1, c2) and clinic flow (c4); the equity condition is part of the proposition because of c5.",
+            "risks": "Board approval of the form may be delayed; seasonal absence."
+          },
+          {
+            "id": "h2",
+            "statement": "Parents who see a staining photograph before consenting will more often consent to SDF on back teeth and decline it on front teeth, and will describe the decision as their own.",
+            "novelty": 50,
+            "need": 70,
+            "practiceChange": 65,
+            "feasibility": 80,
+            "parsimony": 70,
+            "rationale": "Follows parents' wish to see a photograph first (c3); explored in the conversation strand.",
+            "risks": "Conversations may reach mostly fluent, engaged parents."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "h1 selected for the measurement strand; h2 guides the conversation strand."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 2
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Across 23 school clinics, will a lean redesign of the SDF pathway raise the proportion of children with an active cavity at screening who receive SDF soon after screening from about 41 percent to at least 60 percent by the end of the spring term 2027, in every home-language group?",
+            "framework": "QI-aim",
+            "population": "Children with at least one active cavity at a school screening visit",
+            "intervention": "Redesigned pathway: combined consent with a staining photograph, need-ordered call list, staining leaflet",
+            "comparator": "Spring 2026 baseline pathway",
+            "outcome": "Proportion receiving SDF soon after screening, by home language",
+            "time": "Autumn 2026 to spring 2027",
+            "setting": "23 primary schools"
+          },
+          {
+            "id": "q2",
+            "text": "How do parents, teachers and dental therapists experience the redesigned pathway, and what makes SDF acceptable or unacceptable to families, including families with limited English?",
+            "framework": "SPIDER",
+            "population": "Parents of screened children, class teachers, school office staff and dental therapists",
+            "intervention": "Experience of the redesigned SDF pathway",
+            "outcome": "Views on consent, staining, disruption and fairness",
+            "time": "After the first and third test cycles",
+            "setting": "Six of the 23 schools chosen for variation in home language"
+          }
+        ],
+        "finer": "Both questions are feasible within existing records, one analyst day a week and approved conversations; interesting to the unit and the school board; novel locally; ethical under PHU-REC-2026-22; relevant because uptake is low and some families may be left behind.",
+        "summary": "A QI aim for the measurement strand and a SPIDER question for the conversation strand, kept separate."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 2
+          },
+          "questions.items[0].framework": "QI-aim",
+          "questions.items[1].framework": "SPIDER",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "qi-lean",
+        "rationale": "The problem is flow and waste in a treatment pathway: most elapsed time is waiting for consent (c1), and lean redesign of the clinic day has raised chair utilisation in the same setting (c4). Value stream mapping finds the waits and rework; test cycles introduce the combined form (c2), the need-ordered call list and the staining leaflet. Two strands are kept apart by design: a measurement strand with its own primary measure, reported by home language (c5), and a conversation strand with its own primary finding on acceptability, including front-tooth staining (c3). They are compared side by side, not merged into one verdict.",
+        "alternatives": [
+          "Comparison of schools with and without the redesign (refused: the programme will redesign all clinics and has no research grant)",
+          "Consent form change alone (refused: waiting for children in class and staining calls would remain)",
+          "Measurement strand only (refused: acceptability and fairness are half of the programme's question)"
+        ],
+        "guidelines": [
+          "SQUIRE 2.0",
+          "COREQ for the conversation strand"
+        ],
+        "whyNotMoreComplex": "A formal integrated mixed design with joint displays would add analysis time the programme does not have; side-by-side reporting of two pre-specified strands answers the question.",
+        "decision": {
+          "kind": "implementation",
+          "statement": "Redesign the SDF pathway in the 23 school clinics with lean methods, testing a combined consent form with a staining photograph, a need-ordered call list and a staining leaflet, and judge it by two separate strands: timely SDF by home language, and the acceptability of the pathway to parents, teachers and therapists.",
+          "question": "Should the programme redesign its SDF pathway with lean methods and evaluate it in two separate strands?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Consent is the main source of delay, a combined form raised return elsewhere, and lean redesign improved clinic flow in the same setting.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1",
+                "c2",
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Families find staining so unacceptable that informed refusals outweigh the gains in timely treatment.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c3"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Research ethics committee approval for the service evaluation and the structured conversations",
+              "status": "met",
+              "evidence": "Approval PHU-REC-2026-22 dated 2026-09-15, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Permission to use programme screening and treatment records for evaluation",
+              "status": "met",
+              "evidence": "School board data-sharing agreement SB-DSA-2025-09, supplied by the investigator"
+            },
+            {
+              "id": "g3",
+              "requirement": "School board approval of the combined consent form",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Consent form change alone",
+            "Measurement strand only"
+          ],
+          "note": "Rests on ledger claims c1 to c4 from retrieved records; the combined form is not approved yet, so the action stays blocked."
+        },
+        "summary": "Lean redesign recommended with two separate strands; the decision rests on four ledger claims and waits for approval of the combined form."
+      },
+      "note": "The decision rests on c1 to c4 (S13). selectionStatus and actionStatus require S11; the status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "qi-lean",
+          "family": "qi-lean",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "implementation",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "design.decisions[-1].gates": {
+            "length": 3
+          },
+          "design.decisions[-1].gates[2].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection on c1 to c4 from retrieved records; the combined-form gate is unknown, so the action stays blocked (A2 item 9, G7). Requires S11, S13 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.basis": "explicit",
+          "family": "qi-lean"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Lean project across 23 school clinics, September 2026 to June 2027, in two strands reported side by side. Baseline value stream mapping in four schools, then three test cycles: combined consent form with a staining photograph (once approved), need-ordered call-from-class list, and staining leaflet with a bilingual call for families with limited English. Measurement strand from programme records; conversation strand in six schools.",
+        "population": "Measurement strand: every child screened in the 23 schools during the project. Conversation strand: parents (including parents with limited English, with interpreters), class teachers, office staff and the four therapists in six schools chosen for variation in home language.",
+        "exposure": "The redesigned SDF pathway, introduced change by change.",
+        "procedures": "Value stream mapping session with therapists, a teacher and an office staff member; timing of each step for 60 children in four schools at baseline and after cycle 3. Programme records give screening date, cavities, consent date, home language and SDF date. Structured conversations of 20 to 30 minutes after cycles 1 and 3, recorded with consent and analysed with framework analysis by a researcher not involved in the clinics.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Timely SDF (measurement strand)",
+            "measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 28 days of screening, from programme records",
+            "timing": "Each term; baseline spring 2026",
+            "why": "The quantitative strand's single primary measure: whether children with cavities are treated soon after screening.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "primary",
+            "name": "Acceptability of the pathway (conversation strand)",
+            "measure": "Framework analysis of structured conversations, reported by group (parents by home language, teachers, office staff, therapists)",
+            "timing": "After cycles 1 and 3",
+            "why": "The conversation strand's single primary finding, kept separate from the numbers.",
+            "patientCentered": true
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Consent return",
+            "measure": "Days from screening to consent return; proportion never returned; both by home language",
+            "timing": "Each term",
+            "why": "The main waiting step (c1).",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Chair time and waiting per child",
+            "measure": "Minutes from call-from-class to return, and minutes in the chair, timed for 60 children",
+            "timing": "Baseline and after cycle 3",
+            "why": "Shows whether flow changed, not only uptake.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Informed refusals and staining complaints",
+            "measure": "Proportion of parents declining SDF on the form; complaints about staining per term",
+            "timing": "Each term",
+            "why": "A faster pathway must not push treatment families do not want.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "Uses programme records and one analyst day a week; conversations fit within the ethics approval; no added clinic days or therapist hours.",
+        "biasMitigation": [
+          "One pre-specified primary measure per strand, reported side by side",
+          "Measurement by home language fixed before cycle 1",
+          "Conversation analysis by a researcher outside the clinics",
+          "Changes annotated on the time series in the order introduced"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Blending strands into one verdict",
+            "severity": "high",
+            "note": "Prevented by separate primary outcomes and side-by-side reporting."
+          },
+          {
+            "id": "b2",
+            "label": "Conversation sample skewed to fluent parents",
+            "severity": "watch",
+            "note": "Interpreters and purposive invitations in six schools."
+          },
+          {
+            "id": "b3",
+            "label": "Seasonal absence and screening schedules",
+            "severity": "watch",
+            "note": "Compare like terms and annotate school closures."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 2,
+          "secondaryOutcomeCount": 0,
+          "covariateCount": 1,
+          "flags": [
+            "Two primary outcomes, one per strand, by design",
+            "Home language is the only stratifier"
+          ],
+          "simplestPath": "One measure per strand, three changes in sequence, side-by-side report."
+        },
+        "theoreticalFramework": "Lean value stream mapping for the pathway; no further framework.",
+        "summary": "Two strands with one primary outcome each, two process measures and a balancing measure."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.outcomes[0].role": "primary",
+          "protocol.outcomes[1].role": "primary",
+          "protocol.outcomes[0].measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 28 days of screening, from programme records",
+          "protocol.parsimony.primaryOutcomeCount": 2,
+          "protocol.parsimony.covariateCount": 1,
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "set-field",
+      "path": "protocol.outcomes[0].measure",
+      "value": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
+      "note": "Late-reply timing (the format has no field for it): the investigator has already clicked Illuminate on the Analysis stage, so the request for stats call 1 (the next step) was dispatched with the studyRevision of the study before this edit; while that reply is pending, the investigator widens the primary measure's window from 28 to 42 days because each school has a clinic day only about every three weeks. The runner dispatches the next step's request before applying this edit and delivers its reply after the edit is saved. No downstream stage is complete, so nothing is flagged for review.",
+      "expect": {
+        "store": {
+          "protocol.outcomes[0].measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
+          "protocol.outcomes[0].role": "primary",
+          "stats.sampleSize": "",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "needsReview": []
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Time series of the measurement strand's primary proportion by term and by clinic day, with the conversation strand analysed separately.",
+        "sampleSize": "About 1,900 children are screened per term and about 520 have an active cavity. With a baseline of 41 percent treated within 28 days, a rise to 60 percent in 520 children is estimated within about plus or minus 4 percentage points, and a p-chart of clinic-day proportions (subgroups of about 25 children) shows a shift after about four clinic days per school.",
+        "primaryAnalysis": "p-chart of the 28-day proportion by clinic day across the 23 schools, with baseline limits from spring 2026 and pre-specified shift rules.",
+        "secondaryAnalysis": "The same chart by home language; consent return times; chair and waiting times before and after cycle 3; refusals and complaints.",
+        "missingData": "Children absent on the clinic day are counted as not treated within 28 days.",
+        "multiplicity": "One primary measure per strand; no significance tests.",
+        "software": "Spreadsheet p-chart template kept by the analyst.",
+        "overfittingGuards": [
+          "Shift rules fixed before cycle 1",
+          "Home language the only stratifier"
+        ],
+        "summary": "Analysis planned for the 28-day measure."
+      },
+      "note": "Late reply refused (G6): this reply was produced against the study before the investigator's edit of the primary measure (it analyses the 28-day window), so the studyRevision guard refuses it: nothing is applied, the stage stays incomplete, the refusal is shown and logged in the audit entries. The guard itself is the 875fe59 store's mergeStageIfRevision; the screen's use of it is sheet A3 item L1.2 as corrected in A3.1 item 1 (a boundary correction inside L1, not a work-order entry), so a failure here is a defect, not capability absent.",
+      "expect": {
+        "error": {
+          "shown": true
+        },
+        "store": {
+          "stats.sampleSize": "",
+          "stats.primaryAnalysis": "",
+          "stats.overfittingGuards": {
+            "length": 0
+          },
+          "protocol.outcomes[0].measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "audit.entries[0].summary": {
+            "includes": "refused"
+          }
+        },
+        "stage": {
+          "stats": "incomplete"
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Analysis route after the refusal: the investigator's edit must persist and the refused reply must not reappear.",
+      "expect": {
+        "store": {
+          "title": "Lean redesign of the silver diamine fluoride pathway in a 23-school dental programme",
+          "protocol.outcomes[0].measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
+          "stats.sampleSize": "",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ],
+          "needsReview": [],
+          "audit.entries[0].summary": {
+            "includes": "refused"
+          }
+        },
+        "stage": {
+          "stats": "incomplete"
+        },
+        "screen": {
+          "includes": [
+            "Lean redesign of the silver diamine fluoride pathway in a 23-school dental programme"
+          ],
+          "excludes": [
+            "28-day proportion"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 2,
+      "response": {
+        "designSummary": "Measurement strand: time series of the 42-day proportion by term and by clinic day across 23 schools, stratified by home language. Conversation strand: framework analysis, reported separately; no statistical integration.",
+        "sampleSize": "About 1,900 children are screened per term and about 520 have an active cavity. The spring figure of 41 percent measured treatment at the next clinic visit, so the baseline for the 42-day window is recomputed from spring 2026 records before cycle 1. If the baseline is near 45 percent and the aim is 60 percent, one term's 520 children estimate the proportion within about plus or minus 4.3 percentage points; each home-language group of about 90 children gives an interval of about plus or minus 10 points, enough to see a gap of 20 points but not a small one. Conversations: about 24 parents (at least 8 with limited English), 8 teachers or office staff and the 4 therapists, reviewed for information power after cycle 1.",
+        "primaryAnalysis": "p-chart of the 42-day proportion by clinic day, limits from the recomputed baseline, with pre-specified rules (one point outside the limits, or eight consecutive points above the centre line); the same chart by home language. Conversation strand: framework analysis with a matrix by group and home language, reported in its own section and then set beside the numbers in a side-by-side table.",
+        "secondaryAnalysis": "Consent return time and never-returned proportion by home language; chair and waiting minutes before and after cycle 3; informed refusals and staining complaints per term.",
+        "missingData": "Children absent on both clinic days in the window are counted in the denominator and reported separately; missing home language (expected about 14 percent) is reported as its own group, not imputed.",
+        "multiplicity": "One primary measure per strand; charts and themes are not subjected to significance tests; secondary measures are descriptive.",
+        "software": "Spreadsheet p-chart templates kept by the analyst; conversation coding in the unit's qualitative software.",
+        "overfittingGuards": [
+          "Window, denominator and chart rules fixed before cycle 1, after the investigator's edit",
+          "Home language the only stratifier",
+          "No merged score combining the two strands",
+          "Themes developed before the analyst shares the charts with the conversation researcher"
+        ],
+        "summary": "Analysis for the 42-day measure with a recomputed baseline, by home language, and a separate conversation strand."
+      },
+      "note": "Fresh request after the edit: the reply analyses the investigator's 42-day measure and is applied (G6 positive control).",
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "42-day window"
+          },
+          "stats.primaryAnalysis": {
+            "includes": "42-day proportion"
+          },
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "protocol.outcomes[0].measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: the pathway changes are service changes; conversations carry the risk of parents feeling judged about their child's teeth or their English, and of teachers feeling blamed for disruption.",
+        "consent": "The redesigned combined consent form is the clinical consent for treatment; the evaluation uses programme records under agreement SB-DSA-2025-09 without individual consent. Structured conversations need written consent (PHU-REC-2026-22), with interpreters and translated information for parents with limited English.",
+        "data": "Records are analysed inside the programme's systems with study numbers; photographs of teeth never leave the clinical record system; conversation recordings are deleted after transcription.",
+        "equity": "PROGRESS-Plus: home language, deprivation of the school catchment and family structure shape consent return and acceptability. The primary measure is reported by home language, families with limited English are purposively invited to conversations with interpreters, and the bilingual call is part of the change package.",
+        "effectiveness": "Success means more children treated soon after screening in every language group, with acceptable staining decisions made by families; either strand failing is reported as such.",
+        "efficiency": "No added clinic days; the analyst's day a week covers the measurement strand.",
+        "costs": "Printing of forms and leaflets, interpreter time for conversations; within the programme budget.",
+        "grants": "None needed.",
+        "partnerships": "The school board, two head teachers, a parents' group from a school with many families who speak little English, and the four therapists.",
+        "rebPath": "Approved by the public health unit's research ethics committee on 2026-09-15 as a service evaluation with a research component (PHU-REC-2026-22); the combined form still needs school board approval before cycle 1.",
+        "limitations": "Uncontrolled time series; conversation sample limited to six schools; seasonal changes in attendance.",
+        "summary": "Low-risk project with written consent for conversations, interpreters, and results by home language."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "PHU-REC-2026-22"
+          },
+          "ethics.equity": {
+            "includes": "home language"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A parents' group from a school where many families speak little English reviews the combined form and the staining leaflet; a teacher and an office staff member join the value stream mapping session; the therapists review every change before it is tested.",
+        "socialListening": "The programme's parent feedback line and school newsletters are reviewed for comments about the clinics; no social media listening.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "family",
+            "theme": "Seeing the stain first",
+            "quote": "Composite paraphrase: If I had seen the picture I would have said yes for the back teeth and no for the front one.",
+            "implication": "Put the staining photograph on the combined form and allow tooth-by-tooth choices.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Forms in another language",
+            "quote": "Composite paraphrase (through an interpreter): The letter came home but nobody in the house could read it, so it stayed in the bag.",
+            "implication": "Bilingual phone call as part of the change package.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "partner",
+            "theme": "Being called from class",
+            "quote": "Composite paraphrase (teacher): I never know when they will come for a child; it is usually in the middle of reading.",
+            "implication": "Agree a call timetable with each school.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "The afternoon on the phone",
+            "quote": "Composite paraphrase (dental therapist): I spend longer explaining the stain on the phone than applying it in the chair.",
+            "implication": "Leaflet and form do the explaining; calls kept for questions.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v5",
+            "source": "partner",
+            "theme": "Chasing forms",
+            "quote": "Composite paraphrase (school office): Nobody told us why the pink form mattered more than the others.",
+            "implication": "Brief office staff on the pathway and give them one contact.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Five composite voices on staining, language, class disruption, therapist time and office work."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 5
+          },
+          "voices.items[1].source": "family",
+          "voices.items[4].verification": "ai-lead",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Lean redesign of a silver diamine fluoride pathway in 23 school dental clinics: timely treatment and acceptability reported side by side",
+        "abstract": "Problem: only 41 percent of children with an active cavity received silver diamine fluoride at the next school clinic visit. Intervention: lean redesign with a combined consent form and staining photograph, a need-ordered call list, a staining leaflet and bilingual calls. Measures: the proportion treated within 42 days of screening by home language (measurement strand) and the acceptability of the pathway to parents, teachers and therapists (conversation strand), reported side by side. Results will follow the project.",
+        "introduction": "Silver diamine fluoride arrests most cavities, but school programmes lose time waiting for consent, and staining on front teeth is unacceptable to many parents. Families with limited majority-language proficiency return fewer consent forms.",
+        "methods": "Value stream mapping, three test cycles, programme records analysed as p-charts by home language, and structured conversations analysed with framework analysis; ethics approval PHU-REC-2026-22.",
+        "results": "No data have been collected yet. The report will present the two strands in separate sections and a side-by-side table.",
+        "discussion": "The discussion will ask whether the two strands agree, what informed refusals mean for the measure, and whether any language group was left behind.",
+        "limitations": "Uncontrolled time series; six-school conversation sample; baseline for the 42-day window recomputed from records.",
+        "conclusion": "To be written after the project, strand by strand.",
+        "reportingChecklist": "SQUIRE 2.0, with COREQ items for the conversation strand",
+        "summary": "Draft with two strands kept separate and results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": {
+            "includes": "SQUIRE 2.0"
+          },
+          "manuscript.abstract": {
+            "includes": "within 42 days"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "School board approval of the combined consent form is unknown; the decision's action stays blocked and cycle 1 cannot start",
+          "Recompute the baseline for the 42-day window from spring 2026 records before cycle 1",
+          "Book interpreters for the conversation strand in the six schools"
+        ],
+        "improvementNotes": "A reply for the Analysis stage produced before the investigator widened the primary measure's window to 42 days was refused and logged; the fresh reply analyses the edited measure. The two strands have one primary outcome each and are reported side by side.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes: board approval, the recomputed baseline and interpreters."
+      },
+      "note": "audit fields state the correct behaviour; at 875fe59 the audit patch is overwritten by store.ts mergeStage (L1.6 defect, sheet A3).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 3
+          },
+          "audit.lastReview": "2026-09-22",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "note": "Home route, then the study from the list.",
+      "expect": {
+        "store": {
+          "title": "Lean redesign of the silver diamine fluoride pathway in a 23-school dental programme",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "protocol.outcomes[0].measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
+          "protocol.parsimony.primaryOutcomeCount": 2,
+          "stats.sampleSize": {
+            "includes": "42-day window"
+          },
+          "design.decisions": {
+            "length": 1
+          },
+          "audit.openFixes": {
+            "length": 3
+          }
+        },
+        "screen": {
+          "includes": [
+            "Lean redesign of the silver diamine fluoride pathway in a 23-school dental programme"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "One click, one file equal to the store (G10). selectionStatus and actionStatus require S11; scan.claims S13.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "protocol.outcomes[0].measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
+            "protocol.outcomes[1].role": "primary",
+            "stats.sampleSize": {
+              "includes": "42-day window"
+            },
+            "scan.gradeOverall": "low",
+            "scan.claims": {
+              "length": 5
+            },
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "problem.constraints": "No research grant; a data analyst one day a week. Changes must not add clinic days or therapist hours. Consent materials must be approved by the school board before use. Photographs of children's teeth may not leave the programme's clinical record system."
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

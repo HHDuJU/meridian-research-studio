@@ -1,6 +1,6 @@
 {
   "id": "sc-043",
-  "version": 1,
+  "version": 2,
   "title": "Teaching hospital pre-assessment clinic: perioperative glucose protocol, a late reply refused and a trial replaced by a feasibility study",
   "field": "anesthesia",
   "level": 5,
@@ -88,7 +88,13 @@
         },
         "screen": {
           "includes": [
-            {"anyOf": ["kept", "refused", "not applied"]},
+            {
+              "anyOf": [
+                "kept",
+                "refused",
+                "not applied"
+              ]
+            },
             "Capillary glucose meters only"
           ]
         }
@@ -289,7 +295,7 @@
         "gradeRationale": "Observational and pilot evidence only.",
         "summary": "Retrieved records appraised; two claims recorded; certainty low."
       },
-      "note": "Late reply (G6). The request is sent against the study revision of this moment; the runner holds this recorded reply (for example by intercepting the model request) until the next step, the investigator's constraints edit, has been saved, and only then releases it (the release is the wait step). The checks here describe the study while the request is pending: nothing applied yet. The refusal is checked after the wait. The guard is store.ts mergeStageIfRevision in the 875fe59 library; its use on the screen path is L1.2 (A3.1 item 1).",
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. The request is sent against the study revision of this moment; the runner holds this recorded reply (for example by intercepting the model request) until the next step, the investigator's constraints edit, has been saved, and only then releases it. The checks here describe the study while the request is pending: nothing applied yet. The refusal is checked after the release. The guard is store.ts mergeStageIfRevision in the 875fe59 library; its use on the screen path is L1.2 (A3.1 item 1). After the release: The held reply arrives after the edit. It was produced against the earlier revision, so the guard refuses it: no annotation, claim or certainty is applied, the stage stays incomplete, the investigator's edit is intact, the refusal is shown and logged (G6; A3.1 item 1, intervening_edit_refuses_reply). The log text follows store.ts ('Stale model response for scan refused ...').",
       "expect": {
         "store": {
           "scan.claims": {
@@ -299,63 +305,14 @@
           "scan.items[0].grade": "unrated",
           "completedStages": [
             "problem"
-          ]
-        },
-        "stage": {
-          "scan": "incomplete"
-        },
-        "screen": {
-          "includes": [
-            "unrated"
-          ]
-        }
-      }
-    },
-    {
-      "do": "set-field",
-      "path": "problem.constraints",
-      "value": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
-      "note": "While the scan reply is pending, the investigator adds a constraint on the Problem stage. G11: an investigator edit changes the investigator-owned field. The study revision changes; nothing downstream is complete yet, so nothing is flagged.",
-      "expect": {
-        "store": {
-          "problem.constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
-          "needsReview": [],
-          "completedStages": [
-            "problem"
-          ]
-        },
-        "screen": {
-          "includes": [
-            "Orthopaedic lists cannot move insulin-treated patients"
-          ]
-        }
-      }
-    },
-    {
-      "do": "wait",
-      "ms": 3000,
-      "note": "The held reply arrives after the edit. It was produced against the earlier revision, so the guard refuses it: no annotation, claim or certainty is applied, the stage stays incomplete, the investigator's edit is intact, the refusal is shown and logged (G6; A3.1 item 1, intervening_edit_refuses_reply). The log text follows store.ts ('Stale model response for scan refused ...').",
-      "expect": {
-        "error": {
-          "shown": true,
-          "includes": "changed since the request"
-        },
-        "store": {
-          "scan.claims": {
-            "length": 0
-          },
-          "scan.gradeOverall": "",
+          ],
           "scan.items[2].relevance": {
             "isNull": true
           },
-          "scan.items[0].grade": "unrated",
           "problem.constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
           "audit.entries[0].summary": {
             "includes": "refused"
-          },
-          "completedStages": [
-            "problem"
-          ]
+          }
         },
         "stage": {
           "scan": "incomplete"
@@ -364,8 +321,35 @@
           "includes": [
             "unrated"
           ]
+        },
+        "error": {
+          "shown": true,
+          "includes": "changed since the request"
         }
-      }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "problem.constraints",
+          "value": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
+          "note": "While the scan reply is pending, the investigator adds a constraint on the Problem stage. G11: an investigator edit changes the investigator-owned field. The study revision changes; nothing downstream is complete yet, so nothing is flagged. Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "problem.constraints": "The diabetes specialist nurse can give 4 hours a week. Capillary glucose meters only; no continuous glucose monitors. First-on-the-list scheduling needs the agreement of each surgical specialty. No funding beyond a departmental grant of 12,000. Orthopaedic lists cannot move insulin-treated patients to first on the list, so the protocol must work without scheduling changes for orthopaedic patients.",
+              "needsReview": [],
+              "completedStages": [
+                "problem"
+              ]
+            },
+            "screen": {
+              "includes": [
+                "Orthopaedic lists cannot move insulin-treated patients"
+              ]
+            }
+          }
+        }
+      ]
     },
     {
       "do": "illuminate",
@@ -1797,5 +1781,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-043.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
 }

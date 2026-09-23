@@ -1,6 +1,6 @@
 {
   "id": "sc-094",
-  "version": 1,
+  "version": 2,
   "title": "Health authority simulation centre: in-situ simulation for rapid response teams, late Stats reply refused after a protocol edit",
   "field": "medical-education",
   "level": 5,
@@ -1019,33 +1019,6 @@
       }
     },
     {
-      "do": "set-field",
-      "path": "protocol.population",
-      "value": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
-      "note": "In-flight edit (G6). The investigator clicked Illuminate for Stats first: the runner issues that request (stats call 1, carrying the studyRevision captured before this edit) and holds its replay reply; then the investigator restricts the protocol's population to adult ward calls through the Protocol screen; the held reply is released by the next step. This edit is the investigator's own text and changes the study revision.",
-      "expect": {
-        "store": {
-          "protocol.population": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
-          "stats.sampleSize": "",
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol"
-          ],
-          "needsReview": []
-        },
-        "stage": {
-          "protocol": "complete",
-          "stats": "incomplete"
-        }
-      }
-    },
-    {
       "do": "illuminate",
       "stage": "stats",
       "call": 1,
@@ -1062,7 +1035,7 @@
         ],
         "summary": "About 180 calls per hospital per period give about 85 percent power for a 2-minute reduction."
       },
-      "note": "Late reply (G6): this is the Stats reply requested before the previous step's edit, computed for all 2,860 calls. The study changed between request and reply, so the application must refuse it: nothing merged (stats stays empty and incomplete), the investigator's population text kept, the refusal shown and logged (store.mergeStageIfRevision at 875fe59 logs 'Stale model response for stats refused'; integration A3 L1.2 as corrected by A3.1). Requires S10 (revision guard at the commit boundary) and D5 (refusal shown).",
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Late reply (G6): this is the Stats reply requested before the previous step's edit, computed for all 2,860 calls. The study changed between request and reply, so the application must refuse it: nothing merged (stats stays empty and incomplete), the investigator's population text kept, the refusal shown and logged (store.mergeStageIfRevision at 875fe59 logs 'Stale model response for stats refused'; integration A3 L1.2 as corrected by A3.1). Requires S10 (revision guard at the commit boundary) and D5 (refusal shown).",
       "expect": {
         "store": {
           "stats.sampleSize": "",
@@ -1088,7 +1061,37 @@
         "error": {
           "shown": true
         }
-      }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "protocol.population",
+          "value": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
+          "note": "In-flight edit (G6). The investigator clicked Illuminate for Stats first: the runner issues that request (stats call 1, carrying the studyRevision captured before this edit) and holds its replay reply; then the investigator restricts the protocol's population to adult ward calls through the Protocol screen; the held reply is released by the next step. This edit is the investigator's own text and changes the study revision. Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "protocol.population": "Adult ward rapid response calls at the four hospitals, about 2,310 a year (paediatric and obstetric calls excluded because those units have separate teams and training); rapid response team members, ward nurses and families for the qualitative strand.",
+              "stats.sampleSize": "",
+              "completedStages": [
+                "problem",
+                "scan",
+                "map",
+                "gaps",
+                "hypotheses",
+                "questions",
+                "design",
+                "protocol"
+              ],
+              "needsReview": []
+            },
+            "stage": {
+              "protocol": "complete",
+              "stats": "incomplete"
+            }
+          }
+        }
+      ]
     },
     {
       "do": "reload",
@@ -1598,5 +1601,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-094.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
 }

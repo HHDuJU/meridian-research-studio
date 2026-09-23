@@ -1,7 +1,7 @@
 import type { Study } from "../types";
 import { isRecord } from "../contracts";
 
-const ID_RE = /\b((?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]+)\b/gi;
+const ID_RE = /\b((?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]*\d[a-z0-9-]*)\b/gi;
 
 export interface IdHit {
   path: string;
@@ -85,7 +85,7 @@ export function unresolvedActiveIds(study: Study): IdHit[] {
 export function markUnknownIds(text: string, known: Set<string>): { text: string; unknown: string[] } {
   const held: string[] = [];
   const protectedText = text.replace(
-    /⟦unresolved:(?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]+⟧/gi,
+    /⟦unresolved:(?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]*\d[a-z0-9-]*⟧/gi,
     (all) => {
       held.push(all);
       return `\u0000WRAP${held.length - 1}\u0000`;
@@ -93,7 +93,7 @@ export function markUnknownIds(text: string, known: Set<string>): { text: string
   );
   const unknown: string[] = [];
   let next = protectedText.replace(
-    /\b((?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]+)\b/gi,
+    /\b((?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]*\d[a-z0-9-]*)\b/gi,
     (all, id: string) => {
       if (known.has(id)) return all;
       unknown.push(id);

@@ -1,4 +1,4 @@
-import { STUDY_SCHEMA_VERSION } from "./types";
+import { STUDY_SCHEMA_VERSION, orderNeedsReview } from "./types";
 import type {
   AuditStage,
   EvidenceItem,
@@ -383,7 +383,7 @@ export function migrateStudy(raw: unknown): Study {
   return {
     ...base,
     ...(s as Partial<Study>),
-    needsReview,
+    needsReview: orderNeedsReview(needsReview),
     completedStages,
     schemaVersion: STUDY_SCHEMA_VERSION,
     documents,
@@ -479,9 +479,7 @@ export function withdrawScanCompletionIfInvalid(study: Study): Study {
   return {
     ...study,
     completedStages: study.completedStages.filter((s) => s !== "scan"),
-    needsReview: (study.needsReview ?? []).includes("scan")
-      ? study.needsReview
-      : [...(study.needsReview ?? []), "scan"],
+    needsReview: (study.needsReview ?? []).filter((s) => s !== "scan"),
     scan: {
       ...study.scan,
       completionWithdrawn: {

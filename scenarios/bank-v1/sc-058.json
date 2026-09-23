@@ -1,6 +1,6 @@
 {
   "id": "sc-058",
-  "version": 1,
+  "version": 2,
   "title": "Regional Lean catheter project across four hospitals: protocol revision flags analysis and ethics, late audit reply refused",
   "field": "infectious-disease",
   "level": 5,
@@ -1469,44 +1469,6 @@
       }
     },
     {
-      "do": "set-field",
-      "path": "audit.improvementNotes",
-      "value": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
-      "note": "The investigator asks for a re-audit (the request for audit call 2 is sent here, capturing studyRevision) and, while it is pending, rewrites the audit notes on screen. Investigator edits through set-field change the stored text (G11). With D27 this substantive audit content is part of studyRevision, so the study is now at a new revision.",
-      "expect": {
-        "store": {
-          "audit.improvementNotes": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
-          "audit.openFixes": {
-            "length": 4
-          },
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol",
-            "stats",
-            "ethics",
-            "voices",
-            "manuscript",
-            "audit"
-          ],
-          "needsReview": []
-        },
-        "stage": {
-          "audit": "complete"
-        },
-        "screen": {
-          "includes": [
-            "Edited by the infection prevention lead on 2026-09-22"
-          ]
-        }
-      }
-    },
-    {
       "do": "illuminate",
       "stage": "audit",
       "call": 2,
@@ -1519,7 +1481,7 @@
         "lastReview": "2026-09-23",
         "summary": "Two open fixes; notes rewritten."
       },
-      "note": "Late reply refused (G6; A3.1 item 1, intervening_edit_refuses_reply). Representation: the request for this call was sent at the previous step, before the investigator's edit was saved; the runner sends the request and captures studyRevision before executing the set-field step, then delivers this recorded reply after it. The reply was produced against the earlier revision, so nothing is applied: the investigator's notes, the four open fixes and the last review date stay, the refusal is shown (the store's reason text 'study changed since the request') and logged. Requires D27: at 875fe59 studyRevision excludes the whole audit object, so the edit does not change the revision and this reply would overwrite the investigator's notes.",
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Late reply refused (G6; A3.1 item 1, intervening_edit_refuses_reply). Representation: the request for this call was sent at the previous step, before the investigator's edit was saved; the runner sends the request and captures studyRevision before executing the set-field step, then delivers this recorded reply after it. The reply was produced against the earlier revision, so nothing is applied: the investigator's notes, the four open fixes and the last review date stay, the refusal is shown (the store's reason text 'study changed since the request') and logged. Requires D27: at 875fe59 studyRevision excludes the whole audit object, so the edit does not change the revision and this reply would overwrite the investigator's notes.",
       "expect": {
         "error": {
           "shown": true,
@@ -1559,7 +1521,48 @@
             "Edited by the infection prevention lead on 2026-09-22"
           ]
         }
-      }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "audit.improvementNotes",
+          "value": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
+          "note": "The investigator asks for a re-audit (the request for audit call 2 is sent here, capturing studyRevision) and, while it is pending, rewrites the audit notes on screen. Investigator edits through set-field change the stored text (G11). With D27 this substantive audit content is part of studyRevision, so the study is now at a new revision. Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "audit.improvementNotes": "Edited by the infection prevention lead on 2026-09-22: Hospital D's information governance reply is still outstanding. Hospital D's point counts start in November 2026 regardless, but no Hospital D ward-level figures leave the hospital until the agreement arrives. The protocol was revised because the first version ignored the single Lean coach and Hospital D's paper records.",
+              "audit.openFixes": {
+                "length": 4
+              },
+              "completedStages": [
+                "problem",
+                "scan",
+                "map",
+                "gaps",
+                "hypotheses",
+                "questions",
+                "design",
+                "protocol",
+                "stats",
+                "ethics",
+                "voices",
+                "manuscript",
+                "audit"
+              ],
+              "needsReview": []
+            },
+            "stage": {
+              "audit": "complete"
+            },
+            "screen": {
+              "includes": [
+                "Edited by the infection prevention lead on 2026-09-22"
+              ]
+            }
+          }
+        }
+      ]
     },
     {
       "do": "reload",
@@ -1685,5 +1688,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-058.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
 }

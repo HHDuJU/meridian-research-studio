@@ -306,7 +306,7 @@ export function evalError(expectError, lastError, screenText, step, n, action, c
   }
 }
 
-function evalExpect({ study, persistedStudy, step, n, action, checkpoints, lastIssues, lastError, screenText, exportJson, requires }) {
+function evalExpect({ study, persistedStudy, step, n, action, checkpoints, lastIssues, lastError, screenText, errorText, exportJson, requires }) {
   if (step.expect?.store) evalStoreExpect(study, step.expect.store, requires || [], n, action, checkpoints, lastIssues);
   if (step.expect?.stage) {
     for (const [st, want] of Object.entries(step.expect.stage)) {
@@ -315,7 +315,7 @@ function evalExpect({ study, persistedStudy, step, n, action, checkpoints, lastI
     }
   }
   if (step.expect?.issues) evalIssues(step.expect.issues, lastIssues, step, n, action, checkpoints);
-  if (step.expect?.error) evalError(step.expect.error, lastError, screenText, step, n, action, checkpoints);
+  if (step.expect?.error) evalError(step.expect.error, "", errorText ?? screenText, step, n, action, checkpoints);
   if (step.expect?.screen?.includes) {
     const body = screenText ?? "";
     for (const t of step.expect.screen.includes) {
@@ -503,12 +503,13 @@ async function runStore(scenario, lib) {
         actionRoutes.push({ do: step.do, route: "store-fallback" });
       } else if (step.do === "retrieve") {
         actionRoutes.push({ do: step.do, route: "store-fallback" });
-        const adapter = lib.fixture.fixtureAdapter();
-        const url = lib.fixture.fixtureRecordingUrl(step.query || "");
+        const provider = step.provider || "fixture";
+        const adapter = provider === "fixture" ? lib.fixture.fixtureAdapter() : lib.fixture.replaySearchAdapter(provider);
+        const url = provider === "fixture" ? lib.fixture.fixtureRecordingUrl(step.query || "") : lib.fixture.replayRecordingUrl(provider, step.query || "");
         const raw = step.response ?? {};
         const body = typeof raw.body === "string" ? raw.body : JSON.stringify(raw);
         const status = typeof raw.status === "number" ? raw.status : 200;
-        const transport = lib.transport.recordedTransport({ [url]: { status, body } });
+        const transport = lib.transport.recordedTransport({ [url]: { status, body, note: raw.note } });
         const result = await lib.retrieve.runSearch(adapter, step.query || "", transport);
         S().applyRetrieval(studyId, result);
       } else if (step.do === "confirm-empty-search") {
@@ -534,6 +535,35 @@ async function runStore(scenario, lib) {
         } else {
           const s = study();
           const rev = decision.studyRevision(s);
+          if (step.late && Array.isArray(step.during)) {
+            for (const act of step.during) {
+              actionRoutes.push({ do: act.do, route: "store-fallback" });
+              if (act.do === "set-field") applyStoreField(S, study(), studyId, act.path, act.value);
+              else if (act.do === "confirm-empty-search") S().confirmEmptySearch(studyId);
+              else if (act.do === "accept-decision") S().acceptDecision(studyId, act.which ?? "latest");
+              else if (act.do === "withdraw-decision") S().withdrawDecision(studyId, act.which ?? "latest");
+              else if (act.do === "mark-complete") S().markComplete(studyId, act.stage);
+              else if (act.do === "change-source") {
+                const beforeItem = study().scan.items.find((it) => it.title === act.record);
+                S().changeSource(studyId, { title: act.record, id: beforeItem?.id }, act.field, act.value, act.note || (act.field === "status" ? "manual identity check" : undefined));
+              }
+              const mid = study();
+              evalExpect({
+                study: mid,
+                persistedStudy: mid,
+                step: act,
+                n,
+                action: act,
+                checkpoints,
+                lastIssues,
+                lastError: "",
+                screenText: mid ? JSON.stringify(mid) : "",
+                errorText: "",
+                exportJson: null,
+                requires: scenario.requires || [],
+              });
+            }
+          }
           const result = S().illuminateApply(studyId, step.stage, payload, rev);
           lastIssues = result.issues ?? [];
           lastError = result.ok ? "" : (result.reason || result.summary || "");
@@ -549,30 +579,12 @@ async function runStore(scenario, lib) {
         S().markComplete(studyId, step.stage);
       } else if (step.do === "set-field") {
         actionRoutes.push({ do: step.do, route: "store-fallback" });
-        const parts = String(step.path).split(".");
-        const stage = parts[0];
-        const rest = parts.slice(1).join(".");
-        if (["problem", "scan", "map", "gaps", "hypotheses", "questions", "design", "protocol", "stats", "ethics", "voices", "manuscript", "audit"].includes(stage) && rest) {
-          const patch = {};
-          const segs = rest.split(".");
-          let cur = patch;
-          segs.forEach((seg, idx) => {
-            if (idx === segs.length - 1) cur[seg] = step.value;
-            else {
-              cur[seg] = {};
-              cur = cur[seg];
-            }
-          });
-          S().mergeStage(studyId, stage, patch);
-        } else {
-          if (step.path === "family") S().setFamily(studyId, step.value ?? null);
-          else S().update(studyId, { [step.path]: step.value });
-        }
+        applyStoreField(S, study(), studyId, step.path, step.value);
       } else if (step.do === "change-source") {
         actionRoutes.push({ do: step.do, route: "store-fallback" });
         const s = study();
         const beforeItem = s.scan.items.find((it) => it.title === step.record);
-        const r = S().changeSource(studyId, { title: step.record, id: beforeItem?.id }, step.field, step.value);
+        const r = S().changeSource(studyId, { title: step.record, id: beforeItem?.id }, step.field, step.value, step.note || (step.field === "status" ? "manual identity check" : undefined));
         const afterItem = study().scan.items.find((it) => it.title === step.record);
         const changed = r.ok === true;
         checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: changed, ok: changed, reason: changed ? "" : (r.reason || "source content did not change; staleness not supported") }));
@@ -625,6 +637,7 @@ async function runStore(scenario, lib) {
       lastIssues: lastIssues.length ? lastIssues : (illum?.issues ?? []),
       lastError: lastError || illum?.error || "",
       screenText: [lastError, illum?.error, illum?.summary, s ? JSON.stringify(s) : ""].filter(Boolean).join("\n"),
+      errorText: [lastError, illum?.error, illum?.summary].filter(Boolean).join("\n"),
       exportJson,
       requires: scenario.requires || [],
     });
@@ -708,6 +721,52 @@ function fieldValueForFill(value) {
 
 export { fieldValueForFill };
 
+const STORE_STAGES = new Set(["problem", "scan", "map", "gaps", "hypotheses", "questions", "design", "protocol", "stats", "ethics", "voices", "manuscript", "audit"]);
+
+function setPathValue(root, pathName, value) {
+  const parts = String(pathName).split(".");
+  let cur = root;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const seg = parts[i];
+    const m = /^([^[]+)\[(\d+)\]$/.exec(seg);
+    if (m) {
+      const key = m[1];
+      const idx = Number(m[2]);
+      const arr = Array.isArray(cur[key]) ? cur[key].slice() : [];
+      arr[idx] = { ...(arr[idx] ?? {}) };
+      cur[key] = arr;
+      cur = arr[idx];
+    } else {
+      cur[seg] = Array.isArray(cur[seg]) ? cur[seg].slice() : { ...(cur[seg] ?? {}) };
+      cur = cur[seg];
+    }
+  }
+  const last = parts[parts.length - 1];
+  const lm = /^([^[]+)\[(\d+)\]$/.exec(last);
+  if (lm) {
+    const key = lm[1];
+    const idx = Number(lm[2]);
+    const arr = Array.isArray(cur[key]) ? cur[key].slice() : [];
+    arr[idx] = value;
+    cur[key] = arr;
+  } else {
+    cur[last] = value;
+  }
+}
+
+function applyStoreField(S, study, studyId, pathName, value) {
+  const parts = String(pathName).split(".");
+  const stage = parts[0];
+  if (STORE_STAGES.has(stage) && parts.length > 1) {
+    const clone = structuredClone(study[stage]);
+    setPathValue(clone, parts.slice(1).join("."), value);
+    S().mergeStage(studyId, stage, clone);
+    return;
+  }
+  if (pathName === "family") S().setFamily(studyId, value ?? null);
+  else S().update(studyId, { [pathName]: value });
+}
+
 async function clickFirstVisible(locator) {
   const n = await locator.count();
   for (let i = 0; i < n; i++) {
@@ -718,6 +777,74 @@ async function clickFirstVisible(locator) {
     }
   }
   return false;
+}
+
+async function installModelHold(page) {
+  let releaseHold;
+  const gate = new Promise((resolve) => {
+    releaseHold = resolve;
+  });
+  let markHit;
+  const hit = new Promise((resolve) => {
+    markHit = resolve;
+  });
+  let markContinued;
+  const continued = new Promise((resolve) => {
+    markContinued = resolve;
+  });
+  let held = false;
+  const handler = async (route) => {
+    const req = route.request();
+    const post = req.method() === "POST" ? req.postData() || "" : "";
+    const model = post.includes("replayKey") || post.includes('"compact"') || post.includes("scanPurpose");
+    const finish = async () => {
+      try {
+        await route.continue();
+      } catch (err) {
+        if (!/already handled/i.test(String(err))) throw err;
+      }
+    };
+    if (!held && model) {
+      held = true;
+      markHit();
+      await gate;
+      await finish();
+      markContinued();
+      return;
+    }
+    await finish();
+  };
+  await page.route("**/*", handler);
+  return {
+    waitHit: () =>
+      Promise.race([
+        hit,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("model request was not dispatched")), 20000)),
+      ]),
+    release: async () => {
+      releaseHold();
+      await continued;
+      await page.unroute("**/*", handler).catch(() => undefined);
+    },
+  };
+}
+
+async function waitHydratedStage(page, stage) {
+  await page.locator('[data-meridian-hydrated="true"]').waitFor({ timeout: 15000 });
+  if (stage) await page.locator(`[data-meridian-stage-panel="${stage}"]`).waitFor({ timeout: 15000 });
+}
+
+async function retryNavigation(page, fn, checkpoints, n, step) {
+  const attempts = [];
+  try {
+    await fn();
+    attempts.push({ n: 1, ok: true });
+  } catch (err) {
+    attempts.push({ n: 1, ok: false, error: err instanceof Error ? err.message : String(err) });
+    await fn();
+    attempts.push({ n: 2, ok: true });
+  }
+  checkpoints.push(checkpoint({ step: n, action: step, check: "navigation.attempts", expected: "recorded", observed: attempts, ok: attempts.at(-1)?.ok === true, reason: attempts.map((a) => (a.ok ? `attempt ${a.n} ok` : `attempt ${a.n} ${a.error}`)).join("; ") }));
 }
 
 async function gotoStage(page, stage) {
@@ -739,6 +866,13 @@ async function readScreenText(page) {
       .map((el) => el.textContent || "")
       .join("\n");
     return [body, fields, extras].filter(Boolean).join("\n");
+  }).catch(() => "");
+}
+
+async function readErrorRegion(page) {
+  return page.evaluate(() => {
+    const nodes = document.querySelectorAll("[data-meridian-error], [data-meridian-partial-apply], [role='alert']");
+    return [...nodes].map((el) => el.textContent || "").join("\n");
   }).catch(() => "");
 }
 
@@ -897,9 +1031,44 @@ async function runUi(scenario, lib, url) {
         } else if (step.do === "illuminate") {
           actionRoutes.push({ do: step.do, route: "ui" });
           await gotoStage(page, step.stage);
+          const hold = step.late ? await installModelHold(page) : null;
           const btn = page.getByRole("button", { name: /Illuminate/i }).or(page.locator("[data-meridian-illuminate]")).first();
           if ((await btn.count()) === 0) throw new Error("Illuminate control not on screen");
           await btn.click();
+          if (hold) {
+            await hold.waitHit();
+            for (const act of step.during || []) {
+              actionRoutes.push({ do: act.do, route: "ui" });
+              if (act.do === "set-field") {
+                const st = fieldStage(String(act.path || ""));
+                if (st) await gotoStage(page, st).catch(() => undefined);
+                const loc = page.locator(`[data-meridian-field="${act.path}"]`);
+                if ((await loc.count()) === 0) throw new Error(`no screen control for ${act.path}`);
+                await loc.first().fill(fieldValueForFill(act.value));
+                await loc.first().blur().catch(() => undefined);
+                await page.waitForTimeout(150);
+              }
+              const mid = await readPersistedStudy(page, studyId, scenario.id);
+              const midBody = await readScreenText(page);
+              const midErr = await readErrorRegion(page);
+              evalExpect({
+                study: mid,
+                persistedStudy: mid,
+                step: act,
+                n,
+                action: act,
+                checkpoints,
+                lastIssues: mid?.lastIlluminate?.issues ?? [],
+                lastError: "",
+                screenText: midBody,
+                errorText: midErr,
+                exportJson,
+                requires: scenario.requires || [],
+              });
+            }
+            await gotoStage(page, step.stage);
+            await hold.release();
+          }
           await waitIlluminateIdle(page);
           await waitPersistedLastIlluminate(page, step.stage);
           if (step.stage === "design") {
@@ -917,6 +1086,10 @@ async function runUi(scenario, lib, url) {
             unsupported(checkpoints, step, n, "Run recorded search control not on screen", actionRoutes);
           } else {
             actionRoutes.push({ do: step.do, route: "ui" });
+            if (step.provider) {
+              const sel = page.locator("[data-meridian-retrieve-provider]");
+              if ((await sel.count()) > 0) await sel.first().selectOption(String(step.provider));
+            }
             await btn.click();
             await waitRetrieveIdle(page);
             await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 8000 }).catch(() => undefined);
@@ -946,7 +1119,8 @@ async function runUi(scenario, lib, url) {
               unsupported(checkpoints, step, n, `Accept control not on screen for decision index ${idx}: card has no data-meridian-accept`, actionRoutes);
             } else {
               actionRoutes.push({ do: step.do, route: "ui" });
-              await btn.click();
+              const disabled = await btn.isDisabled().catch(() => false);
+              if (!disabled) await btn.click();
               await page.waitForTimeout(150);
               await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 4000 }).catch(() => undefined);
             }
@@ -999,19 +1173,23 @@ async function runUi(scenario, lib, url) {
           }
         } else if (step.do === "reload") {
           actionRoutes.push({ do: step.do, route: "ui" });
-          await page.reload({ waitUntil: "networkidle" });
-          await page.evaluate(() => new Promise((r) => setTimeout(r, 50)));
-          await page.waitForFunction((k) => !!localStorage.getItem(k), PERSIST_KEY, { timeout: 8000 }).catch(() => undefined);
-          const after = await readPersistedStudy(page, studyId, scenario.id);
-          if (after?.currentStage) await gotoStage(page, after.currentStage).catch(() => undefined);
+          await retryNavigation(page, async () => {
+            await page.reload({ waitUntil: "networkidle" });
+            const after = await readPersistedStudy(page, studyId, scenario.id);
+            await waitHydratedStage(page, after?.currentStage);
+          }, checkpoints, n, step);
         } else if (step.do === "reopen") {
           actionRoutes.push({ do: step.do, route: "ui" });
           const s = await readPersistedStudy(page, studyId, scenario.id);
           const title = s?.title || scenario.inputs.need.slice(0, 40);
-          await page.getByRole("link", { name: /All studies/i }).click();
-          await page.waitForURL(/\/$/, { timeout: 10000 }).catch(() => page.goto(url));
-          await page.getByRole("heading", { name: title }).first().click();
-          await page.waitForURL(/\/studio\//, { timeout: 15000 });
+          await retryNavigation(page, async () => {
+            await page.getByRole("link", { name: /All studies/i }).click();
+            await page.waitForURL(/\/$/, { timeout: 10000 }).catch(() => page.goto(url));
+            await page.getByRole("heading", { name: title }).first().click();
+            await page.waitForURL(/\/studio\//, { timeout: 15000 });
+            const after = await readPersistedStudy(page, studyId, scenario.id);
+            await waitHydratedStage(page, after?.currentStage || s?.currentStage);
+          }, checkpoints, n, step);
         } else if (step.do === "set-field") {
           const pathName = String(step.path || "");
           if (pathName === "currentStage") {
@@ -1066,9 +1244,16 @@ async function runUi(scenario, lib, url) {
             checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: false, ok: false, reason: "source content did not change; UI change-source is unsupported" }));
           } else {
             actionRoutes.push({ do: step.do, route: "ui" });
-            const before = await loc.inputValue().catch(() => "");
-            if (field === "status") await loc.selectOption(String(step.value));
-            else if (field === "year") {
+            const beforeStudy = await readPersistedStudy(page, studyId, scenario.id);
+            const beforeItem = beforeStudy?.scan?.items?.find((it) => it.title === step.record);
+            if (field === "status") {
+              const note = step.note || "manual identity check";
+              const noteBox = (await rec.count()) ? rec.locator("[data-meridian-check-note]").first() : page.locator("[data-meridian-check-note]").first();
+              if ((await noteBox.count())) await noteBox.fill(note);
+              await loc.selectOption(String(step.value));
+              const recordBtn = (await rec.count()) ? rec.locator("[data-meridian-record-check]").first() : page.locator("[data-meridian-record-check]").first();
+              if ((await recordBtn.count())) await recordBtn.click();
+            } else if (field === "year") {
               await loc.fill(String(step.value));
               await loc.blur();
             } else {
@@ -1077,8 +1262,19 @@ async function runUi(scenario, lib, url) {
             }
             await page.waitForTimeout(200);
             await page.locator("[data-meridian-decision-stale]").waitFor({ timeout: 4000 }).catch(() => undefined);
-            const after = await loc.inputValue().catch(() => "");
-            const changed = after !== before && after === String(step.value ?? after);
+            const afterStudy = await readPersistedStudy(page, studyId, scenario.id);
+            const afterItem = afterStudy?.scan?.items?.find((it) => it.id === beforeItem?.id || it.title === step.record);
+            let changed = false;
+            if (field === "status") {
+              const checks = afterItem?.provenance?.checks ?? [];
+              changed = checks.some((c) => c.provider === "manual" && c.result === String(step.value)) && afterItem?.provenance?.status !== "verified";
+            } else if (field === "keyFindings" || field === "limitations") {
+              changed = afterItem?.[field] === String(step.value ?? "");
+            } else if (field === "year") {
+              changed = Number(afterItem?.year) === Number(step.value);
+            } else if (field === "abstract") {
+              changed = (afterItem?.abstract?.text ?? "") === String(step.value ?? "") && (afterItem?.abstract?.sha256 ?? "") !== (beforeItem?.abstract?.sha256 ?? "");
+            }
             checkpoints.push(checkpoint({ step: n, action: step, check: "change-source.content", expected: true, observed: changed, ok: changed, reason: changed ? "" : "source content did not change; staleness not supported" }));
           }
         } else if (step.do === "mark-complete") {
@@ -1108,6 +1304,7 @@ async function runUi(scenario, lib, url) {
       if (s?.id) studyId = s.id;
       const illum = s?.lastIlluminate;
       const body = await readScreenText(page);
+      const errorText = await readErrorRegion(page);
       evalExpect({
         study: s,
         persistedStudy: s,
@@ -1118,6 +1315,7 @@ async function runUi(scenario, lib, url) {
         lastIssues: illum?.issues ?? [],
         lastError: illum?.error || (illum && !illum.ok ? illum.summary : "") || "",
         screenText: body,
+        errorText,
         exportJson,
         requires: scenario.requires || [],
       });

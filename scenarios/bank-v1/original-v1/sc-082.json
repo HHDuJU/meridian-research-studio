@@ -1,0 +1,1688 @@
+{
+  "id": "sc-082",
+  "version": 1,
+  "title": "Cardiac surgery network: remote monitoring cost and effect, four-centre cohort, late audit reply refused",
+  "field": "health-economics",
+  "level": 5,
+  "family": "cohort",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "D27",
+    "S5",
+    "S10",
+    "S11",
+    "S13"
+  ],
+  "notes": "Level 5 expert path: a multi-site design, a family change only on acceptance, dependency closure between protocol and stats, and a late audit reply refused after an investigator edit. The need asks for a cost-effectiveness analysis (routing explicit 'economic'). The problem reply sends constraints null: under G11 the typed constraints stay and the attempt is recorded as rejected-change (S5). Seven fixture records are appraised (five claims, one of high uncertainty). The design reply recommends 'cohort' because the missing input for the economic question is a fair effect estimate; the proposed recommendation does not change the family (D3 under S11), and acceptance of the supported decision sets family 'cohort' with basis 'explicit' while the unknown centre D cost gate keeps the action blocked. After Protocol, Stats and Ethics are complete, protocol call 2 revises the comparison period for a contaminated comparison centre; Stats and Ethics are flagged 'review required' (G8); stats call 2 clears Stats and the investigator marks Ethics complete by hand. At the Audit stage, the first reply is held while the investigator edits the audit notes and is then refused (G6): encoded as illuminate (request sent, reply held) then set-field then wait (reply delivered), because the format has no field for a held reply. A fresh audit call is applied and omits improvementNotes, so the investigator's note stays. Record ids are stableRecordId(record) from src/lib/evidence/records.ts at 875fe59, computed by the generator: DOI-keyed for records 1, 3, 4, 5, 6 (ev-0gdg3o5, ev-0p8nj5i, ev-0fos45w, ev-0f46h0m, ev-0xbcx1h) and titleYearKey-keyed for records 2 and 7 (ev-1wngjtj, ev-1w2yv8t). Requires S5 (rejected-change), S11 (no family change before acceptance, selectionStatus, actionStatus, recommendedFamily), S13 (appraisal payload), D5 (status text), and S10 with D27 (substantive audit content in studyRevision so the held reply is refused). The audit patch itself needs L1.6 (store defect at 875fe59). Catches: a model null erasing investigator constraints, a proposed family applied early, downstream stages left current after an upstream change, and a stale audit reply overwriting the investigator's notes.",
+  "inputs": {
+    "need": "I am a health economist working with the cardiac surgery network of four hospitals in our province. Two of the four centres (A and B) started remote monitoring after cardiac surgery in March 2025: patients go home with a tablet, a blood pressure cuff, a scale and a single-lead ECG patch, and a nurse reviews the readings every day for 30 days. Centres C and D still use usual follow-up, a telephone call at one week and a clinic visit at six weeks. The ministry is deciding whether to fund remote monitoring at all four centres from 2028 and has asked us for a cost-effectiveness analysis.\n\nThe programme costs about 1,400 per patient for devices, the platform licence and nursing time. The hope is that it prevents readmissions and emergency visits in the first 30 to 90 days, which are common after surgery: about 14 percent of patients were readmitted within 30 days across the network last year. We have the provincial hospital discharge abstracts and physician billing for all four centres, the monitoring platform's own logs at A and B, and a costing unit that can price hospital episodes.\n\nI need help deciding how to estimate the effect when centres chose whether to adopt it, which costs and outcomes to include, what time horizon makes sense, how to handle differences between centres in case mix and surgical volume, and how many patients we need. Our team is two economists and a data analyst, and the ministry wants the answer by June 2027.",
+    "constraints": "Results needed by 2027-06-30 for the ministry. Two economists and one data analyst. Provincial data only through the data institute's secure environment; no patient contact.",
+    "localFacts": [
+      "Centres A and B started remote monitoring after cardiac surgery in March 2025; centres C and D use usual follow-up.",
+      "Across the four centres, 14 percent of cardiac surgery patients were readmitted within 30 days in 2025.",
+      "The provincial data institute approved access to discharge abstracts, physician billing and monitoring platform logs for 2023 to 2026 (agreement PDI-2026-118, dated 2026-09-05).",
+      "Centre D's research office has not yet signed the addendum that would release its local cost ledger.",
+      "Centre C started a small remote monitoring pilot for 40 patients in July 2026 (reported by its surgical lead on 2026-09-20)."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a health economist working with the cardiac surgery network of four hospitals in our province. Two of the four centres (A and B) started remote monitoring after cardiac surgery in March 2025: patients go home with a tablet, a blood pressure cuff, a scale and a single-lead ECG patch, and a nurse reviews the readings every day for 30 days. Centres C and D still use usual follow-up, a telephone call at one week and a clinic visit at six weeks. The ministry is deciding whether to fund remote monitoring at all four centres from 2028 and has asked us for a cost-effectiveness analysis.\n\nThe programme costs about 1,400 per patient for devices, the platform licence and nursing time. The hope is that it prevents readmissions and emergency visits in the first 30 to 90 days, which are common after surgery: about 14 percent of patients were readmitted within 30 days across the network last year. We have the provincial hospital discharge abstracts and physician billing for all four centres, the monitoring platform's own logs at A and B, and a costing unit that can price hospital episodes.\n\nI need help deciding how to estimate the effect when centres chose whether to adopt it, which costs and outcomes to include, what time horizon makes sense, how to handle differences between centres in case mix and surgical volume, and how many patients we need. Our team is two economists and a data analyst, and the ministry wants the answer by June 2027.",
+          "problem.constraints": "Results needed by 2027-06-30 for the ministry. Two economists and one data analyst. Provincial data only through the data institute's secure environment; no patient contact.",
+          "family": "economic",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a health economist working with the"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Remote monitoring after cardiac surgery across four centres: effect and cost-effectiveness",
+        "subtitle": "Ministry funding decision for 2028",
+        "family": "economic",
+        "statement": "Two of four cardiac surgery centres adopted 30-day remote monitoring after discharge in March 2025, at about 1,400 per patient; the other two use usual follow-up. About 14 percent of patients are readmitted within 30 days. The ministry must decide whether to fund monitoring at all centres from 2028 and needs its effect on readmissions, emergency visits and costs, estimated fairly when centres chose whether to adopt it and differ in case mix and volume.",
+        "whoAffected": "Adults discharged after cardiac surgery in four centres, their carers, monitoring nurses, and the ministry as payer.",
+        "whatHurts": "Readmissions and emergency visits in the first weeks after surgery are common and costly; funding an ineffective programme would divert money, while not funding an effective one would leave preventable readmissions.",
+        "currentPractice": "Remote monitoring at A and B since March 2025; telephone call at one week and clinic at six weeks at C and D.",
+        "whyNow": "The ministry's 2028 funding decision needs an answer by June 2027.",
+        "constraints": null,
+        "patientCenteredGoal": "Patients recover at home safely after cardiac surgery, with problems caught early and fewer returns to hospital.",
+        "summary": "Problem framed as an effect and cost question for a funding decision; constraints omitted by the model."
+      },
+      "note": "The reply sends constraints null. Under G11 a model null never erases investigator-entered text: the typed constraints stay byte for byte and the attempt is recorded as issue rejected-change at 'constraints' and shown on screen (no 'cleared' issue, because nothing was cleared). At 875fe59 the null clears the field. Requires S5.",
+      "expect": {
+        "store": {
+          "title": "Remote monitoring after cardiac surgery across four centres: effect and cost-effectiveness",
+          "family": "economic",
+          "problem.constraints": "Results needed by 2027-06-30 for the ministry. Two economists and one data analyst. Provincial data only through the data institute's secure environment; no patient contact.",
+          "problem.rawNeed": "I am a health economist working with the cardiac surgery network of four hospitals in our province. Two of the four centres (A and B) started remote monitoring after cardiac surgery in March 2025: patients go home with a tablet, a blood pressure cuff, a scale and a single-lead ECG patch, and a nurse reviews the readings every day for 30 days. Centres C and D still use usual follow-up, a telephone call at one week and a clinic visit at six weeks. The ministry is deciding whether to fund remote monitoring at all four centres from 2028 and has asked us for a cost-effectiveness analysis.\n\nThe programme costs about 1,400 per patient for devices, the platform licence and nursing time. The hope is that it prevents readmissions and emergency visits in the first 30 to 90 days, which are common after surgery: about 14 percent of patients were readmitted within 30 days across the network last year. We have the provincial hospital discharge abstracts and physician billing for all four centres, the monitoring platform's own logs at A and B, and a costing unit that can price hospital episodes.\n\nI need help deciding how to estimate the effect when centres chose whether to adopt it, which costs and outcomes to include, what time horizon makes sense, how to handle differences between centres in case mix and surgical volume, and how many patients we need. Our team is two economists and a data analyst, and the ministry wants the answer by June 2027.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
+        },
+        "screen": {
+          "includes": [
+            "Remote monitoring after cardiac surgery across four centres: effect and cost-effectiveness",
+            "Two economists and one data analyst"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "remote monitoring after cardiac surgery readmission cost hospitals adoption",
+      "response": {
+        "status": 200,
+        "total": 7,
+        "records": [
+          {
+            "title": "Remote monitoring after cardiac surgery and 30-day readmission: a randomised trial",
+            "authors": "Lindberg-Asante K, Moreau-Obi T, Castellanos-Pryor J",
+            "year": 2022,
+            "venue": "Journal of Cardiothoracic Recovery",
+            "doi": "10.5555/jcr.2022.0371",
+            "providerType": "Randomized Controlled Trial",
+            "abstract": "We randomly allocated 610 adults discharged after cardiac surgery to 30 days of remote monitoring with daily nurse review of blood pressure, weight, rhythm and symptoms, or to usual follow-up. Thirty-day readmission was 9.2 percent with remote monitoring and 12.8 percent with usual care (risk ratio 0.72, 95 percent CI 0.47 to 1.10). Emergency department visits without admission were 11 percent and 17 percent. Atrial fibrillation was detected earlier with monitoring. Patients reported high satisfaction, and 8 percent stopped transmitting before day 30. The trial was not powered for readmission and did not collect costs."
+          },
+          {
+            "title": "Cost-effectiveness of remote monitoring after cardiac surgery: a model-based analysis",
+            "authors": "Achterberg-Singh D, Nwosu-Hallam E",
+            "year": 2023,
+            "venue": "Cardiovascular Health Economics",
+            "providerType": "economic evaluation",
+            "abstract": "We built a decision model with a 90-day horizon and a health system perspective, taking the effect on readmission from a single randomised trial. The incremental cost-effectiveness ratio was 18,500 per quality-adjusted life year. In probabilistic analysis, remote monitoring had a 54 percent probability of being cost-effective at a threshold of 50,000 per quality-adjusted life year. Results were driven almost entirely by the readmission effect, whose confidence interval crossed no effect. The authors recommend a real-world comparison across hospitals to estimate the effect before funding decisions."
+          },
+          {
+            "title": "Variation in readmission after cardiac surgery across hospitals: the role of case mix and discharge practices",
+            "authors": "Okonjo-Brandt P, Silva-Nakamura H, Reid-Adeyemi F",
+            "year": 2020,
+            "venue": "Surgical Outcomes Research",
+            "doi": "10.5555/sor.2020.0188",
+            "providerType": "cohort study",
+            "abstract": "We studied 28,400 patients discharged after cardiac surgery from 12 hospitals over four years. Thirty-day readmission varied from 9 to 19 percent across hospitals. Case mix, including age, frailty, ejection fraction, urgency and procedure type, explained about half of the variation between hospitals. Hospitals with early follow-up calls had lower adjusted readmission, but the association was confounded by hospital volume. The authors warn that comparisons of programmes between hospitals must adjust for case mix and account for stable differences between hospitals."
+          },
+          {
+            "title": "Remote patient monitoring after surgery: a systematic review of readmission and emergency department visits",
+            "authors": "Haugen-Mbeki A, Olsen-Carvalho R, Tan-Whitaker M",
+            "year": 2024,
+            "venue": "Perioperative Care Reviews",
+            "doi": "10.5555/pcr.2024.0066",
+            "providerType": "systematic review",
+            "abstract": "We included 21 studies of remote patient monitoring after surgery, 7 of them randomised. Across all studies, readmission was lower with monitoring (risk ratio 0.81, 95 percent CI 0.68 to 0.97), but the effect was smaller in randomised studies. In the cardiac surgery subgroup of 6 studies, the risk ratio was 0.84 (95 percent CI 0.64 to 1.10). Emergency department visits were reduced in most studies. Few studies reported costs, and none compared hospitals that adopted monitoring with hospitals that did not while accounting for trends before adoption."
+          },
+          {
+            "title": "Patients' and carers' experience of home monitoring after heart surgery: an interview study",
+            "authors": "Farrow-Ekwueme L, Johansson-Diaz C",
+            "year": 2021,
+            "venue": "Journal of Cardiac Nursing Experience",
+            "doi": "10.5555/jcne.2021.0240",
+            "providerType": "qualitative research",
+            "abstract": "We interviewed 20 patients and 12 carers after 30 days of home monitoring following cardiac surgery. Most described reassurance from knowing a nurse was reviewing their readings. Some found alerts about minor changes worrying and phoned the hospital more as a result. Older patients often depended on a carer to set up and use the devices. Several patients in rural areas lost connection for days. Participants wanted to know in advance what would happen when an alert fired, and carers asked for a named contact at the hospital."
+          },
+          {
+            "title": "Comparing adopting and non-adopting hospitals in health services evaluation: difference-in-differences with few sites",
+            "authors": "Varga-Holloway S, Kim-Ogunleye B",
+            "year": 2019,
+            "venue": "Health Services Methods",
+            "doi": "10.5555/hsm.2019.0031",
+            "providerType": "journal-article",
+            "abstract": "We examine methods for estimating programme effects when a few hospitals adopt a programme and others do not. Differences between hospitals that are stable over time can be removed by comparing changes before and after adoption, but only if outcomes followed parallel trends before adoption. With only two adopting and two comparison hospitals, conventional standard errors are far too small; a wild cluster bootstrap or randomisation inference gives honest intervals. Contamination, when a comparison hospital adopts part of the programme, biases the estimate towards no effect and should be handled by ending the comparison period at the contamination date."
+          },
+          {
+            "title": "Health system costs in the 90 days after discharge from cardiac surgery",
+            "authors": "Provincial Costing Unit Analysts",
+            "year": 2025,
+            "venue": "Provincial Health Costing Reports",
+            "providerType": "report",
+            "abstract": "We priced all health system contacts in the 90 days after discharge for 9,800 cardiac surgery patients using provincial case costing. The mean cost after discharge was 6,200 per patient. Readmissions accounted for 58 percent of this cost, emergency department visits for 9 percent and physician visits for 14 percent. Costs were highest for patients readmitted with infection or heart failure. Costs of home care and medications were not included because they are not held in the provincial data, so total costs are understated."
+          }
+        ]
+      },
+      "note": "Seven records; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 7,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0gdg3o5",
+            "ev-1wngjtj",
+            "ev-0p8nj5i",
+            "ev-0fos45w",
+            "ev-0f46h0m",
+            "ev-0xbcx1h",
+            "ev-1w2yv8t"
+          ],
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[1].id": "ev-1wngjtj",
+          "scan.items[1].doi": {
+            "absent": true
+          },
+          "scan.items[0].grade": "unrated",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Comparing adopting and non-adopting hospitals in health services evaluation: difference-in-differences with few sites"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0gdg3o5",
+            "relevance": 92,
+            "methodQuality": 74,
+            "kind": "rct",
+            "grade": "moderate",
+            "keyFindings": "Thirty-day readmission 9.2 versus 12.8 percent (risk ratio 0.72, 95 percent CI 0.47 to 1.10); emergency visits 11 versus 17 percent; 8 percent stopped transmitting.",
+            "limitations": "Not powered for readmission; no costs; single system.",
+            "contextTags": [
+              "randomised",
+              "readmission",
+              "cardiac surgery"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1wngjtj",
+            "relevance": 86,
+            "methodQuality": 55,
+            "kind": "grey",
+            "grade": "low",
+            "keyFindings": "ICER 18,500 per QALY; 54 percent probability of cost-effectiveness at 50,000; driven by an imprecise readmission effect.",
+            "limitations": "Effect from one trial; 90-day horizon.",
+            "contextTags": [
+              "economic model",
+              "uncertainty"
+            ],
+            "notes": "Model-based evaluation; no design kind fits, so it stays grey."
+          },
+          {
+            "id": "ev-0p8nj5i",
+            "relevance": 88,
+            "methodQuality": 68,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Readmission varied 9 to 19 percent across 12 hospitals; case mix explained about half of the variation.",
+            "limitations": "Observational; residual confounding by hospital volume.",
+            "contextTags": [
+              "hospital variation",
+              "case mix"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0fos45w",
+            "relevance": 84,
+            "methodQuality": 64,
+            "kind": "systematic-review",
+            "grade": "low",
+            "keyFindings": "Readmission risk ratio 0.81 across 21 studies; 0.84 (95 percent CI 0.64 to 1.10) in the cardiac subgroup of 6 studies.",
+            "limitations": "Mostly non-randomised; few costs.",
+            "contextTags": [
+              "systematic review",
+              "remote monitoring"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0f46h0m",
+            "relevance": 66,
+            "methodQuality": 58,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Reassurance for most; alert-related worry for some; older patients depended on carers; rural connection losses.",
+            "limitations": "32 participants from one programme.",
+            "contextTags": [
+              "experience",
+              "carers",
+              "rural"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-0xbcx1h",
+            "relevance": 90,
+            "methodQuality": 72,
+            "kind": "expert",
+            "grade": "moderate",
+            "keyFindings": "With two adopting and two comparison hospitals, conventional standard errors are too small; parallel pre-adoption trends are required; contamination should end the comparison period.",
+            "limitations": "Methods paper, not an effect estimate.",
+            "contextTags": [
+              "difference-in-differences",
+              "few clusters",
+              "contamination"
+            ],
+            "notes": ""
+          },
+          {
+            "id": "ev-1w2yv8t",
+            "relevance": 80,
+            "methodQuality": 60,
+            "kind": "grey",
+            "grade": "low",
+            "keyFindings": "Mean 90-day post-discharge cost 6,200 per patient; readmissions 58 percent of it.",
+            "limitations": "Home care and medications not included.",
+            "contextTags": [
+              "costing",
+              "provincial data"
+            ],
+            "notes": ""
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0gdg3o5"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract, results",
+            "text": "In a randomised trial of 610 patients, 30-day readmission was 9.2 percent with remote monitoring and 12.8 percent with usual care (risk ratio 0.72, 95 percent CI 0.47 to 1.10).",
+            "passage": "Thirty-day readmission was 9.2 percent with remote monitoring and 12.8 percent with usual care (risk ratio 0.72, 95 percent CI 0.47 to 1.10).",
+            "interpretation": "A plausible benefit whose interval includes no effect; a larger real-world estimate is needed."
+          },
+          {
+            "id": "c2",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1wngjtj"
+            ],
+            "uncertainty": "high",
+            "location": "Abstract",
+            "text": "A model-based analysis gave remote monitoring a 54 percent probability of being cost-effective at 50,000 per quality-adjusted life year, driven by an imprecise readmission effect.",
+            "passage": "remote monitoring had a 54 percent probability of being cost-effective at a threshold of 50,000 per quality-adjusted life year",
+            "interpretation": "A cost-effectiveness answer now would be a coin toss; the effect estimate is the missing input."
+          },
+          {
+            "id": "c3",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0p8nj5i"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Thirty-day readmission after cardiac surgery varied from 9 to 19 percent across 12 hospitals, and case mix explained about half of that variation.",
+            "passage": "Case mix, including age, frailty, ejection fraction, urgency and procedure type, explained about half of the variation between hospitals.",
+            "interpretation": "Centre comparisons must adjust for case mix and stable centre differences."
+          },
+          {
+            "id": "c4",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0xbcx1h"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "With only two adopting and two comparison hospitals, conventional standard errors are far too small, and contamination of a comparison hospital should end its comparison period.",
+            "passage": "With only two adopting and two comparison hospitals, conventional standard errors are far too small",
+            "interpretation": "Use changes before and after adoption with honest few-cluster intervals and a contamination rule."
+          },
+          {
+            "id": "c5",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1w2yv8t"
+            ],
+            "uncertainty": "moderate",
+            "location": "Abstract",
+            "text": "Readmissions accounted for 58 percent of the mean 90-day post-discharge cost of 6,200 per patient.",
+            "passage": "Readmissions accounted for 58 percent of this cost",
+            "interpretation": "The cost case rests on readmissions avoided; a 90-day horizon captures most of it."
+          }
+        ],
+        "synthesis": "Seven retrieved records, appraised at abstract level. One randomised trial and a systematic review suggest remote monitoring after cardiac surgery lowers readmission and emergency visits, but the cardiac estimates have intervals that include no effect. A model-based economic evaluation found cost-effectiveness to be close to a coin toss because it borrowed that imprecise effect. Readmission varies widely between hospitals, half of it explained by case mix, and methods work shows that comparisons of few adopting and non-adopting hospitals need before-and-after contrasts, honest few-cluster intervals and a rule for contamination. Readmissions drive most post-discharge cost. The missing input for the ministry is a fair real-world effect estimate with costs attached.",
+        "gradeOverall": "low",
+        "gradeRationale": "Effect evidence imprecise and partly non-randomised; economic evidence rests on a single imprecise trial; methods guidance is strong but not an effect estimate.",
+        "summary": "Seven retrieved records appraised; five claims, one with high uncertainty; certainty low."
+      },
+      "note": "Appraisal of seven retrieved records (S13); certainty 'low' (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 7
+          },
+          "scan.items[0].grade": "moderate",
+          "scan.items[5].kind": "expert",
+          "scan.claims": {
+            "length": 5
+          },
+          "scan.claims[1].uncertainty": "high",
+          "scan.claims[3].sourceIds": [
+            "ev-0xbcx1h"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "Four cardiac surgery centres, two adopting monitoring in March 2025",
+          "Provincial discharge abstracts, billing and platform logs 2023 to 2026",
+          "Ministry decision for 2028, answer by June 2027",
+          "Two economists and one analyst"
+        ],
+        "reading": "The ministry's question is economic, but the decisive unknown is the effect of monitoring on readmission in this network. Centres chose whether to adopt, differ in case mix and volume, and one comparison centre has started a small pilot. Provincial data cover all four centres before and after adoption, which allows a cohort comparison of changes with costs attached. Patient burden and carer dependence shape adherence and therefore effect.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Remote monitoring at centres A and B",
+            "kind": "framework",
+            "detail": "30 days of daily nurse review."
+          },
+          {
+            "id": "n2",
+            "label": "Usual follow-up at centres C and D",
+            "kind": "context",
+            "detail": "Call at one week, clinic at six weeks."
+          },
+          {
+            "id": "n3",
+            "label": "30-day readmission",
+            "kind": "outcome",
+            "detail": "About 14 percent across the network."
+          },
+          {
+            "id": "n4",
+            "label": "90-day post-discharge cost",
+            "kind": "outcome",
+            "detail": "Readmissions 58 percent of it (claim c5)."
+          },
+          {
+            "id": "n5",
+            "label": "Randomised trial",
+            "kind": "rct",
+            "detail": "9.2 versus 12.8 percent (claim c1)."
+          },
+          {
+            "id": "n6",
+            "label": "Model-based economic evaluation",
+            "kind": "observational",
+            "detail": "54 percent probability cost-effective (claim c2)."
+          },
+          {
+            "id": "n7",
+            "label": "Case mix and centre differences",
+            "kind": "context",
+            "detail": "Half the variation between hospitals (claim c3)."
+          },
+          {
+            "id": "n8",
+            "label": "Few-cluster inference and contamination",
+            "kind": "framework",
+            "detail": "Honest intervals and a contamination rule (claim c4)."
+          },
+          {
+            "id": "n9",
+            "label": "Carers and rural patients",
+            "kind": "stakeholder",
+            "detail": "Device set-up and connectivity."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n3",
+            "relation": "expected to reduce"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "drives"
+          },
+          {
+            "from": "n5",
+            "to": "n3",
+            "relation": "estimates effect on"
+          },
+          {
+            "from": "n6",
+            "to": "n4",
+            "relation": "models"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "confounds comparisons of"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "governs estimation of"
+          },
+          {
+            "from": "n9",
+            "to": "n1",
+            "relation": "shape adherence to"
+          },
+          {
+            "from": "n2",
+            "to": "n3",
+            "relation": "comparison for"
+          }
+        ],
+        "summary": "Map shows the effect estimate as the missing input for the economic question, with centre differences and contamination as the main threats."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 8
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No fair local effect estimate",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "The only randomised estimate is imprecise (claim c1) and the economic model inherits it (claim c2).",
+            "opportunity": "Estimate the change in readmission at adopting centres against comparison centres before and after March 2025."
+          },
+          {
+            "id": "g2",
+            "title": "Centre differences and contamination",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Case mix explains half of between-hospital variation (claim c3), and a comparison centre adopting part of the programme biases towards no effect (claim c4).",
+            "opportunity": "Adjust for case mix, compare changes within centres, and end a contaminated centre's comparison period at the contamination date."
+          },
+          {
+            "id": "g3",
+            "title": "Home care and medication costs missing",
+            "kind": "evidence",
+            "severity": "moderate",
+            "whyItMatters": "Provincial costing excludes them, so total cost is understated.",
+            "opportunity": "State the omission and test its size with a scenario analysis."
+          },
+          {
+            "id": "g4",
+            "title": "Older and rural patients may benefit less",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "Device set-up depends on carers and connections fail in rural areas.",
+            "opportunity": "Report effects by age group and rurality and record monitoring days completed."
+          }
+        ],
+        "errorsFound": [
+          "The model's problem reply returned no constraints; the investigator's typed constraints are kept, not cleared."
+        ],
+        "reevaluation": "The economic question cannot be answered well until the effect is estimated in the network; the design must produce that estimate with costs attached.",
+        "summary": "Four gaps; the missing effect estimate and centre differences are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 4
+          },
+          "gaps.items[1].title": "Centre differences and contamination",
+          "gaps.errorsFound": {
+            "length": 1
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "After adjustment for case mix and pre-adoption trends, 30-day readmission falls by at least 3 percentage points more at adopting centres than at comparison centres after March 2025.",
+            "novelty": 45,
+            "need": 90,
+            "practiceChange": 85,
+            "feasibility": 75,
+            "parsimony": 75,
+            "rationale": "The trial and review suggest a benefit of this order; the network data can test it with before-and-after contrasts.",
+            "risks": "Two adopting centres; contamination at centre C."
+          },
+          {
+            "id": "h2",
+            "statement": "Remote monitoring costs less than 20,000 per readmission avoided.",
+            "novelty": 50,
+            "need": 80,
+            "practiceChange": 80,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "At about 1,400 per patient, this threshold is reached if the readmission effect in h1 holds.",
+            "risks": "Imprecise effect makes the ratio unstable."
+          },
+          {
+            "id": "h3",
+            "statement": "The effect is smaller for patients aged over 80 and in rural areas.",
+            "novelty": 40,
+            "need": 65,
+            "practiceChange": 60,
+            "feasibility": 65,
+            "parsimony": 65,
+            "rationale": "Carer dependence and connectivity losses reported in interviews.",
+            "risks": "Small subgroups."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 supplies the effect the economic analysis needs."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults discharged after cardiac surgery at four centres from 2023 to 2026, how did 30-day readmission and 90-day health system cost change after two centres adopted remote monitoring in March 2025, compared with the change at centres that did not, and what is the cost per readmission avoided?",
+            "framework": "PECO",
+            "population": "Adults discharged after cardiac surgery at four centres, 2023 to 2026",
+            "intervention": "Discharge from a centre with remote monitoring after March 2025 (exposure)",
+            "comparator": "Discharge from a centre with usual follow-up",
+            "outcome": "30-day readmission; 90-day health system cost; cost per readmission avoided",
+            "time": "30 and 90 days after discharge",
+            "setting": "Provincial cardiac surgery network"
+          }
+        ],
+        "finer": "Feasible with approved provincial data and three analysts; interesting to the ministry; novel as a real-world estimate with costs; ethical as secondary use without contact; relevant to the 2028 funding decision.",
+        "summary": "One PECO question pairing effect and cost."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "cohort",
+        "rationale": "The ministry asked for a cost-effectiveness analysis, but the analysis is only as good as its effect estimate: the trial's interval includes no effect (c1) and the existing model is close to a coin toss because it borrowed that estimate (c2). A four-centre cohort built from provincial data, comparing changes before and after March 2025 at adopting and comparison centres with adjustment for case mix (c3) and few-cluster inference with a contamination rule (c4), produces the effect estimate and attaches provincial costs (c5), so cost per readmission avoided can be computed within the same cohort. A model-based economic evaluation stays as a later step if the ministry wants a longer horizon.",
+        "alternatives": [
+          "Model-based cost-effectiveness analysis now (refused: rests on an imprecise borrowed effect)",
+          "Cross-sectional comparison of centres after adoption only (refused: confounded by stable centre differences)",
+          "Cluster randomised trial across centres (refused: adoption has already happened and the decision is due in 2027)"
+        ],
+        "guidelines": [
+          "STROBE with the RECORD extension",
+          "CHEERS 2022 for the cost analysis"
+        ],
+        "whyNotMoreComplex": "A long-horizon model adds assumptions without improving the effect estimate that drives the decision; it can follow once the cohort gives that estimate.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Build a four-centre cohort of cardiac surgery discharges from 2023 to 2026 from provincial data, estimate the change in 30-day readmission and 90-day cost at adopting centres against comparison centres, and compute the cost per readmission avoided within the cohort.",
+          "question": "How should the network answer the ministry's question about funding remote monitoring?",
+          "claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "The existing effect estimate is too imprecise to support a funding decision.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c1"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "Centre comparisons can be made fair by before-and-after contrasts with case-mix adjustment and honest intervals.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "id": "k3",
+              "text": "Pre-adoption readmission trends at adopting and comparison centres are clearly not parallel.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Provincial data access for discharge abstracts, billing and platform logs",
+              "status": "met",
+              "evidence": "Data access agreement PDI-2026-118 dated 2026-09-05, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Release of centre D's local cost ledger",
+              "status": "unknown"
+            }
+          ],
+          "alternatives": [
+            "Model-based evaluation with the trial effect",
+            "Report readmission trends by centre without an effect estimate"
+          ],
+          "note": "Rests on ledger claims c1, c3, c4 and c5; the centre D cost gate is unknown, so the action is blocked until the addendum is signed."
+        },
+        "summary": "Cohort with an embedded cost analysis recommended; the decision rests on four ledger claims; one gate unknown."
+      },
+      "note": "The model recommends 'cohort' against the investigator's 'economic'; a proposed recommendation does not change the study family (D3 under S11), so family stays 'economic' until acceptance. The unknown cost gate keeps the action blocked. Requires S11, S13, D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "cohort",
+          "family": "economic",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].kind": "pursue",
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].recommendedFamily": "cohort",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "design.decisions[-1].gates[1].status": "unknown",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "Supported selection accepted; family becomes 'cohort' with basis 'explicit' only now (A1 A2); the unknown cost gate keeps the action blocked (A2 item 9). Requires S11, S13, D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "family": "cohort",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Four-centre cohort from provincial data, 2023 to 2026, comparing changes in 30-day readmission and 90-day cost before and after March 2025 at adopting centres (A, B) with comparison centres (C, D), with a within-cohort cost per readmission avoided.",
+        "population": "Adults discharged alive after coronary bypass, valve or combined surgery at the four centres from January 2023 to December 2026; first surgery per patient; about 3,600 discharges per year.",
+        "exposure": "Discharge from centre A or B after March 2025, when remote monitoring was offered; platform logs give monitoring days completed.",
+        "procedures": "The data institute links discharge abstracts, billing and platform logs; case mix from diagnosis and procedure codes (age, sex, frailty index, ejection fraction category, urgency, procedure type); costs from provincial case costing; centre-level annual volume.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "30-day all-cause readmission",
+            "measure": "Any admission within 30 days of discharge",
+            "timing": "30 days",
+            "why": "The effect that drives both benefit and cost.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "90-day health system cost",
+            "measure": "Provincial case-costed hospital, emergency and physician costs plus programme cost",
+            "timing": "90 days",
+            "why": "The cost side of the ministry's question.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Emergency department visits without admission",
+            "measure": "Visits within 30 days",
+            "timing": "30 days",
+            "why": "Part of the expected benefit.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Monitoring days completed",
+            "measure": "Days with transmitted readings out of 30 at A and B",
+            "timing": "30 days",
+            "why": "Separates programme failure from non-use.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Alert-driven extra contacts",
+            "measure": "Unplanned calls or visits triggered by alerts",
+            "timing": "30 days",
+            "why": "Alerts can add worry and contacts.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 14,400 discharges across four years; analysis within the data institute's environment by June 2027.",
+        "biasMitigation": [
+          "Before-and-after contrast at all four centres",
+          "Case-mix adjustment fixed in advance",
+          "Wild cluster bootstrap for intervals",
+          "Pre-adoption trend check"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Few clusters",
+            "severity": "high",
+            "note": "Two adopting and two comparison centres."
+          },
+          {
+            "id": "b2",
+            "label": "Non-parallel pre-adoption trends",
+            "severity": "watch",
+            "note": "Checked graphically and with an event-study model."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 7,
+          "flags": [
+            "Seven case-mix covariates fixed in advance"
+          ],
+          "simplestPath": "One before-and-after contrast between two pairs of centres, one primary outcome, one cost ratio."
+        },
+        "theoreticalFramework": "Target trial emulation to define time zero at discharge and eligibility.",
+        "summary": "Four-centre cohort with before-and-after contrasts and costs."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 5
+          },
+          "protocol.parsimony.covariateCount": 7,
+          "protocol.overview": {
+            "includes": "Four-centre cohort"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Cohort with a difference-in-differences contrast between two adopting and two comparison centres, 2023 to 2026, and a within-cohort cost analysis.",
+        "sampleSize": "About 3,650 exposed discharges at A and B and about 2,900 comparison discharges at C and D are expected after March 2025. An individual-level comparison would detect a fall in 30-day readmission from 14 to 11 percent with 90 percent power at two-sided alpha 0.05 with about 2,550 patients per group, so patient numbers are sufficient. The binding limit is the number of centres: with four clusters, intervals from a wild cluster bootstrap will be wide, and the report will present the estimate with that interval rather than a significance verdict.",
+        "primaryAnalysis": "Logistic difference-in-differences model of 30-day readmission with centre and quarter fixed effects, the seven case-mix covariates, and an adoption-by-period term; wild cluster bootstrap intervals; an event-study version to check pre-adoption trends.",
+        "secondaryAnalysis": "Generalised linear model with gamma distribution for 90-day cost; cost per readmission avoided from the two contrasts with a joint bootstrap; emergency visits; subgroups by age over 80 and rurality.",
+        "missingData": "Linked provincial records are complete for admissions; platform logs missing for some days are reported; centre D's local costs are replaced by provincial case costing if the ledger is not released.",
+        "multiplicity": "One primary contrast; others are reported with intervals as secondary.",
+        "software": "R within the data institute's environment; code archived before linkage.",
+        "overfittingGuards": [
+          "Covariates fixed before linkage",
+          "Event-study check of pre-trends",
+          "Wild cluster bootstrap",
+          "No data-driven choice of comparison centres"
+        ],
+        "summary": "Enough patients for individual precision; four centres make centre-level inference the limit."
+      },
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 2,900 comparison discharges"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Minimal: secondary use of de-identified provincial data without patient contact; the main risk is re-identification in small subgroups.",
+        "consent": "Individual consent is impracticable for about 14,400 past discharges; use is authorised under the data institute's approval and the research ethics board's waiver process.",
+        "data": "Linkage and analysis only inside the data institute's secure environment; cells under 6 suppressed in outputs.",
+        "equity": "PROGRESS-Plus: older patients, rural residents and people without a carer may use monitoring less; results are reported by age group and rurality, and the report states whether benefits reach them.",
+        "effectiveness": "The study informs a funding decision whether the effect is positive, null or harmful.",
+        "efficiency": "Uses existing data; no new collection.",
+        "costs": "Staff time and data institute fees within the ministry's evaluation budget.",
+        "grants": "None needed.",
+        "partnerships": "Four surgical leads, the data institute, the costing unit, two patient partners who used monitoring, and the ministry's evaluation office.",
+        "rebPath": "Research ethics board review of secondary use with a waiver of consent under TCPS 2, alongside the data institute's approved agreement PDI-2026-118.",
+        "limitations": "Four centres; non-random adoption; missing home care and medication costs.",
+        "summary": "Secondary use under an approved data agreement with a consent waiver; equity reported by age and rurality."
+      },
+      "expect": {
+        "store": {
+          "ethics.rebPath": {
+            "includes": "PDI-2026-118"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 2,
+      "response": {
+        "overview": "Revised after centre C started a remote monitoring pilot in July 2026: four-centre cohort from provincial data, 2023 to 2026, comparing changes before and after March 2025 at adopting centres (A, B) with comparison centres (C, D); centre C contributes comparison data only to June 2026.",
+        "population": "Adults discharged alive after coronary bypass, valve or combined surgery at the four centres from January 2023 to December 2026; first surgery per patient; about 3,600 discharges per year.",
+        "exposure": "Discharge from centre A or B after March 2025, when remote monitoring was offered; platform logs give monitoring days completed.",
+        "procedures": "As before, and centre C's discharges from July 2026 are excluded from the comparison group because its pilot contaminates the contrast; the 40 pilot patients are described separately.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "30-day all-cause readmission",
+            "measure": "Any admission within 30 days of discharge",
+            "timing": "30 days",
+            "why": "The effect that drives both benefit and cost.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "90-day health system cost",
+            "measure": "Provincial case-costed hospital, emergency and physician costs plus programme cost",
+            "timing": "90 days",
+            "why": "The cost side of the ministry's question.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Emergency department visits without admission",
+            "measure": "Visits within 30 days",
+            "timing": "30 days",
+            "why": "Part of the expected benefit.",
+            "patientCentered": true
+          },
+          {
+            "id": "o4",
+            "role": "process",
+            "name": "Monitoring days completed",
+            "measure": "Days with transmitted readings out of 30 at A and B",
+            "timing": "30 days",
+            "why": "Separates programme failure from non-use.",
+            "patientCentered": false
+          },
+          {
+            "id": "o5",
+            "role": "balancing",
+            "name": "Alert-driven extra contacts",
+            "measure": "Unplanned calls or visits triggered by alerts",
+            "timing": "30 days",
+            "why": "Alerts can add worry and contacts.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 14,400 discharges across four years; analysis within the data institute's environment by June 2027.",
+        "biasMitigation": [
+          "Before-and-after contrast at all four centres",
+          "Case-mix adjustment fixed in advance",
+          "Wild cluster bootstrap for intervals",
+          "Pre-adoption trend check",
+          "Comparison period at centre C ended at the contamination date"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Few clusters",
+            "severity": "high",
+            "note": "Two adopting and two comparison centres."
+          },
+          {
+            "id": "b2",
+            "label": "Non-parallel pre-adoption trends",
+            "severity": "watch",
+            "note": "Checked graphically and with an event-study model."
+          }
+        ],
+        "parsimony": {
+          "score": 76,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 7,
+          "flags": [
+            "Seven case-mix covariates fixed in advance"
+          ],
+          "simplestPath": "One before-and-after contrast between two pairs of centres, one primary outcome, one cost ratio."
+        },
+        "theoreticalFramework": "Target trial emulation to define time zero at discharge and eligibility.",
+        "summary": "Protocol revised for contamination at centre C; the comparison period there ends in June 2026."
+      },
+      "note": "Dependency closure: the investigator re-runs the protocol after centre C's pilot (local fact) contaminates a comparison centre. The revised protocol is a consequential upstream change, so the completed downstream stages Stats and Ethics are flagged for review and are not counted complete until re-reviewed (G8; store.ts downstreamCompleted at 875fe59).",
+      "expect": {
+        "store": {
+          "protocol.overview": {
+            "includes": "centre C contributes comparison data only to June 2026"
+          },
+          "protocol.biasMitigation": {
+            "length": 5
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ],
+          "needsReview": [
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "stats": "needs-review",
+          "ethics": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 2,
+      "response": {
+        "designSummary": "Cohort with a difference-in-differences contrast between two adopting and two comparison centres, 2023 to 2026, and a within-cohort cost analysis.",
+        "sampleSize": "After ending centre C's comparison period at June 2026, about 3,650 exposed and about 2,475 comparison discharges are expected. The harmonic mean group size is about 2,950, still above the about 2,550 per group needed to detect a fall from 14 to 11 percent with 90 percent power at two-sided alpha 0.05. The number of centres is unchanged, so centre-level inference remains the binding limit and intervals come from a wild cluster bootstrap.",
+        "primaryAnalysis": "Logistic difference-in-differences model of 30-day readmission with centre and quarter fixed effects, the seven case-mix covariates, and an adoption-by-period term; wild cluster bootstrap intervals; an event-study version to check pre-adoption trends.",
+        "secondaryAnalysis": "Generalised linear model with gamma distribution for 90-day cost; cost per readmission avoided from the two contrasts with a joint bootstrap; emergency visits; subgroups by age over 80 and rurality.",
+        "missingData": "As before; centre C's discharges from July 2026 are excluded from the comparison group, and the 40 pilot patients are described separately.",
+        "multiplicity": "One primary contrast; others are reported with intervals as secondary.",
+        "software": "R within the data institute's environment; code archived before linkage.",
+        "overfittingGuards": [
+          "Covariates fixed before linkage",
+          "Event-study check of pre-trends",
+          "Wild cluster bootstrap",
+          "No data-driven choice of comparison centres"
+        ],
+        "summary": "Revised for centre C's truncated comparison period; patient numbers still sufficient; four centres remain the limit."
+      },
+      "note": "The revised statistics follow the revised protocol and clear Stats from review; Ethics stays flagged.",
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 2,475 comparison discharges"
+          },
+          "needsReview": [
+            "ethics"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "stats": "complete",
+          "ethics": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "mark-complete",
+      "stage": "ethics",
+      "note": "The investigator re-reviews Ethics (the consent waiver and data agreement do not depend on the comparison period) and marks it complete by hand, closing the dependency.",
+      "expect": {
+        "store": {
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete",
+          "stats": "complete"
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "Two patient partners who used monitoring and one carer review the outcome list and the plain-language summary for the ministry.",
+        "socialListening": "No social media listening; the programme's patient feedback forms at A and B are summarised in anonymised form.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Reassurance",
+            "quote": "Composite paraphrase: Knowing someone saw my numbers every morning meant I slept the first week home.",
+            "implication": "Report patient experience alongside cost.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "family",
+            "theme": "Carer workload",
+            "quote": "Composite paraphrase: I set up the tablet and did the readings; without me he would not have used it.",
+            "implication": "Count carer dependence as an equity concern.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Alert noise",
+            "quote": "Composite paraphrase: Half my calls are about a weight change of half a kilo.",
+            "implication": "Measure alert-driven extra contacts as a balancing outcome.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "partner",
+            "theme": "Ministry needs",
+            "quote": "Composite paraphrase: We need a number per readmission avoided and an honest range around it.",
+            "implication": "Lead with the cost per readmission avoided and its interval.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on reassurance, carers, alerts and the payer's needs."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Remote monitoring after cardiac surgery across four centres: a cohort study of readmission and cost",
+        "abstract": "Objective: to estimate the effect of remote monitoring after cardiac surgery on 30-day readmission and 90-day cost, and the cost per readmission avoided. Design: four-centre cohort from provincial data, 2023 to 2026, with before-and-after contrasts between adopting and comparison centres. Results will follow analysis.",
+        "introduction": "Remote monitoring after surgery may prevent readmissions, but estimates are imprecise and economic models borrow them.",
+        "methods": "Provincial discharge abstracts, billing and platform logs; difference-in-differences with case-mix adjustment; wild cluster bootstrap; centre C's comparison period ends at its pilot.",
+        "results": "No data have been analysed yet.",
+        "discussion": "The discussion will set the estimate against the trial and review and explain what the four-centre design can and cannot show.",
+        "limitations": "Four centres; non-random adoption; missing home care and medication costs.",
+        "conclusion": "To be written after analysis.",
+        "reportingChecklist": "STROBE with RECORD; CHEERS 2022 for the cost analysis",
+        "summary": "Cohort report structure with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.methods": {
+            "includes": "centre C's comparison period ends at its pilot"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Check pre-adoption trends before reading the effect estimate",
+          "Confirm centre D's cost ledger or state the provincial costing substitute"
+        ],
+        "improvementNotes": "Model note: analysis plan complete; no further issues.",
+        "lastReview": "2026-09-22",
+        "summary": "Two open fixes."
+      },
+      "note": "Held reply (G6): the runner sends this audit request, captures studyRevision, holds the model's reply while the next step (the investigator's edit of the audit notes) runs, and releases it at the wait step after that. Nothing is applied yet.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 0
+          },
+          "audit.lastReview": {
+            "absent": true
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "audit": "incomplete"
+        }
+      }
+    },
+    {
+      "do": "set-field",
+      "path": "audit.improvementNotes",
+      "value": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
+      "note": "The investigator edits the audit notes while the audit request is pending. With D27 the substantive audit content is part of studyRevision (log entries are not).",
+      "expect": {
+        "store": {
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "audit": "incomplete"
+        }
+      }
+    },
+    {
+      "do": "wait",
+      "ms": 2000,
+      "note": "The held audit reply arrives against the earlier revision and is refused: nothing is applied, the stage stays incomplete, the investigator's note is kept, and the refusal is shown and logged (G6). At 875fe59 studyRevision excludes the audit object, so the reply would be accepted; requires D27 (under S10).",
+      "expect": {
+        "error": {
+          "shown": true,
+          "includes": "changed since the request"
+        },
+        "store": {
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
+          "audit.openFixes": {
+            "length": 0
+          },
+          "audit.lastReview": {
+            "absent": true
+          },
+          "audit.entries[0].summary": {
+            "includes": "refused"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "audit": "incomplete"
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 2,
+      "response": {
+        "openFixes": [
+          "Centre D's cost ledger gate is unknown; the action stays blocked until the addendum is signed or the substitute is approved",
+          "Check pre-adoption trends at all four centres before reading the effect estimate",
+          "Keep centre C's comparison period ended at June 2026 in every analysis",
+          "The problem reply returned no constraints; the typed constraints were kept and must stay as the investigator wrote them"
+        ],
+        "lastReview": "2026-09-22",
+        "summary": "Four open fixes; the investigator's audit note is kept as written."
+      },
+      "omitKeys": [
+        "improvementNotes"
+      ],
+      "note": "A fresh audit request after the edit is applied. The reply omits improvementNotes, so the investigator's note stays (omitted keys never overwrite). The stored patch requires L1.6 (store defect at 875fe59).",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.lastReview": "2026-09-22",
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": []
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "expect": {
+        "store": {
+          "title": "Remote monitoring after cardiac surgery across four centres: effect and cost-effectiveness",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "cohort",
+          "problem.constraints": "Results needed by 2027-06-30 for the ministry. Two economists and one data analyst. Provincial data only through the data institute's secure environment; no patient contact.",
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
+          "stats.sampleSize": {
+            "includes": "about 2,475"
+          },
+          "design.decisions": {
+            "length": 1
+          }
+        },
+        "screen": {
+          "includes": [
+            "Remote monitoring after cardiac surgery across four centres: effect and cost-effectiveness"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Remote monitoring after cardiac surgery across four centres: effect and cost-effectiveness",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "protocol.overview": {
+            "includes": "June 2026"
+          },
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report."
+        },
+        "screen": {
+          "includes": [
+            "Remote monitoring after cardiac surgery across four centres: effect and cost-effectiveness"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "Kept constraints require S5; family 'cohort' after acceptance, selectionStatus and actionStatus S11; the refused audit reply D27. One click gives one file (G10).",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "needsReview": [],
+            "family": "cohort",
+            "problem.constraints": "Results needed by 2027-06-30 for the ministry. Two economists and one data analyst. Provincial data only through the data institute's secure environment; no patient contact.",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "blocked",
+            "design.decisions[-1].recommendedFamily": "cohort",
+            "stats.sampleSize": {
+              "includes": "about 2,475"
+            },
+            "audit.improvementNotes": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
+            "audit.openFixes": {
+              "length": 4
+            },
+            "scan.gradeOverall": "low"
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

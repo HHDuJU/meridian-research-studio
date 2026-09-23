@@ -1,6 +1,6 @@
 {
   "id": "sc-050",
-  "version": 1,
+  "version": 2,
   "title": "School dental programme: lean redesign of silver diamine fluoride pathway, two strands, late Analysis reply refused after an edit",
   "field": "dentistry",
   "level": 5,
@@ -1037,30 +1037,6 @@
       }
     },
     {
-      "do": "set-field",
-      "path": "protocol.outcomes[0].measure",
-      "value": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
-      "note": "Late-reply timing (the format has no field for it): the investigator has already clicked Illuminate on the Analysis stage, so the request for stats call 1 (the next step) was dispatched with the studyRevision of the study before this edit; while that reply is pending, the investigator widens the primary measure's window from 28 to 42 days because each school has a clinic day only about every three weeks. The runner dispatches the next step's request before applying this edit and delivers its reply after the edit is saved. No downstream stage is complete, so nothing is flagged for review.",
-      "expect": {
-        "store": {
-          "protocol.outcomes[0].measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
-          "protocol.outcomes[0].role": "primary",
-          "stats.sampleSize": "",
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol"
-          ],
-          "needsReview": []
-        }
-      }
-    },
-    {
       "do": "illuminate",
       "stage": "stats",
       "call": 1,
@@ -1078,7 +1054,7 @@
         ],
         "summary": "Analysis planned for the 28-day measure."
       },
-      "note": "Late reply refused (G6): this reply was produced against the study before the investigator's edit of the primary measure (it analyses the 28-day window), so the studyRevision guard refuses it: nothing is applied, the stage stays incomplete, the refusal is shown and logged in the audit entries. The guard itself is the 875fe59 store's mergeStageIfRevision; the screen's use of it is sheet A3 item L1.2 as corrected in A3.1 item 1 (a boundary correction inside L1, not a work-order entry), so a failure here is a defect, not capability absent.",
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Late reply refused (G6): this reply was produced against the study before the investigator's edit of the primary measure (it analyses the 28-day window), so the studyRevision guard refuses it: nothing is applied, the stage stays incomplete, the refusal is shown and logged in the audit entries. The guard itself is the 875fe59 store's mergeStageIfRevision; the screen's use of it is sheet A3 item L1.2 as corrected in A3.1 item 1 (a boundary correction inside L1, not a work-order entry), so a failure here is a defect, not capability absent.",
       "expect": {
         "error": {
           "shown": true
@@ -1107,7 +1083,34 @@
         "stage": {
           "stats": "incomplete"
         }
-      }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "protocol.outcomes[0].measure",
+          "value": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
+          "note": "Late-reply timing (format 1.2 late step): the investigator has already clicked Illuminate on the Analysis stage, so the request for stats call 1 (the next step) was dispatched with the studyRevision of the study before this edit; while that reply is pending, the investigator widens the primary measure's window from 28 to 42 days because each school has a clinic day only about every three weeks. The runner dispatches the next step's request before applying this edit and delivers its reply after the edit is saved. No downstream stage is complete, so nothing is flagged for review. Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "protocol.outcomes[0].measure": "Proportion of children with at least one active cavity at screening who have silver diamine fluoride applied within 42 days of screening (two clinic visits), from programme records; children absent on both clinic days are reported separately",
+              "protocol.outcomes[0].role": "primary",
+              "stats.sampleSize": "",
+              "completedStages": [
+                "problem",
+                "scan",
+                "map",
+                "gaps",
+                "hypotheses",
+                "questions",
+                "design",
+                "protocol"
+              ],
+              "needsReview": []
+            }
+          }
+        }
+      ]
     },
     {
       "do": "reload",
@@ -1500,5 +1503,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-050.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
 }

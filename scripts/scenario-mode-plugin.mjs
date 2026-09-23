@@ -47,18 +47,20 @@ export function scenarioModePlugin() {
           const data = Buffer.concat(chunks).length ? JSON.parse(Buffer.concat(chunks).toString("utf8")) : {};
           const key = String(data.key || u.searchParams.get("key") || "");
           const query = String(data.query || u.searchParams.get("query") || "");
+          const provider = String(data.provider || u.searchParams.get("provider") || "fixture");
           const runtime = await server.ssrLoadModule("/src/lib/model-runtime.ts");
           const retrieve = await server.ssrLoadModule("/src/lib/evidence/retrieve.ts");
           const fixture = await server.ssrLoadModule("/src/lib/evidence/fixture-adapter.ts");
           const transportMod = await server.ssrLoadModule("/src/lib/evidence/transport.ts");
-          const n = runtime.nextReplayCall(key, "retrieval/fixture");
-          const text = runtime.readReplayText(runtime.replayDirFromEnv(), key, "retrieval/fixture", n);
+          const stage = `retrieval/${provider}`;
+          const n = runtime.nextReplayCall(key, stage);
+          const text = runtime.readReplayText(runtime.replayDirFromEnv(), key, stage, n);
           const rec = JSON.parse(text);
-          const adapter = fixture.fixtureAdapter();
-          const requestUrl = fixture.fixtureRecordingUrl(query);
+          const adapter = provider === "fixture" ? fixture.fixtureAdapter() : fixture.replaySearchAdapter(provider);
+          const requestUrl = provider === "fixture" ? fixture.fixtureRecordingUrl(query) : fixture.replayRecordingUrl(provider, query);
           const body = typeof rec.body === "string" ? rec.body : JSON.stringify(rec.body ?? rec);
           const t = transportMod.recordedTransport({
-            [requestUrl]: { status: rec.status ?? 200, body },
+            [requestUrl]: { status: rec.status ?? 200, body, note: rec.note },
           });
           const result = await retrieve.runSearch(adapter, query, t);
           res.statusCode = 200;

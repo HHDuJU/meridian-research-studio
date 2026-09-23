@@ -19,7 +19,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const samplesDir = path.join(here, "..", "bank-samples");
+// The generator starts from the version 2 samples (kept at bank-samples/original-v2/) and applies the listed
+// corrections itself, so the good set stays stable when the bank samples move to a later version.
+const samplesDir = path.join(here, "..", "bank-samples", "original-v2");
 const brokenDir = path.join(here, "broken");
 const acceptDir = path.join(here, "accept");
 
@@ -424,6 +426,58 @@ const accept = {};
   must(skeleton(sc) === skeleton(L1), "the cut level 4 copy has the level 1 skeleton");
   accept["accept-shared-skeleton.json"] = sc;
 }
+// Format 1.2, late replies (validator 1.3): the level 1 audit call held while the investigator edits the audit
+// notes; the refusal is expected on the illuminate step, the edit's own outcome inside the during action.
+function lateAuditStep(base) {
+  const a = find(base, (s) => s.do === "illuminate" && s.stage === "audit", "audit");
+  const step = clone(base.steps[a]);
+  step.late = true;
+  step.during = [{
+    do: "set-field",
+    path: "audit.improvementNotes",
+    value: "Investigator note: the pharmacy lead asks that the reconciliation count be reported per shift, not per day.",
+    note: "SELFTEST: the investigator edits the audit notes while the audit request is pending; substantive audit content is part of the revision (D27).",
+    expect: { store: { "audit.improvementNotes": "Investigator note: the pharmacy lead asks that the reconciliation count be reported per shift, not per day." } },
+  }];
+  step.expect = {
+    error: { shown: true, includes: "changed since the request" },
+    store: { "audit.improvementNotes": "Investigator note: the pharmacy lead asks that the reconciliation count be reported per shift, not per day.", "audit.entries[0].summary": { includes: "refused" } },
+    stage: { audit: "incomplete" },
+  };
+  step.note = "SELFTEST: late reply (format 1.2, G6): the held audit reply arrives after the edit and is refused.";
+  return { a, step };
+}
+{
+  const sc = variant(L1, "sc-967", "SELFTEST accept copy (format 1.2): the audit call is a late reply held across an investigator edit of the audit notes (late: true, one during action); the refusal is expected on the illuminate step.");
+  const { a, step } = lateAuditStep(sc);
+  sc.steps[a] = step;
+  accept["accept-late-reply.json"] = sc;
+}
+{
+  const sc = variant(L1, "sc-931", "SELFTEST broken copy (format 1.2): late: true without a during array.");
+  const { a, step } = lateAuditStep(sc);
+  delete step.during;
+  sc.steps[a] = step;
+  broken["broken-late-no-during.json"] = sc;
+}
+{
+  const sc = variant(L1, "sc-932", "SELFTEST broken copy (format 1.2): a during array on an illuminate step that is not late.");
+  const { a, step } = lateAuditStep(sc);
+  delete step.late;
+  sc.steps[a] = step;
+  broken["broken-during-no-late.json"] = sc;
+}
+{
+  const sc = variant(L1, "sc-933", "SELFTEST broken copy (format 1.2): a during action that is a model call (illuminate) and another without an outcome expect.");
+  const { a, step } = lateAuditStep(sc);
+  step.during = [
+    { do: "illuminate", stage: "problem", call: 2, response: {} },
+    { do: "set-field", path: "audit.improvementNotes", value: "edited" },
+  ];
+  sc.steps[a] = step;
+  broken["broken-during-illuminate.json"] = sc;
+}
+for (const [name, sc] of Object.entries(broken)) write(path.join(brokenDir, name), sc);
 for (const [name, sc] of Object.entries(accept)) write(path.join(acceptDir, name), sc);
 
 console.log(`good set: ${Object.keys(good).length} files; broken: ${Object.keys(broken).length} files; accept: ${Object.keys(accept).length} files`);

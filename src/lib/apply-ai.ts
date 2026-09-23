@@ -271,7 +271,7 @@ function applyStage(
               origin: "model" as const,
               retrievalEventIds: [],
               identifiers: compactPatch({ doi, pmid }),
-              access: "model-suggested" as const,
+              access: "unknown" as const,
               status: "unverified" as const,
               checks: [],
             },
@@ -501,7 +501,7 @@ function applyStage(
                 : undefined;
             const chosen = fromDecision ?? recommended;
             if (chosen) r.decision.recommendedFamily = chosen;
-            else delete r.decision.recommendedFamily;
+            else r.decision.recommendedFamily = null;
             // Earlier proposed decisions are superseded, not erased.
             decisions = [
               ...(study.design.decisions ?? []).map((d) =>

@@ -41,6 +41,11 @@ export const STAGE_IDS = [
 
 export type StageId = (typeof STAGE_IDS)[number];
 
+export function orderNeedsReview(ids: readonly string[]): StageId[] {
+  const set = new Set(ids);
+  return STAGE_IDS.filter((id) => set.has(id));
+}
+
 export type StudyStatus = "draft" | "active" | "complete";
 export type GradeLevel = "high" | "moderate" | "low" | "very-low";
 
@@ -74,7 +79,7 @@ export type SourceStatus =
   | "check-failed"
   | "access-blocked";
 
-export type AccessLevel = "unknown" | "metadata" | "abstract" | "full-text" | "model-suggested";
+export type AccessLevel = "unknown" | "metadata" | "abstract" | "full-text";
 
 export type CheckProvider = "crossref" | "openalex" | "pubmed" | "clinicaltrials" | "manual";
 
@@ -124,7 +129,7 @@ export type ClaimKind = "source-derived" | "local-fact" | "assumption" | "infere
 
 export type SupportStatus = "supported" | "unsupported" | "unassessed" | "quarantined";
 export type Polarity = "benefit" | "harm" | "null" | "unknown";
-export type DerivationMethod = "percent" | "difference" | "ratio" | "sum";
+export type DerivationMethod = "percent" | "difference" | "ratio" | "sum" | "contains";
 
 /** Unicode code-point span into an immutable SourceDocument. */
 export interface SourceSpan {
@@ -472,6 +477,8 @@ export interface DecisionRecord {
   statement: string;
   question: string;
   claimIds: string[];
+  /** Claim ids the proposal cited that were not in the ledger. Acceptance stays refused until a re-issued decision omits them. */
+  droppedClaimIds?: string[];
   criteria: DecisionCriterion[];
   gates: DecisionGate[];
   /** Simpler credible alternatives that were considered. */
@@ -484,7 +491,7 @@ export interface DecisionRecord {
   /** Whether the investigator may act. Blocked when gates or other blockers remain (S11). */
   actionStatus: "blocked" | "ready";
   /** Family this decision would pursue, when stated. */
-  recommendedFamily?: StudyFamily | "";
+  recommendedFamily?: StudyFamily | "" | null;
   note?: string;
 }
 

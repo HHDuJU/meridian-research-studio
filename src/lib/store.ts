@@ -3,8 +3,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { createStudy, migrateStudy, scanMayComplete, queryHashOf, scanContentRevision, withdrawScanCompletionIfInvalid } from "./defaults";
 import { writeImmutableBackup, browserLocalStorage, createGuardedStorage, readBackupFailure, FAIL_KEY, MAIN_KEY } from "./persist-backup";
 import { SEED_IDS, SEED_STUDIES } from "./seed";
-import { STAGE_IDS, STUDY_SCHEMA_VERSION, STUDY_FAMILIES } from "./types";
-import type { AuditEntry, StageId, Study, StudyFamily, EvidenceItem, RetrievalEvent, SourceDocument } from "./types";
+import { STAGE_IDS, STUDY_SCHEMA_VERSION, STUDY_FAMILIES, orderNeedsReview } from "./types";
+import type { AuditEntry, StageId, Study, StudyFamily, EvidenceItem, RetrievalEvent, SourceDocument, SourceCheck } from "./types";
 import { nowIso, uid } from "./utils";
 import { refreshDecisionStatuses, studyRevision, decisionIsSupported } from "./evidence/decision";
 import { illuminateDecision } from "./illuminate";
@@ -52,6 +52,7 @@ interface StudioState {
     record: { id?: string; title?: string },
     field: "abstract" | "keyFindings" | "year" | "status" | "limitations",
     value: unknown,
+    note?: string,
   ) => { ok: boolean; reason?: string };
   illuminateApply: (
     id: string,
@@ -170,7 +171,7 @@ export const useStudio = create<StudioState>()(
             const current = s[stage];
             const consequential = isConsequential(patch as Record<string, unknown>);
             const flagged = consequential ? downstreamCompleted(s, stage) : [];
-            const needsReview = [...new Set([...(s.needsReview ?? []), ...flagged])];
+            const needsReview = orderNeedsReview([...(s.needsReview ?? []), ...flagged]);
             const entries =
               consequential && flagged.length
                 ? [
@@ -216,7 +217,7 @@ export const useStudio = create<StudioState>()(
             stage,
             summary: `Stale model response for ${stage} refused: produced against revision ${expectedRevision}, study is now ${current}.`,
           });
-          return { applied: false, reason: `study changed since the request (${expectedRevision} → ${current})` };
+          return { applied: false, reason: `study changed since the request (${expectedRevision} → ${current}); the reply was not applied` };
         }
         get().mergeStage(id, stage, patch);
         return { applied: true };
@@ -321,17 +322,47 @@ export const useStudio = create<StudioState>()(
         });
         return { ok: true };
       },
-      changeSource: (id, record, field, value) => {
+      changeSource: (id, record, field, value, note) => {
         const s = get().studies.find((x) => x.id === id);
         if (!s) return { ok: false, reason: "study not found" };
         const item = s.scan.items.find((it) => (record.id && it.id === record.id) || (record.title && it.title === record.title));
         if (!item) return { ok: false, reason: "record not found" };
         let extraDoc: SourceDocument | undefined;
+        let refused: string | undefined;
         const items = s.scan.items.map((it) => {
           if (it.id !== item.id) return it;
           if (field === "status") {
-            const status = String(value);
-            return { ...it, provenance: { ...it.provenance, status: status as EvidenceItem["provenance"]["status"] } };
+            const result = String(value);
+            const allowed = ["match", "mismatch", "not-found", "error", "blocked"] as const;
+            if (!(allowed as readonly string[]).includes(result)) {
+              refused = "a manual identity check cannot set verified";
+              return it;
+            }
+            const noteText = String(note ?? "").trim();
+            if (!noteText) {
+              refused = "a manual identity check needs a note";
+              return it;
+            }
+            const status =
+              result === "mismatch"
+                ? "mismatch"
+                : result === "blocked"
+                  ? "access-blocked"
+                  : result === "not-found" || result === "error"
+                    ? "check-failed"
+                    : it.provenance.status;
+            const check: SourceCheck = {
+              id: uid("chk"),
+              at: nowIso(),
+              provider: "manual",
+              identifier: it.doi || it.pmid || it.title,
+              result: result as SourceCheck["result"],
+              note: noteText,
+            };
+            return {
+              ...it,
+              provenance: { ...it.provenance, status, checks: [...(it.provenance.checks ?? []), check] },
+            };
           }
           if (field === "year") return { ...it, year: typeof value === "number" ? value : Number(value) };
           if (field === "keyFindings") return { ...it, keyFindings: String(value ?? "") };
@@ -356,10 +387,11 @@ export const useStudio = create<StudioState>()(
           }
           return it;
         });
+        if (refused) return { ok: false, reason: refused };
         const after = items.find((it) => it.id === item.id);
-        const beforeVal = field === "status" ? item.provenance.status : item[field === "abstract" ? "abstract" : field];
-        const afterVal = field === "status" ? after?.provenance.status : after?.[field === "abstract" ? "abstract" : field];
-        const changed = JSON.stringify(beforeVal) !== JSON.stringify(afterVal);
+        const beforeSnap = field === "status" ? item.provenance : field === "abstract" ? item.abstract : item[field as keyof typeof item];
+        const afterSnap = field === "status" ? after?.provenance : field === "abstract" ? after?.abstract : after?.[field as keyof typeof after];
+        const changed = JSON.stringify(beforeSnap) !== JSON.stringify(afterSnap);
         if (!changed) return { ok: false, reason: "source content did not change" };
         get().mergeStage(id, "scan", { items });
         if (extraDoc) {
@@ -400,7 +432,10 @@ export const useStudio = create<StudioState>()(
           stamp({
             ok: false,
             summary: decision.applied.summary,
-            error: decision.reason ?? decision.applied.summary,
+            error:
+              decision.reason === "stale"
+                ? "study changed since the request; the reply was not applied"
+                : (decision.reason ?? decision.applied.summary),
           });
           return {
             ok: false,
@@ -412,7 +447,7 @@ export const useStudio = create<StudioState>()(
         }
         const merged = get().mergeStageIfRevision(id, stage, decision.applied.stagePatch as never, expectedRevision);
         if (!merged.applied) {
-          stamp({ ok: false, summary: decision.applied.summary, error: "stale" });
+          stamp({ ok: false, summary: merged.reason ?? "study changed since the request; the reply was not applied", error: merged.reason ?? "study changed since the request; the reply was not applied" });
           return { ok: false, complete: false, reason: "stale", summary: decision.applied.summary, issues: decision.applied.issues };
         }
         if (decision.applied.studyPatch) {

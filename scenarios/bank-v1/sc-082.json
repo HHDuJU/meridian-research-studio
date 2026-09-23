@@ -1,6 +1,6 @@
 {
   "id": "sc-082",
-  "version": 1,
+  "version": 3,
   "title": "Cardiac surgery network: remote monitoring cost and effect, four-centre cohort, late audit reply refused",
   "field": "health-economics",
   "level": 5,
@@ -276,7 +276,7 @@
             "kind": "qualitative",
             "grade": "low",
             "keyFindings": "Reassurance for most; alert-related worry for some; older patients depended on carers; rural connection losses.",
-            "limitations": "32 participants from one programme.",
+            "limitations": "20 patients and 12 carers from one programme.",
             "contextTags": [
               "experience",
               "carers",
@@ -1416,7 +1416,7 @@
         "lastReview": "2026-09-22",
         "summary": "Two open fixes."
       },
-      "note": "Held reply (G6): the runner sends this audit request, captures studyRevision, holds the model's reply while the next step (the investigator's edit of the audit notes) runs, and releases it at the wait step after that. Nothing is applied yet.",
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Held reply (G6): the runner sends this audit request, captures studyRevision, holds the model's reply while the next step (the investigator's edit of the audit notes) runs, and releases it at the release after that. Nothing is applied yet. After the release: The held audit reply arrives against the earlier revision and is refused: nothing is applied, the stage stays incomplete, the investigator's note is kept, and the refusal is shown and logged (G6). At 875fe59 studyRevision excludes the audit object, so the reply would be accepted; requires D27 (under S10).",
       "expect": {
         "store": {
           "audit.openFixes": {
@@ -1438,80 +1438,51 @@
             "ethics",
             "voices",
             "manuscript"
-          ]
-        },
-        "stage": {
-          "audit": "incomplete"
-        }
-      }
-    },
-    {
-      "do": "set-field",
-      "path": "audit.improvementNotes",
-      "value": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
-      "note": "The investigator edits the audit notes while the audit request is pending. With D27 the substantive audit content is part of studyRevision (log entries are not).",
-      "expect": {
-        "store": {
+          ],
           "audit.improvementNotes": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol",
-            "stats",
-            "ethics",
-            "voices",
-            "manuscript"
-          ]
+          "audit.entries[0].summary": {
+            "includes": "refused"
+          }
         },
         "stage": {
           "audit": "incomplete"
-        }
-      }
-    },
-    {
-      "do": "wait",
-      "ms": 2000,
-      "note": "The held audit reply arrives against the earlier revision and is refused: nothing is applied, the stage stays incomplete, the investigator's note is kept, and the refusal is shown and logged (G6). At 875fe59 studyRevision excludes the audit object, so the reply would be accepted; requires D27 (under S10).",
-      "expect": {
+        },
         "error": {
           "shown": true,
           "includes": "changed since the request"
-        },
-        "store": {
-          "audit.improvementNotes": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
-          "audit.openFixes": {
-            "length": 0
-          },
-          "audit.lastReview": {
-            "absent": true
-          },
-          "audit.entries[0].summary": {
-            "includes": "refused"
-          },
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol",
-            "stats",
-            "ethics",
-            "voices",
-            "manuscript"
-          ]
-        },
-        "stage": {
-          "audit": "incomplete"
         }
-      }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "audit.improvementNotes",
+          "value": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
+          "note": "The investigator edits the audit notes while the audit request is pending. With D27 the substantive audit content is part of studyRevision (log entries are not). Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "audit.improvementNotes": "Investigator note, 2026-09-22: the ministry will read the cost per readmission avoided first; centre C's pilot and centre D's missing cost ledger must be stated on the first page of the report.",
+              "completedStages": [
+                "problem",
+                "scan",
+                "map",
+                "gaps",
+                "hypotheses",
+                "questions",
+                "design",
+                "protocol",
+                "stats",
+                "ethics",
+                "voices",
+                "manuscript"
+              ]
+            },
+            "stage": {
+              "audit": "incomplete"
+            }
+          }
+        }
+      ]
     },
     {
       "do": "illuminate",
@@ -1684,5 +1655,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 2 (kept as bank-v1/original-v2/sc-082.json), superseded 2026-09-22T20:50Z: golden error under S1 (D8), the appraisal reply stated '32 participants from one programme.' where the cited abstract states '20 patients and 12 carers from one programme.', an undeclared derivation or approximation that the application must quarantine; the recorded model output now states the source values, so the expected issue count stands. Earlier: version 1 (kept as bank-v1/original-v1/sc-082.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
 }

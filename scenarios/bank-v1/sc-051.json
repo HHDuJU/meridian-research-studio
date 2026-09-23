@@ -1,6 +1,6 @@
 {
   "id": "sc-051",
-  "version": 1,
+  "version": 2,
   "title": "Emergency department triage lactate for suspected sepsis: umbrella review, diagnostic outcome roles, stale audit reply refused",
   "field": "emergency-medicine",
   "level": 5,
@@ -1226,37 +1226,6 @@
       }
     },
     {
-      "do": "set-field",
-      "path": "audit.improvementNotes",
-      "value": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
-      "note": "Late-reply timing (the format has no field for it): the investigator has already clicked Illuminate on the Audit stage, so the request for audit call 1 (the next step) was dispatched with the studyRevision of the study before this edit; while it is pending, the investigator types a note into the audit notes on screen. The runner dispatches the next step's request before applying this edit and delivers its reply after the edit is saved. This is investigator-entered audit text.",
-      "expect": {
-        "store": {
-          "audit.improvementNotes": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
-          "audit.openFixes": {
-            "length": 0
-          },
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol",
-            "stats",
-            "ethics",
-            "voices",
-            "manuscript"
-          ]
-        },
-        "stage": {
-          "audit": "incomplete"
-        }
-      }
-    },
-    {
       "do": "illuminate",
       "stage": "audit",
       "call": 1,
@@ -1270,7 +1239,7 @@
         "lastReview": "2026-09-22",
         "summary": "Three open fixes before screening."
       },
-      "note": "Late reply refused (G6): produced before the investigator edited the audit notes, so the studyRevision guard must refuse it: nothing applied (the investigator's note is not replaced, no open fixes stored), the stage stays incomplete, the refusal is shown and logged in the audit entries. At 875fe59 studyRevision ignores the whole audit object, so an audit-notes edit leaves the revision unchanged and the reply would be accepted; including substantive audit content in the revision is D27 (sheet A3.2), fixed together with L1.6 (the audit patch kept). The screen's use of the guard is sheet A3 item L1.2 as corrected in A3.1 item 1.",
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Late reply refused (G6): produced before the investigator edited the audit notes, so the studyRevision guard must refuse it: nothing applied (the investigator's note is not replaced, no open fixes stored), the stage stays incomplete, the refusal is shown and logged in the audit entries. At 875fe59 studyRevision ignores the whole audit object, so an audit-notes edit leaves the revision unchanged and the reply would be accepted; including substantive audit content in the revision is D27 (sheet A3.2), fixed together with L1.6 (the audit patch kept). The screen's use of the guard is sheet A3 item L1.2 as corrected in A3.1 item 1.",
       "expect": {
         "error": {
           "shown": true
@@ -1301,7 +1270,41 @@
         "stage": {
           "audit": "incomplete"
         }
-      }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "audit.improvementNotes",
+          "value": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
+          "note": "Late-reply timing (format 1.2 late step): the investigator has already clicked Illuminate on the Audit stage, so the request for audit call 1 (the next step) was dispatched with the studyRevision of the study before this edit; while it is pending, the investigator types a note into the audit notes on screen. The runner dispatches the next step's request before applying this edit and delivers its reply after the edit is saved. This is investigator-entered audit text. Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "audit.improvementNotes": "Investigator note, 2026-09-22: the clinical fellow found two further reviews published in languages we cannot translate; decide with the librarian whether their abstracts and study tables are enough to place them in the overlap matrix before the report is final.",
+              "audit.openFixes": {
+                "length": 0
+              },
+              "completedStages": [
+                "problem",
+                "scan",
+                "map",
+                "gaps",
+                "hypotheses",
+                "questions",
+                "design",
+                "protocol",
+                "stats",
+                "ethics",
+                "voices",
+                "manuscript"
+              ]
+            },
+            "stage": {
+              "audit": "incomplete"
+            }
+          }
+        }
+      ]
     },
     {
       "do": "illuminate",
@@ -1472,5 +1475,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-051.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
 }

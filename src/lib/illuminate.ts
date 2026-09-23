@@ -44,6 +44,13 @@ export function illuminateDecision(
 ): IlluminateDecision {
   const { payload, dropped } = stripModelAuthority(raw);
   const applied = applyAiResult(stage, payload, study.family, study);
+  for (const key of dropped) {
+    applied.issues.push({
+      path: key,
+      code: "dropped",
+      message: `model field ${key} cannot authorize an investigator gate`,
+    });
+  }
   if (!applied.ok) {
     return { applied, merge: false, complete: false, reason: "rejected", droppedGates: dropped };
   }

@@ -23,3 +23,18 @@ export function fixtureAdapter(): SearchAdapter {
 export function fixtureRecordingUrl(query: string): string {
   return `meridian-fixture://search?q=${encodeURIComponent(query)}`;
 }
+
+/** Scenario-mode adapter whose provider name is the replay channel (fixture, pubmed, …). */
+export function replaySearchAdapter(provider: string): SearchAdapter {
+  return {
+    provider,
+    buildSearch(query: string) {
+      return { url: `meridian-replay://${provider}?q=${encodeURIComponent(query)}`, method: "GET" };
+    },
+    parseSearch: fixtureAdapter().parseSearch,
+  };
+}
+
+export function replayRecordingUrl(provider: string, query: string): string {
+  return `meridian-replay://${provider}?q=${encodeURIComponent(query)}`;
+}

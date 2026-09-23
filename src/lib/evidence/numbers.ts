@@ -108,6 +108,7 @@ function maskForExtraction(s: string): string {
     .replace(/\b\d{1,2}:\d{2}\b/g, (m) => " ".repeat(m.length))
     .replace(/\b10\.\d{4,9}\/[^\s]+/g, (m) => " ".repeat(m.length))
     .replace(/\b[A-Za-z][A-Za-z0-9]*-\d+\b/g, (m) => " ".repeat(m.length))
+    .replace(/\b[A-Za-z]+\d+[A-Za-z]*\b/g, (m) => " ".repeat(m.length))
     .replace(/\bev-[A-Za-z0-9]+\b/gi, (m) => " ".repeat(m.length));
 }
 
@@ -141,6 +142,64 @@ function formatDecimal(n: number): string {
   if (!Number.isFinite(n)) return String(n);
   if (Number.isInteger(n)) return String(n);
   return String(n);
+}
+
+/** A hyphen is a minus only at the start, after whitespace or a bracket, or after CI/to/from/of/comma. A letter before it joins words (under-18). */
+export function minusIsSign(s: string, hyphenAt: number): boolean {
+  if (hyphenAt < 0 || s[hyphenAt] !== "-") return false;
+  if (hyphenAt === 0) return true;
+  const prev = s[hyphenAt - 1];
+  if (/[\s(\[]/.test(prev)) return true;
+  const look = s.slice(Math.max(0, hyphenAt - 6), hyphenAt);
+  return /(?:CI|to|from|of|,)\s*$/i.test(look);
+}
+
+export function unitFamily(unit?: string): string | undefined {
+  if (!unit) return undefined;
+  const u = unit.toLowerCase().replace(/\.$/, "");
+  if (u === "hour" || u === "hours" || u === "hr" || u === "hrs" || u === "h") return "hour";
+  if (u === "day" || u === "days") return "day";
+  if (u === "week" || u === "weeks") return "week";
+  if (u === "month" || u === "months") return "month";
+  if (u === "%" || u === "percent") return "percent";
+  return u;
+}
+
+export interface NullValueReference {
+  value: number;
+  start: number;
+  end: number;
+}
+
+/** "interval including 1" / "CI that included 0" — a comparison with the null, not an estimate. */
+export function nullValueReferences(text: string): NullValueReference[] {
+  const re =
+    /\b(?:interval|CI)\s+(?:that\s+)?(?:includes|included|including|contains|contained|containing|crosses|crossed|crossing|spans|spanned|spanning)\s+(-?\d+(?:\.\d+)?)/gi;
+  const out: NullValueReference[] = [];
+  for (const m of text.matchAll(re)) {
+    const num = m[1];
+    const at = (m.index ?? 0) + m[0].lastIndexOf(num);
+    out.push({ value: Number(num), start: utf16ToCp(text, at), end: utf16ToCp(text, at + num.length) });
+  }
+  return out;
+}
+
+export function intervalsIn(text: string): { lo: number; hi: number }[] {
+  const s = maskForExtraction(text);
+  const re = /(-?\d+(?:\.\d+)?)\s*(?:to|[-–])\s*(-?\d+(?:\.\d+)?)/gi;
+  const out: { lo: number; hi: number }[] = [];
+  for (const m of s.matchAll(re)) {
+    const idx = m.index ?? 0;
+    const loRaw = m[1];
+    const hiRaw = m[2];
+    const loAt = idx + m[0].indexOf(loRaw);
+    if (loRaw.startsWith("-") && !minusIsSign(s, loAt)) continue;
+    const lo = Number(loRaw);
+    const hi = Number(hiRaw);
+    if (!Number.isFinite(lo) || !Number.isFinite(hi) || lo > hi) continue;
+    out.push({ lo, hi });
+  }
+  return out;
 }
 
 const NUM = "-?\\d+(?:\\.\\d+)?";
@@ -181,13 +240,40 @@ export function extractNumbers(original: string): ExtractedNumber[] {
     push(out, occupied, original, idx, idx + m[1].length, m[1], Number(m[1]), "temperature", "°C");
   }
 
-  const wordHour =
-    /\b((?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[-\s](?:one|two|three|four|five|six|seven|eight|nine))?|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|zero|one|two|three|four|five|six|seven|eight|nine)\s+hours?\b/gi;
-  for (const m of s.matchAll(wordHour)) {
+  const WORD =
+    "(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[-\\s](?:one|two|three|four|five|six|seven|eight|nine))?|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|zero|one|two|three|four|five|six|seven|eight|nine";
+  const PLACE = "unit|ward|centre|center|hospital|clinic|service|department|case";
+  const wordDur = new RegExp(
+    `\\b(${WORD})[\\s-](hours?|days?|weeks?|months?)\\b(?!-)(?!\\s+(?:${PLACE})s?\\b)`,
+    "gi",
+  );
+  for (const m of s.matchAll(wordDur)) {
     const n = parseNumberWord(m[1]);
     if (n === null) continue;
     const idx = m.index ?? 0;
-    push(out, occupied, original, idx, idx + m[0].length, m[0], n, "duration", "hours");
+    push(out, occupied, original, idx, idx + m[0].length, m[0], n, "duration", m[2].toLowerCase());
+  }
+
+  const digitHyphenDur = /(\d+(?:\.\d+)?)-(day|week|month|hour)s?\b/gi;
+  for (const m of s.matchAll(digitHyphenDur)) {
+    const idx = m.index ?? 0;
+    push(out, occupied, original, idx, idx + m[0].length, m[0], Number(m[1]), "duration", m[2].toLowerCase());
+  }
+
+  // "month 6" is a duration. "24 months 21" and "days 91 percent" are not.
+  const unitThenDigit = /(?<!\d\s)\b(hours?|days?|weeks?|months?)\s+(\d+(?:\.\d+)?)(?!\d)(?!\s*(?:percent|%))/gi;
+  for (const m of s.matchAll(unitThenDigit)) {
+    const idx = m.index ?? 0;
+    const numAt = idx + m[0].lastIndexOf(m[2]);
+    push(out, occupied, original, numAt, numAt + m[2].length, m[2], Number(m[2]), "duration", m[1].toLowerCase());
+  }
+
+  const wordPct = new RegExp(`\\b(${WORD})\\s+percent\\b`, "gi");
+  for (const m of s.matchAll(wordPct)) {
+    const n = parseNumberWord(m[1]);
+    if (n === null) continue;
+    const idx = m.index ?? 0;
+    push(out, occupied, original, idx, idx + m[0].length, m[0], n, "percent", "percent");
   }
 
   const wordAny =
@@ -199,10 +285,13 @@ export function extractNumbers(original: string): ExtractedNumber[] {
     push(out, occupied, original, idx, idx + m[0].length, m[0], n, "count");
   }
 
-  const digitHour = new RegExp(`(${NUM})\\s*(hours?|hrs?|h)\\b`, "gi");
-  for (const m of s.matchAll(digitHour)) {
+  const digitUnit = new RegExp(
+    `(${NUM})\\s*(hours?|hrs?|days?|weeks?|months?)\\b(?!-)(?!\\s+(?:${PLACE})s?\\b)`,
+    "gi",
+  );
+  for (const m of s.matchAll(digitUnit)) {
     const idx = m.index ?? 0;
-    push(out, occupied, original, idx, idx + m[1].length, m[1], Number(m[1]), "duration", "hours");
+    push(out, occupied, original, idx, idx + m[1].length, m[1], Number(m[1]), "duration", m[2].toLowerCase());
   }
 
   const pct = new RegExp(`(${NUM})\\s*%`, "g");
@@ -217,14 +306,20 @@ export function extractNumbers(original: string): ExtractedNumber[] {
     push(out, occupied, original, idx, idx + m[1].length, m[1], Number(m[1]), "dose", m[2]);
   }
 
-  const rest = new RegExp(NUM, "g");
+  const rest = /\d+(?:\.\d+)?/g;
   for (const m of s.matchAll(rest)) {
     const idx = m.index ?? 0;
-    const raw = m[0];
-    const numeric = Number(raw);
-    if (!Number.isFinite(numeric)) continue;
-    if (/^(19|20)\d{2}$/.test(raw) && Math.abs(numeric) >= 1900) continue;
-    push(out, occupied, original, idx, idx + raw.length, raw, numeric, "estimate");
+    const digits = m[0];
+    let start = idx;
+    let numeric = Number(digits);
+    let raw = digits;
+    if (idx > 0 && s[idx - 1] === "-" && minusIsSign(s, idx - 1)) {
+      start = idx - 1;
+      numeric = -numeric;
+      raw = `-${digits}`;
+    }
+    if (/^(19|20)\d{2}$/.test(digits) && numeric >= 1900 && numeric <= 2099 && start === idx) continue;
+    push(out, occupied, original, start, idx + digits.length, raw, numeric, "estimate");
   }
 
   out.sort((a, b) => a.start - b.start);

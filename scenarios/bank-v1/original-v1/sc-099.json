@@ -1,0 +1,1761 @@
+{
+  "id": "sc-099",
+  "version": 1,
+  "title": "Day surgery unit: same-day discharge predictors after cholecystectomy, a withdrawn first decision and a refused late Audit reply",
+  "field": "surgery",
+  "level": 5,
+  "family": "retrospective",
+  "arm": "deterministic",
+  "synthetic": true,
+  "requires": [
+    "D5",
+    "S10",
+    "S11",
+    "S13"
+  ],
+  "notes": "Expert path on an explicit retrospective need (routing retrospective at create) with a disputed data source. Eight fixture records are appraised (certainty 'low', six claims). The first design reply recommends a prospective cohort (decision 1, claims c1, c2, c6, nursing gate unknown); the investigator accepts it (family prospective, action blocked). Protocol and Stats follow, and the Stats reply shows that 12 months of prospective data give about 260 events, enough to fit but not to validate a model before the 2028 cycle. A second design reply (design call 2) then recommends retrospective development with temporal validation (decision 2, claims c1, c3, c4, c5, both gates met on investigator-supplied records); an accepted decision is not superseded automatically, so both are listed and the completed Protocol and Stats stages are flagged for review (G8). The investigator withdraws decision 1 (kept in the history as withdrawn) and accepts decision 2 (supported positive, action ready, family retrospective). A reload on the Design route checks both statuses and the flags; re-running Protocol and Stats clears them. Late Audit reply: the set-field step writes the investigator's audit note while audit call 1 is in flight (the runner issues the request first and holds its reply), and the released late reply must be refused because substantive audit content is part of the study revision (D27): the note stays, no open fix is written, error shown and refusal logged. Audit call 2 omits improvementNotes, so the note survives. The typed constraints are restated unchanged (G11). Record ids are computed by the generator with stableRecordId(record) imported from src/lib/evidence/records.ts at 875fe59, never typed by hand: the normalised-DOI hash for records 1, 2, 3, 4, 5, 6, 8 (ev-0b1dlj7, ev-0ccsyxj, ev-0rygewo, ev-0zygd70, ev-0nxe42j, ev-1trdl59, ev-1ta0eqt); the titleYearKey(title, year) hash for record 7 (ev-1vuysqe). Requires S10 (revision guard; D27 is the audit-content item within its revision coverage), S11 (selection statuses, withdrawal, family on acceptance), S13 (appraisal payload) and D5 (status text). Catches: a withdrawn decision erased or left accepted, a second decision that silently rewrites the first, review flags lost, and a late model reply overwriting the investigator's audit note.",
+  "inputs": {
+    "need": "I am a general surgeon at a regional hospital where we perform about 620 elective laparoscopic cholecystectomies a year, and we want most of these patients to go home the same day. At present 58 percent of patients booked as day cases go home the same evening; the rest stay overnight, most often for nausea and vomiting, pain, a late finish on the list, or a drain. Our day surgery unit wants a short list of predictors it can use at booking to decide who should be placed early on the list or planned for an overnight stay from the start, instead of converting patients at six in the evening.\n\nMy plan was a retrospective chart review of all elective laparoscopic cholecystectomies from 2019 to 2025 using the electronic health record and the theatre management system. Our anaesthesia chief argues that the charts are unreliable for what matters most, such as how bad the nausea was and when the patient first walked, and that we should collect data prospectively for a year with a standard discharge-readiness assessment. I need help deciding between the two, choosing candidate predictors without overfitting, handling list order and surgeon effects, and making sure the result is something the booking nurses can use. We have no research funding beyond an analyst from the hospital's decision support team, and the day surgery unit wants recommendations for its 2028 scheduling cycle.",
+    "constraints": "No research funding; one decision support analyst for about 20 days; recommendations are needed for the day surgery unit's 2028 scheduling cycle; any prospective data collection would need nursing time that is not yet funded.",
+    "localFacts": [
+      "The hospital performed 3,690 elective laparoscopic cholecystectomies from January 2019 to December 2025; 58 percent of those booked as day cases in 2025 went home the same day.",
+      "The decision support team assigned an analyst for about 20 days (request DS-2026-88).",
+      "The data access committee approved use of electronic health record and theatre management data for this work on 2026-09-02 (approval DAC-2026-51).",
+      "The medication administration record has recorded every antiemetic dose electronically since 2019; nursing flowsheets have recorded the time of first walking since mid-2021."
+    ]
+  },
+  "steps": [
+    {
+      "do": "create",
+      "expect": {
+        "store": {
+          "problem.rawNeed": "I am a general surgeon at a regional hospital where we perform about 620 elective laparoscopic cholecystectomies a year, and we want most of these patients to go home the same day. At present 58 percent of patients booked as day cases go home the same evening; the rest stay overnight, most often for nausea and vomiting, pain, a late finish on the list, or a drain. Our day surgery unit wants a short list of predictors it can use at booking to decide who should be placed early on the list or planned for an overnight stay from the start, instead of converting patients at six in the evening.\n\nMy plan was a retrospective chart review of all elective laparoscopic cholecystectomies from 2019 to 2025 using the electronic health record and the theatre management system. Our anaesthesia chief argues that the charts are unreliable for what matters most, such as how bad the nausea was and when the patient first walked, and that we should collect data prospectively for a year with a standard discharge-readiness assessment. I need help deciding between the two, choosing candidate predictors without overfitting, handling list order and surgeon effects, and making sure the result is something the booking nurses can use. We have no research funding beyond an analyst from the hospital's decision support team, and the day surgery unit wants recommendations for its 2028 scheduling cycle.",
+          "family": "retrospective",
+          "currentStage": "problem",
+          "completedStages": [],
+          "needsReview": [],
+          "scan.items": {
+            "length": 0
+          },
+          "design.decisions": {
+            "length": 0
+          }
+        },
+        "screen": {
+          "includes": [
+            "I am a general surgeon at a regional hospital"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "problem",
+      "call": 1,
+      "response": {
+        "title": "Booking-time predictors of same-day discharge after elective laparoscopic cholecystectomy",
+        "subtitle": "Choosing between existing records and prospective collection for a booking-time prediction model",
+        "family": "retrospective",
+        "statement": "At a regional hospital performing about 620 elective laparoscopic cholecystectomies a year, 42 percent of patients booked as day cases stay overnight, often after late conversion. The day surgery unit wants booking-time predictors to plan list position and overnight stays in advance. The investigator planned a retrospective chart review of 2019 to 2025; the anaesthesia chief argues for prospective collection because charts record nausea severity and mobilisation poorly. The study must choose its data source, avoid overfitting, handle list position and surgeon effects, and produce something booking nurses can use.",
+        "whoAffected": "Adults having elective laparoscopic cholecystectomy, especially older patients and those living alone or far away; booking nurses, surgeons, anaesthetists and the day surgery unit.",
+        "whatHurts": "Late conversion to an overnight stay frustrates patients who arranged to go home, disrupts the ward and wastes day-case capacity.",
+        "currentPractice": "All suitable patients are booked as day cases; list order is set by surgeon preference; overnight stays are decided in the evening.",
+        "whyNow": "A 2028 scheduling cycle, a data access approval and an analyst assigned in 2026.",
+        "constraints": "No research funding; one decision support analyst for about 20 days; recommendations are needed for the day surgery unit's 2028 scheduling cycle; any prospective data collection would need nursing time that is not yet funded.",
+        "patientCenteredGoal": "Patients know at booking whether they are likely to go home the same day and can plan for it.",
+        "summary": "Problem framed as a booking-time prediction study with the data source to be decided."
+      },
+      "note": "The typed constraints are restated unchanged (G11).",
+      "expect": {
+        "store": {
+          "title": "Booking-time predictors of same-day discharge after elective laparoscopic cholecystectomy",
+          "family": "retrospective",
+          "problem.constraints": "No research funding; one decision support analyst for about 20 days; recommendations are needed for the day surgery unit's 2028 scheduling cycle; any prospective data collection would need nursing time that is not yet funded.",
+          "problem.rawNeed": "I am a general surgeon at a regional hospital where we perform about 620 elective laparoscopic cholecystectomies a year, and we want most of these patients to go home the same day. At present 58 percent of patients booked as day cases go home the same evening; the rest stay overnight, most often for nausea and vomiting, pain, a late finish on the list, or a drain. Our day surgery unit wants a short list of predictors it can use at booking to decide who should be placed early on the list or planned for an overnight stay from the start, instead of converting patients at six in the evening.\n\nMy plan was a retrospective chart review of all elective laparoscopic cholecystectomies from 2019 to 2025 using the electronic health record and the theatre management system. Our anaesthesia chief argues that the charts are unreliable for what matters most, such as how bad the nausea was and when the patient first walked, and that we should collect data prospectively for a year with a standard discharge-readiness assessment. I need help deciding between the two, choosing candidate predictors without overfitting, handling list order and surgeon effects, and making sure the result is something the booking nurses can use. We have no research funding beyond an analyst from the hospital's decision support team, and the day surgery unit wants recommendations for its 2028 scheduling cycle.",
+          "completedStages": [
+            "problem"
+          ]
+        },
+        "stage": {
+          "problem": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "Booking-time predictors of same-day discharge after elective laparoscopic cholecystectomy"
+          ]
+        }
+      }
+    },
+    {
+      "do": "retrieve",
+      "provider": "fixture",
+      "query": "predictors failed same-day discharge laparoscopic cholecystectomy day surgery list position prediction model validation nausea documentation",
+      "response": {
+        "status": 200,
+        "total": 8,
+        "records": [
+          {
+            "title": "Predictors of failed same-day discharge after elective laparoscopic cholecystectomy: a retrospective analysis of 2,940 procedures",
+            "authors": "Achterberg-Kamau P, Lindqvist-Ferreira J, Osei-Whitlock D",
+            "year": 2017,
+            "venue": "Day Case Outcomes Review",
+            "doi": "10.5555/jdso.2017.0118",
+            "providerType": "journal-article",
+            "abstract": "We reviewed 2,940 elective laparoscopic cholecystectomies booked as day cases at two hospitals. Same-day discharge failed in 21 percent. Age over 70, higher anaesthetic risk class, a start after 13:00, nausea needing rescue treatment and placement of a drain were associated with failure. A model with nine predictors had a c statistic of 0.72 in the development data. The model was not validated in other data, the authors selected predictors partly by statistical significance, and several candidate variables had more than 20 percent missing values."
+          },
+          {
+            "title": "Operating list position and same-day discharge after day-case cholecystectomy",
+            "authors": "Grieve-Nakashima R, Moreau-Obi T",
+            "year": 2020,
+            "venue": "Surgical Scheduling Research",
+            "doi": "10.5555/ssr.2020.0064",
+            "providerType": "journal-article",
+            "abstract": "In 1,810 day-case cholecystectomies, same-day discharge failed in 38 percent of operations starting after 14:00 and in 14 percent of those starting before 11:00. After adjustment for patient factors, a start after 14:00 remained strongly associated with overnight stay. Patients placed late on the list were older and had more comorbidities in one of the two hospitals, suggesting that list order was partly chosen by risk. The authors recommend that booking rules consider both patient risk and list position rather than treating list position as fixed."
+          },
+          {
+            "title": "Chart documentation of postoperative nausea and mobilisation after day surgery: agreement with direct observation",
+            "authors": "Varadi-Oyelaran K, Petrossian-Holm A",
+            "year": 2019,
+            "venue": "Perioperative Information Quality",
+            "doi": "10.5555/piq.2019.0041",
+            "providerType": "journal-article",
+            "abstract": "Trained observers recorded nausea severity and the time of first mobilisation for 420 day surgery patients and compared them with the clinical record. Nausea severity was documented in 41 percent of charts, and the time of first mobilisation in 36 percent. When documented, nausea severity agreed moderately with observation. Administration of a rescue antiemetic was recorded for almost every patient who received one. The authors conclude that charts are a poor source for nausea severity and mobilisation times but that medication records may serve as a proxy."
+          },
+          {
+            "title": "Rescue antiemetic administration as a proxy for postoperative nausea and vomiting in electronic records: a validation study",
+            "authors": "Kowalczyk-Adeyemi S, Harcourt-Lund M",
+            "year": 2022,
+            "venue": "Perioperative Information Quality",
+            "doi": "10.5555/piq.2022.0137",
+            "providerType": "journal-article",
+            "abstract": "We compared rescue antiemetic doses recorded in the electronic medication record with nurse-assessed postoperative nausea and vomiting in 1,120 day surgery patients. Agreement for clinically important nausea or vomiting was good (kappa 0.71). The proxy missed patients whose nausea was managed without medication and counted some doses given for prevention after a first episode. Agreement was similar across surgical specialties. The authors suggest the proxy is suitable for research on nausea severe enough to need treatment, but not for mild nausea."
+          },
+          {
+            "title": "Surgeon variation in same-day discharge after laparoscopic cholecystectomy: a multilevel analysis",
+            "authors": "Ruiz-Mbeki H, Sorensen-Tanaka L",
+            "year": 2021,
+            "venue": "Day Case Outcomes Review",
+            "doi": "10.5555/jdso.2021.0209",
+            "providerType": "journal-article",
+            "abstract": "Across 4,380 day-case cholecystectomies by 31 surgeons, the intraclass correlation for same-day discharge failure at the surgeon level was 0.09 after adjustment for patient factors and list position. Surgeon-level variation was explained partly by drain use and by the timing of the first postoperative review. Surgeons with lower failure rates more often discharged patients directly from the recovery area. The authors recommend accounting for surgeon clustering in prediction and quality work and caution against ranking surgeons on unadjusted rates or small numbers of cases."
+          },
+          {
+            "title": "Prediction models for discharge after day-case surgery: a systematic review of development and validation",
+            "authors": "Mistry-Okonkwo A, Castellanos-Brandt E, Nwosu-Lindgren F",
+            "year": 2023,
+            "venue": "Perioperative Prediction Reviews",
+            "doi": "10.5555/ppr.2023.0072",
+            "providerType": "journal-article",
+            "abstract": "We identified 14 prediction models for failed discharge after day-case surgery. Eleven were at high risk of bias, most often because of too few events for the number of candidate predictors (median 6 events per candidate predictor), selection of predictors by significance and no correction for optimism. Only three models were validated in data from another period or hospital, and their c statistics fell by 0.05 to 0.11. Calibration was reported for four models. The authors recommend pre-specified predictors, penalised estimation and temporal or external validation."
+          },
+          {
+            "title": "A nurse-led discharge readiness assessment after day surgery: a prospective cohort",
+            "authors": "Haddad-Whitfield N, Achebe-Soto R",
+            "year": 2015,
+            "venue": "Recovery Unit Nursing Notes",
+            "providerType": "journal-article",
+            "abstract": "In 760 day surgery patients, nurses completed a standard discharge readiness assessment four hours after surgery, covering nausea, pain, mobilisation, voiding and escort. Of patients assessed as ready, 88 percent went home the same day. The assessment took a median of 6 minutes. Patients assessed as not ready most often had nausea or had not yet walked. The assessment required a nurse dedicated to recovery follow-up for the study period, which the unit could not sustain afterwards, and assessments were missed on days when that nurse was absent."
+          },
+          {
+            "title": "Patients' views on same-day discharge after gallbladder surgery",
+            "authors": "Lemaire-Ito C, Okafor-Rasmussen D",
+            "year": 2024,
+            "venue": "Surgical Patient Experience",
+            "doi": "10.5555/spe.2024.0033",
+            "providerType": "journal-article",
+            "abstract": "We spoke with 24 patients who had day-case gallbladder surgery, of whom 9 stayed overnight unexpectedly. Patients wanted to know in advance whether an overnight stay was likely so they could arrange transport and care at home. Those converted to an overnight stay late in the evening described frustration and poor sleep on a busy ward. Patients living alone or far from the hospital were most worried about going home the same day. Participants came from one hospital and volunteered after a postal invitation."
+          }
+        ]
+      },
+      "note": "Eight records; ids are stableRecordId values (see notes).",
+      "expect": {
+        "store": {
+          "scan.retrievalEvents": {
+            "length": 1
+          },
+          "scan.retrievalEvents[0].status": "ok",
+          "scan.retrievalEvents[0].resultCount": 8,
+          "scan.retrievalEvents[0].recordIds": [
+            "ev-0b1dlj7",
+            "ev-0ccsyxj",
+            "ev-0rygewo",
+            "ev-0zygd70",
+            "ev-0nxe42j",
+            "ev-1trdl59",
+            "ev-1vuysqe",
+            "ev-1ta0eqt"
+          ],
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[6].doi": {
+            "absent": true
+          },
+          "scan.items[3].provenance.status": "retrieved",
+          "scan.gradeOverall": ""
+        },
+        "screen": {
+          "includes": [
+            "unrated",
+            "Rescue antiemetic administration as a proxy for postoperative nausea and vomiting in electronic records: a validation study"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "scan",
+      "shape": "appraisal",
+      "call": 1,
+      "response": {
+        "annotations": [
+          {
+            "id": "ev-0b1dlj7",
+            "relevance": 92,
+            "methodQuality": 50,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Same-day discharge failed in 21 percent of 2,940 procedures; age over 70, higher anaesthetic risk, a start after 13:00, rescue-treated nausea and a drain were associated with failure; a nine-predictor model reached a c statistic of 0.72 without validation.",
+            "limitations": "Predictors partly selected by significance; missing data above 20 percent for some variables; no validation.",
+            "contextTags": [
+              "predictors",
+              "development only",
+              "day surgery"
+            ]
+          },
+          {
+            "id": "ev-0ccsyxj",
+            "relevance": 88,
+            "methodQuality": 60,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Failure was 38 percent for starts after 14:00 and 14 percent for starts before 11:00; list order was partly chosen by risk in one hospital.",
+            "limitations": "Two hospitals; confounding by indication for list position.",
+            "contextTags": [
+              "list position",
+              "scheduling"
+            ]
+          },
+          {
+            "id": "ev-0rygewo",
+            "relevance": 84,
+            "methodQuality": 64,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Nausea severity was documented in 41 percent and time of first mobilisation in 36 percent of charts, while rescue antiemetic doses were almost always recorded.",
+            "limitations": "One hospital's documentation practice.",
+            "contextTags": [
+              "documentation",
+              "data quality"
+            ]
+          },
+          {
+            "id": "ev-0zygd70",
+            "relevance": 86,
+            "methodQuality": 70,
+            "kind": "observational",
+            "grade": "moderate",
+            "keyFindings": "Recorded rescue antiemetic doses agreed well with nurse-assessed clinically important nausea or vomiting (kappa 0.71) in 1,120 day surgery patients.",
+            "limitations": "Misses nausea managed without medication.",
+            "contextTags": [
+              "proxy validation",
+              "medication record"
+            ]
+          },
+          {
+            "id": "ev-0nxe42j",
+            "relevance": 80,
+            "methodQuality": 66,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "Surgeon-level intraclass correlation for failure was 0.09 across 31 surgeons after adjustment, partly explained by drain use and review timing.",
+            "limitations": "Surgeons in one region.",
+            "contextTags": [
+              "surgeon clustering",
+              "multilevel"
+            ]
+          },
+          {
+            "id": "ev-1trdl59",
+            "relevance": 90,
+            "methodQuality": 72,
+            "kind": "systematic-review",
+            "grade": "moderate",
+            "keyFindings": "Eleven of 14 day-case discharge models were at high risk of bias, with a median 6 events per candidate predictor; c statistics fell by 0.05 to 0.11 on validation.",
+            "limitations": "Mixed surgical populations.",
+            "contextTags": [
+              "prediction models",
+              "risk of bias",
+              "validation"
+            ]
+          },
+          {
+            "id": "ev-1vuysqe",
+            "relevance": 70,
+            "methodQuality": 55,
+            "kind": "observational",
+            "grade": "low",
+            "keyFindings": "A nurse-led readiness assessment at four hours took a median of 6 minutes, and 88 percent of patients assessed as ready went home the same day.",
+            "limitations": "Older study; needed a dedicated nurse the unit could not sustain.",
+            "contextTags": [
+              "readiness assessment",
+              "prospective data"
+            ]
+          },
+          {
+            "id": "ev-1ta0eqt",
+            "relevance": 72,
+            "methodQuality": 54,
+            "kind": "qualitative",
+            "grade": "low",
+            "keyFindings": "Patients wanted advance warning of a likely overnight stay; late conversions caused frustration, and patients living alone or far away worried most.",
+            "limitations": "24 volunteers from one hospital.",
+            "contextTags": [
+              "patient experience",
+              "advance planning"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "text": "In 2,940 elective laparoscopic cholecystectomies, same-day discharge failed in 21 percent, and a nine-predictor model reached a c statistic of 0.72 without validation.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0b1dlj7"
+            ],
+            "location": "Abstract",
+            "passage": "A model with nine predictors had a c statistic of 0.72 in the development data.",
+            "interpretation": "Booking-time prediction is plausible, but an unvalidated model overstates performance.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c2",
+            "text": "Nausea severity was documented in 41 percent of charts and the time of first mobilisation in 36 percent.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0rygewo"
+            ],
+            "location": "Abstract",
+            "passage": "Nausea severity was documented in 41 percent of charts, and the time of first mobilisation in 36 percent.",
+            "interpretation": "Charts are a poor source for these two variables.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c3",
+            "text": "Same-day discharge failed in 38 percent of operations starting after 14:00 and 14 percent of those starting before 11:00.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0ccsyxj"
+            ],
+            "location": "Abstract",
+            "passage": "same-day discharge failed in 38 percent of operations starting after 14:00 and in 14 percent of those starting before 11:00",
+            "interpretation": "List position is a modifiable predictor and must be handled as such.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c4",
+            "text": "Eleven of 14 day-case discharge prediction models were at high risk of bias, with a median of 6 events per candidate predictor.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1trdl59"
+            ],
+            "location": "Abstract",
+            "passage": "Eleven were at high risk of bias, most often because of too few events for the number of candidate predictors (median 6 events per candidate predictor)",
+            "interpretation": "Events per candidate predictor and validation decide whether a model is usable.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c5",
+            "text": "Rescue antiemetic doses in the electronic medication record agreed well with nurse-assessed clinically important nausea or vomiting (kappa 0.71).",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-0zygd70"
+            ],
+            "location": "Abstract",
+            "passage": "Agreement for clinically important nausea or vomiting was good (kappa 0.71).",
+            "interpretation": "Nausea needing treatment can be measured from existing records.",
+            "uncertainty": "moderate"
+          },
+          {
+            "id": "c6",
+            "text": "A nurse-led discharge readiness assessment took a median of 6 minutes, and 88 percent of patients assessed as ready went home the same day.",
+            "kind": "source-derived",
+            "sourceIds": [
+              "ev-1vuysqe"
+            ],
+            "location": "Abstract",
+            "passage": "Of patients assessed as ready, 88 percent went home the same day.",
+            "interpretation": "A prospective readiness assessment gives better variables but needs dedicated nursing time.",
+            "uncertainty": "moderate"
+          }
+        ],
+        "synthesis": "Eight retrieved records, appraised at abstract level. Booking-time predictors of failed same-day discharge are plausible (age, anaesthetic risk, rescue-treated nausea, drains, list position), but most published prediction models are at high risk of bias from too few events per candidate predictor and lack validation. Charts document nausea severity and mobilisation poorly, which supports the case for prospective data, yet rescue antiemetic doses in medication records are a validated proxy for nausea needing treatment. List position is strongly associated with failure and is partly chosen by risk, and surgeons cluster. A nurse-led readiness assessment gives good data but needs dedicated nursing time. Patients want advance warning of an overnight stay.",
+        "gradeOverall": "low",
+        "gradeRationale": "Observational development studies at risk of bias, one review of models, and validation evidence for one proxy; certainty about which predictors will perform locally is low.",
+        "summary": "Eight retrieved records appraised; six source-derived claims; certainty low."
+      },
+      "note": "Appraisal of the eight retrieved records (S13); certainty over inspected records (G1).",
+      "expect": {
+        "store": {
+          "scan.items": {
+            "length": 8
+          },
+          "scan.items[3].grade": "moderate",
+          "scan.items[3].keyFindings": {
+            "includes": "kappa 0.71"
+          },
+          "scan.claims": {
+            "length": 6
+          },
+          "scan.claims[4].sourceIds": [
+            "ev-0zygd70"
+          ],
+          "scan.claims[5].sourceIds": [
+            "ev-1vuysqe"
+          ],
+          "scan.gradeOverall": "low",
+          "completedStages": [
+            "problem",
+            "scan"
+          ]
+        },
+        "stage": {
+          "scan": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "low certainty"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "map",
+      "call": 1,
+      "response": {
+        "contexts": [
+          "regional hospital, about 620 elective cholecystectomies a year",
+          "58 percent same-day discharge",
+          "electronic medication record since 2019",
+          "2028 scheduling cycle"
+        ],
+        "reading": "Failed same-day discharge sits at the end of a chain that starts at booking: patient risk and list position shape the chance of nausea, pain and late recovery, and surgeons differ. The data question is whether the key recovery variables can be measured from existing records. The retrieved evidence says charts miss nausea severity and mobilisation, but that rescue antiemetic doses are a validated proxy, and that most published models fail through too few events and no validation.",
+        "nodes": [
+          {
+            "id": "n1",
+            "label": "Booking decision and list position",
+            "kind": "context",
+            "detail": "Currently by surgeon preference."
+          },
+          {
+            "id": "n2",
+            "label": "Patient risk at booking",
+            "kind": "context",
+            "detail": "Age, anaesthetic risk, comorbidity."
+          },
+          {
+            "id": "n3",
+            "label": "Nausea needing treatment",
+            "kind": "context",
+            "detail": "Measurable by rescue antiemetic doses (claim c5)."
+          },
+          {
+            "id": "n4",
+            "label": "Failed same-day discharge",
+            "kind": "outcome",
+            "detail": "42 percent locally."
+          },
+          {
+            "id": "n5",
+            "label": "Late list position",
+            "kind": "context",
+            "detail": "38 against 14 percent failure (claim c3)."
+          },
+          {
+            "id": "n6",
+            "label": "Surgeon clustering",
+            "kind": "context",
+            "detail": "Intraclass correlation 0.09."
+          },
+          {
+            "id": "n7",
+            "label": "Poor chart documentation",
+            "kind": "gap",
+            "detail": "Claim c2."
+          },
+          {
+            "id": "n8",
+            "label": "Overfitted published models",
+            "kind": "systematic-review",
+            "detail": "Claim c4."
+          },
+          {
+            "id": "n9",
+            "label": "Patients who need to plan transport and care",
+            "kind": "stakeholder",
+            "detail": "Want advance warning."
+          }
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "to": "n4",
+            "relation": "raises risk of"
+          },
+          {
+            "from": "n5",
+            "to": "n4",
+            "relation": "raises risk of"
+          },
+          {
+            "from": "n3",
+            "to": "n4",
+            "relation": "raises risk of"
+          },
+          {
+            "from": "n6",
+            "to": "n4",
+            "relation": "varies"
+          },
+          {
+            "from": "n7",
+            "to": "n3",
+            "relation": "limits measurement of"
+          },
+          {
+            "from": "n8",
+            "to": "n1",
+            "relation": "warns against over-trusting models for"
+          },
+          {
+            "from": "n1",
+            "to": "n9",
+            "relation": "should inform"
+          }
+        ],
+        "summary": "Map from booking to failed discharge, with measurement and overfitting as the main design risks."
+      },
+      "expect": {
+        "store": {
+          "map.nodes": {
+            "length": 9
+          },
+          "map.edges": {
+            "length": 7
+          },
+          "map.nodes[6].kind": "gap",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map"
+          ]
+        },
+        "stage": {
+          "map": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "gaps",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "g1",
+            "title": "No validated booking-time model",
+            "kind": "evidence",
+            "severity": "high",
+            "whyItMatters": "Published models are mostly at high risk of bias and rarely validated (claim c4).",
+            "opportunity": "Develop with pre-specified predictors and penalisation, and validate on a later period."
+          },
+          {
+            "id": "g2",
+            "title": "Measuring nausea and mobilisation",
+            "kind": "method",
+            "severity": "high",
+            "whyItMatters": "Charts miss nausea severity and mobilisation times (claim c2).",
+            "opportunity": "Use rescue antiemetic doses as a validated proxy (claim c5) or collect data prospectively."
+          },
+          {
+            "id": "g3",
+            "title": "List position is both a predictor and a decision",
+            "kind": "method",
+            "severity": "moderate",
+            "whyItMatters": "List order is partly chosen by risk, so its association with failure mixes cause and selection.",
+            "opportunity": "Model list position explicitly and report predictions for early and late positions."
+          },
+          {
+            "id": "g4",
+            "title": "Patients living alone or far away",
+            "kind": "equity",
+            "severity": "moderate",
+            "whyItMatters": "They worry most about same-day discharge and may be converted late.",
+            "opportunity": "Include living arrangement and travel distance as candidate predictors and report calibration for these groups."
+          },
+          {
+            "id": "g5",
+            "title": "Surgeon effects",
+            "kind": "method",
+            "severity": "watch",
+            "whyItMatters": "Surgeons cluster; ignoring it overstates precision.",
+            "opportunity": "Account for surgeon clustering and avoid ranking surgeons."
+          }
+        ],
+        "errorsFound": [
+          "The need counts 'a drain' as a patient predictor; drain placement is a surgeon decision made during the operation and is not available at booking."
+        ],
+        "reevaluation": "The gaps point to a model built with attention to events per predictor, measurement of nausea and list position, and validation.",
+        "summary": "Five gaps; validation and measurement are high severity."
+      },
+      "expect": {
+        "store": {
+          "gaps.items": {
+            "length": 5
+          },
+          "gaps.items[3].kind": "equity",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps"
+          ]
+        },
+        "stage": {
+          "gaps": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "No validated booking-time model"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "hypotheses",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "h1",
+            "statement": "A booking-time model with pre-specified predictors (age, anaesthetic risk class, body mass index, previous nausea with anaesthesia, living alone, travel distance and planned list position) discriminates failed same-day discharge with a c statistic of at least 0.70 on validation data and is well calibrated.",
+            "novelty": 45,
+            "need": 85,
+            "practiceChange": 80,
+            "feasibility": 70,
+            "parsimony": 75,
+            "rationale": "Uses predictors available at booking; the validation threshold reflects the fall seen on validation elsewhere (c4).",
+            "risks": "Too few events if data are limited; list position partly chosen by risk."
+          },
+          {
+            "id": "h2",
+            "statement": "Moving patients with a high predicted risk to the first half of the list would lower failed same-day discharge.",
+            "novelty": 50,
+            "need": 70,
+            "practiceChange": 75,
+            "feasibility": 50,
+            "parsimony": 60,
+            "rationale": "List position is strongly associated with failure (c3).",
+            "risks": "A prediction model cannot show this causal effect; it needs a later evaluation."
+          },
+          {
+            "id": "h3",
+            "statement": "Rescue antiemetic doses predict failure as well as nurse-assessed nausea severity.",
+            "novelty": 40,
+            "need": 55,
+            "practiceChange": 50,
+            "feasibility": 70,
+            "parsimony": 70,
+            "rationale": "The proxy is validated for nausea needing treatment (c5).",
+            "risks": "Misses nausea managed without medication."
+          }
+        ],
+        "selectedId": "h1",
+        "summary": "Three hypotheses; h1 is the prediction target."
+      },
+      "expect": {
+        "store": {
+          "hypotheses.items": {
+            "length": 3
+          },
+          "hypotheses.selectedId": "h1",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses"
+          ]
+        },
+        "stage": {
+          "hypotheses": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "questions",
+      "call": 1,
+      "response": {
+        "items": [
+          {
+            "id": "q1",
+            "text": "Among adults booked for elective day-case laparoscopic cholecystectomy, how well do predictors available at booking, including planned list position, predict failed same-day discharge, and how well does the model perform on data from a later period?",
+            "framework": "PECO",
+            "population": "Adults booked for elective day-case laparoscopic cholecystectomy",
+            "intervention": "Predictors available at booking (exposures)",
+            "comparator": "Not applicable: prediction of risk across patients",
+            "outcome": "Failed same-day discharge (overnight stay after a day-case booking)",
+            "time": "Day of surgery",
+            "setting": "Regional hospital day surgery unit"
+          }
+        ],
+        "finer": "Feasible with existing records and 20 analyst days, or with prospective collection if nursing time is found; interesting to the day surgery unit; novel locally; ethical under the data access approval; relevant to the 2028 scheduling cycle.",
+        "summary": "One prediction question with a validation element."
+      },
+      "expect": {
+        "store": {
+          "questions.items": {
+            "length": 1
+          },
+          "questions.items[0].framework": "PECO",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "stage": {
+          "questions": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 1,
+      "response": {
+        "recommended": "prospective",
+        "rationale": "The anaesthesia chief's concern is supported: charts record nausea severity and mobilisation poorly (c2), and a nurse-led readiness assessment captures them well (c6). A 12-month prospective cohort would measure these variables directly and could build on published predictors (c1).",
+        "alternatives": [
+          "Retrospective chart review of 2019 to 2025 procedures (not preferred: charts miss nausea severity and mobilisation)",
+          "Adopt the published nine-predictor model (refused: not validated)"
+        ],
+        "guidelines": [
+          "TRIPOD"
+        ],
+        "whyNotMoreComplex": "A multi-hospital prospective study would add generalisability the unit does not need.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Collect a prospective cohort of all elective laparoscopic cholecystectomies for 12 months from January 2027 with a standard nurse-led discharge readiness assessment at four hours, recording nausea severity and the time of first walking, and develop a booking-time prediction model from it.",
+          "question": "Which data should the booking-time prediction model be built on?",
+          "claimIds": [
+            "c1",
+            "c2",
+            "c6"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Charts miss nausea severity and mobilisation times, which a prospective assessment would capture.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c2",
+                "c6"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The prospective cohort gives too few events to develop and validate a model within the time available.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": []
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Nursing time to run the readiness assessment for 12 months",
+              "status": "unknown"
+            },
+            {
+              "id": "g2",
+              "requirement": "Analyst time for data management and modelling",
+              "status": "met",
+              "evidence": "Decision support request DS-2026-88 for about 20 analyst days, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Retrospective chart review of 2019 to 2025 procedures",
+            "Adopt the published nine-predictor model"
+          ],
+          "note": "Rests on claims c1, c2 and c6; the nursing gate has no evidence."
+        },
+        "summary": "Prospective cohort recommended; blocked until nursing time is found."
+      },
+      "note": "First decision: a prospective cohort, recommended as a proposal; the family stays the accepted prior family until acceptance (D3, S11). Its nursing gate has no evidence, so the action is blocked. selectionStatus, actionStatus and recommendedFamily require S11; claims S13; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "prospective",
+          "design.decisions": {
+            "length": 1
+          },
+          "design.decisions[-1].status": "proposed",
+          "design.decisions[-1].selectionStatus": "proposed",
+          "design.decisions[-1].actionStatus": "blocked",
+          "design.decisions[-1].recommendedFamily": "prospective",
+          "design.decisions[-1].claimIds": [
+            "c1",
+            "c2",
+            "c6"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design"
+          ]
+        },
+        "stage": {
+          "design": "complete"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The investigator accepts the first decision on the anaesthesia chief's argument: a supported selection (claims from retrieved records), so it is accepted and the family becomes prospective with basis 'explicit'; the unknown nursing gate keeps the action blocked (G7; A2 item 9; A1 A2). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "blocked",
+          "family": "prospective",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "blocked"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 1,
+      "response": {
+        "overview": "Prospective cohort of all elective day-case laparoscopic cholecystectomies for 12 months from January 2027, with a nurse-led discharge readiness assessment at four hours and booking-time predictors recorded at the booking visit.",
+        "population": "Adults booked for elective day-case laparoscopic cholecystectomy, about 620 in 12 months.",
+        "exposure": "Predictors recorded at booking (age, anaesthetic risk class, body mass index, previous nausea with anaesthesia, living alone, travel distance, planned list position) and recovery variables from the readiness assessment.",
+        "procedures": "Booking nurses record predictors on a standard form; a recovery nurse completes the readiness assessment at four hours; the outcome is taken from the discharge record.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Failed same-day discharge",
+            "measure": "Overnight stay after a day-case booking",
+            "timing": "Day of surgery",
+            "why": "The event the unit wants to predict.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Readiness at four hours",
+            "measure": "Standard readiness assessment",
+            "timing": "Four hours after surgery",
+            "why": "Links recovery variables to discharge.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "process",
+            "name": "Form completion",
+            "measure": "Proportion of patients with complete booking and readiness forms",
+            "timing": "Monthly",
+            "why": "Data completeness depends on nursing time.",
+            "patientCentered": false
+          }
+        ],
+        "feasibility": "Depends on nursing time for the readiness assessment, which is not yet funded.",
+        "biasMitigation": [
+          "Standard forms",
+          "Outcome from the discharge record"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Missing assessments when the recovery nurse is unavailable",
+            "severity": "high",
+            "note": "Depends on the nursing gate."
+          }
+        ],
+        "parsimony": {
+          "score": 70,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 1,
+          "covariateCount": 7,
+          "flags": [
+            "Seven booking-time predictors"
+          ],
+          "simplestPath": "One year of prospective data with standard forms."
+        },
+        "theoreticalFramework": "None; TRIPOD for reporting.",
+        "summary": "Prospective cohort protocol for the first decision."
+      },
+      "expect": {
+        "store": {
+          "protocol.outcomes": {
+            "length": 3
+          },
+          "protocol.population": {
+            "includes": "about 620 in 12 months"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol"
+          ]
+        },
+        "stage": {
+          "protocol": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 1,
+      "response": {
+        "designSummary": "Prediction model development from a 12-month prospective cohort.",
+        "sampleSize": "About 620 procedures in 12 months with about 42 percent overnight stays give about 260 events. The surgeons' candidate list has 18 parameters once surgeon, list position categories and splines for age are counted, giving about 14 events per candidate parameter. That is enough to fit a penalised model but leaves no independent data for validation: a split would halve the events, and a temporal validation would need a second year of prospective collection, beyond the 2028 scheduling cycle. The retrieved review found that models validated on later data lost 0.05 to 0.11 in c statistic, so an unvalidated model would overstate performance.",
+        "primaryAnalysis": "Penalised logistic regression with pre-specified predictors and bootstrap optimism correction.",
+        "secondaryAnalysis": "Calibration plot; decision curve for booking thresholds.",
+        "missingData": "Incomplete forms are expected when the recovery nurse is unavailable; multiple imputation if under 20 percent missing.",
+        "multiplicity": "Not applicable.",
+        "software": "R with glmnet and rms.",
+        "overfittingGuards": [
+          "Pre-specified predictors",
+          "Penalisation",
+          "Bootstrap optimism correction"
+        ],
+        "summary": "About 260 events: enough to fit but not to validate within the time available."
+      },
+      "note": "The Stats reply exposes a dependency back to the design: the accepted prospective plan cannot give both development and validation data before the 2028 cycle.",
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "leaves no independent data for validation"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "design",
+      "call": 2,
+      "response": {
+        "recommended": "retrospective",
+        "rationale": "The Stats stage showed that 12 months of prospective data would give about 260 events, enough to fit but not to validate a model with the planned predictors, while published models fail mostly through too few events and no validation (c4). The main reason for prospective collection, poor charting of nausea (c2), is answered by the validated rescue antiemetic proxy (c5), recorded electronically since 2019. Existing records from 2019 to 2023 give about 2,600 procedures and about 1,100 overnight stays for development, and 2024 to 2025 give a temporal validation set. List position (c3) and surgeon clustering are handled explicitly, and the published predictors (c1) inform the candidate list. Mobilisation time is available only from mid-2021 and is used in a sensitivity analysis.",
+        "alternatives": [
+          "Prospective cohort with a readiness assessment (withdrawn: too few events for development and validation before 2028, and nursing time is unfunded)",
+          "Adopt the published nine-predictor model (refused: not validated and built partly by significance testing)"
+        ],
+        "guidelines": [
+          "TRIPOD"
+        ],
+        "whyNotMoreComplex": "A prospective multi-year collection would delay recommendations and repeat what existing records can provide with a validated proxy.",
+        "decision": {
+          "kind": "pursue",
+          "statement": "Develop the booking-time model from the existing records of 2019 to 2023, with rescue antiemetic doses as the measure of nausea needing treatment and list position and surgeon handled explicitly, and validate it on the 2024 to 2025 records, replacing the prospective cohort.",
+          "question": "Which data should the booking-time prediction model be built on?",
+          "claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "criteria": [
+            {
+              "id": "k1",
+              "text": "Existing records hold enough events to develop a penalised model with the planned predictors and validate it on a later period.",
+              "role": "justifies",
+              "status": "met",
+              "claimIds": [
+                "c4"
+              ]
+            },
+            {
+              "id": "k2",
+              "text": "The rescue antiemetic proxy fails the local check against 100 sampled charts.",
+              "role": "defeats",
+              "status": "unknown",
+              "claimIds": [
+                "c5"
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "id": "g1",
+              "requirement": "Data access approval for electronic health record and theatre management data",
+              "status": "met",
+              "evidence": "Data access committee approval DAC-2026-51 dated 2026-09-02, supplied by the investigator"
+            },
+            {
+              "id": "g2",
+              "requirement": "Analyst time for data management and modelling",
+              "status": "met",
+              "evidence": "Decision support request DS-2026-88 for about 20 analyst days, supplied by the investigator"
+            }
+          ],
+          "alternatives": [
+            "Prospective cohort with a readiness assessment (withdrawn)",
+            "Adopt the published nine-predictor model"
+          ],
+          "note": "Replaces the accepted prospective decision, which the investigator withdraws: the Stats stage showed that 12 months of prospective data would give too few events to develop and validate a model with the planned predictors (c4), while the validated antiemetic proxy (c5) removes the main reason for prospective collection."
+        },
+        "summary": "Retrospective development and temporal validation recommended; the earlier prospective decision is to be withdrawn by the investigator."
+      },
+      "note": "Second decision, proposed while the first is still accepted: an accepted decision is not superseded automatically (only proposed ones are), so both are listed until the investigator acts. The revised design is consequential, so the completed Protocol and Stats stages are flagged for review (G8). recommendedFamily and selectionStatus require S11; status text D5.",
+      "expect": {
+        "store": {
+          "design.recommended": "retrospective",
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].selectionStatus": "accepted",
+          "design.decisions[1].selectionStatus": "proposed",
+          "design.decisions[1].recommendedFamily": "retrospective",
+          "design.decisions[1].claimIds": [
+            "c1",
+            "c3",
+            "c4",
+            "c5"
+          ],
+          "needsReview": [
+            "protocol",
+            "stats"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "design": "complete",
+          "protocol": "needs-review",
+          "stats": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "proposed",
+            "accepted",
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "withdraw-decision",
+      "which": 0,
+      "note": "The investigator withdraws the first, accepted decision; it stays in the history as withdrawn, never erased (G7; S11).",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].status": "withdrawn",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "design.decisions[1].selectionStatus": "proposed"
+        },
+        "screen": {
+          "includes": [
+            "withdrawn",
+            "proposed"
+          ]
+        }
+      }
+    },
+    {
+      "do": "accept-decision",
+      "which": "latest",
+      "note": "The second decision is a supported positive: four claims from retrieved records and both gates met on investigator-supplied records, so the selection is accepted and the action ready; the family becomes retrospective with basis 'explicit' (G7; A1 A2). Requires S11 and D5.",
+      "expect": {
+        "store": {
+          "design.decisions[-1].status": "accepted",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "family": "retrospective",
+          "design.basis": "explicit"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "ready",
+            "withdrawn"
+          ]
+        }
+      }
+    },
+    {
+      "do": "reload",
+      "note": "Reload on the Design route: the withdrawn first decision, the accepted second decision and the review flags must all survive (G7, G8).",
+      "expect": {
+        "store": {
+          "design.decisions": {
+            "length": 2
+          },
+          "design.decisions[0].selectionStatus": "withdrawn",
+          "design.decisions[-1].selectionStatus": "accepted",
+          "design.decisions[-1].actionStatus": "ready",
+          "needsReview": [
+            "protocol",
+            "stats"
+          ],
+          "family": "retrospective"
+        },
+        "stage": {
+          "protocol": "needs-review",
+          "stats": "needs-review"
+        },
+        "screen": {
+          "includes": [
+            "accepted",
+            "withdrawn",
+            "review required"
+          ],
+          "excludes": [
+            "no recorded response",
+            "did not return JSON"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "protocol",
+      "call": 2,
+      "response": {
+        "overview": "Retrospective development of a booking-time prediction model for failed same-day discharge after elective laparoscopic cholecystectomy, using 2019 to 2023 records for development and 2024 to 2025 records for temporal validation.",
+        "population": "All adults booked for elective day-case laparoscopic cholecystectomy from January 2019 to December 2025 (about 3,690 procedures); first procedure per patient.",
+        "exposure": "Pre-specified booking-time predictors: age, anaesthetic risk class, body mass index, previous nausea with anaesthesia, diabetes, living alone, travel distance and planned list position (first half or second half, and start after 13:00).",
+        "procedures": "The analyst extracts booking, theatre, medication and discharge data under approval DAC-2026-51. Nausea needing treatment is taken from rescue antiemetic doses in the medication record, checked first against 100 randomly sampled charts. Time of first walking, available from mid-2021, is used only in a sensitivity analysis. Surgeon is recorded for clustering.",
+        "outcomes": [
+          {
+            "id": "o1",
+            "role": "primary",
+            "name": "Failed same-day discharge",
+            "measure": "Overnight stay after a day-case booking, from the discharge record",
+            "timing": "Day of surgery",
+            "why": "The event the booking model predicts.",
+            "patientCentered": true
+          },
+          {
+            "id": "o2",
+            "role": "secondary",
+            "name": "Model calibration on validation data",
+            "measure": "Calibration intercept and slope in 2024 to 2025",
+            "timing": "Validation period",
+            "why": "A booking tool must be calibrated to be usable.",
+            "patientCentered": false
+          },
+          {
+            "id": "o3",
+            "role": "secondary",
+            "name": "Discrimination on validation data",
+            "measure": "c statistic in 2024 to 2025",
+            "timing": "Validation period",
+            "why": "Shows the fall from development seen elsewhere (claim c4).",
+            "patientCentered": false
+          },
+          {
+            "id": "o4",
+            "role": "balancing",
+            "name": "Unplanned readmission within 7 days after same-day discharge",
+            "measure": "Readmission from hospital records",
+            "timing": "7 days",
+            "why": "Guards against a model that sends home patients who should stay.",
+            "patientCentered": true
+          }
+        ],
+        "feasibility": "About 20 analyst days: 8 for extraction and cleaning, 2 for the proxy check support, 7 for modelling and validation, 3 for reporting.",
+        "biasMitigation": [
+          "Predictors fixed before extraction",
+          "Temporal validation on a later period",
+          "Proxy checked against sampled charts",
+          "Surgeon clustering handled",
+          "List position modelled explicitly and interpreted as partly chosen by risk"
+        ],
+        "biasFlags": [
+          {
+            "id": "b1",
+            "label": "Measurement of nausea by proxy",
+            "severity": "watch",
+            "note": "Misses nausea managed without medication."
+          },
+          {
+            "id": "b2",
+            "label": "Changes in practice over 2019 to 2025",
+            "severity": "watch",
+            "note": "Temporal validation shows the effect of drift."
+          },
+          {
+            "id": "b3",
+            "label": "List position chosen by risk",
+            "severity": "high",
+            "note": "Predictions by list position are not causal effects."
+          }
+        ],
+        "parsimony": {
+          "score": 78,
+          "primaryOutcomeCount": 1,
+          "secondaryOutcomeCount": 2,
+          "covariateCount": 8,
+          "flags": [
+            "Eight pre-specified predictors; no selection by significance"
+          ],
+          "simplestPath": "One penalised model, one temporal validation, one calibration plot."
+        },
+        "theoreticalFramework": "None; TRIPOD for development and validation reporting.",
+        "summary": "Retrospective development and temporal validation protocol aligned with the accepted second decision."
+      },
+      "note": "Re-running Protocol after the design change re-reviews it: its flag clears, Stats stays flagged (G8).",
+      "expect": {
+        "store": {
+          "protocol.population": {
+            "includes": "about 3,690 procedures"
+          },
+          "protocol.outcomes": {
+            "length": 4
+          },
+          "needsReview": [
+            "stats"
+          ],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "protocol": "complete",
+          "stats": "needs-review"
+        },
+        "issues": {
+          "count": 0
+        },
+        "screen": {
+          "includes": [
+            "review required"
+          ]
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "stats",
+      "call": 2,
+      "response": {
+        "designSummary": "Development of a penalised logistic model on 2019 to 2023 records and temporal validation on 2024 to 2025 records, with surgeon clustering.",
+        "sampleSize": "Development data from 2019 to 2023 hold about 2,600 procedures and, at about 42 percent failure, about 1,100 events; with eight pre-specified predictors and about 12 parameters after categories and splines, that is about 90 events per parameter, well above the level at which the retrieved review found overfitting (median 6 events per candidate predictor). Minimum sample size criteria for a model of this size (expected shrinkage of at least 0.9 and precise estimation of the overall risk) are met with a wide margin. The 2024 to 2025 validation set holds about 1,050 procedures and about 440 events, above the usual minimum of 200 events for precise calibration.",
+        "primaryAnalysis": "Logistic regression with ridge penalisation on the pre-specified predictors, age modelled with restricted cubic splines, surgeon as a random intercept in a sensitivity model, and bootstrap optimism correction for apparent performance.",
+        "secondaryAnalysis": "Temporal validation: c statistic, calibration intercept and slope, and a calibration plot on 2024 to 2025; decision curve analysis for booking thresholds; sensitivity analysis adding time of first walking from mid-2021; calibration reported for patients living alone and for those living more than an hour away.",
+        "missingData": "Body mass index and living alone are expected to be missing in about 8 percent; multiple imputation by chained equations with 20 imputations including the outcome, with imputation applied separately in development and validation data.",
+        "multiplicity": "Not applicable to a prediction model; no significance testing of individual predictors.",
+        "software": "R with rms, glmnet and mice.",
+        "overfittingGuards": [
+          "Predictors fixed before extraction",
+          "No selection by significance",
+          "Penalised estimation with bootstrap optimism correction",
+          "Temporal validation on data never used for development"
+        ],
+        "summary": "About 1,100 development events and 440 validation events support a penalised model with temporal validation."
+      },
+      "note": "The re-run Stats stage follows the accepted second decision and clears its review flag (G8).",
+      "expect": {
+        "store": {
+          "stats.sampleSize": {
+            "includes": "about 1,100 events"
+          },
+          "needsReview": [],
+          "stats.overfittingGuards": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats"
+          ]
+        },
+        "stage": {
+          "stats": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "ethics",
+      "call": 1,
+      "response": {
+        "risks": "Low: secondary use of existing records. A booking model could disadvantage patients if it steers older or isolated patients away from day surgery without reason.",
+        "consent": "Individual consent is impracticable for about 3,690 past procedures; the work proceeds under data access approval DAC-2026-51 with a request to the research ethics board for a waiver of consent.",
+        "data": "Extraction on the hospital analytics server; record numbers replaced by study codes; no data leave the hospital.",
+        "equity": "PROGRESS-Plus: older patients, patients living alone and those living far from the hospital are more likely to be predicted to stay. Calibration is reported for these groups, and the booking rule offers planning support (transport, early list position) rather than excluding them from day surgery.",
+        "effectiveness": "Success is a validated, calibrated booking tool the unit can use in its 2028 scheduling cycle.",
+        "efficiency": "About 20 analyst days and existing data.",
+        "costs": "No new costs.",
+        "grants": "None needed; an evaluation of booking changes informed by the model could seek hospital improvement funding.",
+        "partnerships": "Booking nurses, surgeons, the anaesthesia chief, the day surgery unit manager and a patient partner who stayed overnight unexpectedly.",
+        "rebPath": "Research ethics board review with a request for waiver of consent for secondary use, under the TCPS 2 and ICH-GCP principles; the data access approval is in place.",
+        "limitations": "Proxy measure of nausea; practice drift over seven years; list position partly chosen by risk.",
+        "summary": "Secondary use with a consent waiver request and equity-aware calibration reporting."
+      },
+      "expect": {
+        "store": {
+          "ethics.consent": {
+            "includes": "waiver of consent"
+          },
+          "ethics.equity": {
+            "includes": "PROGRESS-Plus"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics"
+          ]
+        },
+        "stage": {
+          "ethics": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "voices",
+      "call": 1,
+      "response": {
+        "partnershipPlan": "A patient partner who stayed overnight unexpectedly and two booking nurses review the booking tool's wording and the plain-language summary.",
+        "socialListening": "No social media listening; comments from the day surgery unit's feedback cards about overnight stays are themed.",
+        "items": [
+          {
+            "id": "v1",
+            "source": "patient",
+            "theme": "Late conversion",
+            "quote": "Composite paraphrase: My son had taken the afternoon off to drive me home, and at seven they told me I was staying.",
+            "implication": "Predict at booking so patients can plan.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v2",
+            "source": "patient",
+            "theme": "Living alone",
+            "quote": "Composite paraphrase: Nobody at home that night; I would rather have known I was staying from the start.",
+            "implication": "Report calibration for patients living alone.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v3",
+            "source": "clinician",
+            "theme": "Nausea on the chart",
+            "quote": "Composite paraphrase: We write 'nauseous' or nothing; the antiemetic chart is what really tells you.",
+            "implication": "Use and check the rescue antiemetic proxy.",
+            "verification": "ai-lead"
+          },
+          {
+            "id": "v4",
+            "source": "clinician",
+            "theme": "The list",
+            "quote": "Composite paraphrase: The last case of the day is the one that stays; we know that, and still book it there.",
+            "implication": "Model list position and use the result in booking rules.",
+            "verification": "ai-lead"
+          }
+        ],
+        "summary": "Four composite voices on late conversion, living alone, nausea documentation and list order."
+      },
+      "expect": {
+        "store": {
+          "voices.items": {
+            "length": 4
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices"
+          ]
+        },
+        "stage": {
+          "voices": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "manuscript",
+      "call": 1,
+      "response": {
+        "title": "Booking-time prediction of failed same-day discharge after elective laparoscopic cholecystectomy: development and temporal validation",
+        "abstract": "Objective: to develop and temporally validate a booking-time model predicting failed same-day discharge after elective laparoscopic cholecystectomy. Design: retrospective development on 2019 to 2023 records and validation on 2024 to 2025 records at one hospital. Predictors: eight pre-specified booking-time variables including planned list position. Results and conclusions will be written after the analysis.",
+        "introduction": "Many patients booked as day cases stay overnight after late conversion. Published models are mostly at high risk of bias and rarely validated, and charts record nausea poorly, although medication records offer a validated proxy.",
+        "methods": "Penalised logistic regression with pre-specified predictors, bootstrap optimism correction, surgeon clustering in a sensitivity model, and temporal validation with calibration and decision curves. Nausea needing treatment is measured from rescue antiemetic doses, checked against sampled charts. TRIPOD reporting.",
+        "results": "No data have been analysed yet. The report will present the cohort flow, model coefficients, apparent and optimism-corrected performance, validation discrimination and calibration, and decision curves.",
+        "discussion": "The discussion will consider how the unit could use the model at booking, the limits of the nausea proxy, practice drift and the non-causal meaning of list position.",
+        "limitations": "One hospital; proxy measurement of nausea; list position partly chosen by risk.",
+        "conclusion": "To be written after analysis; it will not claim that moving patients on the list reduces overnight stays.",
+        "reportingChecklist": "TRIPOD",
+        "summary": "TRIPOD-structured draft with results left empty."
+      },
+      "expect": {
+        "store": {
+          "manuscript.reportingChecklist": "TRIPOD",
+          "manuscript.results": {
+            "includes": "No data have been analysed yet"
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "manuscript": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "set-field",
+      "path": "audit.improvementNotes",
+      "value": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
+      "note": "In-flight edit (G6). The investigator clicked Illuminate for Audit first: the runner issues that request (audit call 1, carrying the studyRevision captured before this edit) and holds its replay reply; then the investigator writes this note in the audit notes on screen; the held reply is released by the next step. The note is the investigator's own text and substantive audit content, which counts in the study revision (A3.2 item D27).",
+      "expect": {
+        "store": {
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
+          "audit.openFixes": {
+            "length": 0
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ]
+        },
+        "stage": {
+          "audit": "incomplete"
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 1,
+      "response": {
+        "openFixes": [
+          "Check the rescue antiemetic proxy against sampled charts before modelling",
+          "Record the withdrawal of the prospective decision in the study log",
+          "Run identity checks on the eight retrieved records before the report cites them"
+        ],
+        "improvementNotes": "The design moved from a prospective cohort to retrospective development with temporal validation after the Stats stage; the proxy for nausea is validated elsewhere.",
+        "lastReview": "2026-09-22",
+        "summary": "Three open fixes before extraction."
+      },
+      "note": "Late reply (G6): this Audit reply was requested before the investigator's note and is released only now. Substantive audit content is part of the study revision (D27, under S10's revision coverage; at 875fe59 studyRevision excludes the whole audit object, so the reply would be merged and then dropped by the L1.6 store defect). The application must refuse it: the investigator's note stays, no open fix is written, the Audit stage stays incomplete, and the refusal is shown and logged.",
+      "expect": {
+        "store": {
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
+          "audit.openFixes": {
+            "length": 0
+          },
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript"
+          ],
+          "audit.entries[0].summary": {
+            "matches": "[Rr]efused"
+          }
+        },
+        "stage": {
+          "audit": "incomplete"
+        },
+        "error": {
+          "shown": true
+        }
+      }
+    },
+    {
+      "do": "illuminate",
+      "stage": "audit",
+      "call": 2,
+      "response": {
+        "openFixes": [
+          "Check the rescue antiemetic proxy against 100 randomly sampled charts before any model is fitted (investigator note)",
+          "Report nausea as nausea needing treatment, not as severity (investigator note)",
+          "Keep the withdrawn prospective decision in the record with its reason",
+          "Run identity checks on the eight retrieved records before the report cites them"
+        ],
+        "lastReview": "2026-09-22",
+        "summary": "Four open fixes, two of them from the investigator's note; the note itself is left as written."
+      },
+      "omitKeys": [
+        "improvementNotes"
+      ],
+      "note": "A fresh Audit reply requested after the note: applied. It omits improvementNotes, so the investigator's text is kept (an omitted key never overwrites; G11 by analogy for investigator-entered notes). The patch is expected to be stored; at 875fe59 the L1.6 store defect drops it.",
+      "expect": {
+        "store": {
+          "audit.openFixes": {
+            "length": 4
+          },
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
+          "audit.lastReview": "2026-09-22",
+          "needsReview": [],
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ]
+        },
+        "stage": {
+          "audit": "complete"
+        },
+        "issues": {
+          "count": 0
+        }
+      }
+    },
+    {
+      "do": "reopen",
+      "expect": {
+        "store": {
+          "title": "Booking-time predictors of same-day discharge after elective laparoscopic cholecystectomy",
+          "completedStages": [
+            "problem",
+            "scan",
+            "map",
+            "gaps",
+            "hypotheses",
+            "questions",
+            "design",
+            "protocol",
+            "stats",
+            "ethics",
+            "voices",
+            "manuscript",
+            "audit"
+          ],
+          "needsReview": [],
+          "family": "retrospective",
+          "audit.improvementNotes": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
+          "audit.openFixes": {
+            "length": 4
+          },
+          "design.decisions": {
+            "length": 2
+          },
+          "stats.sampleSize": {
+            "includes": "about 1,100 events"
+          }
+        },
+        "screen": {
+          "includes": [
+            "Booking-time predictors of same-day discharge after elective laparoscopic cholecystectomy"
+          ]
+        }
+      }
+    },
+    {
+      "do": "export",
+      "note": "The export carries both decisions with their statuses, the investigator's audit note and nothing from the refused late Audit reply (G6, G7, G10). selectionStatus and actionStatus require S11.",
+      "expect": {
+        "export": {
+          "equalsStore": true,
+          "path": {
+            "completedStages": [
+              "problem",
+              "scan",
+              "map",
+              "gaps",
+              "hypotheses",
+              "questions",
+              "design",
+              "protocol",
+              "stats",
+              "ethics",
+              "voices",
+              "manuscript",
+              "audit"
+            ],
+            "family": "retrospective",
+            "design.decisions[0].status": "withdrawn",
+            "design.decisions[0].selectionStatus": "withdrawn",
+            "design.decisions[-1].selectionStatus": "accepted",
+            "design.decisions[-1].actionStatus": "ready",
+            "design.decisions[-1].claimIds": [
+              "c1",
+              "c3",
+              "c4",
+              "c5"
+            ],
+            "audit.improvementNotes": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
+            "audit.openFixes": {
+              "length": 4
+            }
+          }
+        },
+        "downloads": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

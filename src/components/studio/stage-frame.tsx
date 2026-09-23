@@ -129,6 +129,11 @@ export function StageFrame({
           {partialNotice}
         </p>
       ) : null}
+      {last && last.stage === stage && last.ok === false ? (
+        <p role="alert" data-meridian-error="" className="mb-4 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm">
+          {last.error || last.summary}
+        </p>
+      ) : null}
       <label className="mb-8 block">
         <span className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
           Steer this stage (optional)

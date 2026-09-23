@@ -1,6 +1,6 @@
 {
   "id": "sc-084",
-  "version": 1,
+  "version": 2,
   "title": "Mixed ICU: missed early mobilisation and weakness, case-control with unusual outcome roles, late audit reply refused",
   "field": "critical-care",
   "level": 5,
@@ -1165,78 +1165,16 @@
         "lastReview": "2026-09-22",
         "summary": "One open fix."
       },
-      "note": "Held reply (G6): the runner sends this audit request, captures studyRevision, holds the reply while the next step (the investigator's edit of the open fixes) runs, and releases it at the wait step after that. Nothing is applied yet.",
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Held reply (G6): the runner sends this audit request, captures studyRevision, holds the reply while the next step (the investigator's edit of the open fixes) runs, and releases it at the release after that. Nothing is applied yet. After the release: The held reply, produced against the earlier revision, is refused: the investigator's open fixes are not replaced by the model's list, nothing else is applied, and the refusal is shown and logged (G6). At 875fe59 studyRevision excludes the audit object, so the reply would be accepted; requires D27 (under S10).",
       "expect": {
-        "store": {
-          "audit.openFixes": {
-            "length": 0
-          },
-          "audit.lastReview": {
-            "absent": true
-          },
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol",
-            "stats",
-            "ethics",
-            "voices",
-            "manuscript"
-          ]
-        },
-        "stage": {
-          "audit": "incomplete"
-        }
-      }
-    },
-    {
-      "do": "set-field",
-      "path": "audit.openFixes",
-      "value": [
-        "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
-        "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
-        "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
-      ],
-      "note": "The investigator writes the audit's open fixes by hand while the request is pending; with D27 substantive audit content is part of studyRevision.",
-      "expect": {
-        "store": {
-          "audit.openFixes": [
-            "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
-            "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
-            "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
-          ]
-        },
-        "stage": {
-          "audit": "incomplete"
-        }
-      }
-    },
-    {
-      "do": "wait",
-      "ms": 2000,
-      "note": "The held reply, produced against the earlier revision, is refused: the investigator's open fixes are not replaced by the model's list, nothing else is applied, and the refusal is shown and logged (G6). At 875fe59 studyRevision excludes the audit object, so the reply would be accepted; requires D27 (under S10).",
-      "expect": {
-        "error": {
-          "shown": true,
-          "includes": "changed since the request"
-        },
         "store": {
           "audit.openFixes": [
             "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
             "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
             "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
           ],
-          "audit.improvementNotes": "",
           "audit.lastReview": {
             "absent": true
-          },
-          "audit.entries[0].summary": {
-            "includes": "refused"
           },
           "completedStages": [
             "problem",
@@ -1251,12 +1189,45 @@
             "ethics",
             "voices",
             "manuscript"
-          ]
+          ],
+          "audit.improvementNotes": "",
+          "audit.entries[0].summary": {
+            "includes": "refused"
+          }
         },
         "stage": {
           "audit": "incomplete"
+        },
+        "error": {
+          "shown": true,
+          "includes": "changed since the request"
         }
-      }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "audit.openFixes",
+          "value": [
+            "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
+            "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
+            "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
+          ],
+          "note": "The investigator writes the audit's open fixes by hand while the request is pending; with D27 substantive audit content is part of studyRevision. Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "audit.openFixes": [
+                "Investigator: agree the eligibility rule for each day with the intensivists before extraction",
+                "Investigator: decide whether the day-3 mobility score accuracy is a secondary aim; its outcome was dropped from the protocol because its role was not valid",
+                "Investigator: do not report excess ICU days as a cost of weakness caused by missed mobilisation"
+              ]
+            },
+            "stage": {
+              "audit": "incomplete"
+            }
+          }
+        }
+      ]
     },
     {
       "do": "mark-complete",
@@ -1419,5 +1390,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-084.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
 }

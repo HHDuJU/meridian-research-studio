@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { applyDecision, decisionIsSupported, evaluateDecision, evidenceRevision, studyRevision } from "../src/lib/evidence/decision";
+import { ingestRecords } from "../src/lib/evidence/records";
 import { createStudy } from "../src/lib/defaults";
 import { useStudio } from "../src/lib/store";
 import { studyToJson } from "../src/lib/export";
@@ -148,15 +149,19 @@ test("accept_narrow_without_claims_sets_selection_accepted_action_blocked", () =
   assert.equal(s.design.basis, "explicit");
 });
 
-test("accept_implementation_without_claims_sets_selection_accepted_action_blocked", () => {
+test("accept_implementation_with_retrieved_claim_sets_family_and_blocks_action", () => {
   const created = S().create({ family: "economic", setting: "s", rawNeed: "n" });
   const s0 = S().studies.find((x) => x.id === created.id)!;
+  const { items } = ingestRecords([{ title: "Ward pathway", year: 2021, authors: "A", abstract: "Twelve patients." }], { id: "ret-s11", provider: "fixture" });
+  items[0].provenance.status = "retrieved";
+  s0.scan.items = items;
+  s0.scan.claims = [{ id: "c-ret", text: "Twelve patients were studied", kind: "source-derived", sourceIds: [items[0].id], uncertainty: "moderate", supportStatus: "supported" }];
   const applied = applyDecision(
     {
       kind: "implementation",
       statement: "Run a hybrid implementation study",
       question: "q",
-      claimIds: [],
+      claimIds: ["c-ret"],
       recommendedFamily: "implementation",
       gates: [{ id: "g1", requirement: "data office approval", status: "unknown" }],
       alternatives: ["Model now"],

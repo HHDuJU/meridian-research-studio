@@ -44,7 +44,7 @@ export function StudioView({ study, stage }: { study: Study; stage: StageId }) {
   }, [study.replayKey]);
 
   return (
-    <div className="flex min-h-dvh bg-background">
+    <div className="flex min-h-dvh bg-background" data-meridian-hydrated="true" data-meridian-stage-panel={stage}>
       <aside className="sticky top-0 hidden h-dvh w-[17.5rem] shrink-0 flex-col bg-spine text-spine-foreground lg:flex">
         <div className="px-5 py-5">
           <Wordmark invert />
@@ -91,6 +91,12 @@ export function StudioView({ study, stage }: { study: Study; stage: StageId }) {
           <p className="mt-1.5 font-mono text-[11px] tabular-nums text-spine-muted">
             {done}/{STAGES.length} stages
           </p>
+          {!study.scan.gradeOverall && (study.scan.items.length > 0 || (study.scan.retrievalEvents ?? []).length > 0) ? (
+            <p className="mt-2 text-xs text-spine-muted">Certainty not assessed</p>
+          ) : null}
+          {study.scan.items.some((i) => i.grade === "unrated") ? (
+            <p className="text-xs text-spine-muted">unrated</p>
+          ) : null}
         </div>
         <ScrollArea className="flex-1 px-2 pb-6">
           <PipelineList study={study} stage={stage} invert />

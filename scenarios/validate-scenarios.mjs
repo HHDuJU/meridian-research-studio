@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// validate-scenarios.mjs: checks Meridian usage-scenario files against SCENARIO_FORMAT.md, format version 1.1.
-// Validator revision 1.2 (2026-09-22). Revision 1.1 is kept as bank-samples/original-v1/validate-scenarios.v1-1.mjs.
+// validate-scenarios.mjs: checks Meridian usage-scenario files against SCENARIO_FORMAT.md, format version 1.2.
+// Validator revision 1.3 (2026-09-22, the late illuminate step with its during actions). Revision 1.2 is kept as
+// bank-samples/original-v1/validate-scenarios.v1-2.mjs, revision 1.1 as validate-scenarios.v1-1.mjs there.
 //
 // Usage: node validate-scenarios.mjs <dir> [--forbidden <terms.txt>] [--index <INDEX.json>]
 //   <dir>         folder whose *.json files are scenarios. Subfolders are not read. Bank metadata files (a name
@@ -50,8 +51,8 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 
-const FORMAT_VERSION = "1.1";
-const VALIDATOR_REVISION = "1.2";
+const FORMAT_VERSION = "1.2";
+const VALIDATOR_REVISION = "1.3";
 
 const FIELDS = [
   "anesthesia", "pain-medicine", "critical-care", "emergency-medicine", "surgery", "obstetrics", "pediatrics",
@@ -149,7 +150,7 @@ const FIXTURE_DOI_PREFIX = "10.5555/";
 const STEP_SPECS = {
   create: { required: [], optional: [] },
   retrieve: { required: ["provider", "query", "response"], optional: [] },
-  illuminate: { required: ["stage"], optional: ["shape", "response", "responseText", "call", "omitKeys"] },
+  illuminate: { required: ["stage"], optional: ["shape", "response", "responseText", "call", "omitKeys", "late", "during"] },
   "confirm-empty-search": { required: [], optional: [] },
   "set-field": { required: ["path", "value"], optional: [] },
   "accept-decision": { required: ["which"], optional: [] },
@@ -165,6 +166,9 @@ const STEP_SPECS = {
 const CONSEQUENTIAL = ["retrieve", "illuminate", "confirm-empty-search", "accept-decision", "withdraw-decision", "change-source", "set-field", "mark-complete"];
 const OUTCOME_KEYS = ["store", "stage", "issues", "error"];
 const COMMON_STEP_KEYS = ["do", "expect", "stopOnFail", "note"];
+// Format 1.2: investigator actions a late illuminate step holds its reply across (SCENARIO_FORMAT.md, "Late replies").
+const DURING_KINDS = ["set-field", "confirm-empty-search", "accept-decision", "withdraw-decision", "change-source", "mark-complete"];
+const DURING_MAX = 3;
 const EXPECT_KEYS = ["store", "screen", "issues", "export", "stage", "error", "downloads"];
 const STAGE_STATES = ["complete", "incomplete", "needs-review"];
 const PREDICATE_KEYS = ["oneOf", "includes", "length", "min", "max", "isNull", "absent", "notEquals", "matches"];
@@ -560,6 +564,7 @@ function validateFile(file, forbidden) {
   let decisionSteps = 0;
   let lastDecision = null; // { do, i, acceptedStated, decision } of the latest accept-decision or withdraw-decision
   let lastConsequential = -1;
+  let lateIndex = -1;
   const exportEqual = [];
   const changeSources = [];
   const g2Steps = [];
@@ -816,6 +821,46 @@ function validateFile(file, forbidden) {
     for (const k of spec.required) if (!has(step, k)) fail("step-schema", where, `do "${step.do}" requires "${k}"`);
     if (has(step, "stopOnFail") && typeof step.stopOnFail !== "boolean") fail("step-schema", `${where}.stopOnFail`, "must be a boolean");
     if (has(step, "note") && (typeof step.note !== "string" || !step.note.trim() || step.note.length > LIMITS.stepNoteChars)) fail("step-schema", `${where}.note`, `must be a non-empty string of at most ${LIMITS.stepNoteChars} characters`);
+    // Format 1.2, late replies: an illuminate step may hold its recorded reply while the investigator acts.
+    let duringSteps = [];
+    if (step.do === "illuminate") {
+      if (has(step, "late") && typeof step.late !== "boolean") fail("step-schema", `${where}.late`, "must be a boolean");
+      if (step.late === true && (!Array.isArray(step.during) || step.during.length === 0)) fail("step-schema", `${where}.late`, "late: true needs a non-empty during array: the investigator actions the runner applies through the screen after the request is dispatched and before the recorded reply is released");
+      if (has(step, "during") && step.late !== true) fail("step-schema", `${where}.during`, "during needs late: true on the same illuminate step");
+      if (Array.isArray(step.during)) {
+        if (step.during.length > DURING_MAX) fail("step-schema", `${where}.during`, `at most ${DURING_MAX} actions are applied while a reply is held (got ${step.during.length})`);
+        step.during.forEach((d, k) => {
+          const w = `${where}.during[${k}]`;
+          if (!isObj(d)) { fail("step-schema", w, "must be an object"); return; }
+          if (!DURING_KINDS.includes(d.do)) { fail("step-schema", `${w}.do`, `${show(d.do)} is not an investigator action a held reply can span (one of ${DURING_KINDS.join(", ")}); model calls, retrieval, reload, reopen, export and wait are never nested`); return; }
+          const dspec = STEP_SPECS[d.do];
+          const dallowed = ["do", "expect", "note", ...dspec.required, ...dspec.optional];
+          for (const kk of Object.keys(d)) if (!dallowed.includes(kk)) fail("step-schema", `${w}.${kk}`, `unknown field for a during action "${d.do}"`);
+          for (const kk of dspec.required) if (!has(d, kk)) fail("step-schema", w, `during action "${d.do}" requires "${kk}"`);
+          if (has(d, "note") && (typeof d.note !== "string" || !d.note.trim() || d.note.length > LIMITS.stepNoteChars)) fail("step-schema", `${w}.note`, `must be a non-empty string of at most ${LIMITS.stepNoteChars} characters`);
+          const dex = has(d, "expect") ? d.expect : undefined;
+          const outcome = isObj(dex) && OUTCOME_KEYS.some((kk) => isObj(dex[kk]) && Object.keys(dex[kk]).length > 0);
+          if (!outcome) fail("outcome-check", w, `a during action (do "${d.do}") needs an expect with at least one store, stage, issues or error check that states the study after the edit, before the held reply is released`);
+          if (d.do === "set-field") {
+            if (typeof d.path !== "string") fail("step-schema", `${w}.path`, "must be a string");
+            else {
+              checkStorePath(d.path, `${w}.path`);
+              if (d.path === "problem.constraints") { typedConstraints = typeof d.value === "string" ? d.value : ""; constraintsSource = `as set on screen at ${w}`; constraintDefects = []; }
+              if (d.path === "problem.rawNeed") { typedNeed = typeof d.value === "string" ? d.value : null; needSource = `as set on screen at ${w}`; }
+            }
+          }
+          if (d.do === "change-source") {
+            if (!SOURCE_FIELDS.includes(d.field)) fail("step-schema", `${w}.field`, `must be one of ${SOURCE_FIELDS.join(", ")}`);
+            if (d.field === "status" && !SOURCE_STATUSES.includes(d.value)) fail("step-schema", `${w}.value`, `must be one of ${SOURCE_STATUSES.join(", ")}`);
+          }
+          if (dex !== undefined) checkExpect(dex, d, `${w}.expect`);
+          duringSteps.push(d);
+        });
+        if (step.late === true && isObj(has(step, "expect") ? step.expect : undefined) && !isObj(step.expect.error)) warn("step-schema", `${where}.expect`, "a late reply is produced against the revision before the during actions; if any of them changed the study the reply is refused (G6): expect.error.shown true and the refusal text, and the store checks state that nothing of the reply was applied");
+        lateIndex = i;
+      }
+    }
+    if (step.do === "wait" && lateIndex === i - 1) warn("step-schema", where, "a wait step does not release a held reply; the runner releases it after the during actions and evaluates the illuminate step's expect then (format 1.2)");
     if (step.do !== "create" && !createSeen && !createMissingReported) {
       fail("step-schema", where, "the first step must be create");
       createMissingReported = true;
@@ -835,6 +880,7 @@ function validateFile(file, forbidden) {
     // trajectory signature entry: do, stage, shape, provider and the model response text hashed
     const t = [step.do, step.stage ?? "", step.shape ?? "", step.provider ?? ""];
     if (step.do === "illuminate") t.push(has(step, "responseText") ? sha(`text:${collapse(step.responseText)}`) : has(step, "response") ? sha(`json:${JSON.stringify(canonical(step.response))}`) : "");
+    if (duringSteps.length) t.push(`during:${duringSteps.map((d) => d.do).join(",")}`);
     trajectory.push(t);
 
     let isDiscovery = false;

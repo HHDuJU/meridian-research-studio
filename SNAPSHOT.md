@@ -35,7 +35,7 @@ Library files stay byte-equal to 875fe59 except the edits listed here. App-side 
 | File | Reason |
 |---|---|
 | `src/components/studio/stage-frame.tsx` | Illuminate captures `studyRevision`, calls `runMeridian` with `family` + `replayKey`, applies through `illuminateApply` (refuses `ok: false` and stale). Parse/transport failures go through `recordIlluminateFailure`. Successful apply with dropped issues shows `Applied with notes.` plus path and message (`data-meridian-partial-apply`, `toast.warning`) without rejecting allowed fields. |
-| `src/components/studio/studio-view.tsx` | `familyOf`; needsReview is "review required" and is not counted complete; family picker when undetermined; export confirmation + clipboard; model mode badge. |
+| `src/components/studio/studio-view.tsx` | `familyOf`; needsReview is "review required" and is not counted complete; family picker when undetermined; export confirmation + clipboard; model mode badge. Certainty "not assessed" and the word `unrated` stay in the study chrome after the Scan panel is left. |
 | `src/components/studio/stage-panels.tsx` | `VerifyBadge` from `provenance.status`; ScoreBar null = not assessed; investigator empty-search button; Accept/Withdraw on decisions. |
 | `src/components/studio/bits.tsx` | Unrated is neutral; null scores "not assessed"; verification from provenance only. |
 | `src/components/home/home-page.tsx` | Create stores `family: null` when unresolved; never substitutes mixed-methods; scenario key when `VITE_SCENARIO_MODE=true`. |
@@ -261,3 +261,59 @@ A4.1 and A4.2 remain delivered. Next unfinished phase-4 entry is D8 (S1): bind a
 | sc-000-level4 | 210 | 0 | true |
 
 Authored 3 / executed attempts 3 / qualifying full workflows 3. Whole bank ui `results/d8-bank-ui/run-2026-09-22T19-30-49-316Z`: authored 103, executed attempts 103, qualifying full workflows 68 (PASS 68 / FAIL 35). Per-scenario table in `docs/amendments/BANK_RUN_d8_2026-09-22.md`. `illuminate:issues.count` rose (3 → 16) where bank goldens expected silent application of unsupported numbers; that is D8, listed not claimed as a golden error.
+
+## A4.5 (2026-09-22)
+
+A4.5 accepted. This archive carries T-6, D30–D38, T-4b, D8-a–d, P5, R-9–R-12, and the format 1.2 bank (A4.4 plus the four amended scenarios). `treeSha256` `877d7256483d8a11d75033aa0b907fc93e5741d665a783cf5455ab615047c82f` is the P5 allowlist and is the value in every sample and bank result. D10 is not this archive.
+
+Delivered file SHA-256 (allowlisted bytes that this increment leaves):
+
+| File | SHA-256 |
+|---|---|
+| `src/lib/evidence/numbers.ts` | `a255a4e4d1371bc0d7b89e86a0784818da702f5f494d817bc8378c63b9179e33` |
+| `src/lib/evidence/support.ts` | `1ae02c6f57230f2c2948b30aca2aa0a46a5bb53119803534f9ac385aaa9b8b32` |
+| `src/lib/evidence/decision.ts` | `de3de3b2ad2913e56382e3a7cada6fd8e4a50f9beba360e85082089664c62788` |
+| `src/lib/defaults.ts` | `15cacdc783b229de2df7a6e524c4e6bc8b1adfdc3d8d8864346e9d00aabb0680` |
+| `src/lib/store.ts` | `36de18e1f04ccd5f4e1e5fff16906af662df4531dea0a427eb0f9af0d665d3a2` |
+| `src/components/studio/studio-view.tsx` | `f0d045c31807f293046bb7bd41ab6c428cf4fa9079235d0829df3cb9a961004a` |
+| `scripts/run-scenarios.mjs` | `539b686b804ba0199c66472e820a449045eb811394a19562db52da090c220db8` |
+| `scripts/tree-digest.mjs` | `4d78583178ea546b1500cf7eb9ac26b10252d0752be335b76967b4e93fa59829` |
+| `tests/a45.test.ts` | `cf6fce67ba9aa09f1437d56d62e62425d6a3add4ea609152da075892bd47294c` |
+
+| Entry | Status | Notes |
+|---|---|---|
+| T-6 | TESTED | Dropped or unresolved claim ids block accept until re-issue. pursue / implementation / replicate need a retrieved claim or a valid empty-search confirmation over zero retrieved records. narrow / defer / refer / no-new-study may be accepted with no claims. |
+| T-4b | TESTED | Omitted `recommendedFamily` is stored `null`. |
+| D8-a | TESTED | Null-value CI comparison uses derivation `contains` when the cited interval straddles 0 or 1. |
+| D8-b | TESTED | Number words and hyphenated durations match. `one day unit`, `day-case`, and `days 91 percent` are not durations. |
+| D8-c | TESTED | `under-18` is not −18. |
+| D8-d | TESTED | `SGLT2`, `PROMIS29`, `T2DM` are not numbers. |
+| D30 | TESTED | Model-lead access is `unknown`. |
+| D31 | TESTED | An id token needs a digit in the suffix. |
+| D32 | TESTED | Stripped model gate keys are visible dropped issues. |
+| D33 | TESTED | Non-2xx other than 0/403/407/451 is RetrievalEvent `error`. UI selects the step provider. |
+| D35 | TESTED | `needsReview` stays in stage order. |
+| D36 | TESTED | Explicit null grade clears to `unrated`. |
+| D37 | TESTED | Status changes are a manual SourceCheck. Match never sets verified. Year is inside `evidenceRevision`. |
+| D38 | TESTED | Withdrawn or stale decisions keep a disabled Accept with the reason. |
+| P5 | TESTED | `treeSha256` is the allowlist above; `walkSha256` is the pack walk. |
+| R-9 | TESTED | Reopen and reload wait for hydration and the persisted stage panel, and retry one navigation timeout. |
+| R-10 | TESTED | Error checks read only the error, partial-apply, and alert regions. |
+| R-11 | TESTED | Late illuminate holds the model POST, runs `during`, then releases after `route.continue`. |
+| R-12 | TESTED | A disabled control with a reason is route `ui`. |
+| D10 | NOT STARTED | Next phase entry. Not this archive. |
+
+### Samples ui (2026-09-22T22:58Z, run-2026-09-22T22-58-30-762Z)
+
+| Sample | checks | fail | executedWorkflow |
+|---|---|---|---|
+| sc-000-level1 | 187 | 0 | true |
+| sc-000-level3 | 196 | 0 | true |
+| sc-000-level4 | 212 | 0 | true |
+
+Authored 3 / executed attempts 3 / qualifying full workflows 3.
+
+### Bank ui (2026-09-22T22:59Z, run-2026-09-22T22-59-13-790Z)
+
+Authored 103 / executed attempts 103 / qualifying full workflows 103 (PASS 103 / FAIL 0). `npm run test:lib`: 229/229. `tsc --noEmit` clean.
+

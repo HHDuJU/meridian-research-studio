@@ -1,6 +1,9 @@
-# Full usage scenario format, version 1.1 (coordinating session, 2026-09-22T11:50Z; G11 added 12:50Z)
+# Full usage scenario format, version 1.2 (coordinating session, 2026-09-22T11:50Z; G11 added 12:50Z; late replies added 20:45Z)
 
-Version 1.1 replaces version 1 (kept as `SCENARIO_FORMAT_v1_original_2026-09-22T1030Z.md`). The changes:
+Version 1.2 adds one thing to version 1.1 (kept as `SCENARIO_FORMAT_v1-1_original_2026-09-22T2045Z.md`): the
+`late` illuminate step with its `during` actions, the executable form of a G6 late reply (section "Late replies"
+under Steps). Nine bank scenarios that had improvised a held reply are at version 2 in that form; nothing else
+changed. Version 1.1 replaces version 1 (kept as `SCENARIO_FORMAT_v1_original_2026-09-22T1030Z.md`). The changes:
 expected values are defined by the golden rules below, never by the current behaviour of any build; a
 recorded retrieval step gives scenarios a genuine synthetic provider-response path; the scan model call has
 two shapes (discovery leads, or appraisal of retrieved records); empty scans are representable; a source
@@ -111,7 +114,7 @@ the run continues unless `stopOnFail` is true. Unknown `do` values are a scenari
 |---|---|---|
 | `create` | | submit the create form with `inputs.need`, `inputs.constraints`, `inputs.localFacts` and the replay key `id` |
 | `retrieve` | `provider` (`fixture`, or `openalex`, `crossref`, `pubmed`, `consensus` for provider-format bodies), `query`, `response` (`{ "status": 200, "total": n, "records": [RawRecord...] }` for `fixture`; `{ "status", "body" }` for a real-provider format; `status` 0, 429 or 500 for a blocked or failed channel) | the application runs its scan search; the replay transport serves this recording for the next call to that provider |
-| `illuminate` | `stage`, `shape` (scan only: `discovery` or `appraisal`), `response` (object) or `responseText` (string), `call` (required on a repeated stage, equal to its order) | run the stage; the application receives exactly `response` or `responseText` as the model output |
+| `illuminate` | `stage`, `shape` (scan only: `discovery` or `appraisal`), `response` (object) or `responseText` (string), `call` (required on a repeated stage, equal to its order), `late` and `during` (format 1.2, see "Late replies") | run the stage; the application receives exactly `response` or `responseText` as the model output |
 | `confirm-empty-search` | | the investigator confirms on screen that the search was run and returned nothing |
 | `set-field` | `path`, `value` | edit a field through the screen when a control exists, otherwise through the store (the runner records which) |
 | `accept-decision` | `which` ("latest" or a decision index) | the investigator accepts the current design decision |
@@ -121,7 +124,24 @@ the run continues unless `stopOnFail` is true. Unknown `do` values are a scenari
 | `reload` | | browser reload on the same route |
 | `reopen` | | go to the home route, then open the study from the list |
 | `export` | | click Export JSON, save the file, parse it |
-| `wait` | `ms` | bounded wait (max 5000) |
+| `wait` | `ms` | bounded wait (max 5000); never the release of a held reply |
+
+### Late replies (format 1.2)
+
+A G6 check needs a model reply that was produced against one revision of the study and arrives after the
+investigator changed the study. The executable form is an `illuminate` step with `"late": true` and a `during`
+array of one to three investigator actions (`set-field`, `confirm-empty-search`, `accept-decision`,
+`withdraw-decision`, `change-source`, `mark-complete`; never a model call, a retrieval, `reload`, `reopen`,
+`export` or `wait`). Each `during` action has its own `expect`, evaluated after that action is saved and before
+the reply is released; the illuminate step's own `expect` is evaluated after the release and states the refusal
+(`error.shown` true with the refusal text, nothing of the reply applied, the investigator's edit intact, the
+refusal logged) or, when the actions did not change the revision, the applied reply. The runner (R-11):
+dispatches the request through the screen (the application captures `studyRevision` at that moment), holds the
+recorded reply (in `ui` mode by intercepting the model request; in `store` mode by deferring the commit), runs
+the `during` actions through the screen on their own stages, returns to the illuminate stage, releases the reply,
+waits for the application to process it, then evaluates. The `call` number of a late step counts like any other
+call of that stage (replay file `<stage>.<n>.json`); the `during` actions are recorded in the result's action
+routes like top-level actions and count toward the route rule (all `ui` for a qualifying workflow).
 
 RawRecord for `fixture`: `{ "title", "authors", "year" (number or null), "venue", "doi" (optional,
 `10.5555/...`), "providerType" (optional), "abstract" (optional), "url" (optional) }`. The `fixture` provider

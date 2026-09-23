@@ -139,32 +139,32 @@ test("record_id_survives_title_and_doi_edit", () => {
 
 test("id_lint_finds_unknown_ids_in_any_string_field", () => {
   const study = createStudy({ family: "retrospective", setting: "s", rawNeed: "n" });
-  study.gaps.items = [{ id: "g1", title: "Gap", kind: "evidence", severity: "high", whyItMatters: "see ev-old", opportunity: "" }];
-  study.scan.claims = [{ id: "c1", text: "uses ev-old", kind: "inference", sourceIds: [], uncertainty: "high", interpretation: "ev-old remains" }];
+  study.gaps.items = [{ id: "g1", title: "Gap", kind: "evidence", severity: "high", whyItMatters: "see ev-old1", opportunity: "" }];
+  study.scan.claims = [{ id: "c1", text: "uses ev-old1", kind: "inference", sourceIds: [], uncertainty: "high", interpretation: "ev-old1 remains" }];
   const hits = unresolvedActiveIds(study);
-  assert.ok(hits.some((h) => h.id === "ev-old"));
+  assert.ok(hits.some((h) => h.id === "ev-old1"));
   const quoted = lintActiveReferences({
     ...study,
-    documents: [{ id: "doc-1", recordId: "ev-1", sha256: "a", text: "the paper mentioned ev-foreign once", mediaType: "text/plain", sourceScope: "abstract", shortenedAtSource: "unknown", capturedAt: "2026-01-01T00:00:00Z" }],
+    documents: [{ id: "doc-1", recordId: "ev-1", sha256: "a", text: "the paper mentioned ev-foreign1 once", mediaType: "text/plain", sourceScope: "abstract", shortenedAtSource: "unknown", capturedAt: "2026-01-01T00:00:00Z" }],
   });
-  assert.ok(quoted.some((h) => h.id === "ev-foreign" && h.kind === "quoted-source"));
+  assert.ok(quoted.some((h) => h.id === "ev-foreign1" && h.kind === "quoted-source"));
 });
 
 test("apply_marks_unknown_ids_in_free_text", () => {
-  const r = markUnknownIds("see ev-orphan in the gap", new Set());
-  assert.match(r.text, /unresolved:ev-orphan/);
-  assert.deepEqual(r.unknown, ["ev-orphan"]);
+  const r = markUnknownIds("see ev-orphan1 in the gap", new Set());
+  assert.match(r.text, /unresolved:ev-orphan1/);
+  assert.deepEqual(r.unknown, ["ev-orphan1"]);
   assert.notEqual(r.unknown.length, 0);
   const study = createStudy({ family: "retrospective", setting: "s", rawNeed: "n" });
   const applied = applyAiResult(
     "gaps",
-    { items: [{ title: "Gap", kind: "evidence", whyItMatters: "see ev-orphan in the gap", opportunity: "none" }] },
+    { items: [{ title: "Gap", kind: "evidence", whyItMatters: "see ev-orphan1 in the gap", opportunity: "none" }] },
     null,
     study,
   );
   const why = (applied.stagePatch.items as { whyItMatters: string }[])[0].whyItMatters;
-  assert.match(why, /unresolved:ev-orphan/);
-  assert.ok(applied.issues.some((i) => i.code === "unresolved-reference" && i.value === "ev-orphan"));
+  assert.match(why, /unresolved:ev-orphan1/);
+  assert.ok(applied.issues.some((i) => i.code === "unresolved-reference" && i.value === "ev-orphan1"));
   const quoted = applyAiResult(
     "scan",
     {

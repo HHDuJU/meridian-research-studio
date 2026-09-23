@@ -1,6 +1,6 @@
 {
   "id": "sc-005",
-  "version": 1,
+  "version": 2,
   "title": "Five-hospital sepsis network: a brief vague request becomes a multi-site qualitative study of bundle delivery",
   "field": "implementation-science",
   "level": 2,
@@ -61,7 +61,7 @@
         "patientCenteredGoal": "Every adult with sepsis at any of the five hospitals receives antibiotics and the rest of the bundle promptly, day or night.",
         "summary": "Problem framed from a brief request; the investigator's role, figures and resources must be confirmed."
       },
-      "note": "The model frames the problem without inventing facts: the missing role, figures and resources are stated as unknown.",
+      "note": "The model frames the problem without inventing facts: the missing role, figures and resources are stated as unknown. Version 2: the typed constraints field was empty and the model wrote its own text into it; investigator constraints are not model-editable (G11, owner rule 18), so the text is refused with a dropped issue at constraints, the refusal is visible, and the model's unknowns stay in the statement. The investigator enters constraints at the next step.",
       "expect": {
         "store": {
           "title": "Why sepsis bundle delivery differs across five hospitals",
@@ -69,9 +69,7 @@
           "problem.statement": {
             "includes": "need to be confirmed"
           },
-          "problem.constraints": {
-            "includes": "Not stated"
-          },
+          "problem.constraints": "",
           "completedStages": [
             "problem"
           ]
@@ -80,11 +78,24 @@
           "problem": "complete"
         },
         "issues": {
-          "count": 0
+          "includes": [
+            {
+              "path": "constraints",
+              "code": "dropped"
+            }
+          ],
+          "count": 1
         },
         "screen": {
           "includes": [
-            "Why sepsis bundle delivery differs across five hospitals"
+            "Why sepsis bundle delivery differs across five hospitals",
+            {
+              "anyOf": [
+                "kept",
+                "refused",
+                "not applied"
+              ]
+            }
           ]
         }
       }
@@ -1239,5 +1250,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-005.json), superseded 2026-09-22T20:40Z: golden error GE-1, the problem reply's constraints text was expected applied into the empty investigator field; under G11 the field is investigator-only and the model text is refused with a dropped issue."
 }

@@ -5,6 +5,7 @@ import type { Issue } from "../contracts";
 import { uid, nowIso } from "../utils";
 import { treatAsFullTextRead } from "./access";
 import { isWithdrawnResult } from "./publication-status";
+import { emptySearchConfirmationValid } from "../defaults";
 
 /*
  * Evidence-backed decisions.
@@ -37,7 +38,7 @@ export function evidenceRevision(study: Study): string {
   const items = [...study.scan.items]
     .map(
       (i) =>
-        `${i.id}|${i.provenance?.status ?? "?"}|${i.doi ?? ""}|${i.pmid ?? ""}|${i.title}|${i.abstract?.sha256 ?? ""}|${i.notes}|${i.keyFindings ?? ""}|${i.limitations ?? ""}|${i.publicationStatus ?? ""}|${(i.contextTags ?? []).slice().sort().join(",")}`,
+        `${i.id}|${i.provenance?.status ?? "?"}|${i.doi ?? ""}|${i.pmid ?? ""}|${i.year ?? ""}|${i.title}|${i.abstract?.sha256 ?? ""}|${i.notes}|${i.keyFindings ?? ""}|${i.limitations ?? ""}|${i.publicationStatus ?? ""}|${(i.contextTags ?? []).slice().sort().join(",")}`,
     )
     .sort();
   const claims = [...(study.scan.claims ?? [])]
@@ -80,8 +81,11 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
     return { decision: null, issues: issues.list };
   }
   const known = new Set((study.scan.claims ?? []).map((c) => c.id));
-  const claimIds = (stringArray(raw.claimIds, "decision.claimIds", issues) ?? []).filter((id) => {
+  const requestedIds = stringArray(raw.claimIds, "decision.claimIds", issues) ?? [];
+  const droppedClaimIds: string[] = [];
+  const claimIds = requestedIds.filter((id) => {
     if (known.has(id)) return true;
+    droppedClaimIds.push(id);
     issues.add("decision.claimIds", "dropped", `unknown claim id "${id}" — a decision may rest only on ledger claims`);
     return false;
   });
@@ -127,6 +131,7 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
     statement,
     question: stringOrUndefined(raw.question, "decision.question", issues) ?? "",
     claimIds,
+    ...(droppedClaimIds.length ? { droppedClaimIds } : {}),
     criteria,
     gates,
     alternatives: stringArray(raw.alternatives, "decision.alternatives", issues) ?? [],
@@ -137,7 +142,7 @@ export function applyDecision(raw: unknown, study: Study, actor: DecisionRecord[
     ...(typeof raw.recommendedFamily === "string" &&
     (STUDY_FAMILIES as readonly string[]).includes(raw.recommendedFamily)
       ? { recommendedFamily: raw.recommendedFamily as StudyFamily }
-      : {}),
+      : { recommendedFamily: null }),
     ...(stringOrUndefined(raw.note, "decision.note", issues)?.trim() ? { note: raw.note as string } : {}),
   };
   return { decision, issues: issues.list };
@@ -225,10 +230,18 @@ export function refreshDecisionStatuses(study: Study): Study {
   return { ...study, design: { ...study.design, decisions } };
 }
 
-/** S11 / A2: refuse only an unsupported or contradictory selection. Unresolved gates leave the selection acceptable and the action blocked. A pursue/implementation/replicate with no retrieved-backed ledger claims is unsupported; a narrow/defer/refer/no-new-study with empty claims is not. */
+/** S11 / T-6: refuse a dropped or unresolved claim, a claim that does not rest on a retrieved or verified record, and a pursue/implementation/replicate with neither such a claim nor a valid empty-search confirmation over zero records. defer/narrow/refer/no-new-study may be accepted with no claims. */
 export function decisionIsSupported(d: DecisionRecord, study: Study): { ok: boolean; reason: string } {
   if (d.criteria.some((c) => c.role === "defeats" && c.status === "met")) {
     return { ok: false, reason: "contradictory selection: a defeating condition holds" };
+  }
+  const dropped = [...(d.droppedClaimIds ?? [])];
+  const marked = `${d.statement ?? ""}\n${d.question ?? ""}\n${d.note ?? ""}`;
+  for (const m of marked.matchAll(/⟦unresolved:([^⟧]+)⟧/g)) {
+    if (!dropped.includes(m[1])) dropped.push(m[1]);
+  }
+  if (dropped.length) {
+    return { ok: false, reason: `unsupported selection: claim ${dropped.join(", ")} is not in the ledger` };
   }
   const claimsById = new Map((study.scan.claims ?? []).map((c) => [c.id, c]));
   const itemsById = new Map(study.scan.items.map((i) => [i.id, i]));
@@ -251,8 +264,12 @@ export function decisionIsSupported(d: DecisionRecord, study: Study): { ok: bool
     if (!retrieved) return { ok: false, reason: `unsupported selection: claim ${id} does not rest on a retrieved record` };
     restsOnRetrieved = true;
   }
-  const commitsToAct = d.kind === "pursue" || d.kind === "replicate";
+  const commitsToAct = d.kind === "pursue" || d.kind === "implementation" || d.kind === "replicate";
   if (commitsToAct && !restsOnRetrieved) {
+    const retrievedRecords = study.scan.items.filter(
+      (i) => i.provenance?.status === "retrieved" || i.provenance?.status === "verified",
+    ).length;
+    if (retrievedRecords === 0 && emptySearchConfirmationValid(study)) return { ok: true, reason: "" };
     return { ok: false, reason: "unsupported selection: no ledger claims on retrieved records" };
   }
   return { ok: true, reason: "" };

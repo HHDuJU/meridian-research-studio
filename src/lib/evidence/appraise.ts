@@ -25,13 +25,13 @@ const EVIDENCE_KINDS: readonly EvidenceKind[] = [
 const GRADES: readonly GradeLevel[] = ["high", "moderate", "low", "very-low"];
 const CLAIM_KINDS = ["source-derived", "local-fact", "assumption", "inference", "scenario"] as const;
 const UNCERTAINTY = ["low", "moderate", "high"] as const;
-const DERIVATION_METHODS = ["percent", "difference", "ratio", "sum"] as const satisfies readonly DerivationMethod[];
+const DERIVATION_METHODS = ["percent", "difference", "ratio", "sum", "contains"] as const satisfies readonly DerivationMethod[];
 
 export interface AppraisalResult {
   items: EvidenceItem[];
   claims: Claim[];
   synthesis?: string;
-  gradeOverall?: GradeLevel;
+  gradeOverall?: GradeLevel | "";
   gradeRationale?: string;
   issues: Issue[];
   /** ids the model annotated that do not exist — a sign it invented or misremembered records */
@@ -85,8 +85,13 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown, documents: S
     if (a.methodQuality !== undefined) patch.methodQuality = mq;
     const kind = enumOrResolve(EVIDENCE_KINDS, a.kind, `${p}.kind`, issues);
     if (kind) patch.kind = kind;
-    const grade = enumOrResolve(GRADES, a.grade, `${p}.grade`, issues);
-    if (grade) patch.grade = grade;
+    if (a.grade === null) {
+      issues.add(`${p}.grade`, "cleared", 'cleared to "unrated"');
+      patch.grade = "unrated";
+    } else {
+      const grade = enumOrResolve(GRADES, a.grade, `${p}.grade`, issues);
+      if (grade) patch.grade = grade;
+    }
     const kf = stringOrUndefined(a.keyFindings, `${p}.keyFindings`, issues);
     if (kf !== undefined) {
       if (annotationHasUnsupportedNumber(kf, current, documents)) {
@@ -202,11 +207,15 @@ export function applyAppraisal(items: EvidenceItem[], raw: unknown, documents: S
       quarantine.claims.push(next);
     }
   }
+  const gradeOverall =
+    raw.gradeOverall === null
+      ? (issues.add("gradeOverall", "cleared", 'cleared to ""'), "")
+      : enumOrResolve(GRADES, raw.gradeOverall, "gradeOverall", issues);
   return {
     items: nextItems,
     claims,
     synthesis: stringOrUndefined(raw.synthesis, "synthesis", issues),
-    gradeOverall: enumOrResolve(GRADES, raw.gradeOverall, "gradeOverall", issues),
+    gradeOverall,
     gradeRationale: stringOrUndefined(raw.gradeRationale, "gradeRationale", issues),
     issues: issues.list,
     unknownIds: [...new Set(unknownIds)],

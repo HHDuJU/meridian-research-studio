@@ -33,16 +33,49 @@ export function skipFile(rel) {
   if (rel.startsWith("public/artifacts/") && /\.tar\.gz/.test(rel)) return true;
   if (rel.endsWith(".tar.gz") || rel.endsWith(".tar.gz.bin") || rel.endsWith(".tar.gz.sha256")) return true;
   if (rel === ".env") return true;
+  if (rel === "MANIFEST.json") return true;
   return false;
 }
+
+/** P5: pinned digest is an allowlist of product source. Agent state, docs, scenarios, results, public assets and MANIFEST are outside it. */
+export const PINNED_DIRS = ["src", "server", "scripts", "tests", "probes", "migrations"];
+export const PINNED_FILES = [
+  "package.json",
+  "package-lock.json",
+  "tsconfig.json",
+  "vite.config.ts",
+  "eslint.config.mjs",
+  "startup.sh",
+  ".env.example",
+];
 
 export function walkSourceTree(root, opts = {}) {
   const digest = !!opts.digest;
   const acc = [];
+  if (digest) {
+    for (const file of PINNED_FILES) {
+      const full = path.join(root, file);
+      if (fs.existsSync(full) && fs.statSync(full).isFile()) acc.push(file);
+    }
+    function walkPinned(dir) {
+      for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (ent.name === "node_modules" || ent.name === ".git") continue;
+        const full = path.join(dir, ent.name);
+        const rel = path.relative(root, full).split(path.sep).join("/");
+        if (ent.isDirectory()) walkPinned(full);
+        else if (!skipFile(rel)) acc.push(rel);
+      }
+    }
+    for (const dir of PINNED_DIRS) {
+      const full = path.join(root, dir);
+      if (fs.existsSync(full) && fs.statSync(full).isDirectory()) walkPinned(full);
+    }
+    return acc.sort();
+  }
   function walk(dir) {
     for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
       if (SKIP_DIRS.has(ent.name)) continue;
-      if (digest && DIGEST_SKIP_DIRS.has(ent.name)) continue;
+      if (ent.name === "results" && dir === root) continue;
       const full = path.join(dir, ent.name);
       const rel = path.relative(root, full).split(path.sep).join("/");
       if (ent.isDirectory()) walk(full);

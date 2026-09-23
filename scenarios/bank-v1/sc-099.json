@@ -1,6 +1,6 @@
 {
   "id": "sc-099",
-  "version": 1,
+  "version": 2,
   "title": "Day surgery unit: same-day discharge predictors after cholecystectomy, a withdrawn first decision and a refused late Audit reply",
   "field": "surgery",
   "level": 5,
@@ -1546,37 +1546,6 @@
       }
     },
     {
-      "do": "set-field",
-      "path": "audit.improvementNotes",
-      "value": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
-      "note": "In-flight edit (G6). The investigator clicked Illuminate for Audit first: the runner issues that request (audit call 1, carrying the studyRevision captured before this edit) and holds its replay reply; then the investigator writes this note in the audit notes on screen; the held reply is released by the next step. The note is the investigator's own text and substantive audit content, which counts in the study revision (A3.2 item D27).",
-      "expect": {
-        "store": {
-          "audit.improvementNotes": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
-          "audit.openFixes": {
-            "length": 0
-          },
-          "completedStages": [
-            "problem",
-            "scan",
-            "map",
-            "gaps",
-            "hypotheses",
-            "questions",
-            "design",
-            "protocol",
-            "stats",
-            "ethics",
-            "voices",
-            "manuscript"
-          ]
-        },
-        "stage": {
-          "audit": "incomplete"
-        }
-      }
-    },
-    {
       "do": "illuminate",
       "stage": "audit",
       "call": 1,
@@ -1590,7 +1559,7 @@
         "lastReview": "2026-09-22",
         "summary": "Three open fixes before extraction."
       },
-      "note": "Late reply (G6): this Audit reply was requested before the investigator's note and is released only now. Substantive audit content is part of the study revision (D27, under S10's revision coverage; at 875fe59 studyRevision excludes the whole audit object, so the reply would be merged and then dropped by the L1.6 store defect). The application must refuse it: the investigator's note stays, no open fix is written, the Audit stage stays incomplete, and the refusal is shown and logged.",
+      "note": "Late reply (format 1.2, G6): the runner dispatches this request, holds the recorded reply, applies the during action, then releases the reply. Late reply (G6): this Audit reply was requested before the investigator's note and is released only now. Substantive audit content is part of the study revision (D27, under S10's revision coverage; at 875fe59 studyRevision excludes the whole audit object, so the reply would be merged and then dropped by the L1.6 store defect). The application must refuse it: the investigator's note stays, no open fix is written, the Audit stage stays incomplete, and the refusal is shown and logged.",
       "expect": {
         "store": {
           "audit.improvementNotes": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
@@ -1621,7 +1590,41 @@
         "error": {
           "shown": true
         }
-      }
+      },
+      "late": true,
+      "during": [
+        {
+          "do": "set-field",
+          "path": "audit.improvementNotes",
+          "value": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
+          "note": "In-flight edit (G6). The investigator clicked Illuminate for Audit first: the runner issues that request (audit call 1, carrying the studyRevision captured before this edit) and holds its replay reply; then the investigator writes this note in the audit notes on screen; the held reply is released by the next step. The note is the investigator's own text and substantive audit content, which counts in the study revision (A3.2 item D27). Applied through the screen while the recorded reply is held (format 1.2).",
+          "expect": {
+            "store": {
+              "audit.improvementNotes": "Investigator note, 2026-09-22: the rescue antiemetic proxy must be checked against 100 randomly sampled charts before any model is fitted, and nausea must be reported as nausea needing treatment, not as nausea severity.",
+              "audit.openFixes": {
+                "length": 0
+              },
+              "completedStages": [
+                "problem",
+                "scan",
+                "map",
+                "gaps",
+                "hypotheses",
+                "questions",
+                "design",
+                "protocol",
+                "stats",
+                "ethics",
+                "voices",
+                "manuscript"
+              ]
+            },
+            "stage": {
+              "audit": "incomplete"
+            }
+          }
+        }
+      ]
     },
     {
       "do": "illuminate",
@@ -1757,5 +1760,6 @@
         }
       }
     }
-  ]
+  ],
+  "supersedes": "version 1 (kept as bank-v1/original-v1/sc-099.json), superseded 2026-09-22T20:40Z: the G6 late reply is encoded as an illuminate step with late: true and its during action (format 1.2) instead of an improvised hold the sequential runner could not execute; need, records, model responses and expectations unchanged in substance."
 }

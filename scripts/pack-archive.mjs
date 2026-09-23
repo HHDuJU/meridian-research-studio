@@ -30,6 +30,9 @@ for (const rel of entries.map((e) => e.path)) {
 
 const clockNote = "sandbox clock unverified";
 const digest = treeSha256(ROOT);
+const walkHash = crypto.createHash("sha256");
+for (const e of entries) walkHash.update(`${e.path}\0${e.sha256}\n`);
+const walkSha256 = walkHash.digest("hex");
 const manifest = {
   name: `${name}.tar.gz`,
   kind: "deliverable-1b-l1",
@@ -37,6 +40,7 @@ const manifest = {
   source: "workspace working tree, no git",
   clockNote,
   treeSha256: digest,
+  walkSha256,
   files: entries,
   fileCount: entries.length,
 };
@@ -59,10 +63,16 @@ if (tar.status !== 0) {
   process.exit(1);
 }
 const hash = crypto.createHash("sha256").update(fs.readFileSync(tarPath)).digest("hex");
-const sidecar = `${hash}  ${name}.tar.gz\npackedAt ${packedAt}\n`;
+const bytes = fs.statSync(tarPath).size;
+if (bytes > 100 * 1024 * 1024) {
+  console.error(`tree archive is ${bytes} bytes, over 100 MB`);
+  process.exit(1);
+}
+const sidecar = `${hash}  ${name}.tar.gz\npackedAt ${packedAt}\ntreeSha256 ${digest}\nwalkSha256 ${walkSha256}\n`;
 fs.writeFileSync(`${tarPath}.sha256`, sidecar);
 fs.copyFileSync(tarPath, `${tarPath}.bin`);
+fs.mkdirSync(path.join(ROOT, "artifacts"), { recursive: true });
 fs.copyFileSync(`${tarPath}.sha256`, path.join(ROOT, "artifacts", `${name}.tar.gz.sha256`));
 fs.copyFileSync(tarPath, path.join(ROOT, "artifacts", `${name}.tar.gz`));
 
-console.log(JSON.stringify({ tarPath, binPath: `${tarPath}.bin`, sidecar: `${tarPath}.sha256`, sha256: hash, packedAt, treeSha256: digest, fileCount: entries.length, bytes: fs.statSync(tarPath).size }, null, 2));
+console.log(JSON.stringify({ tarPath, binPath: `${tarPath}.bin`, sidecar: `${tarPath}.sha256`, sha256: hash, packedAt, treeSha256: digest, walkSha256, fileCount: entries.length, bytes }, null, 2));
