@@ -89,7 +89,9 @@ expectations are unchanged; no check was removed [verified by review 6's diff of
   [verified]. New tests: `tests/local-facts-review3.test.ts` (13 tests, each review finding as a case).
 - Store-mode runner on the whole bank against the build before this work (11016b6): no new failing check in
   any scenario; sc-019 gains six passing checks (a withdrawn decision stays withdrawn) [computed].
-- Bank and samples in UI mode on the final tree: see HANDOFF section 4 for the run and its receipts.
+- Bank and samples in UI mode on the final tree (f1dbc9a, digest 317e1307...): bank 103 of 103, samples 3 of 3,
+  19,557 checkpoints, 2,366 screen actions, none off the screen route (run x8ui) [computed]; receipts in HANDOFF
+  section 4.
 - Speed: Meridian's reading of 2,001 fact sentences that share one reference number took 61 s before the
   memoised conflict scan and takes about 0.2 s now; the claim reader stops at 40,000 characters and is
   advisory [computed].
