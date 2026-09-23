@@ -740,3 +740,39 @@ test("review of 23 September: a gate the investigator sets without evidence show
   assert.equal(g.evidence, undefined);
   assert.ok((cur().audit.entries ?? []).some((e) => /the model's evidence was: QIS-2026-131/.test(e.summary ?? "")));
 });
+
+test("gate scope: the investigator can mark a gate not required for this decision, with a reason; a model cannot", () => {
+  // Live run 3 (22 September): the model attached "funding for a comparative trial" to a quality
+  // improvement decision; the unmet gate blocked the chosen decision with no way out.
+  const s = S().create({ family: "qi-pdsa", setting: "s", rawNeed: "Standardise ketamine infusions as a QI project.", localFacts: ["Pharmacy memo PH-2026-091 agrees to prepare standard bags."] });
+  const cur = () => S().studies.find((x) => x.id === s.id)!;
+  const proposed = applyDecision({
+    kind: "narrow",
+    statement: "Standardise the protocol as a QI project.",
+    claimIds: [],
+    criteria: [],
+    gates: [
+      { id: "g1", requirement: "Pharmacy agreement to prepare standard bags", status: "met", evidence: "Pharmacy memo PH-2026-091" },
+      { id: "g2", requirement: "Funding for a comparative trial", status: "unmet" },
+      { id: "g3", requirement: "Ethics review of the comparative trial", status: "not-required", evidence: "the model decides this does not apply" },
+    ],
+    alternatives: ["randomised trial"],
+  }, cur());
+  const d = proposed.decision!;
+  assert.equal(d.gates.find((g) => g.id === "g3")?.status, "unknown");
+  assert.ok(proposed.issues.some((i) => i.path.startsWith("decision.gates[2]")));
+  S().mergeStage(s.id, "design", { decisions: [d] });
+  assert.equal(S().acceptDecision(s.id, "latest").ok, true);
+  const blocked = evaluateDecision(cur().design.decisions[0], cur());
+  assert.equal(blocked.canAct, false);
+  assert.equal(S().setGate(s.id, 0, "g2", "not-required", "").ok, false);
+  assert.equal(S().setGate(s.id, 0, "g2", "not-required", "The trial was the rejected alternative; this decision is a QI project.").ok, true);
+  assert.equal(S().setGate(s.id, 0, "g3", "not-required", "No trial is run under this decision.").ok, true);
+  const after = evaluateDecision(cur().design.decisions[0], cur());
+  assert.deepEqual(after.blockers, []);
+  assert.equal(after.canAct, true);
+  assert.ok(after.warnings.some((w) => /not required for this decision by the investigator: The trial was the rejected alternative/.test(w)));
+  // A waiver that did not come from the investigator is a blocker, not a pass.
+  const spoofed = { ...cur().design.decisions[0], gates: cur().design.decisions[0].gates.map((g) => (g.id === "g2" ? { ...g, setBy: "model" as const } : g)) };
+  assert.ok(evaluateDecision(spoofed, cur()).blockers.some((b) => /only the investigator can waive/.test(b)));
+});

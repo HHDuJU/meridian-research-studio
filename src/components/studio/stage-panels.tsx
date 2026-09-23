@@ -1184,30 +1184,41 @@ function LiveSearch({ study }: { study: Study }) {
 function GateList({ study, decisionIndex }: { study: Study; decisionIndex: number }) {
   const setGate = useStudio((st) => st.setGate);
   const dec = study.design.decisions[decisionIndex];
-  const [editing, setEditing] = useState<string | null>(null);
+  // "met": the investigator documents the gate; "not-required": the gate does not apply to this decision.
+  const [editing, setEditing] = useState<{ gateId: string; mode: "met" | "not-required" } | null>(null);
   const [evidence, setEvidence] = useState("");
   if (!dec) return null;
   return (
     <ul className="mt-2 space-y-1.5" data-meridian-gates="">
       {dec.gates.map((g) => (
         <li key={g.id} data-meridian-gate={g.id} data-gate-status={g.status} className="rounded-md bg-muted/40 p-2 text-xs">
-          <span className="font-medium">{g.status}</span> · {g.requirement}
-          {g.evidence ? <span className="block text-muted-foreground">Evidence: {g.evidence}{g.setBy ? ` (${g.setBy === "investigator" ? "you" : "model"})` : ""}</span> : null}
+          <span className="font-medium">{g.status === "not-required" ? "not required" : g.status}</span> · {g.requirement}
+          {g.evidence ? (
+            <span className="block text-muted-foreground">
+              {g.status === "not-required" ? "Reason" : "Evidence"}: {g.evidence}
+              {g.setBy ? ` (${g.setBy === "investigator" ? "you" : "model"})` : ""}
+            </span>
+          ) : null}
           {g.grounding && g.setBy !== "investigator" ? <span className="block text-muted-foreground">{g.grounding}</span> : null}
-          {editing === g.id ? (
+          {editing?.gateId === g.id ? (
             <span className="mt-1 flex gap-1.5">
               <input
                 className="w-full rounded border border-border bg-background px-1.5 py-1"
                 value={evidence}
                 onChange={(e) => setEvidence(e.target.value)}
-                placeholder="Reference that shows it (approval number, memo, agreement)"
+                placeholder={
+                  editing.mode === "met"
+                    ? "Reference that shows it (approval number, memo, agreement)"
+                    : "Why this gate does not apply to this decision"
+                }
+                data-meridian-gate-input={editing.mode}
               />
               <Button
                 type="button"
                 size="sm"
                 disabled={!evidence.trim()}
                 onClick={() => {
-                  const r = setGate(study.id, decisionIndex, g.id, "met", evidence);
+                  const r = setGate(study.id, decisionIndex, g.id, editing.mode, evidence);
                   if (!r.ok) toast.warning(r.reason ?? "Refused");
                   else {
                     setEditing(null);
@@ -1219,15 +1230,26 @@ function GateList({ study, decisionIndex }: { study: Study; decisionIndex: numbe
               </Button>
             </span>
           ) : (
-            <span className="mt-1 flex gap-1.5">
+            <span className="mt-1 flex flex-wrap gap-1.5">
               {g.status !== "met" || g.setBy !== "investigator" ? (
-                <Button type="button" size="sm" variant="outline" onClick={() => setEditing(g.id)}>
+                <Button type="button" size="sm" variant="outline" onClick={() => setEditing({ gateId: g.id, mode: "met" })}>
                   I can document this
                 </Button>
               ) : null}
               {g.status !== "unmet" ? (
                 <Button type="button" size="sm" variant="ghost" onClick={() => setGate(study.id, decisionIndex, g.id, "unmet")}>
                   Not in place
+                </Button>
+              ) : null}
+              {g.status !== "not-required" || g.setBy !== "investigator" ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  data-meridian-gate-not-required=""
+                  onClick={() => setEditing({ gateId: g.id, mode: "not-required" })}
+                >
+                  Not required for this decision
                 </Button>
               ) : null}
             </span>

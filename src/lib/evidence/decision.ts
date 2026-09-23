@@ -242,6 +242,10 @@ export function evaluateDecision(d: DecisionRecord, study: Study): DecisionEvalu
   for (const g of d.gates) {
     if (g.status === "unmet") blockers.push(`gate unmet: ${g.requirement}`);
     if (g.status === "unknown") blockers.push(`gate unknown: ${g.requirement}`);
+    if (g.status === "not-required") {
+      if (g.setBy === "investigator" && g.evidence?.trim()) warnings.push(`gate "${g.requirement}" marked not required for this decision by the investigator: ${g.evidence}`);
+      else blockers.push(`gate "${g.requirement}" is marked not required, but only the investigator can waive a gate, with a reason`);
+    }
     if (g.status === "met" && g.setBy !== "investigator") {
       // Re-checked every time: removing the local fact a gate rested on reopens the gate.
       const gr = gateGrounding(g.requirement, g.evidence ?? "", invText);

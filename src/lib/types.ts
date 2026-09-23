@@ -466,7 +466,13 @@ export interface QuestionsStage {
  * and OpenResearch (content-identified input snapshot). See docs/EVIDENCE.md.
  */
 export type DecisionKind = "pursue" | "narrow" | "defer" | "no-new-study" | "refer" | "implementation" | "replicate";
-export type GateStatus = "met" | "unmet" | "unknown";
+/**
+ * "not-required": the investigator states that this gate does not apply to this decision (for example a
+ * gate the model copied from a rejected alternative: "funding for a comparative trial" on a quality
+ * improvement decision, live run of 22 September). Investigator only, with the reason in `evidence`;
+ * a model reply can never set it.
+ */
+export type GateStatus = "met" | "unmet" | "unknown" | "not-required";
 
 /** A requirement that must be met before the decision is acted on. Never averaged away. */
 export interface DecisionGate {

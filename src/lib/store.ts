@@ -40,7 +40,7 @@ interface StudioState {
     id: string,
     which: "latest" | number,
     gateId: string,
-    status: "met" | "unmet" | "unknown",
+    status: "met" | "unmet" | "unknown" | "not-required",
     evidence?: string,
   ) => { ok: boolean; reason?: string };
   update: (id: string, patch: StudyPatch) => void;
@@ -165,6 +165,7 @@ export const useStudio = create<StudioState>()(
         if (idx < 0 || idx >= list.length) return { ok: false, reason: "no decision" };
         const ev = (evidence ?? "").trim();
         if (status === "met" && !ev) return { ok: false, reason: "a met gate needs the evidence that shows it (a document, reference or approval number)" };
+        if (status === "not-required" && !ev) return { ok: false, reason: "a gate marked not required for this decision needs the reason" };
         const target = list[idx];
         const prior = target.gates.find((g) => g.id === gateId);
         if (!prior) return { ok: false, reason: "gate not found" };

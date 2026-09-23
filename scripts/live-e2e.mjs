@@ -12,7 +12,7 @@
  * plan.json: { id, inputs: { need, setting?, constraints?, localFacts?: string[], family?: label },
  *              providers?: ["pubmed","openalex","clinicaltrials"], steps: [ { do, stage?, query?, gate?, evidence? } ] }
  * steps: illuminate(stage) | visit(stage) | search(query?) | check-identities | accept-decision
- *        | set-gate(gate, evidence) | reload | export
+ *        | set-gate(gate, evidence, status?: "met" | "not-required") | reload | export
  * Output: report.json (one entry per step), study-final.json, export.json, step-NN-*.png.
  */
 import fs from "node:fs";
@@ -291,7 +291,9 @@ try {
         await gotoStage(page, "design");
         const gate = page.locator(`[data-meridian-gate="${s.gate}"]`).last();
         if ((await gate.count()) === 0) return { unsupported: `gate ${s.gate} not on screen` };
-        await gate.getByRole("button", { name: /I can document this/i }).click();
+        // status "not-required" marks a gate that does not apply to this decision (the reason goes in evidence).
+        const notRequired = s.status === "not-required";
+        await gate.getByRole("button", { name: notRequired ? /Not required for this decision/i : /I can document this/i }).click();
         await gate.locator("input").fill(s.evidence);
         await gate.getByRole("button", { name: /^Save$/ }).click();
         await page.waitForTimeout(500);
