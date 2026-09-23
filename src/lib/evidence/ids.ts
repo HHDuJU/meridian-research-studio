@@ -3,9 +3,9 @@ import { isRecord } from "../contracts";
 
 const ID_RE = /\b((?:ev|claim|doc|unk|local|dec|gate|crit)-[a-z0-9-]*\d[a-z0-9-]*)\b/gi;
 
-/** "Dec-2019" and "Dec-19" in prose are dates, not decision ids (uid() suffixes are 8 characters). */
+/** "Dec-2019" and "Dec-19" in prose are dates, not decision ids (uid() suffixes are 8 lower-case characters; a lower-case "dec-12" stays an id). */
 function isMonthYear(id: string): boolean {
-  return /^dec-(?:\d{2}|\d{4})$/i.test(id);
+  return /^(?:Dec|DEC)-(?:\d{2}|(?:19|20)\d{2})$/.test(id);
 }
 
 export interface IdHit {

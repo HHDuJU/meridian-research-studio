@@ -1,6 +1,7 @@
 import type { Claim, ClaimKind, EvidenceItem, SourceDocument } from "../types";
 import { uid } from "../utils";
 import { supportClaim } from "./support";
+import { localFactEstablished } from "./grounding";
 
 /**
  * Claim–source ledger: every consequential assertion says where it comes from and how sure it is.
@@ -30,7 +31,8 @@ const SOURCE_REQUIRED: ClaimKind[] = ["source-derived"];
  *  - local facts, assumptions and scenarios are allowed without sources but must be labelled so;
  *  - a local fact the model wrote is a proposal and blocks until the investigator enters it (D10 / S5).
  */
-export function ledgerIssues(claims: Claim[], items: EvidenceItem[], documents: SourceDocument[] = []): LedgerIssue[] {
+/** `localFacts`: the investigator's own local facts; a model local-fact claim that repeats one is established. */
+export function ledgerIssues(claims: Claim[], items: EvidenceItem[], documents: SourceDocument[] = [], localFacts: string[] = []): LedgerIssue[] {
   const byId = new Map(items.map((i) => [i.id, i]));
   const out: LedgerIssue[] = [];
   const known = new Map(claims.filter((c) => c.assertion).map((c) => [c.id, c.assertion!]));
@@ -67,7 +69,7 @@ export function ledgerIssues(claims: Claim[], items: EvidenceItem[], documents: 
         out.push({ claimId: c.id, severity: "note", message: "supported from abstract/metadata only; full text not read" });
       }
     }
-    if (c.kind === "local-fact" && c.origin !== "investigator") {
+    if (c.kind === "local-fact" && c.origin !== "investigator" && !localFactEstablished(c.text, localFacts)) {
       // D10 / S5, SYN-LOCAL-01: only the investigator establishes a local fact; a model's is a proposal.
       out.push({ claimId: c.id, severity: "block", message: "local fact proposed by the model; it is not established until the investigator enters it" });
     }

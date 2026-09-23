@@ -16,7 +16,7 @@ import { chart } from "@/lib/chart-tokens";
 import { familyOf } from "@/lib/stages";
 import { emptySearchConfirmationValid, scanHasRetrievedRecord, scanMayComplete } from "@/lib/defaults";
 import { evaluateDecision, decisionIsSupported } from "@/lib/evidence/decision";
-import { checkClaim, type LedgerCheckStatus } from "@/lib/evidence/grounding";
+import { checkClaim, localFactEstablished, type LedgerCheckStatus } from "@/lib/evidence/grounding";
 import { checkIdentities, searchLiterature } from "@/lib/evidence-server";
 import type { LiveProvider } from "@/lib/evidence/live";
 import type { LookupOutcome } from "@/lib/evidence/verify";
@@ -1033,7 +1033,9 @@ function ClaimLedger({ study }: { study: Study }) {
               {c.id} · {c.kind} · {c.uncertainty} uncertainty · {c.origin ?? "unknown"}
             </p>
             <p className="mt-1 text-sm leading-relaxed">{c.text}</p>
-            {c.kind === "local-fact" && c.origin !== "investigator" ? (
+            {c.kind === "local-fact" &&
+            c.origin !== "investigator" &&
+            !localFactEstablished(c.text, (study.problem.localFacts ?? []).filter((f) => f.by === "investigator").map((f) => f.text)) ? (
               <p className="mt-1 text-xs text-amber-700" data-meridian-proposed-local-fact="">
                 Model proposal, not a local fact: it counts only after you enter it yourself under local facts on the Problem stage.
               </p>
