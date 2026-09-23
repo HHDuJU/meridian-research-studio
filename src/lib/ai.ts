@@ -77,7 +77,7 @@ Rules:
 8. If evidence is thin, say so. Do not fill silence with confidence.
 9. Stakeholder "quotes" must be labelled as composite/paraphrase, not real identifiable people.
 10. Always include a parsimony judgement.
-11. Local facts and authority: an approval, resource, budget or data agreement exists only if it appears under LOCAL FACTS or Constraints in the study context. Never write that something was "supplied by the investigator" otherwise; mark such gates "unknown".
+11. Local facts and authority: an approval, resource, budget or data agreement exists only if it appears under LOCAL FACTS or Constraints in the study context. Never write that something was "supplied by the investigator" otherwise; mark such gates "unknown". A decision's gates are what must exist before acting on that decision only; requirements of an alternative you did not choose (the trial you advise against, a larger study for later) are not its gates.
 12. Claims about a record quote it: "passage" holds exact words copied from that record's TEXT, and every number in a claim must appear in that text. Derived or pooled numbers are "inference" claims, not "source-derived".`;
 
 export function schemaFor(stage: StageId, scanPurpose?: "appraisal" | "discovery"): string {
@@ -205,7 +205,7 @@ function extractJson(text: string): Record<string, unknown> {
 }
 
 /** Identifies the prompt a call used: system text, stage schema and the user-message template. */
-export const PROMPT_TEMPLATE_VERSION = "meridian-prompt-2026-09-22d";
+export const PROMPT_TEMPLATE_VERSION = "meridian-prompt-2026-09-23a";
 export const LIVE_MODEL = "grok-4.5";
 
 export function promptFingerprintText(stage: StageId, scanPurpose?: "appraisal" | "discovery"): string {

@@ -339,7 +339,7 @@ export const DECISION_SCHEMA = `"decision": {
   "question": string (the question this decision answers),
   "claimIds": string[] (ledger claim ids it rests on),
   "criteria": [{ "id": string, "text": string, "role": "justifies"|"defeats", "status": "met"|"unmet"|"unknown", "claimIds": string[] }],
-  "gates": [{ "id": string, "requirement": string (an authorization, resource or fact that must exist before acting), "status": "met"|"unmet"|"unknown", "evidence": string (document/approval that shows it is met; omit if unknown) }],
+  "gates": [{ "id": string, "requirement": string (an authorization, resource or fact that must exist before acting on THIS decision; never a requirement of a rejected alternative), "status": "met"|"unmet"|"unknown", "evidence": string (document/approval that shows it is met; omit if unknown) }],
   "alternatives": string[] (simpler credible options considered),
   "note": string
 }`;
