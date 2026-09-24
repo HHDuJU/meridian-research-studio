@@ -9,6 +9,14 @@ export const MAX_QUERY_CHARS = 500;
 export const MAX_RECORDS = 50;
 export const MAX_DOIS = 100;
 
+/**
+ * Records imported per search. Registries get the full page of 50: registry searches are small (39
+ * registrations for an erector spinae plane block rib-fracture query on 24 September 2026) and the
+ * Cowork connector cannot ask ClinicalTrials.gov for relevance order, so a short page would be an
+ * arbitrary subset.
+ */
+export const DEFAULT_IMPORT: Record<LiveProvider, number> = { pubmed: 20, openalex: 20, clinicaltrials: 50 };
+
 export interface SearchLiteratureInput {
   provider: LiveProvider;
   query: string;

@@ -32,7 +32,7 @@ export function exportEnvironment(): { inIframe: boolean; clipboard: boolean } {
   return { inIframe, clipboard };
 }
 
-type FileSaver = (filename: string, text: string, type: string) => Promise<void>;
+type FileSaver = (filename: string, data: string | Blob, type: string) => Promise<void>;
 let fileSaver: FileSaver | null = null;
 
 /**
@@ -41,6 +41,29 @@ let fileSaver: FileSaver | null = null;
  */
 export function setFileSaver(saver: FileSaver | null): void {
   fileSaver = saver;
+}
+
+/**
+ * Offer a file to the investigator: the registered saver (Cowork: the viewer's save prompt) or one link
+ * click. One investigator click produces one download (D22: a single click event, never also click()).
+ */
+export async function saveFile(filename: string, data: string | Blob, type: string): Promise<void> {
+  if (fileSaver) {
+    await fileSaver(filename, data, type);
+    return;
+  }
+  const blob = typeof data === "string" ? new Blob([data], { type }) : data;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+  queueMicrotask(() => {
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
 }
 
 /**

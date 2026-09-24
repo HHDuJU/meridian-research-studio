@@ -43,9 +43,16 @@ export interface LiveSearchResult {
 
 const defaultSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
-function failedEvent(provider: string, query: string, status: "blocked" | "error", note: string): RetrievalEvent {
-  return { id: uid("ret"), at: nowIso(), provider, query, resultCount: null, recordIds: [], status, performedBy: "app", note };
+function failedEvent(provider: string, query: string, status: "blocked" | "error", note: string, extra: Partial<RetrievalEvent> = {}): RetrievalEvent {
+  return { id: uid("ret"), at: nowIso(), provider, query, resultCount: null, recordIds: [], status, performedBy: "app", note, ...extra };
 }
+
+/** How each source is reached from the server build, and the order it returns records in (search report, PRISMA-S items 1 to 3 and 8). */
+export const SERVER_SOURCE_ACCESS: Record<LiveProvider, { via: string; order: string }> = {
+  pubmed: { via: "NCBI E-utilities API (ESearch, EFetch)", order: "relevance (PubMed Best Match)" },
+  openalex: { via: "OpenAlex API (/works, search)", order: "relevance (OpenAlex relevance score)" },
+  clinicaltrials: { via: "ClinicalTrials.gov API version 2 (/studies, query.term)", order: "relevance (@relevance)" },
+};
 
 /*
  * Query checks and per-source shaping. Databases need key terms or Boolean groups; a sentence sent
@@ -157,20 +164,22 @@ export async function searchPubmedLive(query: string, rawTransport: Transport, o
   const transport = retrying(gated(rawTransport, sleep), sleep, opts.retryPauseMs ?? 2000);
   const searchReq = pubmedSearchRequest(query, max, "meridian", opts.contact, opts.ncbiApiKey);
   const requests = [redactRequestUrl(searchReq.url)];
+  const access = { sent: query, ...SERVER_SOURCE_ACCESS.pubmed, importCap: max };
   const sres = await transport(searchReq);
   const sfail = transportFailure(sres.status);
-  if (sfail) return { event: failedEvent("pubmed", query, sfail, sres.note ?? `esearch HTTP ${sres.status}`), items: [], documents: [], requests };
+  if (sfail) return { event: failedEvent("pubmed", query, sfail, sres.note ?? `esearch HTTP ${sres.status}`, access), items: [], documents: [], requests };
   let found: ReturnType<typeof parsePubmedSearch>;
   try {
     found = parsePubmedSearch(sres.body);
   } catch (err) {
-    return { event: failedEvent("pubmed", query, "error", `esearch parse failure: ${err instanceof Error ? err.message : String(err)}`), items: [], documents: [], requests };
+    return { event: failedEvent("pubmed", query, "error", `esearch parse failure: ${err instanceof Error ? err.message : String(err)}`, access), items: [], documents: [], requests };
   }
   const eventId = uid("ret");
   const at = nowIso();
+  const described = { ...access, translation: found.queryTranslation || undefined };
   if (!found.pmids.length) {
     return {
-      event: { id: eventId, at, provider: "pubmed", query, resultCount: found.total ?? 0, recordIds: [], status: "ok", performedBy: "app", note: found.queryTranslation ? `PubMed translation: ${found.queryTranslation}` : undefined },
+      event: { id: eventId, at, provider: "pubmed", query, resultCount: found.total ?? 0, recordIds: [], status: "ok", performedBy: "app", note: found.queryTranslation ? `PubMed translation: ${found.queryTranslation}` : undefined, ...described },
       items: [],
       documents: [],
       requests,
@@ -183,7 +192,7 @@ export async function searchPubmedLive(query: string, rawTransport: Transport, o
   const ffail = transportFailure(fres.status);
   if (ffail) {
     return {
-      event: { id: eventId, at, provider: "pubmed", query, resultCount: found.total, recordIds: [], status: ffail, performedBy: "app", note: `esearch returned ${found.pmids.length} PMIDs but efetch failed (${fres.note ?? `HTTP ${fres.status}`}); no records created` },
+      event: { id: eventId, at, provider: "pubmed", query, resultCount: found.total, recordIds: [], status: ffail, performedBy: "app", note: `esearch returned ${found.pmids.length} PMIDs but efetch failed (${fres.note ?? `HTTP ${fres.status}`}); no records created`, ...described },
       items: [],
       documents: [],
       requests,
@@ -194,7 +203,7 @@ export async function searchPubmedLive(query: string, rawTransport: Transport, o
     records = parsePubmedArticles(fres.body);
   } catch (err) {
     return {
-      event: { id: eventId, at, provider: "pubmed", query, resultCount: found.total, recordIds: [], status: "error", performedBy: "app", note: `efetch parse failure: ${err instanceof Error ? err.message : String(err)}` },
+      event: { id: eventId, at, provider: "pubmed", query, resultCount: found.total, recordIds: [], status: "error", performedBy: "app", note: `efetch parse failure: ${err instanceof Error ? err.message : String(err)}`, ...described },
       items: [],
       documents: [],
       requests,
@@ -210,7 +219,7 @@ export async function searchPubmedLive(query: string, rawTransport: Transport, o
     `${items.filter((i) => i.abstract?.text).length} of ${items.length} records carry an abstract`,
   ].filter(Boolean);
   return {
-    event: { id: eventId, at, provider: "pubmed", query, resultCount: found.total, recordIds: items.map((i) => i.id), status: partial ? "partial" : "ok", performedBy: "app", note: notes.join("; ") },
+    event: { id: eventId, at, provider: "pubmed", query, resultCount: found.total, recordIds: items.map((i) => i.id), status: partial ? "partial" : "ok", performedBy: "app", note: notes.join("; "), ...described },
     items,
     documents,
     requests,
@@ -234,7 +243,8 @@ export async function searchLive(provider: LiveProvider, query: string, transpor
   const r = await runSearch(adapterFor(provider, opts), q, retrying(gated(transport, sleep), sleep, opts.retryPauseMs ?? 2000));
   const withAbstract = r.items.filter((i) => i.abstract?.text).length;
   const note = [r.event.note ?? "", r.items.length ? `${withAbstract} of ${r.items.length} records carry an abstract or registry summary` : ""].filter(Boolean).join("; ");
-  return { event: { ...r.event, note: note || undefined }, items: r.items, documents: r.documents, requests: [redactRequestUrl(r.request.url)] };
+  const described = { sent: q, ...SERVER_SOURCE_ACCESS[provider], importCap: Math.min(Math.max(opts.max ?? 20, 1), 100) };
+  return { event: { ...r.event, note: note || undefined, ...described }, items: r.items, documents: r.documents, requests: [redactRequestUrl(r.request.url)] };
 }
 
 /**

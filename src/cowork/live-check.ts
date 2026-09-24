@@ -255,6 +255,24 @@ async function createStudy(plan: Plan): Promise<string> {
   return created.id;
 }
 
+/**
+ * Claude and the connectors ask the viewer before their first use in each page view, and only a person can
+ * answer (the platform ignores automated clicks on its dialog). The check asks once, with one batched dialog
+ * for Claude and both connectors, and starts only after the answer; before 24 September 2026 it started at
+ * once and every model call waited about 15 minutes on the dialog, then failed.
+ */
+async function askConsent(ui: ReturnType<typeof banner>): Promise<{ before: Record<string, string>; after: Record<string, string>; waitedMs: number }> {
+  const perms = await capability("permissions");
+  const names = ["sample", "mcp"];
+  if (!perms) return { before: {}, after: {}, waitedMs: 0 };
+  const before = await perms.state().catch(() => ({}) as Record<string, string>);
+  if (names.every((n) => before[n] === "granted")) return { before, after: before, waitedMs: 0 };
+  ui.set("Live check: allow Claude and the PubMed and Clinical Trials connectors in the dialog on screen. The check starts after you answer.");
+  const started = Date.now();
+  const after = await perms.request(names).catch(() => ({}) as Record<string, string>);
+  return { before, after, waitedMs: Date.now() - started };
+}
+
 /** Start the live check when the page was opened with #live-check or #live-check-<plan id>. */
 export async function maybeRunLiveCheck(): Promise<void> {
   const hash = (globalThis.location?.hash ?? "").replace(/^#/, "");
@@ -269,6 +287,7 @@ export async function maybeRunLiveCheck(): Promise<void> {
   const [db, user] = await Promise.all([capability("db"), capability("user")]);
   const uid = user ? await user.id().catch(() => null) : null;
   const runId = new Date().toISOString().replace(/[:.]/g, "-");
+  const consent = await askConsent(ui);
   const saveReport = async (planId: string, report: unknown) => {
     if (!db || !uid) return;
     const json = JSON.stringify(report);
@@ -276,9 +295,15 @@ export async function maybeRunLiveCheck(): Promise<void> {
     const body = json.length < 240_000 ? JSON.parse(json) : { ...(report as Record<string, unknown>), steps: "too large; see the study itself", truncated: true };
     await db.doc(`data/users/${uid}/meridian/live-runs/${runId}-${planId}`).set(body).catch(() => undefined);
   };
+  if (consent.after.sample === "denied" || consent.after.mcp === "denied") {
+    const what = [consent.after.sample === "denied" ? "Claude" : "", consent.after.mcp === "denied" ? "the connectors" : ""].filter(Boolean).join(" and ");
+    for (const plan of plans) await saveReport(plan.id, { plan: plan.id, runId, edition: "cowork", consent, notRun: `${what} not allowed in this view`, steps: [] });
+    ui.done(`Live check not run: ${what} not allowed in this view. Reload the page to be asked again.`);
+    return;
+  }
   for (let p = 0; p < plans.length; p++) {
     const plan = plans[p];
-    const report: Record<string, unknown> & { steps: unknown[] } = { plan: plan.id, runId, edition: "cowork", startedAt: new Date().toISOString(), steps: [] };
+    const report: Record<string, unknown> & { steps: unknown[] } = { plan: plan.id, runId, edition: "cowork", consent, startedAt: new Date().toISOString(), steps: [] };
     let studyId: string | null = null;
     const total = plan.steps.length + 1;
     const step = async (n: number, s: PlanStep, fn: () => Promise<unknown>) => {

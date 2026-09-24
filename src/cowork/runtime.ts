@@ -39,7 +39,14 @@ export interface UserCap {
   id(): Promise<string | null>;
 }
 
+/** Built-in `permissions` capability: read consent without asking, or ask once with one batched dialog. */
+export interface Permissions {
+  state(): Promise<Record<string, string>>;
+  request(names?: readonly string[]): Promise<Record<string, string>>;
+}
+
 interface CapabilityMap {
+  permissions: Permissions;
   sample: SampleFn;
   mcp: Mcp;
   downloads: Downloads;

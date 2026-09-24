@@ -16,8 +16,14 @@ export const PUBMED = {
   base: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils",
 };
 
+/**
+ * ESearch with `sort=relevance` (PubMed Best Match). Without it ESearch returns the most recently added
+ * records first: on 24 September 2026 the query "erector spinae plane block rib fractures" gave PMIDs
+ * 42582163, 42538106, ... unsorted and 27501016, 37334278, ... with sort=relevance (106 hits either way),
+ * so the first 20 imported were the newest 20, not the most relevant.
+ */
 export function pubmedSearchRequest(term: string, retmax = 20, tool = "meridian", email?: string, apiKey?: string): TransportRequest {
-  const params = new URLSearchParams({ db: "pubmed", term, retmode: "json", retmax: String(retmax), tool });
+  const params = new URLSearchParams({ db: "pubmed", term, retmode: "json", retmax: String(retmax), sort: "relevance", tool });
   if (email) params.set("email", email);
   if (apiKey) params.set("api_key", apiKey);
   return { url: `${PUBMED.base}/esearch.fcgi?${params.toString()}` };

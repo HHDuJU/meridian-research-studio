@@ -123,6 +123,55 @@ export interface RetrievalEvent {
   /** app: Meridian's own adapter; connector: a development-time tool (e.g. a Cowork connector); manual: a person */
   performedBy: "app" | "connector" | "manual";
   note?: string;
+  /*
+   * Search-report fields (24 September 2026). Recorded when the search runs; absent on events made
+   * earlier, which the search report then describes from the note and marks as not recorded.
+   */
+  /** The strategy exactly as sent to the source, after per-source shaping (field tags removed for registries, wildcards removed where refused). */
+  sent?: string;
+  /** The source's own reading of the strategy, as returned (PubMed "Search details"). */
+  translation?: string;
+  /** How the source was reached, e.g. "NCBI E-utilities API (ESearch, EFetch)". */
+  via?: string;
+  /** Order the source returned records in, e.g. "relevance (PubMed Best Match)". */
+  order?: string;
+  /** Most records this search could import into Meridian. */
+  importCap?: number;
+  /** A search run outside Meridian and recorded by the investigator: the source's name (e.g. "Embase") and kind. */
+  sourceName?: string;
+  sourceKind?: "database" | "registry";
+}
+
+/**
+ * The investigator's answers about how the search was done, for the search report (PRISMA-S items a
+ * database cannot report: other sources, filters, prior work, updates, peer review, limits). Written
+ * only by an investigator screen action; a model reply cannot set it.
+ */
+export const SEARCH_LOG_KEYS = [
+  "searcher",
+  "browsing",
+  "citations",
+  "contacts",
+  "otherMethods",
+  "filters",
+  "priorWork",
+  "updates",
+  "peerReview",
+  "limitsWhy",
+] as const;
+export type SearchLogKey = (typeof SEARCH_LOG_KEYS)[number];
+/** Entries that are free text (no yes/no answer). */
+export const SEARCH_LOG_TEXT_KEYS: ReadonlySet<SearchLogKey> = new Set<SearchLogKey>(["searcher", "limitsWhy"]);
+
+export interface SearchLogEntry {
+  /** yes/no questions carry an answer; free-text entries (searcher, limitsWhy) carry only detail. */
+  answer?: "yes" | "no";
+  detail: string;
+  at: string;
+}
+
+export interface SearchLog {
+  entries: Partial<Record<SearchLogKey, SearchLogEntry>>;
 }
 
 export type ClaimKind = "source-derived" | "local-fact" | "assumption" | "inference" | "scenario" | "unknown";
@@ -426,6 +475,8 @@ export interface ScanStage {
   /** Historical GRADE assignment that was not supported by retrieved records. Display is not this value. */
   unsupportedGradeOverall?: { value: GradeLevel; reason: string; status: "stale" | "unknown" };
   completionWithdrawn?: { wasComplete: true; reason: string };
+  /** The investigator's answers for the search report. Set only by `setSearchLog` in the store. */
+  searchLog?: SearchLog;
 }
 
 export interface MapStage {
@@ -678,6 +729,8 @@ export interface EvidenceRun {
   records: number;
   elapsedMs: number | null;
   note?: string;
+  /** The retrieval event this search produced (search runs only; absent on runs recorded before 24 September 2026). */
+  eventId?: string;
 }
 
 export interface AuditStage {

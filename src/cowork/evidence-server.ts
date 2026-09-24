@@ -25,6 +25,15 @@ import {
 
 export { MAX_DOIS, MAX_QUERY_CHARS, MAX_RECORDS, validateDoiInput, validateSearchInput, type SearchLiteratureInput } from "../lib/evidence/requests";
 
+/** How each source is reached in Cowork and the order it returns records in (search report, PRISMA-S items 1 to 3 and 8). */
+export const COWORK_SOURCE_ACCESS = {
+  pubmed: { via: "PubMed connector in Claude (search_articles, get_article_metadata)", order: "relevance (PubMed Best Match)" },
+  clinicaltrials: {
+    via: "Clinical Trials connector in Claude (search_trials with an Essie expression, get_trial_details)",
+    order: "not set: the connector has no sort option and ClinicalTrials.gov returns studies unsorted unless asked",
+  },
+} as const;
+
 /** Sources with a connector in Cowork. OpenAlex has none. */
 export const LIVE_SOURCES: readonly LiveProvider[] = ["pubmed", "clinicaltrials"];
 /** Identity checks run against PubMed (Crossref has no connector). */
@@ -37,9 +46,9 @@ export interface ConnectorSearchResult {
   requests: string[];
 }
 
-function failed(provider: string, query: string, status: "blocked" | "error", note: string, requests: string[] = []): ConnectorSearchResult {
+function failed(provider: string, query: string, status: "blocked" | "error", note: string, requests: string[] = [], extra: Partial<RetrievalEvent> = {}): ConnectorSearchResult {
   return {
-    event: { id: uid("ret"), at: nowIso(), provider, query, resultCount: null, recordIds: [], status, performedBy: "app", note },
+    event: { id: uid("ret"), at: nowIso(), provider, query, resultCount: null, recordIds: [], status, performedBy: "app", note, ...extra },
     items: [],
     documents: [],
     requests,
@@ -58,21 +67,23 @@ async function searchPubmed(mcp: Mcp, query: string, max: number): Promise<Conne
   const q = pubmedConnectorQuery(providerQuery("pubmed", query));
   const searchInput = { query: q, max_results: max, sort: "relevance" };
   const requests = [describe(PUBMED_SERVER, "search_articles", searchInput)];
+  const access = { sent: q, ...COWORK_SOURCE_ACCESS.pubmed, importCap: max };
   let found: { pmids?: unknown; total_count?: unknown; query_translation?: unknown };
   try {
     found = ((await call(mcp, PUBMED_SERVER, "search_articles", searchInput)) ?? {}) as typeof found;
   } catch (err) {
     const f = connectorFailure(PUBMED_SERVER, err);
-    return failed("pubmed", query, f.status, f.note, requests);
+    return failed("pubmed", query, f.status, f.note, requests, access);
   }
   const pmids = Array.isArray(found.pmids) ? found.pmids.map(String).filter((p) => /^\d{1,9}$/.test(p)).slice(0, max) : [];
   const total = typeof found.total_count === "number" ? found.total_count : null;
   const translation = typeof found.query_translation === "string" ? `PubMed translation: ${found.query_translation}` : "";
+  const described = { ...access, translation: typeof found.query_translation === "string" && found.query_translation ? found.query_translation : undefined };
   const eventId = uid("ret");
   const at = nowIso();
   if (!pmids.length) {
     return {
-      event: { id: eventId, at, provider: "pubmed", query, resultCount: total ?? 0, recordIds: [], status: "ok", performedBy: "app", note: [translation, "through the PubMed connector"].filter(Boolean).join("; ") },
+      event: { id: eventId, at, provider: "pubmed", query, resultCount: total ?? 0, recordIds: [], status: "ok", performedBy: "app", note: [translation, "through the PubMed connector"].filter(Boolean).join("; "), ...described },
       items: [],
       documents: [],
       requests,
@@ -87,7 +98,7 @@ async function searchPubmed(mcp: Mcp, query: string, max: number): Promise<Conne
   } catch (err) {
     const f = connectorFailure(PUBMED_SERVER, err);
     return {
-      event: { id: eventId, at, provider: "pubmed", query, resultCount: total, recordIds: [], status: f.status, performedBy: "app", note: `search returned ${pmids.length} PMIDs but the records could not be read (${f.note}); no records created` },
+      event: { id: eventId, at, provider: "pubmed", query, resultCount: total, recordIds: [], status: f.status, performedBy: "app", note: `search returned ${pmids.length} PMIDs but the records could not be read (${f.note}); no records created`, ...described },
       items: [],
       documents: [],
       requests,
@@ -105,7 +116,7 @@ async function searchPubmed(mcp: Mcp, query: string, max: number): Promise<Conne
     "through the PubMed connector",
   ].filter(Boolean);
   return {
-    event: { id: eventId, at, provider: "pubmed", query, resultCount: total, recordIds: items.map((i) => i.id), status: partial ? "partial" : "ok", performedBy: "app", note: notes.join("; ") },
+    event: { id: eventId, at, provider: "pubmed", query, resultCount: total, recordIds: items.map((i) => i.id), status: partial ? "partial" : "ok", performedBy: "app", note: notes.join("; "), ...described },
     items,
     documents,
     requests,
@@ -130,12 +141,13 @@ async function searchTrials(mcp: Mcp, query: string, max: number): Promise<Conne
   const q = providerQuery("clinicaltrials", query);
   const searchInput = { advanced_query: q, page_size: max, count_total: true };
   const requests = [describe(TRIALS_SERVER, "search_trials", searchInput)];
+  const access = { sent: q, ...COWORK_SOURCE_ACCESS.clinicaltrials, importCap: max };
   let found: { total?: unknown; items?: unknown };
   try {
     found = ((await call(mcp, TRIALS_SERVER, "search_trials", searchInput)) ?? {}) as typeof found;
   } catch (err) {
     const f = connectorFailure(TRIALS_SERVER, err);
-    return failed("clinicaltrials", query, f.status, f.note, requests);
+    return failed("clinicaltrials", query, f.status, f.note, requests, access);
   }
   const listed = (Array.isArray(found.items) ? (found.items as TrialConnectorRecord[]) : []).slice(0, max);
   const total = typeof found.total === "number" ? found.total : null;
@@ -165,7 +177,7 @@ async function searchTrials(mcp: Mcp, query: string, max: number): Promise<Conne
     "through the Clinical Trials connector",
   ].filter(Boolean);
   return {
-    event: { id: eventId, at: nowIso(), provider: "clinicaltrials", query, resultCount: total, recordIds: items.map((i) => i.id), status: partial ? "partial" : "ok", performedBy: "app", note: notes.join("; ") },
+    event: { id: eventId, at: nowIso(), provider: "clinicaltrials", query, resultCount: total, recordIds: items.map((i) => i.id), status: partial ? "partial" : "ok", performedBy: "app", note: notes.join("; "), ...access },
     items,
     documents,
     requests,

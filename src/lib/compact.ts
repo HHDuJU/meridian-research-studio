@@ -144,7 +144,12 @@ export function compactStudy(study: Study, stage: StageId, opts: CompactOptions 
     parts.push(
       "SEARCHES ACTUALLY RUN: " +
         scan.retrievalEvents
-          .map((e) => `${e.provider}${e.performedBy !== "app" ? ` (${e.performedBy})` : ""}: "${e.query}" → ${e.status}${e.resultCount !== null ? `, ${e.resultCount} hits` : ""}`)
+          .map((e) =>
+            e.provider === "external"
+              ? // A search run outside Meridian and recorded by the investigator; its strategy can be long, so only its start is sent.
+                `${e.sourceName ?? "external source"} (run outside Meridian): "${clip(e.query, 300)}" → ${e.resultCount !== null ? `${e.resultCount} hits` : "count not given"}, no records imported`
+              : `${e.provider}${e.performedBy !== "app" ? ` (${e.performedBy})` : ""}: "${e.query}" → ${e.status}${e.resultCount !== null ? `, ${e.resultCount} hits` : ""}`,
+          )
           .join(" | "),
     );
   } else if (scan.items.length) {

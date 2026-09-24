@@ -19,7 +19,7 @@ import { approvalReview, evaluateDecision, decisionIsSupported } from "@/lib/evi
 import { BODY_LABEL, DETERMINATION_GATE, LITERATURE_FAMILIES, NO_WORK_REASON, RECORD_PRESETS, type AuthorityBody } from "@/lib/evidence/authority";
 import { checkClaim, localFactEstablished, type LedgerCheckStatus } from "@/lib/evidence/grounding";
 import { checkIdentities, IDENTITY_PROVIDER, LIVE_SOURCES, searchLiterature } from "@/lib/evidence-server";
-import { doisToCheck } from "@/lib/evidence/requests";
+import { DEFAULT_IMPORT, doisToCheck } from "@/lib/evidence/requests";
 import type { LiveProvider } from "@/lib/evidence/live";
 import type { LookupOutcome } from "@/lib/evidence/verify";
 import { useStudio } from "@/lib/store";
@@ -28,6 +28,7 @@ import type { CheckProvider, GradeLevel, StageId, Study } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import { EmptyHint, Field, GradeBadge, Panel, Prose, ScoreBar, VerifyBadge } from "./bits";
 import { EvidenceGraph } from "./evidence-graph";
+import { SearchReportPanel } from "./search-report-panel";
 
 function patchProblem(study: Study, key: keyof Study["problem"], value: string) {
   useStudio.getState().mergeStage(study.id, "problem", { [key]: value });
@@ -310,6 +311,7 @@ function ScanPanel({ study }: { study: Study }) {
           </ul>
         </Panel>
       ) : null}
+      <SearchReportPanel study={study} />
       {s.claims?.length ? <ClaimLedger study={study} /> : null}
       <Panel title="Synthesis">
         {s.synthesis ? (
@@ -1086,7 +1088,7 @@ function LiveSearch({ study }: { study: Study }) {
       for (const provider of chosen) {
         setBusy(`Searching ${LIVE_LABEL[provider]}`);
         const started = Date.now();
-        const res = await searchLiterature({ data: { provider, query, max: 20 } });
+        const res = await searchLiterature({ data: { provider, query, max: DEFAULT_IMPORT[provider] } });
         if (!res || !res.ok) {
           const error = res && "error" in res ? String(res.error) : "search failed";
           lines.push(`${LIVE_LABEL[provider]}: refused (${error})`);
@@ -1111,6 +1113,7 @@ function LiveSearch({ study }: { study: Study }) {
           records: data.items.length,
           elapsedMs: typeof res.elapsedMs === "number" ? res.elapsedMs : Date.now() - started,
           note: data.event.note,
+          eventId: data.event.id,
         });
         const why = data.event.status === "error" || data.event.status === "blocked" ? ` (${(data.event.note ?? "no detail").slice(0, 220)})` : "";
         lines.push(`${LIVE_LABEL[provider]}: ${data.event.status}, ${data.items.length} records${data.event.resultCount !== null ? ` of ${data.event.resultCount}` : ""}${why}`);

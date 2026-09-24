@@ -12,8 +12,13 @@ export const CLINICALTRIALS = {
   base: "https://clinicaltrials.gov/api/v2",
 };
 
+/**
+ * `sort=@relevance`: the API returns studies unsorted unless asked ("not sorted by default for a
+ * performance reason", OpenAPI description of `sort`, read 24 September 2026). Unsorted, the first
+ * studies for an erector spinae plane block rib-fracture query included mastectomy and hip surgery trials.
+ */
 export function clinicalTrialsSearchRequest(term: string, pageSize = 20): TransportRequest {
-  const params = new URLSearchParams({ "query.term": term, pageSize: String(pageSize), countTotal: "true", format: "json" });
+  const params = new URLSearchParams({ "query.term": term, pageSize: String(pageSize), countTotal: "true", sort: "@relevance", format: "json" });
   return { url: `${CLINICALTRIALS.base}/studies?${params.toString()}`, headers: { Accept: "application/json" } };
 }
 

@@ -3,8 +3,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { createStudy, migrateStudy, scanMayComplete, queryHashOf, scanContentRevision, withdrawScanCompletionIfInvalid } from "./defaults";
 import { writeImmutableBackup, browserLocalStorage, createGuardedStorage, readBackupFailure, FAIL_KEY, MAIN_KEY } from "./persist-backup";
 import { SEED_IDS, SEED_STUDIES } from "./seed";
-import { STAGE_IDS, STUDY_SCHEMA_VERSION, STUDY_FAMILIES, orderNeedsReview } from "./types";
-import type { AuditEntry, CheckProvider, EvidenceRun, ModelRun, SourceCheck, StageId, Study, StudyFamily, EvidenceItem, RetrievalEvent, SourceDocument } from "./types";
+import { SEARCH_LOG_KEYS, SEARCH_LOG_TEXT_KEYS, STAGE_IDS, STUDY_SCHEMA_VERSION, STUDY_FAMILIES, orderNeedsReview } from "./types";
+import type { AuditEntry, CheckProvider, EvidenceRun, ModelRun, SearchLogKey, SourceCheck, StageId, Study, StudyFamily, EvidenceItem, RetrievalEvent, SourceDocument } from "./types";
 import { applyLookupOutcome, type LookupOutcome } from "./evidence/verify";
 import { nowIso, uid } from "./utils";
 import { refreshDecisionStatuses, studyRevision, decisionIsSupported } from "./evidence/decision";
@@ -35,6 +35,19 @@ interface StudioState {
   addLocalFact: (id: string, text: string) => { ok: boolean; reason?: string };
   /** Investigator-only: remove a local fact. Decisions and gates that rested on it are re-evaluated. */
   removeLocalFact: (id: string, factId: string) => void;
+  /**
+   * Investigator-only: record (or clear, with null) one answer for the search report: who searched,
+   * other sources, filters, prior work, updates, peer review, why limits were used. A yes needs the detail.
+   */
+  setSearchLog: (id: string, key: SearchLogKey, entry: { answer?: "yes" | "no"; detail: string } | null) => { ok: boolean; reason?: string };
+  /**
+   * Investigator-only: record a search run outside Meridian (for example Embase through Ovid), so the search
+   * report lists it with its date, strategy and count. No records are imported; the event says who ran it.
+   */
+  recordExternalSearch: (
+    id: string,
+    input: { source: string; kind: "database" | "registry"; platform: string; date: string; strategy: string; found: number | null; note?: string },
+  ) => { ok: boolean; reason?: string; eventId?: string };
   /** Investigator-only: set a decision gate's status with the evidence that shows it. */
   setGate: (
     id: string,
@@ -165,6 +178,66 @@ export const useStudio = create<StudioState>()(
         get().mergeStage(id, "problem", { localFacts: [...(s.problem.localFacts ?? []), fact] });
         get().log(id, { id: uid("audit"), at: nowIso(), kind: "edit", stage: "problem", actor: "investigator", summary: `Local fact ${fact.id} added.` });
         return { ok: true };
+      },
+      setSearchLog: (id, key, entry) => {
+        const s = get().studies.find((x) => x.id === id);
+        if (!s) return { ok: false, reason: "study not found" };
+        if (!(SEARCH_LOG_KEYS as readonly string[]).includes(key)) return { ok: false, reason: "unknown search-report question" };
+        const entries = { ...(s.scan.searchLog?.entries ?? {}) };
+        if (entry === null) {
+          if (!entries[key]) return { ok: true };
+          delete entries[key];
+        } else {
+          const detail = (entry.detail ?? "").trim();
+          const answer = entry.answer === "yes" || entry.answer === "no" ? entry.answer : undefined;
+          if (SEARCH_LOG_TEXT_KEYS.has(key)) {
+            if (!detail) return { ok: false, reason: "empty answer" };
+            entries[key] = { detail, at: nowIso() };
+          } else {
+            if (!answer) return { ok: false, reason: "answer yes or no" };
+            if (answer === "yes" && !detail) return { ok: false, reason: "a yes needs the details a reader would need (what, who, when)" };
+            entries[key] = { answer, detail, at: nowIso() };
+          }
+        }
+        get().mergeStage(id, "scan", { searchLog: { entries } });
+        get().log(id, { id: uid("audit"), at: nowIso(), kind: "edit", stage: "scan", actor: "investigator", summary: `Search report: ${key} ${entry === null ? "cleared" : "recorded"}.` });
+        return { ok: true };
+      },
+      recordExternalSearch: (id, input) => {
+        const s = get().studies.find((x) => x.id === id);
+        if (!s) return { ok: false, reason: "study not found" };
+        const source = (input.source ?? "").trim();
+        const platform = (input.platform ?? "").trim();
+        const strategy = (input.strategy ?? "").trim();
+        if (!source) return { ok: false, reason: "name the source, e.g. Embase" };
+        if (!platform) return { ok: false, reason: "name the platform or website, e.g. Ovid" };
+        if (!strategy) return { ok: false, reason: "paste the strategy exactly as it was run" };
+        if (strategy.length > 20000) return { ok: false, reason: "the strategy is longer than 20,000 characters" };
+        const day = /^\d{4}-\d{2}-\d{2}$/.test(input.date ?? "") ? Date.parse(`${input.date}T12:00:00Z`) : NaN;
+        if (!Number.isFinite(day)) return { ok: false, reason: "give the date the search was run (YYYY-MM-DD)" };
+        if (day > Date.now() + 24 * 3600 * 1000) return { ok: false, reason: "the date is in the future" };
+        if (input.found !== null && (!Number.isInteger(input.found) || input.found < 0)) return { ok: false, reason: "records found must be a whole number" };
+        const event: RetrievalEvent = {
+          id: uid("ret"),
+          at: new Date(day).toISOString(),
+          provider: "external",
+          query: strategy,
+          sent: strategy,
+          resultCount: input.found,
+          recordIds: [],
+          status: "ok",
+          performedBy: "manual",
+          via: platform,
+          sourceName: source,
+          sourceKind: input.kind === "registry" ? "registry" : "database",
+          note: (input.note ?? "").trim() || undefined,
+        };
+        get().mergeStage(id, "scan", {
+          retrievalEvents: [...(s.scan.retrievalEvents ?? []), event],
+          sourcesConsulted: [...new Set([...(s.scan.sourcesConsulted ?? []), source])],
+        });
+        get().log(id, { id: uid("audit"), at: nowIso(), kind: "edit", stage: "scan", actor: "investigator", summary: `Search run outside Meridian recorded: ${source} (${platform}), ${input.date}.` });
+        return { ok: true, eventId: event.id };
       },
       removeLocalFact: (id, factId) => {
         const s = get().studies.find((x) => x.id === id);

@@ -17,14 +17,14 @@ import { applyPulled, StudySync } from "./sync";
 import { maybeRunLiveCheck } from "./live-check";
 import "../styles.css";
 
-setFileSaver(async (filename, text) => {
+setFileSaver(async (filename, data) => {
   const downloads = await capability("downloads");
   if (!downloads) {
-    toast.error("Saving files is not available in this view; the study JSON was copied to the clipboard where allowed.");
+    toast.error("Saving files is not available in this view.");
     return;
   }
   try {
-    await downloads.save({ filename, data: text });
+    await downloads.save({ filename, data });
   } catch (err) {
     const code = (err as { code?: unknown })?.code;
     if (code !== "declined") toast.error(`The file was not saved (${typeof code === "string" ? code : "error"}).`);
