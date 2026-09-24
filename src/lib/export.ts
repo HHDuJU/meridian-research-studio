@@ -32,6 +32,17 @@ export function exportEnvironment(): { inIframe: boolean; clipboard: boolean } {
   return { inIframe, clipboard };
 }
 
+type FileSaver = (filename: string, text: string, type: string) => Promise<void>;
+let fileSaver: FileSaver | null = null;
+
+/**
+ * Where a download goes. A page served on its own uses a link click; the Cowork edition registers
+ * the viewer's save prompt instead, because an artifact frame ignores link downloads.
+ */
+export function setFileSaver(saver: FileSaver | null): void {
+  fileSaver = saver;
+}
+
 /**
  * One investigator click produces one download. D22: dispatch a single click event; do not also call click().
  */
@@ -39,18 +50,22 @@ export function downloadStudyJson(study: Study): { filename: string; bytes: numb
   const json = studyToJson(study);
   const filename = `meridian-study-${study.id}.json`;
   const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.rel = "noopener";
-  a.setAttribute("data-meridian-export", study.id);
-  document.body.appendChild(a);
-  a.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
-  queueMicrotask(() => {
-    a.remove();
-    URL.revokeObjectURL(url);
-  });
+  if (fileSaver) {
+    void fileSaver(filename, json, "application/json").catch(() => undefined);
+  } else {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.rel = "noopener";
+    a.setAttribute("data-meridian-export", study.id);
+    document.body.appendChild(a);
+    a.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+    queueMicrotask(() => {
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+  }
   const env = exportEnvironment();
   if (env.clipboard) {
     void navigator.clipboard.writeText(json).catch(() => undefined);

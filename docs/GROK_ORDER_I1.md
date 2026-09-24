@@ -1,6 +1,6 @@
-# Order I1 for Grok Build (prepared 23 September 2026; approved; not yet sent)
+# Order I1 for Grok Build (prepared 23 September 2026; approved; paused 24 September, not sent)
 
-Status: the investigator approved this order on 23 September, with its 150-call cap. Grok's weekly usage limit is reached until 13:46 UTC on 28 September, so the integration owner's scheduled follow-up pastes the text below into the Grok Build thread "AI-Powered Medical Research Software" as one message at 14:15 UTC that day, after checking that GitHub `main` and `claude/meridian-integration-a45` are on the same commit and that this text and `docs/HANDOFF.md` section 4 name that tree's test count and digest. One coordinator sends orders to Grok at a time.
+Status: paused. On 24 September the investigator chose not to wait for Grok: Claude runs Meridian on Cowork (`docs/COWORK_EDITION.md`), and the scheduled send is disabled (it can be switched back on). The rest of this status describes the order as approved on 23 September, with its 150-call cap. Grok's weekly usage limit is reached until 13:46 UTC on 28 September, so the integration owner's scheduled follow-up pastes the text below into the Grok Build thread "AI-Powered Medical Research Software" as one message at 14:15 UTC that day, after checking that GitHub `main` and `claude/meridian-integration-a45` are on the same commit and that this text and `docs/HANDOFF.md` section 4 name that tree's test count and digest. One coordinator sends orders to Grok at a time.
 
 ---
 

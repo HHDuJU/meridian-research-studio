@@ -18,12 +18,13 @@ import { emptySearchConfirmationValid, scanHasRetrievedRecord, scanMayComplete }
 import { approvalReview, evaluateDecision, decisionIsSupported } from "@/lib/evidence/decision";
 import { BODY_LABEL, DETERMINATION_GATE, NO_WORK_REASON, type AuthorityBody } from "@/lib/evidence/authority";
 import { checkClaim, localFactEstablished, type LedgerCheckStatus } from "@/lib/evidence/grounding";
-import { checkIdentities, searchLiterature } from "@/lib/evidence-server";
+import { checkIdentities, IDENTITY_PROVIDER, LIVE_SOURCES, searchLiterature } from "@/lib/evidence-server";
+import { doisToCheck } from "@/lib/evidence/requests";
 import type { LiveProvider } from "@/lib/evidence/live";
 import type { LookupOutcome } from "@/lib/evidence/verify";
 import { useStudio } from "@/lib/store";
 import { nowIso, uid } from "@/lib/utils";
-import type { GradeLevel, StageId, Study } from "@/lib/types";
+import type { CheckProvider, GradeLevel, StageId, Study } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import { EmptyHint, Field, GradeBadge, Panel, Prose, ScoreBar, VerifyBadge } from "./bits";
 import { EvidenceGraph } from "./evidence-graph";
@@ -1061,27 +1062,21 @@ function ClaimLedger({ study }: { study: Study }) {
 }
 
 const LIVE_LABEL: Record<LiveProvider, string> = { pubmed: "PubMed", openalex: "OpenAlex", clinicaltrials: "ClinicalTrials.gov" };
+const CHECK_LABEL: Record<string, string> = { crossref: "Crossref", pubmed: "PubMed", openalex: "OpenAlex", clinicaltrials: "ClinicalTrials.gov", manual: "Manual" };
 
 /** Production literature search and identity checks (server functions; live network on the app host). */
 function LiveSearch({ study }: { study: Study }) {
   const applyRetrieval = useStudio((st) => st.applyRetrieval);
   const applyIdentityChecks = useStudio((st) => st.applyIdentityChecks);
   const recordEvidenceRun = useStudio((st) => st.recordEvidenceRun);
-  const [sources, setSources] = useState<Record<LiveProvider, boolean>>({ pubmed: true, openalex: true, clinicaltrials: true });
+  const [sources, setSources] = useState<Record<string, boolean>>(() => Object.fromEntries(LIVE_SOURCES.map((p) => [p, true])));
   const [busy, setBusy] = useState<string | null>(null);
   const [last, setLast] = useState<string>("");
   const query = (study.scan.query ?? "").trim();
-  const dois = [
-    ...new Set(
-      study.scan.items
-        .filter((i) => i.provenance?.status !== "verified" && i.provenance?.status !== "mismatch")
-        .map((i) => i.doi ?? i.provenance?.identifiers?.doi)
-        .filter((d): d is string => !!d),
-    ),
-  ];
+  const dois = doisToCheck(study.scan.items, IDENTITY_PROVIDER);
 
   async function search() {
-    const chosen = (Object.keys(sources) as LiveProvider[]).filter((p) => sources[p]);
+    const chosen = LIVE_SOURCES.filter((p) => sources[p]);
     if (!query) {
       toast.warning("Enter a search query first (Illuminate can suggest one).");
       return;
@@ -1136,10 +1131,10 @@ function LiveSearch({ study }: { study: Study }) {
       if (!res || !res.ok) {
         const error = res && "error" in res ? String(res.error) : "identity check failed";
         toast.error(error);
-        recordEvidenceRun(study.id, { id: uid("erun"), at: nowIso(), kind: "identity-check", provider: "crossref", requests: [], status: "error", records: 0, elapsedMs: Date.now() - started, note: error });
+        recordEvidenceRun(study.id, { id: uid("erun"), at: nowIso(), kind: "identity-check", provider: IDENTITY_PROVIDER, requests: [], status: "error", records: 0, elapsedMs: Date.now() - started, note: error });
         return;
       }
-      const data = JSON.parse(res.json) as { provider: "crossref"; chunks: { requested: string[]; outcome: LookupOutcome }[]; requests: string[] };
+      const data = JSON.parse(res.json) as { provider: CheckProvider; chunks: { requested: string[]; outcome: LookupOutcome }[]; requests: string[] };
       const summary = applyIdentityChecks(study.id, data.provider, data.chunks);
       const failed = data.chunks.filter((c) => c.outcome.status !== "ok");
       recordEvidenceRun(study.id, {
@@ -1153,7 +1148,7 @@ function LiveSearch({ study }: { study: Study }) {
         elapsedMs: Date.now() - started,
         note: `${summary.verified} verified, ${summary.mismatch} mismatch, ${summary.notFound} not found, ${summary.unresolved} unresolved, ${summary.failed} failed`,
       });
-      const line = `Crossref: ${summary.verified} verified, ${summary.mismatch} mismatch, ${summary.notFound} not found, ${summary.unresolved} unresolved, ${summary.failed} failed`;
+      const line = `${CHECK_LABEL[data.provider] ?? data.provider}: ${summary.verified} verified, ${summary.mismatch} mismatch, ${summary.notFound} not found, ${summary.unresolved} unresolved, ${summary.failed} failed`;
       setLast(line);
       toast.message("Identity check finished", { description: line });
     } finally {
@@ -1168,7 +1163,7 @@ function LiveSearch({ study }: { study: Study }) {
         Runs the query above against the sources you tick. Every record keeps where it came from; its abstract is stored as retrieved and never rewritten.
       </p>
       <div className="mt-2 flex flex-wrap gap-3 text-sm">
-        {(Object.keys(LIVE_LABEL) as LiveProvider[]).map((p) => (
+        {LIVE_SOURCES.map((p) => (
           <label key={p} className="flex items-center gap-1.5">
             <input type="checkbox" checked={sources[p]} onChange={(e) => setSources({ ...sources, [p]: e.target.checked })} />
             {LIVE_LABEL[p]}

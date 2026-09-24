@@ -1,14 +1,14 @@
-# Meridian handoff, 23 September 2026, night: D10 in the trunk
+# Meridian handoff, 24 September 2026: D10 in the trunk; Meridian runs on Cowork
 
 Written by the Claude orchestrator session in Cowork (integration owner since the coordinating Fable session handed over at 23:35 UTC on 22 September). It says where the code is, what was checked and how, what was taken from each line and why, what is still open, and what not to undo. Tags: [verified] checked here against the named bytes or run; [computed] produced here by a named run; [unverified] reported by someone else and not checked here.
 
 ## 1. Where things are
 
 - **`main` and the integration branch:** both carry this handoff. Its parent, f1dbc9a, is D10 final (section 3); before it come 11016b6 (D10 review fixes) and 08b6ebd (D10 first version); before those both branches were on 45d1bdf. Publication is by fast-forward through GitHub Desktop on the owner's Mac; `main` is never force-pushed (its history holds the old head e27921e). `git ls-remote https://github.com/HHDuJU/meridian-research-studio` shows whether the two branches are on the same commit.
-- **Roles (from 23 September, the investigator's decision):** Claude, in the investigator's Cowork session, writes and integrates Meridian's code, runs the checks and the replay bank, and publishes. Grok Build runs the live plans with Grok 4.5 in its sandbox and hosts the preview, and changes no product code unless an order says so. Only this session sends orders to Grok; one writer per file.
+- **Roles (the investigator's decisions of 23 and 24 September):** Claude, in the investigator's Cowork session, writes and integrates Meridian's code, runs the checks and the replay bank, publishes, and since 24 September also runs Meridian itself: the Cowork edition is a private page in the investigator's Claude account, answered by Claude, with PubMed and ClinicalTrials.gov through his connectors (`docs/COWORK_EDITION.md`). Grok Build is paused (below). One writer per file.
 - **Snapshots of Grok Build deliveries (branches, one commit each):** `snapshot/grok-a33-d25-g11-f3`, `snapshot/grok-a4`, `snapshot/grok-a41` (157f7fd), `snapshot/grok-d8b` (b03c139), `snapshot/grok-a45` (1ffbc3c, parent b03c139). Commit e27921e, an ancestor of `main`, is GitHub `main` before any of this; the tag `baseline-e27921e` that marks it exists only in local clones (GitHub Desktop did not push it with the branches, and `git ls-remote` lists no tags) [verified].
 - **Earlier branch:** `claude/meridian-integrity-20260922` (03af9b7) stays as history; its content lives in the integration branch.
-- **Grok Build:** holds a45 since 23:29 UTC on 22 September (no edits since). The investigator approved Order I1 on 23 September (`docs/GROK_ORDER_I1.md`: install this trunk, rerun the checks and the samples, run the warm-up and eight live plans with Grok 4.5 under a 150-call cap, deliver JSON results, hold). Grok's weekly usage limit is reached until 13:46 UTC on 28 September; a scheduled follow-up of this session sends the order at 14:15 UTC that day, after checking that `main`, the order and this handoff agree.
+- **Grok Build:** paused. It holds a45 since 23:29 UTC on 22 September (no edits since). Order I1 (`docs/GROK_ORDER_I1.md`) was approved on 23 September and then not sent: on 24 September the investigator chose not to wait for Grok's weekly reset, and the scheduled send (28 September) is disabled, not deleted, so it can be switched back on. Only this session sends orders to Grok.
 
 ## 2. The a45 delivery, checked on the bytes
 
