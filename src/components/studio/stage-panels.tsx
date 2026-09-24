@@ -16,7 +16,7 @@ import { chart } from "@/lib/chart-tokens";
 import { familyOf } from "@/lib/stages";
 import { emptySearchConfirmationValid, scanHasRetrievedRecord, scanMayComplete } from "@/lib/defaults";
 import { approvalReview, evaluateDecision, decisionIsSupported } from "@/lib/evidence/decision";
-import { BODY_LABEL, DETERMINATION_GATE, NO_WORK_REASON, type AuthorityBody } from "@/lib/evidence/authority";
+import { BODY_LABEL, DETERMINATION_GATE, LITERATURE_FAMILIES, NO_WORK_REASON, RECORD_PRESETS, type AuthorityBody } from "@/lib/evidence/authority";
 import { checkClaim, localFactEstablished, type LedgerCheckStatus } from "@/lib/evidence/grounding";
 import { checkIdentities, IDENTITY_PROVIDER, LIVE_SOURCES, searchLiterature } from "@/lib/evidence-server";
 import { doisToCheck } from "@/lib/evidence/requests";
@@ -1191,12 +1191,20 @@ function LiveSearch({ study }: { study: Study }) {
  */
 function ApprovalPanel({ study, decisionIndex }: { study: Study; decisionIndex: number }) {
   const addGate = useStudio((st) => st.addGate);
+  const setFamily = useStudio((st) => st.setFamily);
   const dec = study.design.decisions[decisionIndex];
   if (!dec) return null;
   const review = approvalReview(dec, study);
-  if (!review.ethicsRecordMissing && !review.openItems.length && !review.modelStatements.length) return null;
+  if (!review.ethicsRecordMissing && !review.ethicsByStudyType && !review.openItems.length && !review.modelStatements.length) return null;
   return (
     <div className="mt-2 space-y-1.5" data-meridian-approvals="">
+      {review.ethicsByStudyType ? (
+        <div className="rounded-md border border-border p-2 text-xs" data-meridian-ethics-by-study-type="">
+          <span className="block">Research ethics status, from the study type you chose: {review.ethicsByStudyType}</span>
+          <span className="mt-1 block text-muted-foreground">To record something else for this decision (an approval, or another reason):</span>
+          <RecordForm study={study} decisionIndex={decisionIndex} body="ethics" />
+        </div>
+      ) : null}
       {review.ethicsRecordMissing ? (
         <div className="rounded-md border border-amber-300 bg-amber-50/40 p-2 text-xs" data-meridian-ethics-record-missing="">
           <span className="block">
@@ -1208,6 +1216,18 @@ function ApprovalPanel({ study, decisionIndex }: { study: Study; decisionIndex: 
               Your facts about approvals, to check before you record:
               <span className="block">{review.approvalFacts.map((f) => `"${f}"`).join(" ")}</span>
             </span>
+          ) : null}
+          {study.family && LITERATURE_FAMILIES.has(study.family) && study.familyBy !== "investigator" ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="mt-1"
+              data-meridian-confirm-literature-family=""
+              onClick={() => setFamily(study.id, study.family)}
+            >
+              Confirm the study type: {familyOf(study.family).label} of published literature (no REB review, TCPS 2, Article 2.2)
+            </Button>
           ) : null}
           <RecordForm study={study} decisionIndex={decisionIndex} body="ethics" suggestion={review.suggestedEthicsRecord} suggestionSource={review.suggestionSource} />
           {review.leadsToNoWork ? (
@@ -1319,6 +1339,15 @@ function RecordForm({
           Record: not required
         </Button>
       </span>
+      {body === "ethics" ? (
+        <span className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5" data-meridian-record-presets="">
+          {RECORD_PRESETS.map((p) => (
+            <button key={p.label} type="button" className="text-left text-muted-foreground underline" data-meridian-record-preset={p.label} onClick={() => setText(p.text)}>
+              {p.label}
+            </button>
+          ))}
+        </span>
+      ) : null}
       {suggestion ? (
         <button type="button" className="mt-0.5 text-left text-muted-foreground underline" data-meridian-record-suggestion={body} onClick={() => setText(suggestion)}>
           {suggestionSource === "gate" ? "Use the gate you confirmed (the model's words): " : "Use your fact: "}

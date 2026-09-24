@@ -695,6 +695,8 @@ export interface Study {
   title: string;
   subtitle: string;
   family: StudyFamily | null;
+  /** Who set the current family: the investigator (start page, family picker, accepting a decision) or a model reply. */
+  familyBy?: "investigator" | "model";
   setting: string;
   status: StudyStatus;
   createdAt: string;

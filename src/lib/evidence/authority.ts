@@ -309,6 +309,51 @@ export function ethicsRecord(gates: DecisionGate[]): DecisionGate | undefined {
   );
 }
 
+/** Study families that rely only on published literature (reviews of published work). */
+export const LITERATURE_FAMILIES: ReadonlySet<string> = new Set(["systematic-review", "scoping-review", "narrative-review", "umbrella-review", "rapid-review"]);
+
+/**
+ * Why a review of published literature needs no research ethics board review. TCPS 2 (2022), Article 2.2, as
+ * read on ethics.gc.ca on 24 September 2026: research does not require REB review when it relies exclusively on
+ * information in the public domain to which no reasonable expectation of privacy attaches.
+ */
+export const LITERATURE_ONLY_REASON =
+  "This work relies only on published literature in the public domain, so research ethics board review is not required (TCPS 2 (2022), Article 2.2). If it will use individual participant data, unpublished records or people, record the ethics status instead.";
+
+/** One-click reasons the investigator can record (the investigator still clicks; nothing is recorded for them). */
+export const RECORD_PRESETS: { label: string; text: string }[] = [
+  { label: "Published literature only (TCPS 2, Article 2.2)", text: LITERATURE_ONLY_REASON },
+  {
+    label: "Quality improvement or program evaluation (TCPS 2, Article 2.5)",
+    text: "Quality improvement or program evaluation used only for assessment, management or improvement, which falls outside the scope of research ethics board review (TCPS 2 (2022), Article 2.5). Local QI screening, if the institution requires it: ",
+  },
+];
+
+/**
+ * The ethics status taken from the investigator's own choice of study type. A review of published literature
+ * that the investigator chose (familyBy "investigator") needs no REB review, so the decision is not blocked for
+ * want of a record. A family a model reply set never counts, and an explicit record on the decision wins.
+ */
+export function studyTypeEthicsRecord(study: { family?: string | null; familyBy?: string }): DecisionGate | undefined {
+  if (!study.family || !LITERATURE_FAMILIES.has(study.family) || study.familyBy !== "investigator") return undefined;
+  return {
+    id: "ethics-by-study-type",
+    requirement: DETERMINATION_GATE.ethics,
+    status: "not-required",
+    setBy: "investigator",
+    evidence: LITERATURE_ONLY_REASON,
+    record: true,
+  } as DecisionGate;
+}
+
+/** The ethics record that settles a decision: the investigator's explicit record, else the study-type record. */
+export function ethicsRecordFor(gates: DecisionGate[], study: { family?: string | null; familyBy?: string }): { gate: DecisionGate; byStudyType: boolean } | undefined {
+  const explicit = ethicsRecord(gates);
+  if (explicit) return { gate: explicit, byStudyType: false };
+  const derived = studyTypeEthicsRecord(study);
+  return derived ? { gate: derived, byStudyType: true } : undefined;
+}
+
 /** Whether a requirement uses the exact wording of an investigator record (a model gate may not). */
 export function isRecordWording(requirement: string): boolean {
   const t = (requirement ?? "").trim().toLowerCase();

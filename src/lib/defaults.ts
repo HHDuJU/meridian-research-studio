@@ -184,6 +184,7 @@ export function createStudy(input: {
     title: input.title || "Untitled study",
     subtitle: input.subtitle || "Draft in the studio",
     family: input.family,
+    ...(input.family ? { familyBy: "investigator" as const } : {}),
     setting: input.setting,
     status: "draft",
     createdAt,

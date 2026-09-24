@@ -8,7 +8,7 @@ import { treatAsFullTextRead } from "./access";
 import { isWithdrawnResult } from "./publication-status";
 import { emptySearchConfirmationValid } from "../defaults";
 import { assertsLocalResource, checkClaim, factClauses, gateGrounding, gateSupport, investigatorFactText, localFactEstablished, normalizeForMatch, statusOpen, studyOwnText } from "./grounding";
-import { ACTIONABLE_KINDS, OTHER_WORK, approvalFacts, authorityClaims, ethicsGateCandidates, ethicsRecord, isRecordWording, localAssertions, openApprovalItems } from "./authority";
+import { ACTIONABLE_KINDS, OTHER_WORK, approvalFacts, authorityClaims, ethicsGateCandidates, ethicsRecordFor, isRecordWording, localAssertions, openApprovalItems } from "./authority";
 import type { AuthorityBody, OpenItem } from "./authority";
 
 /*
@@ -231,6 +231,8 @@ export interface ModelStatement {
 export interface ApprovalReview {
   /** The investigator has not recorded, on this decision, the research ethics status of the work. */
   ethicsRecordMissing: boolean;
+  /** Set when the investigator's own choice of study type (a review of published literature) settles the record. */
+  ethicsByStudyType?: string;
   /** The decision's kind leads to no work: the record can say so in one click. */
   leadsToNoWork: boolean;
   /** The investigator's own facts that leave an approval open and that they have not acted on for this decision. */
@@ -283,7 +285,8 @@ export function approvalReview(d: DecisionRecord, study: Study): ApprovalReview 
   const invText = investigatorFactText(study);
   const own = studyOwnText(study);
   const acted = new Set((d.settledItems ?? []).map((x) => flat(x.text)));
-  const ethicsRecordMissing = !ethicsRecord(gates);
+  const record = ethicsRecordFor(gates, study);
+  const ethicsRecordMissing = !record;
   const openItems = openApprovalItems(invText).filter((it) => !acted.has(flat(it.text)));
   const modelStatements: ModelStatement[] = [];
   if (d.actor !== "investigator") {
@@ -307,6 +310,7 @@ export function approvalReview(d: DecisionRecord, study: Study): ApprovalReview 
   const suggestionSource = suggestedEthicsRecord ? (fromGate ? "gate" : "fact") : undefined;
   return {
     ethicsRecordMissing,
+    ...(record?.byStudyType ? { ethicsByStudyType: record.gate.evidence } : {}),
     approvalFacts: ethicsRecordMissing ? approvalFacts(invText) : [],
     leadsToNoWork: !ACTIONABLE_KINDS.has(d.kind),
     openItems,

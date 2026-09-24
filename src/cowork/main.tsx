@@ -14,6 +14,7 @@ import { setFileSaver } from "../lib/export";
 import { useStudio } from "../lib/store";
 import { capability } from "./runtime";
 import { applyPulled, StudySync } from "./sync";
+import { maybeRunLiveCheck } from "./live-check";
 import "../styles.css";
 
 setFileSaver(async (filename, text) => {
@@ -89,5 +90,5 @@ if (mount) {
       <RouterProvider router={router} />
     </StrictMode>,
   );
-  void startStudySync();
+  void startStudySync().then(() => maybeRunLiveCheck());
 }

@@ -274,7 +274,7 @@ export const useStudio = create<StudioState>()(
         const basis = family ? ("explicit" as const) : ("unresolved" as const);
         set({
           studies: get().studies.map((s) =>
-            s.id === id ? { ...s, family, design: { ...s.design, basis }, updatedAt: nowIso() } : s,
+            s.id === id ? { ...s, family, familyBy: family ? ("investigator" as const) : undefined, design: { ...s.design, basis }, updatedAt: nowIso() } : s,
           ),
         });
       },
@@ -455,7 +455,7 @@ export const useStudio = create<StudioState>()(
           ...(familyApplied || s.family ? { basis: "explicit" as const } : {}),
         });
         if (familyApplied) {
-          get().update(id, { family: fam as StudyFamily });
+          get().update(id, { family: fam as StudyFamily, familyBy: "investigator" });
         }
         get().log(id, {
           id: uid("audit"),
@@ -624,7 +624,11 @@ export const useStudio = create<StudioState>()(
           if (!patch.title) delete patch.title;
           if (!patch.subtitle) delete patch.subtitle;
           if (stage === "design") delete patch.family;
-          if (Object.keys(patch).length) get().update(id, patch);
+          // A family a model reply sets is the model's, even over the investigator's earlier choice (D10: it then
+          // settles nothing, such as the ethics status of a review of published literature).
+          const current = get().studies.find((x) => x.id === id);
+          const withBy = patch.family && patch.family !== current?.family ? { ...patch, familyBy: "model" as const } : patch;
+          if (Object.keys(withBy).length) get().update(id, withBy);
         }
         if (decision.complete) get().markComplete(id, stage);
         get().log(id, {
